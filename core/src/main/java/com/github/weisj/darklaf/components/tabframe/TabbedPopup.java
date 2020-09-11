@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.components.tabframe;
@@ -134,8 +131,9 @@ public class TabbedPopup extends PanelPopup {
     }
 
     /**
-     * Adds the component to the tabbed pane if it isn't already added. This method exists to conform the interface
-     * methods. It is preferred to directly add to the TabbedPane obtained by {@link #getTabbedPane()}.
+     * Adds the component to the tabbed pane if it isn't already added. This method exists to conform
+     * the interface methods. It is preferred to directly add to the TabbedPane obtained by
+     * {@link #getTabbedPane()}.
      *
      * @param component the component to add.
      */
@@ -148,8 +146,8 @@ public class TabbedPopup extends PanelPopup {
     }
 
     /**
-     * Returns all currently installed content panes. i.e. this area all components currently added as tabs to the
-     * TabbedPane.
+     * Returns all currently installed content panes. i.e. this area all components currently added as
+     * tabs to the TabbedPane.
      *
      * @return a collection of components.
      * @see    #getTabbedPane()

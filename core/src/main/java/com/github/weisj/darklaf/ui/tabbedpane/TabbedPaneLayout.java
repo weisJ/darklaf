@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
@@ -29,8 +26,8 @@ import java.awt.*;
 import javax.swing.*;
 
 /**
- * This class should be treated as a &quot;protected&quot; inner class. Instantiate it only within subclasses of
- * BasicTabbedPaneUI.
+ * This class should be treated as a &quot;protected&quot; inner class. Instantiate it only within
+ * subclasses of BasicTabbedPaneUI.
  */
 public abstract class TabbedPaneLayout implements LayoutManager {
 
@@ -58,15 +55,12 @@ public abstract class TabbedPaneLayout implements LayoutManager {
     @SuppressWarnings("deprecation")
     public void layoutContainer(final Container parent) {
         /*
-         * Some of the code in this method deals with changing the
-         * visibility of components to hide and show the contents for the
-         * selected tab. This is older code that has since been duplicated
-         * in JTabbedPane.fireStateChanged(), so as to allow visibility
-         * changes to happen sooner (see the note there). This code remains
-         * for backward compatibility as there are some cases, such as
-         * subclasses that don't fireStateChanged() where it may be used.
-         * Any changes here need to be kept in synch with
-         * JTabbedPane.fireStateChanged().
+         * Some of the code in this method deals with changing the visibility of components to hide and show
+         * the contents for the selected tab. This is older code that has since been duplicated in
+         * JTabbedPane.fireStateChanged(), so as to allow visibility changes to happen sooner (see the note
+         * there). This code remains for backward compatibility as there are some cases, such as subclasses
+         * that don't fireStateChanged() where it may be used. Any changes here need to be kept in synch
+         * with JTabbedPane.fireStateChanged().
          */
         ui.setRolloverTab(-1);
 
@@ -101,8 +95,7 @@ public abstract class TabbedPaneLayout implements LayoutManager {
         // programs are now depending on this, we're making it work.
         //
         if (selectedComponent != null) {
-            if (selectedComponent != visibleComponent &&
-                visibleComponent != null) {
+            if (selectedComponent != visibleComponent && visibleComponent != null) {
                 if (SwingUtilities.findFocusOwner(visibleComponent) != null) {
                     shouldChangeFocus = true;
                 }
@@ -116,45 +109,39 @@ public abstract class TabbedPaneLayout implements LayoutManager {
         if (numChildren > 0) {
 
             switch (tabPlacement) {
-                case SwingConstants.LEFT :
+                case SwingConstants.LEFT:
                     totalTabWidth = ui.calculateTabAreaWidth(tabPlacement, ui.runCount, ui.maxTabWidth);
                     cx = insets.left + totalTabWidth + contentInsets.left;
                     cy = insets.top + contentInsets.top;
                     break;
-                case SwingConstants.RIGHT :
+                case SwingConstants.RIGHT:
                     totalTabWidth = ui.calculateTabAreaWidth(tabPlacement, ui.runCount, ui.maxTabWidth);
                     cx = insets.left + contentInsets.left;
                     cy = insets.top + contentInsets.top;
                     break;
-                case SwingConstants.BOTTOM :
+                case SwingConstants.BOTTOM:
                     totalTabHeight = ui.calculateTabAreaHeight(tabPlacement, ui.runCount, ui.maxTabHeight);
                     cx = insets.left + contentInsets.left;
                     cy = insets.top + contentInsets.top;
                     break;
-                case SwingConstants.TOP :
-                default :
+                case SwingConstants.TOP:
+                default:
                     totalTabHeight = ui.calculateTabAreaHeight(tabPlacement, ui.runCount, ui.maxTabHeight);
                     cx = insets.left + contentInsets.left;
                     cy = insets.top + totalTabHeight + contentInsets.top;
             }
 
-            cw = bounds.width - totalTabWidth -
-                 insets.left - insets.right -
-                 contentInsets.left - contentInsets.right;
-            ch = bounds.height - totalTabHeight -
-                 insets.top - insets.bottom -
-                 contentInsets.top - contentInsets.bottom;
+            cw = bounds.width - totalTabWidth - insets.left - insets.right - contentInsets.left - contentInsets.right;
+            ch = bounds.height - totalTabHeight - insets.top - insets.bottom - contentInsets.top - contentInsets.bottom;
 
             for (int i = 0; i < numChildren; i++) {
                 Component child = ui.tabPane.getComponent(i);
                 if (child == ui.tabContainer) {
 
                     int tabContainerWidth = totalTabWidth == 0 ? bounds.width
-                            : totalTabWidth + insets.left + insets.right +
-                              contentInsets.left + contentInsets.right;
+                        : totalTabWidth + insets.left + insets.right + contentInsets.left + contentInsets.right;
                     int tabContainerHeight = totalTabHeight == 0 ? bounds.height
-                            : totalTabHeight + insets.top + insets.bottom +
-                              contentInsets.top + contentInsets.bottom;
+                        : totalTabHeight + insets.top + insets.bottom + contentInsets.top + contentInsets.bottom;
 
                     int tabContainerX = 0;
                     int tabContainerY = 0;
@@ -213,26 +200,26 @@ public abstract class TabbedPaneLayout implements LayoutManager {
         // Calculate bounds within which a tab run must fit
         //
         switch (tabPlacement) {
-            case SwingConstants.LEFT :
+            case SwingConstants.LEFT:
                 ui.maxTabWidth = ui.calculateMaxTabWidth(tabPlacement);
                 x = insets.left + tabAreaInsets.left;
                 y = insets.top + tabAreaInsets.top;
                 returnAt = size.height - (insets.bottom + tabAreaInsets.bottom);
                 break;
-            case SwingConstants.RIGHT :
+            case SwingConstants.RIGHT:
                 ui.maxTabWidth = ui.calculateMaxTabWidth(tabPlacement);
                 x = size.width - insets.right - tabAreaInsets.right - ui.maxTabWidth;
                 y = insets.top + tabAreaInsets.top;
                 returnAt = size.height - (insets.bottom + tabAreaInsets.bottom);
                 break;
-            case SwingConstants.BOTTOM :
+            case SwingConstants.BOTTOM:
                 ui.maxTabHeight = ui.calculateMaxTabHeight(tabPlacement);
                 x = insets.left + tabAreaInsets.left;
                 y = size.height - insets.bottom - tabAreaInsets.bottom - ui.maxTabHeight;
                 returnAt = size.width - (insets.right + tabAreaInsets.right);
                 break;
-            case SwingConstants.TOP :
-            default :
+            case SwingConstants.TOP:
+            default:
                 ui.maxTabHeight = ui.calculateMaxTabHeight(tabPlacement);
                 x = insets.left + tabAreaInsets.left;
                 y = insets.top + tabAreaInsets.top;
@@ -390,8 +377,7 @@ public abstract class TabbedPaneLayout implements LayoutManager {
      * @param start        the start
      * @param max          the max
      */
-    protected void normalizeTabRuns(final int tabPlacement, final int tabCount,
-                                    final int start, final int max) {
+    protected void normalizeTabRuns(final int tabPlacement, final int tabCount, final int start, final int max) {
         boolean verticalTabRuns = (tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT);
         int run = ui.runCount - 1;
         boolean keepAdjusting = true;
@@ -598,21 +584,23 @@ public abstract class TabbedPaneLayout implements LayoutManager {
         // minimum size required to display largest child + content border
         //
         switch (tabPlacement) {
-            case SwingConstants.LEFT :
-            case SwingConstants.RIGHT :
+            case SwingConstants.LEFT:
+            case SwingConstants.RIGHT:
                 height = Math.max(height, ui.calculateMaxTabHeight(tabPlacement));
                 tabExtent = preferredTabAreaWidth(tabPlacement, height - tabAreaInsets.top - tabAreaInsets.bottom);
                 width += tabExtent;
                 break;
-            case SwingConstants.TOP :
-            case SwingConstants.BOTTOM :
-            default :
+            case SwingConstants.TOP:
+            case SwingConstants.BOTTOM:
+            default:
                 width = Math.max(width, ui.calculateMaxTabWidth(tabPlacement));
                 tabExtent = preferredTabAreaHeight(tabPlacement, width - tabAreaInsets.left - tabAreaInsets.right);
                 height += tabExtent;
         }
-        return new Dimension(width + insets.left + insets.right + contentInsets.left + contentInsets.right,
-                             height + insets.bottom + insets.top + contentInsets.top + contentInsets.bottom);
+        return new Dimension(
+            width + insets.left + insets.right + contentInsets.left + contentInsets.right,
+            height + insets.bottom + insets.top + contentInsets.top + contentInsets.bottom
+        );
 
     }
 

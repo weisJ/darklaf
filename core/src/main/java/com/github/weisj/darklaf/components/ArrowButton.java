@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.components;
@@ -40,33 +37,32 @@ public final class ArrowButton implements SwingConstants {
 
     private ArrowButton() {}
 
-    public static JButton createUpDownArrow(final JComponent parent, final int orientation,
-                                            final boolean center) {
-        return createUpDownArrow(parent, orientation, center, false,
-                                 new Insets(0, 0, 0, 0));
+    public static JButton createUpDownArrow(final JComponent parent, final int orientation, final boolean center) {
+        return createUpDownArrow(parent, orientation, center, false, new Insets(0, 0, 0, 0));
     }
 
-    public static JButton createUpDownArrow(final JComponent parent, final int orientation,
-                                            final boolean center, final boolean applyInsetsOnSize,
-                                            final Insets insets) {
+    public static JButton createUpDownArrow(
+            final JComponent parent, final int orientation, final boolean center, final boolean applyInsetsOnSize,
+            final Insets insets
+    ) {
         UIAwareIcon icon;
         switch (orientation) {
-            case NORTH :
+            case NORTH:
                 icon = (UIAwareIcon) UIManager.getIcon("ArrowButton.up.icon");
                 break;
-            case SOUTH :
+            case SOUTH:
                 icon = (UIAwareIcon) UIManager.getIcon("ArrowButton.down.icon");
                 break;
-            default :
+            default:
                 throw new IllegalStateException("Invalid button orientation: " + orientation);
         }
         return createUpDownArrow(parent, icon, icon.getDual(), orientation, center, applyInsetsOnSize, insets);
     }
 
-    public static JButton createUpDownArrow(final JComponent parent,
-                                            final Icon activeIcon, final Icon inactiveIcon,
-                                            final int orientation, final boolean center,
-                                            final boolean applyInsetsOnSize, final Insets insets) {
+    public static JButton createUpDownArrow(
+            final JComponent parent, final Icon activeIcon, final Icon inactiveIcon, final int orientation,
+            final boolean center, final boolean applyInsetsOnSize, final Insets insets
+    ) {
         return new BasicArrowButton(orientation, null, null, null, null) {
             {
                 putClientProperty(DarkButtonUI.KEY_NO_BORDERLESS_OVERWRITE, true);
@@ -91,14 +87,18 @@ public final class ArrowButton implements SwingConstants {
                 if (!applyInsetsOnSize) {
                     return new DimensionUIResource(getIcon().getIconWidth(), getIcon().getIconHeight());
                 } else {
-                    return new DimensionUIResource(getIcon().getIconWidth() + insets.left + insets.right,
-                                                   getIcon().getIconHeight() + insets.top + insets.bottom);
+                    return new DimensionUIResource(
+                        getIcon().getIconWidth() + insets.left + insets.right,
+                        getIcon().getIconHeight() + insets.top + insets.bottom
+                    );
                 }
             }
 
             @Override
-            public void paintTriangle(final Graphics g, final int x, final int y,
-                                      final int size, final int direction, final boolean isEnabled) {
+            public void paintTriangle(
+                    final Graphics g, final int x, final int y, final int size, final int direction,
+                    final boolean isEnabled
+            ) {
                 getIcon().paintIcon(this, g, x, y);
             }
 

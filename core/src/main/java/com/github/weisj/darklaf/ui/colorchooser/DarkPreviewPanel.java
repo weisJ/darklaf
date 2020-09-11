@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.colorchooser;
@@ -86,13 +83,11 @@ public class DarkPreviewPanel extends JPanel {
         g.setColor(Color.white);
         g.fillRect(offsetX, 0, SQUARE_SIZE, SQUARE_SIZE);
         g.setColor(color);
-        g.fillRect(offsetX + INNER_GAP, INNER_GAP,
-                   SQUARE_SIZE - (INNER_GAP * 2),
-                   SQUARE_SIZE - (INNER_GAP * 2));
+        g.fillRect(offsetX + INNER_GAP, INNER_GAP, SQUARE_SIZE - (INNER_GAP * 2), SQUARE_SIZE - (INNER_GAP * 2));
         g.setColor(Color.white);
-        g.fillRect(offsetX + INNER_GAP * 2, INNER_GAP * 2,
-                   SQUARE_SIZE - (INNER_GAP * 4),
-                   SQUARE_SIZE - (INNER_GAP * 4));
+        g.fillRect(
+            offsetX + INNER_GAP * 2, INNER_GAP * 2, SQUARE_SIZE - (INNER_GAP * 4), SQUARE_SIZE - (INNER_GAP * 4)
+        );
 
         g.setColor(color);
         g.fillRect(offsetX, SQUARE_SIZE + SQUARE_GAP, SQUARE_SIZE, SQUARE_SIZE);
@@ -101,44 +96,36 @@ public class DarkPreviewPanel extends JPanel {
         g.setColor(Color.black);
         g.fillRect(offsetX, 0, SQUARE_SIZE, SQUARE_SIZE);
         g.setColor(color);
-        g.fillRect(offsetX + INNER_GAP, INNER_GAP,
-                   SQUARE_SIZE - (INNER_GAP * 2),
-                   SQUARE_SIZE - (INNER_GAP * 2));
+        g.fillRect(offsetX + INNER_GAP, INNER_GAP, SQUARE_SIZE - (INNER_GAP * 2), SQUARE_SIZE - (INNER_GAP * 2));
         g.setColor(Color.white);
-        g.fillRect(offsetX + INNER_GAP * 2, INNER_GAP * 2,
-                   SQUARE_SIZE - (INNER_GAP * 4),
-                   SQUARE_SIZE - (INNER_GAP * 4));
+        g.fillRect(
+            offsetX + INNER_GAP * 2, INNER_GAP * 2, SQUARE_SIZE - (INNER_GAP * 4), SQUARE_SIZE - (INNER_GAP * 4)
+        );
         g.translate(-(SQUARE_SIZE + SQUARE_GAP), 0);
 
         g.translate(SQUARE_SIZE + SQUARE_GAP, SQUARE_SIZE + SQUARE_GAP);
         g.setColor(Color.white);
         g.fillRect(offsetX, 0, SQUARE_SIZE, SQUARE_SIZE);
         g.setColor(color);
-        g.fillRect(offsetX + INNER_GAP, INNER_GAP,
-                   SQUARE_SIZE - (INNER_GAP * 2),
-                   SQUARE_SIZE - (INNER_GAP * 2));
+        g.fillRect(offsetX + INNER_GAP, INNER_GAP, SQUARE_SIZE - (INNER_GAP * 2), SQUARE_SIZE - (INNER_GAP * 2));
         g.translate(-(SQUARE_SIZE + SQUARE_GAP), -(SQUARE_SIZE + SQUARE_GAP));
 
         g.translate((SQUARE_SIZE + SQUARE_GAP) * 2, 0);
         g.setColor(Color.white);
         g.fillRect(offsetX, 0, SQUARE_SIZE, SQUARE_SIZE);
         g.setColor(color);
-        g.fillRect(offsetX + INNER_GAP, INNER_GAP,
-                   SQUARE_SIZE - (INNER_GAP * 2),
-                   SQUARE_SIZE - (INNER_GAP * 2));
+        g.fillRect(offsetX + INNER_GAP, INNER_GAP, SQUARE_SIZE - (INNER_GAP * 2), SQUARE_SIZE - (INNER_GAP * 2));
         g.setColor(Color.black);
-        g.fillRect(offsetX + INNER_GAP * 2, INNER_GAP * 2,
-                   SQUARE_SIZE - (INNER_GAP * 4),
-                   SQUARE_SIZE - (INNER_GAP * 4));
+        g.fillRect(
+            offsetX + INNER_GAP * 2, INNER_GAP * 2, SQUARE_SIZE - (INNER_GAP * 4), SQUARE_SIZE - (INNER_GAP * 4)
+        );
         g.translate(-((SQUARE_SIZE + SQUARE_GAP) * 2), 0);
 
         g.translate((SQUARE_SIZE + SQUARE_GAP) * 2, (SQUARE_SIZE + SQUARE_GAP));
         g.setColor(Color.black);
         g.fillRect(offsetX, 0, SQUARE_SIZE, SQUARE_SIZE);
         g.setColor(color);
-        g.fillRect(offsetX + INNER_GAP, INNER_GAP,
-                   SQUARE_SIZE - (INNER_GAP * 2),
-                   SQUARE_SIZE - (INNER_GAP * 2));
+        g.fillRect(offsetX + INNER_GAP, INNER_GAP, SQUARE_SIZE - (INNER_GAP * 2), SQUARE_SIZE - (INNER_GAP * 2));
         g.translate(-((SQUARE_SIZE + SQUARE_GAP) * 2), -(SQUARE_SIZE + SQUARE_GAP));
 
         return (SQUARE_SIZE * 3 + SQUARE_GAP * 2);
@@ -166,16 +153,16 @@ public class DarkPreviewPanel extends JPanel {
         g.fillRect(textXOffset, (height) + TEXT_GAP, width + (TEXT_GAP), height + 2);
 
         g.setColor(Color.black);
-        SwingUtilities2.drawString(host, g, getSampleText(), textXOffset + (TEXT_GAP / 2),
-                                   height + ascent + TEXT_GAP + 2);
+        SwingUtilities2
+            .drawString(host, g, getSampleText(), textXOffset + (TEXT_GAP / 2), height + ascent + TEXT_GAP + 2);
 
         g.setColor(Color.white);
 
         g.fillRect(textXOffset, (height + TEXT_GAP) * 2, width + (TEXT_GAP), height + 2);
 
         g.setColor(color);
-        SwingUtilities2.drawString(host, g, getSampleText(), textXOffset + (TEXT_GAP / 2),
-                                   ((height + TEXT_GAP) * 2) + ascent + 2);
+        SwingUtilities2
+            .drawString(host, g, getSampleText(), textXOffset + (TEXT_GAP / 2), ((height + TEXT_GAP) * 2) + ascent + 2);
 
         config.restore();
         return width + TEXT_GAP * 3;

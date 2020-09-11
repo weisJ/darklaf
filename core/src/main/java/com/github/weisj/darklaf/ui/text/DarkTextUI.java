@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.text;
@@ -58,8 +55,8 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 /**
  * @author Jannis Weis
  */
-public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeListener, FocusListener,
-                                 OpacityBufferedUI {
+public abstract class DarkTextUI extends BasicTextUI
+        implements PropertyChangeListener, FocusListener, OpacityBufferedUI {
 
     protected static final String KEY_PREFIX = "JTextComponent.";
     public static final String KEY_ROUNDED_SELECTION = KEY_PREFIX + "roundedSelection";
@@ -110,8 +107,8 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         if (editor != null) {
             PropertyUtil.installProperty(editor, ToolTipConstants.KEY_STYLE, ToolTipStyle.PLAIN);
             PropertyUtil.installBooleanProperty(editor, KEY_ROUNDED_SELECTION, "TextComponent.roundedSelection");
-            PropertyUtil.installBooleanProperty(editor, KEY_EXTEND_LINE_SELECTION,
-                                                getPropertyPrefix() + ".extendSelection");
+            PropertyUtil
+                .installBooleanProperty(editor, KEY_EXTEND_LINE_SELECTION, getPropertyPrefix() + ".extendSelection");
         }
         disabledColor = UIManager.getColor(getPropertyPrefix() + ".disabledBackground");
         inactiveColor = UIManager.getColor(getPropertyPrefix() + ".inactiveBackground");
@@ -279,18 +276,17 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
                 ins = border.getBorderInsets(editor);
             }
             if (ins == null) ins = new Insets(0, 0, 0, 0);
-            g.fillRect(ins.left, ins.top, editor.getWidth() - ins.left - ins.right,
-                       editor.getHeight() - ins.top - ins.bottom);
+            g.fillRect(
+                ins.left, ins.top, editor.getWidth() - ins.left - ins.right, editor.getHeight() - ins.top - ins.bottom
+            );
         }
     }
 
     protected boolean isInCell(final JComponent c) {
         if (getBorder(c) instanceof DarkTextBorder) return false;
-        return DarkUIUtil.getParentOfType(JSpinner.class, c, 2) != null
-               || DarkUIUtil.isInCell(c)
-               || PropertyUtil.getBooleanProperty(c, KEY_IS_TREE_EDITOR)
-               || PropertyUtil.getBooleanProperty(c, KEY_IS_TABLE_EDITOR)
-               || PropertyUtil.getBooleanProperty(c, KEY_IS_LIST_EDITOR);
+        return DarkUIUtil.getParentOfType(JSpinner.class, c, 2) != null || DarkUIUtil.isInCell(c) || PropertyUtil
+            .getBooleanProperty(c, KEY_IS_TREE_EDITOR) || PropertyUtil.getBooleanProperty(c, KEY_IS_TABLE_EDITOR)
+            || PropertyUtil.getBooleanProperty(c, KEY_IS_LIST_EDITOR);
     }
 
     protected Container getRelevantParent(final Component comp) {
@@ -422,8 +418,10 @@ public abstract class DarkTextUI extends BasicTextUI implements PropertyChangeLi
         JPopupMenu popupMenu = editor.getComponentPopupMenu();
         Component other = e.getOppositeComponent();
         MenuElement[] path = MenuSelectionManager.defaultManager().getSelectedPath();
-        if (popupMenu != null && other != null && SwingUtilities.isDescendingFrom(popupMenu, other)
-            || path != null && path.length > 0 && path[0] == popupMenu) return;
+        if (
+            popupMenu != null && other != null && SwingUtilities.isDescendingFrom(popupMenu, other)
+                || path != null && path.length > 0 && path[0] == popupMenu
+        ) return;
         if (caret instanceof DarkCaret) {
             ((DarkCaret) caret).setPaintSelectionHighlight(false);
         }

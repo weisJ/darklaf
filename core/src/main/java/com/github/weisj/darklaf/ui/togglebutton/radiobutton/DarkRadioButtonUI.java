@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.togglebutton.radiobutton;
@@ -151,9 +148,10 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
         }
     }
 
-    public static void paintText(final Graphics2D g, final AbstractButton b,
-                                 final Rectangle textRect, final String text, final FontMetrics fm,
-                                 final Color disabledTextColor) {
+    public static void paintText(
+            final Graphics2D g, final AbstractButton b, final Rectangle textRect, final String text,
+            final FontMetrics fm, final Color disabledTextColor
+    ) {
         g.setColor(b.isEnabled() ? b.getForeground() : disabledTextColor);
         int mnemIndex = b.isEnabled() ? b.getDisplayedMnemonicIndex() : -1;
         StringPainter.drawStringUnderlineCharAt(g, b, text, mnemIndex, textRect, b.getFont(), fm);
@@ -212,10 +210,10 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
         iconRect.x = iconRect.y = iconRect.width = iconRect.height = 0;
         textRect.x = textRect.y = textRect.width = textRect.height = 0;
 
-        String text = SwingUtilities.layoutCompoundLabel(b, fm, b.getText(), getDefaultIcon(),
-                                                         b.getVerticalAlignment(), b.getHorizontalAlignment(),
-                                                         b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
-                                                         viewRect, iconRect, textRect, b.getIconTextGap());
+        String text = SwingUtilities.layoutCompoundLabel(
+            b, fm, b.getText(), getDefaultIcon(), b.getVerticalAlignment(), b.getHorizontalAlignment(),
+            b.getVerticalTextPosition(), b.getHorizontalTextPosition(), viewRect, iconRect, textRect, b.getIconTextGap()
+        );
         iconRect.y += iconBaselineOffset;
         if (ToggleButtonConstants.isInCell(b)) {
             hitArea = calculateHitArea();
@@ -230,8 +228,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
     }
 
     protected RectangularShape calculateHitArea() {
-        return new Ellipse2D.Float(Math.max(iconRect.x, 0), Math.max(iconRect.y, 0),
-                                   iconRect.width, iconRect.height);
+        return new Ellipse2D.Float(Math.max(iconRect.x, 0), Math.max(iconRect.y, 0), iconRect.width, iconRect.height);
     }
 
     @Override
@@ -248,8 +245,9 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
         if (PropertyKey.COMPONENT_ORIENTATION.equals(key)) {
             radioButton.repaint();
             hitArea.setFrame(0, 0, 0, 0);
-        } else if (DarkToggleButtonUI.KEY_IS_TREE_EDITOR.equals(key)
-                   || DarkToggleButtonUI.KEY_IS_TABLE_EDITOR.equals(key)) {
+        } else if (
+            DarkToggleButtonUI.KEY_IS_TREE_EDITOR.equals(key) || DarkToggleButtonUI.KEY_IS_TABLE_EDITOR.equals(key)
+        ) {
             radioButton.repaint();
             hitArea.setFrame(0, 0, 0, 0);
         } else if (DarkToggleButtonUI.KEY_CLEAR_HIT_AREA.equals(key)) {

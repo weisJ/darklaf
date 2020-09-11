@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.components.border;
@@ -40,18 +37,19 @@ import com.github.weisj.darklaf.util.Disposable;
 import com.github.weisj.darklaf.util.ImageUtil;
 
 /**
- * Implements a DropShadow for components. In general, the DropShadowBorder will work with any rectangular components
- * that do not have a default border installed as part of the look and feel, or otherwise. For example, DropShadowBorder
- * works wonderfully with JPanel, but horribly with JComboBox.
+ * Implements a DropShadow for components. In general, the DropShadowBorder will work with any
+ * rectangular components that do not have a default border installed as part of the look and feel,
+ * or otherwise. For example, DropShadowBorder works wonderfully with JPanel, but horribly with
+ * JComboBox.
  * <p>
- * Note: {@code DropShadowBorder} should usually be added to non-opaque components, otherwise the background is likely
- * to bleed through.
+ * Note: {@code DropShadowBorder} should usually be added to non-opaque components, otherwise the
+ * background is likely to bleed through.
  * </p>
  * <p>
- * Note: Since generating drop shadows is relatively expensive operation,
- * {@code DropShadowBorder} keeps internal static cache that allows sharing same border for multiple re-rendering and
- * between different instances of the class. Since this cache is shared at class level and never reset, it might bleed
- * your app memory in case you tend to create many different borders rapidly.
+ * Note: Since generating drop shadows is relatively expensive operation, {@code DropShadowBorder}
+ * keeps internal static cache that allows sharing same border for multiple re-rendering and between
+ * different instances of the class. Since this cache is shared at class level and never reset, it
+ * might bleed your app memory in case you tend to create many different borders rapidly.
  * </p>
  *
  * @author rbair Adaptions made by
@@ -73,14 +71,14 @@ public class DropShadowBorder implements Border, Serializable {
     }
 
     public DropShadowBorder(final Color shadowColor, final int shadowSize) {
-        this(shadowColor, shadowSize, .5f, 12, false, true,
-             true, true);
+        this(shadowColor, shadowSize, .5f, 12, false, true, true, true);
     }
 
-    public DropShadowBorder(final Color shadowColor, final int shadowSize,
-                            final float shadowOpacity, final int cornerSize, final boolean showTopShadow,
-                            final boolean showLeftShadow, final boolean showBottomShadow,
-                            final boolean showRightShadow) {
+    public DropShadowBorder(
+            final Color shadowColor, final int shadowSize, final float shadowOpacity, final int cornerSize,
+            final boolean showTopShadow, final boolean showLeftShadow, final boolean showBottomShadow,
+            final boolean showRightShadow
+    ) {
         setShadowColor(shadowColor);
         setShadowSize(shadowSize);
         setShadowOpacity(shadowOpacity);
@@ -92,8 +90,9 @@ public class DropShadowBorder implements Border, Serializable {
     }
 
     @Override
-    public void paintBorder(final Component c, final Graphics graphics,
-                            final int x, final int y, final int width, final int height) {
+    public void paintBorder(
+            final Component c, final Graphics graphics, final int x, final int y, final int width, final int height
+    ) {
         final BufferedImage[] images = getImages();
         final Graphics2D g2 = (Graphics2D) graphics.create();
 
@@ -155,45 +154,39 @@ public class DropShadowBorder implements Border, Serializable {
                 }
             }
 
-            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            g2.setRenderingHint(RenderingHints.KEY_RENDERING,
-                                RenderingHints.VALUE_RENDER_SPEED);
+            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
 
             if (showLeftShadow) {
                 assert topLeftShadowPoint != null && bottomLeftShadowPoint != null;
-                drawImage(g2, images[Position.LEFT.ordinal()],
-                          x,
-                          topLeftShadowPoint.y + shadowSize,
-                          shadowSize,
-                          bottomLeftShadowPoint.y - topLeftShadowPoint.y - shadowSize);
+                drawImage(
+                    g2, images[Position.LEFT.ordinal()], x, topLeftShadowPoint.y + shadowSize, shadowSize,
+                    bottomLeftShadowPoint.y - topLeftShadowPoint.y - shadowSize
+                );
             }
 
             if (showBottomShadow) {
                 assert bottomLeftShadowPoint != null && bottomRightShadowPoint != null;
-                drawImage(g2, images[Position.BOTTOM.ordinal()],
-                          bottomLeftShadowPoint.x + shadowSize,
-                          y + height - shadowSize,
-                          bottomRightShadowPoint.x - bottomLeftShadowPoint.x - shadowSize,
-                          shadowSize);
+                drawImage(
+                    g2, images[Position.BOTTOM.ordinal()], bottomLeftShadowPoint.x + shadowSize,
+                    y + height - shadowSize, bottomRightShadowPoint.x - bottomLeftShadowPoint.x - shadowSize, shadowSize
+                );
             }
 
             if (showRightShadow) {
                 assert topRightShadowPoint != null && bottomRightShadowPoint != null;
-                drawImage(g2, images[Position.RIGHT.ordinal()],
-                          x + width - shadowSize,
-                          topRightShadowPoint.y + shadowSize,
-                          shadowSize,
-                          bottomRightShadowPoint.y - topRightShadowPoint.y - shadowSize);
+                drawImage(
+                    g2, images[Position.RIGHT.ordinal()], x + width - shadowSize, topRightShadowPoint.y + shadowSize,
+                    shadowSize, bottomRightShadowPoint.y - topRightShadowPoint.y - shadowSize
+                );
             }
 
             if (showTopShadow) {
                 assert topLeftShadowPoint != null && topRightShadowPoint != null;
-                drawImage(g2, images[Position.TOP.ordinal()],
-                          topLeftShadowPoint.x + shadowSize,
-                          y,
-                          topRightShadowPoint.x - topLeftShadowPoint.x - shadowSize,
-                          shadowSize);
+                drawImage(
+                    g2, images[Position.TOP.ordinal()], topLeftShadowPoint.x + shadowSize, y,
+                    topRightShadowPoint.x - topLeftShadowPoint.x - shadowSize, shadowSize
+                );
             }
 
             if (showLeftShadow || showTopShadow) {
@@ -229,18 +222,12 @@ public class DropShadowBorder implements Border, Serializable {
             images = new BufferedImage[Position.count()];
 
             /*
-             * To draw a drop shadow, I have to:
-             * 1) Create a rounded rectangle
-             * 2) Create a BufferedImage to draw the rounded rect in
-             * 3) Translate the graphics for the image, so that the rectangle
-             * is centered in the drawn space. The border around the rectangle
-             * needs to be shadowWidth wide, so that there is space for the
-             * shadow to be drawn.
-             * 4) Draw the rounded rect as shadowColor, with an opacity of shadowOpacity
-             * 5) Create the BLUR_KERNEL
-             * 6) Blur the image
-             * 7) copy off the corners, sides, etc into images to be used for
-             * drawing the Border
+             * To draw a drop shadow, I have to: 1) Create a rounded rectangle 2) Create a BufferedImage to draw
+             * the rounded rect in 3) Translate the graphics for the image, so that the rectangle is centered in
+             * the drawn space. The border around the rectangle needs to be shadowWidth wide, so that there is
+             * space for the shadow to be drawn. 4) Draw the rounded rect as shadowColor, with an opacity of
+             * shadowOpacity 5) Create the BLUR_KERNEL 6) Blur the image 7) copy off the corners, sides, etc
+             * into images to be used for drawing the Border
              */
             int rectWidth = cornerSize + 1;
             RoundRectangle2D rect = new RoundRectangle2D.Double(0, 0, rectWidth, rectWidth, cornerSize, cornerSize);
@@ -249,8 +236,11 @@ public class DropShadowBorder implements Border, Serializable {
             Graphics2D buffer = (Graphics2D) image.getGraphics();
 
             try (Disposable d = buffer::dispose) {
-                buffer.setPaint(new Color(shadowColor.getRed(), shadowColor.getGreen(),
-                                          shadowColor.getBlue(), (int) (shadowOpacity * 255)));
+                buffer.setPaint(
+                    new Color(
+                        shadowColor.getRed(), shadowColor.getGreen(), shadowColor.getBlue(), (int) (shadowOpacity * 255)
+                    )
+                );
                 buffer.translate(shadowSize, shadowSize);
                 buffer.fill(rect);
             }
@@ -317,8 +307,9 @@ public class DropShadowBorder implements Border, Serializable {
     }
 
     /**
-     * Returns a new BufferedImage that represents a subregion of the given BufferedImage. (Note that this method does
-     * not use BufferedImage.getSubimage(), which will defeat image acceleration strategies on later JDKs.)
+     * Returns a new BufferedImage that represents a subregion of the given BufferedImage. (Note that
+     * this method does not use BufferedImage.getSubimage(), which will defeat image acceleration
+     * strategies on later JDKs.)
      */
     private BufferedImage getSubImage(final BufferedImage img, final int x, final int y, final int w, final int h) {
         BufferedImage ret = ImageUtil.createCompatibleTranslucentImage(w, h);
@@ -423,14 +414,7 @@ public class DropShadowBorder implements Border, Serializable {
     }
 
     private enum Position {
-        TOP,
-        TOP_LEFT,
-        LEFT,
-        BOTTOM_LEFT,
-        BOTTOM,
-        BOTTOM_RIGHT,
-        RIGHT,
-        TOP_RIGHT;
+        TOP, TOP_LEFT, LEFT, BOTTOM_LEFT, BOTTOM, BOTTOM_RIGHT, RIGHT, TOP_RIGHT;
 
         static int count() {
             return 8;

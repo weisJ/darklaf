@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.icons;
@@ -73,8 +70,9 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
      * @param imagePath   the image path.
      * @param width       the icon width.
      * @param height      the icon height.
-     * @param scalingMode One of {@link Image#SCALE_DEFAULT}, {@link Image#SCALE_FAST}, {@link Image#SCALE_REPLICATE},
-     *                    {@link Image#SCALE_AREA_AVERAGING}, {@link Image#SCALE_SMOOTH}
+     * @param scalingMode One of {@link Image#SCALE_DEFAULT}, {@link Image#SCALE_FAST},
+     *                    {@link Image#SCALE_REPLICATE}, {@link Image#SCALE_AREA_AVERAGING},
+     *                    {@link Image#SCALE_SMOOTH}
      */
     public DerivableImageIcon(final String imagePath, final int width, final int height, final int scalingMode) {
         this(() -> Toolkit.getDefaultToolkit().getImage(imagePath), width, height, scalingMode);
@@ -106,8 +104,9 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
      * @param url         the url to load the image from.
      * @param width       the icon width.
      * @param height      the icon height.
-     * @param scalingMode One of {@link Image#SCALE_DEFAULT}, {@link Image#SCALE_FAST}, {@link Image#SCALE_REPLICATE},
-     *                    {@link Image#SCALE_AREA_AVERAGING}, {@link Image#SCALE_SMOOTH}
+     * @param scalingMode One of {@link Image#SCALE_DEFAULT}, {@link Image#SCALE_FAST},
+     *                    {@link Image#SCALE_REPLICATE}, {@link Image#SCALE_AREA_AVERAGING},
+     *                    {@link Image#SCALE_SMOOTH}
      */
     public DerivableImageIcon(final URL url, final int width, final int height, final int scalingMode) {
         this(() -> Toolkit.getDefaultToolkit().getImage(url), width, height, scalingMode);
@@ -121,8 +120,9 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
         this(imageSupplier, width, height, DEFAULT_SCALING_MODE);
     }
 
-    public DerivableImageIcon(final Supplier<Image> imageSupplier, final int width, final int height,
-                              final int scalingMode) {
+    public DerivableImageIcon(
+            final Supplier<Image> imageSupplier, final int width, final int height, final int scalingMode
+    ) {
         this.width = width;
         this.height = height;
         this.scalingMode = scalingMode;
@@ -143,8 +143,9 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
      * Create a new derivable image icon with specified scalingMode.
      *
      * @param icon        the source icon.
-     * @param scalingMode One of {@link Image#SCALE_DEFAULT}, {@link Image#SCALE_FAST}, {@link Image#SCALE_REPLICATE},
-     *                    {@link Image#SCALE_AREA_AVERAGING}, {@link Image#SCALE_SMOOTH}
+     * @param scalingMode One of {@link Image#SCALE_DEFAULT}, {@link Image#SCALE_FAST},
+     *                    {@link Image#SCALE_REPLICATE}, {@link Image#SCALE_AREA_AVERAGING},
+     *                    {@link Image#SCALE_SMOOTH}
      */
     public DerivableImageIcon(final ImageIcon icon, final int scalingMode) {
         this(icon != null ? icon.getImage() : null, scalingMode);
@@ -162,14 +163,15 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
     }
 
     /**
-     * Create a new derivable image icon with specified scalingMode. If the source image doesnt match the specified
-     * dimensions it will be scaled accordingly.
+     * Create a new derivable image icon with specified scalingMode. If the source image doesnt match
+     * the specified dimensions it will be scaled accordingly.
      *
      * @param icon        the source icon.
      * @param width       the icon width.
      * @param height      the icon height.
-     * @param scalingMode One of {@link Image#SCALE_DEFAULT}, {@link Image#SCALE_FAST}, {@link Image#SCALE_REPLICATE},
-     *                    {@link Image#SCALE_AREA_AVERAGING}, {@link Image#SCALE_SMOOTH}
+     * @param scalingMode One of {@link Image#SCALE_DEFAULT}, {@link Image#SCALE_FAST},
+     *                    {@link Image#SCALE_REPLICATE}, {@link Image#SCALE_AREA_AVERAGING},
+     *                    {@link Image#SCALE_SMOOTH}
      */
     public DerivableImageIcon(final ImageIcon icon, final int width, final int height, final int scalingMode) {
         this(icon != null ? icon.getImage() : null, width, height, scalingMode);
@@ -189,16 +191,17 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
      * Create a new derivable image icon with specified scalingMode.
      *
      * @param img         the source image.
-     * @param scalingMode One of {@link Image#SCALE_DEFAULT}, {@link Image#SCALE_FAST}, {@link Image#SCALE_REPLICATE},
-     *                    {@link Image#SCALE_AREA_AVERAGING}, {@link Image#SCALE_SMOOTH}
+     * @param scalingMode One of {@link Image#SCALE_DEFAULT}, {@link Image#SCALE_FAST},
+     *                    {@link Image#SCALE_REPLICATE}, {@link Image#SCALE_AREA_AVERAGING},
+     *                    {@link Image#SCALE_SMOOTH}
      */
     public DerivableImageIcon(final Image img, final int scalingMode) {
         this(img, img != null ? img.getWidth(null) : 0, img != null ? img.getHeight(null) : 0, scalingMode);
     }
 
     /**
-     * Create a new derivable image icon with default scalingMode. If the source image doesnt match the specified
-     * dimensions it will be scaled accordingly.
+     * Create a new derivable image icon with default scalingMode. If the source image doesnt match the
+     * specified dimensions it will be scaled accordingly.
      *
      * @param img    the source image.
      * @param width  the icon width.
@@ -209,14 +212,15 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
     }
 
     /**
-     * Create a new derivable image icon with specified scalingMode. If the source image doesnt match the specified
-     * dimensions it will be scaled accordingly.
+     * Create a new derivable image icon with specified scalingMode. If the source image doesnt match
+     * the specified dimensions it will be scaled accordingly.
      *
      * @param img         the source image.
      * @param width       the icon width.
      * @param height      the icon height.
-     * @param scalingMode One of {@link Image#SCALE_DEFAULT}, {@link Image#SCALE_FAST}, {@link Image#SCALE_REPLICATE},
-     *                    {@link Image#SCALE_AREA_AVERAGING}, {@link Image#SCALE_SMOOTH}
+     * @param scalingMode One of {@link Image#SCALE_DEFAULT}, {@link Image#SCALE_FAST},
+     *                    {@link Image#SCALE_REPLICATE}, {@link Image#SCALE_AREA_AVERAGING},
+     *                    {@link Image#SCALE_SMOOTH}
      */
     public DerivableImageIcon(final Image img, final int width, final int height, final int scalingMode) {
         this.width = width;
@@ -292,11 +296,9 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
     }
 
     /**
-     * Gets the description of the image. This is meant to be a brief
-     * textual description of the object. For example, it might be
-     * presented to a blind user to give an indication of the purpose
-     * of the image.
-     * The description may be null.
+     * Gets the description of the image. This is meant to be a brief textual description of the object.
+     * For example, it might be presented to a blind user to give an indication of the purpose of the
+     * image. The description may be null.
      *
      * @return a brief textual description of the image
      */
@@ -305,10 +307,9 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
     }
 
     /**
-     * Sets the description of the image. This is meant to be a brief
-     * textual description of the object. For example, it might be
-     * presented to a blind user to give an indication of the purpose
-     * of the image.
+     * Sets the description of the image. This is meant to be a brief textual description of the object.
+     * For example, it might be presented to a blind user to give an indication of the purpose of the
+     * image.
      *
      * @param description a brief textual description of the image
      */
@@ -398,8 +399,7 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
             int width = icon.getIconWidth();
             int height = icon.getIconHeight();
             if (originalImage != null && width > 0 && height > 0) {
-                if (originalImage.getWidth(null) != width
-                    || originalImage.getHeight(null) != height) {
+                if (originalImage.getWidth(null) != width || originalImage.getHeight(null) != height) {
                     return originalImage.getScaledInstance(width, height, icon.scalingMode);
                 } else {
                     return originalImage;

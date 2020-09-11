@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.components.tabframe;
@@ -42,15 +39,16 @@ public interface TabFramePopup {
     String KEY_PEER_INSETS = "peerInsets";
 
     /**
-     * Get the current content pane. A popup may hold more than one content pane. In this case this method should return
-     * the component that is currently displayed.
+     * Get the current content pane. A popup may hold more than one content pane. In this case this
+     * method should return the component that is currently displayed.
      *
      * @return the current content pane.
      */
     Component getContentPane();
 
     /**
-     * Sets the content pane. This needn't replace the old content pane if this popup supports multiple content panes.
+     * Sets the content pane. This needn't replace the old content pane if this popup supports multiple
+     * content panes.
      *
      * @param contentPane the content pane to use.
      */
@@ -72,8 +70,10 @@ public interface TabFramePopup {
      * Close the popup.
      */
     default void close() {
-        if (getTabFrame() != null && getAlignment() != null && getIndex() >= 0
-            && getTabFrame().isSelected(getAlignment(), getIndex())) {
+        if (
+            getTabFrame() != null && getAlignment() != null && getIndex() >= 0
+                && getTabFrame().isSelected(getAlignment(), getIndex())
+        ) {
             getTabFrame().closeTab(getAlignment(), getIndex());
         }
     }
@@ -114,8 +114,8 @@ public interface TabFramePopup {
     void setIndex(int index);
 
     /**
-     * Sets the alignment position in the {{@link JTabFrame}}. This method should only be called from {{@link
-     * JTabFrame}}.
+     * Sets the alignment position in the {{@link JTabFrame}}. This method should only be called from
+     * {{@link JTabFrame}}.
      *
      * @param alignment the alignment position.
      */
@@ -125,8 +125,10 @@ public interface TabFramePopup {
      * Open the popup.
      */
     default void open() {
-        if (getTabFrame() != null && getAlignment() != null && getIndex() >= 0
-            && !getTabFrame().isSelected(getAlignment(), getIndex())) {
+        if (
+            getTabFrame() != null && getAlignment() != null && getIndex() >= 0
+                && !getTabFrame().isSelected(getAlignment(), getIndex())
+        ) {
             getTabFrame().closeTab(getAlignment(), getIndex());
         }
     }

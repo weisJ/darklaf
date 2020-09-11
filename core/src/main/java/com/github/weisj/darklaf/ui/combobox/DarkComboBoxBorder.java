@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.combobox;
@@ -59,8 +56,9 @@ public class DarkComboBoxBorder implements Border, UIResource {
     }
 
     @Override
-    public void paintBorder(final Component c, final Graphics g2, final int x, final int y, final int width,
-                            final int height) {
+    public void paintBorder(
+            final Component c, final Graphics g2, final int x, final int y, final int width, final int height
+    ) {
         JComboBox<?> comboBox = ui.getComboBox();
         AbstractButton arrowButton = ui.getArrowButton();
         if (comboBox == null || arrowButton == null) {
@@ -86,8 +84,7 @@ public class DarkComboBoxBorder implements Border, UIResource {
             } else {
                 g.setColor(borderColor);
             }
-            PaintUtil.paintLineBorder(g, bSize, bSize, width - 2 * bSize,
-                                      height - 2 * bSize, arcSize);
+            PaintUtil.paintLineBorder(g, bSize, bSize, width - 2 * bSize, height - 2 * bSize, arcSize);
         } else {
             paintCellBorder(c, width, height, isTableCellEditor, g, borderColor);
         }
@@ -103,8 +100,10 @@ public class DarkComboBoxBorder implements Border, UIResource {
         g.translate(-x, -y);
     }
 
-    protected void paintCellBorder(final Component c, final int width, final int height,
-                                   final boolean isTableCellEditor, final Graphics2D g, final Color borderColor) {
+    protected void paintCellBorder(
+            final Component c, final int width, final int height, final boolean isTableCellEditor, final Graphics2D g,
+            final Color borderColor
+    ) {
         g.setColor(borderColor);
         Component parent = c.getParent();
         if (isTableCellEditor && parent instanceof JTable) {
@@ -122,9 +121,9 @@ public class DarkComboBoxBorder implements Border, UIResource {
     @Override
     public Insets getBorderInsets(final Component c) {
         if (ComboBoxConstants.isTreeOrTableCellEditor(c)) {
-            return CellUtil.adjustEditorInsets(new InsetsUIResource(cellPadding.top, cellPadding.left,
-                                                                    cellPadding.bottom, cellPadding.right),
-                                               c);
+            return CellUtil.adjustEditorInsets(
+                new InsetsUIResource(cellPadding.top, cellPadding.left, cellPadding.bottom, cellPadding.right), c
+            );
         }
         if (c.getComponentOrientation().isLeftToRight()) {
             return new InsetsUIResource(boxPadding.top, boxPadding.left, boxPadding.bottom, borderSize);

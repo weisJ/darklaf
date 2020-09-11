@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.task;
@@ -58,13 +55,13 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
 
     private static final String ALL_FONTS = "__all__";
 
-    private static final Map<AttributedCharacterIterator.Attribute, Integer> ENABLE_KERNING = Collections.singletonMap(TextAttribute.KERNING,
-                                                                                                                       TextAttribute.KERNING_ON);
-    private static final Map<AttributedCharacterIterator.Attribute, Integer> DISABLE_KERNING = Collections.singletonMap(TextAttribute.KERNING,
-                                                                                                                        null);
+    private static final Map<AttributedCharacterIterator.Attribute, Integer> ENABLE_KERNING =
+        Collections.singletonMap(TextAttribute.KERNING, TextAttribute.KERNING_ON);
+    private static final Map<AttributedCharacterIterator.Attribute, Integer> DISABLE_KERNING =
+        Collections.singletonMap(TextAttribute.KERNING, null);
     /*
-     * On Catalina the are issues with font kerning and .AppleSystemUIFont.
-     * For now Helvetica Neue is used instead.
+     * On Catalina the are issues with font kerning and .AppleSystemUIFont. For now Helvetica Neue is
+     * used instead.
      */
     private static final String MAC_OS_CATALINA_FONT_NAME = ".AppleSystemUIFont";
     private static final String MAC_OS_CATALINA_FONT_NAME_FALLBACK = "Helvetica Neue";
@@ -82,8 +79,7 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
         }
 
         if (SystemInfo.isMacOSCatalina) {
-            defaults.put(RenderingHints.KEY_FRACTIONALMETRICS,
-                         RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+            defaults.put(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
         }
 
         if (systemKerningEnabled()) {
@@ -95,8 +91,9 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
                 Set<String> blockedFontSet = new HashSet<>(blockedFonts);
                 boolean enabledAll = ALL_FONTS.equals(allowedFonts.get(0));
 
-                setupKerningPerFont(defaults, key -> (enabledAll || allowedFontsSet.contains(key))
-                                                     && !blockedFontSet.contains(key));
+                setupKerningPerFont(
+                    defaults, key -> (enabledAll || allowedFontsSet.contains(key)) && !blockedFontSet.contains(key)
+                );
             }
         }
 
@@ -118,29 +115,29 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
             Map<?, ?> desktopHints = (Map<?, ?>) toolkit.getDesktopProperty(GraphicsUtil.DESKTOP_HINTS_KEY);
 
             Object aaHint = (desktopHints == null) ? null : desktopHints.get(RenderingHints.KEY_TEXT_ANTIALIASING);
-            if (aaHint != null
-                && aaHint != RenderingHints.VALUE_TEXT_ANTIALIAS_OFF
-                && aaHint != RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT) {
-                LOGGER.fine(String.format("Setting '%s' = '%s'",
-                                          RenderingHints.KEY_TEXT_ANTIALIASING, aaHint));
-                LOGGER.fine(String.format("Setting '%s' = '%s'",
-                                          RenderingHints.KEY_TEXT_LCD_CONTRAST,
-                                          RenderingHints.KEY_TEXT_LCD_CONTRAST));
+            if (
+                aaHint != null && aaHint != RenderingHints.VALUE_TEXT_ANTIALIAS_OFF
+                    && aaHint != RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT
+            ) {
+                LOGGER.fine(String.format("Setting '%s' = '%s'", RenderingHints.KEY_TEXT_ANTIALIASING, aaHint));
+                LOGGER.fine(
+                    String.format(
+                        "Setting '%s' = '%s'", RenderingHints.KEY_TEXT_LCD_CONTRAST,
+                        RenderingHints.KEY_TEXT_LCD_CONTRAST
+                    )
+                );
                 defaults.put(RenderingHints.KEY_TEXT_ANTIALIASING, aaHint);
-                defaults.put(RenderingHints.KEY_TEXT_LCD_CONTRAST,
-                             desktopHints.get(RenderingHints.KEY_TEXT_LCD_CONTRAST));
+                defaults
+                    .put(RenderingHints.KEY_TEXT_LCD_CONTRAST, desktopHints.get(RenderingHints.KEY_TEXT_LCD_CONTRAST));
             }
         }
     }
 
     private void loadFontProperties(final UIDefaults defaults) {
-        Properties fontSizeProps = PropertyLoader.loadProperties(DarkLaf.class,
-                                                                 FONT_SIZE_DEFAULTS_NAME,
-                                                                 FONT_PROPERTY_PATH);
+        Properties fontSizeProps =
+            PropertyLoader.loadProperties(DarkLaf.class, FONT_SIZE_DEFAULTS_NAME, FONT_PROPERTY_PATH);
         PropertyLoader.putProperties(fontSizeProps, defaults);
-        Properties fontProps = PropertyLoader.loadProperties(DarkLaf.class,
-                                                             FONT_DEFAULTS_NAME,
-                                                             FONT_PROPERTY_PATH);
+        Properties fontProps = PropertyLoader.loadProperties(DarkLaf.class, FONT_DEFAULTS_NAME, FONT_PROPERTY_PATH);
         PropertyLoader.putProperties(fontProps, defaults);
     }
 
@@ -170,13 +167,12 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     }
 
     private void setupKerningPerFont(final UIDefaults defaults, final Predicate<String> kerningPredicate) {
-        PropertyLoader.replacePropertiesOfType(Font.class, defaults,
-                                               e -> kerningPredicate.test(e.getKey().toString()),
-                                               f -> {
-                                                   Font font = f.deriveFont(ENABLE_KERNING);
-                                                   if (f instanceof UIResource) font = new DarkFontUIResource(font);
-                                                   return font;
-                                               });
+        PropertyLoader
+            .replacePropertiesOfType(Font.class, defaults, e -> kerningPredicate.test(e.getKey().toString()), f -> {
+                Font font = f.deriveFont(ENABLE_KERNING);
+                if (f instanceof UIResource) font = new DarkFontUIResource(font);
+                return font;
+            });
     }
 
     private void applyFontRule(final Theme currentTheme, final UIDefaults defaults) {
@@ -195,8 +191,7 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
             return font;
         }
         Font withRule = font.deriveFont(newSize);
-        if (font instanceof UIResource
-            && !(withRule instanceof UIResource)) {
+        if (font instanceof UIResource && !(withRule instanceof UIResource)) {
             withRule = new DarkFontUIResource(withRule);
         }
         return withRule;

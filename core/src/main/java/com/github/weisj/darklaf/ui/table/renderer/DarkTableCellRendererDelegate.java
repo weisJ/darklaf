@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.table.renderer;
@@ -52,19 +49,22 @@ public class DarkTableCellRendererDelegate extends TableCellRendererDelegate imp
     }
 
     @Override
-    public Component getTableCellRendererComponent(final JTable table, final Object value,
-                                                   final boolean isSelected, final boolean hasFocus,
-                                                   final int row, final int column) {
+    public Component getTableCellRendererComponent(
+            final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row,
+            final int column
+    ) {
         boolean booleanRenderer = TableConstants.useBooleanEditorForValue(value, table, column);
         TableCellRenderer renderer = booleanRenderer ? getBooleanRenderer(table) : super.getDelegate();
         Component component = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
         boolean isRowFocus = DarkTableCellFocusBorder.isRowFocusBorder(table)
-                             && table.getSelectionModel().getLeadSelectionIndex() == row;
+            && table.getSelectionModel().getLeadSelectionIndex() == row;
         boolean rowLeadSelection = table.getSelectionModel().getLeadSelectionIndex() == row;
         boolean columnLeadSelection = table.getColumnModel().getSelectionModel().getLeadSelectionIndex() == column;
-        if (rowLeadSelection && !columnLeadSelection
-            && PropertyUtil.getBooleanProperty(table, TableConstants.KEY_FULL_ROW_FOCUS_BORDER)) {
+        if (
+            rowLeadSelection && !columnLeadSelection
+                && PropertyUtil.getBooleanProperty(table, TableConstants.KEY_FULL_ROW_FOCUS_BORDER)
+        ) {
             columnLeadSelection = true;
         }
         boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table) && rowLeadSelection && columnLeadSelection;
@@ -78,9 +78,10 @@ public class DarkTableCellRendererDelegate extends TableCellRendererDelegate imp
         return component;
     }
 
-    public void setupBorderStyle(final JTable table, final int row, final int column,
-                                 final JComponent component, final boolean isLeadSelectionCell,
-                                 final boolean isRowFocus) {
+    public void setupBorderStyle(
+            final JTable table, final int row, final int column, final JComponent component,
+            final boolean isLeadSelectionCell, final boolean isRowFocus
+    ) {
         Border focusBorder = UIManager.getBorder("Table.focusSelectedCellHighlightBorder");
         if ((isRowFocus || isLeadSelectionCell) && !table.isEditing()) {
             PropertyUtil.installBorder(component, focusBorder);

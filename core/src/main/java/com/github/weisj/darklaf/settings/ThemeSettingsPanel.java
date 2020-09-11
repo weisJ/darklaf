@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.settings;
@@ -109,10 +106,16 @@ public class ThemeSettingsPanel extends JPanel {
 
         settingsConfiguration.setSystemPreferencesEnabled(settingsConfiguration.isSystemPreferencesEnabled());
 
-        enableButtonGroup(bgAccent, !settingsConfiguration.isAccentColorFollowsSystem()
-                                    && settingsConfiguration.getSelectedTheme().supportsCustomAccentColor());
-        enableButtonGroup(bgSelection, !settingsConfiguration.isSelectionColorFollowsSystem()
-                                       && settingsConfiguration.getSelectedTheme().supportsCustomSelectionColor());
+        enableButtonGroup(
+            bgAccent,
+            !settingsConfiguration.isAccentColorFollowsSystem()
+                && settingsConfiguration.getSelectedTheme().supportsCustomAccentColor()
+        );
+        enableButtonGroup(
+            bgSelection,
+            !settingsConfiguration.isSelectionColorFollowsSystem()
+                && settingsConfiguration.getSelectedTheme().supportsCustomSelectionColor()
+        );
         themeComboBox.setEnabled(!settingsConfiguration.isThemeFollowsSystem());
         fontSlider.setEnabled(!settingsConfiguration.isFontSizeFollowsSystem());
     }
@@ -121,14 +124,14 @@ public class ThemeSettingsPanel extends JPanel {
         ThemeSettings.getInstance().setConfiguration(settingsConfiguration);
     }
 
-    private boolean updateButtonGroup(final ButtonGroup bg, final Color currentColor,
-                                      final AbstractButton defaultButton,
-                                      final Color defaultColor) {
+    private boolean updateButtonGroup(
+            final ButtonGroup bg, final Color currentColor, final AbstractButton defaultButton, final Color defaultColor
+    ) {
         Enumeration<AbstractButton> buttons = bg.getElements();
         while (buttons.hasMoreElements()) {
             ColoredRadioButton radioButton = ((ColoredRadioButton) buttons.nextElement());
             boolean selected = Objects.equals(radioButton.getColor(), currentColor)
-                               || (radioButton == defaultButton && Objects.equals(defaultColor, currentColor));
+                || (radioButton == defaultButton && Objects.equals(defaultColor, currentColor));
             bg.setSelected(radioButton.getModel(), selected);
             if (selected) return true;
         }
@@ -172,35 +175,46 @@ public class ThemeSettingsPanel extends JPanel {
 
         bgSelection = new ButtonGroup();
         defaultSelectionColor = createDefaultColor("themeSelectionColor");
-        defaultSelection = addColoredButton(bgSelection, selectionBox,
-                                            defaultSelectionColor, ColoredRadioButton.DEFAULT_COLOR,
-                                            resourceBundle.getString("color_default"));
-        AbstractButton selectionBlue = addColoredButton(bgSelection, selectionBox,
-                                                        MacOSColors.SELECTION_BLUE, MacOSColors.ACCENT_BLUE,
-                                                        resourceBundle.getString("color_blue"));
-        AbstractButton selectionPurple = addColoredButton(bgSelection, selectionBox,
-                                                          MacOSColors.SELECTION_PURPLE, MacOSColors.ACCENT_LILAC,
-                                                          resourceBundle.getString("color_purple"));
-        AbstractButton selectionPink = addColoredButton(bgSelection, selectionBox,
-                                                        MacOSColors.SELECTION_PINK, MacOSColors.ACCENT_ROSE,
-                                                        resourceBundle.getString("color_pink"));
-        AbstractButton selectionRed = addColoredButton(bgSelection, selectionBox,
-                                                       MacOSColors.SELECTION_RED, MacOSColors.ACCENT_RED,
-                                                       resourceBundle.getString("color_red"));
-        AbstractButton selectionOrange = addColoredButton(bgSelection, selectionBox,
-                                                          MacOSColors.SELECTION_ORANGE, MacOSColors.ACCENT_ORANGE,
-                                                          resourceBundle.getString("color_orange"));
-        AbstractButton selectionYellow = addColoredButton(bgSelection, selectionBox,
-                                                          MacOSColors.SELECTION_YELLOW, MacOSColors.ACCENT_YELLOW,
-                                                          resourceBundle.getString("color_yellow"));
-        AbstractButton selectionGreen = addColoredButton(bgSelection, selectionBox,
-                                                         MacOSColors.SELECTION_GREEN, MacOSColors.ACCENT_GREEN,
-                                                         resourceBundle.getString("color_green"));
-        AbstractButton selectionGraphite = addColoredButton(bgSelection, selectionBox,
-                                                            MacOSColors.SELECTION_GRAPHITE, MacOSColors.ACCENT_GRAPHITE,
-                                                            resourceBundle.getString("color_gray"));
-        customSelection = addCustomButton(bgSelection, selectionBox, currentSelectionColor, defaultSelectionColor,
-                                          resourceBundle.getString("color_custom"));
+        defaultSelection = addColoredButton(
+            bgSelection, selectionBox, defaultSelectionColor, ColoredRadioButton.DEFAULT_COLOR,
+            resourceBundle.getString("color_default")
+        );
+        AbstractButton selectionBlue = addColoredButton(
+            bgSelection, selectionBox, MacOSColors.SELECTION_BLUE, MacOSColors.ACCENT_BLUE,
+            resourceBundle.getString("color_blue")
+        );
+        AbstractButton selectionPurple = addColoredButton(
+            bgSelection, selectionBox, MacOSColors.SELECTION_PURPLE, MacOSColors.ACCENT_LILAC,
+            resourceBundle.getString("color_purple")
+        );
+        AbstractButton selectionPink = addColoredButton(
+            bgSelection, selectionBox, MacOSColors.SELECTION_PINK, MacOSColors.ACCENT_ROSE,
+            resourceBundle.getString("color_pink")
+        );
+        AbstractButton selectionRed = addColoredButton(
+            bgSelection, selectionBox, MacOSColors.SELECTION_RED, MacOSColors.ACCENT_RED,
+            resourceBundle.getString("color_red")
+        );
+        AbstractButton selectionOrange = addColoredButton(
+            bgSelection, selectionBox, MacOSColors.SELECTION_ORANGE, MacOSColors.ACCENT_ORANGE,
+            resourceBundle.getString("color_orange")
+        );
+        AbstractButton selectionYellow = addColoredButton(
+            bgSelection, selectionBox, MacOSColors.SELECTION_YELLOW, MacOSColors.ACCENT_YELLOW,
+            resourceBundle.getString("color_yellow")
+        );
+        AbstractButton selectionGreen = addColoredButton(
+            bgSelection, selectionBox, MacOSColors.SELECTION_GREEN, MacOSColors.ACCENT_GREEN,
+            resourceBundle.getString("color_green")
+        );
+        AbstractButton selectionGraphite = addColoredButton(
+            bgSelection, selectionBox, MacOSColors.SELECTION_GRAPHITE, MacOSColors.ACCENT_GRAPHITE,
+            resourceBundle.getString("color_gray")
+        );
+        customSelection = addCustomButton(
+            bgSelection, selectionBox, currentSelectionColor, defaultSelectionColor,
+            resourceBundle.getString("color_custom")
+        );
 
         JComponent accentBox = Box.createHorizontalBox();
         JLabel accentColorLabel = new JLabel(resourceBundle.getString("label_accent_color"));
@@ -208,26 +222,37 @@ public class ThemeSettingsPanel extends JPanel {
 
         defaultAccentColor = createDefaultColor("themeAccentColor");
         bgAccent = new ButtonGroup();
-        defaultAccent = addColoredButton(bgAccent, accentBox, ColoredRadioButton.DEFAULT_COLOR, defaultSelection,
-                                         resourceBundle.getString("color_default"));
-        addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_BLUE, selectionBlue,
-                         resourceBundle.getString("color_blue"));
-        addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_LILAC, selectionPurple,
-                         resourceBundle.getString("color_lilac"));
-        addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_ROSE, selectionPink,
-                         resourceBundle.getString("color_rose"));
-        addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_RED, selectionRed,
-                         resourceBundle.getString("color_red"));
-        addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_ORANGE, selectionOrange,
-                         resourceBundle.getString("color_orange"));
-        addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_YELLOW, selectionYellow,
-                         resourceBundle.getString("color_yellow"));
-        addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_GREEN, selectionGreen,
-                         resourceBundle.getString("color_green"));
-        addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_GRAPHITE, selectionGraphite,
-                         resourceBundle.getString("color_gray"));
-        customAccent = addCustomButton(bgAccent, accentBox, currentAccentColor, defaultAccentColor,
-                                       resourceBundle.getString("color_custom"));
+        defaultAccent = addColoredButton(
+            bgAccent, accentBox, ColoredRadioButton.DEFAULT_COLOR, defaultSelection,
+            resourceBundle.getString("color_default")
+        );
+        addColoredButton(
+            bgAccent, accentBox, MacOSColors.ACCENT_BLUE, selectionBlue, resourceBundle.getString("color_blue")
+        );
+        addColoredButton(
+            bgAccent, accentBox, MacOSColors.ACCENT_LILAC, selectionPurple, resourceBundle.getString("color_lilac")
+        );
+        addColoredButton(
+            bgAccent, accentBox, MacOSColors.ACCENT_ROSE, selectionPink, resourceBundle.getString("color_rose")
+        );
+        addColoredButton(
+            bgAccent, accentBox, MacOSColors.ACCENT_RED, selectionRed, resourceBundle.getString("color_red")
+        );
+        addColoredButton(
+            bgAccent, accentBox, MacOSColors.ACCENT_ORANGE, selectionOrange, resourceBundle.getString("color_orange")
+        );
+        addColoredButton(
+            bgAccent, accentBox, MacOSColors.ACCENT_YELLOW, selectionYellow, resourceBundle.getString("color_yellow")
+        );
+        addColoredButton(
+            bgAccent, accentBox, MacOSColors.ACCENT_GREEN, selectionGreen, resourceBundle.getString("color_green")
+        );
+        addColoredButton(
+            bgAccent, accentBox, MacOSColors.ACCENT_GRAPHITE, selectionGraphite, resourceBundle.getString("color_gray")
+        );
+        customAccent = addCustomButton(
+            bgAccent, accentBox, currentAccentColor, defaultAccentColor, resourceBundle.getString("color_custom")
+        );
 
         fontSlider = createFontSlider();
         JLabel fontSizeLabel = new JLabel(resourceBundle.getString("label_font_size"));
@@ -235,27 +260,23 @@ public class ThemeSettingsPanel extends JPanel {
 
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createTitledBorder(resourceBundle.getString("title_general")));
-        panel.add(getTwoColumnLayout(new JLabel[]{themeLabel,
-                                                  accentColorLabel,
-                                                  selectionColorLabel,
-                                                  fontSizeLabel},
-                                     new JComponent[]{themeComboBox,
-                                                      accentBox,
-                                                      selectionBox,
-                                                      fontSlider}));
+        panel.add(
+            getTwoColumnLayout(
+                new JLabel[] {themeLabel, accentColorLabel, selectionColorLabel, fontSizeLabel},
+                new JComponent[] {themeComboBox, accentBox, selectionBox, fontSlider}
+            )
+        );
         return panel;
     }
 
-    protected ColoredRadioButton addCustomButton(final ButtonGroup bg, final JComponent parent,
-                                                 final Color currentColor, final Color defaultColor,
-                                                 final String tipText) {
-        Supplier<Color> supplier = () -> Optional.ofNullable(currentColor)
-                                                 .orElse(defaultColor);
+    protected ColoredRadioButton addCustomButton(
+            final ButtonGroup bg, final JComponent parent, final Color currentColor, final Color defaultColor,
+            final String tipText
+    ) {
+        Supplier<Color> supplier = () -> Optional.ofNullable(currentColor).orElse(defaultColor);
         ColoredRadioButton button = addColoredButton(bg, parent, supplier, tipText);
-        QuickColorChooser.attachToComponent(button, button::setColor,
-                                            () -> Optional.ofNullable(button.getColor())
-                                                          .orElse(supplier.get()),
-                                            button::isSelected);
+        QuickColorChooser
+            .attachToComponent(button, button::setColor, () -> Optional.ofNullable(button.getColor()).orElse(supplier.get()), button::isSelected);
         return button;
     }
 
@@ -271,10 +292,10 @@ public class ThemeSettingsPanel extends JPanel {
         setXColor(selectionColor, bgSelection, customSelection, defaultSelection, defaultSelectionColor);
     }
 
-    protected void setXColor(final Color color, final ButtonGroup bg,
-                             final ColoredRadioButton customButton,
-                             final ColoredRadioButton defaultButton,
-                             final Color defaultColor) {
+    protected void setXColor(
+            final Color color, final ButtonGroup bg, final ColoredRadioButton customButton,
+            final ColoredRadioButton defaultButton, final Color defaultColor
+    ) {
         if (color == null) {
             defaultButton.setSelected(true);
             return;
@@ -292,19 +313,16 @@ public class ThemeSettingsPanel extends JPanel {
                 return getValue() + "%";
             }
         };
-        ToolTipContext context = new ToolTipContext().setAlignment(Alignment.CENTER)
-                                                     .setCenterAlignment(Alignment.NORTH)
-                                                     .setUseBestFit(true)
-                                                     .setToolTipRectSupplier(e -> {
-                                                         SliderUI ui = fontSlider.getUI();
-                                                         if (ui instanceof DarkSliderUI) {
-                                                             Rectangle r = ((DarkSliderUI) ui).getThumbRect();
-                                                             r.x -= 1;
-                                                             return r;
-                                                         }
-                                                         return new Rectangle(0, 0, fontSlider.getWidth(),
-                                                                              fontSlider.getHeight());
-                                                     });
+        ToolTipContext context = new ToolTipContext().setAlignment(Alignment.CENTER).setCenterAlignment(Alignment.NORTH)
+            .setUseBestFit(true).setToolTipRectSupplier(e -> {
+                SliderUI ui = fontSlider.getUI();
+                if (ui instanceof DarkSliderUI) {
+                    Rectangle r = ((DarkSliderUI) ui).getThumbRect();
+                    r.x -= 1;
+                    return r;
+                }
+                return new Rectangle(0, 0, fontSlider.getWidth(), fontSlider.getHeight());
+            });
         fontSlider.putClientProperty(DarkSliderUI.KEY_INSTANT_SCROLL, true);
         fontSlider.putClientProperty(ToolTipConstants.KEY_CONTEXT, context);
         fontSlider.putClientProperty(ToolTipConstants.KEY_STYLE, ToolTipConstants.VARIANT_BALLOON);
@@ -414,13 +432,13 @@ public class ThemeSettingsPanel extends JPanel {
 
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createTitledBorder(resourceBundle.getString("title_monitoring")));
-        panel.add(getTwoColumnLayout(new JComponent[]{enabledSystemPreferences,
-                                                      themeFollowsSystem,
-                                                      accentColorFollowsSystem},
-                                     new JComponent[]{new JLabel(),
-                                                      fontSizeFollowsSystem,
-                                                      selectionColorFollowsSystem},
-                                     GroupLayout.Alignment.LEADING, GroupLayout.Alignment.LEADING));
+        panel.add(
+            getTwoColumnLayout(
+                new JComponent[] {enabledSystemPreferences, themeFollowsSystem, accentColorFollowsSystem},
+                new JComponent[] {new JLabel(), fontSizeFollowsSystem, selectionColorFollowsSystem},
+                GroupLayout.Alignment.LEADING, GroupLayout.Alignment.LEADING
+            )
+        );
         return panel;
     }
 
@@ -428,12 +446,12 @@ public class ThemeSettingsPanel extends JPanel {
         return getTwoColumnLayout(left, right, GroupLayout.Alignment.TRAILING, GroupLayout.Alignment.LEADING);
     }
 
-    private JComponent getTwoColumnLayout(final JComponent[] left, final JComponent[] right,
-                                          final GroupLayout.Alignment leftColumn,
-                                          final GroupLayout.Alignment rightColumn) {
+    private JComponent getTwoColumnLayout(
+            final JComponent[] left, final JComponent[] right, final GroupLayout.Alignment leftColumn,
+            final GroupLayout.Alignment rightColumn
+    ) {
         if (left.length != right.length) {
-            String s = left.length + " labels supplied for "
-                       + right.length + " fields!";
+            String s = left.length + " labels supplied for " + right.length + " fields!";
             throw new IllegalArgumentException(s);
         }
         JComponent panel = new JPanel();
@@ -465,8 +483,9 @@ public class ThemeSettingsPanel extends JPanel {
             verticalComponentGroup.addComponent(field, p, p, p);
         }
         for (int i = 0; i < left.length; i++) {
-            verticalGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                                         .addComponent(left[i]).addComponent(right[i], p, p, p));
+            verticalGroup.addGroup(
+                layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(left[i]).addComponent(right[i], p, p, p)
+            );
         }
         return panel;
     }
@@ -478,29 +497,32 @@ public class ThemeSettingsPanel extends JPanel {
         }
     }
 
-    private ColoredRadioButton addColoredButton(final ButtonGroup bg, final JComponent parent,
-                                                final Color color, final String tipText) {
+    private ColoredRadioButton addColoredButton(
+            final ButtonGroup bg, final JComponent parent, final Color color, final String tipText
+    ) {
         return addColoredButton(bg, parent, color, color, tipText);
     }
 
-    private ColoredRadioButton addColoredButton(final ButtonGroup bg, final JComponent parent,
-                                                final Color color, final AbstractButton peer,
-                                                final String tipText) {
+    private ColoredRadioButton addColoredButton(
+            final ButtonGroup bg, final JComponent parent, final Color color, final AbstractButton peer,
+            final String tipText
+    ) {
         return addColoredButton(bg, parent, color, color, peer, tipText);
     }
 
-    private ColoredRadioButton addColoredButton(final ButtonGroup bg, final JComponent parent,
-                                                final Color color, final Color focusColor,
-                                                final String tipText) {
+    private ColoredRadioButton addColoredButton(
+            final ButtonGroup bg, final JComponent parent, final Color color, final Color focusColor,
+            final String tipText
+    ) {
         return addColoredButton(bg, parent, color, focusColor, null, tipText);
     }
 
-    private ColoredRadioButton addColoredButton(final ButtonGroup bg, final JComponent parent,
-                                                final Color color, final Color focusColor,
-                                                final AbstractButton peer,
-                                                final String tipText) {
-        ColoredRadioButton button = addColoredButtonImpl(new ColoredRadioButton(null, color, focusColor),
-                                                         bg, parent, tipText);
+    private ColoredRadioButton addColoredButton(
+            final ButtonGroup bg, final JComponent parent, final Color color, final Color focusColor,
+            final AbstractButton peer, final String tipText
+    ) {
+        ColoredRadioButton button =
+            addColoredButtonImpl(new ColoredRadioButton(null, color, focusColor), bg, parent, tipText);
         if (peer != null) {
             button.addActionListener(e -> {
                 if (button.isSelected()) {
@@ -511,15 +533,16 @@ public class ThemeSettingsPanel extends JPanel {
         return button;
     }
 
-    private ColoredRadioButton addColoredButton(final ButtonGroup bg, final JComponent parent,
-                                                final Supplier<Color> colorSupplier, final String tipText) {
+    private ColoredRadioButton addColoredButton(
+            final ButtonGroup bg, final JComponent parent, final Supplier<Color> colorSupplier, final String tipText
+    ) {
         return addColoredButton(bg, parent, colorSupplier, colorSupplier, tipText);
     }
 
-    private ColoredRadioButton addColoredButton(final ButtonGroup bg, final JComponent parent,
-                                                final Supplier<Color> colorSupplier,
-                                                final Supplier<Color> focusColorSupplier,
-                                                final String tipText) {
+    private ColoredRadioButton addColoredButton(
+            final ButtonGroup bg, final JComponent parent, final Supplier<Color> colorSupplier,
+            final Supplier<Color> focusColorSupplier, final String tipText
+    ) {
         return addColoredButtonImpl(new ColoredRadioButton(null, null) {
             {
                 addActionListener(e -> getColor());
@@ -536,9 +559,9 @@ public class ThemeSettingsPanel extends JPanel {
         }, bg, parent, tipText);
     }
 
-    private ColoredRadioButton addColoredButtonImpl(final ColoredRadioButton button,
-                                                    final ButtonGroup bg, final JComponent parent,
-                                                    final String tipText) {
+    private ColoredRadioButton addColoredButtonImpl(
+            final ColoredRadioButton button, final ButtonGroup bg, final JComponent parent, final String tipText
+    ) {
         setupButton(button, bg, tipText);
         parent.add(button);
         return button;
@@ -547,8 +570,8 @@ public class ThemeSettingsPanel extends JPanel {
     private void setupButton(final ColoredRadioButton button, final ButtonGroup bg, final String tipText) {
         bg.add(button);
         button.setName(tipText);
-        ToolTipContext context = new ToolTipContext().setAlignment(Alignment.CENTER)
-                                                     .setCenterAlignment(Alignment.NORTH);
+        ToolTipContext context =
+            new ToolTipContext().setAlignment(Alignment.CENTER).setCenterAlignment(Alignment.NORTH);
         button.setToolTipText(tipText);
         button.putClientProperty(ToolTipConstants.KEY_STYLE, ToolTipConstants.VARIANT_BALLOON);
         button.putClientProperty(ToolTipConstants.KEY_CONTEXT, context);
@@ -605,19 +628,15 @@ public class ThemeSettingsPanel extends JPanel {
         }
 
         private Color getAccentColor(final Theme theme, final boolean useThemeColor) {
-            return theme.supportsCustomAccentColor()
-                    ? useThemeColor
-                            ? theme.getAccentColorRule().getAccentColor()
-                            : getSelectedColor(bgAccent, defaultAccent)
-                    : null;
+            return theme.supportsCustomAccentColor() ? useThemeColor ? theme.getAccentColorRule().getAccentColor()
+                : getSelectedColor(bgAccent, defaultAccent) : null;
         }
 
         private Color getSelectionColor(final Theme theme, final boolean useThemeColor) {
             return theme.supportsCustomSelectionColor()
-                    ? useThemeColor
-                            ? theme.getAccentColorRule().getSelectionColor()
-                            : getSelectedColor(bgSelection, defaultSelection)
-                    : null;
+                ? useThemeColor ? theme.getAccentColorRule().getSelectionColor()
+                    : getSelectedColor(bgSelection, defaultSelection)
+                : null;
         }
 
         @Override
@@ -628,9 +647,8 @@ public class ThemeSettingsPanel extends JPanel {
 
         private FontSizeRule getFontSizeRule(final Theme theme, final PreferredThemeStyle preferredThemeStyle) {
             if (theme == null) return FontSizeRule.getDefault();
-            return isFontSizeFollowsSystem()
-                    ? preferredThemeStyle.getFontSizeRule()
-                    : FontSizeRule.relativeAdjustment(fontSlider.getValue()); // Todo
+            return isFontSizeFollowsSystem() ? preferredThemeStyle.getFontSizeRule()
+                : FontSizeRule.relativeAdjustment(fontSlider.getValue()); // Todo
         }
 
         @Override
@@ -639,9 +657,7 @@ public class ThemeSettingsPanel extends JPanel {
         }
 
         private Theme getTheme(final PreferredThemeStyle preferredThemeStyle) {
-            return isThemeFollowsSystem()
-                    ? LafManager.themeForPreferredStyle(preferredThemeStyle)
-                    : getSelectedTheme();
+            return isThemeFollowsSystem() ? LafManager.themeForPreferredStyle(preferredThemeStyle) : getSelectedTheme();
         }
 
         private Theme getSelectedTheme() {
@@ -651,11 +667,12 @@ public class ThemeSettingsPanel extends JPanel {
         @Override
         public void setSystemPreferencesEnabled(final boolean enabled) {
             TristateState state = TristateState.DESELECTED;
-            if (enabled
-                && (isFontSizeFollowsSystem() || !fontSizeFollowsSystem.isEnabled())
-                && (isThemeFollowsSystem() || !themeFollowsSystem.isEnabled())
-                && (isAccentColorFollowsSystem() || !accentColorFollowsSystem.isEnabled())
-                && (isSelectionColorFollowsSystem() || !selectionColorFollowsSystem.isEnabled())) {
+            if (
+                enabled && (isFontSizeFollowsSystem() || !fontSizeFollowsSystem.isEnabled())
+                    && (isThemeFollowsSystem() || !themeFollowsSystem.isEnabled())
+                    && (isAccentColorFollowsSystem() || !accentColorFollowsSystem.isEnabled())
+                    && (isSelectionColorFollowsSystem() || !selectionColorFollowsSystem.isEnabled())
+            ) {
                 state = TristateState.SELECTED;
             } else if (enabled) {
                 enabledSystemPreferences.getTristateModel().setIndeterminate();

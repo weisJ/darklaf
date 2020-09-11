@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.table.renderer;
@@ -47,7 +44,8 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
     private final JToggleButton editorCheckBox = new DarkCellRendererToggleButton.CellCheckBox(true);
     private final DarkTableCellEditorToggleButton checkBoxEditor = new DarkTableCellEditorToggleButton(editorCheckBox);
     private final JToggleButton editorRadioButton = new DarkCellRendererToggleButton.CellRadioButton(true);
-    private final DarkTableCellEditorToggleButton radioButtonEditor = new DarkTableCellEditorToggleButton(editorRadioButton);
+    private final DarkTableCellEditorToggleButton radioButtonEditor =
+        new DarkTableCellEditorToggleButton(editorRadioButton);
 
     private boolean isBooleanEditor;
     private TableCellEditor currentEditor;
@@ -93,8 +91,8 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
                 Rectangle rect = table.getCellRect(row, col, false);
                 p.x -= rect.x;
                 p.y -= rect.y;
-                JToggleButton editor = getBooleanEditor(table).getTableCellEditorComponent(table, true,
-                                                                                           false, row, col);
+                JToggleButton editor =
+                    getBooleanEditor(table).getTableCellEditorComponent(table, true, false, row, col);
                 editor.setBounds(rect);
                 return editor.contains(p);
             }
@@ -103,8 +101,9 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
     }
 
     @Override
-    public Component getTableCellEditorComponent(final JTable table, final Object value, final boolean isSelected,
-                                                 final int row, final int column) {
+    public Component getTableCellEditorComponent(
+            final JTable table, final Object value, final boolean isSelected, final int row, final int column
+    ) {
         isBooleanEditor = TableConstants.useBooleanEditorForValue(value, table, column);
         currentEditor = isBooleanEditor ? getBooleanEditor(table) : getDelegate();
 
@@ -113,25 +112,28 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
         return editor;
     }
 
-    protected Component prepareEditorComponent(final Component editor, final JTable table, final Object value,
-                                               final boolean isSelected,
-                                               final int row, final int column) {
+    protected Component prepareEditorComponent(
+            final Component editor, final JTable table, final Object value, final boolean isSelected, final int row,
+            final int column
+    ) {
         return prepareEditor(editor, table, value, isSelected, row, column);
     }
 
-    public static Component prepareEditor(final Component editor, final JTable table, final Object value,
-                                          final boolean isSelected,
-                                          final int row, final int column) {
+    public static Component prepareEditor(
+            final Component editor, final JTable table, final Object value, final boolean isSelected, final int row,
+            final int column
+    ) {
         Component renderer = table.getCellRenderer(row, column)
-                                  .getTableCellRendererComponent(table, value, isSelected, false, row, column);
+            .getTableCellRendererComponent(table, value, isSelected, false, row, column);
         setupEditorComponent(editor, value, renderer);
         Component comp = applyRendererIcon(editor, renderer);
         CellUtil.setupTableBackground(comp, table, false, row);
         return comp;
     }
 
-    protected static void setupEditorComponent(final Component editorComponent, final Object value,
-                                               final Component rendererComp) {
+    protected static void setupEditorComponent(
+            final Component editorComponent, final Object value, final Component rendererComp
+    ) {
         if (editorComponent instanceof JSpinner) {
             int alignment = getHorizontalAlignment(rendererComp);
             if (alignment >= 0) {
@@ -167,8 +169,10 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
     }
 
     protected DarkTableCellEditorToggleButton getBooleanEditor(final JTable table) {
-        if (PropertyUtil.isPropertyEqual(table, DarkTableUI.KEY_BOOLEAN_RENDER_TYPE,
-                                         DarkTableUI.RENDER_TYPE_RADIOBUTTON)) {
+        if (
+            PropertyUtil
+                .isPropertyEqual(table, DarkTableUI.KEY_BOOLEAN_RENDER_TYPE, DarkTableUI.RENDER_TYPE_RADIOBUTTON)
+        ) {
             return radioButtonEditor;
         }
         return checkBoxEditor;

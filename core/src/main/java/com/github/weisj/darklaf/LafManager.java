@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf;
@@ -60,7 +57,8 @@ public final class LafManager {
     private static final List<Theme> registeredThemes = new ArrayList<>();
     private static final Collection<DefaultsAdjustmentTask> uiDefaultsTasks = new ArrayList<>();
     private static final Collection<DefaultsInitTask> uiInitTasks = new ArrayList<>();
-    private static final ThemeEventSupport<ThemeChangeEvent, ThemeChangeListener> eventSupport = new ThemeEventSupport<>();
+    private static final ThemeEventSupport<ThemeChangeEvent, ThemeChangeListener> eventSupport =
+        new ThemeEventSupport<>();
 
     static {
         setLogLevel(Level.WARNING);
@@ -68,8 +66,7 @@ public final class LafManager {
     }
 
     /**
-     * Enable logging for the Look and Feel.
-     * true means Level.INFO, false Level.SEVERE.
+     * Enable logging for the Look and Feel. true means Level.INFO, false Level.SEVERE.
      *
      * @see              #setLogLevel(Level)
      * @param logEnabled true if messages should be logged.
@@ -98,8 +95,8 @@ public final class LafManager {
     }
 
     /**
-     * Returns whether custom decorations should be used. If this returns true decorations still might not be used if
-     * the theme or platform don't support them.
+     * Returns whether custom decorations should be used. If this returns true decorations still might
+     * not be used if the theme or platform don't support them.
      *
      * @return true if decorations should be used.
      */
@@ -108,8 +105,8 @@ public final class LafManager {
     }
 
     /**
-     * Set globally whether decorations are enabled. By default, this is true. Decorations are used if this value is set
-     * to true and the current platform and theme support custom decorations.
+     * Set globally whether decorations are enabled. By default, this is true. Decorations are used if
+     * this value is set to true and the current platform and theme support custom decorations.
      *
      * @param enabled true if decorations should be used if available.
      */
@@ -122,11 +119,12 @@ public final class LafManager {
     }
 
     /**
-     * Enabled whether changes in the preferred theme style should be reported to {@link ThemePreferenceListener}s. On
-     * some platforms this setting may do nothing.
+     * Enabled whether changes in the preferred theme style should be reported to
+     * {@link ThemePreferenceListener}s. On some platforms this setting may do nothing.
      * <p>
-     * Warning: If preference reporting is enabled it <b>needs</b> to be disabled before closing the program. Not doing
-     * so can result in memory leaks and prevent the classloader from being garbage collected.
+     * Warning: If preference reporting is enabled it <b>needs</b> to be disabled before closing the
+     * program. Not doing so can result in memory leaks and prevent the classloader from being garbage
+     * collected.
      *
      * @param enabled true if changes should be reported.
      */
@@ -136,7 +134,8 @@ public final class LafManager {
     }
 
     /**
-     * Returns whether changes to the preferred theme style should be reported to {@link ThemePreferenceListener}s.
+     * Returns whether changes to the preferred theme style should be reported to
+     * {@link ThemePreferenceListener}s.
      *
      * @return true if enabled and currently reporting.
      */
@@ -145,8 +144,8 @@ public final class LafManager {
     }
 
     /**
-     * Adds a {@link ThemePreferenceListener}. If preference change reporting is enabled the handler will receive events
-     * if preferences have changed.
+     * Adds a {@link ThemePreferenceListener}. If preference change reporting is enabled the handler
+     * will receive events if preferences have changed.
      *
      * @param listener the listener to add.
      * @see            ThemePreferenceListener
@@ -188,8 +187,8 @@ public final class LafManager {
     }
 
     /**
-     * Gets the preferred theme style. If theme preference change reporting is enabled this may use native os settings
-     * to determine these values.
+     * Gets the preferred theme style. If theme preference change reporting is enabled this may use
+     * native os settings to determine these values.
      *
      * @return the preferred theme style.
      * @see    #isPreferenceChangeReportingEnabled()
@@ -200,8 +199,8 @@ public final class LafManager {
     }
 
     /**
-     * Get the current theme provider. The theme provider is responsible the produce available themes for a given
-     * preferred theme style.
+     * Get the current theme provider. The theme provider is responsible the produce available themes
+     * for a given preferred theme style.
      *
      * @return the theme provider.
      * @see    PreferredThemeStyle
@@ -212,8 +211,8 @@ public final class LafManager {
     }
 
     /**
-     * Set the current theme provider. The theme provider is responsible the produce available themes for a given
-     * preferred theme style.
+     * Set the current theme provider. The theme provider is responsible the produce available themes
+     * for a given preferred theme style.
      *
      * @param themeProvider the theme provider.
      * @see                 PreferredThemeStyle
@@ -282,23 +281,21 @@ public final class LafManager {
     }
 
     /**
-     * Get {@link javax.swing.UIManager.LookAndFeelInfo}s for all currently registered themes.
-     * These can be directly used to install the specified theme.
-     * Only themes that are annotated using @SynthesiseLaf and compiled with the corresponding
-     * annotations processor may contribute to this list.
+     * Get {@link javax.swing.UIManager.LookAndFeelInfo}s for all currently registered themes. These can
+     * be directly used to install the specified theme. Only themes that are annotated
+     * using @SynthesiseLaf and compiled with the corresponding annotations processor may contribute to
+     * this list.
      *
      * @return all look and feel infos for currently registered themes as array.
      */
     public static UIManager.LookAndFeelInfo[] getRegisteredThemeInfos() {
-        return registeredThemes.stream()
-                               .sorted()
-                               .map(ThemedDarklafInfo::new)
-                               .filter(ThemedDarklafInfo::exists)
-                               .toArray(UIManager.LookAndFeelInfo[]::new);
+        return registeredThemes.stream().sorted().map(ThemedDarklafInfo::new).filter(ThemedDarklafInfo::exists)
+            .toArray(UIManager.LookAndFeelInfo[]::new);
     }
 
     /**
-     * Replaces a registered theme. The newTheme is only registered if the old theme is currently registerd.
+     * Replaces a registered theme. The newTheme is only registered if the old theme is currently
+     * registerd.
      *
      * @param oldTheme the old theme to unregister.
      * @param newTheme the new theme to register.
@@ -328,7 +325,8 @@ public final class LafManager {
     }
 
     /**
-     * Get the current theme. This method will never return null even if the LaF isn#t currently installed.
+     * Get the current theme. This method will never return null even if the LaF isn#t currently
+     * installed.
      *
      * @return the current theme.
      */
@@ -407,8 +405,8 @@ public final class LafManager {
     }
 
     /**
-     * Sets the current theme and installs the LaF. If the LaF is already installed the theme is switched. This behaves
-     * exactly like {@link #setTheme(Theme)} followed by {@link #install()}
+     * Sets the current theme and installs the LaF. If the LaF is already installed the theme is
+     * switched. This behaves exactly like {@link #setTheme(Theme)} followed by {@link #install()}
      *
      * @param theme the theme to install.
      */
@@ -429,8 +427,8 @@ public final class LafManager {
     }
 
     /**
-     * Install the current theme. If no theme is installed, the default is based on the current {@link ThemeProvider}.
-     * This sets the current LaF and applies the given theme.
+     * Install the current theme. If no theme is installed, the default is based on the current
+     * {@link ThemeProvider}. This sets the current LaF and applies the given theme.
      */
     public static void install() {
         try {
@@ -445,8 +443,7 @@ public final class LafManager {
     }
 
     /* default */ static void notifyThemeInstalled() {
-        eventSupport.dispatchEvent(new ThemeChangeEvent(null, getTheme()),
-                                   ThemeChangeListener::themeInstalled);
+        eventSupport.dispatchEvent(new ThemeChangeEvent(null, getTheme()), ThemeChangeListener::themeInstalled);
     }
 
     /**
@@ -484,7 +481,8 @@ public final class LafManager {
     }
 
     /**
-     * Get a view of all currently registered defaults init tasks. Modification will also mutate the collection itself.
+     * Get a view of all currently registered defaults init tasks. Modification will also mutate the
+     * collection itself.
      *
      * @return collection of init tasks.
      */
@@ -511,7 +509,8 @@ public final class LafManager {
     }
 
     /**
-     * Get a view of all currently registered ui init tasks. Modification will also mutate the collection itself.
+     * Get a view of all currently registered ui init tasks. Modification will also mutate the
+     * collection itself.
      *
      * @return collection of init tasks.
      */

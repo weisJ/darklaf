@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.listener;
@@ -33,10 +30,10 @@ import com.github.weisj.darklaf.theme.event.ThemeChangeEvent;
 import com.github.weisj.darklaf.theme.event.ThemeChangeListener;
 
 /**
- * Listener that updates the component ui after a new theme has been installed.
- * This listener only needs to be used with the top most component.
- * This listener isn't needed for components that are part of a visible ui hierarchy.
- * The listener has to be added with {@link LafManager#addThemeChangeListener(ThemeChangeListener)}
+ * Listener that updates the component ui after a new theme has been installed. This listener only
+ * needs to be used with the top most component. This listener isn't needed for components that are
+ * part of a visible ui hierarchy. The listener has to be added with
+ * {@link LafManager#addThemeChangeListener(ThemeChangeListener)}
  */
 public class UIUpdater implements ThemeChangeListener {
 
@@ -56,8 +53,8 @@ public class UIUpdater implements ThemeChangeListener {
     }
 
     /**
-     * Remove the registered {@link UIUpdater} from the component.
-     * This needs to be called in order for the component to be garbage collected.
+     * Remove the registered {@link UIUpdater} from the component. This needs to be called in order for
+     * the component to be garbage collected.
      *
      * @param component the component to unregister.
      */
@@ -76,10 +73,10 @@ public class UIUpdater implements ThemeChangeListener {
     private final Component component;
 
     /**
-     * Creates a new ui updater for the given component. After a new theme has been installed
-     * This listener only needs to be used with the top most component.
-     * This listener isn't needed for components that are part of a visible ui hierarchy.
-     * The listener has to be added with {@link LafManager#addThemeChangeListener(ThemeChangeListener)}
+     * Creates a new ui updater for the given component. After a new theme has been installed This
+     * listener only needs to be used with the top most component. This listener isn't needed for
+     * components that are part of a visible ui hierarchy. The listener has to be added with
+     * {@link LafManager#addThemeChangeListener(ThemeChangeListener)}
      *
      * @param component the component to update.
      */

@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.scrollpane;
@@ -42,14 +39,13 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
     public static final String KEY_VERTICALS_SCROLL_BAR = "verticalScrollBar";
     public static final String KEY_HORIZONTAL_SCROLL_BAR = "horizontalScrollBar";
     private final MouseWheelListener verticalMouseWheelListener = e -> {
-        if (!scrollpane.isWheelScrollingEnabled()
-            || e.getModifiersEx() == 0 || !horizontalScrollBarEnabled()) {
+        if (!scrollpane.isWheelScrollingEnabled() || e.getModifiersEx() == 0 || !horizontalScrollBarEnabled()) {
             return;
         }
         JScrollBar scrollbar = scrollpane.getHorizontalScrollBar();
         scrollbar.setValueIsAdjusting(true);
-        ScrollBarUtil.doScroll(scrollbar, scrollpane.getViewport(), e,
-                               scrollpane.getComponentOrientation().isLeftToRight());
+        ScrollBarUtil
+            .doScroll(scrollbar, scrollpane.getViewport(), e, scrollpane.getComponentOrientation().isLeftToRight());
         scrollbar.setValueIsAdjusting(false);
     };
     private final MouseWheelListener horizontalMouseWheelListener = e -> {
@@ -58,19 +54,19 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
         }
         JScrollBar scrollbar = scrollpane.getVerticalScrollBar();
         scrollbar.setValueIsAdjusting(true);
-        ScrollBarUtil.doScroll(scrollbar, scrollpane.getViewport(), e,
-                               scrollpane.getComponentOrientation().isLeftToRight());
+        ScrollBarUtil
+            .doScroll(scrollbar, scrollpane.getViewport(), e, scrollpane.getComponentOrientation().isLeftToRight());
         scrollbar.setValueIsAdjusting(false);
     };
     private final MouseWheelListener mouseWheelListener = e -> {
         if (!scrollpane.isWheelScrollingEnabled()) {
             return;
         }
-        JScrollBar scrollbar = e.isShiftDown() ? scrollpane.getHorizontalScrollBar()
-                : scrollpane.getVerticalScrollBar();
+        JScrollBar scrollbar =
+            e.isShiftDown() ? scrollpane.getHorizontalScrollBar() : scrollpane.getVerticalScrollBar();
         scrollbar.setValueIsAdjusting(true);
-        ScrollBarUtil.doScroll(scrollbar, scrollpane.getViewport(), e,
-                               scrollpane.getComponentOrientation().isLeftToRight());
+        ScrollBarUtil
+            .doScroll(scrollbar, scrollpane.getViewport(), e, scrollpane.getComponentOrientation().isLeftToRight());
         scrollbar.setValueIsAdjusting(false);
     };
     private final PropertyChangeListener propertyChangeListener = e -> {

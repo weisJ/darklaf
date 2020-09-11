@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.button;
@@ -94,8 +91,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     @Override
     protected void installDefaults(final AbstractButton b) {
         super.installDefaults(b);
-        PropertyUtil.installProperty(b, ToolTipConstants.KEY_STYLE,
-                                     ToolTipStyle.parse(UIManager.get("Button.toolTipStyle")));
+        PropertyUtil
+            .installProperty(b, ToolTipConstants.KEY_STYLE, ToolTipStyle.parse(UIManager.get("Button.toolTipStyle")));
         LookAndFeel.installProperty(b, PropertyKey.OPAQUE, false);
         borderSize = UIManager.getInt("Button.borderThickness");
         shadowHeight = UIManager.getInt("Button.shadowHeight");
@@ -144,8 +141,9 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         paintButtonBackground(g, c);
 
         prepareDelegate(b);
-        String text = layout(layoutDelegate, b, SwingUtilities2.getFontMetrics(b, g, layoutDelegate.getFont()),
-                             b.getWidth(), b.getHeight());
+        String text = layout(
+            layoutDelegate, b, SwingUtilities2.getFontMetrics(b, g, layoutDelegate.getFont()), b.getWidth(), b.getHeight()
+        );
 
         paintIcon(g, b, c);
         config.restoreClip();
@@ -169,8 +167,9 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         }
     }
 
-    protected void paintDefaultBackground(final AbstractButton c, final Graphics2D g,
-                                          final int arc, final int width, final int height) {
+    protected void paintDefaultBackground(
+            final AbstractButton c, final Graphics2D g, final int arc, final int width, final int height
+    ) {
         boolean showShadow = DarkButtonBorder.showDropShadow(c);
         int shadow = showShadow ? shadowHeight : 0;
         int effectiveArc = ButtonConstants.chooseArcWithBorder(c, arc, 0, 0, borderSize);
@@ -182,8 +181,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
             Composite comp = g.getComposite();
             g.setComposite(PaintUtil.getShadowComposite());
             int stroke = (int) PaintUtil.getStrokeWidth(g);
-            paintBackgroundRect(g, effectiveArc * 2, bgRect.x, bgRect.y + shadow + stroke,
-                                bgRect.width, bgRect.height);
+            paintBackgroundRect(g, effectiveArc * 2, bgRect.x, bgRect.y + shadow + stroke, bgRect.width, bgRect.height);
             g.setComposite(comp);
         }
 
@@ -195,8 +193,9 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         paintBackgroundRect(g2, effectiveArc, bgRect.x, bgRect.y, bgRect.width, bgRect.height);
     }
 
-    private void paintBackgroundRect(final Graphics2D g2, final int effectiveArc,
-                                     final int x, final int y, final int width, final int height) {
+    private void paintBackgroundRect(
+            final Graphics2D g2, final int effectiveArc, final int x, final int y, final int width, final int height
+    ) {
         if (effectiveArc == 0) {
             g2.fillRect(x, y, width, height);
         } else {
@@ -204,8 +203,9 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         }
     }
 
-    protected Rectangle getEffectiveRect(final int width, final int height,
-                                         final int adjustment, final AlignmentExt corner) {
+    protected Rectangle getEffectiveRect(
+            final int width, final int height, final int adjustment, final AlignmentExt corner
+    ) {
         Insets insetMask = new Insets(borderSize, borderSize, Math.max(borderSize, shadowHeight), borderSize);
         if (corner != null) {
             insetMask = corner.maskInsets(insetMask, adjustment);
@@ -217,36 +217,37 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         return new Rectangle(bx, by, bw, bh);
     }
 
-    protected void paintBorderlessBackground(final AbstractButton b, final Graphics2D g, final int arc,
-                                             final int width, final int height, final Insets margin) {
+    protected void paintBorderlessBackground(
+            final AbstractButton b, final Graphics2D g, final int arc, final int width, final int height,
+            final Insets margin
+    ) {
         if (isRolloverBorderless(b)) {
             GraphicsUtil.setupAAPainting(g);
             g.setColor(getBorderlessBackground(b));
             if (ButtonConstants.isBorderlessRectangular(b)) {
-                g.fillRect(margin.left, margin.top, width - margin.left - margin.right,
-                           height - margin.top - margin.bottom);
+                g.fillRect(
+                    margin.left, margin.top, width - margin.left - margin.right, height - margin.top - margin.bottom
+                );
             } else if (ButtonConstants.doConvertToBorderless(b)) {
-                int size = Math.min(width - margin.left - margin.right,
-                                    height - margin.left - margin.right);
+                int size = Math.min(width - margin.left - margin.right, height - margin.left - margin.right);
                 if (!drawOutline) {
                     g.fillRoundRect((width - size) / 2, (height - size) / 2, size, size, arc, arc);
                 } else {
                     g.setColor(getBorderlessOutline(b));
-                    PaintUtil.paintLineBorder(g, (width - size) / 2.0f,
-                                              (height - size) / 2.0f, size, size, arc);
+                    PaintUtil.paintLineBorder(g, (width - size) / 2.0f, (height - size) / 2.0f, size, size, arc);
                 }
             } else {
                 if (!drawOutline) {
-                    g.fillRoundRect(margin.left, margin.top,
-                                    width - margin.left - margin.right,
-                                    height - margin.top - margin.bottom,
-                                    arc, arc);
+                    g.fillRoundRect(
+                        margin.left, margin.top, width - margin.left - margin.right,
+                        height - margin.top - margin.bottom, arc, arc
+                    );
                 } else {
                     g.setColor(getBorderlessOutline(b));
-                    PaintUtil.paintLineBorder(g, margin.left, margin.top,
-                                              width - margin.left - margin.right,
-                                              height - margin.top - margin.bottom,
-                                              arc);
+                    PaintUtil.paintLineBorder(
+                        g, margin.left, margin.top, width - margin.left - margin.right,
+                        height - margin.top - margin.bottom, arc
+                    );
                 }
             }
         }
@@ -294,9 +295,10 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
 
     protected Color getForeground(final AbstractButton button) {
         Color fg = button.getForeground();
-        if (fg instanceof UIResource
-            && ButtonConstants.isDefaultButton(button)
-            && !ButtonConstants.isBorderlessVariant(button)) {
+        if (
+            fg instanceof UIResource && ButtonConstants.isDefaultButton(button)
+                && !ButtonConstants.isBorderlessVariant(button)
+        ) {
             fg = defaultForeground;
         }
         if (fg instanceof UIResource && !button.getModel().isEnabled()) {
@@ -335,7 +337,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
 
     protected Color getBorderlessBackground(final AbstractButton c) {
         return isArmedBorderless(c) ? PropertyUtil.getColor(c, KEY_CLICK_COLOR, borderlessClick)
-                : PropertyUtil.getColor(c, KEY_HOVER_COLOR, borderlessHover);
+            : PropertyUtil.getColor(c, KEY_HOVER_COLOR, borderlessHover);
     }
 
     protected boolean isArmedBorderless(final AbstractButton b) {
@@ -347,9 +349,10 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         return armed ? borderlessOutlineClick : borderlessOutlineHover;
     }
 
-    protected String layout(final AbstractButtonLayoutDelegate bl, final AbstractButton b,
-                            final FontMetrics fm,
-                            final int width, final int height) {
+    protected String layout(
+            final AbstractButtonLayoutDelegate bl, final AbstractButton b, final FontMetrics fm, final int width,
+            final int height
+    ) {
         Insets i = b.getInsets();
 
         AlignmentExt corner = DarkButtonBorder.getCornerFlag(b);
@@ -371,13 +374,11 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         textRect.x = textRect.y = textRect.width = textRect.height = 0;
         iconRect.x = iconRect.y = iconRect.width = iconRect.height = 0;
         // layout the text and icon
-        return SwingUtilities.layoutCompoundLabel(bl, fm, bl.getText(), bl.getIcon(),
-                                                  bl.getVerticalAlignment(), bl.getHorizontalAlignment(),
-                                                  bl.getVerticalTextPosition(), bl.getHorizontalTextPosition(),
-                                                  viewRect, iconRect, textRect,
-                                                  bl.getText() == null || ButtonConstants.isIconOnly(b)
-                                                          ? 0
-                                                          : bl.getIconTextGap());
+        return SwingUtilities.layoutCompoundLabel(
+            bl, fm, bl.getText(), bl.getIcon(), bl.getVerticalAlignment(), bl.getHorizontalAlignment(),
+            bl.getVerticalTextPosition(), bl.getHorizontalTextPosition(), viewRect, iconRect, textRect,
+            bl.getText() == null || ButtonConstants.isIconOnly(b) ? 0 : bl.getIconTextGap()
+        );
     }
 
     @Override

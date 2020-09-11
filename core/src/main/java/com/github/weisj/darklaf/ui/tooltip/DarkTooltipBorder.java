@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.tooltip;
@@ -62,9 +59,9 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
         bubbleBorder.setPointerSide(Alignment.CENTER);
         int shadowSize = UIManager.getInt("ToolTip.shadowSize");
         float opacity = UIManager.getInt("ToolTip.shadowOpacity") / 100.0f;
-        shadowBorder = new DropShadowBorder(UIManager.getColor("ToolTip.borderShadowColor"),
-                                            shadowSize, opacity, 2 * shadowSize,
-                                            false, true, true, true);
+        shadowBorder = new DropShadowBorder(
+            UIManager.getColor("ToolTip.borderShadowColor"), shadowSize, opacity, 2 * shadowSize, false, true, true, true
+        );
         paintShadow = UIManager.getBoolean("ToolTip.paintShadow");
     }
 
@@ -74,17 +71,17 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
         }
         Insets ins = shadowBorder.getBorderInsets(null);
         adjustInsets(ins);
-        return bubbleBorder.getBubbleArea(ins.left, ins.top,
-                                          width - ins.left - ins.right,
-                                          height - ins.top - ins.bottom,
-                                          bubbleBorder.getThickness() / 2f);
+        return bubbleBorder.getBubbleArea(
+            ins.left, ins.top, width - ins.left - ins.right, height - ins.top - ins.bottom,
+            bubbleBorder.getThickness() / 2f
+        );
     }
 
     @Override
     public int getPointerOffset(final Component c, final Dimension dimension, final int thicknessFactor) {
         if (!showPointer || isPlain(c)) return 0;
         int offset = (int) bubbleBorder.getOffset(dimension.width - 2 * shadowBorder.getShadowSize(), dimension.height)
-                     + shadowBorder.getShadowSize();
+            + shadowBorder.getShadowSize();
         int thickness = bubbleBorder.getThickness();
         Alignment align = bubbleBorder.getPointerSide();
         if (align.isWest(false)) offset += thicknessFactor * thickness;
@@ -113,8 +110,9 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
     }
 
     @Override
-    public void paintBorder(final Component c, final Graphics g,
-                            final int x, final int y, final int width, final int height) {
+    public void paintBorder(
+            final Component c, final Graphics g, final int x, final int y, final int width, final int height
+    ) {
         if (c instanceof JToolTip && ((JToolTip) c).getTipText() == null) return;
         GraphicsContext context = new GraphicsContext(g);
         if (isPlain(c)) {
@@ -124,24 +122,24 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
         }
         Insets ins = shadowBorder.getBorderInsets(c);
         adjustInsets(ins);
-        Area innerArea = bubbleBorder.getBubbleArea(x + ins.left, y + ins.top,
-                                                    width - ins.left - ins.right,
-                                                    height - ins.top - ins.bottom,
-                                                    bubbleBorder.getThickness());
+        Area innerArea = bubbleBorder.getBubbleArea(
+            x + ins.left, y + ins.top, width - ins.left - ins.right, height - ins.top - ins.bottom,
+            bubbleBorder.getThickness()
+        );
         if (!skipShadow && paintShadow) {
             paintShadow(c, g, x, y, width, height, innerArea);
         }
-        Area outerArea = bubbleBorder.getBubbleArea(x + ins.left, y + ins.top,
-                                                    width - ins.left - ins.right,
-                                                    height - ins.top - ins.bottom,
-                                                    0);
+        Area outerArea = bubbleBorder
+            .getBubbleArea(x + ins.left, y + ins.top, width - ins.left - ins.right, height - ins.top - ins.bottom, 0);
         outerArea.subtract(innerArea);
         bubbleBorder.paintBorder(g, outerArea);
         context.restore();
     }
 
-    public void paintShadow(final Component c, final Graphics g, final int x, final int y,
-                            final int width, final int height, final Area bubbleArea) {
+    public void paintShadow(
+            final Component c, final Graphics g, final int x, final int y, final int width, final int height,
+            final Area bubbleArea
+    ) {
         Shape oldClip = g.getClip();
         Area clip = new Area(new Rectangle2D.Double(x, y, width, height));
         clip.subtract(bubbleArea);
@@ -215,18 +213,18 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
     @Override
     public int getDistanceToPointer() {
         switch (alignment) {
-            case WEST :
-            case SOUTH :
-            case SOUTH_EAST :
-            case SOUTH_WEST :
-            case EAST :
+            case WEST:
+            case SOUTH:
+            case SOUTH_EAST:
+            case SOUTH_WEST:
+            case EAST:
                 return Math.max(0, shadowBorder.getShadowSize() - bubbleBorder.getPointerSize())
-                       + bubbleBorder.getThickness();
-            case NORTH :
-            case NORTH_EAST :
-            case NORTH_WEST :
-            case CENTER :
-            default :
+                    + bubbleBorder.getThickness();
+            case NORTH:
+            case NORTH_EAST:
+            case NORTH_WEST:
+            case CENTER:
+            default:
                 return bubbleBorder.getThickness();
         }
     }

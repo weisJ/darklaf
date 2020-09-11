@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
@@ -46,9 +43,10 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
     private static final String MIME_TYPE = DataFlavor.javaJVMLocalObjectMimeType + ";class=javax.swing.JTabbedPane";
     private static TabbedPaneDragGestureRecognizer recognizer = null;
     /**
-     * The location of the mouse cursor throughout the drag-and-drop. This is here because of a deficiency in
-     * TransferHandler's design; you have no way of knowing the exact drop location in the component with a plain
-     * TransferHandler unless you implement DropTargetListener and get it that way.
+     * The location of the mouse cursor throughout the drag-and-drop. This is here because of a
+     * deficiency in TransferHandler's design; you have no way of knowing the exact drop location in the
+     * component with a plain TransferHandler unless you implement DropTargetListener and get it that
+     * way.
      */
     protected Point mouseLocation;
     private int lastTab = -1;
@@ -58,7 +56,8 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
     public TabbedPaneTransferHandler() {
         try {
             tabFlavor = new DataFlavor(MIME_TYPE);
-        } catch (ClassNotFoundException ignored) {}
+        } catch (ClassNotFoundException ignored) {
+        }
     }
 
     public void exportAsDrag(final JComponent comp, final InputEvent e, final int a) {
@@ -66,11 +65,13 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         int action = a;
 
         // only mouse events supported for drag operations
-        if (!(e instanceof MouseEvent)
-            // only support known actions
-            || !(action == COPY || action == MOVE || action == LINK)
-            // only support valid source actions
-            || (srcActions & action) == 0) {
+        if (
+            !(e instanceof MouseEvent)
+                // only support known actions
+                || !(action == COPY || action == MOVE || action == LINK)
+                // only support valid source actions
+                || (srcActions & action) == 0
+        ) {
 
             action = NONE;
         }
@@ -86,12 +87,12 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
     }
 
     /**
-     * Called when the drag-and-drop operation has just completed. This creates a new tab identical to the one
-     * "dragged" and places it in the destination <code>JTabbedPane</code>.
+     * Called when the drag-and-drop operation has just completed. This creates a new tab identical to
+     * the one "dragged" and places it in the destination <code>JTabbedPane</code>.
      *
-     * @param  c The component receiving the "drop" (the instance of
-     *           <code>JTabbedPane</code>).
-     * @param  t The data being transfered (information about the tab and the component contained by the tab).
+     * @param  c The component receiving the "drop" (the instance of <code>JTabbedPane</code>).
+     * @param  t The data being transfered (information about the tab and the component contained by the
+     *           tab).
      * @return   Whether or not the import was successful.
      */
     @Override
@@ -101,8 +102,9 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         if (hasTabFlavor(t.getTransferDataFlavors()) && mouseLocation != null) {
             try {
                 JTabbedPane tabbedPane = (JTabbedPane) c;
-                int tab = TabbedPaneUtil.getDroppedTabIndex(currentTransferable.getTabBounds(), tabbedPane,
-                                                            supportsIndicator(tabbedPane), mouseLocation);
+                int tab = TabbedPaneUtil.getDroppedTabIndex(
+                    currentTransferable.getTabBounds(), tabbedPane, supportsIndicator(tabbedPane), mouseLocation
+                );
                 TabTransferable.TabTransferData td = (TabTransferable.TabTransferData) t.getTransferData(tabFlavor);
                 if (!TabbedPaneUtil.moveTabs(td.sourceTabbedPane, tabbedPane, td.tabIndex, tab)) {
                     return true;
@@ -165,7 +167,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
 
     protected void createDragImage(final JTabbedPane tabbedPane, final DarkTabbedPaneUI ui) {
         Color color = ui != null ? ui.getDragBorderColor()
-                : tabbedPane.getBackgroundAt(currentTransferable.transferData.tabIndex);
+            : tabbedPane.getBackgroundAt(currentTransferable.transferData.tabIndex);
         Image tabImage = DnDUtil.createDragImage(tabbedPane, currentTransferable.transferData.tabBounds, 2, color);
         int w = tabImage.getWidth(null);
         int h = tabImage.getHeight(null);
@@ -210,19 +212,21 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         if (ui != null) {
             TabTransferable t = currentTransferable;
             if (t != null) {
-                int tab = TabbedPaneUtil.getDroppedTabIndex(t.getTabBounds(), destTabbedPane,
-                                                            supportsIndicator(destTabbedPane), mouseLocation);
+                int tab = TabbedPaneUtil.getDroppedTabIndex(
+                    t.getTabBounds(), destTabbedPane, supportsIndicator(destTabbedPane), mouseLocation
+                );
                 if (tab == -1) {
                     lastTab = tab;
                     ui.clearDropIndicator();
                     return;
                 }
-                Rectangle dropRect = TabbedPaneUtil.getDropRect(supportsIndicator(destTabbedPane), destTabbedPane,
-                                                                t.transferData.sourceTabbedPane, mouseLocation,
-                                                                t.getTabBounds(), tab, t.transferData.tabIndex,
-                                                                lastTab);
-                ui.setDnDIndicatorRect(dropRect.x, dropRect.y, dropRect.width, dropRect.height,
-                                       tab, t.transferData.sourceTabbedPane == destTabbedPane);
+                Rectangle dropRect = TabbedPaneUtil.getDropRect(
+                    supportsIndicator(destTabbedPane), destTabbedPane, t.transferData.sourceTabbedPane, mouseLocation, t.getTabBounds(), tab, t.transferData.tabIndex, lastTab
+                );
+                ui.setDnDIndicatorRect(
+                    dropRect.x, dropRect.y, dropRect.width, dropRect.height, tab,
+                    t.transferData.sourceTabbedPane == destTabbedPane
+                );
                 lastTab = tab;
             }
         }
@@ -299,7 +303,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         @Override
         public DataFlavor[] getTransferDataFlavors() {
             if (tabFlavor == null) return new DataFlavor[0];
-            return new DataFlavor[]{tabFlavor};
+            return new DataFlavor[] {tabFlavor};
         }
 
         @Override
@@ -390,8 +394,8 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
             DragSourceContext dsc = dsde.getDragSourceContext();
             JComponent c = (JComponent) dsc.getComponent();
             if (dsde.getDropSuccess()) {
-                ((TabbedPaneTransferHandler) c.getTransferHandler()).exportDone(c, dsc.getTransferable(),
-                                                                                dsde.getDropAction());
+                ((TabbedPaneTransferHandler) c.getTransferHandler())
+                    .exportDone(c, dsc.getTransferable(), dsde.getDropAction());
             } else {
                 ((TabbedPaneTransferHandler) c.getTransferHandler()).exportDone(c, dsc.getTransferable(), NONE);
             }
@@ -402,8 +406,9 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
                 ui.clearSourceIndicator();
             }
             if (!dsde.getDropSuccess()) {
-                TabbedPaneUtil.selectTab(currentTransferable.transferData.sourceTabbedPane,
-                                         currentTransferable.transferData.tabIndex);
+                TabbedPaneUtil.selectTab(
+                    currentTransferable.transferData.sourceTabbedPane, currentTransferable.transferData.tabIndex
+                );
             }
             currentTransferable = null;
         }

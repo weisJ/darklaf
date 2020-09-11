@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.scrollpane;
@@ -81,20 +78,27 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
 
     @Override
     public void mouseWheelMoved(final MouseWheelEvent e) {
-        if (scrollbar.getParent() instanceof JScrollPane
-            && !((JScrollPane) scrollbar.getParent()).isWheelScrollingEnabled()) {
+        if (
+            scrollbar.getParent() instanceof JScrollPane
+                && !((JScrollPane) scrollbar.getParent()).isWheelScrollingEnabled()
+        ) {
             return;
         }
-        if (scrollbar.getOrientation() == JScrollBar.VERTICAL && !e.isShiftDown()
-            || scrollbar.getOrientation() == JScrollBar.HORIZONTAL && e.isShiftDown()) {
+        if (
+            scrollbar.getOrientation() == JScrollBar.VERTICAL && !e.isShiftDown()
+                || scrollbar.getOrientation() == JScrollBar.HORIZONTAL && e.isShiftDown()
+        ) {
             scrollbar.setValueIsAdjusting(true);
             JScrollPane sp = PropertyUtil.getObject(scrollbar, KEY_SCROLL_PANE_PARENT, JScrollPane.class);
             if (scrollbar.getParent() instanceof JScrollPane) {
-                ScrollBarUtil.doScroll(scrollbar, ((JScrollPane) scrollbar.getParent()).getViewport(), e,
-                                       scrollbar.getParent().getComponentOrientation().isLeftToRight());
+                ScrollBarUtil.doScroll(
+                    scrollbar, ((JScrollPane) scrollbar.getParent()).getViewport(), e,
+                    scrollbar.getParent().getComponentOrientation().isLeftToRight()
+                );
             } else if (sp != null) {
-                ScrollBarUtil.doScroll(scrollbar, sp.getViewport(), e,
-                                       scrollbar.getParent().getComponentOrientation().isLeftToRight());
+                ScrollBarUtil.doScroll(
+                    scrollbar, sp.getViewport(), e, scrollbar.getParent().getComponentOrientation().isLeftToRight()
+                );
             } else {
                 ScrollBarUtil.doScroll(scrollbar, null, e, scrollbar.getComponentOrientation().isLeftToRight());
             }
@@ -184,8 +188,10 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
         resetAnimators(trackFadeinAnimator, trackFadeoutAnimator, mouseOverTrack, trackAlpha, MAX_TRACK_ALPHA);
     }
 
-    protected void resetAnimators(final Animator fadeInAnimator, final Animator fadeOutAnimator,
-                                  final boolean overAnimatedComponent, final float currentAlpha, final float maxAlpha) {
+    protected void resetAnimators(
+            final Animator fadeInAnimator, final Animator fadeOutAnimator, final boolean overAnimatedComponent,
+            final float currentAlpha, final float maxAlpha
+    ) {
         fadeInAnimator.reset();
         fadeOutAnimator.reset();
         if (scrollbar != null && (scrollbar.getValueIsAdjusting() || overAnimatedComponent)) {
@@ -220,8 +226,10 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
 
     protected class TrackFadeOutAnimator extends Animator {
         public TrackFadeOutAnimator() {
-            super("Track fadeout", DarkScrollBarListener.FADEOUT_FRAMES_COUNT,
-                  DarkScrollBarListener.FADEOUT_FRAMES_COUNT * DarkScrollBarListener.FADEOUT_FRAME_COUNT_FACTOR, false);
+            super(
+                "Track fadeout", DarkScrollBarListener.FADEOUT_FRAMES_COUNT,
+                DarkScrollBarListener.FADEOUT_FRAMES_COUNT * DarkScrollBarListener.FADEOUT_FRAME_COUNT_FACTOR, false
+            );
         }
 
         public void paintNow(final int frame, final int totalFrames, final int cycle) {
@@ -245,8 +253,10 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
 
     protected class ThumbFadeInAnimator extends Animator {
         public ThumbFadeInAnimator() {
-            super("Thumb fadein", DarkScrollBarListener.FADEIN_FRAMES_COUNT / 2,
-                  DarkScrollBarListener.FADEIN_FRAMES_COUNT * DarkScrollBarListener.FADEIN_FRAME_COUNT_FACTOR, false);
+            super(
+                "Thumb fadein", DarkScrollBarListener.FADEIN_FRAMES_COUNT / 2,
+                DarkScrollBarListener.FADEIN_FRAMES_COUNT * DarkScrollBarListener.FADEIN_FRAME_COUNT_FACTOR, false
+            );
         }
 
         @Override
@@ -274,8 +284,10 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
 
     protected class TrackFadeInAnimator extends Animator {
         public TrackFadeInAnimator() {
-            super("Track fadein", DarkScrollBarListener.FADEIN_FRAMES_COUNT,
-                  DarkScrollBarListener.FADEIN_FRAMES_COUNT * DarkScrollBarListener.FADEIN_FRAME_COUNT_FACTOR, false);
+            super(
+                "Track fadein", DarkScrollBarListener.FADEIN_FRAMES_COUNT,
+                DarkScrollBarListener.FADEIN_FRAMES_COUNT * DarkScrollBarListener.FADEIN_FRAME_COUNT_FACTOR, false
+            );
         }
 
         public void paintNow(final int frame, final int totalFrames, final int cycle) {
@@ -296,8 +308,10 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
 
     protected class ThumbFadeOutAnimator extends Animator {
         public ThumbFadeOutAnimator() {
-            super("Adjustment fadeout", DarkScrollBarListener.FADEOUT_FRAMES_COUNT,
-                  DarkScrollBarListener.FADEOUT_FRAMES_COUNT * DarkScrollBarListener.FADEOUT_FRAME_COUNT_FACTOR, false);
+            super(
+                "Adjustment fadeout", DarkScrollBarListener.FADEOUT_FRAMES_COUNT,
+                DarkScrollBarListener.FADEOUT_FRAMES_COUNT * DarkScrollBarListener.FADEOUT_FRAME_COUNT_FACTOR, false
+            );
         }
 
         @Override

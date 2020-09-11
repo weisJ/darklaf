@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.tabframe;
@@ -55,8 +52,8 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
         public void mouseClicked(final MouseEvent e) {
             if (!tabComponent.isEnabled()) return;
             if (SwingUtilities.isLeftMouseButton(e)) {
-                tabComponent.getTabFrame().toggleTab(tabComponent.getOrientation(), tabComponent.getIndex(),
-                                                     !tabComponent.isSelected());
+                tabComponent.getTabFrame()
+                    .toggleTab(tabComponent.getOrientation(), tabComponent.getIndex(), !tabComponent.isSelected());
             }
         }
     };
@@ -139,8 +136,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
         super.propertyChange(e);
         String key = e.getPropertyName();
         if (TabFrameTab.KEY_SELECTED.equals(key)) {
-            tabComponent.setForeground(Boolean.TRUE.equals(e.getNewValue())
-                    ? selectedFontColor : defaultFontColor);
+            tabComponent.setForeground(Boolean.TRUE.equals(e.getNewValue()) ? selectedFontColor : defaultFontColor);
             tabComponent.repaint();
         } else if (TabFrameTab.KEY_TITLE.equals(key)) {
             updateText();
@@ -181,8 +177,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
         int acc = tabComponent.getAccelerator();
         if (acc < 0) return;
         tabFrame.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-                .put(KeyStroke.getKeyStroke(UIManager.getString("TabFrame.acceleratorKeyCode") + " " + acc),
-                     ACCELERATOR_PREFIX + acc);
+            .put(KeyStroke.getKeyStroke(UIManager.getString("TabFrame.acceleratorKeyCode") + " " + acc), ACCELERATOR_PREFIX + acc);
         tabFrame.getActionMap().put(ACCELERATOR_PREFIX + acc, createAcceleratorAction(tabFrame));
     }
 
@@ -215,11 +210,8 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
 
     public Color getBackground(final TabFrameTabLabel tab) {
         if (printing || !tab.isEnabled()) return tab.getBackground();
-        return tab.isSelected()
-                ? selectedColor
-                : hoverListener.isHover() && !tab.getTabFrame().isInTransfer()
-                        ? hoverColor
-                : tab.getBackground();
+        return tab.isSelected() ? selectedColor
+            : hoverListener.isHover() && !tab.getTabFrame().isInTransfer() ? hoverColor : tab.getBackground();
     }
 
     @Override
@@ -229,11 +221,8 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
 
     public Color getTabForeground(final TabFrameTabLabel tab) {
         if (printing) return tab.getForeground();
-        return tab.isSelected()
-                ? selectedFontColor
-                : hoverListener.isHover() && !tab.getTabFrame().isInTransfer()
-                        ? fontHoverColor
-                : tab.getForeground();
+        return tab.isSelected() ? selectedFontColor
+            : hoverListener.isHover() && !tab.getTabFrame().isInTransfer() ? fontHoverColor : tab.getForeground();
     }
 
     @Override
@@ -248,17 +237,17 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
 
     protected Alignment mapOrientation(final Alignment newValue) {
         switch (newValue) {
-            case CENTER :
-            case NORTH :
-            case NORTH_EAST :
-            case SOUTH :
-            case SOUTH_WEST :
+            case CENTER:
+            case NORTH:
+            case NORTH_EAST:
+            case SOUTH:
+            case SOUTH_WEST:
                 return Alignment.NORTH;
-            case EAST :
-            case SOUTH_EAST :
+            case EAST:
+            case SOUTH_EAST:
                 return Alignment.WEST;
-            case WEST :
-            case NORTH_WEST :
+            case WEST:
+            case NORTH_WEST:
                 return Alignment.EAST;
         }
         return Alignment.NORTH;

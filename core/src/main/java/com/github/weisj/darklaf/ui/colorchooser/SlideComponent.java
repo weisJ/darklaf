@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.colorchooser;
@@ -69,11 +66,8 @@ class SlideComponent extends JComponent implements ColorListener {
         this.shadowColor = UIManager.getColor("ColorChooser.sliderShadow");
         this.knobFill = UIManager.getColor("ColorChooser.sliderKnobColor");
 
-        toolTipContext.setAlignInside(false)
-                      .setAlignment(vertical ? Alignment.WEST : Alignment.NORTH)
-                      .setHideOnExit(false)
-                      .setToolTipRectSupplier(e -> getKnobRect())
-                      .setToolTipInsets(new Insets(3, 0, 3, 0));
+        toolTipContext.setAlignInside(false).setAlignment(vertical ? Alignment.WEST : Alignment.NORTH)
+            .setHideOnExit(false).setToolTipRectSupplier(e -> getKnobRect()).setToolTipInsets(new Insets(3, 0, 3, 0));
 
         addMouseMotionListener(new MouseAdapter() {
             @Override
@@ -147,8 +141,8 @@ class SlideComponent extends JComponent implements ColorListener {
     private void fireValueChanged() {
         Point p = MouseInfo.getPointerInfo().getLocation();
         SwingUtilities.convertPointFromScreen(p, this);
-        ToolTipManager.sharedInstance().mouseMoved(new MouseEvent(this, MouseEvent.MOUSE_MOVED, 0,
-                                                                  0, p.x, p.y, 0, false, 0));
+        ToolTipManager.sharedInstance()
+            .mouseMoved(new MouseEvent(this, MouseEvent.MOUSE_MOVED, 0, 0, p.x, p.y, 0, false, 0));
         for (Consumer<Integer> listener : listeners) {
             listener.accept(value);
         }
@@ -160,8 +154,9 @@ class SlideComponent extends JComponent implements ColorListener {
 
     public void setValue(final int value) {
         if (value < Unit.LEVEL.getMin() || value > Unit.LEVEL.getMax()) {
-            throw new IllegalArgumentException("Value " + value + " not in range [" + Unit.LEVEL.getMin() + ","
-                                               + Unit.LEVEL.getMax() + "]");
+            throw new IllegalArgumentException(
+                "Value " + value + " not in range [" + Unit.LEVEL.getMin() + "," + Unit.LEVEL.getMax() + "]"
+            );
         }
         pointerValue = valueToPointerValue(value);
         this.value = value;
@@ -260,14 +255,12 @@ class SlideComponent extends JComponent implements ColorListener {
 
     @Override
     public Dimension getPreferredSize() {
-        return vertical ? new Dimension(22, 100)
-                : new Dimension(100, 22);
+        return vertical ? new Dimension(22, 100) : new Dimension(100, 22);
     }
 
     @Override
     public Dimension getMinimumSize() {
-        return vertical ? new Dimension(22, 50)
-                : new Dimension(50, 22);
+        return vertical ? new Dimension(22, 50) : new Dimension(50, 22);
     }
 
     @Override

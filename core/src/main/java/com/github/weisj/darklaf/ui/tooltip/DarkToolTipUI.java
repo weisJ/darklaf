@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.tooltip;
@@ -48,8 +45,8 @@ import com.github.weisj.darklaf.util.PropertyKey;
 /**
  * @author Jannis Weis
  */
-public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListener, HierarchyListener,
-                           ToolTipConstants {
+public class DarkToolTipUI extends BasicToolTipUI
+        implements PropertyChangeListener, HierarchyListener, ToolTipConstants {
 
     protected static final float MAX_ALPHA = 1.0f;
 
@@ -58,11 +55,12 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
         public void mouseExited(final MouseEvent e) {
             boolean inside = isInside(e);
             if (!inside) {
-                ToolTipManager.sharedInstance().mouseExited(new MouseEvent(toolTip.getComponent(), e.getID(),
-                                                                           e.getWhen(), e.getModifiersEx(),
-                                                                           Integer.MIN_VALUE, Integer.MIN_VALUE,
-                                                                           e.getClickCount(), e.isPopupTrigger(),
-                                                                           e.getButton()));
+                ToolTipManager.sharedInstance().mouseExited(
+                    new MouseEvent(
+                        toolTip.getComponent(), e.getID(), e.getWhen(), e.getModifiersEx(), Integer.MIN_VALUE,
+                        Integer.MIN_VALUE, e.getClickCount(), e.isPopupTrigger(), e.getButton()
+                    )
+                );
             }
         }
     };
@@ -71,11 +69,10 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
         public void mouseEntered(final MouseEvent e) {
             if (e.getButton() == MouseEvent.BUTTON1) return;
             /*
-             * We redispatch the event to the ToolTipManager with a corrected location.
-             * Because the ToolTipManager check for outside using >= width/height instead of > width/height and due to
-             * the nature of mouseEntered events most of the times having width/height as their coordinated ToolTips
-             * would
-             * not show up when the component is entered through the bottom/right side of the component.
+             * We redispatch the event to the ToolTipManager with a corrected location. Because the
+             * ToolTipManager check for outside using >= width/height instead of > width/height and due to the
+             * nature of mouseEntered events most of the times having width/height as their coordinated ToolTips
+             * would not show up when the component is entered through the bottom/right side of the component.
              */
             Point p = e.getPoint();
             Component c = toolTip.getComponent();
@@ -83,9 +80,12 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
             if (p.y == c.getHeight()) p.y--;
             p.x = Math.max(p.x, 0);
             p.y = Math.max(p.y, 0);
-            ToolTipManager.sharedInstance()
-                          .mouseEntered(new MouseEvent(c, e.getID(), e.getWhen(), e.getModifiersEx(), p.x, p.y,
-                                                       e.getClickCount(), e.isPopupTrigger(), e.getButton()));
+            ToolTipManager.sharedInstance().mouseEntered(
+                new MouseEvent(
+                    c, e.getID(), e.getWhen(), e.getModifiersEx(), p.x, p.y, e.getClickCount(), e.isPopupTrigger(),
+                    e.getButton()
+                )
+            );
         }
 
         @Override
@@ -213,9 +213,10 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
         // noinspection StringEquality
         if (tipText != NO_TEXT) {
             Insets insets = c.getInsets();
-            Rectangle paintTextR = new Rectangle(insets.left, insets.top,
-                                                 size.width - (insets.left + insets.right),
-                                                 size.height - (insets.top + insets.bottom));
+            Rectangle paintTextR = new Rectangle(
+                insets.left, insets.top, size.width - (insets.left + insets.right),
+                size.height - (insets.top + insets.bottom)
+            );
             StringPainter.drawString(g, c, tipText, paintTextR);
         }
     }
@@ -234,8 +235,7 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
         Font font = c.getFont();
         FontMetrics fm = c.getFontMetrics(font);
         Insets insets = c.getInsets();
-        Dimension prefSize = new Dimension(insets.left + insets.right,
-                                           insets.top + insets.bottom);
+        Dimension prefSize = new Dimension(insets.left + insets.right, insets.top + insets.bottom);
         String text = getTipText();
         if ((text != null) && !text.equals("")) {
             View v = (View) c.getClientProperty(PropertyKey.HTML);
@@ -267,16 +267,15 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
         Point compPoint = new Point(screenPos.x, screenPos.y);
         SwingUtilities.convertPointFromScreen(toolTipPoint, toolTip);
         SwingUtilities.convertPointFromScreen(compPoint, toolTip.getComponent());
-        return toolTip.getComponent().contains(compPoint)
-               || contains(toolTip, toolTipPoint.x, toolTipPoint.y);
+        return toolTip.getComponent().contains(compPoint) || contains(toolTip, toolTipPoint.x, toolTipPoint.y);
     }
 
     @Override
     public boolean contains(final JComponent c, final int x, final int y) {
         Border b = c.getBorder();
         if (b instanceof DarkTooltipBorder) {
-            Area insideArea = ((DarkTooltipBorder) b).getBackgroundArea(toolTip, toolTip.getWidth(),
-                                                                        toolTip.getHeight());
+            Area insideArea =
+                ((DarkTooltipBorder) b).getBackgroundArea(toolTip, toolTip.getWidth(), toolTip.getHeight());
             return insideArea.contains(x, y);
         } else {
             return super.contains(c, x, y);
@@ -377,8 +376,8 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
             this.style = style;
             updateBorder(style);
             /*
-             * In non opaque windows on Windows subpixel AA doesn't work. The translucent background isn't needed
-             * for the plain tooltip style, so we set it here.
+             * In non opaque windows on Windows subpixel AA doesn't work. The translucent background isn't
+             * needed for the plain tooltip style, so we set it here.
              *
              * See https://bugs.openjdk.java.net/browse/JDK-8215980?attachmentOrder=desc
              */
@@ -405,8 +404,7 @@ public class DarkToolTipUI extends BasicToolTipUI implements PropertyChangeListe
         private static final int FADEIN_FRAMES_COUNT = DELAY_FRAMES + 10;
 
         public FadeInAnimator() {
-            super("Tooltip fadein", FADEIN_FRAMES_COUNT,
-                  FADEIN_FRAMES_COUNT * 15, false);
+            super("Tooltip fadein", FADEIN_FRAMES_COUNT, FADEIN_FRAMES_COUNT * 15, false);
         }
 
         @Override

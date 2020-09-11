@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.tree;
@@ -116,8 +113,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         super.completeUIInstall();
         oldRepaintAllRowValue = UIManager.getBoolean("Tree.repaintWholeRow");
         UIManager.put("Tree.repaintWholeRow", true);
-        tree.putClientProperty(DarkTreeUI.KEY_ALTERNATE_ROW_COLOR,
-                               UIManager.getBoolean("Tree.alternateRowColor"));
+        tree.putClientProperty(DarkTreeUI.KEY_ALTERNATE_ROW_COLOR, UIManager.getBoolean("Tree.alternateRowColor"));
     }
 
     @Override
@@ -256,9 +252,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         if (tree == null) return false;
         int selectionRow = tree.getLeadSelectionRow();
         if (selectionRow == -1) return false;
-        final boolean collapsedOrExpanded = collapsed
-                ? tree.isCollapsed(selectionRow)
-                : tree.isExpanded(selectionRow);
+        final boolean collapsedOrExpanded = collapsed ? tree.isCollapsed(selectionRow) : tree.isExpanded(selectionRow);
         if (isLeaf(selectionRow) || collapsedOrExpanded) {
             return !PropertyUtil.getBooleanProperty(tree, KEY_IS_TABLE_TREE);
         }
@@ -347,8 +341,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
                 owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
             }
             boolean treeEditor = PropertyUtil.getBooleanProperty(owner, DarkTreeUI.KEY_IS_TREE_EDITOR);
-            boolean treeRenderer = !treeEditor
-                                   && PropertyUtil.getBooleanProperty(owner, DarkTreeUI.KEY_IS_TREE_RENDERER);
+            boolean treeRenderer =
+                !treeEditor && PropertyUtil.getBooleanProperty(owner, DarkTreeUI.KEY_IS_TREE_RENDERER);
             return treeEditor || treeRenderer;
         }
         return true;
@@ -431,15 +425,14 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         g.translate(0, rowBounds.y);
     }
 
-    protected boolean paintSingleRow(final Graphics g, final Rectangle paintBounds, final Insets insets,
-                                     final TreePath path, final int row) {
+    protected boolean paintSingleRow(
+            final Graphics g, final Rectangle paintBounds, final Insets insets, final TreePath path, final int row
+    ) {
         if (path == null) return false;
-        final int xOffset = tree.getParent() instanceof JViewport
-                ? ((JViewport) tree.getParent()).getViewPosition().x
-                : 0;
-        final int containerWidth = tree.getParent() instanceof JViewport
-                ? tree.getParent().getWidth()
-                : tree.getWidth();
+        final int xOffset =
+            tree.getParent() instanceof JViewport ? ((JViewport) tree.getParent()).getViewPosition().x : 0;
+        final int containerWidth =
+            tree.getParent() instanceof JViewport ? tree.getParent().getWidth() : tree.getWidth();
         final Rectangle cellBounds = getPathBounds(path, insets, boundsBuffer);
         if (cellBounds == null) return false;
         final int boundsX = cellBounds.x;
@@ -462,8 +455,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         boolean hasBeenExpanded = !isLeaf && tree.hasBeenExpanded(path);
 
         if (shouldPaintExpandControl(path, row, isExpanded, hasBeenExpanded, isLeaf)) {
-            paintExpandControl(g, paintBounds, insets, cellBounds, path, row, isExpanded,
-                               hasBeenExpanded, isLeaf);
+            paintExpandControl(g, paintBounds, insets, cellBounds, path, row, isExpanded, hasBeenExpanded, isLeaf);
         }
         paintRow(g, paintBounds, insets, cellBounds, path, row, isExpanded, hasBeenExpanded, isLeaf);
 
@@ -477,8 +469,9 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         return (cellBounds.y + cellBounds.height) < paintBounds.y + paintBounds.height;
     }
 
-    protected void paintRowBackground(final Graphics g, final Rectangle bounds, final TreePath path,
-                                      final int row, final boolean selected) {
+    protected void paintRowBackground(
+            final Graphics g, final Rectangle bounds, final TreePath path, final int row, final boolean selected
+    ) {
         if (path != null) {
             g.setColor(CellUtil.getTreeBackground(tree, selected, row));
             g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
@@ -488,9 +481,10 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     /*
      * Paint all vertical legs for the whole tree in this row.
      */
-    protected void paintVerticalLegs(final Graphics g, final Rectangle clipBounds,
-                                     final Rectangle rowBounds,
-                                     final Insets insets, final TreePath path) {
+    protected void paintVerticalLegs(
+            final Graphics g, final Rectangle clipBounds, final Rectangle rowBounds, final Insets insets,
+            final TreePath path
+    ) {
         if (!shouldPaintLines()) return;
         int depth = path.getPathCount() - 1;
         if (depth == 0 && (!isRootVisible() || !getShowsRootHandles())) {
@@ -623,29 +617,33 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         Graphics2D g2d = (Graphics2D) g;
         Stroke oldStroke = g2d.getStroke();
 
-        BasicStroke dashedStroke = new BasicStroke(2, BasicStroke.CAP_BUTT,
-                                                   BasicStroke.JOIN_ROUND, 0, new float[]{2.0f}, 0);
+        BasicStroke dashedStroke =
+            new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 0, new float[] {2.0f}, 0);
         g2d.setStroke(dashedStroke);
         g2d.drawLine(x, y1, x, y2);
         g2d.setStroke(oldStroke);
     }
 
     @Override
-    protected void paintHorizontalPartOfLeg(final Graphics g, final Rectangle clipBounds, final Insets insets,
-                                            final Rectangle bounds, final TreePath path, final int row,
-                                            final boolean isExpanded, final boolean hasBeenExpanded,
-                                            final boolean isLeaf) {
+    protected void paintHorizontalPartOfLeg(
+            final Graphics g, final Rectangle clipBounds, final Insets insets, final Rectangle bounds,
+            final TreePath path, final int row, final boolean isExpanded, final boolean hasBeenExpanded,
+            final boolean isLeaf
+    ) {
 
     }
 
     @Override
-    protected void paintVerticalPartOfLeg(final Graphics g, final Rectangle clipBounds,
-                                          final Insets insets, final TreePath path) {}
+    protected void paintVerticalPartOfLeg(
+            final Graphics g, final Rectangle clipBounds, final Insets insets, final TreePath path
+    ) {}
 
     @Override
-    protected void paintExpandControl(final Graphics g, final Rectangle clipBounds, final Insets insets,
-                                      final Rectangle bounds, final TreePath path, final int row,
-                                      final boolean isExpanded, final boolean hasBeenExpanded, final boolean isLeaf) {
+    protected void paintExpandControl(
+            final Graphics g, final Rectangle clipBounds, final Insets insets, final Rectangle bounds,
+            final TreePath path, final int row, final boolean isExpanded, final boolean hasBeenExpanded,
+            final boolean isLeaf
+    ) {
         if (!isLeaf(row)) {
             boolean isPathSelected = tree.isPathSelected(path);
             setExpandedIcon(getExpandedIcon(isPathSelected, tree.hasFocus() || tree.isEditing()));
@@ -655,8 +653,9 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     }
 
     @Override
-    protected void paintVerticalLine(final Graphics g, final JComponent c, final int x,
-                                     final int top, final int bottom) {
+    protected void paintVerticalLine(
+            final Graphics g, final JComponent c, final int x, final int top, final int bottom
+    ) {
         if (isDashedLine()) {
             drawDashedLine(g, x, top, bottom);
         } else {
@@ -667,21 +666,19 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     @Override
     protected void completeEditing() {
         /* If should invoke stopCellEditing, try that */
-        if (tree.getInvokesStopCellEditing() &&
-            stopEditingInCompleteEditing && editingComponent != null) {
+        if (tree.getInvokesStopCellEditing() && stopEditingInCompleteEditing && editingComponent != null) {
             cellEditor.stopCellEditing();
         }
         /*
-         * Invoke cancelCellEditing, this will do nothing if stopCellEditing
-         * was successful.
+         * Invoke cancelCellEditing, this will do nothing if stopCellEditing was successful.
          */
         completeEditing(false, true, true);
     }
 
     @Override
     protected boolean isToggleSelectionEvent(final MouseEvent e) {
-        return SwingUtilities.isLeftMouseButton(e)
-               && (SystemInfo.isMac ? e.isMetaDown() : e.isControlDown()) && !e.isPopupTrigger();
+        return SwingUtilities.isLeftMouseButton(e) && (SystemInfo.isMac ? e.isMetaDown() : e.isControlDown())
+            && !e.isPopupTrigger();
     }
 
     @Override
@@ -698,7 +695,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         }
     }
 
-    private abstract static class TreeUIAction extends AbstractAction implements UIResource {}
+    private abstract static class TreeUIAction extends AbstractAction implements UIResource {
+    }
 
     private class DarkTreeMouseListener extends MouseAdapter {
         boolean handled = false;

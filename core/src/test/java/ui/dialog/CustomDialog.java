@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package ui.dialog;
@@ -83,8 +80,8 @@ class CustomDialog extends JDialog implements ActionListener, PropertyChangeList
         Object[] options = {btnString1, btnString2};
 
         // Create the JOptionPane.
-        optionPane = new JOptionPane(array, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION,
-                                     null, options, options[0]);
+        optionPane =
+            new JOptionPane(array, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, null, options, options[0]);
 
         // Make this dialog display it.
         setContentPane(optionPane);
@@ -94,9 +91,7 @@ class CustomDialog extends JDialog implements ActionListener, PropertyChangeList
         addWindowListener(new WindowAdapter() {
             public void windowClosing(final WindowEvent we) {
                 /*
-                 * Instead of directly closing the window,
-                 * we're going to change the JOptionPane's
-                 * value property.
+                 * Instead of directly closing the window, we're going to change the JOptionPane's value property.
                  */
                 optionPane.setValue(JOptionPane.CLOSED_OPTION);
             }
@@ -117,7 +112,8 @@ class CustomDialog extends JDialog implements ActionListener, PropertyChangeList
     }
 
     /**
-     * Returns null if the typed string was invalid; otherwise, returns the string as the user entered it.
+     * Returns null if the typed string was invalid; otherwise, returns the string as the user entered
+     * it.
      */
     public String getValidatedText() {
         return typedText;
@@ -136,10 +132,10 @@ class CustomDialog extends JDialog implements ActionListener, PropertyChangeList
     public void propertyChange(final PropertyChangeEvent e) {
         String prop = e.getPropertyName();
 
-        if (isVisible()
-            && (e.getSource() == optionPane)
-            && (JOptionPane.VALUE_PROPERTY.equals(prop) ||
-                JOptionPane.INPUT_VALUE_PROPERTY.equals(prop))) {
+        if (
+            isVisible() && (e.getSource() == optionPane)
+                && (JOptionPane.VALUE_PROPERTY.equals(prop) || JOptionPane.INPUT_VALUE_PROPERTY.equals(prop))
+        ) {
             Object value = optionPane.getValue();
 
             if (value == JOptionPane.UNINITIALIZED_VALUE) {
@@ -162,10 +158,12 @@ class CustomDialog extends JDialog implements ActionListener, PropertyChangeList
                 } else {
                     // text was invalid
                     textField.selectAll();
-                    JOptionPane.showMessageDialog(CustomDialog.this,
-                                                  "Sorry, \"" + typedText + "\" " + "isn't a valid response.\n"
-                                                                     + "Please enter " + magicWord + ".",
-                                                  "Try again", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(
+                        CustomDialog.this,
+                        "Sorry, \"" + typedText + "\" " + "isn't a valid response.\n" + "Please enter " + magicWord
+                            + ".",
+                        "Try again", JOptionPane.ERROR_MESSAGE
+                    );
                     typedText = null;
                     textField.requestFocusInWindow();
                 }

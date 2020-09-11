@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.filechooser;
@@ -214,53 +211,53 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     }
 
     /*
-     * Listen for filechooser property changes, such as
-     * the selected file changing, or the type of the dialog changing.
+     * Listen for filechooser property changes, such as the selected file changing, or the type of the
+     * dialog changing.
      */
     public PropertyChangeListener createPropertyChangeListener(final JFileChooser fc) {
         return e -> {
             String s = e.getPropertyName();
             switch (s) {
-                case JFileChooser.SELECTED_FILE_CHANGED_PROPERTY :
+                case JFileChooser.SELECTED_FILE_CHANGED_PROPERTY:
                     doSelectedFileChanged(e);
                     break;
-                case JFileChooser.SELECTED_FILES_CHANGED_PROPERTY :
+                case JFileChooser.SELECTED_FILES_CHANGED_PROPERTY:
                     doSelectedFilesChanged(e);
                     break;
-                case JFileChooser.DIRECTORY_CHANGED_PROPERTY :
-                case "FileChooser.useShellFolder" :
+                case JFileChooser.DIRECTORY_CHANGED_PROPERTY:
+                case "FileChooser.useShellFolder":
                     doDirectoryChanged(e);
                     break;
-                case JFileChooser.FILE_FILTER_CHANGED_PROPERTY :
+                case JFileChooser.FILE_FILTER_CHANGED_PROPERTY:
                     doFilterChanged(e);
                     break;
-                case JFileChooser.FILE_SELECTION_MODE_CHANGED_PROPERTY :
+                case JFileChooser.FILE_SELECTION_MODE_CHANGED_PROPERTY:
                     doFileSelectionModeChanged(e);
                     break;
-                case JFileChooser.ACCESSORY_CHANGED_PROPERTY :
+                case JFileChooser.ACCESSORY_CHANGED_PROPERTY:
                     doAccessoryChanged(e);
                     break;
-                case JFileChooser.APPROVE_BUTTON_TEXT_CHANGED_PROPERTY :
-                case JFileChooser.APPROVE_BUTTON_TOOL_TIP_TEXT_CHANGED_PROPERTY :
+                case JFileChooser.APPROVE_BUTTON_TEXT_CHANGED_PROPERTY:
+                case JFileChooser.APPROVE_BUTTON_TOOL_TIP_TEXT_CHANGED_PROPERTY:
                     doApproveButtonTextChanged(e);
                     break;
-                case JFileChooser.DIALOG_TYPE_CHANGED_PROPERTY :
+                case JFileChooser.DIALOG_TYPE_CHANGED_PROPERTY:
                     doDialogTypeChanged(e);
                     break;
-                case JFileChooser.APPROVE_BUTTON_MNEMONIC_CHANGED_PROPERTY :
+                case JFileChooser.APPROVE_BUTTON_MNEMONIC_CHANGED_PROPERTY:
                     doApproveButtonMnemonicChanged(e);
                     break;
-                case JFileChooser.CONTROL_BUTTONS_ARE_SHOWN_CHANGED_PROPERTY :
+                case JFileChooser.CONTROL_BUTTONS_ARE_SHOWN_CHANGED_PROPERTY:
                     doControlButtonsChanged(e);
                     break;
-                case PropertyKey.COMPONENT_ORIENTATION :
+                case PropertyKey.COMPONENT_ORIENTATION:
                     ComponentOrientation o = (ComponentOrientation) e.getNewValue();
                     JFileChooser cc = (JFileChooser) e.getSource();
                     if (o != e.getOldValue()) {
                         cc.applyComponentOrientation(o);
                     }
                     break;
-                case PropertyKey.ANCESTOR :
+                case PropertyKey.ANCESTOR:
                     if (e.getOldValue() == null && e.getNewValue() != null) {
                         // Ancestor was added, set initial focus
                         fileNameTextField.selectAll();
@@ -274,9 +271,10 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     protected void doSelectedFileChanged(final PropertyChangeEvent e) {
         File f = (File) e.getNewValue();
         JFileChooser fc = getFileChooser();
-        if (f != null
-            && ((fc.isFileSelectionEnabled() && !f.isDirectory())
-                || (f.isDirectory() && fc.isDirectorySelectionEnabled()))) {
+        if (
+            f != null && ((fc.isFileSelectionEnabled() && !f.isDirectory())
+                || (f.isDirectory() && fc.isDirectorySelectionEnabled()))
+        ) {
 
             setFileName(fileNameString(f));
         }
@@ -285,9 +283,10 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     protected void doSelectedFilesChanged(final PropertyChangeEvent e) {
         File[] files = (File[]) e.getNewValue();
         JFileChooser fc = getFileChooser();
-        if (files != null
-            && files.length > 0
-            && (files.length > 1 || fc.isDirectorySelectionEnabled() || !files[0].isDirectory())) {
+        if (
+            files != null && files.length > 0
+                && (files.length > 1 || fc.isDirectorySelectionEnabled() || !files[0].isDirectory())
+        ) {
             setFileName(fileNameString(files));
         }
     }
@@ -323,10 +322,10 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
 
         JFileChooser fc = getFileChooser();
         File currentDirectory = fc.getCurrentDirectory();
-        if (currentDirectory != null
-            && fc.isDirectorySelectionEnabled()
-            && !fc.isFileSelectionEnabled()
-            && fc.getFileSystemView().isFileSystem(currentDirectory)) {
+        if (
+            currentDirectory != null && fc.isDirectorySelectionEnabled() && !fc.isFileSelectionEnabled()
+                && fc.getFileSystemView().isFileSystem(currentDirectory)
+        ) {
 
             setFileName(currentDirectory.getPath());
         } else {
@@ -439,8 +438,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     }
 
     /**
-     * Property to remember whether a directory is currently selected in the UI. This is normally called by the UI on a
-     * selection event.
+     * Property to remember whether a directory is currently selected in the UI. This is normally called
+     * by the UI on a selection event.
      *
      * @param directorySelected if a directory is currently selected.
      * @since                   1.4
@@ -545,9 +544,10 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
             return null;
         } else {
             JFileChooser fc = getFileChooser();
-            if ((fc.isDirectorySelectionEnabled() && !fc.isFileSelectionEnabled()) ||
-                (fc.isDirectorySelectionEnabled() && fc.isFileSelectionEnabled()
-                 && fc.getFileSystemView().isFileSystemRoot(file))) {
+            if (
+                (fc.isDirectorySelectionEnabled() && !fc.isFileSelectionEnabled()) || (fc.isDirectorySelectionEnabled()
+                    && fc.isFileSelectionEnabled() && fc.getFileSystemView().isFileSystemRoot(file))
+            ) {
                 return file.getPath();
             } else {
                 return file.getName();
@@ -619,10 +619,9 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     }
 
     /**
-     * Returns the preferred size of the specified
-     * <code>JFileChooser</code>.
-     * The preferred size is at least as large, in both height and width, as the preferred size recommended by the file
-     * chooser's layout manager.
+     * Returns the preferred size of the specified <code>JFileChooser</code>. The preferred size is at
+     * least as large, in both height and width, as the preferred size recommended by the file chooser's
+     * layout manager.
      *
      * @param  c a <code>JFileChooser</code>
      * @return   a <code>Dimension</code> specifying the preferred width and height of the file chooser
@@ -632,8 +631,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
         int prefWidth = PREF_SIZE.width;
         Dimension d = c.getLayout().preferredLayoutSize(c);
         if (d != null) {
-            return new Dimension(Math.max(d.width, prefWidth),
-                                 Math.max(d.height, PREF_SIZE.height));
+            return new Dimension(Math.max(d.width, prefWidth), Math.max(d.height, PREF_SIZE.height));
         } else {
             return new Dimension(prefWidth, PREF_SIZE.height);
         }
@@ -679,9 +677,10 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
      */
     @SuppressWarnings("serial") // Superclass is not serializable across versions
     public static class FilterComboBoxRenderer extends DefaultListCellRenderer {
-        public Component getListCellRendererComponent(final JList<?> list,
-                                                      final Object value, final int index, final boolean isSelected,
-                                                      final boolean cellHasFocus) {
+        public Component getListCellRendererComponent(
+                final JList<?> list, final Object value, final int index, final boolean isSelected,
+                final boolean cellHasFocus
+        ) {
 
             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
@@ -695,9 +694,9 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     }
 
     /**
-     * <code>ButtonAreaLayout</code> behaves in a similar manner to
-     * <code>FlowLayout</code>. It lays out all components from left to
-     * right, flushed right. The widths of all components will be set to the largest preferred size width.
+     * <code>ButtonAreaLayout</code> behaves in a similar manner to <code>FlowLayout</code>. It lays out
+     * all components from left to right, flushed right. The widths of all components will be set to the
+     * largest preferred size width.
      */
     protected static class ButtonAreaLayout implements LayoutManager {
         protected final int hGap = 5;
@@ -728,9 +727,9 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
                         height = Math.max(height, aSize.height);
                         maxWidth = Math.max(maxWidth, aSize.width);
                     }
-                    return new Dimension(extraWidth + numChildren * maxWidth +
-                                         (numChildren - 1) * hGap,
-                                         extraHeight + height);
+                    return new Dimension(
+                        extraWidth + numChildren * maxWidth + (numChildren - 1) * hGap, extraHeight + height
+                    );
                 }
             }
             return new Dimension(0, 0);
@@ -759,8 +758,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
                     xOffset = -(hGap + maxWidth);
                 }
                 for (int counter = numChildren - 1; counter >= 0; counter--) {
-                    children[counter].setBounds(xLocation, yLocation,
-                                                maxWidth, sizes[counter].height);
+                    children[counter].setBounds(xLocation, yLocation, maxWidth, sizes[counter].height);
                     xLocation -= xOffset;
                 }
             }
@@ -805,8 +803,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
         }
 
         public MouseListener createDoubleClickListener(final JList<?> list) {
-            return DarkFileChooserUIBridge.this.createDoubleClickListener(getFileChooser(),
-                                                                          list);
+            return DarkFileChooserUIBridge.this.createDoubleClickListener(getFileChooser(), list);
         }
 
         public ListSelectionListener createListSelectionListener() {
@@ -834,7 +831,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
      * @deprecated As of JDK version 9. Obsolete class.
      */
     @SuppressWarnings("serial") // Superclass is not serializable across versions
-    protected static class FileRenderer extends DefaultListCellRenderer {}
+    protected static class FileRenderer extends DefaultListCellRenderer {
+    }
 
     //
     // Renderer for DirectoryComboBox
@@ -844,9 +842,10 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     class DirectoryComboBoxRenderer extends DefaultListCellRenderer {
         final IndentIcon ii = new IndentIcon();
 
-        public Component getListCellRendererComponent(final JList<?> list, final Object value,
-                                                      final int index, final boolean isSelected,
-                                                      final boolean cellHasFocus) {
+        public Component getListCellRendererComponent(
+                final JList<?> list, final Object value, final int index, final boolean isSelected,
+                final boolean cellHasFocus
+        ) {
 
             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
@@ -910,8 +909,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
         }
 
         /**
-         * Adds the directory to the model and sets it to be selected, additionally clears out the previous selected
-         * directory and the paths leading up to it, if any.
+         * Adds the directory to the model and sets it to be selected, additionally clears out the previous
+         * selected directory and the paths leading up to it, if any.
          *
          * @param directory the directory
          */
@@ -925,9 +924,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
 
             directories.clear();
 
-            File[] baseFolders = (useShellFolder)
-                    ? (File[]) ShellFolder.get("fileChooserComboBoxFolders")
-                    : fsv.getRoots();
+            File[] baseFolders =
+                (useShellFolder) ? (File[]) ShellFolder.get("fileChooserComboBoxFolders") : fsv.getRoots();
             directories.addAll(Arrays.asList(baseFolders));
 
             // Get the canonical (full) path. This has the side
@@ -943,8 +941,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
 
             // create File instances of each directory leading up to the top
             try {
-                File sf = useShellFolder ? ShellFolder.getShellFolder(canonical)
-                        : canonical;
+                File sf = useShellFolder ? ShellFolder.getShellFolder(canonical) : canonical;
                 File f = sf;
                 Vector<File> path = new Vector<>(10);
                 do {
@@ -1020,7 +1017,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
      */
     @SuppressWarnings("serial") // Same-version serialization only
     protected class FilterComboBoxModel extends AbstractListModel<Object>
-                                        implements ComboBoxModel<Object>, PropertyChangeListener {
+            implements ComboBoxModel<Object>, PropertyChangeListener {
 
         /**
          * An array of file filters.

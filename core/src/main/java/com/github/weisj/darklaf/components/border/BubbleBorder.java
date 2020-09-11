@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.components.border;
@@ -64,12 +61,11 @@ public class BubbleBorder extends AbstractBorder {
      * @param color       Colour of bubble.
      * @param thickness   Line thickness of border.
      * @param radius      corner radius of border.
-     * @param pointerSize size of pointer. You can set this size to 0 to achieve no pointer, but it is not desirable.
-     *                    The appropriate method for this is to set using {@link BubbleBorder#setPointerSide(Alignment)}
-     *                    to. {@link Alignment#CENTER}
+     * @param pointerSize size of pointer. You can set this size to 0 to achieve no pointer, but it is
+     *                    not desirable. The appropriate method for this is to set using
+     *                    {@link BubbleBorder#setPointerSide(Alignment)} to. {@link Alignment#CENTER}
      */
-    public BubbleBorder(final Color color, final int thickness,
-                        final int radius, final int pointerSize) {
+    public BubbleBorder(final Color color, final int thickness, final int radius, final int pointerSize) {
         this.color = color;
         this.thickness = thickness;
         this.radius = radius;
@@ -163,23 +159,23 @@ public class BubbleBorder extends AbstractBorder {
         float top = thickness;
 
         switch (pointerSide) {
-            case NORTH :
-            case NORTH_WEST :
-            case NORTH_EAST :
+            case NORTH:
+            case NORTH_WEST:
+            case NORTH_EAST:
                 top += pSize;
                 break;
-            case SOUTH :
-            case SOUTH_WEST :
-            case SOUTH_EAST :
+            case SOUTH:
+            case SOUTH_WEST:
+            case SOUTH_EAST:
                 bottom += pSize;
                 break;
-            case WEST :
+            case WEST:
                 left += pSize;
                 break;
-            case EAST :
+            case EAST:
                 right += pSize;
                 break;
-            default :
+            default:
                 break;
         }
         insets.set((int) top, (int) left, (int) bottom, (int) right);
@@ -216,9 +212,10 @@ public class BubbleBorder extends AbstractBorder {
     }
 
     /**
-     * Set the alignment for the pointer. Not there is no difference between {@link Alignment#NORTH}, {@link
-     * Alignment#NORTH_EAST} and {@link Alignment#NORTH_WEST} as well as {@link Alignment#SOUTH}, {@link
-     * Alignment#SOUTH_EAST} and {@link Alignment#SOUTH_WEST} {@link Alignment#CENTER} results in no pointer.
+     * Set the alignment for the pointer. Not there is no difference between {@link Alignment#NORTH},
+     * {@link Alignment#NORTH_EAST} and {@link Alignment#NORTH_WEST} as well as {@link Alignment#SOUTH},
+     * {@link Alignment#SOUTH_EAST} and {@link Alignment#SOUTH_WEST} {@link Alignment#CENTER} results in
+     * no pointer.
      *
      * @param  side direction in which the pointer should point.
      * @return      this.
@@ -236,23 +233,23 @@ public class BubbleBorder extends AbstractBorder {
     private double calculatePointerPad(final float width, final float height, final Alignment side) {
         double pointerPad;
         switch (side) {
-            case WEST :
-            case EAST :
+            case WEST:
+            case EAST:
                 pointerPad = radius + (height - insets.top - insets.bottom - 2 * radius) / 2.0;
                 break;
-            case NORTH_WEST :
-            case SOUTH_WEST :
+            case NORTH_WEST:
+            case SOUTH_WEST:
                 pointerPad = radius + insets.left + pointerWidth;
                 break;
-            case NORTH_EAST :
-            case SOUTH_EAST :
+            case NORTH_EAST:
+            case SOUTH_EAST:
                 pointerPad = width - radius - insets.right - pointerWidth;
                 break;
-            case SOUTH :
-            case NORTH :
+            case SOUTH:
+            case NORTH:
                 pointerPad = radius + (0.5 * (width - insets.left - insets.right - 2 * radius));
                 break;
-            default :
+            default:
                 pointerPad = 0;
                 break;
         }
@@ -260,8 +257,9 @@ public class BubbleBorder extends AbstractBorder {
     }
 
     @Override
-    public void paintBorder(final Component c, final Graphics g,
-                            final int x, final int y, final int width, final int height) {
+    public void paintBorder(
+            final Component c, final Graphics g, final int x, final int y, final int width, final int height
+    ) {
         Area area = getBorderArea(x, y, width, height);
         paintBorder(g, area);
     }
@@ -276,8 +274,7 @@ public class BubbleBorder extends AbstractBorder {
         return getBorderInsets(c);
     }
 
-    public Area getBubbleArea(final float x, final float y, final float width, final float height,
-                              final float adj) {
+    public Area getBubbleArea(final float x, final float y, final float width, final float height, final float adj) {
         float w = width - 2 * adj;
         float h = height - 2 * adj;
         double pSize = getPointerSize() - adj;
@@ -287,15 +284,15 @@ public class BubbleBorder extends AbstractBorder {
         if (pointerSide != Alignment.CENTER) {
             double pointerPad = calculatePointerPad(w, h, pointerSide);
             switch (pointerSide) {
-                case SOUTH_EAST :
-                case NORTH_EAST :
+                case SOUTH_EAST:
+                case NORTH_EAST:
                     pointerPad += adj;
                     break;
-                case NORTH_WEST :
-                case SOUTH_WEST :
+                case NORTH_WEST:
+                case SOUTH_WEST:
                     pointerPad -= adj;
                     break;
-                default :
+                default:
                     break;
             }
             Path2D pointer = creatPointerShape(pointerPad, pSize, pWidth, bubble);
@@ -319,44 +316,48 @@ public class BubbleBorder extends AbstractBorder {
         config.restore();
     }
 
-    public RoundRectangle2D.Float calculateBubbleRect(final float x, final float y,
-                                                      final float width, final float height) {
-        return new RoundRectangle2D.Float(x + insets.left, y + insets.top, width - insets.left - insets.right,
-                                          height - insets.top - insets.bottom, radius, radius);
+    public RoundRectangle2D.Float calculateBubbleRect(
+            final float x, final float y, final float width, final float height
+    ) {
+        return new RoundRectangle2D.Float(
+            x + insets.left, y + insets.top, width - insets.left - insets.right, height - insets.top - insets.bottom,
+            radius, radius
+        );
     }
 
-    private Path2D creatPointerShape(final double pointerPad, final double pSize, final double pWidth,
-                                     final RoundRectangle2D.Float bubble) {
+    private Path2D creatPointerShape(
+            final double pointerPad, final double pSize, final double pWidth, final RoundRectangle2D.Float bubble
+    ) {
         final double w = pWidth / 2.0;
         final Path2D pointer = new Path2D.Double(Path2D.WIND_EVEN_ODD);
         double x = bubble.x;
         double y = bubble.y;
         switch (pointerSide) {
-            case WEST :
+            case WEST:
                 pointer.moveTo(x, y + pointerPad - w); // Top
                 pointer.lineTo(x - pSize, y + pointerPad);
                 pointer.lineTo(x, y + pointerPad + w);// bottom
                 break;
-            case EAST :
+            case EAST:
                 pointer.moveTo(x + bubble.width, y + pointerPad - w);// top
                 pointer.lineTo(x + bubble.width + pSize, y + pointerPad);
                 pointer.lineTo(x + bubble.width, y + pointerPad + w);// bottom
                 break;
-            case NORTH :
-            case NORTH_WEST :
-            case NORTH_EAST :
+            case NORTH:
+            case NORTH_WEST:
+            case NORTH_EAST:
                 pointer.moveTo(x + pointerPad - w, y);// left
                 pointer.lineTo(x + pointerPad, y - pSize);
                 pointer.lineTo(x + pointerPad + w, y);// right
                 break;
-            case SOUTH :
-            case SOUTH_WEST :
-            case SOUTH_EAST :
+            case SOUTH:
+            case SOUTH_WEST:
+            case SOUTH_EAST:
                 pointer.moveTo(x + pointerPad - w, y + bubble.height);// left
                 pointer.lineTo(x + pointerPad, y + bubble.height + pSize);
                 pointer.lineTo(x + pointerPad + w, y + bubble.height);// right
                 break;
-            default :
+            default:
                 break;
         }
         pointer.closePath();

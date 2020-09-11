@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.progressbar;
@@ -147,17 +144,21 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
                 if (orientation == SwingConstants.HORIZONTAL) {
                     shape = getShapedRect(r.x, yOffset, r.width, pHeight, pHeight);
                     yOffset = r.y + pHeight / 2;
-                    g2.setPaint(new GradientPaint(r.x + getAnimationIndex() * step * 2, yOffset, startColor,
-                                                  r.x + getFrameCount() * step + getAnimationIndex() * step * 2,
-                                                  yOffset,
-                                                  endColor, true));
+                    g2.setPaint(
+                        new GradientPaint(
+                            r.x + getAnimationIndex() * step * 2, yOffset, startColor,
+                            r.x + getFrameCount() * step + getAnimationIndex() * step * 2, yOffset, endColor, true
+                        )
+                    );
                 } else {
                     shape = getShapedRect(xOffset, r.y, pWidth, r.height, pWidth);
                     xOffset = r.x + pWidth / 2;
-                    g2.setPaint(new GradientPaint(xOffset, r.y + getAnimationIndex() * step * 2, startColor,
-                                                  xOffset,
-                                                  r.y + getFrameCount() * step + getAnimationIndex() * step * 2,
-                                                  endColor, true));
+                    g2.setPaint(
+                        new GradientPaint(
+                            xOffset, r.y + getAnimationIndex() * step * 2, startColor, xOffset,
+                            r.y + getFrameCount() * step + getAnimationIndex() * step * 2, endColor, true
+                        )
+                    );
                 }
                 g2.fill(shape);
             }
@@ -165,11 +166,9 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
             // Paint text
             if (progressBar.isStringPainted()) {
                 if (progressBar.getOrientation() == SwingConstants.HORIZONTAL) {
-                    paintString((Graphics2D) g, i.left, i.top, r.width, r.height,
-                                boxRect.x, boxRect.width);
+                    paintString((Graphics2D) g, i.left, i.top, r.width, r.height, boxRect.x, boxRect.width);
                 } else {
-                    paintString((Graphics2D) g, i.left, i.top, r.width, r.height,
-                                boxRect.y, boxRect.height);
+                    paintString((Graphics2D) g, i.left, i.top, r.width, r.height, boxRect.y, boxRect.height);
                 }
             }
         } finally {
@@ -184,8 +183,9 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
     @Override
     protected void installDefaults() {
         super.installDefaults();
-        UIManager.put("ProgressBar.repaintInterval",
-                      isSimplified() ? REPAINT_INTERVAL_SIMPLIFIED : REPAINT_INTERVAL_DEFAULT);
+        UIManager.put(
+            "ProgressBar.repaintInterval", isSimplified() ? REPAINT_INTERVAL_SIMPLIFIED : REPAINT_INTERVAL_DEFAULT
+        );
         UIManager.put("ProgressBar.cycleTime", isSimplified() ? CYCLE_TIME_SIMPLIFIED : CYCLE_TIME_DEFAULT);
         trackColor = UIManager.getColor("ProgressBar.trackColor");
         progressColor = UIManager.getColor("ProgressBar.progressColor");
@@ -210,8 +210,10 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
         return new RoundRectangle2D.Float(x, y, w, h, ar, ar);
     }
 
-    private void paintString(final Graphics2D g, final int x, final int y,
-                             final int w, final int h, final int fillStart, final int amountFull) {
+    private void paintString(
+            final Graphics2D g, final int x, final int y, final int w, final int h, final int fillStart,
+            final int amountFull
+    ) {
         GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         String progressString = progressBar.getString();
         g.setFont(progressBar.getFont());
@@ -292,11 +294,15 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
                 GraphicsContext config = GraphicsUtil.setupAAPainting(g);
                 Rectangle progressRect = coloredShape.getBounds();
                 if (progressBar.getOrientation() == JProgressBar.HORIZONTAL) {
-                    paintString((Graphics2D) g, i.left, i.top, r.width, r.height, progressRect.x,
-                                progressRect.x + progressRect.width);
+                    paintString(
+                        (Graphics2D) g, i.left, i.top, r.width, r.height, progressRect.x,
+                        progressRect.x + progressRect.width
+                    );
                 } else {
-                    paintString((Graphics2D) g, i.left, i.top, r.width, r.height, progressRect.y,
-                                progressRect.y + progressRect.height);
+                    paintString(
+                        (Graphics2D) g, i.left, i.top, r.width, r.height, progressRect.y,
+                        progressRect.y + progressRect.height
+                    );
                 }
                 config.restore();
             }
@@ -342,8 +348,7 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
         String key = evt.getPropertyName();
         if (KEY_FAILED.equals(key) || KEY_PASSED.equals(key)) {
             progressBar.repaint();
-        } else if (PropertyKey.COMPONENT_ORIENTATION.equals(key)
-                   || "stringPainted".equals(key)) {
+        } else if (PropertyKey.COMPONENT_ORIENTATION.equals(key) || "stringPainted".equals(key)) {
             progressBar.revalidate();
         }
     }

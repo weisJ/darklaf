@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.colorchooser;
@@ -45,8 +42,8 @@ import com.github.weisj.darklaf.ui.text.DarkTextUI;
 /**
  * @author Jannis Weis
  */
-public final class ColorValueFormatter extends JFormattedTextField.AbstractFormatter implements FocusListener,
-                                       ActionListener {
+public final class ColorValueFormatter extends JFormattedTextField.AbstractFormatter
+        implements FocusListener, ActionListener {
 
     private final int fieldIndex;
     private final int radix;
@@ -57,8 +54,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
     private JFormattedTextField text;
     private final DocumentFilter filter = new DocumentFilter() {
         @Override
-        public void remove(final FilterBypass fb, final int offset,
-                           final int length) throws BadLocationException {
+        public void remove(final FilterBypass fb, final int offset, final int length) throws BadLocationException {
             if (isValid(fb.getDocument().getLength() - length)) {
                 fb.remove(offset, length);
                 commit();
@@ -68,10 +64,9 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         }
 
         @Override
-        public void insertString(final FilterBypass fb, final int offset,
-                                 final String text, final AttributeSet set) throws BadLocationException {
-            if (isValid(fb.getDocument().getLength() + text.length())
-                && isValid(text)) {
+        public void insertString(final FilterBypass fb, final int offset, final String text, final AttributeSet set)
+                throws BadLocationException {
+            if (isValid(fb.getDocument().getLength() + text.length()) && isValid(text)) {
                 StringBuilder newText = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()));
                 newText.insert(offset, text);
                 if (hex || isValidValue(newText.toString())) {
@@ -84,8 +79,9 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         }
 
         @Override
-        public void replace(final FilterBypass fb, final int offset, final int length,
-                            final String text, final AttributeSet set) throws BadLocationException {
+        public void replace(
+                final FilterBypass fb, final int offset, final int length, final String text, final AttributeSet set
+        ) throws BadLocationException {
             if (isValid(fb.getDocument().getLength() + text.length() - length) && isValid(text)) {
                 StringBuilder newText = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()));
                 newText.replace(offset, offset + length, text);
@@ -108,8 +104,9 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         errorTimer.setRepeats(false);
     }
 
-    public static ColorValueFormatter init(final DarkColorModel model, final int index,
-                                           final boolean hex, final JFormattedTextField text) {
+    public static ColorValueFormatter init(
+            final DarkColorModel model, final int index, final boolean hex, final JFormattedTextField text
+    ) {
         ColorValueFormatter formatter = new ColorValueFormatter(model, index, hex);
         formatter.setText(text);
         text.setFormatterFactory(new DefaultFormatterFactory(formatter));
@@ -218,9 +215,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
                 checkRange(g, 0, 255);
                 int b = Integer.valueOf(hexStr.substring(4, 6), 16);
                 checkRange(b, 0, 255);
-                int alpha = hexStr.length() >= 8
-                        ? Integer.valueOf(hexStr.substring(6, 8), 16)
-                        : 255;
+                int alpha = hexStr.length() >= 8 ? Integer.valueOf(hexStr.substring(6, 8), 16) : 255;
                 checkRange(alpha, 0, 255);
                 return new Color(r, g, b, alpha);
             } else {

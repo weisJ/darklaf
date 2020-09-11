@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package documentation;
@@ -81,8 +78,9 @@ public class CreateUITable {
         File f = new File(htmlFile);
         if (!f.exists()) Files.createFile(f.toPath());
 
-        try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(htmlFile),
-                                                                StandardCharsets.UTF_8)) {
+        try (
+            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(htmlFile), StandardCharsets.UTF_8)
+        ) {
             CreateUITable tableCreator = new CreateUITable();
             writer.append("<html>\n");
             writer.append("<a href=\"../index.html\">back</a>\n");
@@ -106,19 +104,17 @@ public class CreateUITable {
             return misc + s;
         }).collect(Collectors.toSet());
 
-        Set<String> miscKeys = groups.stream().filter(s -> s.startsWith(misc))
-                                     .map(s -> s.substring(misc.length())).collect(Collectors.toSet());
+        Set<String> miscKeys = groups.stream().filter(s -> s.startsWith(misc)).map(s -> s.substring(misc.length()))
+            .collect(Collectors.toSet());
 
         StringBuilder builder = new StringBuilder();
         appendGroup(ident, defaults, builder, "%", "Theme Defaults");
-        groups.stream().sorted()
-              .filter(s -> !s.startsWith(misc) && !s.equals("%"))
-              .forEach(group -> appendGroup(ident, defaults, builder, group, group));
+        groups.stream().sorted().filter(s -> !s.startsWith(misc) && !s.equals("%"))
+            .forEach(group -> appendGroup(ident, defaults, builder, group, group));
         builder.append(StringUtil.repeat(IDENT, ident)).append("<h3>").append("Miscellaneous").append("</h3>\n");
-        appendTable(builder, defaults.entrySet().stream()
-                                     .filter(entry -> miscKeys.contains(entry.getKey().toString()))
-                                     .collect(Collectors.toSet()),
-                    ident);
+        appendTable(
+            builder, defaults.entrySet().stream().filter(entry -> miscKeys.contains(entry.getKey().toString())).collect(Collectors.toSet()), ident
+        );
 
         return builder.toString();
     }
@@ -132,27 +128,26 @@ public class CreateUITable {
         return defaults;
     }
 
-    private void appendGroup(final int ident, final UIDefaults defaults, final StringBuilder builder,
-                             final String group, final String heading) {
+    private void appendGroup(
+            final int ident, final UIDefaults defaults, final StringBuilder builder, final String group,
+            final String heading
+    ) {
         builder.append(StringUtil.repeat(IDENT, ident)).append("<h3>").append(heading).append("</h3>\n");
-        Set<Map.Entry<Object, Object>> values = defaults.entrySet().stream()
-                                                        .filter(entry -> {
-                                                            String key = entry.getKey().toString();
-                                                            if (key.startsWith("%")) return true;
-                                                            if (key.endsWith("UI"))
-                                                                return key.substring(0, key.length() - 2).equals(group);
-                                                            if (key.contains("."))
-                                                                return key.split("\\.")[0].equals(group);
-                                                            return key.equals(group);
-                                                        })
-                                                        .collect(Collectors.toSet());
+        Set<Map.Entry<Object, Object>> values = defaults.entrySet().stream().filter(entry -> {
+            String key = entry.getKey().toString();
+            if (key.startsWith("%")) return true;
+            if (key.endsWith("UI")) return key.substring(0, key.length() - 2).equals(group);
+            if (key.contains(".")) return key.split("\\.")[0].equals(group);
+            return key.equals(group);
+        }).collect(Collectors.toSet());
         appendTable(builder, values, ident);
         values.forEach(entry -> defaults.remove(entry.getKey()));
         builder.append('\n');
     }
 
-    private void appendTable(final StringBuilder builder, final Set<Map.Entry<Object, Object>> values,
-                             final int ident) {
+    private void appendTable(
+            final StringBuilder builder, final Set<Map.Entry<Object, Object>> values, final int ident
+    ) {
         builder.append(StringUtil.repeat(IDENT, ident)).append("<table>\n");
         builder.append(StringUtil.repeat(IDENT, ident + 1)).append("<tr>\n");
         builder.append(StringUtil.repeat(IDENT, ident + 2)).append("<th>Key</th>\n");
@@ -160,44 +155,29 @@ public class CreateUITable {
         builder.append(StringUtil.repeat(IDENT, ident + 2)).append("<th>Reference</th>\n");
         builder.append(StringUtil.repeat(IDENT, ident + 2)).append("<th>Preview</th>\n");
         builder.append(StringUtil.repeat(IDENT, ident + 1)).append("</tr>\n");
-        values.stream()
-              .filter(entry -> entry.getKey().toString().endsWith("UI"))
-              .forEach(entry -> appendRow(builder, entry, ident + 1));
-        values.stream()
-              .filter(entry -> !entry.getKey().toString().endsWith("UI"))
-              .sorted((o1, o2) -> {
-                  int res = o1.getValue().getClass().getSimpleName()
-                              .compareTo(o2.getValue().getClass().getSimpleName());
-                  if (res != 0) return res;
-                  Object val1 = o1.getValue();
-                  Object val2 = o2.getValue();
-                  if (val1 instanceof Comparable) {
-                      return ((Comparable<Object>) val1).compareTo(val2);
-                  } else {
-                      return val1.toString().compareTo(val2.toString());
-                  }
-              })
-              .forEach(entry -> appendRow(builder, entry, ident + 1));
+        values.stream().filter(entry -> entry.getKey().toString().endsWith("UI"))
+            .forEach(entry -> appendRow(builder, entry, ident + 1));
+        values.stream().filter(entry -> !entry.getKey().toString().endsWith("UI")).sorted((o1, o2) -> {
+            int res = o1.getValue().getClass().getSimpleName().compareTo(o2.getValue().getClass().getSimpleName());
+            if (res != 0) return res;
+            Object val1 = o1.getValue();
+            Object val2 = o2.getValue();
+            if (val1 instanceof Comparable) {
+                return ((Comparable<Object>) val1).compareTo(val2);
+            } else {
+                return val1.toString().compareTo(val2.toString());
+            }
+        }).forEach(entry -> appendRow(builder, entry, ident + 1));
         builder.append(StringUtil.repeat(IDENT, ident)).append("</table>\n");
     }
 
     private String getTableStyle() {
-        return "<style>\n"
-               + "table {\n"
-               + IDENT + "font-family: monospace;\n"
-               + IDENT + "font-size: 10pt;\n"
-               + IDENT + "border-collapse: collapse;\n"
-               + "}\n"
-               + "th, td {\n"
-               + IDENT + "padding: 4px 8px 4px 8px;\n"
-               + "}\n"
-               + "tr:nth-child(even) {background-color: #f2f2f2;}\n"
-               + "</style>\n";
+        return "<style>\n" + "table {\n" + IDENT + "font-family: monospace;\n" + IDENT + "font-size: 10pt;\n" + IDENT
+            + "border-collapse: collapse;\n" + "}\n" + "th, td {\n" + IDENT + "padding: 4px 8px 4px 8px;\n" + "}\n"
+            + "tr:nth-child(even) {background-color: #f2f2f2;}\n" + "</style>\n";
     }
 
-    private void appendRow(final StringBuilder builder,
-                           final Map.Entry<Object, Object> entry,
-                           final int ident) {
+    private void appendRow(final StringBuilder builder, final Map.Entry<Object, Object> entry, final int ident) {
         builder.append(StringUtil.repeat(IDENT, ident)).append("<tr>\n");
         String key = entry.getKey().toString();
         appendData(builder, key, ident + 1);
@@ -219,13 +199,17 @@ public class CreateUITable {
         Object value = getValue(val);
         if (value instanceof Color) {
             return StringUtil.repeat(IDENT, ident)
-                   + String.format("<td style=\"background-color: #%s\" width=\"%d\" height=\"%d\">\n",
-                                   ColorUtil.toHex((Color) value), SAMPLE_WIDTH, SAMPLE_HEIGHT);
+                + String
+                    .format(
+                        "<td style=\"background-color: #%s\" width=\"%d\" height=\"%d\">\n",
+                        ColorUtil.toHex((Color) value), SAMPLE_WIDTH, SAMPLE_HEIGHT
+                    );
         } else if (value instanceof DarkSVGIcon) {
             return parseSVGIcon((DarkSVGIcon) value, ident);
-        } else if ((value instanceof Border && !(value instanceof EmptyBorder))
-                   || value instanceof Font
-                   || (value instanceof Icon && !(value instanceof EmptyIcon))) {
+        } else if (
+            (value instanceof Border && !(value instanceof EmptyBorder)) || value instanceof Font
+                || (value instanceof Icon && !(value instanceof EmptyIcon))
+        ) {
             return parseImage(key, value, ident);
         }
         return StringUtil.repeat(IDENT, ident) + "<td></td>\n";
@@ -257,8 +241,7 @@ public class CreateUITable {
             return StringUtil.repeat(IDENT, ident) + "<td></td>\n";
         }
         return StringUtil.repeat(IDENT, ident)
-               + String.format("<td style=\"padding:0px\" align=\"center\"><img src=\"%s\" alt=\"%s\"></td>\n", path,
-                               key);
+            + String.format("<td style=\"padding:0px\" align=\"center\"><img src=\"%s\" alt=\"%s\"></td>\n", path, key);
     }
 
     private String createImage(final Object value, final String name, final Dimension size) throws IOException {
@@ -270,8 +253,8 @@ public class CreateUITable {
             size.width = Math.max(size.width, ((Icon) value).getIconWidth());
             size.height = Math.max(size.height, ((Icon) value).getIconHeight());
         }
-        JComponent comp = (JComponent) new SampleRenderer().getTableCellRendererComponent(null, value, false, false, 0,
-                                                                                          0);
+        JComponent comp =
+            (JComponent) new SampleRenderer().getTableCellRendererComponent(null, value, false, false, 0, 0);
         BufferedImage image = ImageUtil.createCompatibleTranslucentImage(size.width, size.height);
         Graphics g = image.getGraphics();
         if (!(value instanceof Icon) && !(value instanceof DropShadowBorder)) {
@@ -347,9 +330,9 @@ public class CreateUITable {
         Object value = getValue(val);
         if (value instanceof Color) {
             Color color = (Color) value;
-            return String.format("#%s [%03d,%03d,%03d]",
-                                 ColorUtil.toHex(color),
-                                 color.getRed(), color.getGreen(), color.getBlue());
+            return String.format(
+                "#%s [%03d,%03d,%03d]", ColorUtil.toHex(color), color.getRed(), color.getGreen(), color.getBlue()
+            );
         } else if (value instanceof Insets) {
             Insets insets = (Insets) value;
             return String.format("Insets [%d,%d,%d,%d]", insets.top, insets.left, insets.bottom, insets.right);

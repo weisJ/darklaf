@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.theme.info;
@@ -37,8 +34,7 @@ public class PreferredThemeStyle {
         this(ContrastRule.STANDARD, ColorToneRule.LIGHT);
     }
 
-    public PreferredThemeStyle(final ContrastRule contrastRule,
-                               final ColorToneRule colorToneRule) {
+    public PreferredThemeStyle(final ContrastRule contrastRule, final ColorToneRule colorToneRule) {
         if (contrastRule == null) throw new IllegalArgumentException("null is not a valid contrast rule");
         if (colorToneRule == null) throw new IllegalArgumentException("null is not a valid style rule");
         this.contrastRule = contrastRule;
@@ -47,9 +43,9 @@ public class PreferredThemeStyle {
         this.accentColorRule = AccentColorRule.getDefault();
     }
 
-    public PreferredThemeStyle(final ContrastRule contrastRule,
-                               final ColorToneRule colorToneRule,
-                               final AccentColorRule accentColorRule) {
+    public PreferredThemeStyle(
+            final ContrastRule contrastRule, final ColorToneRule colorToneRule, final AccentColorRule accentColorRule
+    ) {
         if (contrastRule == null) throw new IllegalArgumentException("null is not a valid contrast rule");
         if (colorToneRule == null) throw new IllegalArgumentException("null is not a valid style rule");
         if (accentColorRule == null) throw new IllegalArgumentException("null is not a valid accent color rule");
@@ -59,9 +55,9 @@ public class PreferredThemeStyle {
         this.accentColorRule = accentColorRule;
     }
 
-    public PreferredThemeStyle(final ContrastRule contrastRule,
-                               final ColorToneRule colorToneRule,
-                               final FontSizeRule fontSizeRule) {
+    public PreferredThemeStyle(
+            final ContrastRule contrastRule, final ColorToneRule colorToneRule, final FontSizeRule fontSizeRule
+    ) {
         if (contrastRule == null) throw new IllegalArgumentException("null is not a valid contrast rule");
         if (colorToneRule == null) throw new IllegalArgumentException("null is not a valid style rule");
         if (fontSizeRule == null) throw new IllegalArgumentException("null is not a valid font size rule");
@@ -71,10 +67,10 @@ public class PreferredThemeStyle {
         this.accentColorRule = AccentColorRule.getDefault();
     }
 
-    public PreferredThemeStyle(final ContrastRule contrastRule,
-                               final ColorToneRule colorToneRule,
-                               final AccentColorRule accentColorRule,
-                               final FontSizeRule fontSizeRule) {
+    public PreferredThemeStyle(
+            final ContrastRule contrastRule, final ColorToneRule colorToneRule, final AccentColorRule accentColorRule,
+            final FontSizeRule fontSizeRule
+    ) {
         if (contrastRule == null) throw new IllegalArgumentException("null is not a valid contrast rule");
         if (colorToneRule == null) throw new IllegalArgumentException("null is not a valid style rule");
         if (fontSizeRule == null) throw new IllegalArgumentException("null is not a valid font size rule");
@@ -103,12 +99,8 @@ public class PreferredThemeStyle {
 
     @Override
     public String toString() {
-        return "PreferredThemeStyle{" +
-               "contrastRule=" + contrastRule +
-               ", colorToneRule=" + colorToneRule +
-               ", accentColorRule=" + accentColorRule +
-               ", fontSizeRule=" + fontSizeRule +
-               '}';
+        return "PreferredThemeStyle{" + "contrastRule=" + contrastRule + ", colorToneRule=" + colorToneRule
+            + ", accentColorRule=" + accentColorRule + ", fontSizeRule=" + fontSizeRule + '}';
     }
 
     @Override
@@ -116,10 +108,8 @@ public class PreferredThemeStyle {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PreferredThemeStyle that = (PreferredThemeStyle) o;
-        return contrastRule == that.contrastRule
-               && colorToneRule == that.colorToneRule
-               && Objects.equals(fontSizeRule, that.fontSizeRule)
-               && Objects.equals(accentColorRule, that.accentColorRule);
+        return contrastRule == that.contrastRule && colorToneRule == that.colorToneRule
+            && Objects.equals(fontSizeRule, that.fontSizeRule) && Objects.equals(accentColorRule, that.accentColorRule);
     }
 
     @Override

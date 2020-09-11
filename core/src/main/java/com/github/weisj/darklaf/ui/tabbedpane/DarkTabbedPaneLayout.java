@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
@@ -92,8 +89,7 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
         // programs are now depending on this, we're making it work.
         //
         if (selectedComponent != null) {
-            if (selectedComponent != visibleComponent &&
-                visibleComponent != null) {
+            if (selectedComponent != visibleComponent && visibleComponent != null) {
                 Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
                 if (owner != null && SwingUtilities.isDescendingFrom(owner, visibleComponent)) {
                     shouldChangeFocus = true;
@@ -107,7 +103,7 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
 
         if (numChildren > 0) {
             switch (tabPlacement) {
-                case SwingConstants.LEFT :
+                case SwingConstants.LEFT:
                     tw = ui.calculateTabAreaWidth(tabPlacement, ui.runCount, ui.maxTabWidth);
                     tx = insets.left + tabAreaInsets.left;
                     ty = insets.top + tabAreaInsets.top;
@@ -115,10 +111,10 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
                     cx = insets.left + tw + contentInsets.left + tabAreaInsets.left + tabAreaInsets.right;
                     cy = insets.top + contentInsets.top;
                     cw = bounds.width - insets.left - insets.right - contentInsets.left - contentInsets.right - tw
-                         - tabAreaInsets.left - tabAreaInsets.right;
+                        - tabAreaInsets.left - tabAreaInsets.right;
                     ch = bounds.height - insets.top - insets.bottom - contentInsets.top - contentInsets.bottom;
                     break;
-                case SwingConstants.RIGHT :
+                case SwingConstants.RIGHT:
                     tw = ui.calculateTabAreaWidth(tabPlacement, ui.runCount, ui.maxTabWidth);
                     tx = bounds.width - insets.left - tw - tabAreaInsets.right - tabAreaInsets.left;
                     ty = insets.top + tabAreaInsets.top;
@@ -126,10 +122,10 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
                     cx = insets.left + contentInsets.left;
                     cy = insets.top + contentInsets.top;
                     cw = bounds.width - insets.left - insets.right - contentInsets.left - contentInsets.right - tw
-                         - tabAreaInsets.left - tabAreaInsets.right;
+                        - tabAreaInsets.left - tabAreaInsets.right;
                     ch = bounds.height - insets.top - insets.bottom - contentInsets.top - contentInsets.bottom;
                     break;
-                case SwingConstants.BOTTOM :
+                case SwingConstants.BOTTOM:
                     th = ui.calculateTabAreaHeight(tabPlacement, ui.runCount, ui.maxTabHeight);
                     ty = bounds.height - insets.bottom - th;
                     tx = insets.left + tabAreaInsets.left;
@@ -139,7 +135,7 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
                     cw = bounds.width - insets.left - insets.right - contentInsets.left - contentInsets.right;
                     ch = bounds.height - th - insets.top - insets.bottom - contentInsets.top - contentInsets.bottom;
                     break;
-                default :
+                default:
                     ty = insets.top + tabAreaInsets.top;
                     tx = insets.left + tabAreaInsets.left;
                     tw = bounds.width - insets.left - insets.right - tabAreaInsets.left - tabAreaInsets.right;
@@ -148,7 +144,7 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
                     cy = insets.top + th + contentInsets.top + tabAreaInsets.top + tabAreaInsets.bottom;
                     cw = bounds.width - insets.left - insets.right - contentInsets.left - contentInsets.right;
                     ch = bounds.height - th - insets.top - insets.bottom - contentInsets.top - contentInsets.bottom
-                         - tabAreaInsets.top - tabAreaInsets.bottom;
+                        - tabAreaInsets.top - tabAreaInsets.bottom;
                     break;
             }
 
@@ -175,15 +171,18 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
                     } else if (child == ui.trailingComp && ui.trailingComp != null) {
                         ui.layoutTrailingComponent(child, tabWidth, tabHeight, insets, tx, ty, tw, th, tabPlacement);
                     } else if (child == ui.northComp && ui.northComp != null) {
-                        ui.northComp.setBounds(cx, cy - ui.northComp.getPreferredSize().height,
-                                               cw, ui.northComp.getPreferredSize().height);
+                        ui.northComp.setBounds(
+                            cx, cy - ui.northComp.getPreferredSize().height, cw, ui.northComp.getPreferredSize().height
+                        );
                     } else if (child == ui.southComp && ui.southComp != null) {
                         ui.southComp.setBounds(cx, cy + ch, cw, ui.southComp.getPreferredSize().height);
                     } else if (child == ui.eastComp && ui.eastComp != null) {
                         ui.eastComp.setBounds(cx + cw, compY, ui.eastComp.getPreferredSize().width, compHeight);
                     } else if (child == ui.westComp && ui.westComp != null) {
-                        ui.westComp.setBounds(cx - ui.westComp.getPreferredSize().width, compY,
-                                              ui.westComp.getPreferredSize().width, compHeight);
+                        ui.westComp.setBounds(
+                            cx - ui.westComp.getPreferredSize().width, compY, ui.westComp.getPreferredSize().width,
+                            compHeight
+                        );
                     } else {
                         child.setBounds(cx, cy, cw, ch);
                     }

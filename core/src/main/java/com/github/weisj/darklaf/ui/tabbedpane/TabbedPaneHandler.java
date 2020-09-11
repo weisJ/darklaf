@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
@@ -41,8 +38,8 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-public class TabbedPaneHandler implements ChangeListener, ContainerListener, FocusListener,
-                               MouseListener, MouseMotionListener, PropertyChangeListener {
+public class TabbedPaneHandler implements ChangeListener, ContainerListener, FocusListener, MouseListener,
+        MouseMotionListener, PropertyChangeListener {
     private final DarkTabbedPaneUIBridge ui;
 
     //
@@ -210,35 +207,26 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
     // ContainerListener
     //
     /*
-     * GES 2/3/99:
-     * The container listener code was added to support HTML
-     * rendering of tab titles.
+     * GES 2/3/99: The container listener code was added to support HTML rendering of tab titles.
      *
-     * Ideally, we would be able to listen for property changes
-     * when a tab is added or its text modified. At the moment
-     * there are no such events because the Beans spec doesn't
-     * allow 'indexed' property changes (i.e. tab 2's text changed
-     * from A to B).
+     * Ideally, we would be able to listen for property changes when a tab is added or its text
+     * modified. At the moment there are no such events because the Beans spec doesn't allow 'indexed'
+     * property changes (i.e. tab 2's text changed from A to B).
      *
-     * In order to get around this, we listen for tabs to be added
-     * or removed by listening for the container events. we then
-     * queue up a runnable (so the component has a chance to complete
-     * the add) which checks the tab title of the new component to see
-     * if it requires HTML rendering.
+     * In order to get around this, we listen for tabs to be added or removed by listening for the
+     * container events. we then queue up a runnable (so the component has a chance to complete the add)
+     * which checks the tab title of the new component to see if it requires HTML rendering.
      *
-     * The Views (one per tab title requiring HTML rendering) are
-     * stored in the htmlViews Vector, which is only allocated after
-     * the first time we run into an HTML tab. Note that this vector
-     * is kept in step with the number of pages, and nulls are added
-     * for those pages whose tab title do not require HTML rendering.
+     * The Views (one per tab title requiring HTML rendering) are stored in the htmlViews Vector, which
+     * is only allocated after the first time we run into an HTML tab. Note that this vector is kept in
+     * step with the number of pages, and nulls are added for those pages whose tab title do not require
+     * HTML rendering.
      *
-     * This makes it easy for the paint and layout code to tell
-     * whether to invoke the HTML engine without having to check
-     * the string during time-sensitive operations.
+     * This makes it easy for the paint and layout code to tell whether to invoke the HTML engine
+     * without having to check the string during time-sensitive operations.
      *
-     * When we have added a way to listen for tab additions and
-     * changes to tab text, this code should be removed and
-     * replaced by something which uses that.
+     * When we have added a way to listen for tab additions and changes to tab text, this code should be
+     * removed and replaced by something which uses that.
      */
     public void componentAdded(final ContainerEvent e) {
         JTabbedPane tp = (JTabbedPane) e.getContainer();

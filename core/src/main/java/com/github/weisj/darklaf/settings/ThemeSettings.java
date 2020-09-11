@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.settings;
@@ -141,10 +138,10 @@ public class ThemeSettings implements ThemePreferenceListener {
     }
 
     /**
-     * Returns the settings panel for custom use. Note that this is a shared resource and while it is used {@link
-     * #showDialog(Component, java.awt.Dialog.ModalityType)} can't be called. Note that all communication to the
-     * settings panel should happen through this class by calling {@link #peek()}, {@link #save()},{@link
-     * #refresh()},{@link #revert()} or {@link #apply()}
+     * Returns the settings panel for custom use. Note that this is a shared resource and while it is
+     * used {@link #showDialog(Component, java.awt.Dialog.ModalityType)} can't be called. Note that all
+     * communication to the settings panel should happen through this class by calling {@link #peek()},
+     * {@link #save()},{@link #refresh()},{@link #revert()} or {@link #apply()}
      *
      * @return the settings panel.
      */
@@ -207,8 +204,8 @@ public class ThemeSettings implements ThemePreferenceListener {
     }
 
     /**
-     * Get the currently selected accent color rule. This is not the same as the rule of {@link LafManager#getTheme()}
-     * as the current settings might not have been applied.
+     * Get the currently selected accent color rule. This is not the same as the rule of
+     * {@link LafManager#getTheme()} as the current settings might not have been applied.
      *
      * @return the current selected accent color rule.
      * @see    #setAccentColorRule(AccentColorRule)
@@ -218,8 +215,8 @@ public class ThemeSettings implements ThemePreferenceListener {
     }
 
     /**
-     * Get the currently selected font size rule. This is not the same as the rule of {@link LafManager#getTheme()} as
-     * the current settings might not have been applied.
+     * Get the currently selected font size rule. This is not the same as the rule of
+     * {@link LafManager#getTheme()} as the current settings might not have been applied.
      *
      * @return the current selected font size rule.
      * @see    #setFontSizeRule(FontSizeRule)
@@ -229,8 +226,8 @@ public class ThemeSettings implements ThemePreferenceListener {
     }
 
     /**
-     * Get the currently selected theme. This is not the same as {@link LafManager#getTheme()} as the current settings
-     * might not have been applied.
+     * Get the currently selected theme. This is not the same as {@link LafManager#getTheme()} as the
+     * current settings might not have been applied.
      *
      * @return the current selected theme.
      * @see    #setTheme(Theme)
@@ -257,8 +254,8 @@ public class ThemeSettings implements ThemePreferenceListener {
     }
 
     /**
-     * Sets whether the accent color should follow the system settings. This only works if {@link
-     * #isSelectionColorFollowsSystem()} is true.
+     * Sets whether the accent color should follow the system settings. This only works if
+     * {@link #isSelectionColorFollowsSystem()} is true.
      *
      * @param accentColorFollowsSystem true if accent color should follow system.
      * @see                            #isAccentColorFollowsSystem()
@@ -272,8 +269,8 @@ public class ThemeSettings implements ThemePreferenceListener {
     }
 
     /**
-     * Sets whether the font size should follow the system settings. This only works if {@link
-     * #isSelectionColorFollowsSystem()} is true.
+     * Sets whether the font size should follow the system settings. This only works if
+     * {@link #isSelectionColorFollowsSystem()} is true.
      *
      * @param fontSizeFollowsSystem true if font size should follow system.
      * @see                         #isFontSizeFollowsSystem()
@@ -287,8 +284,8 @@ public class ThemeSettings implements ThemePreferenceListener {
     }
 
     /**
-     * Sets whether the selection color should follow the system settings. This only works if {@link
-     * #isSelectionColorFollowsSystem()} is true.
+     * Sets whether the selection color should follow the system settings. This only works if
+     * {@link #isSelectionColorFollowsSystem()} is true.
      *
      * @param selectionColorFollowsSystem true if selection color should follow system.
      * @see                               #isSelectionColorFollowsSystem()
@@ -302,8 +299,8 @@ public class ThemeSettings implements ThemePreferenceListener {
     }
 
     /**
-     * Sets whether the theme should follow the system settings. This only works if {@link
-     * #isSelectionColorFollowsSystem()} is true.
+     * Sets whether the theme should follow the system settings. This only works if
+     * {@link #isSelectionColorFollowsSystem()} is true.
      *
      * @param themeFollowsSystem true if theme should follow system.
      * @see                      #isThemeFollowsSystem()
@@ -420,7 +417,8 @@ public class ThemeSettings implements ThemePreferenceListener {
     }
 
     /**
-     * Saves the settings and updates the laf. This is them same as calling {@link #save()} and {@link #peek()}.
+     * Saves the settings and updates the laf. This is them same as calling {@link #save()} and
+     * {@link #peek()}.
      */
     public void apply() {
         save();
@@ -447,16 +445,12 @@ public class ThemeSettings implements ThemePreferenceListener {
     }
 
     private Theme getEffectiveBaseTheme(final PreferredThemeStyle preferredThemeStyle) {
-        return isThemeFollowsSystem()
-                ? LafManager.themeForPreferredStyle(preferredThemeStyle)
-                : getTheme();
+        return isThemeFollowsSystem() ? LafManager.themeForPreferredStyle(preferredThemeStyle) : getTheme();
     }
 
     private FontSizeRule getEffectiveFontSizeRule(final Theme theme, final PreferredThemeStyle preferredThemeStyle) {
         if (theme == null) return FontSizeRule.getDefault();
-        return isFontSizeFollowsSystem()
-                ? preferredThemeStyle.getFontSizeRule()
-                : getFontSizeRule();
+        return isFontSizeFollowsSystem() ? preferredThemeStyle.getFontSizeRule() : getFontSizeRule();
     }
 
     private AccentColorRule getEffectiveAccentColorRule(final Theme theme) {

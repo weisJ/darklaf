@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.table.header;
@@ -134,8 +131,8 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
         }
 
         Color borderColor = c.getBorder() instanceof DarkTableScrollPaneBorder
-                ? ((DarkTableScrollPaneBorder) c.getBorder()).getBorderColor()
-                : getBorderColor();
+            ? ((DarkTableScrollPaneBorder) c.getBorder()).getBorderColor()
+            : getBorderColor();
         g.setColor(borderColor);
 
         TableColumn draggedColumn = header.getDraggedColumn();
@@ -152,8 +149,9 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
         config.restore();
 
         /*
-         * If the table is in a scroll pane which uses buffer backed viewports scrolling leads to the previously
-         * last cell missing part of its border. We manually repaint it to prevent the appearance of joint cells.
+         * If the table is in a scroll pane which uses buffer backed viewports scrolling leads to the
+         * previously last cell missing part of its border. We manually repaint it to prevent the appearance
+         * of joint cells.
          */
         if (lastMaxVisible != cMaxVisible) {
             if (lastMaxVisible >= 0) {
@@ -164,29 +162,26 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
         }
     }
 
-    public void paintCells(final Graphics2D g, final int h, final boolean ltr,
-                           final TableColumnModel cm,
-                           final int cMin, final int cMax,
-                           final int cMinVisible, final int cMaxVisible,
-                           final Color borderColor,
-                           final TableColumn draggedColumn, final Rectangle cellRect) {
+    public void paintCells(
+            final Graphics2D g, final int h, final boolean ltr, final TableColumnModel cm, final int cMin,
+            final int cMax, final int cMinVisible, final int cMaxVisible, final Color borderColor,
+            final TableColumn draggedColumn, final Rectangle cellRect
+    ) {
         if (ltr) {
             for (int column = cMin; column <= cMax; column++) {
-                paintSingleCell(g, h, cm, cMinVisible, cMaxVisible,
-                                borderColor, draggedColumn, cellRect, column);
+                paintSingleCell(g, h, cm, cMinVisible, cMaxVisible, borderColor, draggedColumn, cellRect, column);
             }
         } else {
             for (int column = cMax; column >= cMin; column--) {
-                paintSingleCell(g, h, cm, cMinVisible, cMaxVisible,
-                                borderColor, draggedColumn, cellRect, column);
+                paintSingleCell(g, h, cm, cMinVisible, cMaxVisible, borderColor, draggedColumn, cellRect, column);
             }
         }
     }
 
-    public void paintSingleCell(final Graphics2D g, final int h, final TableColumnModel cm,
-                                final int cMinVisible, final int cMaxVisible,
-                                final Color borderColor, final TableColumn draggedColumn,
-                                final Rectangle cellRect, final int column) {
+    public void paintSingleCell(
+            final Graphics2D g, final int h, final TableColumnModel cm, final int cMinVisible, final int cMaxVisible,
+            final Color borderColor, final TableColumn draggedColumn, final Rectangle cellRect, final int column
+    ) {
         TableColumn aColumn;
         int columnWidth;
         aColumn = cm.getColumn(column);
@@ -202,30 +197,33 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
         cellRect.x += cellRect.width;
     }
 
-    public void paintDraggedArea(final Graphics2D g, final boolean ltr,
-                                 final int cMin, final int cMax,
-                                 final Color borderColor, final TableColumn draggedColumn) {
+    public void paintDraggedArea(
+            final Graphics2D g, final boolean ltr, final int cMin, final int cMax, final Color borderColor,
+            final TableColumn draggedColumn
+    ) {
         int draggedColumnIndex = viewIndexForColumn(draggedColumn);
         boolean scrollPaneRtl = isScrollPaneRtl();
         Rectangle draggedCellRect = header.getHeaderRect(draggedColumnIndex);
         int dist = DarkTableUI.adjustDistance(header.getDraggedDistance(), draggedCellRect, header.getTable());
         // Draw a gray well in place of the moving column.
         g.setColor(header.getParent().getBackground());
-        g.fillRect(draggedCellRect.x, draggedCellRect.y,
-                   draggedCellRect.width, draggedCellRect.height);
+        g.fillRect(draggedCellRect.x, draggedCellRect.y, draggedCellRect.width, draggedCellRect.height);
         g.setColor(borderColor);
         if (scrollBarVisible()) {
             if (ltr) {
                 if (!scrollPaneRtl) {
-                    g.fillRect(draggedCellRect.x + draggedCellRect.width - 1, draggedCellRect.y,
-                               1, draggedCellRect.height);
+                    g.fillRect(
+                        draggedCellRect.x + draggedCellRect.width - 1, draggedCellRect.y, 1, draggedCellRect.height
+                    );
                 } else {
                     if (draggedColumnIndex != cMax) {
-                        g.fillRect(draggedCellRect.x + draggedCellRect.width - 1, draggedCellRect.y,
-                                   1, draggedCellRect.height);
+                        g.fillRect(
+                            draggedCellRect.x + draggedCellRect.width - 1, draggedCellRect.y, 1, draggedCellRect.height
+                        );
                     } else {
-                        g.fillRect(draggedCellRect.x + draggedCellRect.width, draggedCellRect.y,
-                                   1, draggedCellRect.height);
+                        g.fillRect(
+                            draggedCellRect.x + draggedCellRect.width, draggedCellRect.y, 1, draggedCellRect.height
+                        );
                     }
                     if (draggedColumnIndex == cMin) {
                         g.fillRect(draggedCellRect.x, draggedCellRect.y, 1, draggedCellRect.height);
@@ -233,12 +231,14 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
                 }
             } else {
                 if (!scrollPaneRtl) {
-                    g.fillRect(draggedCellRect.x + draggedCellRect.width - 1, draggedCellRect.y,
-                               1, draggedCellRect.height);
+                    g.fillRect(
+                        draggedCellRect.x + draggedCellRect.width - 1, draggedCellRect.y, 1, draggedCellRect.height
+                    );
                 } else {
                     if (draggedColumnIndex != cMin) {
-                        g.fillRect(draggedCellRect.x + draggedCellRect.width - 1, draggedCellRect.y,
-                                   1, draggedCellRect.height);
+                        g.fillRect(
+                            draggedCellRect.x + draggedCellRect.width - 1, draggedCellRect.y, 1, draggedCellRect.height
+                        );
                     }
                     if (draggedColumnIndex == cMax) {
                         g.fillRect(draggedCellRect.x, draggedCellRect.y, 1, draggedCellRect.height);
@@ -248,16 +248,17 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
         } else {
             if (ltr) {
                 if (draggedColumnIndex != cMax) {
-                    g.fillRect(draggedCellRect.x + draggedCellRect.width - 1, draggedCellRect.y,
-                               1, draggedCellRect.height);
+                    g.fillRect(
+                        draggedCellRect.x + draggedCellRect.width - 1, draggedCellRect.y, 1, draggedCellRect.height
+                    );
                 } else {
-                    g.fillRect(draggedCellRect.x + draggedCellRect.width, draggedCellRect.y,
-                               1, draggedCellRect.height);
+                    g.fillRect(draggedCellRect.x + draggedCellRect.width, draggedCellRect.y, 1, draggedCellRect.height);
                 }
             } else {
                 if (draggedColumnIndex != cMin) {
-                    g.fillRect(draggedCellRect.x + draggedCellRect.width - 1, draggedCellRect.y,
-                               1, draggedCellRect.height);
+                    g.fillRect(
+                        draggedCellRect.x + draggedCellRect.width - 1, draggedCellRect.y, 1, draggedCellRect.height
+                    );
                 }
             }
         }
@@ -266,8 +267,7 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
 
         // Fill the background.
         g.setColor(header.getBackground());
-        g.fillRect(draggedCellRect.x, draggedCellRect.y,
-                   draggedCellRect.width, draggedCellRect.height);
+        g.fillRect(draggedCellRect.x, draggedCellRect.y, draggedCellRect.width, draggedCellRect.height);
         paintCell(g, draggedCellRect, draggedColumnIndex);
 
         g.setColor(borderColor);
@@ -280,15 +280,14 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
         }
         // right
         if (dist != 0 || !onRightEdge) {
-            g.fillRect(draggedCellRect.x + draggedCellRect.width - 1, draggedCellRect.y,
-                       1, draggedCellRect.height);
+            g.fillRect(draggedCellRect.x + draggedCellRect.width - 1, draggedCellRect.y, 1, draggedCellRect.height);
         }
     }
 
     protected void paintCell(final Graphics g, final Rectangle cellRect, final int columnIndex) {
         Component component = getHeaderCellRenderer(columnIndex);
-        rendererPane.paintComponent(g, component, header, cellRect.x, cellRect.y,
-                                    cellRect.width, cellRect.height, true);
+        rendererPane
+            .paintComponent(g, component, header, cellRect.x, cellRect.y, cellRect.width, cellRect.height, true);
     }
 
     protected Color getHeaderBackground() {
@@ -340,9 +339,8 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
 
         boolean hasFocus = !header.isPaintingForPrint() && header.hasFocus();
         rendererDelegate.setDelegate(renderer);
-        return rendererDelegate.getTableCellRendererComponent(header.getTable(),
-                                                              aColumn.getHeaderValue(),
-                                                              false, hasFocus,
-                                                              -1, columnIndex);
+        return rendererDelegate.getTableCellRendererComponent(
+            header.getTable(), aColumn.getHeaderValue(), false, hasFocus, -1, columnIndex
+        );
     }
 }

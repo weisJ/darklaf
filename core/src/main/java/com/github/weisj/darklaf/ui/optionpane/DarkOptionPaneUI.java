@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.optionpane;
@@ -47,13 +44,10 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
         if (border != null) {
             bottom.setBorder(border);
         }
-        bottom.setLayout(new DarkButtonAreaLayout(DefaultLookup.getBoolean(optionPane, this,
-                                                                           "OptionPane.sameSizeButtons", false),
-                                                  DefaultLookup.getInt(optionPane, this, "OptionPane.buttonPadding", 6),
-                                                  DefaultLookup.getInt(optionPane, this, "OptionPane.buttonOrientation",
-                                                                       SwingConstants.CENTER),
-                                                  DefaultLookup.getBoolean(optionPane, this, "OptionPane.isYesLast",
-                                                                           false)));
+        bottom
+            .setLayout(
+                new DarkButtonAreaLayout(DefaultLookup.getBoolean(optionPane, this, "OptionPane.sameSizeButtons", false), DefaultLookup.getInt(optionPane, this, "OptionPane.buttonPadding", 6), DefaultLookup.getInt(optionPane, this, "OptionPane.buttonOrientation", SwingConstants.CENTER), DefaultLookup.getBoolean(optionPane, this, "OptionPane.isYesLast", false))
+            );
         addButtonComponents(bottom, getButtons(), getInitialValueIndex());
         return bottom;
     }
@@ -63,26 +57,26 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
     }
 
     /**
-     * <code>ButtonAreaLayout</code> behaves in a similar manner to
-     * <code>FlowLayout</code>. It lays out all components from left to
-     * right. If <code>syncAllWidths</code> is true, the widths of each component will be set to the largest preferred
-     * size width.
+     * <code>ButtonAreaLayout</code> behaves in a similar manner to <code>FlowLayout</code>. It lays out
+     * all components from left to right. If <code>syncAllWidths</code> is true, the widths of each
+     * component will be set to the largest preferred size width.
      * <p>
-     * This class should be treated as a &quot;protected&quot; inner class. Instantiate it only within subclasses of
-     * {@code BasicOptionPaneUI}.
+     * This class should be treated as a &quot;protected&quot; inner class. Instantiate it only within
+     * subclasses of {@code BasicOptionPaneUI}.
      */
     public static class DarkButtonAreaLayout extends ButtonAreaLayout {
         protected boolean syncAllWidthOverwrite = false;
         private int orientation;
         private boolean reverseButtons;
         /**
-         * Indicates whether or not centersChildren should be used vs the orientation. This is done for backward
-         * compatibility for subclassers.
+         * Indicates whether or not centersChildren should be used vs the orientation. This is done for
+         * backward compatibility for subclassers.
          */
         private boolean useOrientation;
 
-        public DarkButtonAreaLayout(final boolean syncAllSizes, final int padding, final int orientation,
-                                    final boolean reverseButtons) {
+        public DarkButtonAreaLayout(
+                final boolean syncAllSizes, final int padding, final int orientation, final boolean reverseButtons
+        ) {
             this(syncAllSizes, padding);
             useOrientation = true;
             this.orientation = orientation;
@@ -166,11 +160,11 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
                 return orientation;
             }
             switch (orientation) {
-                case SwingConstants.LEFT :
+                case SwingConstants.LEFT:
                     return SwingConstants.RIGHT;
-                case SwingConstants.RIGHT :
+                case SwingConstants.RIGHT:
                     return SwingConstants.LEFT;
-                case SwingConstants.CENTER :
+                case SwingConstants.CENTER:
                     return SwingConstants.CENTER;
             }
             return SwingConstants.LEFT;
@@ -211,27 +205,23 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
                 }
 
                 switch (getOrientation(container)) {
-                    case SwingConstants.LEFT :
+                    case SwingConstants.LEFT:
                         x = insets.left;
                         break;
-                    case SwingConstants.RIGHT :
+                    case SwingConstants.RIGHT:
                         x = container.getWidth() - insets.right - totalButtonWidth;
                         break;
-                    case SwingConstants.CENTER :
+                    case SwingConstants.CENTER:
                         if (getCentersChildren() || numChildren < 2) {
                             x = (container.getWidth() - totalButtonWidth) / 2;
                         } else {
                             x = insets.left;
                             if (getSyncAllWidths()) {
-                                xOffset = (container.getWidth() - insets.left -
-                                           insets.right - totalButtonWidth)
-                                          /
-                                          (numChildren - 1) + maxWidth;
+                                xOffset = (container.getWidth() - insets.left - insets.right - totalButtonWidth)
+                                    / (numChildren - 1) + maxWidth;
                             } else {
-                                xOffset = (container.getWidth() - insets.left -
-                                           insets.right - totalButtonWidth)
-                                          /
-                                          (numChildren - 1);
+                                xOffset = (container.getWidth() - insets.left - insets.right - totalButtonWidth)
+                                    / (numChildren - 1);
                             }
                         }
                         break;
@@ -276,9 +266,9 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
                             height = Math.max(height, aSize.height);
                             maxWidth = Math.max(maxWidth, aSize.width);
                         }
-                        return new Dimension(extraWidth + (maxWidth * numChildren) +
-                                             (numChildren - 1) * padding,
-                                             extraHeight + height);
+                        return new Dimension(
+                            extraWidth + (maxWidth * numChildren) + (numChildren - 1) * padding, extraHeight + height
+                        );
                     } else {
                         int totalWidth = 0;
 

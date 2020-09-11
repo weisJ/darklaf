@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
@@ -37,10 +34,9 @@ public class TabbedPaneUtil implements SwingConstants {
 
     private static final Rectangle EMPTY_RECT = new Rectangle(0, 0, 0, 0);
 
-    public static int getDroppedTabIndex(final Rectangle tabBounds,
-                                         final JTabbedPane tabbedPane,
-                                         final DarkTabbedPaneUI ui,
-                                         final Point p) {
+    public static int getDroppedTabIndex(
+            final Rectangle tabBounds, final JTabbedPane tabbedPane, final DarkTabbedPaneUI ui, final Point p
+    ) {
         int tab = tabbedPane.indexAtLocation(p.x, p.y);
         if (ui != null) {
             if (tab == -1) {
@@ -86,8 +82,8 @@ public class TabbedPaneUtil implements SwingConstants {
 
                     Rectangle sb = (ui.scrollableTabLayoutEnabled()) ? tabBounds : EMPTY_RECT;
                     switch (tabbedPane.getTabPlacement()) {
-                        case TOP :
-                        case BOTTOM :
+                        case TOP:
+                        case BOTTOM:
                             if (tabbedPane.getComponentOrientation().isLeftToRight()) {
                                 if (p.x >= b.x + sb.width + (b.width - sb.width) / 2) {
                                     tab += 1;
@@ -98,8 +94,8 @@ public class TabbedPaneUtil implements SwingConstants {
                                 }
                             }
                             break;
-                        case LEFT :
-                        case RIGHT :
+                        case LEFT:
+                        case RIGHT:
                             if (p.y >= b.y + sb.height + (b.height - sb.height) / 2) {
                                 tab += 1;
                             }
@@ -113,39 +109,44 @@ public class TabbedPaneUtil implements SwingConstants {
         return tab;
     }
 
-    public static Rectangle getDropRect(final DarkTabbedPaneUI ui,
-                                        final JTabbedPane destTabbedPane, final JTabbedPane source,
-                                        final Point mouseLocation, final Rectangle tabBounds,
-                                        final int tab, final int sourceIndex, final int lastTab) {
+    public static Rectangle getDropRect(
+            final DarkTabbedPaneUI ui, final JTabbedPane destTabbedPane, final JTabbedPane source,
+            final Point mouseLocation, final Rectangle tabBounds, final int tab, final int sourceIndex,
+            final int lastTab
+    ) {
         if (destTabbedPane.getTabCount() == 0) return new Rectangle(0, 0, 0, 0);
         int tabPlacement = destTabbedPane.getTabPlacement();
         Rectangle destRect = destTabbedPane.getBoundsAt(Math.min(tab, destTabbedPane.getTabCount() - 1));
 
         if (ui.scrollableTabLayoutEnabled()) {
-            calculateDropRectScrollLayout(destTabbedPane, source, tabBounds, tab, sourceIndex,
-                                          lastTab, tabPlacement, destRect);
+            calculateDropRectScrollLayout(
+                destTabbedPane, source, tabBounds, tab, sourceIndex, lastTab, tabPlacement, destRect
+            );
         } else {
-            calculateDropRectWrapLayout(ui, destTabbedPane, source, mouseLocation, tabBounds, tab, sourceIndex,
-                                        destRect);
+            calculateDropRectWrapLayout(
+                ui, destTabbedPane, source, mouseLocation, tabBounds, tab, sourceIndex, destRect
+            );
         }
         return tabBounds;
     }
 
-    private static void calculateDropRectScrollLayout(final JTabbedPane destTabbedPane, final JTabbedPane source,
-                                                      final Rectangle tabBounds, final int tab, final int sourceIndex,
-                                                      final int lastTab, final int tabPlacement,
-                                                      final Rectangle destRect) {
+    private static void calculateDropRectScrollLayout(
+            final JTabbedPane destTabbedPane, final JTabbedPane source, final Rectangle tabBounds, final int tab,
+            final int sourceIndex, final int lastTab, final int tabPlacement, final Rectangle destRect
+    ) {
         boolean lastInSource = false;
-        if (destTabbedPane == source && (tab == sourceIndex || (sourceIndex == source.getTabCount() - 1
-                                                                && tab == source.getTabCount()))) {
+        if (
+            destTabbedPane == source
+                && (tab == sourceIndex || (sourceIndex == source.getTabCount() - 1 && tab == source.getTabCount()))
+        ) {
             lastInSource = true;
             destRect.width = tabBounds.width;
             destRect.height = tabBounds.height;
         }
 
         switch (tabPlacement) {
-            case TOP :
-            case BOTTOM :
+            case TOP:
+            case BOTTOM:
                 if (destTabbedPane.getComponentOrientation().isLeftToRight()) {
                     if (tab >= destTabbedPane.getTabCount() && !lastInSource) {
                         destRect.x += destRect.width;
@@ -168,8 +169,8 @@ public class TabbedPaneUtil implements SwingConstants {
                 }
                 tabBounds.y = destRect.y + destRect.height - tabBounds.height;
                 break;
-            case LEFT :
-            case RIGHT :
+            case LEFT:
+            case RIGHT:
                 if (tab >= destTabbedPane.getTabCount()) {
                     destRect.y += destRect.height;
                 }
@@ -182,11 +183,11 @@ public class TabbedPaneUtil implements SwingConstants {
         }
     }
 
-    private static void calculateDropRectWrapLayout(final DarkTabbedPaneUI ui,
-                                                    final JTabbedPane destTabbedPane,
-                                                    final JTabbedPane source, final Point mouseLocation,
-                                                    final Rectangle tabBounds, final int tab, final int sourceIndex,
-                                                    final Rectangle destRect) {
+    private static void calculateDropRectWrapLayout(
+            final DarkTabbedPaneUI ui, final JTabbedPane destTabbedPane, final JTabbedPane source,
+            final Point mouseLocation, final Rectangle tabBounds, final int tab, final int sourceIndex,
+            final Rectangle destRect
+    ) {
         if (source == destTabbedPane && (tab == sourceIndex || tab == sourceIndex + 1)) {
             tabBounds.setRect(0, 0, 0, 0);
         } else {
@@ -209,8 +210,10 @@ public class TabbedPaneUtil implements SwingConstants {
                 tabBounds.x = destRect.x;
                 tabBounds.width = Math.min(tabBounds.width / 2, destRect.width / 2);
             } else {
-                if (destRect.y + destRect.height <= mouseLocation.y
-                    && prev.y <= mouseLocation.y && mouseLocation.y <= prev.y + prev.height) {
+                if (
+                    destRect.y + destRect.height <= mouseLocation.y && prev.y <= mouseLocation.y
+                        && mouseLocation.y <= prev.y + prev.height
+                ) {
                     destRect.x = prev.x + prev.width;
                     destRect.y = prev.y;
                     destRect.height = prev.height;
@@ -237,8 +240,9 @@ public class TabbedPaneUtil implements SwingConstants {
         }
     }
 
-    public static boolean moveTabs(final JTabbedPane sourcePane, final JTabbedPane tabbedPane,
-                                   final int sourceIndex, final int tab) {
+    public static boolean moveTabs(
+            final JTabbedPane sourcePane, final JTabbedPane tabbedPane, final int sourceIndex, final int tab
+    ) {
 
         if (tabbedPane == sourcePane && sourceIndex == tab) {
             // Nothing to do. Just select the tab to be sure.
@@ -281,8 +285,8 @@ public class TabbedPaneUtil implements SwingConstants {
     }
 
     /**
-     * Selects the specified tab in the specified tabbed pane. This method can be overridden by subclasses to do more
-     * stuff than simply select the tab.
+     * Selects the specified tab in the specified tabbed pane. This method can be overridden by
+     * subclasses to do more stuff than simply select the tab.
      *
      * @param tabbedPane The tabbed pane.
      * @param index      The index of the tab to select.

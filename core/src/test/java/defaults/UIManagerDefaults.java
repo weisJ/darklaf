@@ -3,30 +3,27 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package defaults;
 
 /*
- * This programs uses the information found in the UIManager
- * to create a table of key/value pairs for each Swing component.
+ * This programs uses the information found in the UIManager to create a table of key/value pairs
+ * for each Swing component.
  */
 
 import java.awt.*;
@@ -157,8 +154,7 @@ public class UIManagerDefaults implements ItemListener, ComponentDemo {
     }
 
     /*
-     * The item map will contain items for each component or
-     * items for each attribute type.
+     * The item map will contain items for each component or items for each attribute type.
      */
     private void buildItemsMap() {
         final UIDefaults defaults = UIManager.getLookAndFeelDefaults();
@@ -313,8 +309,7 @@ public class UIManagerDefaults implements ItemListener, ComponentDemo {
     }
 
     /*
-     * Some rows containing icons, may need to be sized taller to fully
-     * display the icon.
+     * Some rows containing icons, may need to be sized taller to fully display the icon.
      */
     private void updateRowHeights() {
         try {
@@ -327,6 +322,7 @@ public class UIManagerDefaults implements ItemListener, ComponentDemo {
                 }
                 table.setRowHeight(row, rowHeight);
             }
-        } catch (final ClassCastException ignored) {}
+        } catch (final ClassCastException ignored) {
+        }
     }
 }

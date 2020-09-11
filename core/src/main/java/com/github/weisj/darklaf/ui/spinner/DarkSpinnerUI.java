@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.spinner;
@@ -198,10 +195,9 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
     private JButton createArrow(final int direction) {
         int buttonPad = UIManager.getInt("Spinner.buttonPad");
         Insets insets = new Insets(0, buttonPad, 0, buttonPad);
-        JButton button = ArrowButton.createUpDownArrow(spinner,
-                                                       getArrowIcon(direction),
-                                                       getArrowInactiveIcon(direction), direction,
-                                                       false, true, insets);
+        JButton button = ArrowButton.createUpDownArrow(
+            spinner, getArrowIcon(direction), getArrowInactiveIcon(direction), direction, false, true, insets
+        );
         Border buttonBorder = UIManager.getBorder("Spinner.arrowButtonBorder");
         if (buttonBorder instanceof UIResource) {
             // Wrap the border to avoid having the UIResource be replaced by
@@ -260,8 +256,9 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
         }
     }
 
-    protected void paintSpinBackground(final Graphics2D g, final int width, final int height,
-                                       final int bSize, final int arc) {
+    protected void paintSpinBackground(
+            final Graphics2D g, final int width, final int height, final int bSize, final int arc
+    ) {
         Rectangle arrowBounds = prevButton.getBounds();
         boolean leftToRight = spinner.getComponentOrientation().isLeftToRight();
 

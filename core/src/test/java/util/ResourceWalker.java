@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package util;
@@ -48,8 +45,7 @@ public class ResourceWalker implements AutoCloseable {
 
     public Stream<String> stream() {
         if (stream != null) throw new IllegalStateException("Stream already open");
-        Stream<String> s = Arrays.stream(packages)
-                                 .flatMap(this::walk);
+        Stream<String> s = Arrays.stream(packages).flatMap(this::walk);
         stream = s;
         return s;
     }
@@ -61,7 +57,8 @@ public class ResourceWalker implements AutoCloseable {
         for (FileSystem fileSystem : fileSystemList) {
             try {
                 fileSystem.close();
-            } catch (IOException ignored) {}
+            } catch (IOException ignored) {
+            }
         }
         fileSystemList.clear();
     }
@@ -75,30 +72,26 @@ public class ResourceWalker implements AutoCloseable {
         pack = pack.endsWith("/") ? pack : pack + "/";
         String pathName = pack;
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        Stream<URL> stream = enumerationAsStream(orDefault(classLoader::getResources,
-                                                           Collections.<URL>emptyEnumeration()).apply(pathName));
-        return stream.map(wrap(URL::toURI))
-                     .flatMap(uri -> {
-                         if ("jar".equals(uri.getScheme())) {
-                             try {
-                                 FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap());
-                                 Path resourcePath = fileSystem.getPath(pathName);
-                                 fileSystemList.add(fileSystem);
-                                 return Files.walk(resourcePath, Integer.MAX_VALUE);
-                             } catch (IOException e) {
-                                 return Stream.empty();
-                             }
-                         } else {
-                             return walkFolder(new File(uri)).map(File::toPath);
-                         }
-                     })
-                     .map(Path::toString)
-                     .map(p -> p.replace(File.separatorChar, '/'))
-                     .map(p -> {
-                         int index = p.indexOf(pathName);
-                         return index >= 0 ? p.substring(index) : null;
-                     })
-                     .filter(Objects::nonNull);
+        Stream<URL> stream = enumerationAsStream(
+            orDefault(classLoader::getResources, Collections.<URL>emptyEnumeration()).apply(pathName)
+        );
+        return stream.map(wrap(URL::toURI)).flatMap(uri -> {
+            if ("jar".equals(uri.getScheme())) {
+                try {
+                    FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap());
+                    Path resourcePath = fileSystem.getPath(pathName);
+                    fileSystemList.add(fileSystem);
+                    return Files.walk(resourcePath, Integer.MAX_VALUE);
+                } catch (IOException e) {
+                    return Stream.empty();
+                }
+            } else {
+                return walkFolder(new File(uri)).map(File::toPath);
+            }
+        }).map(Path::toString).map(p -> p.replace(File.separatorChar, '/')).map(p -> {
+            int index = p.indexOf(pathName);
+            return index >= 0 ? p.substring(index) : null;
+        }).filter(Objects::nonNull);
     }
 
     public static <T> Stream<T> enumerationAsStream(final Enumeration<T> e) {
@@ -120,8 +113,9 @@ public class ResourceWalker implements AutoCloseable {
         return Arrays.stream(files).flatMap(this::walkFolder);
     }
 
-    public static <T, K, E extends Throwable> Function<T, K> orDefault(final CheckedFunction<T, K, E> wrappee,
-                                                                       final K fallback) {
+    public static <T, K, E extends Throwable> Function<T, K> orDefault(
+            final CheckedFunction<T, K, E> wrappee, final K fallback
+    ) {
         return t -> {
             try {
                 return wrappee.apply(t);

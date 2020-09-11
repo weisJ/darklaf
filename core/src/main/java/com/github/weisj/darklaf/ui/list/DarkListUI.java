@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.list;
@@ -87,19 +84,19 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
 
     protected void paintImpl(final Graphics g, final JComponent c) {
         switch (layoutOrientation) {
-            case JList.VERTICAL_WRAP :
+            case JList.VERTICAL_WRAP:
                 if (list.getHeight() != listHeight) {
                     updateLayoutStateNeeded |= heightChanged;
                     redrawList();
                 }
                 break;
-            case JList.HORIZONTAL_WRAP :
+            case JList.HORIZONTAL_WRAP:
                 if (list.getWidth() != listWidth) {
                     updateLayoutStateNeeded |= widthChanged;
                     redrawList();
                 }
                 break;
-            default :
+            default:
                 break;
         }
         maybeUpdateLayoutState();
@@ -145,9 +142,8 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
                 // Not valid, bail!
                 return;
             }
-            boolean lastColumn = colCounter == endColumn
-                                 && getColumnCount() > 1
-                                 && colCounter * rowsPerColumn + rowCount >= dataModel.getSize();
+            boolean lastColumn = colCounter == endColumn && getColumnCount() > 1
+                && colCounter * rowsPerColumn + rowCount >= dataModel.getSize();
             int bgWidth = lastColumn ? maxX - rowBounds.x : 0;
             int maxRow = lastColumn ? Integer.MAX_VALUE : rowCount;
 
@@ -162,8 +158,7 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
                 g.clipRect(paintBounds.x, paintBounds.y, paintBounds.width, paintBounds.height);
                 int cellIndex = row < maxRow && colCounter <= endColumn ? index : -1;
                 int rowIndex = row;
-                paintCell(g, cellIndex, rowBounds,
-                          renderer, dataModel, selModel, leadIndex, rowIndex, bgWidth);
+                paintCell(g, cellIndex, rowBounds, renderer, dataModel, selModel, leadIndex, rowIndex, bgWidth);
                 rowBounds.y += rowBounds.height;
                 index += rowIncrement;
                 row++;
@@ -179,11 +174,11 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
         return rendererDelegate;
     }
 
-    protected void paintCell(final Graphics g, final int index, final Rectangle rowBounds,
-                             final ListCellRenderer<Object> cellRenderer,
-                             final ListModel<Object> dataModel,
-                             final ListSelectionModel selModel, final int leadIndex, final int row,
-                             final int bgWidth) {
+    protected void paintCell(
+            final Graphics g, final int index, final Rectangle rowBounds, final ListCellRenderer<Object> cellRenderer,
+            final ListModel<Object> dataModel, final ListSelectionModel selModel, final int leadIndex, final int row,
+            final int bgWidth
+    ) {
         boolean empty = index < 0 || index >= list.getModel().getSize();
         Object value = empty ? null : dataModel.getElementAt(index);
         boolean cellHasFocus = list.hasFocus() && (index == leadIndex);
@@ -198,8 +193,8 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
             g.setColor(CellUtil.getListBackground(list, list, false, row));
             g.fillRect(cx, cy, bgWidth > 0 ? bgWidth : cw, ch);
         } else {
-            Component rendererComponent = cellRenderer.getListCellRendererComponent(list, value, index, isSelected,
-                                                                                    cellHasFocus);
+            Component rendererComponent =
+                cellRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             if (PropertyUtil.getBooleanProperty(list, KEY_SHRINK_WRAP)) {
                 // Shrink renderer to preferred size. This is mostly used on Windows
                 // where selection is only shown around the file name, instead of
@@ -240,9 +235,11 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
             if (row < 0) {
                 // If shift is down in multi-select, we should do nothing.
                 // For single select or non-shift-click, clear the selection
-                if (isFileList && !PropertyUtil.getBooleanProperty(list, KEY_FULL_ROW_SELECTION)
-                    && e.getID() == MouseEvent.MOUSE_PRESSED &&
-                    (!e.isShiftDown() || list.getSelectionMode() == ListSelectionModel.SINGLE_SELECTION)) {
+                if (
+                    isFileList && !PropertyUtil.getBooleanProperty(list, KEY_FULL_ROW_SELECTION)
+                        && e.getID() == MouseEvent.MOUSE_PRESSED
+                        && (!e.isShiftDown() || list.getSelectionMode() == ListSelectionModel.SINGLE_SELECTION)
+                ) {
                     list.clearSelection();
                 }
             } else {

@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui;
@@ -48,8 +45,8 @@ public class DarkPopupFactory extends PopupFactory {
     private HeavyWeightParent heavyWeightParent;
 
     @Override
-    public Popup getPopup(final Component owner, final Component contents,
-                          final int x, final int y) throws IllegalArgumentException {
+    public Popup getPopup(final Component owner, final Component contents, final int x, final int y)
+            throws IllegalArgumentException {
         Pair<Popup, PopupType> result = getEffectivePopup(owner, contents, x, y);
         Popup popup = result.getFirst();
         PopupType type = result.getSecond();
@@ -57,12 +54,13 @@ public class DarkPopupFactory extends PopupFactory {
         return popup;
     }
 
-    protected Pair<Popup, PopupType> getEffectivePopup(final Component owner, final Component contents,
-                                                       final int x, final int y) {
+    protected Pair<Popup, PopupType> getEffectivePopup(
+            final Component owner, final Component contents, final int x, final int y
+    ) {
         Popup popup = super.getPopup(owner, contents, x, y);
         PopupType type = getPopupType(popup);
-        boolean forceHeavy = type != PopupType.HEAVY_WEIGHT
-                             && PropertyUtil.getBooleanProperty(contents, KEY_FORCE_HEAVYWEIGHT);
+        boolean forceHeavy =
+            type != PopupType.HEAVY_WEIGHT && PropertyUtil.getBooleanProperty(contents, KEY_FORCE_HEAVYWEIGHT);
         if (forceHeavy) {
             // Heavy weight owner forces a heavyweight popup.
             Window targetWindow = DarkUIUtil.getWindow(owner);
@@ -71,13 +69,13 @@ public class DarkPopupFactory extends PopupFactory {
         }
         if (type == PopupType.HEAVY_WEIGHT) {
             Window window = DarkUIUtil.getWindow(contents);
-            if ((owner != null && window != null)
-                && !Objects.equals(window.getGraphicsConfiguration(),
-                                   owner.getGraphicsConfiguration())) {
+            if (
+                (owner != null && window != null)
+                    && !Objects.equals(window.getGraphicsConfiguration(), owner.getGraphicsConfiguration())
+            ) {
                 /*
-                 * Window uses incorrect graphics configuration.
-                 * Setting the focusable window state will force the PopupFactory to dispose it and create
-                 * a new window.
+                 * Window uses incorrect graphics configuration. Setting the focusable window state will force the
+                 * PopupFactory to dispose it and create a new window.
                  */
                 window.setFocusableWindowState(true);
                 popup = super.getPopup(getHeavyWeightParent(DarkUIUtil.getWindow(owner)), contents, x, y);
@@ -115,26 +113,25 @@ public class DarkPopupFactory extends PopupFactory {
         }
     }
 
-    protected void setupWindow(final Window window, final Component contents,
-                               final boolean isFocusable, final boolean startHidden) {
+    protected void setupWindow(
+            final Window window, final Component contents, final boolean isFocusable, final boolean startHidden
+    ) {
         boolean noDecorations = PropertyUtil.getBooleanProperty(contents, KEY_NO_DECORATION);
         boolean opaque = PropertyUtil.getBooleanProperty(contents, KEY_OPAQUE);
-        JRootPane rootPane = window instanceof RootPaneContainer
-                ? ((RootPaneContainer) window).getRootPane()
-                : null;
+        JRootPane rootPane = window instanceof RootPaneContainer ? ((RootPaneContainer) window).getRootPane() : null;
         setupWindowBackground(window, rootPane, opaque, !noDecorations);
         setupWindowFocusableState(isFocusable, window);
         setupWindowDecorations(window, rootPane, noDecorations);
         setupWindowOpacity(startHidden, window);
     }
 
-    protected void setupWindowBackground(final Window window, final JRootPane rootPane,
-                                         final boolean opaque, final boolean decorations) {
+    protected void setupWindowBackground(
+            final Window window, final JRootPane rootPane, final boolean opaque, final boolean decorations
+    ) {
         /*
-         * Sometimes the background is java.awt.SystemColor[i=7]
-         * It results in a flash of white background, that is repainted with
-         * the proper popup background later.
-         * That is why we set window background explicitly.
+         * Sometimes the background is java.awt.SystemColor[i=7] It results in a flash of white background,
+         * that is repainted with the proper popup background later. That is why we set window background
+         * explicitly.
          */
         if (rootPane == null) return;
         rootPane.setOpaque(opaque);
@@ -158,8 +155,8 @@ public class DarkPopupFactory extends PopupFactory {
     protected void setupWindowDecorations(final Window window, final JRootPane rootPane, final boolean noDecorations) {
         if (rootPane != null) {
             /*
-             * To ensure truly undecorated windows we need to specify the Window.shadow property to
-             * remove shadows on macOS.
+             * To ensure truly undecorated windows we need to specify the Window.shadow property to remove
+             * shadows on macOS.
              */
             rootPane.putClientProperty("Window.shadow", !noDecorations);
         }
@@ -175,7 +172,8 @@ public class DarkPopupFactory extends PopupFactory {
         if (startHidden && translucencySupported) {
             try {
                 window.setOpacity(0);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
     }
 
@@ -226,8 +224,6 @@ public class DarkPopupFactory extends PopupFactory {
     }
 
     public enum PopupType {
-        LIGHT_WEIGHT,
-        MEDIUM_WEIGHT,
-        HEAVY_WEIGHT
+        LIGHT_WEIGHT, MEDIUM_WEIGHT, HEAVY_WEIGHT
     }
 }

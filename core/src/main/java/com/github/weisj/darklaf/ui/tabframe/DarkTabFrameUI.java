@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.tabframe;
@@ -262,32 +259,31 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
 
     public Rectangle getTabContainerBounds(final JTabFrame tabFrame, final Alignment a) {
         switch (a) {
-            case NORTH :
-            case NORTH_EAST :
+            case NORTH:
+            case NORTH_EAST:
                 Rectangle rect = getTopContainer().getBounds();
                 rect.x = 0;
                 rect.width = tabFrame.getWidth();
                 return rect;
-            case EAST :
-            case SOUTH_EAST :
+            case EAST:
+            case SOUTH_EAST:
                 return getRightContainer().getBounds();
-            case SOUTH :
-            case SOUTH_WEST :
+            case SOUTH:
+            case SOUTH_WEST:
                 Rectangle rect2 = getTopContainer().getBounds();
                 rect2.x = 0;
                 rect2.width = tabFrame.getWidth();
                 return rect2;
-            case WEST :
-            case NORTH_WEST :
+            case WEST:
+            case NORTH_WEST:
                 return getLeftContainer().getBounds();
-            default :
-            case CENTER :
+            default:
+            case CENTER:
                 return tabFrame.getContentPane().getComponent().getBounds();
         }
     }
 
-    protected Pair<JTabFrame.TabFramePosition, Point> getTabIndexAtImpl(final JTabFrame tabFrame,
-                                                                        final Point p) {
+    protected Pair<JTabFrame.TabFramePosition, Point> getTabIndexAtImpl(final JTabFrame tabFrame, final Point p) {
         Component tabComp = null;
         Alignment a = null;
         Point pos = null;
@@ -375,8 +371,8 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
             Alignment a = tab.getAlignment();
             int index = tab.getIndex();
             if (index >= 0) {
-                Rectangle rect = getTabRect(tabFrame.getTabComponentAt(a, index), a,
-                                            tabFrame.getTabContainer(a), false);
+                Rectangle rect =
+                    getTabRect(tabFrame.getTabComponentAt(a, index), a, tabFrame.getTabContainer(a), false);
                 Point pos = res.getSecond();
                 if (isForward(a)) {
                     if (pos.x <= rect.x + rect.width / 2 && pos.x >= rect.x) {
@@ -436,8 +432,9 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
         dropSize.setSize(width, height);
     }
 
-    protected Rectangle getTabRect(final TabFrameTab tab, final Alignment a, final Component tabComp,
-                                   final boolean includeDropRect) {
+    protected Rectangle getTabRect(
+            final TabFrameTab tab, final Alignment a, final Component tabComp, final boolean includeDropRect
+    ) {
         tab.getComponent().getBounds(calcRect);
         SwingUtilities.convertRectangle(tab.getComponent(), calcRect, tabComp);
         if (includeDropRect && a == destAlign) {
@@ -455,22 +452,23 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
 
     protected boolean isForward(final Alignment a) {
         switch (a) {
-            case NORTH :
-            case EAST :
-            case WEST :
-            case SOUTH_WEST :
+            case NORTH:
+            case EAST:
+            case WEST:
+            case SOUTH_WEST:
                 return true;
-            case NORTH_WEST :
-            case SOUTH :
-            case NORTH_EAST :
-            case SOUTH_EAST :
-            default :
+            case NORTH_WEST:
+            case SOUTH:
+            case NORTH_EAST:
+            case SOUTH_EAST:
+            default:
                 return false;
         }
     }
 
-    protected Pair<JTabFrame.TabFramePosition, Point> getNearestTabIndexAtImpl(final JTabFrame tabFrame,
-                                                                               final Point pos) {
+    protected Pair<JTabFrame.TabFramePosition, Point> getNearestTabIndexAtImpl(
+            final JTabFrame tabFrame, final Point pos
+    ) {
         Pair<JTabFrame.TabFramePosition, Point> res = getTabIndexAtImpl(tabFrame, pos);
         JTabFrame.TabFramePosition tab = res.getFirst();
         if (tab.getAlignment() != null && tab.getIndex() == -1) {
@@ -483,26 +481,26 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
             int w = a == destAlign && destIndex == -1 ? dropSize.width : 0;
             Component comp = getTabContainer(a);
             switch (a) {
-                case NORTH :
-                case SOUTH_WEST :
+                case NORTH:
+                case SOUTH_WEST:
                     if (p.x > getLeftContainer().getWidth() + w) {
                         tab.setIndex(tabFrame.getTabCountAt(a) - 1);
                     }
                     break;
-                case NORTH_EAST :
-                case SOUTH :
+                case NORTH_EAST:
+                case SOUTH:
                     if (p.x < comp.getWidth() - getRightContainer().getWidth() - w) {
                         tab.setIndex(tabFrame.getTabCountAt(a) - 1);
                     }
                     break;
-                case EAST :
-                case WEST :
+                case EAST:
+                case WEST:
                     if (p.x > w) {
                         tab.setIndex(tabFrame.getTabCountAt(a) - 1);
                     }
                     break;
-                case SOUTH_EAST :
-                case NORTH_WEST :
+                case SOUTH_EAST:
+                case NORTH_WEST:
                     if (p.x < comp.getHeight() - w) {
                         tab.setIndex(tabFrame.getTabCountAt(a) - 1);
                     }
@@ -514,17 +512,17 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
 
     protected Component getTabContainer(final Alignment a) {
         switch (a) {
-            case NORTH :
-            case NORTH_EAST :
+            case NORTH:
+            case NORTH_EAST:
                 return getTopContainer();
-            case EAST :
-            case SOUTH_EAST :
+            case EAST:
+            case SOUTH_EAST:
                 return getRightContainer();
-            case SOUTH :
-            case SOUTH_WEST :
+            case SOUTH:
+            case SOUTH_WEST:
                 return getBottomContainer();
-            case WEST :
-            case NORTH_WEST :
+            case WEST:
+            case NORTH_WEST:
                 return getLeftContainer();
         }
         return null;
@@ -563,19 +561,19 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
 
     public JComponent getDropComponent(final Alignment a) {
         switch (a) {
-            default :
-            case CENTER :
-            case NORTH :
-            case NORTH_EAST :
+            default:
+            case CENTER:
+            case NORTH:
+            case NORTH_EAST:
                 return getDropComponentTop();
-            case EAST :
-            case SOUTH_EAST :
+            case EAST:
+            case SOUTH_EAST:
                 return getDropComponentRight();
-            case SOUTH :
-            case SOUTH_WEST :
+            case SOUTH:
+            case SOUTH_WEST:
                 return getDropComponentBottom();
-            case WEST :
-            case NORTH_WEST :
+            case WEST:
+            case NORTH_WEST:
                 return getDropComponentLeft();
         }
     }

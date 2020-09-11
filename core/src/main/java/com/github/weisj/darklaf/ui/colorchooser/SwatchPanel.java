@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.colorchooser;
@@ -43,10 +40,8 @@ abstract class SwatchPanel extends JPanel {
     protected Dimension swatchSize;
     protected Dimension numSwatches;
     protected Dimension gap;
-    private final ToolTipContext toolTipContext = new ToolTipContext(this)
-                                                                          .setAlignment(Alignment.CENTER)
-                                                                          .setToolTipRectSupplier(this::getSwatchBounds)
-                                                                          .setHideOnExit(true);
+    private final ToolTipContext toolTipContext = new ToolTipContext(this).setAlignment(Alignment.CENTER)
+        .setToolTipRectSupplier(this::getSwatchBounds).setHideOnExit(true);
     private int selRow;
     private int selCol;
 
@@ -71,31 +66,34 @@ abstract class SwatchPanel extends JPanel {
             public void keyPressed(final KeyEvent e) {
                 int typed = e.getKeyCode();
                 switch (typed) {
-                    case KeyEvent.VK_UP :
+                    case KeyEvent.VK_UP:
                         if (selRow > 0) {
                             selRow--;
                             repaint();
                         }
                         break;
-                    case KeyEvent.VK_DOWN :
+                    case KeyEvent.VK_DOWN:
                         if (selRow < numSwatches.height - 1) {
                             selRow++;
                             repaint();
                         }
                         break;
-                    case KeyEvent.VK_LEFT :
+                    case KeyEvent.VK_LEFT:
                         if (selCol > 0 && SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
                             selCol--;
                             repaint();
-                        } else if (selCol < numSwatches.width - 1
-                                   && !SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
+                        } else if (
+                            selCol < numSwatches.width - 1
+                                && !SwatchPanel.this.getComponentOrientation().isLeftToRight()
+                        ) {
                             selCol++;
                             repaint();
                         }
                         break;
-                    case KeyEvent.VK_RIGHT :
-                        if (selCol < numSwatches.width - 1
-                            && SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
+                    case KeyEvent.VK_RIGHT:
+                        if (
+                            selCol < numSwatches.width - 1 && SwatchPanel.this.getComponentOrientation().isLeftToRight()
+                        ) {
                             selCol++;
                             repaint();
                         } else if (selCol > 0 && !SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
@@ -103,12 +101,12 @@ abstract class SwatchPanel extends JPanel {
                             repaint();
                         }
                         break;
-                    case KeyEvent.VK_HOME :
+                    case KeyEvent.VK_HOME:
                         selCol = 0;
                         selRow = 0;
                         repaint();
                         break;
-                    case KeyEvent.VK_END :
+                    case KeyEvent.VK_END:
                         selCol = numSwatches.width - 1;
                         selRow = numSwatches.height - 1;
                         repaint();

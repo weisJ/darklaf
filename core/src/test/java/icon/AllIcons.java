@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package icon;
@@ -53,8 +50,8 @@ public class AllIcons implements ComponentDemo {
     }
 
     public AllIcons() {
-        List<DecorationsProvider> decorationsProviders = ClassFinder.getInstancesOfType(DecorationsProvider.class,
-                                                                                        "com.github.weisj");
+        List<DecorationsProvider> decorationsProviders =
+            ClassFinder.getInstancesOfType(DecorationsProvider.class, "com.github.weisj");
         LafManager.registerInitTask((currentTheme, defaults) -> {
             Properties props = new Properties();
             decorationsProviders.forEach(provider -> provider.loadDecorationProperties(props, defaults));
@@ -91,33 +88,27 @@ public class AllIcons implements ComponentDemo {
     private List<Pair<String, ? extends Icon>> loadIcons() {
         IconLoader loader = IconLoader.get();
         try (ResourceWalker walker = ResourceWalker.walkResources("com.github.weisj")) {
-            return walker.stream()
-                         .filter(p -> p.endsWith("svg"))
-                         .map(p -> {
-                             int size = ICON_SIZE;
-                             ThemedSVGIcon icon = (ThemedSVGIcon) loader.loadSVGIcon(p, size, size, true);
-                             SVGIcon svgIcon = icon.getSVGIcon();
-                             int autosize = svgIcon.getAutosize();
-                             svgIcon.setAutosize(SVGIcon.AUTOSIZE_NONE);
-                             int width = size;
-                             int height = (int) (((double) width / svgIcon.getIconWidth()) * svgIcon.getIconHeight());
-                             if (height > size) {
-                                 height = size;
-                                 width = (int) (((double) height / svgIcon.getIconHeight()) * svgIcon.getIconWidth());
-                             }
+            return walker.stream().filter(p -> p.endsWith("svg")).map(p -> {
+                int size = ICON_SIZE;
+                ThemedSVGIcon icon = (ThemedSVGIcon) loader.loadSVGIcon(p, size, size, true);
+                SVGIcon svgIcon = icon.getSVGIcon();
+                int autosize = svgIcon.getAutosize();
+                svgIcon.setAutosize(SVGIcon.AUTOSIZE_NONE);
+                int width = size;
+                int height = (int) (((double) width / svgIcon.getIconWidth()) * svgIcon.getIconHeight());
+                if (height > size) {
+                    height = size;
+                    width = (int) (((double) height / svgIcon.getIconHeight()) * svgIcon.getIconWidth());
+                }
 
-                             icon.setDisplaySize(width, height);
-                             svgIcon.setAutosize(autosize);
+                icon.setDisplaySize(width, height);
+                svgIcon.setAutosize(autosize);
 
-                             return new Pair<>(p, new CenterIcon(icon, size, size));
-                         })
-                         .collect(Collectors.groupingBy(pair -> pathToIconName(pair.getFirst())))
-                         .values()
-                         .stream()
-                         .peek(list -> makeUnique(list, 1))
-                         .flatMap(List::stream)
-                         .sorted(Pair.compareFirst(AllIcons::pathToIconName))
-                         .collect(Collectors.toList());
+                return new Pair<>(p, new CenterIcon(icon, size, size));
+            }
+            ).collect(Collectors.groupingBy(pair -> pathToIconName(pair.getFirst()))).values().stream().peek(
+                list -> makeUnique(list, 1)
+            ).flatMap(List::stream).sorted(Pair.compareFirst(AllIcons::pathToIconName)).collect(Collectors.toList());
         }
     }
 
@@ -125,10 +116,8 @@ public class AllIcons implements ComponentDemo {
         if (iconList.size() <= 1) {
             iconList.forEach(p -> p.setFirst(pathToIconName(p.getFirst(), depth)));
         } else {
-            iconList.stream()
-                    .collect(Collectors.groupingBy(p -> pathToIconName(p.getFirst(), depth + 1)))
-                    .values()
-                    .forEach(list -> makeUnique(list, depth + 1));
+            iconList.stream().collect(Collectors.groupingBy(p -> pathToIconName(p.getFirst(), depth + 1))).values()
+                .forEach(list -> makeUnique(list, depth + 1));
         }
     }
 
@@ -150,16 +139,17 @@ public class AllIcons implements ComponentDemo {
     }
 
     private static final class IconListRenderer extends JLabel
-                                                implements ListCellRenderer<Pair<String, ? extends Icon>> {
+            implements ListCellRenderer<Pair<String, ? extends Icon>> {
 
         private IconListRenderer() {
             setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
         }
 
         @Override
-        public Component getListCellRendererComponent(final JList<? extends Pair<String, ? extends Icon>> list,
-                                                      final Pair<String, ? extends Icon> value, final int index,
-                                                      final boolean isSelected, final boolean cellHasFocus) {
+        public Component getListCellRendererComponent(
+                final JList<? extends Pair<String, ? extends Icon>> list, final Pair<String, ? extends Icon> value,
+                final int index, final boolean isSelected, final boolean cellHasFocus
+        ) {
             setIcon(value.getSecond());
             setText(value.getFirst());
             return this;

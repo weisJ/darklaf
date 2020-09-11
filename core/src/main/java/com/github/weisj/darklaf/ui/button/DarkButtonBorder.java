@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.button;
@@ -89,14 +86,9 @@ public class DarkButtonBorder implements Border, UIResource {
     }
 
     public static boolean showDropShadow(final AlignmentExt a) {
-        return a == null
-               || a == AlignmentExt.SOUTH
-               || a == AlignmentExt.SOUTH_EAST
-               || a == AlignmentExt.SOUTH_WEST
-               || a == AlignmentExt.LEFT
-               || a == AlignmentExt.RIGHT
-               || a == AlignmentExt.BOTTOM
-               || a == AlignmentExt.MIDDLE_HORIZONTAL;
+        return a == null || a == AlignmentExt.SOUTH || a == AlignmentExt.SOUTH_EAST || a == AlignmentExt.SOUTH_WEST
+            || a == AlignmentExt.LEFT || a == AlignmentExt.RIGHT || a == AlignmentExt.BOTTOM
+            || a == AlignmentExt.MIDDLE_HORIZONTAL;
     }
 
     protected int getArc(final Component c) {
@@ -124,8 +116,9 @@ public class DarkButtonBorder implements Border, UIResource {
     }
 
     @Override
-    public void paintBorder(final Component c, final Graphics g,
-                            final int x, final int y, final int width, final int height) {
+    public void paintBorder(
+            final Component c, final Graphics g, final int x, final int y, final int width, final int height
+    ) {
         if (ButtonConstants.isBorderlessVariant(c)) {
             return;
         }
@@ -172,8 +165,7 @@ public class DarkButtonBorder implements Border, UIResource {
         config.restore();
     }
 
-    protected void paintNeighbourFocus(final Graphics2D g2, final Component c,
-                                       final int width, final int height) {
+    protected void paintNeighbourFocus(final Graphics2D g2, final Component c, final int width, final int height) {
         JComponent left = ButtonConstants.getNeighbour(DarkButtonUI.KEY_LEFT_NEIGHBOUR, c);
         boolean paintLeft = DarkUIUtil.hasFocus(left);
         if (paintLeft) {
@@ -183,8 +175,7 @@ public class DarkButtonBorder implements Border, UIResource {
 
             int h = height - Math.max(0, getShadowSize(left) - borderSize);
             g2.translate(-3 * borderSize + 1, -ins.top);
-            PaintUtil.paintFocusBorder(g2, 4 * borderSize, h + ins.top + ins.bottom,
-                                       getFocusArc(left), borderSize);
+            PaintUtil.paintFocusBorder(g2, 4 * borderSize, h + ins.top + ins.bottom, getFocusArc(left), borderSize);
             g2.translate(-(-3 * borderSize + 1), ins.bottom);
         }
         JComponent right = ButtonConstants.getNeighbour(DarkButtonUI.KEY_RIGHT_NEIGHBOUR, c);
@@ -196,8 +187,7 @@ public class DarkButtonBorder implements Border, UIResource {
 
             int h = height - Math.max(0, getShadowSize(right) - borderSize);
             g2.translate(width - borderSize - 1, -ins.top);
-            PaintUtil.paintFocusBorder(g2, 4 * borderSize, h + ins.top + ins.bottom,
-                                       getFocusArc(right), borderSize);
+            PaintUtil.paintFocusBorder(g2, 4 * borderSize, h + ins.top + ins.bottom, getFocusArc(right), borderSize);
             g2.translate(-(width - borderSize - 1), ins.top);
         }
 
@@ -209,8 +199,7 @@ public class DarkButtonBorder implements Border, UIResource {
             if (corner != null) ins = corner.maskInsets(ins, borderSize);
 
             g2.translate(-ins.left, -3 * borderSize + 1);
-            PaintUtil.paintFocusBorder(g2, width + ins.right + ins.left,
-                                       4 * borderSize, getFocusArc(top), borderSize);
+            PaintUtil.paintFocusBorder(g2, width + ins.right + ins.left, 4 * borderSize, getFocusArc(top), borderSize);
             g2.translate(ins.left, -(-3 * borderSize + 1));
         }
 
@@ -218,8 +207,7 @@ public class DarkButtonBorder implements Border, UIResource {
         boolean paintTopLeft = DarkUIUtil.hasFocus(topLeft);
         if (paintTopLeft) {
             g2.translate(-3 * borderSize + 1, -3 * borderSize + 1);
-            PaintUtil.paintFocusBorder(g2, 4 * borderSize, 4 * borderSize,
-                                       getFocusArc(topLeft), borderSize);
+            PaintUtil.paintFocusBorder(g2, 4 * borderSize, 4 * borderSize, getFocusArc(topLeft), borderSize);
             g2.translate(-(-3 * borderSize + 1), -(-3 * borderSize + 1));
         }
 
@@ -227,8 +215,7 @@ public class DarkButtonBorder implements Border, UIResource {
         boolean paintTopRight = DarkUIUtil.hasFocus(topRight);
         if (paintTopRight) {
             g2.translate(width - borderSize - 1, -3 * borderSize + 1);
-            PaintUtil.paintFocusBorder(g2, 4 * borderSize, 4 * borderSize,
-                                       getFocusArc(topRight), borderSize);
+            PaintUtil.paintFocusBorder(g2, 4 * borderSize, 4 * borderSize, getFocusArc(topRight), borderSize);
             g2.translate(-(width - borderSize - 1), -(-3 * borderSize + 1));
         }
 
@@ -240,8 +227,8 @@ public class DarkButtonBorder implements Border, UIResource {
             if (corner != null) ins = corner.maskInsets(ins, borderSize);
 
             g2.translate(-ins.left, height - borderSize - 1);
-            PaintUtil.paintFocusBorder(g2, width + ins.left + ins.right, 4 * borderSize,
-                                       getFocusArc(bottom), borderSize);
+            PaintUtil
+                .paintFocusBorder(g2, width + ins.left + ins.right, 4 * borderSize, getFocusArc(bottom), borderSize);
             g2.translate(ins.left, -(height - borderSize - 1));
         }
 
@@ -249,8 +236,7 @@ public class DarkButtonBorder implements Border, UIResource {
         boolean paintBottomLeft = DarkUIUtil.hasFocus(bottomLeft);
         if (paintBottomLeft) {
             g2.translate(-3 * borderSize + 1, height - borderSize - 1);
-            PaintUtil.paintFocusBorder(g2, 4 * borderSize, 4 * borderSize,
-                                       getFocusArc(bottomLeft), borderSize);
+            PaintUtil.paintFocusBorder(g2, 4 * borderSize, 4 * borderSize, getFocusArc(bottomLeft), borderSize);
             g2.translate(-(-3 * borderSize + 1), -(height - borderSize - 1));
         }
 
@@ -258,8 +244,7 @@ public class DarkButtonBorder implements Border, UIResource {
         boolean paintBottomRight = DarkUIUtil.hasFocus(bottomRight);
         if (paintBottomRight) {
             g2.translate(width - borderSize - 1, height - borderSize - 1);
-            PaintUtil.paintFocusBorder(g2, 4 * borderSize, 4 * borderSize,
-                                       getFocusArc(bottomRight), borderSize);
+            PaintUtil.paintFocusBorder(g2, 4 * borderSize, 4 * borderSize, getFocusArc(bottomRight), borderSize);
             g2.translate(-(width - borderSize - 1), -(height - borderSize - 1));
         }
     }
@@ -289,15 +274,16 @@ public class DarkButtonBorder implements Border, UIResource {
 
     public Insets getBorderInsets(final Component c) {
         if (ButtonConstants.isBorderlessRectangular(c)) {
-            return new InsetsUIResource(borderlessRectangularInsets.top, borderlessRectangularInsets.left,
-                                        borderlessRectangularInsets.bottom, borderlessRectangularInsets.right);
+            return new InsetsUIResource(
+                borderlessRectangularInsets.top, borderlessRectangularInsets.left, borderlessRectangularInsets.bottom,
+                borderlessRectangularInsets.right
+            );
         }
         boolean shadowVariant = ButtonConstants.isBorderless(c);
         int shadow = shadowVariant ? 0 : getShadowSize();
         boolean square = ButtonConstants.isSquare(c);
-        Insets pad = ButtonConstants.isThin(c)
-                ? square ? squareThinInsets : thinInsets
-                : square ? squareInsets : insets;
+        Insets pad =
+            ButtonConstants.isThin(c) ? square ? squareThinInsets : thinInsets : square ? squareInsets : insets;
         return maskInsets(new InsetsUIResource(pad.top, pad.left, pad.bottom, pad.right), c, shadow);
     }
 

@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package ui.tree;
@@ -71,8 +68,11 @@ public class TreeDemo implements ComponentDemo {
         controlPanel.add(new JCheckBox("LeftToRight") {
             {
                 setSelected(tree.getComponentOrientation().isLeftToRight());
-                addActionListener(e -> tree.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                        : ComponentOrientation.RIGHT_TO_LEFT));
+                addActionListener(
+                    e -> tree.setComponentOrientation(
+                        isSelected() ? ComponentOrientation.LEFT_TO_RIGHT : ComponentOrientation.RIGHT_TO_LEFT
+                    )
+                );
             }
         });
         controlPanel.add(new JCheckBox("show root") {
@@ -130,7 +130,8 @@ public class TreeDemo implements ComponentDemo {
         DefaultMutableTreeNode child = new DefaultMutableTreeNode("A loooooooooooooooooooooooooooooooooooooong leaf A");
         DefaultMutableTreeNode child1 = new SelectableTreeNode("Leaf B (boolean)", true);
         DefaultMutableTreeNode parent2 = new DefaultMutableTreeNode("Node B");
-        DefaultMutableTreeNode child2 = new DefaultMutableTreeNode("Leaf that is unnecessary verbose and ridiculously long C");
+        DefaultMutableTreeNode child2 =
+            new DefaultMutableTreeNode("Leaf that is unnecessary verbose and ridiculously long C");
         DefaultMutableTreeNode parent3 = new DefaultMutableTreeNode("Nested");
 
         DefaultMutableTreeNode current = parent3;
@@ -156,11 +157,12 @@ public class TreeDemo implements ComponentDemo {
         JTree tree = new JTree(root);
         tree.setCellRenderer(new DefaultTreeCellRenderer() {
             @Override
-            public Component getTreeCellRendererComponent(final JTree tree, final Object value, final boolean sel,
-                                                          final boolean expanded,
-                                                          final boolean leaf, final int row, final boolean hasFocus) {
-                Component component = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row,
-                                                                         hasFocus);
+            public Component getTreeCellRendererComponent(
+                    final JTree tree, final Object value, final boolean sel, final boolean expanded, final boolean leaf,
+                    final int row, final boolean hasFocus
+            ) {
+                Component component =
+                    super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
                 component.setEnabled(tree.isEnabled() && (value != parent1 && value != child));
                 return component;
             }

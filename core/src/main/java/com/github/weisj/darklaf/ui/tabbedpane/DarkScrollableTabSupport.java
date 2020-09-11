@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
@@ -104,26 +101,25 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
                 Dimension pref = scrollPopupMenu.getPreferredSize();
                 boolean leftToRight = ui.tabPane.getComponentOrientation().isLeftToRight();
                 switch (ui.tabPane.getTabPlacement()) {
-                    case SwingConstants.LEFT :
-                        scrollPopupMenu.show(moreTabsButton, moreTabsButton.getWidth(),
-                                             moreTabsButton.getHeight() - pref.height);
+                    case SwingConstants.LEFT:
+                        scrollPopupMenu
+                            .show(moreTabsButton, moreTabsButton.getWidth(), moreTabsButton.getHeight() - pref.height);
                         break;
-                    case SwingConstants.RIGHT :
-                        scrollPopupMenu.show(moreTabsButton, -pref.width,
-                                             moreTabsButton.getHeight() - pref.height);
+                    case SwingConstants.RIGHT:
+                        scrollPopupMenu.show(moreTabsButton, -pref.width, moreTabsButton.getHeight() - pref.height);
                         break;
-                    case SwingConstants.TOP :
+                    case SwingConstants.TOP:
                         if (leftToRight) {
-                            scrollPopupMenu.show(moreTabsButton, moreTabsButton.getWidth() - pref.width,
-                                                 moreTabsButton.getHeight());
+                            scrollPopupMenu.show(
+                                moreTabsButton, moreTabsButton.getWidth() - pref.width, moreTabsButton.getHeight()
+                            );
                         } else {
                             scrollPopupMenu.show(moreTabsButton, 0, moreTabsButton.getHeight());
                         }
                         break;
-                    case SwingConstants.BOTTOM :
+                    case SwingConstants.BOTTOM:
                         if (leftToRight) {
-                            scrollPopupMenu.show(moreTabsButton, moreTabsButton.getWidth() - pref.width,
-                                                 -pref.height);
+                            scrollPopupMenu.show(moreTabsButton, moreTabsButton.getWidth() - pref.width, -pref.height);
                         } else {
                             scrollPopupMenu.show(moreTabsButton, 0, -pref.height);
                         }
@@ -167,8 +163,7 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
         int tabCount = ui.tabPane.getTabCount();
         int shift;
         if (horizontal) {
-            int rightMargin = size.width - (insets.left + insets.right
-                                            + tabAreaInsets.right + tabAreaInsets.left);
+            int rightMargin = size.width - (insets.left + insets.right + tabAreaInsets.right + tabAreaInsets.left);
             if (moreTabsButton.isVisible()) {
                 rightMargin -= moreTabsButton.getWidth();
             }
@@ -184,8 +179,7 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
             ui.scrollLayout.commitShiftX(shift, tabCount);
             ui.scrollShiftX += shift;
         } else {
-            int bottomMargin = size.height - (insets.bottom + tabAreaInsets.bottom
-                                              + insets.top + tabAreaInsets.top);
+            int bottomMargin = size.height - (insets.bottom + tabAreaInsets.bottom + insets.top + tabAreaInsets.top);
             if (moreTabsButton.isVisible()) {
                 bottomMargin -= moreTabsButton.getHeight();
             }

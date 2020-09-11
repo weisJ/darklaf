@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
@@ -51,9 +48,8 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
     protected static final String KEY_PREFIX = "JTabbedPane.";
     /*
-     * Centering tabs only applies if in
-     * - WRAP_TAB_LAYOUT there is only one tab run.
-     * - SCROLL_TAB_LAYOUT the viewport doesn't need to be scrolled.
+     * Centering tabs only applies if in - WRAP_TAB_LAYOUT there is only one tab run. -
+     * SCROLL_TAB_LAYOUT the viewport doesn't need to be scrolled.
      */
     public static final String KEY_CENTER_TABS = KEY_PREFIX + "centerTabs";
     public static final String KEY_DND = KEY_PREFIX + "dndEnabled";
@@ -218,53 +214,55 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     @Override
-    protected void paintTabBackground(final Graphics g, final int tabPlacement, final int tabIndex,
-                                      final int x,
-                                      final int y, final int w, final int h,
-                                      final boolean isSelected) {
+    protected void paintTabBackground(
+            final Graphics g, final int tabPlacement, final int tabIndex, final int x, final int y, final int w,
+            final int h, final boolean isSelected
+    ) {
         g.setColor(getTabBackgroundColor(tabIndex, isSelected, getRolloverTab() == tabIndex));
         g.fillRect(x, y, w, h);
     }
 
     @Override
-    protected void paintTabBorder(final Graphics g, final int tabPlacement, final int tabIndex,
-                                  final int x, final int y, final int w, final int h,
-                                  final boolean isSelected) {
+    protected void paintTabBorder(
+            final Graphics g, final int tabPlacement, final int tabIndex, final int x, final int y, final int w,
+            final int h, final boolean isSelected
+    ) {
         g.setColor(getTabBorderColor());
         switch (tabPlacement) {
-            case TOP :
+            case TOP:
                 g.fillRect(x, y + h - 1, w, 1);
                 break;
-            case BOTTOM :
+            case BOTTOM:
                 g.fillRect(x, y, w, 1);
                 break;
-            case LEFT :
+            case LEFT:
                 g.fillRect(x + w - 1, y, 1, h);
                 break;
-            case RIGHT :
+            case RIGHT:
                 g.fillRect(x, y, 1, h);
                 break;
         }
     }
 
     @Override
-    protected void paintFocusIndicator(final Graphics g, final int tabPlacement, final Rectangle r,
-                                       final int tabIndex, final Rectangle iconRect,
-                                       final Rectangle textRect, final boolean isSelected) {
+    protected void paintFocusIndicator(
+            final Graphics g, final int tabPlacement, final Rectangle r, final int tabIndex, final Rectangle iconRect,
+            final Rectangle textRect, final boolean isSelected
+    ) {
         if (isSelected) {
             if (!drawFocusBar()) return;
             g.setColor(getAccentColor());
             switch (tabPlacement) {
-                case LEFT :
+                case LEFT:
                     g.fillRect(r.x + r.width - focusSize, r.y, focusSize, r.height);
                     break;
-                case RIGHT :
+                case RIGHT:
                     g.fillRect(r.x, r.y, focusSize, r.height);
                     break;
-                case BOTTOM :
+                case BOTTOM:
                     g.fillRect(r.x, r.y + 1, r.width, focusSize);
                     break;
-                default :
+                default:
                     g.fillRect(r.x, r.y + r.height - focusSize, r.width, focusSize);
                     break;
             }
@@ -300,14 +298,14 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
             b.setLocation(0, 0);
         }
         switch (tabPlacement) {
-            case BOTTOM :
+            case BOTTOM:
                 b.y++;
-            case TOP :
+            case TOP:
                 b.height--;
                 break;
-            case RIGHT :
+            case RIGHT:
                 b.x++;
-            case LEFT :
+            case LEFT:
                 b.width--;
                 break;
         }
@@ -348,8 +346,9 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     @Override
-    protected int tabForCoordinate(final JTabbedPane pane, final int x, final int y,
-                                   final boolean validateIfNecessary) {
+    protected int tabForCoordinate(
+            final JTabbedPane pane, final int x, final int y, final boolean validateIfNecessary
+    ) {
         int tab = super.tabForCoordinate(pane, x, y, validateIfNecessary);
         Point p = new Point(x, y);
         if (scrollableTabLayoutEnabled()) {
@@ -379,19 +378,21 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         int h = calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight);
         int w = calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth);
         switch (tabPlacement) {
-            case TOP :
+            case TOP:
                 paintTabAreaBorder(g, tabPlacement, ins.left, 0, width - ins.left - ins.right, h + ins.top);
                 break;
-            case BOTTOM :
-                paintTabAreaBorder(g, tabPlacement, ins.left, height - h - ins.top, width - ins.left - ins.right,
-                                   h + ins.top + 1);
+            case BOTTOM:
+                paintTabAreaBorder(
+                    g, tabPlacement, ins.left, height - h - ins.top, width - ins.left - ins.right, h + ins.top + 1
+                );
                 break;
-            case LEFT :
+            case LEFT:
                 paintTabAreaBorder(g, tabPlacement, 0, ins.top, w + ins.left, height - ins.top - ins.bottom);
                 break;
-            case RIGHT :
-                paintTabAreaBorder(g, tabPlacement, width - w - ins.right, ins.top, w + ins.right,
-                                   height - ins.top - ins.bottom);
+            case RIGHT:
+                paintTabAreaBorder(
+                    g, tabPlacement, width - w - ins.right, ins.top, w + ins.right, height - ins.top - ins.bottom
+                );
                 break;
         }
     }
@@ -425,8 +426,10 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         return Math.max(super.calculateTabAreaWidth(tabPlacement, vertRunCount, maxTabWidth), getFallBackSize());
     }
 
-    public void setDnDIndicatorRect(final int x, final int y, final int width, final int height, final int targetIndex,
-                                    final boolean sourceEqualsTarget) {
+    public void setDnDIndicatorRect(
+            final int x, final int y, final int width, final int height, final int targetIndex,
+            final boolean sourceEqualsTarget
+    ) {
         dropRect.setBounds(x, y, width, height);
         if (scrollableTabLayoutEnabled()) {
             Point p = scrollableTabSupport.viewport.getLocation();
@@ -497,20 +500,21 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         }
     }
 
-    protected void paintTabAreaBorder(final Graphics g, final int tabPlacement,
-                                      final int x, final int y, final int w, final int h) {
+    protected void paintTabAreaBorder(
+            final Graphics g, final int tabPlacement, final int x, final int y, final int w, final int h
+    ) {
         g.setColor(getTabBorderColor());
         switch (tabPlacement) {
-            case TOP :
+            case TOP:
                 g.fillRect(x, y + h - 1, w, 1);
                 break;
-            case BOTTOM :
+            case BOTTOM:
                 g.fillRect(x, y, w, 1);
                 break;
-            case LEFT :
+            case LEFT:
                 g.fillRect(w - 1, y, 1, h);
                 break;
-            case RIGHT :
+            case RIGHT:
                 g.fillRect(x, y, 1, h);
                 break;
         }
@@ -527,50 +531,51 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
             ((Graphics2D) g).setComposite(PaintUtil.getDropComposite());
         }
         switch (tabPane.getTabPlacement()) {
-            case TOP :
+            case TOP:
                 g.fillRect(dropRect.x, dropRect.y, dropRect.width, dropRect.height - 1);
                 break;
-            case BOTTOM :
+            case BOTTOM:
                 g.fillRect(dropRect.x, dropRect.y + 1, dropRect.width, dropRect.height - 1);
                 break;
-            case LEFT :
+            case LEFT:
                 g.fillRect(dropRect.x, dropRect.y, dropRect.width - 1, dropRect.height);
                 break;
-            case RIGHT :
+            case RIGHT:
                 g.fillRect(dropRect.x + 1, dropRect.y, dropRect.width - 1, dropRect.height);
                 break;
         }
         context.restore();
     }
 
-    protected void layoutLeadingComponent(final Component comp, final int tabWidth, final int tabHeight,
-                                          final Insets insets, final int tx, final int ty, final int tabPlacement) {
+    protected void layoutLeadingComponent(
+            final Component comp, final int tabWidth, final int tabHeight, final Insets insets, final int tx,
+            final int ty, final int tabPlacement
+    ) {
         Dimension b = leadingComp.getPreferredSize();
         int h = Math.min(tabHeight, b.height);
         int w = Math.min(tabWidth, b.width);
         int centerY = (tabHeight - h) / 2;
         int centerX = (tabWidth - w) / 2;
         switch (tabPlacement) {
-            case LEFT :
+            case LEFT:
                 comp.setBounds(insets.left + centerX, insets.top, w, b.height);
                 break;
-            case RIGHT :
-                comp.setBounds(tx - tabAreaInsets.left + centerX, insets.top,
-                               w, b.height);
+            case RIGHT:
+                comp.setBounds(tx - tabAreaInsets.left + centerX, insets.top, w, b.height);
                 break;
-            case TOP :
+            case TOP:
                 comp.setBounds(insets.left, insets.top + centerY, b.width, h);
                 break;
-            case BOTTOM :
-                comp.setBounds(insets.left, ty - tabAreaInsets.bottom + centerY,
-                               b.width, h);
+            case BOTTOM:
+                comp.setBounds(insets.left, ty - tabAreaInsets.bottom + centerY, b.width, h);
                 break;
         }
     }
 
-    protected void layoutTrailingComponent(final Component comp, final int tabWidth, final int tabHeight,
-                                           final Insets insets, final int tx, final int ty,
-                                           final int tw, final int th, final int tabPlacement) {
+    protected void layoutTrailingComponent(
+            final Component comp, final int tabWidth, final int tabHeight, final Insets insets, final int tx,
+            final int ty, final int tw, final int th, final int tabPlacement
+    ) {
         Dimension b = trailingComp.getPreferredSize();
         int h = Math.min(tabHeight, b.height);
         int w = Math.min(tabWidth, b.width);
@@ -578,20 +583,17 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         int centerY = (tabHeight - h) / 2;
         int centerX = (tabWidth - w) / 2;
         switch (tabPlacement) {
-            case LEFT :
-                comp.setBounds(insets.left + centerX, size.height - b.height - insets.bottom,
-                               w, b.height);
+            case LEFT:
+                comp.setBounds(insets.left + centerX, size.height - b.height - insets.bottom, w, b.height);
                 break;
-            case RIGHT :
-                comp.setBounds(tx - tabAreaInsets.left + centerX, size.height - b.height - insets.bottom,
-                               w, b.height);
+            case RIGHT:
+                comp.setBounds(tx - tabAreaInsets.left + centerX, size.height - b.height - insets.bottom, w, b.height);
                 break;
-            case TOP :
+            case TOP:
                 comp.setBounds(size.width - b.width - insets.right, insets.top + centerY, b.width, h);
                 break;
-            case BOTTOM :
-                comp.setBounds(size.width - b.width - insets.right, ty - tabAreaInsets.bottom + centerY,
-                               b.width, h);
+            case BOTTOM:
+                comp.setBounds(size.width - b.width - insets.right, ty - tabAreaInsets.bottom + centerY, b.width, h);
                 break;
         }
     }
@@ -628,8 +630,10 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         Point pos = scrollableTabSupport.viewport.getLocation();
         p.x += pos.x;
         p.y += pos.y;
-        return new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiersEx(),
-                              p.x, p.y, e.getClickCount(), e.isPopupTrigger(), e.getButton());
+        return new MouseEvent(
+            e.getComponent(), e.getID(), e.getWhen(), e.getModifiersEx(), p.x, p.y, e.getClickCount(),
+            e.isPopupTrigger(), e.getButton()
+        );
     }
 
     public Rectangle getTabAreaBounds() {
@@ -694,16 +698,17 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
             int tabPlacement = tabPane.getTabPlacement();
             boolean isSeleceted = i == tabPane.getSelectedIndex();
 
-            c.setBounds(x + getTabLabelShiftX(tabPlacement, i, isSeleceted),
-                        y + getTabLabelShiftY(tabPlacement, i, isSeleceted),
-                        width, height);
+            c.setBounds(
+                x + getTabLabelShiftX(tabPlacement, i, isSeleceted), y + getTabLabelShiftY(tabPlacement, i, isSeleceted), width, height
+            );
         }
     }
 
     @Override
-    protected void paintText(final Graphics g, final int tabPlacement, final Font font,
-                             final FontMetrics metrics, final int tabIndex, final String title,
-                             final Rectangle textRect, final boolean isSelected) {
+    protected void paintText(
+            final Graphics g, final int tabPlacement, final Font font, final FontMetrics metrics, final int tabIndex,
+            final String title, final Rectangle textRect, final boolean isSelected
+    ) {
         View v = getTextViewForTab(tabIndex);
         int mnemIndex = tabPane.getDisplayedMnemonicIndexAt(tabIndex);
         Color bg = getTabBackgroundColor(tabIndex, isSelected, getRolloverTab() == tabIndex);
@@ -745,8 +750,8 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         newTabIcon = UIManager.getIcon("TabbedPane.newTab.icon");
 
         tabAreaInsets = PropertyUtil.getObject(tabPane, KEY_TAB_AREA_INSETS, Insets.class, tabAreaInsets);
-        contentBorderInsets = PropertyUtil.getObject(tabPane, KEY_CONTENT_BORDER_INSETS, Insets.class,
-                                                     contentBorderInsets);
+        contentBorderInsets =
+            PropertyUtil.getObject(tabPane, KEY_CONTENT_BORDER_INSETS, Insets.class, contentBorderInsets);
         installComponent(KEY_LEADING_COMP, c -> leadingComp = c);
         installComponent(KEY_TRAILING_COMP, c -> trailingComp = c);
         installComponent(KEY_NORTH_COMP, c -> northComp = c);
@@ -768,8 +773,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     @Override
     public Rectangle getTabBounds(final JTabbedPane pane, final int i) {
         Rectangle rect = super.getTabBounds(pane, i);
-        if (scrollableTabLayoutEnabled() && rect != null
-            && dropTargetIndex >= 0 && i == dropTargetIndex) {
+        if (scrollableTabLayoutEnabled() && rect != null && dropTargetIndex >= 0 && i == dropTargetIndex) {
             int tabPlacement = pane.getTabPlacement();
             if (tabPlacement == TOP || tabPlacement == BOTTOM) {
                 if (pane.getComponentOrientation().isLeftToRight()) {

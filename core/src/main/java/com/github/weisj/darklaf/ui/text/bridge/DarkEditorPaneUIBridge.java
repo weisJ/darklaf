@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.text.bridge;
@@ -82,9 +79,10 @@ public abstract class DarkEditorPaneUIBridge extends DarkTextUI {
     }
 
     protected void updateDisplayProperties() {
-        updateDisplayProperties((JEditorPane) getComponent(),
-                                new PropertyChangeEvent(editorPane, PropertyKey.FONT,
-                                                        editorPane.getFont(), editorPane.getFont()));
+        updateDisplayProperties(
+            (JEditorPane) getComponent(),
+            new PropertyChangeEvent(editorPane, PropertyKey.FONT, editorPane.getFont(), editorPane.getFont())
+        );
     }
 
     protected void updateDisplayProperties(final JEditorPane c, final PropertyChangeEvent event) {
@@ -127,11 +125,10 @@ public abstract class DarkEditorPaneUIBridge extends DarkTextUI {
         if ("editorKit".equals(name) || PropertyKey.EDITABLE.equals(name)) {
             editorPane.setEditorPane((JEditorPane) getComponent());
             basicEditorPaneUI.propertyChange(evt);
-        } else if (PropertyKey.FOREGROUND.equals(name)
-                   || PropertyKey.FONT.equals(name)
-                   || PropertyKey.DOCUMENT.equals(name)
-                   || JEditorPane.W3C_LENGTH_UNITS.equals(name)
-                   || JEditorPane.HONOR_DISPLAY_PROPERTIES.equals(name)) {
+        } else if (
+            PropertyKey.FOREGROUND.equals(name) || PropertyKey.FONT.equals(name) || PropertyKey.DOCUMENT.equals(name)
+                || JEditorPane.W3C_LENGTH_UNITS.equals(name) || JEditorPane.HONOR_DISPLAY_PROPERTIES.equals(name)
+        ) {
             updateDisplayProperties((JEditorPane) getComponent(), evt);
         } else if ("focusAccelerator".equals(name)) {
             updateFocusAcceleratorBinding(evt);

@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.components;
@@ -106,8 +103,9 @@ public class DefaultColorPipette extends ColorPipetteBase {
             zoomImage = parent.getGraphicsConfiguration().createCompatibleImage(SIZE, SIZE, Transparency.TRANSLUCENT);
 
             zoomGraphics = (Graphics2D) zoomImage.getGraphics();
-            zoomGraphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                                          RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+            zoomGraphics.setRenderingHint(
+                RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR
+            );
         }
 
         return pickerWindow;
@@ -209,9 +207,10 @@ public class DefaultColorPipette extends ColorPipetteBase {
             Icon icon = pipette.getPipetteIcon();
             if (pipette.isKeyDown() && pipette.getPressedKeyCode() == KeyEvent.VK_SHIFT) {
                 Shape oldCLip = g.getClip();
-                Ellipse2D.Float circ = new Ellipse2D.Float(icon.getIconWidth() - 4, 2,
-                                                           getWidth() - icon.getIconWidth() - 2 + 4,
-                                                           getHeight() - 2 - icon.getIconHeight() + 4);
+                Ellipse2D.Float circ = new Ellipse2D.Float(
+                    icon.getIconWidth() - 4, 2, getWidth() - icon.getIconWidth() - 2 + 4,
+                    getHeight() - 2 - icon.getIconHeight() + 4
+                );
                 g.setClip(circ);
                 g.drawImage(pipette.zoomImage, icon.getIconWidth() - 4, 2, null);
                 g.setClip(oldCLip);

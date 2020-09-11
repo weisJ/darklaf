@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.components.tabframe;
@@ -64,8 +61,8 @@ public class JTabFrame extends JComponent {
     private boolean dndEnabled;
 
     /**
-     * Creates new {@link JTabFrame}. A TabFrame displays one center component and multiple popups around that can be
-     * toggles with a TabbedPane like tabArea along the border.
+     * Creates new {@link JTabFrame}. A TabFrame displays one center component and multiple popups
+     * around that can be toggles with a TabbedPane like tabArea along the border.
      */
     public JTabFrame() {
         super();
@@ -146,8 +143,8 @@ public class JTabFrame extends JComponent {
     }
 
     /**
-     * Get the maximum width a tab can inhibit. A negative value indicated the tabs should use as much space as their
-     * proffered size indicates.
+     * Get the maximum width a tab can inhibit. A negative value indicated the tabs should use as much
+     * space as their proffered size indicates.
      *
      * @return the maximum tab width.
      */
@@ -156,8 +153,8 @@ public class JTabFrame extends JComponent {
     }
 
     /**
-     * Sets the maximum width a tab can inhibit. A negative value indicated the tabs should use as much space as their
-     * proffered size indicates.
+     * Sets the maximum width a tab can inhibit. A negative value indicated the tabs should use as much
+     * space as their proffered size indicates.
      *
      * @param maxTabWidth the maximum tab width.
      */
@@ -280,8 +277,7 @@ public class JTabFrame extends JComponent {
      * @param a     the alignment position to add at.{@link TabFramePosition#getAlignment()}
      * @param index the index to insert at.{@link TabFramePosition#getIndex()}
      */
-    public void insertTab(final Component c, final String title, final Icon icon, final Alignment a,
-                          final int index) {
+    public void insertTab(final Component c, final String title, final Icon icon, final Alignment a, final int index) {
         TabFramePopup popup = new PanelPopup(title, icon, c);
         insertTab(popup, title, icon, a, index);
     }
@@ -295,8 +291,9 @@ public class JTabFrame extends JComponent {
      * @param a     the alignment position to add at.{@link TabFramePosition#getAlignment()}
      * @param index the index to insert at.{@link TabFramePosition#getIndex()}
      */
-    public void insertTab(final TabFramePopup c, final String title, final Icon icon, final Alignment a,
-                          final int index) {
+    public void insertTab(
+            final TabFramePopup c, final String title, final Icon icon, final Alignment a, final int index
+    ) {
         if (a == Alignment.CENTER) {
             return;
         }
@@ -363,21 +360,21 @@ public class JTabFrame extends JComponent {
      */
     public JComponent getTabContainer(final Alignment a) {
         switch (a) {
-            case NORTH :
-            case NORTH_EAST :
+            case NORTH:
+            case NORTH_EAST:
                 return getTopTabContainer();
-            case SOUTH :
-            case SOUTH_WEST :
+            case SOUTH:
+            case SOUTH_WEST:
                 return getBottomTabContainer();
-            case EAST :
-            case SOUTH_EAST :
+            case EAST:
+            case SOUTH_EAST:
                 return getRightTabContainer();
-            case WEST :
-            case NORTH_WEST :
+            case WEST:
+            case NORTH_WEST:
                 return getLeftTabContainer();
-            case CENTER :
+            case CENTER:
                 throw new IllegalArgumentException("invalid alignment: " + a);
-            default :
+            default:
                 throw new IllegalArgumentException();
         }
     }
@@ -437,8 +434,9 @@ public class JTabFrame extends JComponent {
      * @param a     the alignment position to place at.{@link TabFramePosition#getAlignment()}
      * @param index the index to place at.{@link TabFramePosition#getIndex()}
      */
-    public void setTabAt(final TabFramePopup c, final String title, final Icon icon,
-                         final Alignment a, final int index) {
+    public void setTabAt(
+            final TabFramePopup c, final String title, final Icon icon, final Alignment a, final int index
+    ) {
         if (a == Alignment.CENTER) {
             return;
         }
@@ -466,7 +464,8 @@ public class JTabFrame extends JComponent {
      * @param  a                         the alignment position.{@link TabFramePosition#getAlignment()}
      * @param  index                     the index.{@link TabFramePosition#getIndex()}
      * @return                           the tab component.
-     * @throws IndexOutOfBoundsException if the alignment or index is out of bounds, or the tab doesn't exist.
+     * @throws IndexOutOfBoundsException if the alignment or index is out of bounds, or the tab doesn't
+     *                                   exist.
      */
     public TabFrameTab getTabComponentAt(final Alignment a, final int index) {
         List<TabFrameTab> tabs = tabsForAlignment(a);
@@ -489,8 +488,10 @@ public class JTabFrame extends JComponent {
      *
      * @param  a                         the alignment position.{@link TabFramePosition#getAlignment()}
      * @param  index                     the index. {@link TabFramePosition#getIndex()} ()}
-     * @return                           the popup component specified by {@link TabFramePopup#getContentPane()}.
-     * @throws IndexOutOfBoundsException if the alignment or index is out of bounds, or the tab doesn't exist.
+     * @return                           the popup component specified by
+     *                                   {@link TabFramePopup#getContentPane()}.
+     * @throws IndexOutOfBoundsException if the alignment or index is out of bounds, or the tab doesn't
+     *                                   exist.
      */
     public Component getComponentAt(final Alignment a, final int index) {
         List<TabFramePopup> tabs = compsForAlignment(a);
@@ -530,9 +531,11 @@ public class JTabFrame extends JComponent {
     /**
      * Close a popup.
      *
-     * @param  a                         the alignment position of the popup.{@link TabFramePosition#getAlignment()}
+     * @param  a                         the alignment position of the
+     *                                   popup.{@link TabFramePosition#getAlignment()}
      * @param  index                     the index of the tab.{@link TabFramePosition#getIndex()}
-     * @throws IndexOutOfBoundsException if the alignment or index is out of bounds, or the tab doesn't exist.
+     * @throws IndexOutOfBoundsException if the alignment or index is out of bounds, or the tab doesn't
+     *                                   exist.
      */
     public void closeTab(final Alignment a, final int index) {
         toggleTab(a, index, false);
@@ -544,7 +547,8 @@ public class JTabFrame extends JComponent {
      * @param  a                         the alignment position.{@link TabFramePosition#getAlignment()}
      * @param  index                     the index.{@link TabFramePosition#getIndex()}
      * @param  enabled                   true if visible.
-     * @throws IndexOutOfBoundsException if the alignment or index is out of bounds, or the tab doesn't exist.
+     * @throws IndexOutOfBoundsException if the alignment or index is out of bounds, or the tab doesn't
+     *                                   exist.
      */
     public void toggleTab(final Alignment a, final int index, final boolean enabled) {
         int oldIndex = selectedIndices[a.getIndex()];
@@ -558,18 +562,21 @@ public class JTabFrame extends JComponent {
             getPopupComponentAt(a).doLayout();
             getPopupComponentAt(a).requestFocusInWindow();
         }
-        firePropertyChange(TabFramePopup.KEY_VISIBLE_TAB, new TabFramePosition(a, oldIndex),
-                           new TabFramePosition(a, index));
+        firePropertyChange(
+            TabFramePopup.KEY_VISIBLE_TAB, new TabFramePosition(a, oldIndex), new TabFramePosition(a, index)
+        );
     }
 
     /**
-     * Enable or disable a tab. A disabled tab cannot be opened. Enabling a tab does not open it. Disabling a tab closes
-     * it. After the tab has been disabled enabling it won't restore the open state,
+     * Enable or disable a tab. A disabled tab cannot be opened. Enabling a tab does not open it.
+     * Disabling a tab closes it. After the tab has been disabled enabling it won't restore the open
+     * state,
      *
      * @param  a                         the alignment position.{@link TabFramePosition#getAlignment()}
      * @param  index                     the index.{@link TabFramePosition#getIndex()}
      * @param  enabled                   true if enabled.
-     * @throws IndexOutOfBoundsException if the alignment or index is out of bounds, or the tab doesn't exist.
+     * @throws IndexOutOfBoundsException if the alignment or index is out of bounds, or the tab doesn't
+     *                                   exist.
      */
     public void setTabEnabled(final Alignment a, final int index, final boolean enabled) {
         getTabComponentAt(a, index).setEnabled(enabled);
@@ -598,8 +605,7 @@ public class JTabFrame extends JComponent {
     /*
      * Set the visibility of the popup.
      */
-    private void setPopupVisibility(final TabFrameTab tabComponent,
-                                    final boolean selected) {
+    private void setPopupVisibility(final TabFrameTab tabComponent, final boolean selected) {
         Alignment a = tabComponent.getOrientation();
         TabFramePopup c = compsForAlignment(a).get(tabComponent.getIndex());
         c.setEnabled(selected);
@@ -842,8 +848,8 @@ public class JTabFrame extends JComponent {
     }
 
     /**
-     * Get the position of the alignment peer. That being the other position that occupies the same tab container given
-     * by {@link #getTabContainer(Alignment)}.
+     * Get the position of the alignment peer. That being the other position that occupies the same tab
+     * container given by {@link #getTabContainer(Alignment)}.
      * <p>
      * NORTH = NORTH_EAST
      * </p>
@@ -861,23 +867,23 @@ public class JTabFrame extends JComponent {
      */
     public Alignment getPeer(final Alignment a) {
         switch (a) {
-            case NORTH :
-            case SOUTH :
-            case WEST :
-            case EAST :
+            case NORTH:
+            case SOUTH:
+            case WEST:
+            case EAST:
                 return a.clockwise();
-            case NORTH_EAST :
-            case NORTH_WEST :
-            case SOUTH_EAST :
-            case SOUTH_WEST :
+            case NORTH_EAST:
+            case NORTH_WEST:
+            case SOUTH_EAST:
+            case SOUTH_WEST:
                 return a.anticlockwise();
         }
         return a;
     }
 
     /**
-     * Returns whether there is transfer ongoing. How this is realized may depend on the specific UI implementation.
-     * This needn't necessarily represent a DnD operation.
+     * Returns whether there is transfer ongoing. How this is realized may depend on the specific UI
+     * implementation. This needn't necessarily represent a DnD operation.
      *
      * @return true if a transfer is ongoing.
      */
@@ -940,8 +946,8 @@ public class JTabFrame extends JComponent {
     }
 
     /**
-     * Get the current transfer info. This contains the position of the tab prepared the be transferred by {@link
-     * #initTransfer(Alignment, int)}.
+     * Get the current transfer info. This contains the position of the tab prepared the be transferred
+     * by {@link #initTransfer(Alignment, int)}.
      *
      * @return the transfer position.
      */

@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.togglebutton;
@@ -48,9 +45,8 @@ public class ButtonGroupInfo {
     }
 
     public static boolean isValidButton(final Object obj) {
-        return obj instanceof AbstractButton
-               && ((AbstractButton) obj).isEnabled()
-               && ((AbstractButton) obj).isVisible();
+        return obj instanceof AbstractButton && ((AbstractButton) obj).isEnabled()
+            && ((AbstractButton) obj).isVisible();
     }
 
     protected boolean containsInGroup(final AbstractButton button) {
@@ -142,16 +138,15 @@ public class ButtonGroupInfo {
                 // button is the first button of the group.
                 newSelectedButton = (null == previousButton) ? lastButton : previousButton;
             }
-            if (newSelectedButton != null &&
-                (newSelectedButton != activeButton)) {
+            if (newSelectedButton != null && (newSelectedButton != activeButton)) {
                 newSelectedButton.requestFocusInWindow();
             }
         }
     }
 
     /**
-     * Find the button group the passed in AbstractButton belongs to, and move focus to next component of the last
-     * button in the group or previous component of first button
+     * Find the button group the passed in AbstractButton belongs to, and move focus to next component
+     * of the last button in the group or previous component of first button
      *
      * @param next indicate if jump to next component or previous
      */

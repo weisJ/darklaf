@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui;
@@ -34,19 +31,17 @@ import org.jdesktop.swingx.SwingXUtilities;
 // import sun.awt.AppContext;
 
 /**
- * Drag gesture recognition support for classes that have a
- * <code>TransferHandler</code>. The gesture for a drag in this class is a mouse
- * press followed by movement by <code>DragSource.getDragThreshold()</code> pixels. An instance of this class is
- * maintained per AppContext, and the public static methods call into the appropriate instance.
+ * Drag gesture recognition support for classes that have a <code>TransferHandler</code>. The
+ * gesture for a drag in this class is a mouse press followed by movement by
+ * <code>DragSource.getDragThreshold()</code> pixels. An instance of this class is maintained per
+ * AppContext, and the public static methods call into the appropriate instance.
  * <p>
- * This is a c and p of core (package private) needed for BasicXListUI. It differs from core in that references to
- * sun
- * packages have been replaced.
+ * This is a c and p of core (package private) needed for BasicXListUI. It differs from core in that
+ * references to sun packages have been replaced.
  * <ul>
- * <li>a static method of SunDragSourceContextPeer has been copied into SwingXUtilities
- * and is used here
- * <li>the shared instance of this class is maintained in the UIManager instead of
- * per appContext.
+ * <li>a static method of SunDragSourceContextPeer has been copied into SwingXUtilities and is used
+ * here
+ * <li>the shared instance of this class is maintained in the UIManager instead of per appContext.
  * </ul>
  *
  * @author  Shannon Hickey
@@ -97,7 +92,8 @@ public class DragRecognitionSupport {
         // AppContext.getAppContext().put(DragRecognitionSupport.class, support);
         // }
 
-        DragRecognitionSupport support = (DragRecognitionSupport) UIManager.get("sharedInstance.dragRecognitionSupport");
+        DragRecognitionSupport support =
+            (DragRecognitionSupport) UIManager.get("sharedInstance.dragRecognitionSupport");
         if (support == null) {
             support = new DragRecognitionSupport();
             UIManager.put("sharedInstance.dragRecognitionSupport", support);
@@ -105,15 +101,13 @@ public class DragRecognitionSupport {
         return support;
     }
 
-    private int mapDragOperationFromModifiers(final MouseEvent me,
-                                              final TransferHandler th) {
+    private int mapDragOperationFromModifiers(final MouseEvent me, final TransferHandler th) {
 
         if (th == null || !SwingUtilities.isLeftMouseButton(me)) {
             return TransferHandler.NONE;
         }
         // PENDING JW: c'p from SunDragSourceContextPeer
-        return SwingXUtilities.convertModifiersToDropAction(me.getModifiersEx(),
-                                                            th.getSourceActions(component));
+        return SwingXUtilities.convertModifiersToDropAction(me.getModifiersEx(), th.getSourceActions(component));
     }
 
     private void clearState() {
@@ -122,8 +116,8 @@ public class DragRecognitionSupport {
     }
 
     /**
-     * If a dnd recognition has been going on, return the MouseEvent that started the recognition. Otherwise, return
-     * null.
+     * If a dnd recognition has been going on, return the MouseEvent that started the recognition.
+     * Otherwise, return null.
      *
      * @param  me the MouseEvent.
      * @return    true if mouse has been released.
@@ -133,8 +127,8 @@ public class DragRecognitionSupport {
     }
 
     /**
-     * If a dnd recognition has been going on, return the MouseEvent that started the recognition. Otherwise, return
-     * null.
+     * If a dnd recognition has been going on, return the MouseEvent that started the recognition.
+     * Otherwise, return null.
      */
     private MouseEvent mouseReleasedImpl(final MouseEvent me) {
         /* no recognition has been going on */
@@ -197,8 +191,10 @@ public class DragRecognitionSupport {
     }
 
     /**
-     * This interface allows us to pass in a handler to mouseDragged, so that we can be notified immediately before a
-     * drag begins.
+     * This interface allows us to pass in a handler to mouseDragged, so that we can be notified
+     * immediately before a drag begins.
      */
-    public interface BeforeDrag { void dragStarting(MouseEvent me); }
+    public interface BeforeDrag {
+        void dragStarting(MouseEvent me);
+    }
 }

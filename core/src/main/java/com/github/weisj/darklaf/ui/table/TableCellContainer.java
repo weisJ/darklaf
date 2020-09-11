@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.table;
@@ -43,9 +40,8 @@ public class TableCellContainer implements IndexedCellContainer<JTable, Pair<Int
 
     @Override
     public Rectangle getCellBoundsAt(final Pair<Integer, Integer> position, final boolean isEditing) {
-        return isEditing
-                ? table.getEditorComponent().getBounds()
-                : table.getCellRect(position.getFirst(), position.getSecond(), false);
+        return isEditing ? table.getEditorComponent().getBounds()
+            : table.getCellRect(position.getFirst(), position.getSecond(), false);
     }
 
     @Override
@@ -70,10 +66,8 @@ public class TableCellContainer implements IndexedCellContainer<JTable, Pair<Int
 
     @Override
     public boolean isEditingCell(final Pair<Integer, Integer> position) {
-        return isEditing()
-               && position != null
-               && table.getEditingColumn() == position.getSecond()
-               && table.getEditingRow() == position.getFirst();
+        return isEditing() && position != null && table.getEditingColumn() == position.getSecond()
+            && table.getEditingRow() == position.getFirst();
     }
 
     @Override
@@ -85,7 +79,7 @@ public class TableCellContainer implements IndexedCellContainer<JTable, Pair<Int
         Object value = table.getValueAt(row, column);
         boolean focus = table.hasFocus();
         return ui.getCellRenderer(row, column)
-                 .getTableCellRendererComponent(table, value, isSelected, focus, row, column);
+            .getTableCellRendererComponent(table, value, isSelected, focus, row, column);
     }
 
     @Override

@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.cell;
@@ -248,97 +245,104 @@ public class CellUtil {
         listCellInactiveBackgroundSelectedNoFocus = d.getColor("List.inactiveBackgroundSelectedNoFocus");
     }
 
-    public static void setupTableForeground(final Component comp, final JTable parent, final boolean selected,
-                                            final int row) {
-        setupForeground(comp, parent, selected,
-                        tableCellForeground, tableCellForegroundSelected,
-                        tableCellForegroundNoFocus, tableCellForegroundSelectedNoFocus,
-                        tableCellInactiveForeground, tableCellInactiveForegroundSelected,
-                        tableCellInactiveForegroundNoFocus, tableCellInactiveForegroundSelectedNoFocus);
+    public static void setupTableForeground(
+            final Component comp, final JTable parent, final boolean selected, final int row
+    ) {
+        setupForeground(
+            comp, parent, selected, tableCellForeground, tableCellForegroundSelected, tableCellForegroundNoFocus,
+            tableCellForegroundSelectedNoFocus, tableCellInactiveForeground, tableCellInactiveForegroundSelected,
+            tableCellInactiveForegroundNoFocus, tableCellInactiveForegroundSelectedNoFocus
+        );
     }
 
     public static void setupTreeForeground(final Component comp, final JTree parent, final boolean selected) {
-        setupForeground(comp, parent, selected,
-                        treeCellForeground, treeCellForegroundSelected,
-                        treeCellForegroundNoFocus, treeCellForegroundSelectedNoFocus,
-                        treeCellInactiveForeground, treeCellInactiveForegroundSelected,
-                        treeCellInactiveForegroundNoFocus, treeCellInactiveForegroundSelectedNoFocus);
+        setupForeground(
+            comp, parent, selected, treeCellForeground, treeCellForegroundSelected, treeCellForegroundNoFocus,
+            treeCellForegroundSelectedNoFocus, treeCellInactiveForeground, treeCellInactiveForegroundSelected,
+            treeCellInactiveForegroundNoFocus, treeCellInactiveForegroundSelectedNoFocus
+        );
     }
 
     public static void setupListForeground(final Component comp, final JList<?> parent, final boolean selected) {
-        setupForeground(comp, parent, selected,
-                        listCellForeground, listCellForegroundSelected,
-                        listCellForegroundNoFocus, listCellForegroundSelectedNoFocus,
-                        listCellInactiveForeground, listCellInactiveForegroundSelected,
-                        listCellInactiveForegroundNoFocus, listCellInactiveForegroundSelectedNoFocus);
+        setupForeground(
+            comp, parent, selected, listCellForeground, listCellForegroundSelected, listCellForegroundNoFocus,
+            listCellForegroundSelectedNoFocus, listCellInactiveForeground, listCellInactiveForegroundSelected,
+            listCellInactiveForegroundNoFocus, listCellInactiveForegroundSelectedNoFocus
+        );
     }
 
     public static void setupStandardForeground(final Component comp, final JComponent parent, final boolean selected) {
-        setupForeground(comp, parent, selected,
-                        cellForeground, cellForegroundSelected,
-                        cellForegroundNoFocus, cellForegroundSelectedNoFocus,
-                        cellInactiveForeground, cellInactiveForegroundSelected,
-                        cellInactiveForegroundNoFocus, cellInactiveForegroundSelectedNoFocus);
+        setupForeground(
+            comp, parent, selected, cellForeground, cellForegroundSelected, cellForegroundNoFocus,
+            cellForegroundSelectedNoFocus, cellInactiveForeground, cellInactiveForegroundSelected,
+            cellInactiveForegroundNoFocus, cellInactiveForegroundSelectedNoFocus
+        );
     }
 
-    public static void setupForeground(final Component comp, final JComponent parent, final boolean selected,
-                                       final Color fg, final Color selFg,
-                                       final Color fgNoFocus, final Color selFgNoFocus,
-                                       final Color inactiveFg, final Color inactiveSelFg,
-                                       final Color inactiveFgNoFocus, final Color inactiveSelFgNoFocus) {
+    public static void setupForeground(
+            final Component comp, final JComponent parent, final boolean selected, final Color fg, final Color selFg,
+            final Color fgNoFocus, final Color selFgNoFocus, final Color inactiveFg, final Color inactiveSelFg,
+            final Color inactiveFgNoFocus, final Color inactiveSelFgNoFocus
+    ) {
         boolean enabled = comp.isEnabled() && parent.isEnabled();
         boolean focus = hasFocus(parent, comp);
-        setupForeground(comp, parent, focus, selected, enabled, fg, selFg, fgNoFocus, selFgNoFocus, inactiveFg,
-                        inactiveSelFg, inactiveFgNoFocus, inactiveSelFgNoFocus);
+        setupForeground(
+            comp, parent, focus, selected, enabled, fg, selFg, fgNoFocus, selFgNoFocus, inactiveFg, inactiveSelFg,
+            inactiveFgNoFocus, inactiveSelFgNoFocus
+        );
     }
 
-    public static void setupForeground(final Component comp, final JComponent parent,
-                                       final boolean focus, final boolean selected, final boolean enabled,
-                                       final Color fg, final Color selFg,
-                                       final Color fgNoFocus, final Color selFgNoFocus,
-                                       final Color inactiveFg, final Color inactiveSelFg,
-                                       final Color inactiveFgNoFocus, final Color inactiveSelFgNoFocus) {
-        Color c = getColor(enabled, focus, selected, fg, selFg, fgNoFocus, selFgNoFocus, inactiveFg, inactiveSelFg,
-                           inactiveFgNoFocus, inactiveSelFgNoFocus);
+    public static void setupForeground(
+            final Component comp, final JComponent parent, final boolean focus, final boolean selected,
+            final boolean enabled, final Color fg, final Color selFg, final Color fgNoFocus, final Color selFgNoFocus,
+            final Color inactiveFg, final Color inactiveSelFg, final Color inactiveFgNoFocus,
+            final Color inactiveSelFgNoFocus
+    ) {
+        Color c = getColor(
+            enabled, focus, selected, fg, selFg, fgNoFocus, selFgNoFocus, inactiveFg, inactiveSelFg, inactiveFgNoFocus,
+            inactiveSelFgNoFocus
+        );
         PropertyUtil.installForeground(comp, c);
     }
 
-    public static Color getTableBackground(final Component comp, final JTable parent,
-                                           final boolean selected, final boolean focus,
-                                           final int row) {
+    public static Color getTableBackground(
+            final Component comp, final JTable parent, final boolean selected, final boolean focus, final int row
+    ) {
         boolean alt = row % 2 == 1 && PropertyUtil.getBooleanProperty(parent, DarkTableUI.KEY_ALTERNATE_ROW_COLOR);
-        return getColor(comp, focus, selected,
-                        alt ? tableCellBackgroundAlternative : tableCellBackground,
-                        tableCellBackgroundSelected,
-                        alt ? tableCellBackgroundNoFocusAlternative : tableCellBackgroundNoFocus,
-                        tableCellBackgroundSelectedNoFocus,
-                        alt ? tableCellInactiveBackgroundAlternative : tableCellInactiveBackground,
-                        tableCellInactiveBackgroundSelected,
-                        alt ? tableCellInactiveBackgroundNoFocusAlternative : tableCellInactiveBackgroundNoFocus,
-                        tableCellInactiveBackgroundSelectedNoFocus);
+        return getColor(
+            comp, focus, selected, alt ? tableCellBackgroundAlternative : tableCellBackground,
+            tableCellBackgroundSelected, alt ? tableCellBackgroundNoFocusAlternative : tableCellBackgroundNoFocus,
+            tableCellBackgroundSelectedNoFocus,
+            alt ? tableCellInactiveBackgroundAlternative : tableCellInactiveBackground,
+            tableCellInactiveBackgroundSelected,
+            alt ? tableCellInactiveBackgroundNoFocusAlternative : tableCellInactiveBackgroundNoFocus,
+            tableCellInactiveBackgroundSelectedNoFocus
+        );
     }
 
-    public static void setupTableBackground(final Component comp, final JTable parent, final boolean selected,
-                                            final int row) {
+    public static void setupTableBackground(
+            final Component comp, final JTable parent, final boolean selected, final int row
+    ) {
         setupBackground(comp, getTableBackground(comp, parent, selected, hasFocus(parent, comp), row));
     }
 
-    public static Color getTreeBackground(final Component comp, final JTree parent,
-                                          final boolean selected, final boolean focus, final int row) {
+    public static Color getTreeBackground(
+            final Component comp, final JTree parent, final boolean selected, final boolean focus, final int row
+    ) {
         boolean alt = row % 2 == 1 && PropertyUtil.getBooleanProperty(parent, DarkTreeUI.KEY_ALTERNATE_ROW_COLOR);
-        return getColor(comp, focus, selected,
-                        alt ? treeCellBackgroundAlternative : treeCellBackground,
-                        treeCellBackgroundSelected,
-                        alt ? treeCellBackgroundNoFocusAlternative : treeCellBackgroundNoFocus,
-                        treeCellBackgroundSelectedNoFocus,
-                        alt ? treeCellInactiveBackgroundAlternative : treeCellInactiveBackground,
-                        treeCellInactiveBackgroundSelected,
-                        alt ? treeCellInactiveBackgroundNoFocusAlternative : treeCellInactiveBackgroundNoFocus,
-                        treeCellInactiveBackgroundSelectedNoFocus);
+        return getColor(
+            comp, focus, selected, alt ? treeCellBackgroundAlternative : treeCellBackground, treeCellBackgroundSelected,
+            alt ? treeCellBackgroundNoFocusAlternative : treeCellBackgroundNoFocus, treeCellBackgroundSelectedNoFocus,
+            alt ? treeCellInactiveBackgroundAlternative : treeCellInactiveBackground,
+            treeCellInactiveBackgroundSelected,
+            alt ? treeCellInactiveBackgroundNoFocusAlternative : treeCellInactiveBackgroundNoFocus,
+            treeCellInactiveBackgroundSelectedNoFocus
+        );
     }
 
-    public static void setupTreeBackground(final Component comp, final JTree parent, final boolean selected,
-                                           final int row) {
+    public static void setupTreeBackground(
+            final Component comp, final JTree parent, final boolean selected, final int row
+    ) {
         Color bg = getTreeBackground(comp, parent, selected, hasFocus(parent, comp), row);
         setupBackground(comp, bg);
         if (comp instanceof DefaultTreeCellRenderer) {
@@ -351,19 +355,14 @@ public class CellUtil {
 
     public static Color getTreeBackground(final JTree tree, final boolean selected, final int row) {
         boolean alt = row % 2 == 1 && PropertyUtil.getBooleanProperty(tree, DarkTreeUI.KEY_ALTERNATE_ROW_COLOR);
-        return getColor(tree.isEnabled(), hasFocus(tree, tree), selected,
-                        alt ? treeCellBackgroundAlternative : treeCellBackground,
-                        treeCellBackgroundSelected,
-                        alt ? treeCellBackgroundNoFocusAlternative : treeCellBackgroundNoFocus,
-                        treeCellBackgroundSelectedNoFocus,
-                        alt ? treeCellInactiveBackgroundAlternative : treeCellInactiveBackground,
-                        treeCellInactiveBackgroundSelected,
-                        alt ? treeCellInactiveBackgroundNoFocusAlternative : treeCellInactiveBackgroundNoFocus,
-                        treeCellInactiveBackgroundSelectedNoFocus);
+        return getColor(
+            tree.isEnabled(), hasFocus(tree, tree), selected, alt ? treeCellBackgroundAlternative : treeCellBackground, treeCellBackgroundSelected, alt ? treeCellBackgroundNoFocusAlternative : treeCellBackgroundNoFocus, treeCellBackgroundSelectedNoFocus, alt ? treeCellInactiveBackgroundAlternative : treeCellInactiveBackground, treeCellInactiveBackgroundSelected, alt ? treeCellInactiveBackgroundNoFocusAlternative : treeCellInactiveBackgroundNoFocus, treeCellInactiveBackgroundSelectedNoFocus
+        );
     }
 
-    public static Color getListBackground(final Component comp, final JList<?> parent,
-                                          final boolean selected, final int index) {
+    public static Color getListBackground(
+            final Component comp, final JList<?> parent, final boolean selected, final int index
+    ) {
         int layout = parent.getLayoutOrientation();
         boolean altRow = false;
         if (layout == JList.VERTICAL) {
@@ -386,28 +385,25 @@ public class CellUtil {
         return getListBackground(comp, parent, selected, altRow);
     }
 
-    public static Color getListBackground(final Component comp, final JList<?> parent, final boolean selected,
-                                          final boolean altRow) {
+    public static Color getListBackground(
+            final Component comp, final JList<?> parent, final boolean selected, final boolean altRow
+    ) {
         boolean alt = altRow && PropertyUtil.getBooleanProperty(parent, DarkListUI.KEY_ALTERNATE_ROW_COLOR);
         boolean comboList = PropertyUtil.getBooleanProperty(parent, DarkListUI.KEY_IS_COMBO_LIST);
-        return getColor(comp, hasFocus(parent, comp), selected,
-                        alt ? listCellBackgroundAlternative : listCellBackground,
-                        comboList ? comboListCellBackgroundSelected : listCellBackgroundSelected,
-                        alt ? listCellBackgroundNoFocusAlternative : listCellBackgroundNoFocus,
-                        listCellBackgroundSelectedNoFocus,
-                        alt ? listCellInactiveBackgroundAlternative : listCellInactiveBackground,
-                        listCellInactiveBackgroundSelected,
-                        alt ? listCellInactiveBackgroundNoFocusAlternative : listCellInactiveBackgroundNoFocus,
-                        listCellInactiveBackgroundSelectedNoFocus);
+        return getColor(
+            comp, hasFocus(parent, comp), selected, alt ? listCellBackgroundAlternative : listCellBackground, comboList ? comboListCellBackgroundSelected : listCellBackgroundSelected, alt ? listCellBackgroundNoFocusAlternative : listCellBackgroundNoFocus, listCellBackgroundSelectedNoFocus, alt ? listCellInactiveBackgroundAlternative : listCellInactiveBackground, listCellInactiveBackgroundSelected, alt ? listCellInactiveBackgroundNoFocusAlternative : listCellInactiveBackgroundNoFocus, listCellInactiveBackgroundSelectedNoFocus
+        );
     }
 
-    public static void setupListBackground(final Component comp, final JList<?> parent, final boolean selected,
-                                           final int index) {
+    public static void setupListBackground(
+            final Component comp, final JList<?> parent, final boolean selected, final int index
+    ) {
         setupBackground(comp, getListBackground(comp, parent, selected, index));
     }
 
-    public static void setupListBackground(final Component comp, final JList<?> parent, final boolean selected,
-                                           final boolean altRow) {
+    public static void setupListBackground(
+            final Component comp, final JList<?> parent, final boolean selected, final boolean altRow
+    ) {
         setupBackground(comp, getListBackground(comp, parent, selected, altRow));
     }
 
@@ -415,17 +411,12 @@ public class CellUtil {
         setupStandardBackground(comp, parent, selected, false);
     }
 
-    public static void setupStandardBackground(final Component comp, final JComponent parent,
-                                               final boolean selected, final boolean alt) {
-        setupBackground(comp, getColor(comp, hasFocus(parent, comp), selected,
-                                       alt ? cellBackgroundAlternative : cellBackground,
-                                       cellBackgroundSelected,
-                                       alt ? cellBackgroundNoFocusAlternative : cellBackgroundNoFocus,
-                                       cellBackgroundSelectedNoFocus,
-                                       alt ? cellInactiveBackgroundAlternative : cellInactiveBackground,
-                                       cellInactiveBackgroundSelected,
-                                       alt ? cellInactiveBackgroundNoFocusAlternative : cellInactiveBackgroundNoFocus,
-                                       cellInactiveBackgroundSelectedNoFocus));
+    public static void setupStandardBackground(
+            final Component comp, final JComponent parent, final boolean selected, final boolean alt
+    ) {
+        setupBackground(
+            comp, getColor(comp, hasFocus(parent, comp), selected, alt ? cellBackgroundAlternative : cellBackground, cellBackgroundSelected, alt ? cellBackgroundNoFocusAlternative : cellBackgroundNoFocus, cellBackgroundSelectedNoFocus, alt ? cellInactiveBackgroundAlternative : cellInactiveBackground, cellInactiveBackgroundSelected, alt ? cellInactiveBackgroundNoFocusAlternative : cellInactiveBackgroundNoFocus, cellInactiveBackgroundSelectedNoFocus)
+        );
     }
 
     public static void setupBackground(final Component comp, final Color c) {
@@ -435,20 +426,22 @@ public class CellUtil {
         }
     }
 
-    public static Color getColor(final Component comp, final boolean focus, final boolean selected,
-                                 final Color bg, final Color selBg,
-                                 final Color bgNoFocus, final Color selBgNoFocus,
-                                 final Color inactiveBg, final Color inactiveSelBg,
-                                 final Color inactiveBgNoFocus, final Color inactiveSelBgNoFocus) {
-        return getColor(comp.isEnabled(), focus, selected, bg, selBg, bgNoFocus, selBgNoFocus, inactiveBg,
-                        inactiveSelBg, inactiveBgNoFocus, inactiveSelBgNoFocus);
+    public static Color getColor(
+            final Component comp, final boolean focus, final boolean selected, final Color bg, final Color selBg,
+            final Color bgNoFocus, final Color selBgNoFocus, final Color inactiveBg, final Color inactiveSelBg,
+            final Color inactiveBgNoFocus, final Color inactiveSelBgNoFocus
+    ) {
+        return getColor(
+            comp.isEnabled(), focus, selected, bg, selBg, bgNoFocus, selBgNoFocus, inactiveBg, inactiveSelBg,
+            inactiveBgNoFocus, inactiveSelBgNoFocus
+        );
     }
 
-    public static Color getColor(final boolean enabled, final boolean focus, final boolean selected,
-                                 final Color color, final Color selColor,
-                                 final Color colorNoFocus, final Color selColorNoFocus,
-                                 final Color inactiveColor, final Color inactiveSelColor,
-                                 final Color inactiveColorNoFocus, final Color inactiveSelColorNoFocus) {
+    public static Color getColor(
+            final boolean enabled, final boolean focus, final boolean selected, final Color color, final Color selColor,
+            final Color colorNoFocus, final Color selColorNoFocus, final Color inactiveColor,
+            final Color inactiveSelColor, final Color inactiveColorNoFocus, final Color inactiveSelColorNoFocus
+    ) {
         Color c;
         if (enabled) {
             if (selected) {
@@ -483,9 +476,8 @@ public class CellUtil {
     }
 
     protected static boolean hasFocus(final Component cellComponent, final Component parentComponent) {
-        return parentComponent.hasFocus()
-               || (DarkUIUtil.hasFocus(cellComponent)
-                   || DarkUIUtil.getParentOfType(JPopupMenu.class, cellComponent, 4) != null);
+        return parentComponent.hasFocus() || (DarkUIUtil.hasFocus(cellComponent)
+            || DarkUIUtil.getParentOfType(JPopupMenu.class, cellComponent, 4) != null);
     }
 
     public static void setSelectedFlag(final Component comp, final boolean selected) {
@@ -494,8 +486,9 @@ public class CellUtil {
         }
     }
 
-    public static void paintTableEditorBorder(final Graphics g, final Component c, final JTable table,
-                                              final int width, final int height) {
+    public static void paintTableEditorBorder(
+            final Graphics g, final Component c, final JTable table, final int width, final int height
+    ) {
         int row = table.getEditingRow();
         int col = table.getEditingColumn();
         if (!table.getShowHorizontalLines()) {
@@ -505,10 +498,12 @@ public class CellUtil {
         boolean isWrapper = isInWrapper(c);
         ComponentOrientation orientation = table.getComponentOrientation();
         if (!table.getShowVerticalLines()) {
-            if ((isWrapper && orientation.isLeftToRight())
-                || col > CellUtil.getMinColumnIndex(table)) g.fillRect(0, 0, 1, height);
-            if ((isWrapper && orientation.isLeftToRight())
-                || col < CellUtil.getMaxColumnIndex(table)) g.fillRect(width - 1, 0, 1, height);
+            if (
+                (isWrapper && orientation.isLeftToRight()) || col > CellUtil.getMinColumnIndex(table)
+            ) g.fillRect(0, 0, 1, height);
+            if (
+                (isWrapper && orientation.isLeftToRight()) || col < CellUtil.getMaxColumnIndex(table)
+            ) g.fillRect(width - 1, 0, 1, height);
         } else if (isInWrapper(c)) {
             if (table.getComponentOrientation().isLeftToRight()) {
                 g.fillRect(0, 0, 1, height);

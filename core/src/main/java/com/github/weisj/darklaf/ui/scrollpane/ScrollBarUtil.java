@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.scrollpane;
@@ -34,8 +31,9 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 public class ScrollBarUtil implements ScrollBarConstants {
 
     @SuppressWarnings("MagicConstant")
-    public static void doScroll(final JScrollBar toScroll, final JViewport vp,
-                                final MouseWheelEvent e, final boolean leftToRight) {
+    public static void doScroll(
+            final JScrollBar toScroll, final JViewport vp, final MouseWheelEvent e, final boolean leftToRight
+    ) {
         int direction = e.getWheelRotation() < 0 ? -1 : 1;
         int orientation = toScroll.getOrientation();
         if (!leftToRight && orientation == JScrollBar.HORIZONTAL) {
@@ -58,11 +56,9 @@ public class ScrollBarUtil implements ScrollBarConstants {
                 if (limitScroll) {
                     int blockIncr = scrollComp.getScrollableBlockIncrement(viewRect, orientation, direction);
                     if (direction < 0) {
-                        scrollMin = Math.max(scrollMin,
-                                             toScroll.getValue() - blockIncr);
+                        scrollMin = Math.max(scrollMin, toScroll.getValue() - blockIncr);
                     } else {
-                        scrollMax = Math.min(scrollMax,
-                                             toScroll.getValue() + blockIncr);
+                        scrollMax = Math.min(scrollMax, toScroll.getValue() + blockIncr);
                     }
                 }
 
@@ -86,8 +82,7 @@ public class ScrollBarUtil implements ScrollBarConstants {
                         }
                     } else {
                         // Scroll left
-                        if ((leftToRight && direction < 0) ||
-                            (!leftToRight && direction > 0)) {
+                        if ((leftToRight && direction < 0) || (!leftToRight && direction > 0)) {
                             viewRect.x -= unitIncr;
                             if (leftToRight) {
                                 if (viewRect.x < scrollMin) {
@@ -137,8 +132,9 @@ public class ScrollBarUtil implements ScrollBarConstants {
         }
     }
 
-    static void scrollByUnits(final JScrollBar scrollbar, final int direction,
-                              final int units, final boolean limitToBlock) {
+    static void scrollByUnits(
+            final JScrollBar scrollbar, final int direction, final int units, final boolean limitToBlock
+    ) {
         // This method is called from BasicScrollPaneUI to implement wheel
         // scrolling, as well as from scrollByUnit().
         int delta;
@@ -146,11 +142,9 @@ public class ScrollBarUtil implements ScrollBarConstants {
 
         if (limitToBlock) {
             if (direction < 0) {
-                limit = scrollbar.getValue() -
-                        scrollbar.getBlockIncrement(direction);
+                limit = scrollbar.getValue() - scrollbar.getBlockIncrement(direction);
             } else {
-                limit = scrollbar.getValue() +
-                        scrollbar.getBlockIncrement(direction);
+                limit = scrollbar.getValue() + scrollbar.getBlockIncrement(direction);
             }
         }
 
@@ -176,8 +170,7 @@ public class ScrollBarUtil implements ScrollBarConstants {
 
             if (limitToBlock && i > 0) {
                 assert limit != -1;
-                if ((direction < 0 && newValue < limit) ||
-                    (direction > 0 && newValue > limit)) {
+                if ((direction < 0 && newValue < limit) || (direction > 0 && newValue > limit)) {
                     break;
                 }
             }

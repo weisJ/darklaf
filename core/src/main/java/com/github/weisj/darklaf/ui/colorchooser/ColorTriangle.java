@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.colorchooser;
@@ -278,13 +275,13 @@ public class ColorTriangle extends JComponent {
 
     public int[] getValuesForModel(final DarkColorModel model) {
         if (model instanceof DarkColorModelHSB) {
-            return new int[]{(int) Math.round(getHue() * model.getMaximum(0)),
-                             (int) Math.round(getHSBSaturation() * model.getMaximum(1)),
-                             (int) Math.round(getHSBValue() * model.getMaximum(2))};
+            return new int[] {(int) Math.round(getHue() * model.getMaximum(0)), (int) Math
+                .round(getHSBSaturation() * model.getMaximum(1)),
+                (int) Math.round(getHSBValue() * model.getMaximum(2))};
         } else if (model instanceof DarkColorModelHSL) {
-            return new int[]{(int) Math.round(getHue() * model.getMaximum(0)),
-                             (int) Math.round(getHSLSaturation() * model.getMaximum(1)),
-                             (int) Math.round(getHSLValue() * model.getMaximum(2))};
+            return new int[] {(int) Math.round(getHue() * model.getMaximum(0)), (int) Math
+                .round(getHSLSaturation() * model.getMaximum(1)),
+                (int) Math.round(getHSLValue() * model.getMaximum(2))};
         } else {
             return model.getValuesFromColor(color);
         }
@@ -450,8 +447,9 @@ public class ColorTriangle extends JComponent {
 
         circleShape = calculateCircleShape(x, y, size, outerSize);
         triangleShape = calculateTriangleShape(x, y, size, outerSize, rotationTransform);
-        outerIndicator = createOuterIndicator(centerX, centerY, (innerRadius + outerRadius) / 2.0,
-                                              rotationTransform, outerIndicatorRadius);
+        outerIndicator = createOuterIndicator(
+            centerX, centerY, (innerRadius + outerRadius) / 2.0, rotationTransform, outerIndicatorRadius
+        );
         innerIndicator = createInnerIndicator(rotationTransform, innerIndicatorRadius);
 
         invalid = false;
@@ -481,8 +479,9 @@ public class ColorTriangle extends JComponent {
         return createIndicatorShape(p, dotRadius);
     }
 
-    protected Shape createOuterIndicator(final double cx, final double cy, final double radius,
-                                         final AffineTransform transform, final int dotRadius) {
+    protected Shape createOuterIndicator(
+            final double cx, final double cy, final double radius, final AffineTransform transform, final int dotRadius
+    ) {
         dummy.setLocation(cx, cy - radius);
         transform.transform(dummy, dummy);
         return createIndicatorShape(dummy, dotRadius);
@@ -492,8 +491,9 @@ public class ColorTriangle extends JComponent {
         return new Ellipse2D.Double(p.getX() - radius, p.getY() - radius, 2 * radius, 2 * radius);
     }
 
-    protected Shape calculateTriangleShape(final double x, final double y, final int size, final int outerSize,
-                                           final AffineTransform transform) {
+    protected Shape calculateTriangleShape(
+            final double x, final double y, final int size, final int outerSize, final AffineTransform transform
+    ) {
         double diameter = (size - 2 * outerSize);
         double radius = diameter / 2.0;
         double sideLength = Math.cos(Math.PI / 6.0) * diameter;
@@ -517,16 +517,17 @@ public class ColorTriangle extends JComponent {
         if (!circleInfo.update(x, y, size, outerSize) && circleShape != null) return circleShape;
 
         Area outer = new Area(new Ellipse2D.Double(x, y, size, size));
-        Area inner = new Area(new Ellipse2D.Double(x + outerSize, y + outerSize,
-                                                   size - 2 * outerSize,
-                                                   size - 2 * outerSize));
+        Area inner =
+            new Area(new Ellipse2D.Double(x + outerSize, y + outerSize, size - 2 * outerSize, size - 2 * outerSize));
         outer.subtract(inner);
         return outer;
     }
 
     protected Point2D getTrianglePos(final double sat, final double val) {
-        return new Point2D.Double(centerX + innerRadius * (2 * val - sat * val - 1) * SQRT3 / 2.0,
-                                  centerY + innerRadius * (1 - 3 * sat * val) / 2.0);
+        return new Point2D.Double(
+            centerX + innerRadius * (2 * val - sat * val - 1) * SQRT3 / 2.0,
+            centerY + innerRadius * (1 - 3 * sat * val) / 2.0
+        );
 
     }
 
@@ -569,9 +570,10 @@ public class ColorTriangle extends JComponent {
         }
 
         @Override
-        public PaintContext createContext(final ColorModel cm, final Rectangle deviceBounds,
-                                          final Rectangle2D userBounds, final AffineTransform xform,
-                                          final RenderingHints hints) {
+        public PaintContext createContext(
+                final ColorModel cm, final Rectangle deviceBounds, final Rectangle2D userBounds,
+                final AffineTransform xform, final RenderingHints hints
+        ) {
             context.setHints(deviceBounds, xform);
             return context;
         }
@@ -617,10 +619,7 @@ public class ColorTriangle extends JComponent {
         }
 
         protected void setPixel(final WritableRaster raster, final int i, final int j, final int rgb) {
-            setPixel(raster, i, j, new int[]{(rgb >> 16) & 0xFF,
-                                             (rgb >> 8) & 0xFF,
-                                             (rgb) & 0xFF,
-                                             255});
+            setPixel(raster, i, j, new int[] {(rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, (rgb) & 0xFF, 255});
         }
 
         protected void setPixel(final WritableRaster raster, final int i, final int j, final int[] vals) {
@@ -659,7 +658,8 @@ public class ColorTriangle extends JComponent {
                         triangleInverse.transform(dummy, dummy);
                         Point2D sv = getSaturationAndValue(dummy.getX(), dummy.getY());
                         setPixel(raster, i, j, getColorRGB(getHue(), sv.getX(), sv.getY()));
-                    } catch (NoninvertibleTransformException ignored) {}
+                    } catch (NoninvertibleTransformException ignored) {
+                    }
                 }
             }
             return raster;
@@ -673,8 +673,10 @@ public class ColorTriangle extends JComponent {
         protected final double value;
         protected final double hue;
 
-        public PickResult(final PickArea area, final double rotation,
-                          final double hue, final double saturation, final double value) {
+        public PickResult(
+                final PickArea area, final double rotation, final double hue, final double saturation,
+                final double value
+        ) {
             this.area = area;
             this.hue = hue;
             this.rotation = rotation;
@@ -684,9 +686,7 @@ public class ColorTriangle extends JComponent {
     }
 
     protected enum PickArea {
-        OUTSIDE,
-        WHEEL,
-        TRIANGLE
+        OUTSIDE, WHEEL, TRIANGLE
     }
 
     protected static class CircleInfo {

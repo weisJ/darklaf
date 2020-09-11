@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.numberingpane;
@@ -79,9 +76,8 @@ public class DarkNumberingPaneUI extends ComponentUI {
     }
 
     protected void installDefaults(final JComponent c) {
-        LookAndFeel.installColorsAndFont(c, "NumberingPane.background",
-                                         "NumberingPane.foreground",
-                                         "NumberingPane.font");
+        LookAndFeel
+            .installColorsAndFont(c, "NumberingPane.background", "NumberingPane.foreground", "NumberingPane.font");
         foregroundHighlight = UIManager.getColor("NumberingPane.currentLineForeground");
         backgroundHighlight = UIManager.getColor("NumberingPane.currentLineBackground");
         LookAndFeel.installProperty(c, PropertyKey.OPAQUE, true);
@@ -188,8 +184,10 @@ public class DarkNumberingPaneUI extends ComponentUI {
         return rect.y;
     }
 
-    protected void drawNumbering(final Graphics g, final int startLine, final int endLine, final int yCur,
-                                 final Element root, final int descent) {
+    protected void drawNumbering(
+            final Graphics g, final int startLine, final int endLine, final int yCur, final Element root,
+            final int descent
+    ) {
         GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         g.setColor(numberingPane.getForeground());
         Font font = numberingPane.getTextComponent().getFont();
@@ -205,17 +203,16 @@ public class DarkNumberingPaneUI extends ComponentUI {
             try {
                 Rectangle lineRect = textComponent.modelToView(off);
                 g.setColor(lineRect.y == yCur ? foregroundHighlight : numberingPane.getForeground());
-                g.drawString(String.format("%1$" + digits + "d", i), OUTER_PAD,
-                             lineRect.y + lineRect.height - descent);
-            } catch (BadLocationException ignored) {}
+                g.drawString(String.format("%1$" + digits + "d", i), OUTER_PAD, lineRect.y + lineRect.height - descent);
+            } catch (BadLocationException ignored) {
+            }
         }
         config.restore();
     }
 
     protected void paintIcons(final Graphics g, final int startLine, final int endLine, final Element root) {
-        List<Map.Entry<Position, Icon>> icons = numberingPane.getIconsInRange(root.getElement(startLine)
-                                                                                  .getStartOffset(),
-                                                                              root.getElement(endLine).getEndOffset());
+        List<Map.Entry<Position, Icon>> icons = numberingPane
+            .getIconsInRange(root.getElement(startLine).getStartOffset(), root.getElement(endLine).getEndOffset());
         for (Map.Entry<Position, Icon> icon : icons) {
             Rectangle lineRect;
             try {
@@ -224,7 +221,8 @@ public class DarkNumberingPaneUI extends ComponentUI {
                 int x = OUTER_PAD + PAD + textWidth;
                 int y = lineRect.y + lineRect.height / 2 - h / 2;
                 icon.getValue().paintIcon(numberingPane, g, x, y);
-            } catch (BadLocationException ignored) {}
+            } catch (BadLocationException ignored) {
+            }
         }
     }
 
@@ -278,7 +276,8 @@ public class DarkNumberingPaneUI extends ComponentUI {
                                 listener.iconClicked(e);
                             }
                         }
-                    } catch (BadLocationException ignored) {}
+                    } catch (BadLocationException ignored) {
+                    }
                 }
                 IndexListener[] list = numberingPane.getIndexListeners();
                 for (IndexListener listener : list) {
@@ -295,8 +294,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
             selectionLineEnd = textComponent.viewToModel(new Point(textComponent.getWidth(), p.y));
             if (p.x <= OUTER_PAD + textWidth) {
                 textComponent.getCaret().setDot(selectionLineEnd + 1);
-                textComponent.getCaret().moveDot(Math.min(selectionLineStart,
-                                                          textComponent.getDocument().getLength()));
+                textComponent.getCaret().moveDot(Math.min(selectionLineStart, textComponent.getDocument().getLength()));
             }
         }
 
@@ -364,7 +362,8 @@ public class DarkNumberingPaneUI extends ComponentUI {
                         currentHighlight = textComponent.getHighlighter().addHighlight(0, 0, currentLinePainter);
                         textComponent.getCaret().addChangeListener(currentLinePainter);
                         currentLinePainter.setComponent(textComponent);
-                    } catch (BadLocationException ignored) {}
+                    } catch (BadLocationException ignored) {
+                    }
                     textComponent.addPropertyChangeListener(getPropertyChangeListener());
                     textComponent.getCaret().addChangeListener(getChangeListener());
                     Font font = textComponent.getFont();

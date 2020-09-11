@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.filechooser;
@@ -51,12 +48,12 @@ import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellRenderer;
 import com.github.weisj.darklaf.util.PropertyKey;
 
 /**
- * <b>WARNING:</b> This class is an implementation detail and is only
- * public so that it can be used by two packages. You should NOT consider this public API.
+ * <b>WARNING:</b> This class is an implementation detail and is only public so that it can be used
+ * by two packages. You should NOT consider this public API.
  * <p>
- * This component is intended to be used in a subclass of javax.swing.plaf.basic.BasicFileChooserUI. It realies heavily
- * on the implementation of BasicFileChooserUI, and is intended to be API compatible with earlier implementations of
- * MetalFileChooserUI and WindowsFileChooserUI.
+ * This component is intended to be used in a subclass of javax.swing.plaf.basic.BasicFileChooserUI.
+ * It realies heavily on the implementation of BasicFileChooserUI, and is intended to be API
+ * compatible with earlier implementations of MetalFileChooserUI and WindowsFileChooserUI.
  *
  * @author Leif Samuelsson
  */
@@ -170,20 +167,17 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
         }
 
         /**
-         * Moves the keyboard focus to the first element whose prefix matches
-         * the sequence of alphanumeric keys pressed by the user with delay
-         * less than value of <code>timeFactor</code>. Subsequent same key
-         * presses move the keyboard focus to the next object that starts with
-         * the same letter until another key is pressed, then it is treated
-         * as the prefix with appropriate number of the same letters followed
-         * by first typed another letter.
+         * Moves the keyboard focus to the first element whose prefix matches the sequence of alphanumeric
+         * keys pressed by the user with delay less than value of <code>timeFactor</code>. Subsequent same
+         * key presses move the keyboard focus to the next object that starts with the same letter until
+         * another key is pressed, then it is treated as the prefix with appropriate number of the same
+         * letters followed by first typed another letter.
          */
         public void keyTyped(final KeyEvent e) {
             BasicDirectoryModel model = getModel();
             int rowCount = model.getSize();
 
-            if (detailsTable == null || rowCount == 0 ||
-                e.isAltDown() || e.isControlDown() || e.isMetaDown()) {
+            if (detailsTable == null || rowCount == 0 || e.isAltDown() || e.isControlDown() || e.isMetaDown()) {
                 return;
             }
 
@@ -239,9 +233,8 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
             if (index >= 0) {
                 detailsTable.getSelectionModel().setSelectionInterval(index, index);
 
-                Rectangle cellRect = detailsTable.getCellRect(index,
-                                                              detailsTable.convertColumnIndexToView(COLUMN_FILENAME),
-                                                              false);
+                Rectangle cellRect =
+                    detailsTable.getCellRect(index, detailsTable.convertColumnIndexToView(COLUMN_FILENAME), false);
                 detailsTable.scrollRectToVisible(cellRect);
             }
         }
@@ -348,8 +341,7 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
     public static boolean usesShellFolder(final JFileChooser chooser) {
         Boolean prop = (Boolean) chooser.getClientProperty("FileChooser.useShellFolder");
 
-        return prop == null ? chooser.getFileSystemView().equals(FileSystemView.getFileSystemView())
-                : prop;
+        return prop == null ? chooser.getFileSystemView().equals(FileSystemView.getFileSystemView()) : prop;
     }
 
     public void uninstallUI() {
@@ -378,7 +370,7 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
         Component newFocusOwner = null;
 
         switch (viewType) {
-            case VIEWTYPE_LIST :
+            case VIEWTYPE_LIST:
                 if (viewPanels[viewType] == null) {
                     createdViewPanel = fileChooserUIAccessor.createList();
                     if (createdViewPanel == null) {
@@ -399,7 +391,7 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
                 newFocusOwner = list;
                 break;
 
-            case VIEWTYPE_DETAILS :
+            case VIEWTYPE_DETAILS:
                 if (viewPanels[viewType] == null) {
                     createdViewPanel = fileChooserUIAccessor.createDetailsView();
                     if (createdViewPanel == null) {
@@ -480,7 +472,8 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
     }
 
     /**
-     * Fetches the command list for the FilePane. These commands are useful for binding to events, such as in a keymap.
+     * Fetches the command list for the FilePane. These commands are useful for binding to events, such
+     * as in a keymap.
      *
      * @return the command list
      */
@@ -510,9 +503,10 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
                     } else if (Objects.equals(cmd, ACTION_EDIT_FILE_NAME)) {
                         JFileChooser fc = getFileChooser();
                         int index = listSelectionModel.getMinSelectionIndex();
-                        if (index >= 0 && editFile == null &&
-                            (!fc.isMultiSelectionEnabled() ||
-                             fc.getSelectedFiles().length <= 1)) {
+                        if (
+                            index >= 0 && editFile == null
+                                && (!fc.isMultiSelectionEnabled() || fc.getSelectedFiles().length <= 1)
+                        ) {
 
                             editFileName(index);
                         }
@@ -687,13 +681,14 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
                 FileSystemView fsv = chooser.getFileSystemView();
                 File f2 = fsv.createFileObject(editFile.getParentFile(), newFileName);
                 if (f2.exists()) {
-                    JOptionPane.showMessageDialog(chooser, MessageFormat.format(renameErrorFileExistsText, oldFileName),
-                                                  renameErrorTitleText, JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(
+                        chooser, MessageFormat.format(renameErrorFileExistsText, oldFileName), renameErrorTitleText, JOptionPane.ERROR_MESSAGE
+                    );
                 } else {
                     if (getModel().renameFile(editFile, f2)) {
                         if (fsv.isParent(chooser.getCurrentDirectory(), f2)) {
                             if (chooser.isMultiSelectionEnabled()) {
-                                chooser.setSelectedFiles(new File[]{f2});
+                                chooser.setSelectedFiles(new File[] {f2});
                             } else {
                                 chooser.setSelectedFile(f2);
                             }
@@ -702,8 +697,9 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
                             // chooser.setSelectedFile(null);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(chooser, MessageFormat.format(renameErrorText, oldFileName),
-                                                      renameErrorTitleText, JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(
+                            chooser, MessageFormat.format(renameErrorText, oldFileName), renameErrorTitleText, JOptionPane.ERROR_MESSAGE
+                        );
                     }
                 }
             }
@@ -766,8 +762,7 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
 
                 // Remove files that shouldn't be selected and add files which should be selected
                 // Note: Assume files are already sorted in compareTo order.
-                while (shouldIndex < files.length &&
-                       actuallyIndex < selectedObjects.length) {
+                while (shouldIndex < files.length && actuallyIndex < selectedObjects.length) {
                     int comparison = files[shouldIndex].compareTo((File) selectedObjects[actuallyIndex]);
                     if (comparison < 0) {
                         doSelectFile(files[shouldIndex++]);
@@ -834,9 +829,10 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
         applyEdit();
         File f = (File) e.getNewValue();
         JFileChooser fc = getFileChooser();
-        if (f != null
-            && ((fc.isFileSelectionEnabled() && !f.isDirectory())
-                || (f.isDirectory() && fc.isDirectorySelectionEnabled()))) {
+        if (
+            f != null && ((fc.isFileSelectionEnabled() && !f.isDirectory())
+                || (f.isDirectory() && fc.isDirectorySelectionEnabled()))
+        ) {
 
             setFileSelected();
         }
@@ -846,9 +842,10 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
         applyEdit();
         File[] files = (File[]) e.getNewValue();
         JFileChooser fc = getFileChooser();
-        if (files != null
-            && files.length > 0
-            && (files.length > 1 || fc.isDirectorySelectionEnabled() || !files[0].isDirectory())) {
+        if (
+            files != null && files.length > 0
+                && (files.length > 1 || fc.isDirectorySelectionEnabled() || !files[0].isDirectory())
+        ) {
             setFileSelected();
         }
     }
@@ -897,8 +894,8 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
     }
 
     /*
-     * Listen for filechooser property changes, such as
-     * the selected file changing, or the type of the dialog changing.
+     * Listen for filechooser property changes, such as the selected file changing, or the type of the
+     * dialog changing.
      */
     public void propertyChange(final PropertyChangeEvent e) {
         if (viewType == -1) {
@@ -907,31 +904,31 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
 
         String s = e.getPropertyName();
         switch (s) {
-            case JFileChooser.SELECTED_FILE_CHANGED_PROPERTY :
+            case JFileChooser.SELECTED_FILE_CHANGED_PROPERTY:
                 doSelectedFileChanged(e);
                 break;
-            case JFileChooser.SELECTED_FILES_CHANGED_PROPERTY :
+            case JFileChooser.SELECTED_FILES_CHANGED_PROPERTY:
                 doSelectedFilesChanged(e);
                 break;
-            case JFileChooser.DIRECTORY_CHANGED_PROPERTY :
+            case JFileChooser.DIRECTORY_CHANGED_PROPERTY:
                 doDirectoryChanged(e);
                 break;
-            case JFileChooser.FILE_FILTER_CHANGED_PROPERTY :
+            case JFileChooser.FILE_FILTER_CHANGED_PROPERTY:
                 doFilterChanged(e);
                 break;
-            case JFileChooser.FILE_SELECTION_MODE_CHANGED_PROPERTY :
+            case JFileChooser.FILE_SELECTION_MODE_CHANGED_PROPERTY:
                 doFileSelectionModeChanged(e);
                 break;
-            case JFileChooser.MULTI_SELECTION_ENABLED_CHANGED_PROPERTY :
+            case JFileChooser.MULTI_SELECTION_ENABLED_CHANGED_PROPERTY:
                 doMultiSelectionChanged(e);
                 break;
-            case JFileChooser.CANCEL_SELECTION :
+            case JFileChooser.CANCEL_SELECTION:
                 applyEdit();
                 break;
-            case "busy" :
+            case "busy":
                 setCursor((Boolean) e.getNewValue() ? waitCursor : null);
                 break;
-            case PropertyKey.COMPONENT_ORIENTATION :
+            case PropertyKey.COMPONENT_ORIENTATION:
                 ComponentOrientation o = (ComponentOrientation) e.getNewValue();
                 JFileChooser cc = (JFileChooser) e.getSource();
                 if (o != e.getOldValue()) {
@@ -1068,13 +1065,13 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
 
             String cmd;
             switch (viewType) {
-                case VIEWTYPE_LIST :
+                case VIEWTYPE_LIST:
                     cmd = ACTION_VIEW_LIST;
                     break;
-                case VIEWTYPE_DETAILS :
+                case VIEWTYPE_DETAILS:
                     cmd = ACTION_VIEW_DETAILS;
                     break;
-                default :
+                default:
                     cmd = (String) getValue(Action.NAME);
             }
             putValue(Action.ACTION_COMMAND_KEY, cmd);
@@ -1090,7 +1087,7 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
      */
     @SuppressWarnings("serial") // JDK-implementation class
     protected class SortableListModel extends AbstractListModel<Object>
-                                      implements TableModelListener, RowSorterListener {
+            implements TableModelListener, RowSorterListener {
 
         public SortableListModel() {
             getDetailsTableModel().addTableModelListener(this);
@@ -1198,8 +1195,7 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
 
         public boolean isCellEditable(final int row, final int column) {
             File currentDirectory = getFileChooser().getCurrentDirectory();
-            return (!readOnly && column == COLUMN_FILENAME
-                    && canWrite(currentDirectory, getFileChooser()));
+            return (!readOnly && column == COLUMN_FILENAME && canWrite(currentDirectory, getFileChooser()));
         }
 
         public void setValueAt(final Object value, final int row, final int col) {
@@ -1225,10 +1221,8 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
                         FileSystemView fsv = chooser.getFileSystemView();
                         final File f2 = fsv.createFileObject(f.getParentFile(), newFileName);
                         if (f2.exists()) {
-                            JOptionPane.showMessageDialog(chooser, MessageFormat.format(renameErrorFileExistsText,
-                                                                                        oldFileName),
-                                                          renameErrorTitleText,
-                                                          JOptionPane.ERROR_MESSAGE);
+                            JOptionPane
+                                .showMessageDialog(chooser, MessageFormat.format(renameErrorFileExistsText, oldFileName), renameErrorTitleText, JOptionPane.ERROR_MESSAGE);
                         } else {
                             if (DarkFilePaneUIBridge.this.getModel().renameFile(f, f2)) {
                                 if (fsv.isParent(chooser.getCurrentDirectory(), f2)) {
@@ -1237,7 +1231,7 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
                                     // is completed
                                     SwingUtilities.invokeLater(() -> {
                                         if (chooser.isMultiSelectionEnabled()) {
-                                            chooser.setSelectedFiles(new File[]{f2});
+                                            chooser.setSelectedFiles(new File[] {f2});
                                         } else {
                                             chooser.setSelectedFile(f2);
                                         }
@@ -1247,9 +1241,9 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
                                     // chooser.setSelectedFile(null);
                                 }
                             } else {
-                                JOptionPane.showMessageDialog(chooser,
-                                                              MessageFormat.format(renameErrorText, oldFileName),
-                                                              renameErrorTitleText, JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(
+                                    chooser, MessageFormat.format(renameErrorText, oldFileName), renameErrorTitleText, JOptionPane.ERROR_MESSAGE
+                                );
                             }
                         }
                     }
@@ -1261,9 +1255,8 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
             if (col == COLUMN_SIZE) {
                 return f.isDirectory() ? null : f.length();
             }
-            return (col == COLUMN_FILENAME)
-                    ? f // always return the file itself for the 1st column
-                    : ShellFolder.getFolderColumnValue(f, columnMap[col]);
+            return (col == COLUMN_FILENAME) ? f // always return the file itself for the 1st column
+                : ShellFolder.getFolderColumnValue(f, columnMap[col]);
         }
 
         public void intervalAdded(final ListDataEvent e) {
@@ -1349,8 +1342,8 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
     }
 
     /**
-     * This class sorts directories before files, comparing directory to directory and file to file using the wrapped
-     * comparator.
+     * This class sorts directories before files, comparing directory to directory and file to file
+     * using the wrapped comparator.
      */
     protected class DirectoriesFirstComparatorWrapper implements Comparator<File> {
         protected final Comparator<Object> comparator;
@@ -1375,8 +1368,8 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
                 }
             }
             if (detailsTableModel.getColumns()[column].isCompareByColumn()) {
-                return comparator.compare(getDetailsTableModel().getFileColumnValue(f1, column),
-                                          getDetailsTableModel().getFileColumnValue(f2, column));
+                return comparator
+                    .compare(getDetailsTableModel().getFileColumnValue(f1, column), getDetailsTableModel().getFileColumnValue(f2, column));
             }
             // For this column we need to pass the file itself (not a
             // column value) to the comparator
@@ -1392,22 +1385,22 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
 
         public DetailsTableCellRenderer(final JFileChooser chooser) {
             this.chooser = chooser;
-            df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT,
-                                                chooser.getLocale());
+            df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, chooser.getLocale());
         }
 
-        public Component getTableCellRendererComponent(final JTable table, final Object value,
-                                                       boolean isSelected, final boolean hasFocus,
-                                                       final int row, final int column) {
+        public Component getTableCellRendererComponent(
+                final JTable table, final Object value, boolean isSelected, final boolean hasFocus, final int row,
+                final int column
+        ) {
 
-            if ((table.convertColumnIndexToModel(column) != COLUMN_FILENAME ||
-                 (listViewWindowsStyle && !table.isFocusOwner()))
-                && !fullRowSelection) {
+            if (
+                (table.convertColumnIndexToModel(column) != COLUMN_FILENAME
+                    || (listViewWindowsStyle && !table.isFocusOwner())) && !fullRowSelection
+            ) {
                 isSelected = false;
             }
 
-            super.getTableCellRendererComponent(table, value, isSelected,
-                                                hasFocus, row, column);
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
             setIcon(null);
             int modelColumn = table.convertColumnIndexToModel(column);
@@ -1415,9 +1408,7 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
 
             Integer alignment = columnInfo.getAlignment();
             if (alignment == null) {
-                alignment = (value instanceof Number)
-                        ? SwingConstants.RIGHT
-                        : SwingConstants.LEADING;
+                alignment = (value instanceof Number) ? SwingConstants.RIGHT : SwingConstants.LEADING;
             }
 
             setHorizontalAlignment(alignment);
@@ -1469,11 +1460,13 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
             this.wrappedRenderer = wrappedRenderer;
         }
 
-        public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
-                                                       final boolean hasFocus, final int row, final int column) {
+        public Component getTableCellRendererComponent(
+                final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row,
+                final int column
+        ) {
 
-            Component c = wrappedRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row,
-                                                                        column);
+            Component c =
+                wrappedRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
             int modelColumn = table.convertColumnIndexToModel(column);
             ShellFolderColumnInfo columnInfo = detailsTableModel.getColumns()[modelColumn];

@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.tabframe;
@@ -47,8 +44,7 @@ import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.ResourceUtil;
 
-public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListener, AWTEventListener,
-                              TabFramePopupUI {
+public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListener, AWTEventListener, TabFramePopupUI {
 
     protected HeaderButton closeButton;
     private final Action closeAction = new AbstractAction() {
@@ -95,7 +91,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
         headerButtonFocusClickBackground = UIManager.getColor("TabFramePopup.headerButtonFocusClickBackground");
         accelerator = UIManager.getString("TabFramePopup.closeAccelerator");
         popupComponent.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-                      .put(KeyStroke.getKeyStroke(accelerator), accelerator);
+            .put(KeyStroke.getKeyStroke(accelerator), accelerator);
         popupComponent.getActionMap().put(accelerator, closeAction);
         popupComponent.setLayout(new BorderLayout());
     }
@@ -186,7 +182,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
         uninstallListeners();
         popupComponent.removeAll();
         popupComponent.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-                      .remove(KeyStroke.getKeyStroke(accelerator));
+            .remove(KeyStroke.getKeyStroke(accelerator));
         popupComponent.getActionMap().remove(accelerator);
         popupComponent = null;
     }
@@ -296,7 +292,8 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
                 try {
                     Component peer = tabFrame.getPopupComponentAt(tabFrame.getPeer(popupComponent.getAlignment()));
                     peer.firePropertyChange(TabFramePopup.KEY_PEER_INSETS, 0, 1);
-                } catch (IndexOutOfBoundsException ignored) {/* may happen during transfer */}
+                } catch (IndexOutOfBoundsException ignored) {
+                    /* may happen during transfer */}
             }
         }
     }
@@ -304,8 +301,8 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     protected Insets getBorderSize(final JTabFrame tabFrame, final Alignment a, final boolean[] info) {
         Insets insets = new Insets(0, 0, 0, 0);
         switch (a) {
-            case NORTH :
-            case NORTH_EAST :
+            case NORTH:
+            case NORTH_EAST:
                 if (info[a.getIndex()] || info[tabFrame.getPeer(a).getIndex()]) {
                     insets.bottom = 1;
                 }
@@ -313,8 +310,8 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
                     insets.left = 1;
                 }
                 return insets;
-            case SOUTH :
-            case SOUTH_WEST :
+            case SOUTH:
+            case SOUTH_WEST:
                 if (info[a.getIndex()] || info[tabFrame.getPeer(a).getIndex()]) {
                     insets.top = 1;
                 }
@@ -322,8 +319,8 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
                     insets.left = 1;
                 }
                 return insets;
-            case EAST :
-            case SOUTH_EAST :
+            case EAST:
+            case SOUTH_EAST:
                 if (info[a.getIndex()] || info[tabFrame.getPeer(a).getIndex()]) {
                     insets.left = 1;
                 }
@@ -331,8 +328,8 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
                     insets.top = 1;
                 }
                 return insets;
-            case WEST :
-            case NORTH_WEST :
+            case WEST:
+            case NORTH_WEST:
                 if (info[a.getIndex()] || info[tabFrame.getPeer(a).getIndex()]) {
                     insets.right = 1;
                 }
@@ -340,7 +337,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
                     insets.top = 1;
                 }
                 return insets;
-            default :
+            default:
                 return insets;
         }
     }
@@ -362,8 +359,8 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
             if (focusOwner instanceof JRootPane) return;
             boolean focus = DarkUIUtil.hasFocus(popupComponent);
             if (popupComponent.getTabFrame() != null) {
-                Container container = popupComponent.getTabFrame().getContentPane()
-                                                    .getContainer(popupComponent.getAlignment());
+                Container container =
+                    popupComponent.getTabFrame().getContentPane().getContainer(popupComponent.getAlignment());
                 focus = focus || DarkUIUtil.hasFocus(container);
             }
             setHeaderBackground(focus);
@@ -390,10 +387,14 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
         }
 
         public void setFocus(final boolean focus) {
-            putClientProperty(DarkButtonUI.KEY_HOVER_COLOR, focus ? ui.headerButtonFocusHoverBackground
-                    : ui.headerButtonHoverBackground);
-            putClientProperty(DarkButtonUI.KEY_CLICK_COLOR, focus ? ui.headerButtonFocusClickBackground
-                    : ui.headerButtonClickBackground);
+            putClientProperty(
+                DarkButtonUI.KEY_HOVER_COLOR,
+                focus ? ui.headerButtonFocusHoverBackground : ui.headerButtonHoverBackground
+            );
+            putClientProperty(
+                DarkButtonUI.KEY_CLICK_COLOR,
+                focus ? ui.headerButtonFocusClickBackground : ui.headerButtonClickBackground
+            );
         }
     }
 }

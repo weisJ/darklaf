@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package javax.swing.text.DefaultHighlighterDark;
@@ -44,9 +41,10 @@ import com.github.weisj.darklaf.ui.text.StyleConstantsEx;
 import com.github.weisj.darklaf.util.Alignment;
 
 /**
- * Note this class only sits inside this weird package because of a hack used in {@link
- * SwingUtilities2#useSelectedTextColor(Highlighter.Highlight, JTextComponent)} that makes it impossible for custom
- * highlighters to use the correct text foreground specified by {@link JTextComponent#getSelectedTextColor()}.
+ * Note this class only sits inside this weird package because of a hack used in
+ * {@link SwingUtilities2#useSelectedTextColor(Highlighter.Highlight, JTextComponent)} that makes it
+ * impossible for custom highlighters to use the correct text foreground specified by
+ * {@link JTextComponent#getSelectedTextColor()}.
  *
  * @author Jannis Weis
  */
@@ -117,8 +115,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
      * @param c      the editor
      */
     @Override
-    public void paint(final Graphics g, final int offs0, final int offs1, final Shape bounds,
-                      final JTextComponent c) {
+    public void paint(final Graphics g, final int offs0, final int offs1, final Shape bounds, final JTextComponent c) {
         if (!enabled) return;
         Graphics2D g2d = (Graphics2D) g;
         GraphicsContext context = new GraphicsContext(g2d);
@@ -160,8 +157,10 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     }
 
     @Override
-    public Shape paintLayer(final Graphics g, final int offs0, final int offs1,
-                            final Shape bounds, final JTextComponent c, final View view) {
+    public Shape paintLayer(
+            final Graphics g, final int offs0, final int offs1, final Shape bounds, final JTextComponent c,
+            final View view
+    ) {
         if (!enabled) return bounds;
         color = (Color) view.getAttributes().getAttribute(StyleConstantsEx.SelectedForeground);
         if (color == null) {
@@ -226,13 +225,13 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
     private boolean isLeftTorRight(final JTextComponent c) {
         return !TextAttribute.RUN_DIRECTION_RTL.equals(c.getDocument().getProperty(TextAttribute.RUN_DIRECTION))
-               && !Boolean.TRUE.equals(c.getDocument().getProperty("i18n"));
+            && !Boolean.TRUE.equals(c.getDocument().getProperty("i18n"));
     }
 
-    protected Rectangle paintRoundedLayer(final Graphics2D g, final JTextComponent c, final int offs0, final int offs1,
-                                          final GraphicsContext context,
-                                          final boolean rounded, final boolean extendLines,
-                                          final boolean isPaintingPreceding) {
+    protected Rectangle paintRoundedLayer(
+            final Graphics2D g, final JTextComponent c, final int offs0, final int offs1, final GraphicsContext context,
+            final boolean rounded, final boolean extendLines, final boolean isPaintingPreceding
+    ) {
         final int selectionStart = c.getSelectionStart();
         final int selectionEnd = c.getSelectionEnd();
 
@@ -256,10 +255,8 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         int nextLineEnd = getOffset(c, c.getWidth(), getPosRect(c, nextLineStart).y);
         if (nextLineEnd < nextLineStart) nextLineEnd = nextLineStart;
 
-        boolean isEndOfLine = offs1 >= c.getDocument().getLength() - 1
-                              || getPosRect(c, offs1 + 1).y > posOffs1.y;
-        boolean isStartOfLine = offs0 == 0
-                                || getPosRect(c, offs0 - 1).y < posOffs0.y;
+        boolean isEndOfLine = offs1 >= c.getDocument().getLength() - 1 || getPosRect(c, offs1 + 1).y > posOffs1.y;
+        boolean isStartOfLine = offs0 == 0 || getPosRect(c, offs0 - 1).y < posOffs0.y;
 
         Rectangle layerRect = getRect(posOffs0, posOffs1);
         Rectangle previousLineRect = getRect(prevStart, prevEnd);
@@ -292,31 +289,25 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         boolean hasLineAbove = previousLineEnd >= selectionStart;
         boolean hasLineBelow = nextLineStart <= selectionEnd;
 
-        boolean previousLineVisible = hasLineAbove
-                                      && previousLineRect.width > 0
-                                      && previousLineStart < previousLineEnd;
-        boolean nextLineVisible = hasLineBelow
-                                  && nextLineRect.width > 0
-                                  && nextLineStart < nextLineEnd;
+        boolean previousLineVisible = hasLineAbove && previousLineRect.width > 0 && previousLineStart < previousLineEnd;
+        boolean nextLineVisible = hasLineBelow && nextLineRect.width > 0 && nextLineStart < nextLineEnd;
 
         boolean paintPreviousLine = false;
 
         if (extendLines) {
             // Adjust the line rects for the adjacent lines for correct rounded corner placement.
-            extendLine(c, ins, previousLineRect,
-                       hasLineAbove && previousLineStart >= selectionStart,
-                       hasLineAbove && previousLineEnd <= selectionEnd);
+            extendLine(
+                c, ins, previousLineRect, hasLineAbove && previousLineStart >= selectionStart,
+                hasLineAbove && previousLineEnd <= selectionEnd
+            );
 
-            boolean extendNextRight = hasLineBelow
-                                      && nextLineEnd < c.getDocument().getLength()
-                                      && getOffset(c, getPosRect(c, nextLineEnd + 1)) <= selectionEnd;
+            boolean extendNextRight = hasLineBelow && nextLineEnd < c.getDocument().getLength()
+                && getOffset(c, getPosRect(c, nextLineEnd + 1)) <= selectionEnd;
 
-            extendLine(c, ins, nextLineRect,
-                       hasLineBelow && nextLineStart >= selectionStart,
-                       extendNextRight);
+            extendLine(c, ins, nextLineRect, hasLineBelow && nextLineStart >= selectionStart, extendNextRight);
 
-            paintPreviousLine = hasLineAbove
-                                && (previousLineStart == previousLineEnd || previousLineEnd == selectionStart);
+            paintPreviousLine =
+                hasLineAbove && (previousLineStart == previousLineEnd || previousLineEnd == selectionStart);
             previousLineVisible = hasLineAbove;
             if (nextLineRect.y != posEnd.y) nextLineVisible = hasLineBelow;
 
@@ -339,38 +330,35 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         boolean roundedBottomLeft = !nextLineVisible || leftRoundedVisible(currentLineRect, nextLineRect);
         boolean roundedBottomRight = !nextLineVisible || rightRoundedVisible(currentLineRect, nextLineRect);
 
-        boolean arcTopLeft = previousLineVisible && !roundedTopLeft
-                             && leftArcVisible(currentLineRect, previousLineRect);
-        boolean arcTopRight = previousLineVisible && !roundedTopRight
-                              && rightArcVisible(currentLineRect, previousLineRect);
+        boolean arcTopLeft =
+            previousLineVisible && !roundedTopLeft && leftArcVisible(currentLineRect, previousLineRect);
+        boolean arcTopRight =
+            previousLineVisible && !roundedTopRight && rightArcVisible(currentLineRect, previousLineRect);
         boolean arcBottomLeft = nextLineVisible && !roundedBottomLeft && leftArcVisible(currentLineRect, nextLineRect);
-        boolean arcBottomRight = nextLineVisible && !roundedBottomRight
-                                 && rightArcVisible(currentLineRect, nextLineRect);
+        boolean arcBottomRight =
+            nextLineVisible && !roundedBottomRight && rightArcVisible(currentLineRect, nextLineRect);
 
-        layerRect = paintRoundRect(g, context, layerRect,
-                                   canRoundLeft && roundedTopLeft,
-                                   canRoundRight && roundedTopRight,
-                                   canRoundLeft && roundedBottomLeft,
-                                   canRoundRight && roundedBottomRight);
-        Rectangle r = paintArcs(g, context, layerRect,
-                                canRoundLeft && arcTopLeft,
-                                canRoundRight && arcTopRight,
-                                canRoundLeft && arcBottomLeft,
-                                canRoundRight && arcBottomRight);
+        layerRect = paintRoundRect(
+            g, context, layerRect, canRoundLeft && roundedTopLeft, canRoundRight && roundedTopRight,
+            canRoundLeft && roundedBottomLeft, canRoundRight && roundedBottomRight
+        );
+        Rectangle r = paintArcs(
+            g, context, layerRect, canRoundLeft && arcTopLeft, canRoundRight && arcTopRight,
+            canRoundLeft && arcBottomLeft, canRoundRight && arcBottomRight
+        );
 
         if (paintPreviousLine && !isPaintingPreceding) {
-            Rectangle prev = paintRoundedLayer(g, c,
-                                               Math.max(previousLineStart, selectionStart),
-                                               Math.min(previousLineEnd, selectionEnd),
-                                               context,
-                                               rounded, extendLines, true);
+            Rectangle prev =
+                paintRoundedLayer(g, c, Math.max(previousLineStart, selectionStart), Math.min(previousLineEnd, selectionEnd), context, rounded, extendLines, true);
             convexHull(r, prev);
         }
         return r;
     }
 
-    private void extendLine(final JTextComponent c, final Insets ins, final Rectangle rect,
-                            final boolean extendLeft, final boolean extendRight) {
+    private void extendLine(
+            final JTextComponent c, final Insets ins, final Rectangle rect, final boolean extendLeft,
+            final boolean extendRight
+    ) {
         if (extendRight || extendLeft) {
             int x = startX(rect);
             if (extendRight) {
@@ -392,23 +380,19 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     }
 
     private boolean leftRoundedVisible(final Rectangle current, final Rectangle other) {
-        return startX(other) > startX(current) + arcSize
-               || endX(other) < startX(current);
+        return startX(other) > startX(current) + arcSize || endX(other) < startX(current);
     }
 
     private boolean rightRoundedVisible(final Rectangle current, final Rectangle other) {
-        return endX(other) < endX(current) - arcSize
-               || startX(other) > endX(current);
+        return endX(other) < endX(current) - arcSize || startX(other) > endX(current);
     }
 
     private boolean leftArcVisible(final Rectangle current, final Rectangle other) {
-        return startX(other) <= startX(current) - arcSize
-               && endX(other) >= startX(current);
+        return startX(other) <= startX(current) - arcSize && endX(other) >= startX(current);
     }
 
     private boolean rightArcVisible(final Rectangle current, final Rectangle other) {
-        return endX(other) >= endX(current) + arcSize
-               && startX(other) <= endX(current);
+        return endX(other) >= endX(current) + arcSize && startX(other) <= endX(current);
     }
 
     private Rectangle getPosRect(final JTextComponent c, final int offset) {
@@ -418,7 +402,8 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     private Rectangle getPosRect(final JTextComponent c, final int offset, final Position.Bias bias) {
         try {
             return c.getUI().modelToView(c, Math.max(0, Math.min(offset, c.getDocument().getLength())), bias);
-        } catch (BadLocationException ignored) {} catch (IllegalArgumentException e) {
+        } catch (BadLocationException ignored) {
+        } catch (IllegalArgumentException e) {
             new RuntimeException("" + offset).printStackTrace();
         }
         return new Rectangle(Integer.MIN_VALUE + 100, Integer.MIN_VALUE + 100, 0, 0);
@@ -477,17 +462,18 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         return roundedEdges;
     }
 
-    private Rectangle paintRoundRect(final Graphics g, final GraphicsContext context, final Rectangle shape,
-                                     final boolean topLeft, final boolean topRight,
-                                     final boolean bottomLeft, final boolean bottomRight) {
+    private Rectangle paintRoundRect(
+            final Graphics g, final GraphicsContext context, final Rectangle shape, final boolean topLeft,
+            final boolean topRight, final boolean bottomLeft, final boolean bottomRight
+    ) {
         Rectangle r = new Rectangle(shape);
         int aw = Math.min(arcSize, r.width);
         int ah = Math.min(arcSize, r.height);
 
         /*
-         * If there is a rounded arc on one side A and none on the other (B) removing the arc B could overlap
-         * arc A if the width of the allocation is too small. This happens e.g. when single characters have different
-         * attribute sets.
+         * If there is a rounded arc on one side A and none on the other (B) removing the arc B could
+         * overlap arc A if the width of the allocation is too small. This happens e.g. when single
+         * characters have different attribute sets.
          */
         g.clipRect(r.x, r.y, r.width, r.height);
         boolean showLeft = topLeft || bottomLeft;
@@ -526,9 +512,10 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         return shape;
     }
 
-    private Rectangle paintArcs(final Graphics2D g, final GraphicsContext context, final Rectangle r,
-                                final boolean topLeft, final boolean topRight,
-                                final boolean bottomLeft, final boolean bottomRight) {
+    private Rectangle paintArcs(
+            final Graphics2D g, final GraphicsContext context, final Rectangle r, final boolean topLeft,
+            final boolean topRight, final boolean bottomLeft, final boolean bottomRight
+    ) {
         if (r.isEmpty()) return r;
         Rectangle alloc = new Rectangle(r);
         if (topLeft || bottomLeft) {
@@ -584,13 +571,13 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
     private Shape getSubtractShape(final Alignment a) {
         switch (a) {
-            case NORTH_EAST :
+            case NORTH_EAST:
                 return new Arc2D.Double(0, 0, 2 * arcSize, 2 * arcSize, 90, 90, Arc2D.PIE);
-            case NORTH_WEST :
+            case NORTH_WEST:
                 return new Arc2D.Double(-arcSize, 0, 2 * arcSize, 2 * arcSize, 0, 90, Arc2D.PIE);
-            case SOUTH_EAST :
+            case SOUTH_EAST:
                 return new Arc2D.Double(0, -arcSize, 2 * arcSize, 2 * arcSize, 180, 90, Arc2D.PIE);
-            case SOUTH_WEST :
+            case SOUTH_WEST:
                 return new Arc2D.Double(-arcSize, -arcSize, 2 * arcSize, 2 * arcSize, 270, 90, Arc2D.PIE);
         }
         return new Rectangle();
@@ -598,13 +585,13 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
     private int getIndex(final Alignment a) {
         switch (a) {
-            case NORTH_EAST :
+            case NORTH_EAST:
                 return 0;
-            case NORTH_WEST :
+            case NORTH_WEST:
                 return 1;
-            case SOUTH_EAST :
+            case SOUTH_EAST:
                 return 2;
-            case SOUTH_WEST :
+            case SOUTH_WEST:
                 return 3;
         }
         return 0;

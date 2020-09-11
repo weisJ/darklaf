@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.task;
@@ -63,11 +60,9 @@ public class ForegroundColorGenerationTask extends ColorAdjustmentTask {
     }
 
     private void adjustForegroundList(final List<?> list, final Properties properties) {
-        list.stream()
-            .filter(o -> o instanceof Pair<?, ?>)
-            .map(Pair.class::cast)
-            .filter(p -> p.getFirst() instanceof Color)
-            .forEach(p -> properties.put(p.getSecond(), makeForeground((Color) p.getFirst())));
+        list.stream().filter(o -> o instanceof Pair<?, ?>).map(Pair.class::cast).filter(
+            p -> p.getFirst() instanceof Color
+        ).forEach(p -> properties.put(p.getSecond(), makeForeground((Color) p.getFirst())));
     }
 
     public static ColorUIResource makeForeground(final Color bg) {
@@ -80,13 +75,15 @@ public class ForegroundColorGenerationTask extends ColorAdjustmentTask {
         return makeAdjustedForeground(fg, bg, Bias.getBackground(), minimumBrightnessDifference);
     }
 
-    public static ColorUIResource makeAdjustedForeground(final Color fg, final Color bg,
-                                                         final double minimumBrightnessDifference) {
+    public static ColorUIResource makeAdjustedForeground(
+            final Color fg, final Color bg, final double minimumBrightnessDifference
+    ) {
         return makeAdjustedForeground(fg, bg, Bias.getBackground(), minimumBrightnessDifference);
     }
 
-    public static ColorUIResource makeAdjustedForeground(final Color fg, final Color bg, final Bias bias,
-                                                         final double minimumBrightnessDifference) {
+    public static ColorUIResource makeAdjustedForeground(
+            final Color fg, final Color bg, final Bias bias, final double minimumBrightnessDifference
+    ) {
         final double[] hslFG = DarkColorModelHSL.RGBtoHSLValues(fg.getRed(), fg.getGreen(), fg.getBlue());
         final double[] hslBG = DarkColorModelHSL.RGBtoHSLValues(bg.getRed(), bg.getGreen(), bg.getBlue());
         double bgBrightness = hslBG[2];
@@ -99,11 +96,11 @@ public class ForegroundColorGenerationTask extends ColorAdjustmentTask {
             b = bgBright <= b.threshold ? Bias.WHITE : Bias.BLACK;
         }
 
-        double bright1 = fgBrightness > bgBrightness && (fgBrightness - bgBrightness) >= minimumBrightnessDifference
-                ? hslFG[2]
+        double bright1 =
+            fgBrightness > bgBrightness && (fgBrightness - bgBrightness) >= minimumBrightnessDifference ? hslFG[2]
                 : Math.min(bgBrightness + minimumBrightnessDifference, 1);
-        double bright2 = fgBrightness < bgBrightness && (bgBrightness - fgBrightness) >= minimumBrightnessDifference
-                ? hslFG[2]
+        double bright2 =
+            fgBrightness < bgBrightness && (bgBrightness - fgBrightness) >= minimumBrightnessDifference ? hslFG[2]
                 : Math.max(bgBrightness - minimumBrightnessDifference, 0);
 
         double brightness = b == Bias.WHITE ? bright1 : bright2;
@@ -111,9 +108,7 @@ public class ForegroundColorGenerationTask extends ColorAdjustmentTask {
     }
 
     public enum Bias {
-        BACKGROUND,
-        WHITE,
-        BLACK;
+        BACKGROUND, WHITE, BLACK;
 
         public static Bias getBackground() {
             return getBackground(0.5);

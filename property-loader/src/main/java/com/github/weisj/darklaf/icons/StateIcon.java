@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.icons;
@@ -47,8 +44,9 @@ public class StateIcon implements Icon {
 
     public StateIcon(final Icon[] icons) {
         if (icons == null || icons.length < 6) {
-            throw new IllegalArgumentException("Not enough icons given: count="
-                                               + (icons == null ? "null" : icons.length));
+            throw new IllegalArgumentException(
+                "Not enough icons given: count=" + (icons == null ? "null" : icons.length)
+            );
         }
         this.icon = icons[0];
         this.disabledIcon = icons[1];
@@ -58,9 +56,10 @@ public class StateIcon implements Icon {
         this.selectedFocusedIcon = icons[5];
     }
 
-    public StateIcon(final Icon icon, final Icon disabledIcon,
-                     final Icon focusedIcon, final Icon selectedIcon,
-                     final Icon selectedDisabledIcon, final Icon selectedFocusedIcon) {
+    public StateIcon(
+            final Icon icon, final Icon disabledIcon, final Icon focusedIcon, final Icon selectedIcon,
+            final Icon selectedDisabledIcon, final Icon selectedFocusedIcon
+    ) {
         this.icon = icon;
         this.disabledIcon = disabledIcon;
         this.focusedIcon = focusedIcon;
@@ -80,10 +79,8 @@ public class StateIcon implements Icon {
         boolean selected = b.isSelected();
         boolean enabled = b.isEnabled();
         boolean hasFocus = b.isFocusPainted() && b.hasFocus();
-        Icon icn = selected ? enabled ? hasFocus ? selectedFocusedIcon : selectedIcon
-                : selectedDisabledIcon
-                : enabled ? hasFocus ? focusedIcon : icon
-                : disabledIcon;
+        Icon icn = selected ? enabled ? hasFocus ? selectedFocusedIcon : selectedIcon : selectedDisabledIcon
+            : enabled ? hasFocus ? focusedIcon : icon : disabledIcon;
         return icn != null ? icn : EmptyIcon.create(0);
     }
 

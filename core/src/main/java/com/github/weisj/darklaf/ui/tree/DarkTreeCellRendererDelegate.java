@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.tree;
@@ -49,19 +46,20 @@ public class DarkTreeCellRendererDelegate extends TreeCellRendererDelegate imple
     }
 
     @Override
-    public Component getTreeCellRendererComponent(final JTree tree, final Object value,
-                                                  final boolean selected, final boolean expanded,
-                                                  final boolean leaf, final int row, final boolean hasFocus) {
+    public Component getTreeCellRendererComponent(
+            final JTree tree, final Object value, final boolean selected, final boolean expanded, final boolean leaf,
+            final int row, final boolean hasFocus
+    ) {
         boolean isFocused = DarkUIUtil.hasFocus(tree);
         Object unwrapped = unwrapValue(value);
         Component renderer;
         if (unwrapped instanceof Boolean && isBooleanRenderingEnabled(tree)) {
-            Component comp = getBooleanRenderer(tree).getTreeCellRendererComponent(tree, value, selected, expanded,
-                                                                                   leaf, row, isFocused);
+            Component comp = getBooleanRenderer(tree)
+                .getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, isFocused);
             renderer = prepareRendererComponent(tree, comp);
         } else if (unwrapped instanceof TristateState) {
-            Component comp = getTristateRenderer(tree).getTreeCellRendererComponent(tree, value, selected, expanded,
-                                                                                    leaf, row, isFocused);
+            Component comp = getTristateRenderer(tree)
+                .getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, isFocused);
             renderer = prepareRendererComponent(tree, comp);
         } else {
             if (getDelegate() instanceof DefaultTreeCellRenderer) {
@@ -97,8 +95,9 @@ public class DarkTreeCellRendererDelegate extends TreeCellRendererDelegate imple
     }
 
     protected DarkCellRendererToggleButton<?> getBooleanRenderer(final JTree tree) {
-        if (PropertyUtil.isPropertyEqual(tree, DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE,
-                                         DarkTreeUI.RENDER_TYPE_RADIOBUTTON)) {
+        if (
+            PropertyUtil.isPropertyEqual(tree, DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE, DarkTreeUI.RENDER_TYPE_RADIOBUTTON)
+        ) {
             return radioRenderer;
         }
         return checkBoxRenderer;

@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.task;
@@ -48,10 +45,10 @@ public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
         applyColors(currentTheme, properties, accentColor, selectionColor);
     }
 
-    public void applyColors(final Theme currentTheme, final Properties properties,
-                            final Color accentColor, final Color selectionColor) {
-        if (!currentTheme.supportsCustomAccentColor()
-            && !currentTheme.supportsCustomSelectionColor()) {
+    public void applyColors(
+            final Theme currentTheme, final Properties properties, final Color accentColor, final Color selectionColor
+    ) {
+        if (!currentTheme.supportsCustomAccentColor() && !currentTheme.supportsCustomSelectionColor()) {
             // No custom colors are supported. Nothing needs to be mapped.
             return;
         }
@@ -69,16 +66,16 @@ public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
         }
     }
 
-    private void adjustColors(final String listKey, final Color c,
-                              final Properties listProperties, final Properties properties) {
+    private void adjustColors(
+            final String listKey, final Color c, final Properties listProperties, final Properties properties
+    ) {
         adjust(listKey, listProperties, list -> {
             double[] hsb = DarkColorModelHSB.RGBtoHSBValues(c.getRed(), c.getGreen(), c.getBlue());
             adjustColorList(list, hsb, properties);
         });
     }
 
-    private void adjustColorList(final List<?> list, final double[] hsb,
-                                 final Properties properties) {
+    private void adjustColorList(final List<?> list, final double[] hsb, final Properties properties) {
         ColorInfo info = new ColorInfo();
         for (Object o : list) {
             setColorInfo(o, info);
@@ -87,9 +84,10 @@ public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
             if (c instanceof Color) {
                 properties.put(info.key, c);
             } else {
-                LOGGER.warning("Color with key '" + info.key
-                               + "' could not be adjusted because the value '" + c + ", '" + c.getClass()
-                               + " is not a color");
+                LOGGER.warning(
+                    "Color with key '" + info.key + "' could not be adjusted because the value '" + c + ", '"
+                        + c.getClass() + " is not a color"
+                );
             }
         }
     }
@@ -107,10 +105,10 @@ public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
             if (!(second instanceof List<?>)) return;
             String key = first.toString();
             List<?> list = (List<?>) second;
-            if (list.size() != 3
-                || !(list.get(0) instanceof Integer)
-                || !(list.get(1) instanceof Integer)
-                || !(list.get(2) instanceof Integer)) {
+            if (
+                list.size() != 3 || !(list.get(0) instanceof Integer) || !(list.get(1) instanceof Integer)
+                    || !(list.get(2) instanceof Integer)
+            ) {
                 return;
             }
             info.set(key, (Integer) list.get(0), (Integer) list.get(1), (Integer) list.get(2));
@@ -120,9 +118,9 @@ public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
     private Object mapColor(final ColorInfo info, final double[] hsbMatch, final Properties properties) {
         Object obj = properties.get(info.key);
         if (obj instanceof Color) {
-            Color color = DarkColorModelHSB.getColorFromHSBValues(mapValue(hsbMatch[0], info.hAdj),
-                                                                  mapValue(hsbMatch[1], info.sAdj),
-                                                                  mapValue(hsbMatch[2], info.bAdj));
+            Color color = DarkColorModelHSB.getColorFromHSBValues(
+                mapValue(hsbMatch[0], info.hAdj), mapValue(hsbMatch[1], info.sAdj), mapValue(hsbMatch[2], info.bAdj)
+            );
             return new DarkColorUIResource(color);
         }
         return obj;

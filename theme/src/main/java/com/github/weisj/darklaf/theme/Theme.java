@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.theme;
@@ -80,8 +77,9 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
 
     /**
      * Creates a copy of this theme. This is not equivalent to {@link #clone()} in the sense that
-     * <code>clone().getClass() == this.getClass()</code> and <code>copy().getClass() != this.getClass()</code>.
-     * Nonetheless the copy theme behaves exactly the same as the original.
+     * <code>clone().getClass() == this.getClass()</code> and
+     * <code>copy().getClass() != this.getClass()</code>. Nonetheless the copy theme behaves exactly the
+     * same as the original.
      *
      * @return a copy of the theme.
      */
@@ -90,7 +88,8 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     }
 
     /**
-     * Returns whether the theme is a dark theme. This is used to determine the default mode for [aware] icons.
+     * Returns whether the theme is a dark theme. This is used to determine the default mode for [aware]
+     * icons.
      *
      * @param  theme the theme.
      * @return       true if dark.
@@ -114,9 +113,9 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     /**
      * Load the theme defaults.
      * <p>
-     * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()} to return the class of the theme
-     * you are overwriting. In this case you should use {@link #loadWithClass(String, Class)} instead of {@link
-     * #load(String)}.
+     * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()} to return the
+     * class of the theme you are overwriting. In this case you should use
+     * {@link #loadWithClass(String, Class)} instead of {@link #load(String)}.
      *
      * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
@@ -128,9 +127,9 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     /**
      * Customize the global values.
      * <p>
-     * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()} to return the class of the theme
-     * you are overwriting. In this case you should use {@link #loadWithClass(String, Class)} instead of {@link
-     * #load(String)}.
+     * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()} to return the
+     * class of the theme you are overwriting. In this case you should use
+     * {@link #loadWithClass(String, Class)} instead of {@link #load(String)}.
      *
      * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
@@ -140,9 +139,9 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     /**
      * Customize the icon defaults.
      * <p>
-     * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()} to return the class of the theme
-     * you are overwriting. In this case you should use {@link #loadWithClass(String, Class)} instead of {@link
-     * #load(String)}.
+     * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()} to return the
+     * class of the theme you are overwriting. In this case you should use
+     * {@link #loadWithClass(String, Class)} instead of {@link #load(String)}.
      *
      * @param properties      the properties to load the value into.
      * @param currentDefaults the current ui defaults.
@@ -152,9 +151,9 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     /**
      * Load the general properties file for the icon themes.
      * <p>
-     * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()} to return the class of the theme
-     * you are overwriting. In this case you should use {@link #loadWithClass(String, Class)} instead of {@link
-     * #load(String)}.
+     * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()} to return the
+     * class of the theme you are overwriting. In this case you should use
+     * {@link #loadWithClass(String, Class)} instead of {@link #load(String)}.
      *
      * @param properties      the properties to load the value into.
      * @param currentDefaults the current ui defaults.
@@ -163,14 +162,14 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
         PresetIconRule iconTheme = getPresetIconRule();
         Properties props;
         switch (iconTheme) {
-            case DARK :
+            case DARK:
                 props = PropertyLoader.loadProperties(Theme.class, "dark_icons", "icon_presets/");
                 break;
-            case LIGHT :
+            case LIGHT:
                 props = PropertyLoader.loadProperties(Theme.class, "light_icons", "icon_presets/");
                 break;
-            case NONE :
-            default :
+            case NONE:
+            default:
                 props = loadPropertyFile("icons");
         }
         PropertyLoader.putProperties(props, properties, currentDefaults);
@@ -179,8 +178,8 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     /**
      * Customize the platform defaults.
      * <p>
-     * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)} instead of {@link
-     * #load(String)}.
+     * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)} instead of
+     * {@link #load(String)}.
      *
      * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
@@ -190,8 +189,8 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     /**
      * Customize the ui defaults.
      * <p>
-     * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)} instead of {@link
-     * #load(String)}.
+     * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)} instead of
+     * {@link #load(String)}.
      *
      * @param properties      the properties to load the values into.
      * @param currentDefaults the current ui defaults.
@@ -206,24 +205,25 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     protected abstract PresetIconRule getPresetIconRule();
 
     /**
-     * Load custom properties that are located under {@link #getResourcePath()}, with the name {@link
-     * #getPrefix()}_{propertySuffix}.properties
+     * Load custom properties that are located under {@link #getResourcePath()}, with the name
+     * {@link #getPrefix()}_{propertySuffix}.properties
      * <p>
-     * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)} instead of {@link
-     * #load(String)}.
+     * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)} instead of
+     * {@link #load(String)}.
      *
      * @param propertySuffix  the property suffix.
      * @param properties      the properties to load into.
      * @param currentDefaults the current ui defaults.
      */
-    protected final void loadCustomProperties(final String propertySuffix, final Properties properties,
-                                              final UIDefaults currentDefaults) {
+    protected final void loadCustomProperties(
+            final String propertySuffix, final Properties properties, final UIDefaults currentDefaults
+    ) {
         PropertyLoader.putProperties(loadPropertyFile(propertySuffix), properties, currentDefaults);
     }
 
     /**
-     * Load the properties specifying how to map the colors from the {@link AccentColorRule} are mapped to the
-     * properties.
+     * Load the properties specifying how to map the colors from the {@link AccentColorRule} are mapped
+     * to the properties.
      *
      * @return the properties providing the mapping rules.
      */
@@ -265,8 +265,8 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     }
 
     /**
-     * Load the css style sheet used for html display in text components with a {@link
-     * javax.swing.text.html.HTMLEditorKit}.
+     * Load the css style sheet used for html display in text components with a
+     * {@link javax.swing.text.html.HTMLEditorKit}.
      *
      * @return the {@link StyleSheet}.
      */
@@ -312,8 +312,8 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     }
 
     /**
-     * The class used to determine the runtime location of resources. It is advised to explicitly return the class
-     * instead of using {@link #getClass()} to protect against extending the theme.
+     * The class used to determine the runtime location of resources. It is advised to explicitly return
+     * the class instead of using {@link #getClass()} to protect against extending the theme.
      *
      * @return the loader class.
      */
@@ -330,8 +330,8 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     }
 
     /**
-     * Load the theme property file with the specified name. The name gets resolved to the resource location of the
-     * theme adds the theme property prefix and appends ".properties" e.g. "test" -&gt;
+     * Load the theme property file with the specified name. The name gets resolved to the resource
+     * location of the theme adds the theme property prefix and appends ".properties" e.g. "test" -&gt;
      * [resource_location]/[prefix_of_theme]_test.properties.
      *
      * @param  name the properties name.
@@ -342,13 +342,13 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     }
 
     /**
-     * Load the theme property file with the specified name. The name gets resolved to the resource location of the
-     * theme adds the theme property prefix and appends ".properties" e.g. "test" -&gt;
+     * Load the theme property file with the specified name. The name gets resolved to the resource
+     * location of the theme adds the theme property prefix and appends ".properties" e.g. "test" -&gt;
      * [resource_location]/[prefix_of_theme]_test.properties.
      *
      * @param  name   the properties name.
-     * @param  silent if true no warnings are issues if the file is not present. Instead, an empty property instance is
-     *                returned.
+     * @param  silent if true no warnings are issues if the file is not present. Instead, an empty
+     *                property instance is returned.
      * @return        the properties.
      */
     public final Properties loadPropertyFile(final String name, final boolean silent) {
@@ -450,9 +450,9 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     public boolean appearsEqualTo(final Theme theme) {
         if (theme == null) return false;
         if (!Objects.equals(getThemeClass(), theme.getThemeClass())) return false;
-        return Objects.equals(getAccentColorRule(), theme.getAccentColorRule())
-               && Objects.equals(getColorToneRule(), theme.getColorToneRule())
-               && Objects.equals(getContrastRule(), theme.getContrastRule())
-               && Objects.equals(getFontSizeRule(), theme.getFontSizeRule());
+        return Objects.equals(getAccentColorRule(), theme.getAccentColorRule()) && Objects.equals(
+            getColorToneRule(), theme.getColorToneRule()
+        ) && Objects.equals(getContrastRule(), theme.getContrastRule())
+            && Objects.equals(getFontSizeRule(), theme.getFontSizeRule());
     }
 }

@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.text;
@@ -107,9 +104,8 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
 
     protected Icon getSearchIcon(final JTextComponent c) {
         boolean enabled = c.isEnabled();
-        return isSearchFieldWithHistoryPopup(c)
-                ? enabled ? searchWithHistory : searchWithHistoryDisabled
-                : enabled ? search : searchDisabled;
+        return isSearchFieldWithHistoryPopup(c) ? enabled ? searchWithHistory : searchWithHistoryDisabled
+            : enabled ? search : searchDisabled;
     }
 
     @Override
@@ -189,9 +185,8 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         if (textRect.contains(p)) {
             getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
         } else {
-            Cursor cursor = action == ClickAction.NONE
-                    ? Cursor.getDefaultCursor()
-                    : Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+            Cursor cursor =
+                action == ClickAction.NONE ? Cursor.getDefaultCursor() : Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
             getComponent().setCursor(cursor);
         }
     }
@@ -260,16 +255,15 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         Rectangle r = getDrawingRect(getComponent());
         int w = getLeftIcon(getComponent()).getIconWidth();
         int left = getBorderInsets(getComponent()).left + padding.left;
-        return DarkUIUtil.adjustForOrientation(new Point(r.x + left, r.y + (r.height - w) / 2),
-                                               w, editor);
+        return DarkUIUtil.adjustForOrientation(new Point(r.x + left, r.y + (r.height - w) / 2), w, editor);
     }
 
     protected Point getRightIconCoord() {
         Rectangle r = getDrawingRect(getComponent());
         int w = getRightIcon(getComponent()).getIconWidth();
         int right = getBorderInsets(getComponent()).right + padding.right;
-        return DarkUIUtil.adjustForOrientation(new Point(r.x + r.width - w - right, r.y + (r.height - w) / 2),
-                                               w, editor);
+        return DarkUIUtil
+            .adjustForOrientation(new Point(r.x + r.width - w - right, r.y + (r.height - w) / 2), w, editor);
     }
 
     protected void showSearchPopup() {
@@ -368,8 +362,6 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     }
 
     protected enum ClickAction {
-        RIGHT_ACTION,
-        LEFT_ACTION,
-        NONE
+        RIGHT_ACTION, LEFT_ACTION, NONE
     }
 }

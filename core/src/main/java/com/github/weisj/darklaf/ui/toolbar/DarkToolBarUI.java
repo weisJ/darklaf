@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.toolbar;
@@ -243,8 +240,7 @@ public class DarkToolBarUI extends BasicToolBarUI {
     @Override
     public void setOrientation(final int orientation) {
         toolBar.setOrientation(orientation);
-        if (dragWindow != null)
-            dragWindow.setOrientation(orientation);
+        if (dragWindow != null) dragWindow.setOrientation(orientation);
     }
 
     protected int mapConstraintToOrientation(final String constraint) {
@@ -253,8 +249,9 @@ public class DarkToolBarUI extends BasicToolBarUI {
         if (constraint != null) {
             if (constraint.equals(BorderLayout.EAST) || constraint.equals(BorderLayout.WEST))
                 orientation = JToolBar.VERTICAL;
-            else if (constraint.equals(BorderLayout.NORTH) || constraint.equals(BorderLayout.SOUTH))
-                orientation = JToolBar.HORIZONTAL;
+            else if (
+                constraint.equals(BorderLayout.NORTH) || constraint.equals(BorderLayout.SOUTH)
+            ) orientation = JToolBar.HORIZONTAL;
         }
 
         return orientation;
@@ -319,8 +316,7 @@ public class DarkToolBarUI extends BasicToolBarUI {
 
                 if (dockingSource != null) {
                     Point dockingPosition = dockingSource.getLocationOnScreen();
-                    Point comparisonPoint = new Point(global.x - dockingPosition.x,
-                                                      global.y - dockingPosition.y);
+                    Point comparisonPoint = new Point(global.x - dockingPosition.x, global.y - dockingPosition.y);
                     if (canDock(dockingSource, comparisonPoint)) {
                         setFloating(false, comparisonPoint);
                     } else {
@@ -330,7 +326,8 @@ public class DarkToolBarUI extends BasicToolBarUI {
                     setFloating(true, null);
                 }
                 dockingSource.remove(previewPanel);
-            } catch (IllegalComponentStateException ignored) {}
+            } catch (IllegalComponentStateException ignored) {
+            }
         }
     }
 
@@ -384,5 +381,6 @@ public class DarkToolBarUI extends BasicToolBarUI {
         return new DarkFrameListener();
     }
 
-    protected static class DarkFrameListener extends WindowAdapter {}
+    protected static class DarkFrameListener extends WindowAdapter {
+    }
 }

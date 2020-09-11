@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.icons;
@@ -63,8 +60,8 @@ public final class IconColorMapper {
         }
     }
 
-    private static void loadColors(final SVGDiagram diagram,
-                                   final Map<Object, Object> defaults) throws SVGElementException {
+    private static void loadColors(final SVGDiagram diagram, final Map<Object, Object> defaults)
+            throws SVGElementException {
         SVGRoot root = diagram.getRoot();
         SVGElement defs = diagram.getElement("colors");
         if (defs == null) {
@@ -72,7 +69,7 @@ public final class IconColorMapper {
                 String uri = diagram.getXMLBase().toASCIIString();
                 String name = uri.substring(Math.min(uri.lastIndexOf('/') + 1, uri.length() - 1));
                 return "Themed icon '" + name
-                       + "' has no color definitions. Consider loading it as a standard icon or add missing definitions";
+                    + "' has no color definitions. Consider loading it as a standard icon or add missing definitions";
             });
             return;
         }
@@ -115,8 +112,8 @@ public final class IconColorMapper {
                 }
 
                 Color c = resolveColor(id, getFallbacks(colorFallbacks), FALLBACK_COLOR, defaults);
-                Pair<LinearGradient, Runnable> result = createColor(c, id, opacityKey, colorFallbacks, opacity1,
-                                                                    opacity2);
+                Pair<LinearGradient, Runnable> result =
+                    createColor(c, id, opacityKey, colorFallbacks, opacity1, opacity2);
                 LinearGradient gradient = result.getFirst();
                 Runnable finalizer = result.getSecond();
                 themedDefs.loaderAddChild(null, gradient);
@@ -136,14 +133,16 @@ public final class IconColorMapper {
         return resolveColor(id, getFallbacks(fallbacks), FALLBACK_COLOR, propertyMap);
     }
 
-    private static Color resolveColor(final String key, final String[] fallbacks,
-                                      final Color fallbackColor, final Map<Object, Object> propertyMap) {
+    private static Color resolveColor(
+            final String key, final String[] fallbacks, final Color fallbackColor, final Map<Object, Object> propertyMap
+    ) {
         Color color = get(propertyMap, key, fallbacks, Color.class);
 
         if (color == null) {
             color = fallbackColor;
-            LOGGER.warning("Could not load color with id '" + key + "' fallbacks" + Arrays.toString(fallbacks)
-                           + ". Using color '" + fallbackColor + "' instead.");
+            LOGGER.warning(
+                "Could not load color with id '" + key + "' fallbacks" + Arrays.toString(fallbacks) + ". Using color '" + fallbackColor + "' instead."
+            );
         }
         return color;
     }
@@ -205,11 +204,10 @@ public final class IconColorMapper {
         return attribute.getStringValue();
     }
 
-    private static Pair<LinearGradient, Runnable> createColor(final Color c,
-                                                              final String name, final String opacityKey,
-                                                              final StyleAttribute fallbacks,
-                                                              final float opacity1,
-                                                              final float opacity2) throws SVGElementException {
+    private static Pair<LinearGradient, Runnable> createColor(
+            final Color c, final String name, final String opacityKey, final StyleAttribute fallbacks,
+            final float opacity1, final float opacity2
+    ) throws SVGElementException {
         LinearGradient grad = new LinearGradient();
         grad.addAttribute("id", AnimationElement.AT_XML, name);
         if (opacityKey != null && !opacityKey.isEmpty()) {
@@ -245,15 +243,17 @@ public final class IconColorMapper {
         return getFromMap(map, key, null, type);
     }
 
-    private static <T> T get(final Map<Object, Object> map, final Object key, final Object[] fallbacks,
-                             final Class<T> type) {
+    private static <T> T get(
+            final Map<Object, Object> map, final Object key, final Object[] fallbacks, final Class<T> type
+    ) {
         T obj = getFromMap(map, key, fallbacks, type);
         if (obj == null) return getFromMap(UIManager.getDefaults(), key, fallbacks, type);
         return obj;
     }
 
-    private static <T> T getFromMap(final Map<Object, Object> map, final Object key, final Object[] fallbacks,
-                                    final Class<T> type) {
+    private static <T> T getFromMap(
+            final Map<Object, Object> map, final Object key, final Object[] fallbacks, final Class<T> type
+    ) {
         Object obj = map.get(key);
         if (fallbacks != null) {
             for (int i = 0; i < fallbacks.length && !type.isInstance(obj); i++) {

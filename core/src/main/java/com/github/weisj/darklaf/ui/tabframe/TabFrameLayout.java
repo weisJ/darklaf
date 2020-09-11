@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.tabframe;
@@ -62,23 +59,19 @@ public class TabFrameLayout implements LayoutManager {
     @Override
     public Dimension preferredLayoutSize(final Container parent) {
         Dimension b = tabFrame.getContentPane().getComponent().getPreferredSize();
-        return new Dimension(tabFrame.getLeftTabContainer().getWidth()
-                             + tabFrame.getRightTabContainer().getWidth() + b.width,
-                             tabFrame.getTopTabContainer().getHeight()
-                                                                                     + tabFrame.getBottomTabContainer()
-                                                                                               .getHeight()
-                                                                                     + b.height);
+        return new Dimension(
+            tabFrame.getLeftTabContainer().getWidth() + tabFrame.getRightTabContainer().getWidth() + b.width,
+            tabFrame.getTopTabContainer().getHeight() + tabFrame.getBottomTabContainer().getHeight() + b.height
+        );
     }
 
     @Override
     public Dimension minimumLayoutSize(final Container parent) {
         Dimension b = tabFrame.getContentPane().getComponent().getMinimumSize();
-        return new Dimension(tabFrame.getLeftTabContainer().getWidth()
-                             + tabFrame.getRightTabContainer().getWidth() + b.width,
-                             tabFrame.getTopTabContainer().getHeight()
-                                                                                     + tabFrame.getBottomTabContainer()
-                                                                                               .getHeight()
-                                                                                     + b.height);
+        return new Dimension(
+            tabFrame.getLeftTabContainer().getWidth() + tabFrame.getRightTabContainer().getWidth() + b.width,
+            tabFrame.getTopTabContainer().getHeight() + tabFrame.getBottomTabContainer().getHeight() + b.height
+        );
     }
 
     @Override
@@ -113,9 +106,10 @@ public class TabFrameLayout implements LayoutManager {
         Component rightPane = ui.getRightContainer();
         Component topPane = ui.getTopContainer();
         Component bottomPane = ui.getBottomContainer();
-        tabFrame.getContentPane().getComponent().setBounds(leftPane.getWidth(), topPane.getHeight(),
-                                                           dim.width - leftPane.getWidth() - rightPane.getWidth(),
-                                                           dim.height - topPane.getHeight() - bottomPane.getHeight());
+        tabFrame.getContentPane().getComponent().setBounds(
+            leftPane.getWidth(), topPane.getHeight(), dim.width - leftPane.getWidth() - rightPane.getWidth(),
+            dim.height - topPane.getHeight() - bottomPane.getHeight()
+        );
     }
 
     protected void layoutTopTab(final Dimension dim, final int topCount, final int leftCount, final int rightCount) {
@@ -133,8 +127,9 @@ public class TabFrameLayout implements LayoutManager {
         }
     }
 
-    protected void layoutBottomTab(final Dimension dim, final int bottomCount, final int leftCount,
-                                   final int rightCount) {
+    protected void layoutBottomTab(
+            final Dimension dim, final int bottomCount, final int leftCount, final int rightCount
+    ) {
         Component bottomComp = tabFrame.getBottomTabContainer();
         if (bottomCount > 0) {
             bottomComp.setBounds(0, dim.height - bottomHeight, dim.width, bottomHeight);
@@ -149,8 +144,9 @@ public class TabFrameLayout implements LayoutManager {
         }
     }
 
-    protected void layoutHorizontalDrop(final Alignment left, final int leftCount, final int rightCount,
-                                        final int size, final int yOff) {
+    protected void layoutHorizontalDrop(
+            final Alignment left, final int leftCount, final int rightCount, final int size, final int yOff
+    ) {
         Alignment a = ui.getDestAlign();
         Dimension dropSize = ui.getDropSize();
         Component dropComp = ui.getDropComponent(left);
@@ -164,8 +160,10 @@ public class TabFrameLayout implements LayoutManager {
         }
     }
 
-    protected void layoutHorizontal(final Dimension dim, final Alignment left, final Alignment right,
-                                    final int yOff, final int leftCount, final int rightCount, final int tabHeight) {
+    protected void layoutHorizontal(
+            final Dimension dim, final Alignment left, final Alignment right, final int yOff, final int leftCount,
+            final int rightCount, final int tabHeight
+    ) {
         Point start = new Point(leftCount > 0 ? leftHeight : 0, yOff);
         int leftEnd = layoutTabArea(start, left, true, tabHeight - 1);
         start.x = rightCount > 0 ? dim.width - rightHeight : dim.width;
@@ -186,8 +184,7 @@ public class TabFrameLayout implements LayoutManager {
             int size = leftCount > 0 ? leftHeight : tabFrame.getTabSize();
             int height = dim.height - topPane.getHeight() - bottomPane.getHeight();
             leftPane.setBounds(0, topPane.getHeight(), size, height + (height % 2));
-            tabFrame.getLeftTabContainer().setPreferredSize(new Dimension(leftPane.getHeight(),
-                                                                          leftPane.getWidth()));
+            tabFrame.getLeftTabContainer().setPreferredSize(new Dimension(leftPane.getHeight(), leftPane.getWidth()));
             tabFrame.getLeftTabContainer().setSize(tabFrame.getLeftTabContainer().getPreferredSize());
             if (leftCount > 0) {
                 Point start = new Point(leftPane.getHeight(), 0);
@@ -229,8 +226,8 @@ public class TabFrameLayout implements LayoutManager {
             int size = rightCount > 0 ? rightHeight : tabFrame.getTabSize();
             int height = dim.height - topPane.getHeight() - bottomPane.getHeight();
             rightPane.setBounds(dim.width - rightHeight, topPane.getHeight(), size, height + (height % 2));
-            tabFrame.getRightTabContainer().setPreferredSize(new Dimension(rightPane.getHeight(),
-                                                                           rightPane.getWidth()));
+            tabFrame.getRightTabContainer()
+                .setPreferredSize(new Dimension(rightPane.getHeight(), rightPane.getWidth()));
             tabFrame.getRightTabContainer().setSize(tabFrame.getRightTabContainer().getPreferredSize());
             if (rightCount > 0) {
                 Point start = new Point(0, 0);
@@ -268,17 +265,17 @@ public class TabFrameLayout implements LayoutManager {
 
     protected int getIndex(final Alignment a) {
         switch (a) {
-            case NORTH :
-            case NORTH_EAST :
+            case NORTH:
+            case NORTH_EAST:
                 return 0;
-            case EAST :
-            case SOUTH_EAST :
+            case EAST:
+            case SOUTH_EAST:
                 return 1;
-            case SOUTH :
-            case SOUTH_WEST :
+            case SOUTH:
+            case SOUTH_WEST:
                 return 2;
-            case WEST :
-            case NORTH_WEST :
+            case WEST:
+            case NORTH_WEST:
                 return 3;
         }
         return 0;
@@ -288,8 +285,7 @@ public class TabFrameLayout implements LayoutManager {
         draggedOver[getIndex(a)] = b;
     }
 
-    protected int layoutTabArea(final Point start, final Alignment a,
-                                final boolean forward, final int size) {
+    protected int layoutTabArea(final Point start, final Alignment a, final boolean forward, final int size) {
         int x = start.x;
         int y = start.y;
         int sourceIndex = a == ui.getSourceAlign() ? ui.getSourceIndex() : -10;

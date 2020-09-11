@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.util;
@@ -130,8 +127,10 @@ public final class DarkUIUtil {
         repaint(component, bounds.x, bounds.y, bounds.width, bounds.height, immediately);
     }
 
-    public static void repaint(final JComponent component, final int x, final int y,
-                               final int width, final int height, final boolean immediately) {
+    public static void repaint(
+            final JComponent component, final int x, final int y, final int width, final int height,
+            final boolean immediately
+    ) {
         if (component != null && component.isVisible()) {
             if (immediately) {
                 component.paintImmediately(x, y, width, height);
@@ -141,13 +140,15 @@ public final class DarkUIUtil {
         }
     }
 
-    public static <T extends Component> void repaintChild(final T component, final Function<T, JComponent> func,
-                                                          final Rectangle bounds) {
+    public static <T extends Component> void repaintChild(
+            final T component, final Function<T, JComponent> func, final Rectangle bounds
+    ) {
         repaintChild(component, func, bounds, false);
     }
 
-    public static <T extends Component> void repaintChild(final T component, final Function<T, JComponent> func,
-                                                          final Rectangle bounds, final boolean immediately) {
+    public static <T extends Component> void repaintChild(
+            final T component, final Function<T, JComponent> func, final Rectangle bounds, final boolean immediately
+    ) {
         if (component != null) {
             JComponent c = func.apply(component);
             Rectangle r = SwingUtilities.convertRectangle(component, bounds, c);
@@ -196,8 +197,9 @@ public final class DarkUIUtil {
 
     public static Component unwrapComponent(final Component component) {
         if (component == null) return null;
-        if (!(component.getParent() instanceof JLayer)
-            && !(component.getParent() instanceof JViewport)) return component;
+        if (
+            !(component.getParent() instanceof JLayer) && !(component.getParent() instanceof JViewport)
+        ) return component;
         Container parent = component.getParent();
         while (parent instanceof JLayer || parent instanceof JViewport) {
             parent = parent.getParent();
@@ -227,10 +229,11 @@ public final class DarkUIUtil {
 
     public static boolean isInCell(final Component c) {
         if (getParentOfType(DarkTableHeaderRendererPane.class, c, CELL_SEARCH_DEPTH) != null) return false;
-        return getParentOfType(c, CELL_SEARCH_DEPTH, CellRendererPane.class, CellEditor.class,
-                               TableCellRenderer.class, TableCellEditor.class,
-                               TreeCellRenderer.class, TreeCellEditor.class,
-                               ListCellRenderer.class, CellRenderer.class) != null;
+        return getParentOfType(
+            c, CELL_SEARCH_DEPTH, CellRendererPane.class, CellEditor.class, TableCellRenderer.class,
+            TableCellEditor.class, TreeCellRenderer.class, TreeCellEditor.class, ListCellRenderer.class,
+            CellRenderer.class
+        ) != null;
     }
 
     public static <T> T getParentOfType(final Class<? extends T> cls, final Component c) {
@@ -306,9 +309,10 @@ public final class DarkUIUtil {
         for (int i = fromIndex; i <= toIndex; i++) {
             if (e[i] != null) {
                 Component comp = e[i].getComponent();
-                if (comp != null
-                    && (comp.isEnabled() || UIManager.getBoolean("MenuItem.disabledAreNavigable"))
-                    && comp.isVisible()) {
+                if (
+                    comp != null && (comp.isEnabled() || UIManager.getBoolean("MenuItem.disabledAreNavigable"))
+                        && comp.isVisible()
+                ) {
                     return e[i];
                 }
             }
@@ -320,9 +324,10 @@ public final class DarkUIUtil {
         for (int i = fromIndex; i >= toIndex; i--) {
             if (e[i] != null) {
                 Component comp = e[i].getComponent();
-                if (comp != null
-                    && (comp.isEnabled() || UIManager.getBoolean("MenuItem.disabledAreNavigable"))
-                    && comp.isVisible()) {
+                if (
+                    comp != null && (comp.isEnabled() || UIManager.getBoolean("MenuItem.disabledAreNavigable"))
+                        && comp.isVisible()
+                ) {
                     return e[i];
                 }
             }
@@ -334,12 +339,8 @@ public final class DarkUIUtil {
         Rectangle bounds = list.getCellBounds(index, index);
         if (!bounds.contains(e.getPoint())) return false;
         // noinspection unchecked
-        Component cellRenderer = ((ListCellRenderer<Object>) list.getCellRenderer()).getListCellRendererComponent(list,
-                                                                                                                  list.getModel()
-                                                                                                                      .getElementAt(index),
-                                                                                                                  index,
-                                                                                                                  false,
-                                                                                                                  false);
+        Component cellRenderer = ((ListCellRenderer<Object>) list.getCellRenderer())
+            .getListCellRendererComponent(list, list.getModel().getElementAt(index), index, false, false);
         if (cellRenderer instanceof JLabel) {
             return isOverText((JLabel) cellRenderer, bounds, e.getPoint());
         } else {
@@ -350,23 +351,17 @@ public final class DarkUIUtil {
     public static boolean isOverText(final JLabel label, final Rectangle bounds, final Point p) {
         textRect.setBounds(0, 0, 0, 0);
         iconRect.setBounds(0, 0, 0, 0);
-        SwingUtilities.layoutCompoundLabel(label, label.getFontMetrics(label.getFont()), label.getText(),
-                                           label.getIcon(), label.getVerticalAlignment(),
-                                           label.getHorizontalAlignment(),
-                                           label.getVerticalTextPosition(), label.getHorizontalTextPosition(),
-                                           bounds, iconRect, textRect, label.getIconTextGap());
+        SwingUtilities.layoutCompoundLabel(
+            label, label.getFontMetrics(label.getFont()), label.getText(), label.getIcon(), label.getVerticalAlignment(), label.getHorizontalAlignment(), label.getVerticalTextPosition(), label.getHorizontalTextPosition(), bounds, iconRect, textRect, label.getIconTextGap()
+        );
         return textRect.contains(p);
     }
 
-    public static boolean isOverText(final MouseEvent e, final int row, final int column,
-                                     final JTable table) {
+    public static boolean isOverText(final MouseEvent e, final int row, final int column, final JTable table) {
         Rectangle bounds = table.getCellRect(row, column, false);
         if (!bounds.contains(e.getPoint())) return false;
-        Component cellRenderer = table.getCellRenderer(row, column).getTableCellRendererComponent(table,
-                                                                                                  table.getValueAt(row,
-                                                                                                                   column),
-                                                                                                  false, false, row,
-                                                                                                  column);
+        Component cellRenderer = table.getCellRenderer(row, column)
+            .getTableCellRendererComponent(table, table.getValueAt(row, column), false, false, row, column);
         if (cellRenderer instanceof JLabel) {
             return isOverText((JLabel) cellRenderer, bounds, e.getPoint());
         } else {
@@ -417,8 +412,9 @@ public final class DarkUIUtil {
         return getScreenBounds(target, x, y, true);
     }
 
-    public static Rectangle getScreenBounds(final JComponent target, final int x, final int y,
-                                            final boolean subtractInsets) {
+    public static Rectangle getScreenBounds(
+            final JComponent target, final int x, final int y, final boolean subtractInsets
+    ) {
         GraphicsConfiguration gc = target != null ? target.getGraphicsConfiguration() : null;
         if (gc == null) {
             gc = getGraphicsConfigurationForLocation(x, y);
@@ -431,8 +427,7 @@ public final class DarkUIUtil {
         Rectangle sBounds = gc.getBounds();
         if (subtractInsets) {
             // Take into account screen insets, decrease viewport
-            Insets screenInsets = Toolkit.getDefaultToolkit()
-                                         .getScreenInsets(gc);
+            Insets screenInsets = Toolkit.getDefaultToolkit().getScreenInsets(gc);
             sBounds.x += screenInsets.left;
             sBounds.y += screenInsets.top;
             sBounds.width -= (screenInsets.left + screenInsets.right);
@@ -507,10 +502,10 @@ public final class DarkUIUtil {
     }
 
     public static boolean supportsTransparency(final Window window) {
-        Optional<GraphicsDevice> gd = Optional.ofNullable(window).map(Window::getGraphicsConfiguration)
-                                              .map(GraphicsConfiguration::getDevice);
+        Optional<GraphicsDevice> gd =
+            Optional.ofNullable(window).map(Window::getGraphicsConfiguration).map(GraphicsConfiguration::getDevice);
         return gd.map(d -> d.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT))
-                 .orElse(false);
+            .orElse(false);
     }
 
     public static Dimension getPreferredSize(final JComponent component) {

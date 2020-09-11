@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.components;
@@ -38,10 +35,14 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 public class ClosableTabbedPane extends JTabbedPane {
 
     @Override
-    public void insertTab(final String title, final Icon icon, final Component component,
-                          final String tip, final int index) {
-        if (notifyVetoableChangeListeners(new TabPropertyChangeEvent(this, TabEvent.Type.TAB_OPENED.getCommand(),
-                                                                     null, component, index))) {
+    public void insertTab(
+            final String title, final Icon icon, final Component component, final String tip, final int index
+    ) {
+        if (
+            notifyVetoableChangeListeners(
+                new TabPropertyChangeEvent(this, TabEvent.Type.TAB_OPENED.getCommand(), null, component, index)
+            )
+        ) {
             return;
         }
         super.insertTab(title, icon, component, tip, index);
@@ -53,8 +54,11 @@ public class ClosableTabbedPane extends JTabbedPane {
     public void removeTabAt(final int index) {
         checkIndex(index);
         Component c = getComponentAt(index);
-        if (notifyVetoableChangeListeners(new TabPropertyChangeEvent(this, TabEvent.Type.TAB_CLOSING.getCommand(),
-                                                                     getComponentAt(index), null, index))) {
+        if (
+            notifyVetoableChangeListeners(
+                new TabPropertyChangeEvent(this, TabEvent.Type.TAB_CLOSING.getCommand(), getComponentAt(index), null, index)
+            )
+        ) {
             return;
         }
         notifyTabListeners(new TabEvent(this, TabEvent.Type.TAB_CLOSING, index, c));
@@ -73,8 +77,7 @@ public class ClosableTabbedPane extends JTabbedPane {
     }
 
     /**
-     * Returns the {@link ClosableTabComponent} at the given index or null
-     * if no tab component is set.
+     * Returns the {@link ClosableTabComponent} at the given index or null if no tab component is set.
      *
      * @param  index the index.
      * @return       the {@link ClosableTabComponent} at the index.
@@ -132,17 +135,17 @@ public class ClosableTabbedPane extends JTabbedPane {
     private void notifyTabListeners(final TabEvent event) {
         TabListener[] listeners = listenerList.getListeners(TabListener.class);
         switch (event.getType()) {
-            case TAB_CLOSED :
+            case TAB_CLOSED:
                 for (TabListener l : listeners) {
                     l.tabClosed(event);
                 }
                 break;
-            case TAB_OPENED :
+            case TAB_OPENED:
                 for (TabListener l : listeners) {
                     l.tabOpened(event);
                 }
                 break;
-            case TAB_CLOSING :
+            case TAB_CLOSING:
                 for (TabListener l : listeners) {
                     l.tabClosing(event);
                 }

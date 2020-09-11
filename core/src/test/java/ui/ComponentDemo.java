@@ -3,29 +3,25 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package ui;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowListener;
 import java.util.Enumeration;
@@ -50,8 +46,9 @@ public interface ComponentDemo {
 
     static Theme getTheme() {
         PreferredThemeStyle themeStyle = LafManager.getPreferredThemeStyle();
-        return LafManager.themeForPreferredStyle(new PreferredThemeStyle(themeStyle.getContrastRule(),
-                                                                         themeStyle.getColorToneRule()));
+        return LafManager.themeForPreferredStyle(
+            new PreferredThemeStyle(themeStyle.getContrastRule(), themeStyle.getColorToneRule())
+        );
     }
 
     default Theme createTheme() {
@@ -100,8 +97,7 @@ public interface ComponentDemo {
             Dimension dimension = demo.getDisplayDimension();
             if (dimension == null) {
                 Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                Dimension dim = new Dimension(screenSize.width / 2,
-                                              screenSize.height / 2);
+                Dimension dim = new Dimension(screenSize.width / 2, screenSize.height / 2);
                 Dimension targetSize = window.getSize();
                 targetSize.width = Math.min(targetSize.width, dim.width);
                 targetSize.height = Math.min(targetSize.height, dim.height);
@@ -134,9 +130,9 @@ public interface ComponentDemo {
         menu.addMenuListener(new MenuListener() {
             @Override
             public void menuSelected(final MenuEvent e) {
-                bg.setSelected(Optional.ofNullable(getSelectedThemeButton(bg))
-                                       .map(AbstractButton::getModel).orElse(null),
-                               true);
+                bg.setSelected(
+                    Optional.ofNullable(getSelectedThemeButton(bg)).map(AbstractButton::getModel).orElse(null), true
+                );
             }
 
             @Override
@@ -173,10 +169,10 @@ public interface ComponentDemo {
         mi.addActionListener(event -> {
             try {
                 UIManager.setLookAndFeel(info.getClassName());
-            } catch (ClassNotFoundException
-                     | InstantiationException
-                     | IllegalAccessException
-                     | UnsupportedLookAndFeelException e) {
+            } catch (
+                ClassNotFoundException | InstantiationException | IllegalAccessException
+                | UnsupportedLookAndFeelException e
+            ) {
                 e.printStackTrace();
             }
             LafManager.updateLaf();
@@ -200,8 +196,8 @@ public interface ComponentDemo {
         JMenu dev = new JMenu("Dev");
         JMenu logging = new JMenu("Logging");
         ButtonGroup bg = new ButtonGroup();
-        Level[] levels = new Level[]{Level.ALL, Level.FINEST, Level.FINER, Level.FINE, Level.INFO, Level.WARNING,
-                                     Level.SEVERE, Level.OFF};
+        Level[] levels = new Level[] {Level.ALL, Level.FINEST, Level.FINER, Level.FINE, Level.INFO, Level.WARNING,
+            Level.SEVERE, Level.OFF};
         Level currentLevel = LafManager.getLogLevel();
         for (Level level : levels) {
             JRadioButtonMenuItem mi = new JRadioButtonMenuItem(level.getName());
@@ -216,7 +212,8 @@ public interface ComponentDemo {
         aaPainting.addActionListener(e -> StringPainter.setTranslucentAAPaintingEnabled(aaPainting.isSelected()));
         aaPainting.setSelected(StringPainter.isTranslucentAAPaintingEnabled());
         JCheckBoxMenuItem experimentalAA = new JCheckBoxMenuItem("Experimental Antialiasing");
-        experimentalAA.addActionListener(e -> StringPainter.setExperimentalAntialiasingEnabled(experimentalAA.isSelected()));
+        experimentalAA
+            .addActionListener(e -> StringPainter.setExperimentalAntialiasingEnabled(experimentalAA.isSelected()));
         experimentalAA.setSelected(StringPainter.isExperimentalAntialiasingEnabled());
 
         dev.add(logging);
@@ -230,13 +227,11 @@ public interface ComponentDemo {
         });
         dev.add(new JCheckBoxMenuItem("Unified Menubar") {
             {
-                SwingUtilities.invokeLater(() -> {
-                    setSelected(PropertyUtil.getBooleanProperty(SwingUtilities.getRootPane(dev),
-                                                                DarkRootPaneUI.KEY_UNIFIED_MENUBAR));
-                });
-                addActionListener(e -> SwingUtilities.getRootPane(dev)
-                                                     .putClientProperty(DarkRootPaneUI.KEY_UNIFIED_MENUBAR,
-                                                                        isSelected()));
+                SwingUtilities
+                    .invokeLater(() -> setSelected(PropertyUtil.getBooleanProperty(SwingUtilities.getRootPane(dev), DarkRootPaneUI.KEY_UNIFIED_MENUBAR)));
+                addActionListener(
+                    e -> SwingUtilities.getRootPane(dev).putClientProperty(DarkRootPaneUI.KEY_UNIFIED_MENUBAR, isSelected())
+                );
             }
         });
         dev.add(new JCheckBoxMenuItem("Darklaf/System Laf") {
@@ -249,10 +244,10 @@ public interface ComponentDemo {
                         try {
                             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                             LafManager.updateLaf();
-                        } catch (ClassNotFoundException
-                                 | UnsupportedLookAndFeelException
-                                 | IllegalAccessException
-                                 | InstantiationException classNotFoundException) {
+                        } catch (
+                            ClassNotFoundException | UnsupportedLookAndFeelException | IllegalAccessException
+                            | InstantiationException classNotFoundException
+                        ) {
                             classNotFoundException.printStackTrace();
                         }
                     }
@@ -264,25 +259,4 @@ public interface ComponentDemo {
 
     String getTitle();
 
-    class ThemeMenuItem extends JRadioButtonMenuItem {
-
-        private final String name;
-
-        public ThemeMenuItem(final Theme theme) {
-            name = theme.getName();
-            final Action action = new AbstractAction(name) {
-                @Override
-                public void actionPerformed(final ActionEvent e) {
-                    Theme current = LafManager.getTheme();
-                    LafManager.install(theme.derive(current.getFontSizeRule(), current.getAccentColorRule()));
-                }
-            };
-            setAction(action);
-        }
-
-        @Override
-        public String getName() {
-            return name;
-        }
-    }
 }

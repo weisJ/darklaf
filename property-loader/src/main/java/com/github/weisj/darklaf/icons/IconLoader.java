@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.icons;
@@ -108,8 +105,8 @@ public final class IconLoader {
     }
 
     /**
-     * Updates the style of aware icons.
-     * Changing it will force aware icons to change their appearance accordingly.
+     * Updates the style of aware icons. Changing it will force aware icons to change their appearance
+     * accordingly.
      *
      * @param style the new style.
      */
@@ -118,9 +115,8 @@ public final class IconLoader {
     }
 
     /**
-     * Updates the object associated with the current theme.
-     * Changing it will force themed icons to refresh their colors.
-     * This doesn't need to be any specific type as it is simply a marker object.
+     * Updates the object associated with the current theme. Changing it will force themed icons to
+     * refresh their colors. This doesn't need to be any specific type as it is simply a marker object.
      *
      * @param theme the new theme object.
      */
@@ -145,8 +141,8 @@ public final class IconLoader {
     }
 
     /**
-     * Get the object associated to the current theme.
-     * This may not be any specific type as it is simply a marker object.
+     * Get the object associated to the current theme. This may not be any specific type as it is simply
+     * a marker object.
      *
      * @return the current theme object.
      */
@@ -155,9 +151,9 @@ public final class IconLoader {
     }
 
     /**
-     * Get an aware icon. If [path] is the search root of the current icon loader then the icon resource will be
-     * resolved to [path]/dark/[icon_path] and [path]/light/[icon_path]
-     * Uses 16x16 icons by default.
+     * Get an aware icon. If [path] is the search root of the current icon loader then the icon resource
+     * will be resolved to [path]/dark/[icon_path] and [path]/light/[icon_path] Uses 16x16 icons by
+     * default.
      *
      * @param  path the path to the icon resource described as above.
      * @return      the icon.
@@ -167,8 +163,8 @@ public final class IconLoader {
     }
 
     /**
-     * Get an aware icon. If [path] is the search root of the current icon loader then the icon resource will be
-     * resolved to [path]/dark/[icon_path] and [path]/light/[icon_path]
+     * Get an aware icon. If [path] is the search root of the current icon loader then the icon resource
+     * will be resolved to [path]/dark/[icon_path] and [path]/light/[icon_path]
      *
      * @param  path the path to the icon resource described as above.
      * @param  w    the icon width.
@@ -194,9 +190,8 @@ public final class IconLoader {
     }
 
     /**
-     * Get an icon at the specified location. The icon type is deduced from the file name. i.e. "folder/icon.svg"
-     * will be loaded as an svg.icon.
-     * Uses 16x16 icons by default.
+     * Get an icon at the specified location. The icon type is deduced from the file name. i.e.
+     * "folder/icon.svg" will be loaded as an svg.icon. Uses 16x16 icons by default.
      *
      * @see         #get(Class)
      * @see         #get
@@ -208,9 +203,8 @@ public final class IconLoader {
     }
 
     /**
-     * Get an icon at the specified location. The icon type is deduced from the file name. i.e. "folder/icon.svg"
-     * will be loaded as an svg.icon.
-     * Uses 16x16 icons by default.
+     * Get an icon at the specified location. The icon type is deduced from the file name. i.e.
+     * "folder/icon.svg" will be loaded as an svg.icon. Uses 16x16 icons by default.
      *
      * @see           #get(Class)
      * @see           #get
@@ -223,8 +217,8 @@ public final class IconLoader {
     }
 
     /**
-     * Get an icon at the specified location. The icon type is deduced from the file name. i.e. "folder/icon.svg"
-     * will be loaded as an svg.icon.
+     * Get an icon at the specified location. The icon type is deduced from the file name. i.e.
+     * "folder/icon.svg" will be loaded as an svg.icon.
      *
      * @see         #get(Class)
      * @see         #get
@@ -238,8 +232,8 @@ public final class IconLoader {
     }
 
     /**
-     * Get an icon at the specified location. The icon type is deduced from the file name. i.e. "folder/icon.svg"
-     * will be loaded as an svg.icon.
+     * Get an icon at the specified location. The icon type is deduced from the file name. i.e.
+     * "folder/icon.svg" will be loaded as an svg.icon.
      *
      * @see           #get(Class)
      * @see           #get
@@ -274,8 +268,7 @@ public final class IconLoader {
         }
     }
 
-    private Icon getWildcardIcon(final Map<IconKey, Icon> iconMap,
-                                 final IconKey iconKey, final int w, final int h) {
+    private Icon getWildcardIcon(final Map<IconKey, Icon> iconMap, final IconKey iconKey, final int w, final int h) {
         iconKey.isWildcardEnabled = true;
         Icon icon = iconMap.get(iconKey);
         if (icon instanceof DerivableIcon) {
@@ -296,9 +289,8 @@ public final class IconLoader {
     }
 
     /**
-     * Get an svg icon at the specified location.
-     * will be loaded as an svg.icon.
-     * Uses 16x16 icons by default.
+     * Get an svg icon at the specified location. will be loaded as an svg.icon. Uses 16x16 icons by
+     * default.
      *
      * @see           #get(Class)
      * @see           #get
@@ -311,8 +303,7 @@ public final class IconLoader {
     }
 
     /**
-     * Get an svg icon at the specified location.
-     * will be loaded as an svg.icon.
+     * Get an svg icon at the specified location. will be loaded as an svg.icon.
      *
      * @see           #get(Class)
      * @see           #get
@@ -327,8 +318,7 @@ public final class IconLoader {
     }
 
     /**
-     * Get an svg icon at the specified location.
-     * will be loaded as an svg.icon.
+     * Get an svg icon at the specified location. will be loaded as an svg.icon.
      *
      * @see                #get(Class)
      * @see                #get
@@ -336,11 +326,13 @@ public final class IconLoader {
      * @param  w           the icon width.
      * @param  h           the icon height.
      * @param  themed      determines whether the icon is themed. This only has an effect on svg icons.
-     * @param  propertyMap the property map for resolving themed icon properties. If null the UIDefaults will be used.
+     * @param  propertyMap the property map for resolving themed icon properties. If null the UIDefaults
+     *                     will be used.
      * @return             the icon.
      */
-    public Icon loadSVGIcon(final String path, final int w, final int h, final boolean themed,
-                            final Map<Object, Object> propertyMap) {
+    public Icon loadSVGIcon(
+            final String path, final int w, final int h, final boolean themed, final Map<Object, Object> propertyMap
+    ) {
         Supplier<URI> uriSupplier = createURISupplier(path);
         if (themed) {
             if (propertyMap != null) {
@@ -358,8 +350,10 @@ public final class IconLoader {
             try {
                 return Objects.requireNonNull(getResource(path).toURI());
             } catch (NullPointerException | URISyntaxException e) {
-                LOGGER.log(Level.SEVERE, "Exception while loading '" + path + "'" + ". Resolving from " + parentClass,
-                           e.getStackTrace());
+                LOGGER.log(
+                    Level.SEVERE, "Exception while loading '" + path + "'" + ". Resolving from " + parentClass,
+                    e.getStackTrace()
+                );
             }
             return null;
         };
@@ -369,7 +363,8 @@ public final class IconLoader {
      * Create an image icon.
      *
      * @param  path        the path to the icon with respect to the IconLoader resource root.
-     * @param  description description of the icon as described in {@link ImageIcon#setDescription(String)}
+     * @param  description description of the icon as described in
+     *                     {@link ImageIcon#setDescription(String)}
      * @return             the ImageIcon.
      */
     ImageIcon createImageIcon(final String path, final String description) {
@@ -383,9 +378,9 @@ public final class IconLoader {
     }
 
     /**
-     * Create an {@link Image} from an {@link Icon} suitable for a window icon.
-     * If the window is moved to a screen with a different scaling factor or
-     * the theme changes the icon automatically gets updated.
+     * Create an {@link Image} from an {@link Icon} suitable for a window icon. If the window is moved
+     * to a screen with a different scaling factor or the theme changes the icon automatically gets
+     * updated.
      *
      * @param  icon   the icon.
      * @param  window the window.

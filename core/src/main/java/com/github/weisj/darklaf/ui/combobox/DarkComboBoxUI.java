@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.combobox;
@@ -176,13 +173,8 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
 
     protected JButton createArrowButton() {
         int buttonPad = UIManager.getInt("ComboBox.buttonPad");
-        JButton button = ArrowButton.createUpDownArrow(comboBox,
-                                                       new ComboIcon(comboBox,
-                                                                     UIManager.getIcon("ComboBox.arrowEditable.icon"),
-                                                                     UIManager.getIcon("ComboBox.arrow.icon")),
-                                                       UIManager.getIcon("ComboBox.arrowInactive.icon"),
-                                                       SwingConstants.SOUTH, true, false,
-                                                       new Insets(0, buttonPad, 0, buttonPad));
+        JButton button = ArrowButton
+            .createUpDownArrow(comboBox, new ComboIcon(comboBox, UIManager.getIcon("ComboBox.arrowEditable.icon"), UIManager.getIcon("ComboBox.arrow.icon")), UIManager.getIcon("ComboBox.arrowInactive.icon"), SwingConstants.SOUTH, true, false, new Insets(0, buttonPad, 0, buttonPad));
         button.setBorder(BorderFactory.createEmptyBorder());
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         return button;
@@ -218,22 +210,22 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
             g.setColor(getBackground(comboBox));
         }
         if (!isCellEditor) {
-            PaintUtil.fillRoundRect((Graphics2D) g, borderSize, borderSize,
-                                    width - 2 * borderSize, height - 2 * borderSize, arcSize);
+            PaintUtil.fillRoundRect(
+                (Graphics2D) g, borderSize, borderSize, width - 2 * borderSize, height - 2 * borderSize, arcSize
+            );
         } else {
             g.fillRect(0, 0, width, height);
         }
         if (comboBox.isEditable()) {
             int bSize = !isCellEditor ? borderSize : 0;
-            paintArrowBackground(width, height, comboBox, arrowButton, isCellEditor,
-                                 bSize, arcSize, (Graphics2D) g);
+            paintArrowBackground(width, height, comboBox, arrowButton, isCellEditor, bSize, arcSize, (Graphics2D) g);
         }
     }
 
-    public void paintArrowBackground(final int width, final int height, final JComboBox<?> comboBox,
-                                     final AbstractButton arrowButton, final boolean isCellEditor,
-                                     final int bSize, final int arc,
-                                     final Graphics2D g) {
+    public void paintArrowBackground(
+            final int width, final int height, final JComboBox<?> comboBox, final AbstractButton arrowButton,
+            final boolean isCellEditor, final int bSize, final int arc, final Graphics2D g
+    ) {
         Rectangle arrowBounds = arrowButton.getBounds();
         boolean leftToRight = comboBox.getComponentOrientation().isLeftToRight();
 
@@ -248,8 +240,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         if (isCellEditor) {
             g.fillRect(0, 0, width, height);
         } else {
-            PaintUtil.fillRoundRect(g, bSize, bSize, width - 2 * bSize, height - 2 * bSize,
-                                    arc, false);
+            PaintUtil.fillRoundRect(g, bSize, bSize, width - 2 * bSize, height - 2 * bSize, arc, false);
         }
         g.setClip(oldClip);
     }
@@ -302,10 +293,8 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         Insets insets = getInsets();
         // calculate the width and height of the button
         int buttonHeight = size.height;
-        int buttonWidth = squareButton
-                ? buttonHeight
-                : arrowButton.getPreferredSize().width
-                  + arrowButton.getInsets().left + arrowButton.getInsets().right;
+        int buttonWidth = squareButton ? buttonHeight
+            : arrowButton.getPreferredSize().width + arrowButton.getInsets().left + arrowButton.getInsets().right;
         // adjust the size based on the button width
         size.height += insets.top + insets.bottom;
         size.width += insets.left + insets.right + buttonWidth;
@@ -333,8 +322,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
 
     public void paintCurrentValue(final Graphics g, final Rectangle bounds, final boolean hasFocus) {
         ListCellRenderer<Object> renderer = comboBox.getRenderer();
-        Component c = renderer.getListCellRendererComponent(listBox, comboBox.getSelectedItem(),
-                                                            -1, false, false);
+        Component c = renderer.getListCellRendererComponent(listBox, comboBox.getSelectedItem(), -1, false, false);
         c.setFont(comboBox.getFont());
         if (hasFocus && !isPopupVisible(comboBox)) {
             c.setForeground(listBox.getForeground());
@@ -345,8 +333,8 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         }
 
         // paint selection in table-cell-editor mode correctly
-        boolean changeOpaque = c.isOpaque() && (!comboBox.isEnabled()
-                                                || ComboBoxConstants.isTreeOrTableCellEditor(comboBox));
+        boolean changeOpaque =
+            c.isOpaque() && (!comboBox.isEnabled() || ComboBoxConstants.isTreeOrTableCellEditor(comboBox));
         if (changeOpaque) {
             ((JComponent) c).setOpaque(false);
         }

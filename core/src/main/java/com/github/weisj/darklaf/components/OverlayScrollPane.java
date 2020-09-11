@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.components;
@@ -45,19 +42,19 @@ public class OverlayScrollPane extends JLayeredPane implements PropertyChangeLis
     private final ControlPanel controlPanel;
 
     /**
-     * Creates a <code>OverlayScrollPane</code> that displays the contents of the specified component, where both
-     * horizontal and vertical scrollbars appear whenever the component's contents are larger than the view and
-     * scrolling in underway or the mouse is over the scrollbar position.
-     * The scrollbars appear over the viewport.
+     * Creates a <code>OverlayScrollPane</code> that displays the contents of the specified component,
+     * where both horizontal and vertical scrollbars appear whenever the component's contents are larger
+     * than the view and scrolling in underway or the mouse is over the scrollbar position. The
+     * scrollbars appear over the viewport.
      */
     public OverlayScrollPane() {
         this(null);
     }
 
     /**
-     * Creates a <code>OverlayScrollPane</code> that displays the contents of the specified component, where both
-     * horizontal and vertical scrollbars appear whenever the component's contents are larger than the view and
-     * scrolling in underway or the mouse is over the scrollbar position.
+     * Creates a <code>OverlayScrollPane</code> that displays the contents of the specified component,
+     * where both horizontal and vertical scrollbars appear whenever the component's contents are larger
+     * than the view and scrolling in underway or the mouse is over the scrollbar position.
      *
      * @param view the component to display in the scrollable viewport
      * @see        JScrollPane#setViewportView
@@ -67,14 +64,13 @@ public class OverlayScrollPane extends JLayeredPane implements PropertyChangeLis
     }
 
     /**
-     * Creates a <code>OverlayScrollPane</code> that displays the view component in a viewport whose view position can
-     * be controlled
-     * with a pair of scrollbars. The scrollbars appear over the viewport.
-     * The scrollbar policies specify when the scrollbars are displayed, For example, if
-     * vsbPolicy is JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED then the vertical scrollbar only appears if the view
-     * doesn't fit vertically. The available policy settings are listed at
-     * {@link JScrollPane#setVerticalScrollBarPolicy(int)}
-     * and {@link JScrollPane#setHorizontalScrollBarPolicy}.
+     * Creates a <code>OverlayScrollPane</code> that displays the view component in a viewport whose
+     * view position can be controlled with a pair of scrollbars. The scrollbars appear over the
+     * viewport. The scrollbar policies specify when the scrollbars are displayed, For example, if
+     * vsbPolicy is JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED then the vertical scrollbar only appears if
+     * the view doesn't fit vertically. The available policy settings are listed at
+     * {@link JScrollPane#setVerticalScrollBarPolicy(int)} and
+     * {@link JScrollPane#setHorizontalScrollBarPolicy}.
      *
      * @param view      the view of the component.
      * @param vsbPolicy an integer that specifies the vertical scrollbar policy
@@ -91,9 +87,9 @@ public class OverlayScrollPane extends JLayeredPane implements PropertyChangeLis
     }
 
     /**
-     * Creates a <code>OverlayScrollPane</code> that displays the view component in a viewport whose view position can
-     * be controlled
-     * with a pair of scrollbars. The scrollbars appear over the viewport.
+     * Creates a <code>OverlayScrollPane</code> that displays the view component in a viewport whose
+     * view position can be controlled with a pair of scrollbars. The scrollbars appear over the
+     * viewport.
      *
      * @param scrollPane the scroll pane to use.
      */
@@ -128,8 +124,9 @@ public class OverlayScrollPane extends JLayeredPane implements PropertyChangeLis
     }
 
     /**
-     * Returns the scroll pane used by this scroll indicator. Use carefully (e.g. to set unit increments) because not
-     * all changes have an effect. You have to write listeners in this cases (e.g. for changing the scrollbar policy)
+     * Returns the scroll pane used by this scroll indicator. Use carefully (e.g. to set unit
+     * increments) because not all changes have an effect. You have to write listeners in this cases
+     * (e.g. for changing the scrollbar policy)
      *
      * @return the scrollPane
      */
@@ -303,12 +300,14 @@ public class OverlayScrollPane extends JLayeredPane implements PropertyChangeLis
 
         @Override
         public boolean contains(final int x, final int y) {
-            if (scrollPane.getHorizontalScrollBar().isVisible()
-                && scrollPane.getHorizontalScrollBar().getBounds().contains(x, y)) {
+            if (
+                scrollPane.getHorizontalScrollBar().isVisible()
+                    && scrollPane.getHorizontalScrollBar().getBounds().contains(x, y)
+            ) {
                 return true;
             }
             return scrollPane.getVerticalScrollBar().isVisible()
-                   && scrollPane.getVerticalScrollBar().getBounds().contains(x, y);
+                && scrollPane.getVerticalScrollBar().getBounds().contains(x, y);
         }
 
         @Override

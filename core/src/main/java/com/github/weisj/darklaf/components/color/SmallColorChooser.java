@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.components.color;
@@ -49,9 +46,8 @@ import com.github.weisj.darklaf.util.ColorUtil;
 
 public class SmallColorChooser extends JPanel {
 
-    private static final DarkColorModel[] COLOR_MODELS = new DarkColorModel[]{DarkColorModelRGB.getInstance(),
-                                                                              DarkColorModelHSB.getInstance(),
-                                                                              DarkColorModelHSL.getInstance()};
+    private static final DarkColorModel[] COLOR_MODELS = new DarkColorModel[] {DarkColorModelRGB.getInstance(),
+        DarkColorModelHSB.getInstance(), DarkColorModelHSL.getInstance()};
 
     protected ColorTriangle colorTriangle;
     protected ColorPreviewComponent previewComponent;
@@ -106,14 +102,12 @@ public class SmallColorChooser extends JPanel {
         });
         hexField.getDocument().addDocumentListener((UpdateDocumentListener) () -> {
             try {
-                String hexStr = String.format("%1$-" + 8 + "s",
-                                              hexField.getText())
-                                      .replaceAll(" ", "F");
-                int[] rgb = new int[]{Integer.valueOf(hexStr.substring(0, 2), 16),
-                                      Integer.valueOf(hexStr.substring(2, 4), 16),
-                                      Integer.valueOf(hexStr.substring(4, 6), 16)};
+                String hexStr = String.format("%1$-" + 8 + "s", hexField.getText()).replaceAll(" ", "F");
+                int[] rgb = new int[] {Integer.valueOf(hexStr.substring(0, 2), 16),
+                    Integer.valueOf(hexStr.substring(2, 4), 16), Integer.valueOf(hexStr.substring(4, 6), 16)};
                 setColor(hexField, DarkColorModelRGB.getInstance(), rgb);
-            } catch (NumberFormatException | IndexOutOfBoundsException ignore) {}
+            } catch (NumberFormatException | IndexOutOfBoundsException ignore) {
+            }
         });
     }
 
@@ -187,11 +181,10 @@ public class SmallColorChooser extends JPanel {
         Icon pipetteIcon = UIManager.getIcon("ColorChooser.pipette.icon");
         Icon pipetteHoverIcon = UIManager.getIcon("ColorChooser.pipetteRollover.icon");
         JButton pipetteButton = new JButton();
-        DefaultColorPipette pipette = new DefaultColorPipette(this,
-                                                              (c, o) -> setColor(pipetteButton,
-                                                                                 DarkColorModelRGB.getInstance(),
-                                                                                 c.getRed(), c.getGreen(),
-                                                                                 c.getBlue()));
+        DefaultColorPipette pipette = new DefaultColorPipette(
+            this,
+            (c, o) -> setColor(pipetteButton, DarkColorModelRGB.getInstance(), c.getRed(), c.getGreen(), c.getBlue())
+        );
         pipetteButton.putClientProperty(DarkButtonUI.KEY_THIN, Boolean.TRUE);
         pipetteButton.putClientProperty(DarkButtonUI.KEY_SQUARE, Boolean.TRUE);
         pipetteButton.setRolloverEnabled(true);

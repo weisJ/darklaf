@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package ui.table;
@@ -28,7 +25,10 @@ import java.awt.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableModel;
 
 import ui.ComponentDemo;
 import ui.DemoPanel;
@@ -49,9 +49,8 @@ public class TableDemo implements ComponentDemo {
     public JComponent createComponent() {
         String[] columns = {"Id", "Name", "Hourly Rate", "Part Time", "Components"};
 
-        Object[][] data = {{1, "John", 40.0, false, "Item"},
-                           {2, "Rambo", 70.0, false, 10},
-                           {3, "Zorro", 60.0, true, "cell"}};
+        Object[][] data =
+            {{1, "John", 40.0, false, "Item"}, {2, "Rambo", 70.0, false, 10}, {3, "Zorro", 60.0, true, "cell"}};
         Class<?>[] columnClasses = {Integer.class, String.class, Double.class, Boolean.class, Object.class};
         AtomicBoolean editable = new AtomicBoolean(true);
         TableModel model = new DefaultTableModel() {
@@ -140,8 +139,11 @@ public class TableDemo implements ComponentDemo {
         controlPanel.add(new JCheckBox("LeftToRight") {
             {
                 setSelected(table.getComponentOrientation().isLeftToRight());
-                addActionListener(e -> table.setComponentOrientation(isSelected() ? ComponentOrientation.LEFT_TO_RIGHT
-                        : ComponentOrientation.RIGHT_TO_LEFT));
+                addActionListener(
+                    e -> table.setComponentOrientation(
+                        isSelected() ? ComponentOrientation.LEFT_TO_RIGHT : ComponentOrientation.RIGHT_TO_LEFT
+                    )
+                );
             }
         });
         controlPanel.add(new JCheckBox(DarkTableUI.KEY_ALTERNATE_ROW_COLOR) {
@@ -179,8 +181,9 @@ public class TableDemo implements ComponentDemo {
         controlPanel.add(new JCheckBox(DarkTableUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX) {
             {
                 setSelected(PropertyUtil.getBooleanProperty(table, DarkTableUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX));
-                addActionListener(e -> table.putClientProperty(DarkTableUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX,
-                                                               isSelected()));
+                addActionListener(
+                    e -> table.putClientProperty(DarkTableUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX, isSelected())
+                );
             }
         }, "span");
         controlPanel.add(new JLabel(DarkTableUI.KEY_BOOLEAN_RENDER_TYPE + ":", JLabel.RIGHT));

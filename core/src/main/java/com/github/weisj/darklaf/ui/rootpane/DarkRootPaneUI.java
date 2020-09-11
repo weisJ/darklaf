@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.rootpane;
@@ -49,15 +46,10 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     public static final String KEY_NO_DECORATIONS_UPDATE = KEY_PREFIX + "noDecorationsUpdate";
     public static final String KEY_NO_DECORATIONS = KEY_PREFIX + "noDecorations";
     public static final String KEY_UNIFIED_MENUBAR = KEY_PREFIX + "unifiedMenuBar";
-    protected static final String[] borderKeys = new String[]{"RootPane.border",
-                                                              "RootPane.frameBorder",
-                                                              "RootPane.plainDialogBorder",
-                                                              "RootPane.informationDialogBorder",
-                                                              "RootPane.errorDialogBorder",
-                                                              "RootPane.colorChooserDialogBorder",
-                                                              "RootPane.fileChooserDialogBorder",
-                                                              "RootPane.questionDialogBorder",
-                                                              "RootPane.warningDialogBorder"};
+    protected static final String[] borderKeys =
+        new String[] {"RootPane.border", "RootPane.frameBorder", "RootPane.plainDialogBorder",
+            "RootPane.informationDialogBorder", "RootPane.errorDialogBorder", "RootPane.colorChooserDialogBorder",
+            "RootPane.fileChooserDialogBorder", "RootPane.questionDialogBorder", "RootPane.warningDialogBorder"};
 
     private Window window;
     private CustomTitlePane titlePane;
@@ -117,8 +109,9 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     }
 
     protected int decorationsStyleFromWindow(final Window window, final int windowDecorationsStyle) {
-        if (DarkUIUtil.isUndecorated(window)
-            || PropertyUtil.getBooleanProperty(rootPane, KEY_NO_DECORATIONS)) return JRootPane.NONE;
+        if (
+            DarkUIUtil.isUndecorated(window) || PropertyUtil.getBooleanProperty(rootPane, KEY_NO_DECORATIONS)
+        ) return JRootPane.NONE;
         if (windowDecorationsStyle != JRootPane.NONE) return windowDecorationsStyle;
         if (window instanceof JFrame) return JRootPane.FRAME;
         if (window instanceof JDialog) return JRootPane.PLAIN_DIALOG;
@@ -156,8 +149,9 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
 
     private void installClientDecorations(final JRootPane root) {
         updateWindow(rootPane.getParent());
-        int style = decorationsStyleFromWindow(window, windowDecorationsStyle < 0 ? root.getWindowDecorationStyle()
-                : windowDecorationsStyle);
+        int style = decorationsStyleFromWindow(
+            window, windowDecorationsStyle < 0 ? root.getWindowDecorationStyle() : windowDecorationsStyle
+        );
         CustomTitlePane titlePane = DecorationsHandler.getSharedInstance().createTitlePane(root, style, window);
         installLayout(root);
         setTitlePane(root, titlePane);
@@ -220,8 +214,10 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         if (parent == null) {
             return;
         }
-        if (parent.getClass().getName().startsWith("org.jdesktop.jdic.tray")
-            || (parent.getClass().getName().equals("javax.swing.Popup$HeavyWeightWindow"))) {
+        if (
+            parent.getClass().getName().startsWith("org.jdesktop.jdic.tray")
+                || (parent.getClass().getName().equals("javax.swing.Popup$HeavyWeightWindow"))
+        ) {
             SwingUtilities.invokeLater(() -> {
                 if (rootPane != null) {
                     rootPane.removeHierarchyListener(this);
@@ -246,7 +242,6 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
 
     protected boolean decorationsEnabled(final JRootPane rootPane) {
         return !(rootPane.getParent() instanceof JInternalFrame)
-               && !PropertyUtil.getBooleanProperty(rootPane, KEY_NO_DECORATIONS_UPDATE)
-               && rootPane.getParent() != null;
+            && !PropertyUtil.getBooleanProperty(rootPane, KEY_NO_DECORATIONS_UPDATE) && rootPane.getParent() != null;
     }
 }

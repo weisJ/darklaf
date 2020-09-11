@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui;
@@ -77,8 +74,9 @@ public class BasicTransferable implements Transferable, UIResource {
     }
 
     /**
-     * Returns an array of DataFlavor objects indicating the flavors the data can be provided in. The array should be
-     * ordered according to preference for providing the data (from most richly descriptive to least descriptive).
+     * Returns an array of DataFlavor objects indicating the flavors the data can be provided in. The
+     * array should be ordered according to preference for providing the data (from most richly
+     * descriptive to least descriptive).
      *
      * @return an array of data flavors in which this data can be transferred.
      */
@@ -129,8 +127,8 @@ public class BasicTransferable implements Transferable, UIResource {
     }
 
     /**
-     * Returns an object which represents the data to be transferred. The class of the object returned is defined by
-     * the representation class of the flavor.
+     * Returns an object which represents the data to be transferred. The class of the object returned
+     * is defined by the representation class of the flavor.
      *
      * @param  flavor                     the requested flavor for the data
      * @throws UnsupportedFlavorException if the requested data flavor is not supported.
@@ -184,8 +182,9 @@ public class BasicTransferable implements Transferable, UIResource {
     }
 
     /**
-     * Some subclasses will have flavors that are more descriptive than HTML or plain text. If this method returns a
-     * non-null value, it will be placed at the start of the array of supported flavors.
+     * Some subclasses will have flavors that are more descriptive than HTML or plain text. If this
+     * method returns a non-null value, it will be placed at the start of the array of supported
+     * flavors.
      *
      * @return the supported data flavours as array.
      */
@@ -216,8 +215,8 @@ public class BasicTransferable implements Transferable, UIResource {
     }
 
     /**
-     * Should the HTML flavors be offered? If so, the method getHTMLData should be implemented to provide something
-     * reasonable.
+     * Should the HTML flavors be offered? If so, the method getHTMLData should be implemented to
+     * provide something reasonable.
      *
      * @return true if html is supported.
      */
@@ -253,8 +252,8 @@ public class BasicTransferable implements Transferable, UIResource {
     }
 
     /**
-     * Should the plain text flavors be offered? If so, the method getPlainData should be implemented to provide
-     * something reasonable.
+     * Should the plain text flavors be offered? If so, the method getPlainData should be implemented to
+     * provide something reasonable.
      *
      * @return true if plain text is supported.
      */

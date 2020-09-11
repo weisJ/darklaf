@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.splitpane;
@@ -64,8 +61,7 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
         boolean paintBorder = ui.getStyle().isPaintBorder();
         if (splitPane.getOrientation() == JSplitPane.VERTICAL_SPLIT) {
             Icon icon = getVerticalSplitIcon();
-            icon.paintIcon(this, g, (getWidth() - icon.getIconWidth()) / 2,
-                           (getHeight() - icon.getIconHeight()) / 2);
+            icon.paintIcon(this, g, (getWidth() - icon.getIconWidth()) / 2, (getHeight() - icon.getIconHeight()) / 2);
             if (paintBorder) {
                 g.setColor(borderColor);
                 g.fillRect(0, 0, getWidth(), 1);
@@ -73,8 +69,7 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
             }
         } else {
             Icon icon = getHorizontalSplitIcon();
-            icon.paintIcon(this, g, (getWidth() - icon.getIconWidth()) / 2,
-                           (getHeight() - icon.getIconHeight()) / 2);
+            icon.paintIcon(this, g, (getWidth() - icon.getIconWidth()) / 2, (getHeight() - icon.getIconHeight()) / 2);
             if (paintBorder) {
                 g.setColor(borderColor);
                 g.fillRect(0, 0, 1, getHeight());
@@ -147,9 +142,8 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
         @Override
         public Icon getIcon() {
             if (splitPane != null) {
-                return splitPane.getOrientation() == JSplitPane.HORIZONTAL_SPLIT
-                        ? getRightOneTouchIcon()
-                        : getBottomOneTouchIcon();
+                return splitPane.getOrientation() == JSplitPane.HORIZONTAL_SPLIT ? getRightOneTouchIcon()
+                    : getBottomOneTouchIcon();
             }
             return EmptyIcon.create(0);
         }
@@ -159,9 +153,8 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
         @Override
         public Icon getIcon() {
             if (splitPane != null) {
-                return splitPane.getOrientation() == JSplitPane.HORIZONTAL_SPLIT
-                        ? getLeftOneTouchIcon()
-                        : getTopOneTouchIcon();
+                return splitPane.getOrientation() == JSplitPane.HORIZONTAL_SPLIT ? getLeftOneTouchIcon()
+                    : getTopOneTouchIcon();
             }
             return EmptyIcon.create(0);
         }

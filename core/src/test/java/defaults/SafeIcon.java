@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package defaults;
@@ -36,14 +33,16 @@ import javax.swing.*;
  * https://jdnc-incubator.dev.java.net/source/browse/jdnc-incubator/src/kleopatra/java/org
  * /jdesktop/swingx/renderer/UIPropertiesViewer.java?rev=1.2&view=markup
  * <p>
- * Some ui-icons misbehave in that they unconditionally class-cast to the component type they
- * are mostly painted on. Consequently they blow up if we are trying to paint them anywhere else (f.i. in a renderer).
+ * Some ui-icons misbehave in that they unconditionally class-cast to the component type they are
+ * mostly painted on. Consequently they blow up if we are trying to paint them anywhere else (f.i.
+ * in a renderer).
  * <p>
  * This Icon is an adaption of a cool trick by Darryl Burke found at
  * http://tips4java.wordpress.com/2008/12/18/icon-table-cell-renderer
  * <p>
- * The base idea is to instantiate a component of the type expected by the icon, let it paint
- * into the graphics of a bufferedImage and create an ImageIcon from it. In subsequent calls the ImageIcon is used.
+ * The base idea is to instantiate a component of the type expected by the icon, let it paint into
+ * the graphics of a bufferedImage and create an ImageIcon from it. In subsequent calls the
+ * ImageIcon is used.
  */
 final class SafeIcon implements Icon {
     private final Icon wrappee;

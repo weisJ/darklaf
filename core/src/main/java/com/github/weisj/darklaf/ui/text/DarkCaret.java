@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.text;
@@ -97,10 +94,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
         int mark = super.getMark();
         int dot = super.getDot();
         JTextComponent target = getComponent();
-        if (expandMode && isInsertMode()
-            && target != null
-            && mark == dot
-            && !isEndOfLine(target, dot)) {
+        if (expandMode && isInsertMode() && target != null && mark == dot && !isEndOfLine(target, dot)) {
             mark += 1;
         }
         return mark;
@@ -176,9 +170,9 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     }
 
     /**
-     * Toggles whether this caret should always be visible (as opposed to blinking, or not visible when the editor's
-     * window is not focused). This can be used by popup windows that want the caret's location to still be visible for
-     * contextual purposes while they are displayed.
+     * Toggles whether this caret should always be visible (as opposed to blinking, or not visible when
+     * the editor's window is not focused). This can be used by popup windows that want the caret's
+     * location to still be visible for contextual purposes while they are displayed.
      *
      * @param alwaysVisible Whether this caret should always be visible.
      * @see                 #isAlwaysVisible()
@@ -195,11 +189,9 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     }
 
     public enum CaretStyle {
-        VERTICAL_LINE_STYLE(1, false),
-        UNDERLINE_STYLE(1, true),
-        BLOCK_STYLE(1, true),
-        BLOCK_BORDER_STYLE(1, true),
-        THICK_VERTICAL_LINE_STYLE(2, false);
+        VERTICAL_LINE_STYLE(1, false), UNDERLINE_STYLE(1, true), BLOCK_STYLE(1, true), BLOCK_BORDER_STYLE(
+                1, true
+        ), THICK_VERTICAL_LINE_STYLE(2, false);
 
         private final int size;
         private final boolean charWidth;
@@ -224,8 +216,8 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     }
 
     /**
-     * Called when the mouse is clicked. If the click was generated from button1, a double click selects a word, and a
-     * triple click the current line.
+     * Called when the mouse is clicked. If the click was generated from button1, a double click selects
+     * a word, and a triple click the current line.
      *
      * @param e the mouse event
      */
@@ -239,19 +231,20 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                 if (clickCount > 2) {
                     clickCount %= 2; // Alternate selecting word/line.
                     switch (clickCount) {
-                        case 0 :
+                        case 0:
                             selectWord(e);
                             selectedWordEvent = null;
                             break;
-                        case 1 :
-                            selectLine.actionPerformed(new ActionEvent(textArea,
-                                                                       ActionEvent.ACTION_PERFORMED,
-                                                                       null, e.getWhen(), e.getModifiersEx()));
+                        case 1:
+                            selectLine.actionPerformed(
+                                new ActionEvent(
+                                    textArea, ActionEvent.ACTION_PERFORMED, null, e.getWhen(), e.getModifiersEx()
+                                )
+                            );
                             break;
                     }
                 }
-            } else if (SwingUtilities.isMiddleMouseButton(e) &&
-                       getPasteOnMiddleMouseClick()) {
+            } else if (SwingUtilities.isMiddleMouseButton(e) && getPasteOnMiddleMouseClick()) {
                 if (clickCount == 1 && textArea.isEditable() && textArea.isEnabled()) {
                     // Paste the system selection, if it exists (e.g., on UNIX
                     // platforms, the user can select text, the middle-mouse click
@@ -280,7 +273,8 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                             else {
                                 textArea.paste();
                             }
-                        } catch (HeadlessException ignored) {}
+                        } catch (HeadlessException ignored) {
+                        }
                     }
                 }
             }
@@ -297,8 +291,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
 
     private void adjustFocus(final boolean inWindow) {
         JTextComponent textArea = getComponent();
-        if ((textArea != null) && textArea.isEnabled() &&
-            textArea.isRequestFocusEnabled()) {
+        if ((textArea != null) && textArea.isEnabled() && textArea.isRequestFocusEnabled()) {
             if (inWindow) {
                 textArea.requestFocusInWindow();
             } else {
@@ -397,20 +390,20 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                 textAreaBg = Color.white;
             }
             switch (getEffectiveStyle()) {
-                case BLOCK_STYLE :
+                case BLOCK_STYLE:
                     g.setXORMode(textAreaBg);
                     g.fillRect(r.x, r.y, r.width, r.height);
                     break;
-                case BLOCK_BORDER_STYLE :
+                case BLOCK_BORDER_STYLE:
                     PaintUtil.drawRect(g, r.x, r.y, r.width, r.height, getEffectiveStyle().getSize());
                     break;
-                case UNDERLINE_STYLE :
+                case UNDERLINE_STYLE:
                     g.setXORMode(textAreaBg);
                     int y = r.y + r.height;
                     g.fillRect(r.x, y - getEffectiveStyle().getSize(), r.width, getEffectiveStyle().getSize());
                     break;
-                case THICK_VERTICAL_LINE_STYLE :
-                case VERTICAL_LINE_STYLE :
+                case THICK_VERTICAL_LINE_STYLE:
+                case VERTICAL_LINE_STYLE:
                     g.fillRect(r.x, r.y, style.getSize(), r.height);
                     if (isBidiText()) {
                         flagXPoints[0] = r.x + (dotLtr ? style.getSize() : 0);
@@ -461,15 +454,14 @@ public class DarkCaret extends DefaultCaret implements UIResource {
      * Selects word based on a mouse event.
      */
     private void selectWord(final MouseEvent e) {
-        if (selectedWordEvent != null &&
-            selectedWordEvent.getX() == e.getX() &&
-            selectedWordEvent.getY() == e.getY()) {
+        if (selectedWordEvent != null && selectedWordEvent.getX() == e.getX() && selectedWordEvent.getY() == e.getY()) {
             // We've already the done selection for this.
             return;
         }
         JTextComponent textArea = getComponent();
-        selectWord.actionPerformed(new ActionEvent(textArea, ActionEvent.ACTION_PERFORMED,
-                                                   null, e.getWhen(), e.getModifiersEx()));
+        selectWord.actionPerformed(
+            new ActionEvent(textArea, ActionEvent.ACTION_PERFORMED, null, e.getWhen(), e.getModifiersEx())
+        );
         selectedWordEvent = e;
     }
 

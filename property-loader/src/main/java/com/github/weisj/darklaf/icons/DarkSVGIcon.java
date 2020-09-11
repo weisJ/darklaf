@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.icons;
@@ -47,9 +44,9 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
     private static final Logger LOGGER = LogUtil.getLogger(DarkSVGIcon.class);
 
     /*
-     * Render the icon a bit larger than needed to ensure it is painted good enough when rotated.
-     * This accounts for diagonal lines (i.e. when the rotation is pi/4). Ideally this value would only need to
-     * be sqrt(2) but 1.5 behaves a lot better w.r.t. floating point calculations.
+     * Render the icon a bit larger than needed to ensure it is painted good enough when rotated. This
+     * accounts for diagonal lines (i.e. when the rotation is pi/4). Ideally this value would only need
+     * to be sqrt(2) but 1.5 behaves a lot better w.r.t. floating point calculations.
      *
      * The scale factor is only used if the icon is painted with a non trivial rotation.
      */
@@ -171,8 +168,8 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
                 IconColorMapper.patchColors(icon);
                 Image img = icon.getImage();
                 /*
-                 * If we get to here the issue was that the icon hasn't been patched because it isn't loaded as a themed
-                 * svg icon.
+                 * If we get to here the issue was that the icon hasn't been patched because it isn't loaded as a
+                 * themed svg icon.
                  */
                 LOGGER.severe("Icon '" + getName(uri) + "' that defines custom colors isn't loaded as themed icon.");
                 return img;
@@ -200,10 +197,8 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
         double r = rotation;
         if (r < 0) r += 2 * Math.PI;
         if (r > 2 * Math.PI) r -= 2 * Math.PI;
-        return Scale.equalWithError(r, 0)
-               || Scale.equalWithError(r, Math.PI / 2)
-               || Scale.equalWithError(r, Math.PI)
-               || Scale.equalWithError(r, 3 * Math.PI / 2);
+        return Scale.equalWithError(r, 0) || Scale.equalWithError(r, Math.PI / 2) || Scale.equalWithError(r, Math.PI)
+            || Scale.equalWithError(r, 3 * Math.PI / 2);
     }
 
     protected SVGIcon createSVGIcon() {
@@ -211,8 +206,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
     }
 
     @Override
-    public void paintIcon(final Component c, final Graphics g, final int x, final int y,
-                          final double rotation) {
+    public void paintIcon(final Component c, final Graphics g, final int x, final int y, final double rotation) {
         ensureImageLoaded(c, rotation);
         Graphics2D g2 = (Graphics2D) g;
         AffineTransform transform = g2.getTransform();

@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.platform.macos.ui;
@@ -42,8 +39,7 @@ public class MacOSDecorationsUtil {
         Window window = SwingUtilities.getWindowAncestor(rootPane);
         long windowHandle = JNIDecorationsMacOS.getComponentPointer(window);
         if (windowHandle == 0) {
-            return new DecorationInformation(0, false, false,
-                                             false, rootPane, false, 0, 0);
+            return new DecorationInformation(0, false, false, false, rootPane, false, 0, 0);
         }
         JNIDecorationsMacOS.retainWindow(windowHandle);
         boolean fullWindowContent = isFullWindowContentEnabled(rootPane);
@@ -64,8 +60,10 @@ public class MacOSDecorationsUtil {
             boolean isDarkTheme = UIManager.getBoolean("Theme.dark");
             JNIDecorationsMacOS.setDarkTheme(windowHandle, isDarkTheme);
         }
-        return new DecorationInformation(windowHandle, fullWindowContent, transparentTitleBar,
-                                         jniInstall, rootPane, titleVisible, titleBarHeight, titleFontSize);
+        return new DecorationInformation(
+            windowHandle, fullWindowContent, transparentTitleBar, jniInstall, rootPane, titleVisible, titleBarHeight,
+            titleFontSize
+        );
     }
 
     protected static void uninstallDecorations(final DecorationInformation information) {
@@ -88,8 +86,7 @@ public class MacOSDecorationsUtil {
         return PropertyUtil.getBooleanProperty(rootPane, TRANSPARENT_TITLE_BAR_KEY);
     }
 
-    private static void setFullWindowContentEnabled(final JRootPane rootPane,
-                                                    final boolean enabled) {
+    private static void setFullWindowContentEnabled(final JRootPane rootPane, final boolean enabled) {
         rootPane.putClientProperty(FULL_WINDOW_CONTENT_KEY, enabled);
     }
 

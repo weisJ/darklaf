@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.popupmenu;
@@ -60,12 +57,11 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
         // A grab needs to be added
         final Toolkit tk = Toolkit.getDefaultToolkit();
         AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
-            tk.addAWTEventListener(MouseGrabber.this,
-                                   AWTEvent.MOUSE_EVENT_MASK
-                                                      | AWTEvent.MOUSE_MOTION_EVENT_MASK
-                                                      | AWTEvent.MOUSE_WHEEL_EVENT_MASK
-                                                      | AWTEvent.WINDOW_EVENT_MASK
-                                                      | SunToolkit.GRAB_EVENT_MASK);
+            tk.addAWTEventListener(
+                MouseGrabber.this,
+                AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_WHEEL_EVENT_MASK
+                    | AWTEvent.WINDOW_EVENT_MASK | SunToolkit.GRAB_EVENT_MASK
+            );
             return null;
         });
 
@@ -167,16 +163,17 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
         // or inside a Popup#HeavyWeightWindow or inside a frame
         // popup should not close which is the standard behaviour
         switch (me.getID()) {/*
-                              * Changed here: Make doNotCancelPopup accessible to all component.
-                              * Allows for more versatile PopupMenus.
+                              * Changed here: Make doNotCancelPopup accessible to all component. Allows for more
+                              * versatile PopupMenus.
                               */
-            case MouseEvent.MOUSE_PRESSED :
-                if (isInPopup(src) ||
-                    (src instanceof JMenu && ((JMenu) src).isSelected())) {
+            case MouseEvent.MOUSE_PRESSED:
+                if (isInPopup(src) || (src instanceof JMenu && ((JMenu) src).isSelected())) {
                     return;
                 }
-                if (!PropertyUtil.isPropertyEqual(src, DarkPopupMenuUI.KEY_DO_NOT_CANCEL_POPUP,
-                                                  DarkPopupMenuUI.HIDE_POPUP_VALUE)) {
+                if (
+                    !PropertyUtil
+                        .isPropertyEqual(src, DarkPopupMenuUI.KEY_DO_NOT_CANCEL_POPUP, DarkPopupMenuUI.HIDE_POPUP_VALUE)
+                ) {
                     // Cancel popup only if this property was not set.
                     // If this property is set to TRUE component wants
                     // to deal with this event by himself.
@@ -190,7 +187,7 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
                     }
                 }
                 break;
-            case MouseEvent.MOUSE_RELEASED :
+            case MouseEvent.MOUSE_RELEASED:
                 if (!(src instanceof MenuElement)) {
                     // Do not forward event to MSM, let component handle it
                     if (isInPopup(src)) {
@@ -201,7 +198,7 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
                     MenuSelectionManager.defaultManager().processMouseEvent(me);
                 }
                 break;
-            case MouseEvent.MOUSE_DRAGGED :
+            case MouseEvent.MOUSE_DRAGGED:
                 if (!(src instanceof MenuElement)) {
                     // For the MOUSE_DRAGGED event the src is
                     // the Component in which mouse button was pressed.
@@ -213,13 +210,13 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
                 }
                 MenuSelectionManager.defaultManager().processMouseEvent(me);
                 break;
-            case MouseEvent.MOUSE_WHEEL :
-                if (isInPopup(src)
-                    || ((src instanceof JComboBox) && ((JComboBox<?>) src).isPopupVisible())
-                    || ((src instanceof JWindow) && src.isVisible())
-                    || ((src instanceof JMenuItem) && src.isVisible())
-                    || (src instanceof JFrame)
-                    || (src instanceof JDialog)) {
+            case MouseEvent.MOUSE_WHEEL:
+                if (
+                    isInPopup(src) || ((src instanceof JComboBox) && ((JComboBox<?>) src).isPopupVisible())
+                        || ((src instanceof JWindow) && src.isVisible())
+                        || ((src instanceof JMenuItem) && src.isVisible()) || (src instanceof JFrame)
+                        || (src instanceof JDialog)
+                ) {
                     return;
                 }
                 cancelPopupMenu();

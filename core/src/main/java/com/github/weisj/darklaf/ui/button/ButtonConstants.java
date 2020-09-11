@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.button;
@@ -60,13 +57,13 @@ public interface ButtonConstants {
         return PropertyUtil.getBooleanProperty(c, KEY_ALT_ARC);
     }
 
-    static int chooseArcWithBorder(final Component c, final int arc, final int minimum,
-                                   final int altArc, final int borderSize) {
+    static int chooseArcWithBorder(
+            final Component c, final int arc, final int minimum, final int altArc, final int borderSize
+    ) {
         return chooseArc(c, arc, minimum, altArc, c.getHeight() - 2 * borderSize);
     }
 
-    static int chooseArc(final Component c, final int arc, final int minimum,
-                         final int altArc, final int roundedArc) {
+    static int chooseArc(final Component c, final int arc, final int minimum, final int altArc, final int roundedArc) {
         if (ButtonConstants.isNoArc(c)) return minimum;
         if (ButtonConstants.isRound(c)) return roundedArc;
         boolean alt = ButtonConstants.chooseAlternativeArc(c);
@@ -87,7 +84,7 @@ public interface ButtonConstants {
 
     static boolean isThin(final Component c) {
         return PropertyUtil.getBooleanProperty(c, KEY_THIN)
-               || (c instanceof AbstractButton && ButtonConstants.doConvertToBorderless((AbstractButton) c));
+            || (c instanceof AbstractButton && ButtonConstants.doConvertToBorderless((AbstractButton) c));
     }
 
     static boolean isBorderlessVariant(final Component c) {
@@ -108,13 +105,12 @@ public interface ButtonConstants {
 
     static boolean doConvertToBorderless(final AbstractButton b) {
         return isIconOnly(b) && !b.isFocusable() && convertIconButtonToBorderless(b)
-               && (b instanceof JButton || b instanceof JToggleButton);
+            && (b instanceof JButton || b instanceof JToggleButton);
     }
 
     static boolean convertIconButtonToBorderless(final AbstractButton b) {
-        return !(b instanceof UIResource)
-               && UIManager.getBoolean("Button.convertIconOnlyToBorderless")
-               && !PropertyUtil.getBooleanProperty(b, KEY_NO_BORDERLESS_OVERWRITE);
+        return !(b instanceof UIResource) && UIManager.getBoolean("Button.convertIconOnlyToBorderless")
+            && !PropertyUtil.getBooleanProperty(b, KEY_NO_BORDERLESS_OVERWRITE);
     }
 
     static boolean isIconOnly(final AbstractButton b) {

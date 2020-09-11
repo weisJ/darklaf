@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.table;
@@ -63,7 +60,8 @@ public abstract class DarkTableUIBridge extends TableUIBridge {
         if (table.getRowCount() <= 0 || table.getColumnCount() <= 0 ||
         // this check prevents us from painting the entire table
         // when the clip doesn't intersect our bounds at all
-            !bounds.intersects(clip)) {
+            !bounds.intersects(clip)
+        ) {
 
             paintDropLines(g);
             return;
@@ -74,8 +72,7 @@ public abstract class DarkTableUIBridge extends TableUIBridge {
         // compute the visible part of table which needs to be painted
         Rectangle visibleBounds = clip.intersection(bounds);
         upperLeft = visibleBounds.getLocation();
-        lowerRight = new Point(visibleBounds.x + visibleBounds.width - 1,
-                               visibleBounds.y + visibleBounds.height - 1);
+        lowerRight = new Point(visibleBounds.x + visibleBounds.width - 1, visibleBounds.y + visibleBounds.height - 1);
 
         int rMin = table.rowAtPoint(upperLeft);
         int rMax = table.rowAtPoint(lowerRight);
@@ -101,8 +98,7 @@ public abstract class DarkTableUIBridge extends TableUIBridge {
         Object printMode = table.getClientProperty(DarkTableUI.KEY_IS_PRINT_MODE);
         if ((printMode == JTable.PrintMode.FIT_WIDTH)) {
             upperLeft = clip.getLocation();
-            lowerRight = new Point(clip.x + clip.width - 1,
-                                   clip.y + clip.height - 1);
+            lowerRight = new Point(clip.x + clip.width - 1, clip.y + clip.height - 1);
         }
         int cMin = table.columnAtPoint(ltr ? upperLeft : lowerRight);
         int cMax = table.columnAtPoint(ltr ? lowerRight : upperLeft);
@@ -127,8 +123,7 @@ public abstract class DarkTableUIBridge extends TableUIBridge {
             // when there is no scrollPane and we do printing of table
             // but not when rmax is already pointing to index of last row
             // and if there is any selected rows
-            if (rMax != (table.getRowCount() - 1) &&
-                (table.getSelectedRow() == -1)) {
+            if (rMax != (table.getRowCount() - 1) && (table.getSelectedRow() == -1)) {
                 // Do not decrement rMax if rMax becomes
                 // less than or equal to rMin
                 // else cells will not be painted
@@ -253,18 +248,19 @@ public abstract class DarkTableUIBridge extends TableUIBridge {
     @Deprecated
     protected final void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column) {}
 
-    protected abstract void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column,
-                                      final int cMin, final int cMax);
+    protected abstract void paintCell(
+            final Graphics g, final Rectangle cellRect, final int row, final int column, final int cMin, final int cMax
+    );
 
     @Override
     protected int viewIndexForColumn(final TableColumn aColumn) {
         return viewIndexForColumn(aColumn, table);
     }
 
-    protected abstract void paintDraggedArea(final Graphics g,
-                                             final int rMin, final int rMax,
-                                             final int cMin, final int cMax,
-                                             final TableColumn draggedColumn, final int distance);
+    protected abstract void paintDraggedArea(
+            final Graphics g, final int rMin, final int rMax, final int cMin, final int cMax,
+            final TableColumn draggedColumn, final int distance
+    );
 
     public static int viewIndexForColumn(final TableColumn aColumn, final JTable table) {
         TableColumnModel cm = table.getColumnModel();

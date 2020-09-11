@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.components.tabframe;
@@ -119,10 +116,8 @@ public class ToggleSplitPane extends JSplitPane {
     }
 
     public void forceSetDividerLocation(final double proportionalLocation) {
-        if (proportionalLocation < 0.0 ||
-            proportionalLocation > 1.0) {
-            throw new IllegalArgumentException("proportional location must "
-                                               + "be between 0.0 and 1.0.");
+        if (proportionalLocation < 0.0 || proportionalLocation > 1.0) {
+            throw new IllegalArgumentException("proportional location must " + "be between 0.0 and 1.0.");
         }
         if (getOrientation() == VERTICAL_SPLIT) {
             super.setDividerLocation((int) ((double) (getHeight()) * proportionalLocation));
@@ -174,8 +169,7 @@ public class ToggleSplitPane extends JSplitPane {
     @Override
     public int getMinimumDividerLocation() {
         Component comp = getRightComponent();
-        return comp == null ? 0 : getOrientation() == HORIZONTAL_SPLIT
-                ? comp.getMinimumSize().width
-                : comp.getMinimumSize().height;
+        return comp == null ? 0
+            : getOrientation() == HORIZONTAL_SPLIT ? comp.getMinimumSize().width : comp.getMinimumSize().height;
     }
 }

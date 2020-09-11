@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.cell.hint;
@@ -96,9 +93,7 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
             final Rectangle visibleBounds = allocation.intersection(cellBounds);
             if (visibleBounds.contains(p)) {
                 final Component comp = cellContainer.getEffectiveCellRendererComponent(index, isEditing);
-                final Dimension prefSize = isEditing
-                        ? comp.getBounds().getSize()
-                        : comp.getPreferredSize();
+                final Dimension prefSize = isEditing ? comp.getBounds().getSize() : comp.getPreferredSize();
                 if (comp instanceof JComponent) {
                     // Avoid showing the popup if only the border is obscured.
                     Border border = ((JComponent) comp).getBorder();
@@ -130,20 +125,22 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
         leave();
     }
 
-    private Rectangle calculatePopupBounds(final Rectangle cellBounds, final Rectangle visibleBounds,
-                                           final boolean addBorder) {
+    private Rectangle calculatePopupBounds(
+            final Rectangle cellBounds, final Rectangle visibleBounds, final boolean addBorder
+    ) {
         Rectangle rect = new Rectangle(visibleBounds);
         boolean ltr = cellContainer.getComponent().getComponentOrientation().isLeftToRight();
         popupComponent.setBorderInsets(1, 1, 1, 1);
 
         if (isRespectCellWidth()) {
-            if (cellBounds.x >= visibleBounds.x
-                && cellBounds.x + cellBounds.width <= visibleBounds.x + visibleBounds.width) {
+            if (
+                cellBounds.x >= visibleBounds.x
+                    && cellBounds.x + cellBounds.width <= visibleBounds.x + visibleBounds.width
+            ) {
                 rect.x = cellBounds.x;
                 rect.width = cellBounds.width;
             } else {
-                int upperDiff = Math.max(cellBounds.x + cellBounds.width - visibleBounds.x - visibleBounds.width,
-                                         0);
+                int upperDiff = Math.max(cellBounds.x + cellBounds.width - visibleBounds.x - visibleBounds.width, 0);
                 int lowerDiff = Math.max(visibleBounds.x - cellBounds.x, 0);
                 if (ltr && upperDiff > 0) lowerDiff = 0;
                 if (!ltr && lowerDiff > 0) upperDiff = 0;
@@ -159,13 +156,14 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
             }
         }
         if (isRespectCellHeight()) {
-            if ((cellBounds.y >= visibleBounds.y
-                 && cellBounds.y + cellBounds.height <= visibleBounds.y + visibleBounds.height)) {
+            if (
+                (cellBounds.y >= visibleBounds.y
+                    && cellBounds.y + cellBounds.height <= visibleBounds.y + visibleBounds.height)
+            ) {
                 rect.y = cellBounds.y;
                 rect.height = cellBounds.height;
             } else {
-                int upperDiff = Math.max(cellBounds.y + cellBounds.height - visibleBounds.y - visibleBounds.height,
-                                         0);
+                int upperDiff = Math.max(cellBounds.y + cellBounds.height - visibleBounds.y - visibleBounds.height, 0);
                 int lowerDiff = Math.max(visibleBounds.y - cellBounds.y, 0);
                 if (upperDiff > 0) lowerDiff = 0;
                 if (upperDiff >= lowerDiff) {
@@ -195,8 +193,7 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
         if (isOverEditor(e.getPoint())) {
             if (popup == null) {
                 /*
-                 * If mouse is over editor and no popup is currently visible
-                 * check if we need to show the popup.
+                 * If mouse is over editor and no popup is currently visible check if we need to show the popup.
                  */
                 mouseMoved(e);
             }
@@ -206,8 +203,7 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
     }
 
     private boolean isOverEditor(final Point p) {
-        return cellContainer.isEditing()
-               && cellContainer.getCellEditorComponent(lastIndex).getBounds().contains(p);
+        return cellContainer.isEditing() && cellContainer.getCellEditorComponent(lastIndex).getBounds().contains(p);
     }
 
     public void repaint() {
@@ -227,16 +223,16 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
             popupComponent.setRendererBounds(rendererBounds);
             if (popup != null) {
                 Point p = popupComponent.isShowing() ? popupComponent.getLocationOnScreen() : null;
-                if (p == null
-                    || p.x != bounds.x || p.y != bounds.y
-                    || popupComponent.getWidth() != bounds.width
-                    || popupComponent.getHeight() != bounds.height) {
+                if (
+                    p == null || p.x != bounds.x || p.y != bounds.y || popupComponent.getWidth() != bounds.width
+                        || popupComponent.getHeight() != bounds.height
+                ) {
                     movePopup(bounds);
                 }
             }
             if (popup == null) {
                 popup = PopupFactory.getSharedInstance()
-                                    .getPopup(cellContainer.getComponent(), popupComponent, bounds.x, bounds.y);
+                    .getPopup(cellContainer.getComponent(), popupComponent, bounds.x, bounds.y);
                 popup.show();
                 if (DarkPopupFactory.getPopupType(popup) == DarkPopupFactory.PopupType.HEAVY_WEIGHT) {
                     // Ensure heavy weight popup is at desired location.
@@ -277,11 +273,12 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
     private void moveMediumLightWeightPopup(final Rectangle bounds, final Window parentWindow) {
         JLayeredPane layeredPane = ((RootPaneContainer) parentWindow).getLayeredPane();
         JRootPane rootPane = ((RootPaneContainer) parentWindow).getRootPane();
-        Component comp = DarkUIUtil.getParentBeforeMatching(popupComponent.getParent(),
-                                                            c -> c == layeredPane);
+        Component comp = DarkUIUtil.getParentBeforeMatching(popupComponent.getParent(), c -> c == layeredPane);
         Rectangle windowBounds = parentWindow.getBounds();
-        if (windowBounds.contains(bounds.x, bounds.y)
-            && windowBounds.contains(bounds.x + bounds.width, bounds.y + bounds.height)) {
+        if (
+            windowBounds.contains(bounds.x, bounds.y)
+                && windowBounds.contains(bounds.x + bounds.width, bounds.y + bounds.height)
+        ) {
             Point windowPos = rootPane.getLocationOnScreen();
             bounds.x -= windowPos.x;
             bounds.y -= windowPos.y;

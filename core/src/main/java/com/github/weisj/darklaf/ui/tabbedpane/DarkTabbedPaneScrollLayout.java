@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.tabbedpane;
@@ -74,8 +71,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         // programs are now depending on this, we're making it work.
         //
         if (selectedComponent != null) {
-            if (selectedComponent != visibleComponent &&
-                visibleComponent != null) {
+            if (selectedComponent != visibleComponent && visibleComponent != null) {
 
                 Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
                 if (owner != null && SwingUtilities.isDescendingFrom(owner, visibleComponent)) {
@@ -92,7 +88,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
 
         if (numChildren > 0) {
             switch (tabPlacement) {
-                case SwingConstants.LEFT :
+                case SwingConstants.LEFT:
                     tw = ui.calculateTabAreaWidth(tabPlacement, ui.runCount, ui.maxTabWidth);
                     th = bounds.height - insets.top - insets.bottom - tabAreaInsets.top - tabAreaInsets.bottom;
                     tx = insets.left + tabAreaInsets.left;
@@ -100,11 +96,11 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
                     cx = insets.left + tw + contentInsets.left + tabAreaInsets.left + tabAreaInsets.right;
                     cy = insets.top + contentInsets.top;
                     cw = bounds.width - insets.left - insets.right - tw - contentInsets.left - contentInsets.right
-                         - tabAreaInsets.left - tabAreaInsets.right;
+                        - tabAreaInsets.left - tabAreaInsets.right;
                     ch = bounds.height - insets.top - insets.bottom - contentInsets.top - contentInsets.bottom;
                     tw -= tabAreaInsets.left + tabAreaInsets.right;
                     break;
-                case SwingConstants.RIGHT :
+                case SwingConstants.RIGHT:
                     tw = ui.calculateTabAreaWidth(tabPlacement, ui.runCount, ui.maxTabWidth);
                     th = bounds.height - insets.top - insets.bottom - tabAreaInsets.top - tabAreaInsets.bottom;
                     tx = bounds.width - insets.right - tw + tabAreaInsets.left;
@@ -115,7 +111,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
                     ch = bounds.height - insets.top - insets.bottom - contentInsets.top - contentInsets.bottom;
                     tw -= tabAreaInsets.left + tabAreaInsets.right;
                     break;
-                case SwingConstants.BOTTOM :
+                case SwingConstants.BOTTOM:
                     tw = bounds.width - insets.left - insets.right - tabAreaInsets.left - tabAreaInsets.right;
                     th = ui.calculateTabAreaHeight(tabPlacement, ui.runCount, ui.maxTabHeight);
                     tx = insets.left + tabAreaInsets.left;
@@ -126,7 +122,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
                     ch = bounds.height - insets.top - insets.bottom - th - contentInsets.top - contentInsets.bottom;
                     th -= tabAreaInsets.top + tabAreaInsets.bottom;
                     break;
-                default :
+                default:
                     tw = bounds.width - insets.left - insets.right - tabAreaInsets.left - tabAreaInsets.right;
                     th = ui.calculateTabAreaHeight(tabPlacement, ui.runCount, ui.maxTabHeight);
                     tx = insets.left + tabAreaInsets.left;
@@ -147,13 +143,9 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
                 if (ui.tabScroller != null && child == ui.tabScroller.viewport) {
                     int vw = tw;
                     int vh = th;
-                    Dimension butSize = moreTabs.isVisible()
-                            ? moreTabs.getPreferredSize()
-                            : new Dimension(0, 0);
+                    Dimension butSize = moreTabs.isVisible() ? moreTabs.getPreferredSize() : new Dimension(0, 0);
                     boolean showNewTabButton = newTab.isVisible() && newTab.getParent() == ui.tabPane;
-                    Dimension butSize2 = showNewTabButton
-                            ? newTab.getPreferredSize()
-                            : new Dimension(0, 0);
+                    Dimension butSize2 = showNewTabButton ? newTab.getPreferredSize() : new Dimension(0, 0);
                     boolean leftToRight = ui.tabPane.getComponentOrientation().isLeftToRight();
                     if (tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT) {
                         vh = th - butSize.height - butSize2.height;
@@ -196,15 +188,18 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
                     } else if (child == ui.trailingComp && ui.trailingComp != null) {
                         ui.layoutTrailingComponent(child, tabWidth, tabHeight, insets, tx, ty, tw, th, tabPlacement);
                     } else if (child == ui.northComp && ui.northComp != null) {
-                        ui.northComp.setBounds(cx, cy - ui.northComp.getPreferredSize().height,
-                                               cw, ui.northComp.getPreferredSize().height);
+                        ui.northComp.setBounds(
+                            cx, cy - ui.northComp.getPreferredSize().height, cw, ui.northComp.getPreferredSize().height
+                        );
                     } else if (child == ui.southComp && ui.southComp != null) {
                         ui.southComp.setBounds(cx, cy + ch, cw, ui.southComp.getPreferredSize().height);
                     } else if (child == ui.eastComp && ui.eastComp != null) {
                         ui.eastComp.setBounds(cx + cw, compY, ui.eastComp.getPreferredSize().width, compHeight);
                     } else if (child == ui.westComp && ui.westComp != null) {
-                        ui.westComp.setBounds(cx - ui.westComp.getPreferredSize().width, compY,
-                                              ui.westComp.getPreferredSize().width, compHeight);
+                        ui.westComp.setBounds(
+                            cx - ui.westComp.getPreferredSize().width, compY, ui.westComp.getPreferredSize().width,
+                            compHeight
+                        );
                     } else if (child != moreTabs && child != newTab) {
                         child.setBounds(cx, cy, cw, ch);
                     }
@@ -259,8 +254,8 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         //
         if (ui.tabPane.getTabCount() > 0) {
             if (!ui.isHorizontalTabPlacement()) {
-                int tabHeight = ui.calculateTabHeight(tabPlacement, ui.tabPane.getSelectedIndex(),
-                                                      ui.getFontMetrics().getHeight());
+                int tabHeight =
+                    ui.calculateTabHeight(tabPlacement, ui.tabPane.getSelectedIndex(), ui.getFontMetrics().getHeight());
                 if (ui.scrollableTabSupport.moreTabsButton.isVisible()) {
                     tabHeight += ui.scrollableTabSupport.moreTabsButton.getPreferredSize().height;
                 }
@@ -277,8 +272,10 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
                 height += tabExtent;
             }
         }
-        return new Dimension(width + insets.left + insets.right + contentInsets.left + contentInsets.right,
-                             height + insets.bottom + insets.top + contentInsets.top + contentInsets.bottom);
+        return new Dimension(
+            width + insets.left + insets.right + contentInsets.left + contentInsets.right,
+            height + insets.bottom + insets.top + contentInsets.top + contentInsets.bottom
+        );
 
     }
 
@@ -313,11 +310,10 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
 
         JComponent tabsButton = ui.scrollableTabSupport.moreTabsButton;
         Rectangle selectedBounds = ui.tabPane.getSelectedIndex() > 0
-                ? new Rectangle(ui.rects[ui.tabPane.getSelectedIndex()])
-                : new Rectangle(0, 0, 0, 0);
+            ? new Rectangle(ui.rects[ui.tabPane.getSelectedIndex()])
+            : new Rectangle(0, 0, 0, 0);
         if (!verticalTabRuns) {
-            int rightMargin = size.width - (insets.right + tabAreaInsets.right
-                                            + insets.left + tabAreaInsets.left);
+            int rightMargin = size.width - (insets.right + tabAreaInsets.right + insets.left + tabAreaInsets.left);
             Point p = getMargins(tabPlacement);
             int leftMargin = p.x;
             int returnAt = p.y;
@@ -330,8 +326,10 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
             }
             restoreHiddenTabsX(leftMargin, returnAt, tabCount);
 
-            if (ui.minVisible == 0 && ui.maxVisible == tabCount - 1
-                && PropertyUtil.getBooleanProperty(ui.tabPane, DarkTabbedPaneUI.KEY_CENTER_TABS)) {
+            if (
+                ui.minVisible == 0 && ui.maxVisible == tabCount - 1
+                    && PropertyUtil.getBooleanProperty(ui.tabPane, DarkTabbedPaneUI.KEY_CENTER_TABS)
+            ) {
                 adjustForCenterX(leftMargin, returnAt, tabCount);
             }
 
@@ -370,8 +368,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
             }
 
         } else {
-            int bottomMargin = size.height - (insets.bottom + tabAreaInsets.bottom
-                                              + insets.top + tabAreaInsets.top);
+            int bottomMargin = size.height - (insets.bottom + tabAreaInsets.bottom + insets.top + tabAreaInsets.top);
             Point p = getMargins(tabPlacement);
             int topMargin = p.x;
             int returnAt = p.y;
@@ -383,8 +380,10 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
             }
             restoreHiddenTabsY(topMargin, returnAt, tabCount);
 
-            if (ui.minVisible == 0 && ui.maxVisible == tabCount - 1
-                && PropertyUtil.getBooleanProperty(ui.tabPane, DarkTabbedPaneUI.KEY_CENTER_TABS)) {
+            if (
+                ui.minVisible == 0 && ui.maxVisible == tabCount - 1
+                    && PropertyUtil.getBooleanProperty(ui.tabPane, DarkTabbedPaneUI.KEY_CENTER_TABS)
+            ) {
                 adjustForCenterY(topMargin, returnAt, tabCount);
             }
 
@@ -442,8 +441,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         JComponent newTabsButton = ui.scrollableTabSupport.newTabButton;
         if (ui.isHorizontalTabPlacement()) {
             int leftMargin = 0;
-            int returnAt = size.width - (insets.right + tabAreaInsets.right
-                                         + insets.left + tabAreaInsets.left);
+            int returnAt = size.width - (insets.right + tabAreaInsets.right + insets.left + tabAreaInsets.left);
             if (tabsButton.isVisible()) {
                 returnAt -= tabsButton.getPreferredSize().width;
             }
@@ -453,8 +451,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
             return new Point(leftMargin, returnAt);
         } else {
             int topMargin = 0;
-            int returnAt = size.height - (insets.bottom + tabAreaInsets.bottom
-                                          + insets.top + tabAreaInsets.top);
+            int returnAt = size.height - (insets.bottom + tabAreaInsets.bottom + insets.top + tabAreaInsets.top);
             if (tabsButton.isVisible()) {
                 returnAt -= tabsButton.getPreferredSize().height;
             }
@@ -478,8 +475,9 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         shiftTabsX(0, minX, maxX, tabCount, false);
     }
 
-    protected void layoutNewTabButton(final boolean horizontal, final boolean leftToRight,
-                                      final int minVal, final int maxVal, final int tabCount) {
+    protected void layoutNewTabButton(
+            final boolean horizontal, final boolean leftToRight, final int minVal, final int maxVal, final int tabCount
+    ) {
         JComponent button = ui.scrollableTabSupport.newTabButton;
         Dimension buttonBounds = button.getPreferredSize();
         if (horizontal) {
@@ -532,33 +530,36 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         }
     }
 
-    protected void shiftBoundsToVisibleX(final Rectangle selectedBounds, final int leftMargin,
-                                         final int rightMargin, final int tabCount) {
+    protected void shiftBoundsToVisibleX(
+            final Rectangle selectedBounds, final int leftMargin, final int rightMargin, final int tabCount
+    ) {
         if (selectedBounds.x + selectedBounds.width > rightMargin) {
             // SelectedTab is not fully visible. Covered on right side.
-            shiftTabsX(rightMargin - selectedBounds.x - selectedBounds.width,
-                       leftMargin, rightMargin, tabCount, true);
+            shiftTabsX(rightMargin - selectedBounds.x - selectedBounds.width, leftMargin, rightMargin, tabCount, true);
         } else if (selectedBounds.x < leftMargin) {
             // SelectedTab is not fully visible. Covered on left side.
             shiftTabsX(-selectedBounds.x + leftMargin, leftMargin, rightMargin, tabCount, true);
         }
     }
 
-    protected void shiftBoundsToVisibleY(final Rectangle selectedBounds, final int topMargin,
-                                         final int bottomMargin, final int tabCount) {
+    protected void shiftBoundsToVisibleY(
+            final Rectangle selectedBounds, final int topMargin, final int bottomMargin, final int tabCount
+    ) {
         if (selectedBounds.y + selectedBounds.height > bottomMargin) {
             // SelectedTab is not fully visible. Covered on right side.
-            shiftTabsY(bottomMargin - selectedBounds.y - selectedBounds.height,
-                       topMargin, bottomMargin, tabCount, true);
+            shiftTabsY(
+                bottomMargin - selectedBounds.y - selectedBounds.height, topMargin, bottomMargin, tabCount, true
+            );
         } else if (selectedBounds.y < topMargin) {
             // SelectedTab is not fully visible. Covered on left side.
-            shiftTabsY(-selectedBounds.y + topMargin,
-                       topMargin, bottomMargin, tabCount, true);
+            shiftTabsY(-selectedBounds.y + topMargin, topMargin, bottomMargin, tabCount, true);
         }
     }
 
-    protected void calculateRect(final int i, final Rectangle tabBounds, final FontMetrics metrics,
-                                 final boolean verticalTabRuns, final int tabPlacement) {
+    protected void calculateRect(
+            final int i, final Rectangle tabBounds, final FontMetrics metrics, final boolean verticalTabRuns,
+            final int tabPlacement
+    ) {
         Rectangle rect = ui.rects[i];
         if (!verticalTabRuns) {
             if (i > 0) {
@@ -600,8 +601,8 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
 
     protected void restoreHiddenTabsY(final int minY, final int maxY, final int tabCount) {
         if (ui.maxVisible < 0 || ui.maxVisible >= tabCount) return;
-        int space = Math.max(maxY - ui.rects[ui.maxVisible].y - ui.rects[ui.maxVisible].height - ui.currentShiftYTmp,
-                             0);
+        int space =
+            Math.max(maxY - ui.rects[ui.maxVisible].y - ui.rects[ui.maxVisible].height - ui.currentShiftYTmp, 0);
         int shift = Math.min(minY - ui.rects[0].y - ui.currentShiftYTmp, space);
         shiftTabsY(shift, minY, maxY, tabCount, true);
     }
@@ -647,25 +648,29 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         }
     }
 
-    protected void shiftTabsX(final int shift, final int minX, final int returnAt,
-                              final int tabCount, final boolean updateShift) {
+    protected void shiftTabsX(
+            final int shift, final int minX, final int returnAt, final int tabCount, final boolean updateShift
+    ) {
         shiftTabs(shift, minX, returnAt, tabCount, updateShift, true);
     }
 
-    protected void shiftTabsY(final int shift, final int minY, final int returnAt,
-                              final int tabCount, final boolean updateShift) {
+    protected void shiftTabsY(
+            final int shift, final int minY, final int returnAt, final int tabCount, final boolean updateShift
+    ) {
         shiftTabs(shift, minY, returnAt, tabCount, updateShift, false);
     }
 
-    protected void shiftTabs(final int shift, final int minVal, final int returnAt,
-                             final int tabCount, final boolean updateShift, final boolean isX) {
+    protected void shiftTabs(
+            final int shift, final int minVal, final int returnAt, final int tabCount, final boolean updateShift,
+            final boolean isX
+    ) {
         int min = -1;
         int max = -1;
         int minStart = ui.minVisible < 0 || ui.minVisible >= tabCount ? 0 : ui.minVisible;
         int maxStart = ui.maxVisible < 0 || ui.maxVisible >= tabCount ? tabCount - 1 : ui.maxVisible;
         int currShift = isX ? ui.currentShiftXTmp + shift : ui.currentShiftYTmp + shift;
-        Function<Integer, Boolean> isVisible = isX ? (i -> isVisibleX(i, currShift, minVal, returnAt))
-                : (i -> isVisibleY(i, currShift, minVal, returnAt));
+        Function<Integer, Boolean> isVisible =
+            isX ? (i -> isVisibleX(i, currShift, minVal, returnAt)) : (i -> isVisibleY(i, currShift, minVal, returnAt));
         if (isVisible.apply(minStart)) {
             // Descent to find minimum.
             min = minStart;

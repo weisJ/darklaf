@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.ui.table;
@@ -90,7 +87,7 @@ public abstract class TableUIBridge extends BasicTableUI {
      */
     protected static int getAdjustedLead(final JTable table, final boolean row) {
         return row ? getAdjustedLead(table, row, table.getSelectionModel())
-                : getAdjustedLead(table, row, table.getColumnModel().getSelectionModel());
+            : getAdjustedLead(table, row, table.getColumnModel().getSelectionModel());
     }
 
     /**
@@ -101,9 +98,7 @@ public abstract class TableUIBridge extends BasicTableUI {
      * @param  model the model
      * @return       the adjusted lead
      */
-    protected static int getAdjustedLead(final JTable table,
-                                         final boolean row,
-                                         final ListSelectionModel model) {
+    protected static int getAdjustedLead(final JTable table, final boolean row, final ListSelectionModel model) {
         int index = model.getLeadSelectionIndex();
         int compare = row ? table.getRowCount() : table.getColumnCount();
         return index < compare ? index : -1;
@@ -118,9 +113,9 @@ public abstract class TableUIBridge extends BasicTableUI {
      * @return        the boolean
      */
     /*
-     * Returns true if the given point is outside the preferredSize of the
-     * item at the given row of the table. (Column must be 0).
-     * Returns false if the DarkTableUI.KEY_IS_FILE_LIST client property is not set.
+     * Returns true if the given point is outside the preferredSize of the item at the given row of the
+     * table. (Column must be 0). Returns false if the DarkTableUI.KEY_IS_FILE_LIST client property is
+     * not set.
      */
     protected boolean pointOutsidePrefSize(final int row, final int column, final Point p) {
         if (!isFileList) {
@@ -143,9 +138,9 @@ public abstract class TableUIBridge extends BasicTableUI {
     }
 
     /**
-     * Initialize JTable properties, e.g. font, foreground, and background. The font, foreground, and background
-     * properties are only set if their current value is either null or a UIResource, other properties are set if the
-     * current value is null.
+     * Initialize JTable properties, e.g. font, foreground, and background. The font, foreground, and
+     * background properties are only set if their current value is either null or a UIResource, other
+     * properties are set if the current value is null.
      *
      * @see #installUI #installUI
      */
@@ -193,13 +188,13 @@ public abstract class TableUIBridge extends BasicTableUI {
      */
     InputMap getInputMap(final int condition) {
         if (condition == JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT) {
-            InputMap keyMap = (InputMap) DefaultLookup.get(table, this,
-                                                           "Table.ancestorInputMap");
+            InputMap keyMap = (InputMap) DefaultLookup.get(table, this, "Table.ancestorInputMap");
             InputMap rtlKeyMap;
 
-            if (table.getComponentOrientation().isLeftToRight() ||
-                ((rtlKeyMap = (InputMap) DefaultLookup.get(table, this,
-                                                           "Table.ancestorInputMap.RightToLeft")) == null)) {
+            if (
+                table.getComponentOrientation().isLeftToRight() || ((rtlKeyMap =
+                    (InputMap) DefaultLookup.get(table, this, "Table.ancestorInputMap.RightToLeft")) == null)
+            ) {
                 return keyMap;
             } else {
                 rtlKeyMap.setParent(keyMap);
@@ -262,8 +257,8 @@ public abstract class TableUIBridge extends BasicTableUI {
     public abstract void paint(final Graphics g, final JComponent c);
 
     /**
-     * Return the preferred size of the table. The preferred height is the row height times the number of rows. The
-     * preferred width is the sum of the preferred widths of each column.
+     * Return the preferred size of the table. The preferred height is the row height times the number
+     * of rows. The preferred width is the sum of the preferred widths of each column.
      */
     public Dimension getPreferredSize(final JComponent c) {
         long width = 0;
@@ -276,8 +271,8 @@ public abstract class TableUIBridge extends BasicTableUI {
     }
 
     /**
-     * Return the minimum size of the table. The minimum height is the row height times the number of rows. The minimum
-     * width is the sum of the minimum widths of each column.
+     * Return the minimum size of the table. The minimum height is the row height times the number of
+     * rows. The minimum width is the sum of the minimum widths of each column.
      */
     public Dimension getMinimumSize(final JComponent c) {
         long width = 0;
@@ -290,8 +285,8 @@ public abstract class TableUIBridge extends BasicTableUI {
     }
 
     /**
-     * Return the maximum size of the table. The maximum height is the row heighttimes the number of rows. The maximum
-     * width is the sum of the maximum widths of each column.
+     * Return the maximum size of the table. The maximum height is the row heighttimes the number of
+     * rows. The maximum width is the sum of the maximum widths of each column.
      */
     public Dimension getMaximumSize(final JComponent c) {
         long width = 0;
@@ -326,9 +321,7 @@ public abstract class TableUIBridge extends BasicTableUI {
         }
         renderer.setFont(table.getFont());
         int rowMargin = table.getRowMargin();
-        return renderer.getBaseline(Integer.MAX_VALUE, table.getRowHeight() -
-                                                       rowMargin)
-               + rowMargin / 2;
+        return renderer.getBaseline(Integer.MAX_VALUE, table.getRowHeight() - rowMargin) + rowMargin / 2;
     }
 
     /**
@@ -487,11 +480,9 @@ public abstract class TableUIBridge extends BasicTableUI {
      * @param cMax the c max
      */
     /*
-     * Paints the grid lines within <I>aRect</I>, using the grid
-     * color set with <I>setGridColor</I>. Paints vertical lines
-     * if <code>getShowVerticalLines()</code> returns true and paints
-     * horizontal lines if <code>getShowHorizontalLines()</code>
-     * returns true.
+     * Paints the grid lines within <I>aRect</I>, using the grid color set with <I>setGridColor</I>.
+     * Paints vertical lines if <code>getShowVerticalLines()</code> returns true and paints horizontal
+     * lines if <code>getShowHorizontalLines()</code> returns true.
      */
     protected abstract void paintGrid(final Graphics g, final int rMin, final int rMax, final int cMin, final int cMax);
 
@@ -504,8 +495,9 @@ public abstract class TableUIBridge extends BasicTableUI {
      * @param cMin the c min
      * @param cMax the c max
      */
-    protected abstract void paintCells(final Graphics g, final int rMin, final int rMax, final int cMin,
-                                       final int cMax);
+    protected abstract void paintCells(
+            final Graphics g, final int rMin, final int rMax, final int cMin, final int cMax
+    );
 
     /**
      * Paint cell.
@@ -528,9 +520,8 @@ public abstract class TableUIBridge extends BasicTableUI {
     /**
      * The type Handler.
      */
-    protected class Handler implements FocusListener, MouseInputListener,
-                            PropertyChangeListener, ListSelectionListener, ActionListener,
-                            DragRecognitionSupport.BeforeDrag, KeyListener {
+    protected class Handler implements FocusListener, MouseInputListener, PropertyChangeListener, ListSelectionListener,
+            ActionListener, DragRecognitionSupport.BeforeDrag, KeyListener {
 
         protected final FocusListener focusListener;
         protected final KeyListener keyListener;
@@ -639,10 +630,8 @@ public abstract class TableUIBridge extends BasicTableUI {
             outsidePrefSize = pointOutsidePrefSize(pressedRow, pressedCol, p);
 
             if (isFileList) {
-                shouldStartTimer = table.isCellSelected(pressedRow, pressedCol) &&
-                                   !e.isShiftDown() &&
-                                   !DarkUIUtil.isMenuShortcutKeyDown(e) &&
-                                   !outsidePrefSize;
+                shouldStartTimer = table.isCellSelected(pressedRow, pressedCol) && !e.isShiftDown()
+                    && !DarkUIUtil.isMenuShortcutKeyDown(e) && !outsidePrefSize;
             }
 
             if (table.getDragEnabled()) {
@@ -697,10 +686,10 @@ public abstract class TableUIBridge extends BasicTableUI {
 
                 Point p = e.getPoint();
 
-                if (pressedEvent != null &&
-                    table.rowAtPoint(p) == pressedRow &&
-                    table.columnAtPoint(p) == pressedCol &&
-                    table.editCellAt(pressedRow, pressedCol, pressedEvent)) {
+                if (
+                    pressedEvent != null && table.rowAtPoint(p) == pressedRow && table.columnAtPoint(p) == pressedCol
+                        && table.editCellAt(pressedRow, pressedCol, pressedEvent)
+                ) {
 
                     setDispatchComponent(pressedEvent);
                     repostEvent(pressedEvent);
@@ -726,9 +715,10 @@ public abstract class TableUIBridge extends BasicTableUI {
             if (outsidePrefSize) {
                 // If shift is down in multi-select, we should just return.
                 // For single select or non-shift-click, clear the selection
-                if (e.getID() == MouseEvent.MOUSE_PRESSED &&
-                    (!e.isShiftDown() ||
-                     table.getSelectionModel().getSelectionMode() == ListSelectionModel.SINGLE_SELECTION)) {
+                if (
+                    e.getID() == MouseEvent.MOUSE_PRESSED && (!e.isShiftDown()
+                        || table.getSelectionModel().getSelectionMode() == ListSelectionModel.SINGLE_SELECTION)
+                ) {
                     table.clearSelection();
                     TableCellEditor tce = table.getCellEditor();
                     if (tce != null) {
@@ -752,9 +742,7 @@ public abstract class TableUIBridge extends BasicTableUI {
 
             CellEditor editor = table.getCellEditor();
             if (dragEnabled || editor == null || editor.shouldSelectCell(e)) {
-                table.changeSelection(pressedRow, pressedCol,
-                                      DarkUIUtil.isMenuShortcutKeyDown(e),
-                                      e.isShiftDown());
+                table.changeSelection(pressedRow, pressedCol, DarkUIUtil.isMenuShortcutKeyDown(e), e.isShiftDown());
             }
         }
 
@@ -799,8 +787,7 @@ public abstract class TableUIBridge extends BasicTableUI {
             if (dispatchComponent == null || !table.isEditing()) {
                 return false;
             }
-            MouseEvent e2 = SwingUtilities.convertMouseEvent(table, e,
-                                                             dispatchComponent);
+            MouseEvent e2 = SwingUtilities.convertMouseEvent(table, e, dispatchComponent);
             dispatchComponent.dispatchEvent(e2);
             return true;
         }
@@ -867,9 +854,10 @@ public abstract class TableUIBridge extends BasicTableUI {
             }
 
             // if this is a single selection table
-            if ((table.getSelectionModel().getSelectionMode() == ListSelectionModel.SINGLE_SELECTION) &&
-                (table.getColumnModel().getSelectionModel()
-                      .getSelectionMode() == ListSelectionModel.SINGLE_SELECTION)) {
+            if (
+                (table.getSelectionModel().getSelectionMode() == ListSelectionModel.SINGLE_SELECTION) && (table
+                    .getColumnModel().getSelectionModel().getSelectionMode() == ListSelectionModel.SINGLE_SELECTION)
+            ) {
 
                 return true;
             }
@@ -906,8 +894,7 @@ public abstract class TableUIBridge extends BasicTableUI {
             dragStarted = true;
 
             if (DarkUIUtil.isMenuShortcutKeyDown(me) && isFileList) {
-                table.getSelectionModel().addSelectionInterval(pressedRow,
-                                                               pressedRow);
+                table.getSelectionModel().addSelectionInterval(pressedRow, pressedRow);
                 table.getColumnModel().getSelectionModel().addSelectionInterval(pressedCol, pressedCol);
             }
 

@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.util;
@@ -33,30 +30,33 @@ import java.util.function.BiFunction;
  * @author Jannis Weis
  */
 public enum Alignment {
-    NORTH(AlignmentHelper.align(HOR_CENTER_INSIDE, VERT_TOP_INSIDE),
-            AlignmentHelper.align(HOR_CENTER_OUTSIDE, VERT_TOP_OUTSIDE)),
-    SOUTH(AlignmentHelper.align(HOR_CENTER_INSIDE, VERT_BOTTOM_INSIDE),
-            AlignmentHelper.align(HOR_CENTER_OUTSIDE, VERT_BOTTOM_OUTSIDE)),
-    EAST(AlignmentHelper.align(HOR_RIGHT_INSIDE, VERT_CENTER_INSIDE),
-            AlignmentHelper.align(HOR_RIGHT_OUTSIDE, VERT_CENTER_OUTSIDE)),
-    WEST(AlignmentHelper.align(HOR_LEFT_INSIDE, VERT_CENTER_INSIDE),
-            AlignmentHelper.align(HOR_LEFT_OUTSIDE, VERT_CENTER_OUTSIDE)),
-    NORTH_EAST(AlignmentHelper.align(HOR_RIGHT_INSIDE, VERT_TOP_INSIDE),
-            AlignmentHelper.align(HOR_RIGHT_OUTSIDE, VERT_TOP_OUTSIDE)),
-    NORTH_WEST(AlignmentHelper.align(HOR_LEFT_INSIDE, VERT_TOP_INSIDE),
-            AlignmentHelper.align(HOR_LEFT_OUTSIDE, VERT_TOP_OUTSIDE)),
-    SOUTH_EAST(AlignmentHelper.align(HOR_RIGHT_INSIDE, VERT_BOTTOM_INSIDE),
-            AlignmentHelper.align(HOR_RIGHT_OUTSIDE, VERT_BOTTOM_OUTSIDE)),
-    SOUTH_WEST(AlignmentHelper.align(HOR_LEFT_INSIDE, VERT_BOTTOM_INSIDE),
-            AlignmentHelper.align(HOR_LEFT_OUTSIDE, VERT_BOTTOM_OUTSIDE)),
-    CENTER(AlignmentHelper.align(HOR_CENTER_INSIDE, VERT_CENTER_INSIDE),
-            AlignmentHelper.align(HOR_CENTER_OUTSIDE, VERT_CENTER_OUTSIDE));
+    NORTH(
+            AlignmentHelper.align(HOR_CENTER_INSIDE, VERT_TOP_INSIDE), AlignmentHelper.align(HOR_CENTER_OUTSIDE, VERT_TOP_OUTSIDE)
+    ), SOUTH(
+            AlignmentHelper.align(HOR_CENTER_INSIDE, VERT_BOTTOM_INSIDE), AlignmentHelper.align(HOR_CENTER_OUTSIDE, VERT_BOTTOM_OUTSIDE)
+    ), EAST(
+            AlignmentHelper.align(HOR_RIGHT_INSIDE, VERT_CENTER_INSIDE), AlignmentHelper.align(HOR_RIGHT_OUTSIDE, VERT_CENTER_OUTSIDE)
+    ), WEST(
+            AlignmentHelper.align(HOR_LEFT_INSIDE, VERT_CENTER_INSIDE), AlignmentHelper.align(HOR_LEFT_OUTSIDE, VERT_CENTER_OUTSIDE)
+    ), NORTH_EAST(
+            AlignmentHelper.align(HOR_RIGHT_INSIDE, VERT_TOP_INSIDE), AlignmentHelper.align(HOR_RIGHT_OUTSIDE, VERT_TOP_OUTSIDE)
+    ), NORTH_WEST(
+            AlignmentHelper.align(HOR_LEFT_INSIDE, VERT_TOP_INSIDE), AlignmentHelper.align(HOR_LEFT_OUTSIDE, VERT_TOP_OUTSIDE)
+    ), SOUTH_EAST(
+            AlignmentHelper.align(HOR_RIGHT_INSIDE, VERT_BOTTOM_INSIDE), AlignmentHelper.align(HOR_RIGHT_OUTSIDE, VERT_BOTTOM_OUTSIDE)
+    ), SOUTH_WEST(
+            AlignmentHelper.align(HOR_LEFT_INSIDE, VERT_BOTTOM_INSIDE), AlignmentHelper.align(HOR_LEFT_OUTSIDE, VERT_BOTTOM_OUTSIDE)
+    ), CENTER(
+            AlignmentHelper.align(HOR_CENTER_INSIDE, VERT_CENTER_INSIDE), AlignmentHelper.align(HOR_CENTER_OUTSIDE, VERT_CENTER_OUTSIDE)
+    );
 
     private final BiFunction<Dimension, Rectangle, Point> alignInside;
     private final BiFunction<Dimension, Rectangle, Point> alignOutside;
 
-    Alignment(final BiFunction<Dimension, Rectangle, Point> alignInside,
-              final BiFunction<Dimension, Rectangle, Point> alignOutside) {
+    Alignment(
+            final BiFunction<Dimension, Rectangle, Point> alignInside,
+            final BiFunction<Dimension, Rectangle, Point> alignOutside
+    ) {
         this.alignInside = alignInside;
         this.alignOutside = alignOutside;
     }
@@ -70,16 +70,14 @@ public enum Alignment {
      * @param  hint        preferred alignment.
      * @return             fitting alignment. If none is found the default is {@link Alignment#CENTER}.
      */
-    public static Alignment getAlignment(final Point point,
-                                         final Dimension size,
-                                         final Rectangle outerBounds,
-                                         final Alignment hint) {
+    public static Alignment getAlignment(
+            final Point point, final Dimension size, final Rectangle outerBounds, final Alignment hint
+    ) {
         if (hint.canBeAligned(point, size, outerBounds)) {
             return hint;
         }
         for (Alignment alignment : Alignment.values()) {
-            if (alignment != CENTER && alignment != hint
-                && alignment.canBeAligned(point, size, outerBounds)) {
+            if (alignment != CENTER && alignment != hint && alignment.canBeAligned(point, size, outerBounds)) {
                 return alignment;
             }
         }
@@ -94,13 +92,10 @@ public enum Alignment {
      * @param  outerBounds boundaries.
      * @return             true if can be aligned.
      */
-    public boolean canBeAligned(final Point point,
-                                final Dimension size,
-                                final Rectangle outerBounds) {
+    public boolean canBeAligned(final Point point, final Dimension size, final Rectangle outerBounds) {
         Point p = relativePos(size, point);
-        return p.x >= outerBounds.x && p.y >= outerBounds.y
-               && p.x + size.width < outerBounds.x + outerBounds.width
-               && p.y + size.height < outerBounds.x + outerBounds.height;
+        return p.x >= outerBounds.x && p.y >= outerBounds.y && p.x + size.width < outerBounds.x + outerBounds.width
+            && p.y + size.height < outerBounds.x + outerBounds.height;
     }
 
     /**
@@ -121,14 +116,13 @@ public enum Alignment {
      * @param  innerBounds bounds of inside rectangle
      * @return             top/left point of aligned rectangle
      */
-    public Point alignOutside(final Dimension toAlign,
-                              final Rectangle innerBounds) {
+    public Point alignOutside(final Dimension toAlign, final Rectangle innerBounds) {
         return this.alignOutside.apply(toAlign, innerBounds);
     }
 
     /**
-     * Get the index of the alignment. This function is for utility purposes where one might save settings based on
-     * alignment in an array.
+     * Get the index of the alignment. This function is for utility purposes where one might save
+     * settings based on alignment in an array.
      *
      * @return the index.
      */
@@ -144,25 +138,25 @@ public enum Alignment {
     @SuppressWarnings("Duplicates")
     public Alignment opposite() {
         switch (this) {
-            case NORTH :
+            case NORTH:
                 return SOUTH;
-            case NORTH_EAST :
+            case NORTH_EAST:
                 return SOUTH_WEST;
-            case EAST :
+            case EAST:
                 return WEST;
-            case SOUTH_EAST :
+            case SOUTH_EAST:
                 return NORTH_WEST;
-            case SOUTH :
+            case SOUTH:
                 return NORTH;
-            case SOUTH_WEST :
+            case SOUTH_WEST:
                 return NORTH_EAST;
-            case WEST :
+            case WEST:
                 return EAST;
-            case NORTH_WEST :
+            case NORTH_WEST:
                 return SOUTH_EAST;
-            case CENTER :
+            case CENTER:
                 return CENTER;
-            default :
+            default:
                 throw new IllegalArgumentException();
         }
     }
@@ -170,25 +164,25 @@ public enum Alignment {
     @SuppressWarnings("Duplicates")
     public Alignment anticlockwise() {
         switch (this) {
-            case NORTH :
+            case NORTH:
                 return NORTH_WEST;
-            case NORTH_EAST :
+            case NORTH_EAST:
                 return NORTH;
-            case EAST :
+            case EAST:
                 return NORTH_EAST;
-            case SOUTH_EAST :
+            case SOUTH_EAST:
                 return EAST;
-            case SOUTH :
+            case SOUTH:
                 return SOUTH_EAST;
-            case SOUTH_WEST :
+            case SOUTH_WEST:
                 return SOUTH;
-            case WEST :
+            case WEST:
                 return SOUTH_WEST;
-            case NORTH_WEST :
+            case NORTH_WEST:
                 return WEST;
-            case CENTER :
+            case CENTER:
                 return CENTER;
-            default :
+            default:
                 throw new IllegalArgumentException();
         }
     }
@@ -196,25 +190,25 @@ public enum Alignment {
     @SuppressWarnings("Duplicates")
     public Alignment clockwise() {
         switch (this) {
-            case NORTH :
+            case NORTH:
                 return NORTH_EAST;
-            case NORTH_EAST :
+            case NORTH_EAST:
                 return EAST;
-            case EAST :
+            case EAST:
                 return SOUTH_EAST;
-            case SOUTH_EAST :
+            case SOUTH_EAST:
                 return SOUTH;
-            case SOUTH :
+            case SOUTH:
                 return SOUTH_WEST;
-            case SOUTH_WEST :
+            case SOUTH_WEST:
                 return WEST;
-            case WEST :
+            case WEST:
                 return NORTH_WEST;
-            case NORTH_WEST :
+            case NORTH_WEST:
                 return NORTH;
-            case CENTER :
+            case CENTER:
                 return CENTER;
-            default :
+            default:
                 throw new IllegalArgumentException();
         }
     }
@@ -229,25 +223,25 @@ public enum Alignment {
 
     public Insets maskInsets(final int top, final int left, final int bottom, final int right, final int mask) {
         switch (this) {
-            case NORTH :
+            case NORTH:
                 return new Insets(top, mask, mask, mask);
-            case NORTH_EAST :
+            case NORTH_EAST:
                 return new Insets(top, mask, mask, right);
-            case EAST :
+            case EAST:
                 return new Insets(mask, mask, mask, right);
-            case SOUTH_EAST :
+            case SOUTH_EAST:
                 return new Insets(mask, mask, bottom, right);
-            case SOUTH :
+            case SOUTH:
                 return new Insets(mask, mask, bottom, mask);
-            case SOUTH_WEST :
+            case SOUTH_WEST:
                 return new Insets(mask, left, bottom, mask);
-            case WEST :
+            case WEST:
                 return new Insets(mask, left, mask, mask);
-            case NORTH_WEST :
+            case NORTH_WEST:
                 return new Insets(top, left, mask, mask);
-            case CENTER :
+            case CENTER:
                 return new Insets(mask, mask, mask, mask);
-            default :
+            default:
                 throw new IllegalArgumentException();
         }
     }
@@ -263,10 +257,10 @@ public enum Alignment {
     public Insets maskInsetsInverted(final int top, final int left, final int bottom, final int right, final int mask) {
         Insets masking = maskInsets(0, 0, 0, 0, 1);
         Insets maskVal = maskInsets(mask, mask, mask, mask, 0);
-        return new Insets(top * masking.top + maskVal.top,
-                          left * masking.left + maskVal.left,
-                          bottom * masking.bottom + maskVal.bottom,
-                          right * masking.right + maskVal.right);
+        return new Insets(
+            top * masking.top + maskVal.top, left * masking.left + maskVal.left,
+            bottom * masking.bottom + maskVal.bottom, right * masking.right + maskVal.right
+        );
     }
 
     /**
@@ -276,8 +270,7 @@ public enum Alignment {
      * @param  outerBounds bounds of outer rectangle
      * @return             top/left point of aligned rectangle
      */
-    public Point alignInside(final Dimension toAlign,
-                             final Rectangle outerBounds) {
+    public Point alignInside(final Dimension toAlign, final Rectangle outerBounds) {
         return this.alignInside.apply(toAlign, outerBounds);
     }
 
@@ -320,29 +313,29 @@ public enum Alignment {
     public double getAngle() {
         double angle = 0.0;
         switch (this) {
-            case NORTH :
-            case CENTER :
+            case NORTH:
+            case CENTER:
                 angle = 0.0;
                 break;
-            case SOUTH :
+            case SOUTH:
                 angle = 180.0;
                 break;
-            case EAST :
+            case EAST:
                 angle = 90.0;
                 break;
-            case WEST :
+            case WEST:
                 angle = 270.0;
                 break;
-            case NORTH_EAST :
+            case NORTH_EAST:
                 angle = 45.0;
                 break;
-            case NORTH_WEST :
+            case NORTH_WEST:
                 angle = 315.0;
                 break;
-            case SOUTH_EAST :
+            case SOUTH_EAST:
                 angle = 135.0;
                 break;
-            case SOUTH_WEST :
+            case SOUTH_WEST:
                 angle = 225.0;
                 break;
         }

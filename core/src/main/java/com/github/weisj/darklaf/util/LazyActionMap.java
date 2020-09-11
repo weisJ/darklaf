@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.util;
@@ -47,19 +44,17 @@ public class LazyActionMap extends ActionMapUIResource {
     }
 
     /**
-     * Installs an ActionMap that will be populated by invoking the
-     * <code>loadActionMap</code> method on the specified Class
-     * when necessary.
+     * Installs an ActionMap that will be populated by invoking the <code>loadActionMap</code> method on
+     * the specified Class when necessary.
      * <p>
      * This should be used if the ActionMap can be shared.
      *
      * @param c           JComponent to install the ActionMap on.
      * @param loaderClass Class object that gets loadActionMap invoked on.
-     * @param defaultsKey Key to use to defaults table to check for existing map and what resulting Map will be
-     *                    registered on.
+     * @param defaultsKey Key to use to defaults table to check for existing map and what resulting Map
+     *                    will be registered on.
      */
-    public static void installLazyActionMap(final JComponent c, final Class<?> loaderClass,
-                                            final String defaultsKey) {
+    public static void installLazyActionMap(final JComponent c, final Class<?> loaderClass, final String defaultsKey) {
         ActionMap map = (ActionMap) UIManager.get(defaultsKey);
         if (map == null) {
             map = new LazyActionMap(loaderClass);
@@ -69,19 +64,17 @@ public class LazyActionMap extends ActionMapUIResource {
     }
 
     /**
-     * Returns an ActionMap that will be populated by invoking the
-     * <code>loadActionMap</code> method on the specified Class
-     * when necessary.
+     * Returns an ActionMap that will be populated by invoking the <code>loadActionMap</code> method on
+     * the specified Class when necessary.
      * <p>
      * This should be used if the ActionMap can be shared.
      *
      * @param  loaderClass Class object that gets loadActionMap invoked on.
-     * @param  defaultsKey Key to use to defaults table to check for existing map and what resulting Map will be
-     *                     registered on.
+     * @param  defaultsKey Key to use to defaults table to check for existing map and what resulting Map
+     *                     will be registered on.
      * @return             the action map
      */
-    public static ActionMap getActionMap(final Class<?> loaderClass,
-                                         final String defaultsKey) {
+    public static ActionMap getActionMap(final Class<?> loaderClass, final String defaultsKey) {
         ActionMap map = (ActionMap) UIManager.get(defaultsKey);
         if (map == null) {
             map = new LazyActionMap(loaderClass);
@@ -104,13 +97,9 @@ public class LazyActionMap extends ActionMapUIResource {
                 Method method = klass.getDeclaredMethod("loadActionMap", LazyActionMap.class);
                 method.invoke(klass, this);
             } catch (NoSuchMethodException nsme) {
-                assert false : "LazyActionMap unable to load actions " +
-                               klass;
-            } catch (IllegalAccessException
-                     | InvocationTargetException
-                     | IllegalArgumentException iae) {
-                assert false : "LazyActionMap unable to load actions " +
-                               iae;
+                assert false : "LazyActionMap unable to load actions " + klass;
+            } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException iae) {
+                assert false : "LazyActionMap unable to load actions " + iae;
             }
         }
     }

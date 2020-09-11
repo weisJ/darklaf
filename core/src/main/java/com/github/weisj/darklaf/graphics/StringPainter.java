@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf.graphics;
@@ -63,66 +60,62 @@ public class StringPainter {
         return experimentalAntialiasingEnabled;
     }
 
-    public static <T extends JComponent> void drawString(final Graphics g, final T c,
-                                                         final String text, final Rectangle textRect) {
+    public static <T extends JComponent> void drawString(
+            final Graphics g, final T c, final String text, final Rectangle textRect
+    ) {
         drawString(g, c, text, textRect, SwingUtilities2.getFontMetrics(c, g));
     }
 
-    public static <T extends JComponent> void drawString(final Graphics g, final T c, final View view,
-                                                         final String text, final Rectangle textRect,
-                                                         final FontMetrics fm) {
+    public static <T extends JComponent> void drawString(
+            final Graphics g, final T c, final View view, final String text, final Rectangle textRect,
+            final FontMetrics fm
+    ) {
         drawStringImpl(g, c, view, text, textRect, c.getFont(), fm, -1);
     }
 
-    public static <T extends JComponent> void drawString(final Graphics g, final T c,
-                                                         final String text, final Rectangle textRect,
-                                                         final FontMetrics fm) {
+    public static <T extends JComponent> void drawString(
+            final Graphics g, final T c, final String text, final Rectangle textRect, final FontMetrics fm
+    ) {
         drawStringImpl(g, c, null, text, textRect, c.getFont(), fm, -1);
     }
 
-    public static <T extends JComponent> void drawStringUnderlineCharAt(final Graphics g, final T c,
-                                                                        final String text, final int mnemIndex,
-                                                                        final Rectangle textRect) {
+    public static <T extends JComponent> void drawStringUnderlineCharAt(
+            final Graphics g, final T c, final String text, final int mnemIndex, final Rectangle textRect
+    ) {
         drawStringUnderlineCharAt(g, c, text, mnemIndex, textRect, c.getFont());
     }
 
-    public static <T extends JComponent> void drawStringUnderlineCharAt(final Graphics g, final T c,
-                                                                        final String text, final int mnemIndex,
-                                                                        final Rectangle textRect,
-                                                                        final Font f) {
+    public static <T extends JComponent> void drawStringUnderlineCharAt(
+            final Graphics g, final T c, final String text, final int mnemIndex, final Rectangle textRect, final Font f
+    ) {
         drawStringUnderlineCharAt(g, c, text, mnemIndex, textRect, f, SwingUtilities2.getFontMetrics(c, g));
     }
 
-    public static <T extends JComponent> void drawStringUnderlineCharAt(final Graphics g, final T c, final View view,
-                                                                        final String text, final int mnemIndex,
-                                                                        final Rectangle textRect,
-                                                                        final Font font,
-                                                                        final FontMetrics fm) {
+    public static <T extends JComponent> void drawStringUnderlineCharAt(
+            final Graphics g, final T c, final View view, final String text, final int mnemIndex,
+            final Rectangle textRect, final Font font, final FontMetrics fm
+    ) {
         drawStringImpl(g, c, view, text, textRect, font, fm, mnemIndex);
     }
 
-    public static <T extends JComponent> void drawStringUnderlineCharAt(final Graphics g, final T c,
-                                                                        final String text, final int mnemIndex,
-                                                                        final Rectangle textRect,
-                                                                        final Font font,
-                                                                        final FontMetrics fm) {
+    public static <T extends JComponent> void drawStringUnderlineCharAt(
+            final Graphics g, final T c, final String text, final int mnemIndex, final Rectangle textRect,
+            final Font font, final FontMetrics fm
+    ) {
         drawStringImpl(g, c, null, text, textRect, font, fm, mnemIndex);
     }
 
-    public static <T extends JComponent> void drawStringImpl(final Graphics g, final T c,
-                                                             final View view,
-                                                             final String text, final Rectangle textRect,
-                                                             final Font font, final FontMetrics fm,
-                                                             final int mnemIndex) {
+    public static <T extends JComponent> void drawStringImpl(
+            final Graphics g, final T c, final View view, final String text, final Rectangle textRect, final Font font,
+            final FontMetrics fm, final int mnemIndex
+    ) {
         drawStringImpl(g, c, view, text, textRect, font, fm, mnemIndex, c.getBackground());
     }
 
-    public static <T extends JComponent> void drawStringImpl(final Graphics g, final T c,
-                                                             final View view,
-                                                             final String text, final Rectangle textRect,
-                                                             final Font font, final FontMetrics fm,
-                                                             final int mnemIndex,
-                                                             final Color background) {
+    public static <T extends JComponent> void drawStringImpl(
+            final Graphics g, final T c, final View view, final String text, final Rectangle textRect, final Font font,
+            final FontMetrics fm, final int mnemIndex, final Color background
+    ) {
         if (text == null || text.equals("")) return;
 
         GraphicsContext context = GraphicsUtil.setupAntialiasing(g);
@@ -139,9 +132,9 @@ public class StringPainter {
         Color bgColor = background;
 
         /*
-         * If there is a non-opaque parent on Windows no sub-pixel AA is supported.
-         * In this case we paint the text to an offscreen image with opaque background and paste
-         * it draw it back to the original graphics object.
+         * If there is a non-opaque parent on Windows no sub-pixel AA is supported. In this case we paint
+         * the text to an offscreen image with opaque background and paste it draw it back to the original
+         * graphics object.
          *
          * See https://bugs.openjdk.java.net/browse/JDK-8215980?attachmentOrder=desc
          */
@@ -156,8 +149,7 @@ public class StringPainter {
             if (experimentalAntialiasingEnabled) {
                 textPos = new Point(x, y);
                 textPos.setLocation(SwingUtilities.convertPoint(c, textPos, window));
-                textPos.setLocation((int) Math.round(scaleX * textPos.x),
-                                    (int) Math.round(scaleX * textPos.y));
+                textPos.setLocation((int) Math.round(scaleX * textPos.x), (int) Math.round(scaleX * textPos.y));
 
                 /*
                  * Ensure the background color has sufficient contrast to the foreground.
@@ -167,8 +159,9 @@ public class StringPainter {
                 bgColor = brightness > 127 ? Color.BLACK : Color.WHITE;
             }
 
-            img = ImageUtil.createCompatibleImage((int) Math.round(scaleX * textRect.width),
-                                                  (int) Math.round(scaleY * textRect.height));
+            img = ImageUtil.createCompatibleImage(
+                (int) Math.round(scaleX * textRect.width), (int) Math.round(scaleY * textRect.height)
+            );
             drawingGraphics = prepareImage(img, bgColor, fgColor, scaleX, scaleY);
             textRect.setLocation(0, 0);
         } else {
@@ -182,8 +175,7 @@ public class StringPainter {
         } else {
             textRect.y += asc;
             if (mnemIndex >= 0) {
-                SwingUtilities2.drawStringUnderlineCharAt(c, drawingGraphics, text,
-                                                          mnemIndex, textRect.x, textRect.y);
+                SwingUtilities2.drawStringUnderlineCharAt(c, drawingGraphics, text, mnemIndex, textRect.x, textRect.y);
             } else {
                 SwingUtilities2.drawString(c, drawingGraphics, text, textRect.x, textRect.y);
             }
@@ -197,8 +189,9 @@ public class StringPainter {
         context.restore();
     }
 
-    private static Image postProcessImage(final Graphics2D g, final BufferedImage img, final Point textPos,
-                                          final Color bgColor, final Color fgColor) {
+    private static Image postProcessImage(
+            final Graphics2D g, final BufferedImage img, final Point textPos, final Color bgColor, final Color fgColor
+    ) {
         if (experimentalAntialiasingEnabled) {
             final BufferedImage destImg = getImage(g);
             ImageFilter filter = new AntialiasingImageFilter(destImg, textPos.x, textPos.y, fgColor, bgColor);
@@ -252,9 +245,9 @@ public class StringPainter {
         return null;
     }
 
-    private static Graphics2D prepareImage(final BufferedImage img,
-                                           final Color background, final Color color,
-                                           final double xScale, final double yScale) {
+    private static Graphics2D prepareImage(
+            final BufferedImage img, final Color background, final Color color, final double xScale, final double yScale
+    ) {
         Graphics2D g = (Graphics2D) img.getGraphics();
         g.setColor(background);
         g.fillRect(0, 0, img.getWidth(), img.getHeight());
@@ -276,8 +269,8 @@ public class StringPainter {
     public static void paintOpacityBuffered(final Graphics g, final JComponent c, final OpacityBufferedUI ui) {
         double scaleX = Scale.getScaleX((Graphics2D) g);
         double scaleY = Scale.getScaleX((Graphics2D) g);
-        BufferedImage img = ImageUtil.createCompatibleImage((int) Math.round(scaleX * c.getWidth()),
-                                                            (int) Math.round(scaleY * c.getHeight()));
+        BufferedImage img = ImageUtil
+            .createCompatibleImage((int) Math.round(scaleX * c.getWidth()), (int) Math.round(scaleY * c.getHeight()));
         Graphics imgGraphics = img.getGraphics();
         imgGraphics.setColor(c.getBackground());
         imgGraphics.fillRect(0, 0, c.getWidth(), c.getHeight());

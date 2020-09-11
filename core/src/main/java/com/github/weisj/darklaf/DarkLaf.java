@@ -3,23 +3,20 @@
  *
  * Copyright (c) 2020 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 package com.github.weisj.darklaf;
@@ -51,23 +48,17 @@ public class DarkLaf extends ThemedLookAndFeel {
     /*
      * All tasks for initializing the ui defaults in order of execution.
      */
-    private static final DefaultsInitTask[] INIT_TASKS = new DefaultsInitTask[]{new RemoveUnusedInitTask(),
-                                                                                new ThemeDefaultsInitTask(),
-                                                                                new InputDefaultsInitTask(),
-                                                                                new IdeaDefaultsInitTask(),
-                                                                                new FontDefaultsInitTask(),
-                                                                                new StyleSheetInitTask(),
-                                                                                new SystemDefaultsInitTask(),
-                                                                                new PlatformDefaultsInitTask(),
-                                                                                new UserInitTask(),
-                                                                                new UtilityDefaultsInitTask()};
+    private static final DefaultsInitTask[] INIT_TASKS = new DefaultsInitTask[] {new RemoveUnusedInitTask(),
+        new ThemeDefaultsInitTask(), new InputDefaultsInitTask(), new IdeaDefaultsInitTask(),
+        new FontDefaultsInitTask(), new StyleSheetInitTask(), new SystemDefaultsInitTask(),
+        new PlatformDefaultsInitTask(), new UserInitTask(), new UtilityDefaultsInitTask()};
     /*
      * The base look and feel. This may vary to handle different platform support.
      */
     private final LookAndFeel base;
     /*
-     * Indicated whether #initialize has been called. This prevents the theme to change for Borders/Icons etc.
-     * if #getDefaults is called outside of LaF installation.
+     * Indicated whether #initialize has been called. This prevents the theme to change for
+     * Borders/Icons etc. if #getDefaults is called outside of LaF installation.
      */
     private boolean isInitialized;
 
@@ -209,8 +200,8 @@ public class DarkLaf extends ThemedLookAndFeel {
     @Override
     public boolean getSupportsWindowDecorations() {
         /*
-         * Return false to avoid setting the windows to undecorated. This results in rootpane-styles not being set.
-         * However darklaf only distinguished between Frames and Dialogs.
+         * Return false to avoid setting the windows to undecorated. This results in rootpane-styles not
+         * being set. However darklaf only distinguished between Frames and Dialogs.
          */
         return false;
     }
