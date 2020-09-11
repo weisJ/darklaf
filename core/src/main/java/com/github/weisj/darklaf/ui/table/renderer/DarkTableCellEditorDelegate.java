@@ -74,8 +74,8 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
             if (DarkTableUI.ignoreKeyCodeOnEdit((KeyEvent) anEvent, table)) return false;
         }
         if (TableConstants.isBooleanRenderingEnabled(table)) {
-            if (anEvent instanceof MouseEvent) {
-                return isMouseOverBooleanRenderer((MouseEvent) anEvent, table);
+            if (anEvent instanceof MouseEvent && isMouseOverBooleanRenderer((MouseEvent) anEvent, table)) {
+                return true;
             }
         }
         return super.isCellEditable(anEvent);
