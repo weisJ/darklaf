@@ -108,15 +108,16 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     /**
      * Paints a highlight.
      *
-     * @param g      the graphics context
-     * @param offs0  the starting model offset &gt;= 0
-     * @param offs1  the ending model offset &gt;= offs1
+     * @param g the graphics context
+     * @param offs0 the starting model offset &gt;= 0
+     * @param offs1 the ending model offset &gt;= offs1
      * @param bounds the bounding box for the highlight
-     * @param c      the editor
+     * @param c the editor
      */
     @Override
     public void paint(final Graphics g, final int offs0, final int offs1, final Shape bounds, final JTextComponent c) {
-        if (!enabled) return;
+        if (!enabled)
+            return;
         Graphics2D g2d = (Graphics2D) g;
         GraphicsContext context = new GraphicsContext(g2d);
         color = c.getSelectedTextColor();
@@ -157,11 +158,10 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     }
 
     @Override
-    public Shape paintLayer(
-            final Graphics g, final int offs0, final int offs1, final Shape bounds, final JTextComponent c,
-            final View view
-    ) {
-        if (!enabled) return bounds;
+    public Shape paintLayer(final Graphics g, final int offs0, final int offs1, final Shape bounds,
+            final JTextComponent c, final View view) {
+        if (!enabled)
+            return bounds;
         color = (Color) view.getAttributes().getAttribute(StyleConstantsEx.SelectedForeground);
         if (color == null) {
             color = StyleConstants.getForeground(view.getAttributes());
@@ -193,7 +193,8 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         if (lineExtension || rounded) {
             dirtyShape = paintRoundedLayer(g2d, c, offs0, offs1, context, rounded, lineExtension, false);
 
-            // Swing may not recognise the painted extension. Just repaint if the selection changed to guarantee
+            // Swing may not recognise the painted extension. Just repaint if the selection changed to
+            // guarantee
             // everything is visible.
             if (lineExtension) {
                 if ((lastSelEnd != c.getSelectionEnd() || lastSelStart != c.getSelectionStart())) {
@@ -225,13 +226,12 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
     private boolean isLeftTorRight(final JTextComponent c) {
         return !TextAttribute.RUN_DIRECTION_RTL.equals(c.getDocument().getProperty(TextAttribute.RUN_DIRECTION))
-            && !Boolean.TRUE.equals(c.getDocument().getProperty("i18n"));
+                && !Boolean.TRUE.equals(c.getDocument().getProperty("i18n"));
     }
 
-    protected Rectangle paintRoundedLayer(
-            final Graphics2D g, final JTextComponent c, final int offs0, final int offs1, final GraphicsContext context,
-            final boolean rounded, final boolean extendLines, final boolean isPaintingPreceding
-    ) {
+    protected Rectangle paintRoundedLayer(final Graphics2D g, final JTextComponent c, final int offs0, final int offs1,
+            final GraphicsContext context, final boolean rounded, final boolean extendLines,
+            final boolean isPaintingPreceding) {
         final int selectionStart = c.getSelectionStart();
         final int selectionEnd = c.getSelectionEnd();
 
@@ -253,7 +253,8 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
         int nextLineStart = currentLineEnd + 1;
         int nextLineEnd = getOffset(c, c.getWidth(), getPosRect(c, nextLineStart).y);
-        if (nextLineEnd < nextLineStart) nextLineEnd = nextLineStart;
+        if (nextLineEnd < nextLineStart)
+            nextLineEnd = nextLineStart;
 
         boolean isEndOfLine = offs1 >= c.getDocument().getLength() - 1 || getPosRect(c, offs1 + 1).y > posOffs1.y;
         boolean isStartOfLine = offs0 == 0 || getPosRect(c, offs0 - 1).y < posOffs0.y;
@@ -296,20 +297,19 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
         if (extendLines) {
             // Adjust the line rects for the adjacent lines for correct rounded corner placement.
-            extendLine(
-                c, ins, previousLineRect, hasLineAbove && previousLineStart >= selectionStart,
-                hasLineAbove && previousLineEnd <= selectionEnd
-            );
+            extendLine(c, ins, previousLineRect, hasLineAbove && previousLineStart >= selectionStart,
+                    hasLineAbove && previousLineEnd <= selectionEnd);
 
             boolean extendNextRight = hasLineBelow && nextLineEnd < c.getDocument().getLength()
-                && getOffset(c, getPosRect(c, nextLineEnd + 1)) <= selectionEnd;
+                    && getOffset(c, getPosRect(c, nextLineEnd + 1)) <= selectionEnd;
 
             extendLine(c, ins, nextLineRect, hasLineBelow && nextLineStart >= selectionStart, extendNextRight);
 
             paintPreviousLine =
-                hasLineAbove && (previousLineStart == previousLineEnd || previousLineEnd == selectionStart);
+                    hasLineAbove && (previousLineStart == previousLineEnd || previousLineEnd == selectionStart);
             previousLineVisible = hasLineAbove;
-            if (nextLineRect.y != posEnd.y) nextLineVisible = hasLineBelow;
+            if (nextLineRect.y != posEnd.y)
+                nextLineVisible = hasLineBelow;
 
             boolean extendRight = isPaintingPreceding || (hasLineBelow && (endX(layerRect) == endX(currentLineRect)));
             extendRight &= offs1 < selectionEnd;
@@ -319,7 +319,8 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
             extendLine(c, ins, layerRect, extendLeft, extendRight);
             extendLine(c, ins, currentLineRect, extendLeft, extendRight);
 
-            if (isPaintingPreceding) layerRect.height = currentLineRect.height;
+            if (isPaintingPreceding)
+                layerRect.height = currentLineRect.height;
         }
 
         boolean canRoundLeft = rounded && (isStartOfLine || startX(currentLineRect) == startX(layerRect));
@@ -331,34 +332,29 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         boolean roundedBottomRight = !nextLineVisible || rightRoundedVisible(currentLineRect, nextLineRect);
 
         boolean arcTopLeft =
-            previousLineVisible && !roundedTopLeft && leftArcVisible(currentLineRect, previousLineRect);
+                previousLineVisible && !roundedTopLeft && leftArcVisible(currentLineRect, previousLineRect);
         boolean arcTopRight =
-            previousLineVisible && !roundedTopRight && rightArcVisible(currentLineRect, previousLineRect);
+                previousLineVisible && !roundedTopRight && rightArcVisible(currentLineRect, previousLineRect);
         boolean arcBottomLeft = nextLineVisible && !roundedBottomLeft && leftArcVisible(currentLineRect, nextLineRect);
         boolean arcBottomRight =
-            nextLineVisible && !roundedBottomRight && rightArcVisible(currentLineRect, nextLineRect);
+                nextLineVisible && !roundedBottomRight && rightArcVisible(currentLineRect, nextLineRect);
 
-        layerRect = paintRoundRect(
-            g, context, layerRect, canRoundLeft && roundedTopLeft, canRoundRight && roundedTopRight,
-            canRoundLeft && roundedBottomLeft, canRoundRight && roundedBottomRight
-        );
-        Rectangle r = paintArcs(
-            g, context, layerRect, canRoundLeft && arcTopLeft, canRoundRight && arcTopRight,
-            canRoundLeft && arcBottomLeft, canRoundRight && arcBottomRight
-        );
+        layerRect =
+                paintRoundRect(g, context, layerRect, canRoundLeft && roundedTopLeft, canRoundRight && roundedTopRight,
+                        canRoundLeft && roundedBottomLeft, canRoundRight && roundedBottomRight);
+        Rectangle r = paintArcs(g, context, layerRect, canRoundLeft && arcTopLeft, canRoundRight && arcTopRight,
+                canRoundLeft && arcBottomLeft, canRoundRight && arcBottomRight);
 
         if (paintPreviousLine && !isPaintingPreceding) {
-            Rectangle prev =
-                paintRoundedLayer(g, c, Math.max(previousLineStart, selectionStart), Math.min(previousLineEnd, selectionEnd), context, rounded, extendLines, true);
+            Rectangle prev = paintRoundedLayer(g, c, Math.max(previousLineStart, selectionStart),
+                    Math.min(previousLineEnd, selectionEnd), context, rounded, extendLines, true);
             convexHull(r, prev);
         }
         return r;
     }
 
-    private void extendLine(
-            final JTextComponent c, final Insets ins, final Rectangle rect, final boolean extendLeft,
-            final boolean extendRight
-    ) {
+    private void extendLine(final JTextComponent c, final Insets ins, final Rectangle rect, final boolean extendLeft,
+            final boolean extendRight) {
         if (extendRight || extendLeft) {
             int x = startX(rect);
             if (extendRight) {
@@ -462,10 +458,8 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         return roundedEdges;
     }
 
-    private Rectangle paintRoundRect(
-            final Graphics g, final GraphicsContext context, final Rectangle shape, final boolean topLeft,
-            final boolean topRight, final boolean bottomLeft, final boolean bottomRight
-    ) {
+    private Rectangle paintRoundRect(final Graphics g, final GraphicsContext context, final Rectangle shape,
+            final boolean topLeft, final boolean topRight, final boolean bottomLeft, final boolean bottomRight) {
         Rectangle r = new Rectangle(shape);
         int aw = Math.min(arcSize, r.width);
         int ah = Math.min(arcSize, r.height);
@@ -503,20 +497,23 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
              * First paint the whole rounded rectangle and remove any non visible arcs.
              */
             g.fillRoundRect(r.x, r.y, r.width, r.height, aw, ah);
-            if (!topLeft) g.fillRect(r.x, r.y, aw, ah);
-            if (!topRight) g.fillRect(r.x + r.width - aw, r.y, aw, ah);
-            if (!bottomLeft) g.fillRect(r.x, r.y + r.height - ah, aw, ah);
-            if (!bottomRight) g.fillRect(r.x + r.width - aw, r.y + r.height - ah, aw, ah);
+            if (!topLeft)
+                g.fillRect(r.x, r.y, aw, ah);
+            if (!topRight)
+                g.fillRect(r.x + r.width - aw, r.y, aw, ah);
+            if (!bottomLeft)
+                g.fillRect(r.x, r.y + r.height - ah, aw, ah);
+            if (!bottomRight)
+                g.fillRect(r.x + r.width - aw, r.y + r.height - ah, aw, ah);
         }
         context.restoreClip();
         return shape;
     }
 
-    private Rectangle paintArcs(
-            final Graphics2D g, final GraphicsContext context, final Rectangle r, final boolean topLeft,
-            final boolean topRight, final boolean bottomLeft, final boolean bottomRight
-    ) {
-        if (r.isEmpty()) return r;
+    private Rectangle paintArcs(final Graphics2D g, final GraphicsContext context, final Rectangle r,
+            final boolean topLeft, final boolean topRight, final boolean bottomLeft, final boolean bottomRight) {
+        if (r.isEmpty())
+            return r;
         Rectangle alloc = new Rectangle(r);
         if (topLeft || bottomLeft) {
             alloc.x -= arcSize;

@@ -67,10 +67,8 @@ public class GridButtonsDemo implements ComponentDemo {
         return new DemoPanel(panel);
     }
 
-    private void add(
-            final JPanel p, final AbstractButton[][] buttons, final int x, final int y, final GridBagConstraints c,
-            final AlignmentExt a
-    ) {
+    private void add(final JPanel p, final AbstractButton[][] buttons, final int x, final int y,
+            final GridBagConstraints c, final AlignmentExt a) {
         Optional.ofNullable(get(buttons, x, y)).ifPresent(b -> {
             b.putClientProperty(ButtonConstants.KEY_CORNER, a);
 

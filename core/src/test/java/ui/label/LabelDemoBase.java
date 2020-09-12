@@ -49,11 +49,8 @@ public abstract class LabelDemoBase<T extends JLabel> implements ComponentDemo {
         controlPanel.add(new JCheckBox("LeftToRight") {
             {
                 setSelected(label.getComponentOrientation().isLeftToRight());
-                addActionListener(
-                    e -> label.setComponentOrientation(
-                        isSelected() ? ComponentOrientation.LEFT_TO_RIGHT : ComponentOrientation.RIGHT_TO_LEFT
-                    )
-                );
+                addActionListener(e -> label.setComponentOrientation(
+                        isSelected() ? ComponentOrientation.LEFT_TO_RIGHT : ComponentOrientation.RIGHT_TO_LEFT));
             }
         });
         return controlPanel;

@@ -38,9 +38,7 @@ import javax.swing.*;
 import com.github.weisj.darklaf.util.LazyValue;
 import com.github.weisj.darklaf.util.LogUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public final class IconLoader {
     private static final Logger LOGGER = LogUtil.getLogger(IconLoader.class);
     private static final Map<Class<?>, IconLoader> iconLoaderMap = new HashMap<>();
@@ -124,9 +122,7 @@ public final class IconLoader {
         currentThemeKey.set(theme);
     }
 
-    /**
-     * Reload all created frame icons if necessary.
-     */
+    /** Reload all created frame icons if necessary. */
     public static void reloadFrameIcons() {
         IconUtil.reloadDynamicFrameIcons();
     }
@@ -155,8 +151,8 @@ public final class IconLoader {
      * will be resolved to [path]/dark/[icon_path] and [path]/light/[icon_path] Uses 16x16 icons by
      * default.
      *
-     * @param  path the path to the icon resource described as above.
-     * @return      the icon.
+     * @param path the path to the icon resource described as above.
+     * @return the icon.
      */
     public DarkUIAwareIcon getUIAwareIcon(final String path) {
         return getUIAwareIcon(path, getDefaultWidth(path), getDefaultHeight(path));
@@ -166,10 +162,10 @@ public final class IconLoader {
      * Get an aware icon. If [path] is the search root of the current icon loader then the icon resource
      * will be resolved to [path]/dark/[icon_path] and [path]/light/[icon_path]
      *
-     * @param  path the path to the icon resource described as above.
-     * @param  w    the icon width.
-     * @param  h    the icon height.
-     * @return      the icon.
+     * @param path the path to the icon resource described as above.
+     * @param w the icon width.
+     * @param h the icon height.
+     * @return the icon.
      */
     public DarkUIAwareIcon getUIAwareIcon(final String path, final int w, final int h) {
         IconKey key = new IconKey(path, w, h);
@@ -193,10 +189,10 @@ public final class IconLoader {
      * Get an icon at the specified location. The icon type is deduced from the file name. i.e.
      * "folder/icon.svg" will be loaded as an svg.icon. Uses 16x16 icons by default.
      *
-     * @see         #get(Class)
-     * @see         #get
-     * @param  path the path to the icon with respect to the IconLoader resource root.
-     * @return      the icon.
+     * @see #get(Class)
+     * @see #get
+     * @param path the path to the icon with respect to the IconLoader resource root.
+     * @return the icon.
      */
     public Icon getIcon(final String path) {
         return getIcon(path, getDefaultWidth(path), getDefaultHeight(path));
@@ -206,11 +202,11 @@ public final class IconLoader {
      * Get an icon at the specified location. The icon type is deduced from the file name. i.e.
      * "folder/icon.svg" will be loaded as an svg.icon. Uses 16x16 icons by default.
      *
-     * @see           #get(Class)
-     * @see           #get
-     * @param  path   the path to the icon with respect to the IconLoader resource root.
-     * @param  themed determines whether the icon is themed. This only has an effect on svg icons.
-     * @return        the icon.
+     * @see #get(Class)
+     * @see #get
+     * @param path the path to the icon with respect to the IconLoader resource root.
+     * @param themed determines whether the icon is themed. This only has an effect on svg icons.
+     * @return the icon.
      */
     public Icon getIcon(final String path, final boolean themed) {
         return getIcon(path, getDefaultWidth(path), getDefaultHeight(path), themed);
@@ -220,12 +216,12 @@ public final class IconLoader {
      * Get an icon at the specified location. The icon type is deduced from the file name. i.e.
      * "folder/icon.svg" will be loaded as an svg.icon.
      *
-     * @see         #get(Class)
-     * @see         #get
-     * @param  path the path to the icon with respect to the IconLoader resource root.
-     * @param  w    the icon width.
-     * @param  h    the icon height.
-     * @return      the icon.
+     * @see #get(Class)
+     * @see #get
+     * @param path the path to the icon with respect to the IconLoader resource root.
+     * @param w the icon width.
+     * @param h the icon height.
+     * @return the icon.
      */
     public Icon getIcon(final String path, final int w, final int h) {
         return getIcon(path, w, h, false);
@@ -235,13 +231,13 @@ public final class IconLoader {
      * Get an icon at the specified location. The icon type is deduced from the file name. i.e.
      * "folder/icon.svg" will be loaded as an svg.icon.
      *
-     * @see           #get(Class)
-     * @see           #get
-     * @param  path   the path to the icon with respect to the IconLoader resource root.
-     * @param  w      the icon width.
-     * @param  h      the icon height.
-     * @param  themed determines whether the icon is themed. This only has an effect on svg icons.
-     * @return        the icon.
+     * @see #get(Class)
+     * @see #get
+     * @param path the path to the icon with respect to the IconLoader resource root.
+     * @param w the icon width.
+     * @param h the icon height.
+     * @param themed determines whether the icon is themed. This only has an effect on svg icons.
+     * @return the icon.
      */
     public Icon getIcon(final String path, final int w, final int h, final boolean themed) {
         IconKey key = new IconKey(path, w, h);
@@ -253,7 +249,8 @@ public final class IconLoader {
                 return awareIconMap.get(key);
             }
             Icon icon = getWildcardIcon(iconMap, key, w, h);
-            if (icon != null) return icon;
+            if (icon != null)
+                return icon;
         }
 
         // Icon not found or caching is disabled.
@@ -292,11 +289,11 @@ public final class IconLoader {
      * Get an svg icon at the specified location. will be loaded as an svg.icon. Uses 16x16 icons by
      * default.
      *
-     * @see           #get(Class)
-     * @see           #get
-     * @param  path   the path to the icon with respect to the IconLoader resource root.
-     * @param  themed determines whether the icon is themed. This only has an effect on svg icons.
-     * @return        the icon.
+     * @see #get(Class)
+     * @see #get
+     * @param path the path to the icon with respect to the IconLoader resource root.
+     * @param themed determines whether the icon is themed. This only has an effect on svg icons.
+     * @return the icon.
      */
     public Icon loadSVGIcon(final String path, final boolean themed) {
         return loadSVGIcon(path, DEFAULT_W, DEFAULT_H, themed);
@@ -305,13 +302,13 @@ public final class IconLoader {
     /**
      * Get an svg icon at the specified location. will be loaded as an svg.icon.
      *
-     * @see           #get(Class)
-     * @see           #get
-     * @param  path   the path to the icon with respect to the IconLoader resource root.
-     * @param  w      the icon width.
-     * @param  h      the icon height.
-     * @param  themed determines whether the icon is themed. This only has an effect on svg icons.
-     * @return        the icon.
+     * @see #get(Class)
+     * @see #get
+     * @param path the path to the icon with respect to the IconLoader resource root.
+     * @param w the icon width.
+     * @param h the icon height.
+     * @param themed determines whether the icon is themed. This only has an effect on svg icons.
+     * @return the icon.
      */
     public Icon loadSVGIcon(final String path, final int w, final int h, final boolean themed) {
         return loadSVGIcon(path, w, h, themed, null);
@@ -320,19 +317,18 @@ public final class IconLoader {
     /**
      * Get an svg icon at the specified location. will be loaded as an svg.icon.
      *
-     * @see                #get(Class)
-     * @see                #get
-     * @param  path        the path to the icon with respect to the IconLoader resource root.
-     * @param  w           the icon width.
-     * @param  h           the icon height.
-     * @param  themed      determines whether the icon is themed. This only has an effect on svg icons.
-     * @param  propertyMap the property map for resolving themed icon properties. If null the UIDefaults
-     *                     will be used.
-     * @return             the icon.
+     * @see #get(Class)
+     * @see #get
+     * @param path the path to the icon with respect to the IconLoader resource root.
+     * @param w the icon width.
+     * @param h the icon height.
+     * @param themed determines whether the icon is themed. This only has an effect on svg icons.
+     * @param propertyMap the property map for resolving themed icon properties. If null the UIDefaults
+     *        will be used.
+     * @return the icon.
      */
-    public Icon loadSVGIcon(
-            final String path, final int w, final int h, final boolean themed, final Map<Object, Object> propertyMap
-    ) {
+    public Icon loadSVGIcon(final String path, final int w, final int h, final boolean themed,
+            final Map<Object, Object> propertyMap) {
         Supplier<URI> uriSupplier = createURISupplier(path);
         if (themed) {
             if (propertyMap != null) {
@@ -350,10 +346,8 @@ public final class IconLoader {
             try {
                 return Objects.requireNonNull(getResource(path).toURI());
             } catch (NullPointerException | URISyntaxException e) {
-                LOGGER.log(
-                    Level.SEVERE, "Exception while loading '" + path + "'" + ". Resolving from " + parentClass,
-                    e.getStackTrace()
-                );
+                LOGGER.log(Level.SEVERE, "Exception while loading '" + path + "'" + ". Resolving from " + parentClass,
+                        e.getStackTrace());
             }
             return null;
         };
@@ -362,10 +356,10 @@ public final class IconLoader {
     /**
      * Create an image icon.
      *
-     * @param  path        the path to the icon with respect to the IconLoader resource root.
-     * @param  description description of the icon as described in
-     *                     {@link ImageIcon#setDescription(String)}
-     * @return             the ImageIcon.
+     * @param path the path to the icon with respect to the IconLoader resource root.
+     * @param description description of the icon as described in
+     *        {@link ImageIcon#setDescription(String)}
+     * @return the ImageIcon.
      */
     ImageIcon createImageIcon(final String path, final String description) {
         URL imgURL = getResource(path);
@@ -382,9 +376,9 @@ public final class IconLoader {
      * to a screen with a different scaling factor or the theme changes the icon automatically gets
      * updated.
      *
-     * @param  icon   the icon.
-     * @param  window the window.
-     * @return        the converted {@link Image}.
+     * @param icon the icon.
+     * @param window the window.
+     * @return the converted {@link Image}.
      */
     public static Image createFrameIcon(final Icon icon, final Window window) {
         return IconUtil.createFrameIcon(icon, window);
@@ -399,12 +393,14 @@ public final class IconLoader {
     }
 
     private int getDefaultWidth(final String path) {
-        if (!isSVGIcon(path)) return -1;
+        if (!isSVGIcon(path))
+            return -1;
         return DEFAULT_W;
     }
 
     private int getDefaultHeight(final String path) {
-        if (!isSVGIcon(path)) return -1;
+        if (!isSVGIcon(path))
+            return -1;
         return DEFAULT_H;
     }
 
@@ -431,8 +427,10 @@ public final class IconLoader {
 
         @Override
         public boolean equals(final Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
 
             IconKey iconKey = (IconKey) o;
 
@@ -440,8 +438,10 @@ public final class IconLoader {
                 // Math any size.
                 return Objects.equals(path, iconKey.path);
             }
-            if (w != iconKey.w) return false;
-            if (h != iconKey.h) return false;
+            if (w != iconKey.w)
+                return false;
+            if (h != iconKey.h)
+                return false;
             return Objects.equals(path, iconKey.path);
         }
 

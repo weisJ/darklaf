@@ -28,7 +28,7 @@ import java.awt.event.ComponentListener;
  * Wrapper interface for resize listener.
  *
  * @author Jannis Weis
- * @since  2019
+ * @since 2019
  */
 public interface ComponentResizeListener extends ComponentListener {
     @Override

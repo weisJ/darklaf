@@ -30,7 +30,7 @@ import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 
 public class MoreTabsButton extends TabButtonContainer {
 
-    protected final static String INFINITY = "\u221e";
+    protected static final String INFINITY = "\u221e";
     private final int pad;
 
     public MoreTabsButton(final DarkTabbedPaneUI ui) {
@@ -55,7 +55,7 @@ public class MoreTabsButton extends TabButtonContainer {
 
     protected String getLabelString() {
         int invisible =
-            Math.min(ui.minVisible - 1 + ui.tabPane.getTabCount() - ui.maxVisible, ui.tabPane.getTabCount());
+                Math.min(ui.minVisible - 1 + ui.tabPane.getTabCount() - ui.maxVisible, ui.tabPane.getTabCount());
         return invisible >= 100 ? INFINITY : String.valueOf(invisible);
     }
 

@@ -51,7 +51,7 @@ public class AllIcons implements ComponentDemo {
 
     public AllIcons() {
         List<DecorationsProvider> decorationsProviders =
-            ClassFinder.getInstancesOfType(DecorationsProvider.class, "com.github.weisj");
+                ClassFinder.getInstancesOfType(DecorationsProvider.class, "com.github.weisj");
         LafManager.registerInitTask((currentTheme, defaults) -> {
             Properties props = new Properties();
             decorationsProviders.forEach(provider -> provider.loadDecorationProperties(props, defaults));
@@ -105,10 +105,9 @@ public class AllIcons implements ComponentDemo {
                 svgIcon.setAutosize(autosize);
 
                 return new Pair<>(p, new CenterIcon(icon, size, size));
-            }
-            ).collect(Collectors.groupingBy(pair -> pathToIconName(pair.getFirst()))).values().stream().peek(
-                list -> makeUnique(list, 1)
-            ).flatMap(List::stream).sorted(Pair.compareFirst(AllIcons::pathToIconName)).collect(Collectors.toList());
+            }).collect(Collectors.groupingBy(pair -> pathToIconName(pair.getFirst()))).values().stream()
+                    .peek(list -> makeUnique(list, 1)).flatMap(List::stream)
+                    .sorted(Pair.compareFirst(AllIcons::pathToIconName)).collect(Collectors.toList());
         }
     }
 
@@ -117,7 +116,7 @@ public class AllIcons implements ComponentDemo {
             iconList.forEach(p -> p.setFirst(pathToIconName(p.getFirst(), depth)));
         } else {
             iconList.stream().collect(Collectors.groupingBy(p -> pathToIconName(p.getFirst(), depth + 1))).values()
-                .forEach(list -> makeUnique(list, depth + 1));
+                    .forEach(list -> makeUnique(list, depth + 1));
         }
     }
 
@@ -146,10 +145,9 @@ public class AllIcons implements ComponentDemo {
         }
 
         @Override
-        public Component getListCellRendererComponent(
-                final JList<? extends Pair<String, ? extends Icon>> list, final Pair<String, ? extends Icon> value,
-                final int index, final boolean isSelected, final boolean cellHasFocus
-        ) {
+        public Component getListCellRendererComponent(final JList<? extends Pair<String, ? extends Icon>> list,
+                final Pair<String, ? extends Icon> value, final int index, final boolean isSelected,
+                final boolean cellHasFocus) {
             setIcon(value.getSecond());
             setText(value.getFirst());
             return this;

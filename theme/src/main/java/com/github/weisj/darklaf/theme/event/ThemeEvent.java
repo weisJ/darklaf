@@ -22,5 +22,4 @@
 package com.github.weisj.darklaf.theme.event;
 
 public interface ThemeEvent {
-
 }

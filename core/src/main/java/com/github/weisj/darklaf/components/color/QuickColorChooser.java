@@ -44,10 +44,8 @@ public class QuickColorChooser extends JPanel {
         this(title, color, (b, c) -> onColorChange.accept(c), false);
     }
 
-    public QuickColorChooser(
-            final String title, final Color color, final BiConsumer<Boolean, Color> onStatusChange,
-            final boolean showCheckBox
-    ) {
+    public QuickColorChooser(final String title, final Color color, final BiConsumer<Boolean, Color> onStatusChange,
+            final boolean showCheckBox) {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         if (showCheckBox) {
             checkBox = new JCheckBox();
@@ -76,19 +74,17 @@ public class QuickColorChooser extends JPanel {
         this(title, color, onStatusChange, true);
     }
 
-    public static void attachToComponent(
-            final JComponent component, final Consumer<Color> onStatusChange, final Supplier<Color> supplier
-    ) {
+    public static void attachToComponent(final JComponent component, final Consumer<Color> onStatusChange,
+            final Supplier<Color> supplier) {
         attachToComponent(component, onStatusChange, supplier, Boolean.TRUE::booleanValue);
     }
 
-    public static void attachToComponent(
-            final JComponent component, final Consumer<Color> onStatusChange, final Supplier<Color> supplier,
-            final Supplier<Boolean> activationCheck
-    ) {
+    public static void attachToComponent(final JComponent component, final Consumer<Color> onStatusChange,
+            final Supplier<Color> supplier, final Supplier<Boolean> activationCheck) {
         AtomicBoolean isShowing = new AtomicBoolean(false);
         component.addMouseListener((MouseClickListener) e -> {
-            if (!component.isEnabled() || isShowing.get() || !activationCheck.get()) return;
+            if (!component.isEnabled() || isShowing.get() || !activationCheck.get())
+                return;
             isShowing.set(true);
             PopupColorChooser.showColorChooser(component, supplier.get(), c -> {
                 if (c != null) {
@@ -103,7 +99,8 @@ public class QuickColorChooser extends JPanel {
     }
 
     public void setSelected(final boolean selected) {
-        if (checkBox != null) checkBox.setSelected(selected);
+        if (checkBox != null)
+            checkBox.setSelected(selected);
     }
 
     public Color getColor() {

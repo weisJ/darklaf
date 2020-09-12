@@ -45,28 +45,27 @@ public class NativeUtil {
      * {@link File#createTempFile(String, String)}}.
      */
     private static final int MIN_PREFIX_LENGTH = 3;
-    /**
-     * Temporary directory which will contain the DLLs.
-     */
+    /** Temporary directory which will contain the DLLs. */
     private static Path temporaryDir;
 
     private NativeUtil() {}
 
     /**
      * Loads library from current JAR archive
+     *
      * <p>
      * The file from JAR is copied into system temporary directory and then loaded. The temporary file
      * is deleted after exiting. Method uses String as filename because the pathname is "abstract", not
      * system-dependent.
      *
-     * @param  path                     The path of file inside JAR as absolute path (beginning with
-     *                                  '/'), e.g. /package/File.ext
-     * @throws IOException              If temporary file creation or read/write operation fails
+     * @param path The path of file inside JAR as absolute path (beginning with '/'), e.g.
+     *        /package/File.ext
+     * @throws IOException If temporary file creation or read/write operation fails
      * @throws IllegalArgumentException If source file (param path) does not exist
      * @throws IllegalArgumentException If the path is not absolute or if the filename is shorter than
-     *                                  three characters (restriction of
-     *                                  {@link File#createTempFile(java.lang.String, java.lang.String)}).
-     * @throws FileNotFoundException    If the file could not be found inside the JAR.
+     *         three characters (restriction of
+     *         {@link File#createTempFile(java.lang.String, java.lang.String)}).
+     * @throws FileNotFoundException If the file could not be found inside the JAR.
      */
     public static void loadLibraryFromJar(final String path) throws IOException {
 
@@ -92,7 +91,8 @@ public class NativeUtil {
         Path temp = temporaryDir.resolve(filename);
 
         try (InputStream is = NativeUtil.class.getResourceAsStream(path)) {
-            if (!temporaryDir.toFile().canWrite()) throw new IOException("Can't write to temporary directory.");
+            if (!temporaryDir.toFile().canWrite())
+                throw new IOException("Can't write to temporary directory.");
             Files.copy(is, temp.toAbsolutePath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             delete(temp);

@@ -44,9 +44,7 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListener {
 
     protected static final String KEY_PREFIX = "JSlider.";
@@ -332,7 +330,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
 
     protected int getLowerHorizontalExtend() {
         boolean ltr = (slider.getComponentOrientation().isLeftToRight() && !slider.getInverted())
-            || (!slider.getComponentOrientation().isLeftToRight() && slider.getInverted());
+                || (!slider.getComponentOrientation().isLeftToRight() && slider.getInverted());
         Component minLabel = ltr ? getLowestValueLabel() : getHighestValueLabel();
         boolean adjustMin = PropertyUtil.getBooleanProperty(minLabel, KEY_MANUAL_LABEL_ALIGN);
         int minPrefWidth = minLabel.getPreferredSize().width;
@@ -342,7 +340,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
 
     protected int getUpperHorizontalExtend() {
         boolean ltr = (slider.getComponentOrientation().isLeftToRight() && !slider.getInverted())
-            || (!slider.getComponentOrientation().isLeftToRight() && slider.getInverted());
+                || (!slider.getComponentOrientation().isLeftToRight() && slider.getInverted());
         Component maxLabel = ltr ? getHighestValueLabel() : getLowestValueLabel();
         boolean adjustMax = PropertyUtil.getBooleanProperty(maxLabel, KEY_MANUAL_LABEL_ALIGN);
         int maxPrefWidth = maxLabel.getPreferredSize().width;
@@ -378,7 +376,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
             return new Dimension(plainThumbRadius + bw, plainThumbRadius + bw);
         }
         return isHorizontal() ? new Dimension(thumbSize.width, thumbSize.height)
-            : new Dimension(thumbSize.height, thumbSize.width);
+                : new Dimension(thumbSize.height, thumbSize.width);
     }
 
     @Override
@@ -783,7 +781,8 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
             int pos = isHorizontal() ? evt.getX() : evt.getY();
             int loc = getLocationForValue(getSnappedValue(evt));
             offset = (loc < 0) ? 0 : pos - loc;
-            if (iconRect.contains(evt.getPoint())) return;
+            if (iconRect.contains(evt.getPoint()))
+                return;
             super.mousePressed(evt);
         }
 

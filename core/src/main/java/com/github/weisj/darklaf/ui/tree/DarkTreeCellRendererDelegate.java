@@ -46,20 +46,18 @@ public class DarkTreeCellRendererDelegate extends TreeCellRendererDelegate imple
     }
 
     @Override
-    public Component getTreeCellRendererComponent(
-            final JTree tree, final Object value, final boolean selected, final boolean expanded, final boolean leaf,
-            final int row, final boolean hasFocus
-    ) {
+    public Component getTreeCellRendererComponent(final JTree tree, final Object value, final boolean selected,
+            final boolean expanded, final boolean leaf, final int row, final boolean hasFocus) {
         boolean isFocused = DarkUIUtil.hasFocus(tree);
         Object unwrapped = unwrapValue(value);
         Component renderer;
         if (unwrapped instanceof Boolean && isBooleanRenderingEnabled(tree)) {
-            Component comp = getBooleanRenderer(tree)
-                .getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, isFocused);
+            Component comp = getBooleanRenderer(tree).getTreeCellRendererComponent(tree, value, selected, expanded,
+                    leaf, row, isFocused);
             renderer = prepareRendererComponent(tree, comp);
         } else if (unwrapped instanceof TristateState) {
-            Component comp = getTristateRenderer(tree)
-                .getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, isFocused);
+            Component comp = getTristateRenderer(tree).getTreeCellRendererComponent(tree, value, selected, expanded,
+                    leaf, row, isFocused);
             renderer = prepareRendererComponent(tree, comp);
         } else {
             if (getDelegate() instanceof DefaultTreeCellRenderer) {
@@ -95,9 +93,8 @@ public class DarkTreeCellRendererDelegate extends TreeCellRendererDelegate imple
     }
 
     protected DarkCellRendererToggleButton<?> getBooleanRenderer(final JTree tree) {
-        if (
-            PropertyUtil.isPropertyEqual(tree, DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE, DarkTreeUI.RENDER_TYPE_RADIOBUTTON)
-        ) {
+        if (PropertyUtil.isPropertyEqual(tree, DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE,
+                DarkTreeUI.RENDER_TYPE_RADIOBUTTON)) {
             return radioRenderer;
         }
         return checkBoxRenderer;

@@ -52,7 +52,8 @@ public class MacOSDecorationsProvider implements DecorationsProvider {
     @Override
     public void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults) {
         IconLoader iconLoader = IconLoader.get(MacOSDecorationsProvider.class);
-        PropertyLoader
-            .putProperties(PropertyLoader.loadProperties(MacOSDecorationsProvider.class, "macos_decorations", ""), properties, currentDefaults, iconLoader);
+        PropertyLoader.putProperties(
+                PropertyLoader.loadProperties(MacOSDecorationsProvider.class, "macos_decorations", ""), properties,
+                currentDefaults, iconLoader);
     }
 }

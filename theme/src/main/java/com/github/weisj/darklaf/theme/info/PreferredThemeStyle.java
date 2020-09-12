@@ -35,46 +35,54 @@ public class PreferredThemeStyle {
     }
 
     public PreferredThemeStyle(final ContrastRule contrastRule, final ColorToneRule colorToneRule) {
-        if (contrastRule == null) throw new IllegalArgumentException("null is not a valid contrast rule");
-        if (colorToneRule == null) throw new IllegalArgumentException("null is not a valid style rule");
+        if (contrastRule == null)
+            throw new IllegalArgumentException("null is not a valid contrast rule");
+        if (colorToneRule == null)
+            throw new IllegalArgumentException("null is not a valid style rule");
         this.contrastRule = contrastRule;
         this.colorToneRule = colorToneRule;
         this.fontSizeRule = FontSizeRule.getDefault();
         this.accentColorRule = AccentColorRule.getDefault();
     }
 
-    public PreferredThemeStyle(
-            final ContrastRule contrastRule, final ColorToneRule colorToneRule, final AccentColorRule accentColorRule
-    ) {
-        if (contrastRule == null) throw new IllegalArgumentException("null is not a valid contrast rule");
-        if (colorToneRule == null) throw new IllegalArgumentException("null is not a valid style rule");
-        if (accentColorRule == null) throw new IllegalArgumentException("null is not a valid accent color rule");
+    public PreferredThemeStyle(final ContrastRule contrastRule, final ColorToneRule colorToneRule,
+            final AccentColorRule accentColorRule) {
+        if (contrastRule == null)
+            throw new IllegalArgumentException("null is not a valid contrast rule");
+        if (colorToneRule == null)
+            throw new IllegalArgumentException("null is not a valid style rule");
+        if (accentColorRule == null)
+            throw new IllegalArgumentException("null is not a valid accent color rule");
         this.contrastRule = contrastRule;
         this.colorToneRule = colorToneRule;
         this.fontSizeRule = FontSizeRule.getDefault();
         this.accentColorRule = accentColorRule;
     }
 
-    public PreferredThemeStyle(
-            final ContrastRule contrastRule, final ColorToneRule colorToneRule, final FontSizeRule fontSizeRule
-    ) {
-        if (contrastRule == null) throw new IllegalArgumentException("null is not a valid contrast rule");
-        if (colorToneRule == null) throw new IllegalArgumentException("null is not a valid style rule");
-        if (fontSizeRule == null) throw new IllegalArgumentException("null is not a valid font size rule");
+    public PreferredThemeStyle(final ContrastRule contrastRule, final ColorToneRule colorToneRule,
+            final FontSizeRule fontSizeRule) {
+        if (contrastRule == null)
+            throw new IllegalArgumentException("null is not a valid contrast rule");
+        if (colorToneRule == null)
+            throw new IllegalArgumentException("null is not a valid style rule");
+        if (fontSizeRule == null)
+            throw new IllegalArgumentException("null is not a valid font size rule");
         this.contrastRule = contrastRule;
         this.colorToneRule = colorToneRule;
         this.fontSizeRule = fontSizeRule;
         this.accentColorRule = AccentColorRule.getDefault();
     }
 
-    public PreferredThemeStyle(
-            final ContrastRule contrastRule, final ColorToneRule colorToneRule, final AccentColorRule accentColorRule,
-            final FontSizeRule fontSizeRule
-    ) {
-        if (contrastRule == null) throw new IllegalArgumentException("null is not a valid contrast rule");
-        if (colorToneRule == null) throw new IllegalArgumentException("null is not a valid style rule");
-        if (fontSizeRule == null) throw new IllegalArgumentException("null is not a valid font size rule");
-        if (accentColorRule == null) throw new IllegalArgumentException("null is not a valid accent color rule");
+    public PreferredThemeStyle(final ContrastRule contrastRule, final ColorToneRule colorToneRule,
+            final AccentColorRule accentColorRule, final FontSizeRule fontSizeRule) {
+        if (contrastRule == null)
+            throw new IllegalArgumentException("null is not a valid contrast rule");
+        if (colorToneRule == null)
+            throw new IllegalArgumentException("null is not a valid style rule");
+        if (fontSizeRule == null)
+            throw new IllegalArgumentException("null is not a valid font size rule");
+        if (accentColorRule == null)
+            throw new IllegalArgumentException("null is not a valid accent color rule");
         this.contrastRule = contrastRule;
         this.colorToneRule = colorToneRule;
         this.fontSizeRule = fontSizeRule;
@@ -100,16 +108,19 @@ public class PreferredThemeStyle {
     @Override
     public String toString() {
         return "PreferredThemeStyle{" + "contrastRule=" + contrastRule + ", colorToneRule=" + colorToneRule
-            + ", accentColorRule=" + accentColorRule + ", fontSizeRule=" + fontSizeRule + '}';
+                + ", accentColorRule=" + accentColorRule + ", fontSizeRule=" + fontSizeRule + '}';
     }
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         PreferredThemeStyle that = (PreferredThemeStyle) o;
         return contrastRule == that.contrastRule && colorToneRule == that.colorToneRule
-            && Objects.equals(fontSizeRule, that.fontSizeRule) && Objects.equals(accentColorRule, that.accentColorRule);
+                && Objects.equals(fontSizeRule, that.fontSizeRule)
+                && Objects.equals(accentColorRule, that.accentColorRule);
     }
 
     @Override

@@ -25,9 +25,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public final class TimerUtil {
 
     public static Timer createNamedTimer(final String name, final int delay, final ActionListener listener) {

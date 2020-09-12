@@ -26,37 +26,43 @@ import static com.github.weisj.darklaf.util.AlignmentHelper.*;
 import java.awt.*;
 import java.util.function.BiFunction;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public enum Alignment {
-    NORTH(
-            AlignmentHelper.align(HOR_CENTER_INSIDE, VERT_TOP_INSIDE), AlignmentHelper.align(HOR_CENTER_OUTSIDE, VERT_TOP_OUTSIDE)
-    ), SOUTH(
-            AlignmentHelper.align(HOR_CENTER_INSIDE, VERT_BOTTOM_INSIDE), AlignmentHelper.align(HOR_CENTER_OUTSIDE, VERT_BOTTOM_OUTSIDE)
-    ), EAST(
-            AlignmentHelper.align(HOR_RIGHT_INSIDE, VERT_CENTER_INSIDE), AlignmentHelper.align(HOR_RIGHT_OUTSIDE, VERT_CENTER_OUTSIDE)
-    ), WEST(
-            AlignmentHelper.align(HOR_LEFT_INSIDE, VERT_CENTER_INSIDE), AlignmentHelper.align(HOR_LEFT_OUTSIDE, VERT_CENTER_OUTSIDE)
-    ), NORTH_EAST(
-            AlignmentHelper.align(HOR_RIGHT_INSIDE, VERT_TOP_INSIDE), AlignmentHelper.align(HOR_RIGHT_OUTSIDE, VERT_TOP_OUTSIDE)
-    ), NORTH_WEST(
-            AlignmentHelper.align(HOR_LEFT_INSIDE, VERT_TOP_INSIDE), AlignmentHelper.align(HOR_LEFT_OUTSIDE, VERT_TOP_OUTSIDE)
-    ), SOUTH_EAST(
-            AlignmentHelper.align(HOR_RIGHT_INSIDE, VERT_BOTTOM_INSIDE), AlignmentHelper.align(HOR_RIGHT_OUTSIDE, VERT_BOTTOM_OUTSIDE)
-    ), SOUTH_WEST(
-            AlignmentHelper.align(HOR_LEFT_INSIDE, VERT_BOTTOM_INSIDE), AlignmentHelper.align(HOR_LEFT_OUTSIDE, VERT_BOTTOM_OUTSIDE)
-    ), CENTER(
-            AlignmentHelper.align(HOR_CENTER_INSIDE, VERT_CENTER_INSIDE), AlignmentHelper.align(HOR_CENTER_OUTSIDE, VERT_CENTER_OUTSIDE)
-    );
+    NORTH(AlignmentHelper.align(HOR_CENTER_INSIDE, VERT_TOP_INSIDE),
+            AlignmentHelper.align(HOR_CENTER_OUTSIDE, VERT_TOP_OUTSIDE)), SOUTH(
+                    AlignmentHelper.align(HOR_CENTER_INSIDE, VERT_BOTTOM_INSIDE),
+                    AlignmentHelper.align(HOR_CENTER_OUTSIDE, VERT_BOTTOM_OUTSIDE)), EAST(
+                            AlignmentHelper.align(HOR_RIGHT_INSIDE, VERT_CENTER_INSIDE),
+                            AlignmentHelper.align(HOR_RIGHT_OUTSIDE, VERT_CENTER_OUTSIDE)), WEST(
+                                    AlignmentHelper.align(HOR_LEFT_INSIDE, VERT_CENTER_INSIDE),
+                                    AlignmentHelper.align(HOR_LEFT_OUTSIDE, VERT_CENTER_OUTSIDE)), NORTH_EAST(
+                                            AlignmentHelper.align(HOR_RIGHT_INSIDE, VERT_TOP_INSIDE),
+                                            AlignmentHelper.align(HOR_RIGHT_OUTSIDE, VERT_TOP_OUTSIDE)), NORTH_WEST(
+                                                    AlignmentHelper.align(HOR_LEFT_INSIDE, VERT_TOP_INSIDE),
+                                                    AlignmentHelper.align(HOR_LEFT_OUTSIDE,
+                                                            VERT_TOP_OUTSIDE)), SOUTH_EAST(
+                                                                    AlignmentHelper.align(HOR_RIGHT_INSIDE,
+                                                                            VERT_BOTTOM_INSIDE),
+                                                                    AlignmentHelper.align(HOR_RIGHT_OUTSIDE,
+                                                                            VERT_BOTTOM_OUTSIDE)), SOUTH_WEST(
+                                                                                    AlignmentHelper.align(
+                                                                                            HOR_LEFT_INSIDE,
+                                                                                            VERT_BOTTOM_INSIDE),
+                                                                                    AlignmentHelper.align(
+                                                                                            HOR_LEFT_OUTSIDE,
+                                                                                            VERT_BOTTOM_OUTSIDE)), CENTER(
+                                                                                                    AlignmentHelper
+                                                                                                            .align(HOR_CENTER_INSIDE,
+                                                                                                                    VERT_CENTER_INSIDE),
+                                                                                                    AlignmentHelper
+                                                                                                            .align(HOR_CENTER_OUTSIDE,
+                                                                                                                    VERT_CENTER_OUTSIDE));
 
     private final BiFunction<Dimension, Rectangle, Point> alignInside;
     private final BiFunction<Dimension, Rectangle, Point> alignOutside;
 
-    Alignment(
-            final BiFunction<Dimension, Rectangle, Point> alignInside,
-            final BiFunction<Dimension, Rectangle, Point> alignOutside
-    ) {
+    Alignment(final BiFunction<Dimension, Rectangle, Point> alignInside,
+            final BiFunction<Dimension, Rectangle, Point> alignOutside) {
         this.alignInside = alignInside;
         this.alignOutside = alignOutside;
     }
@@ -64,15 +70,14 @@ public enum Alignment {
     /**
      * Get fitting alignment.
      *
-     * @param  point       point to align at.
-     * @param  size        Size of rectangle to align.
-     * @param  outerBounds outer boundaries to align in.
-     * @param  hint        preferred alignment.
-     * @return             fitting alignment. If none is found the default is {@link Alignment#CENTER}.
+     * @param point point to align at.
+     * @param size Size of rectangle to align.
+     * @param outerBounds outer boundaries to align in.
+     * @param hint preferred alignment.
+     * @return fitting alignment. If none is found the default is {@link Alignment#CENTER}.
      */
-    public static Alignment getAlignment(
-            final Point point, final Dimension size, final Rectangle outerBounds, final Alignment hint
-    ) {
+    public static Alignment getAlignment(final Point point, final Dimension size, final Rectangle outerBounds,
+            final Alignment hint) {
         if (hint.canBeAligned(point, size, outerBounds)) {
             return hint;
         }
@@ -87,23 +92,23 @@ public enum Alignment {
     /**
      * Check whether the given Rectangle can be aligned at point inside boundaries.
      *
-     * @param  point       point to align at.
-     * @param  size        size of rectangle to align.
-     * @param  outerBounds boundaries.
-     * @return             true if can be aligned.
+     * @param point point to align at.
+     * @param size size of rectangle to align.
+     * @param outerBounds boundaries.
+     * @return true if can be aligned.
      */
     public boolean canBeAligned(final Point point, final Dimension size, final Rectangle outerBounds) {
         Point p = relativePos(size, point);
         return p.x >= outerBounds.x && p.y >= outerBounds.y && p.x + size.width < outerBounds.x + outerBounds.width
-            && p.y + size.height < outerBounds.x + outerBounds.height;
+                && p.y + size.height < outerBounds.x + outerBounds.height;
     }
 
     /**
      * Get the relative Position of Rectangle to Point with respect to the alignment.
      *
-     * @param  toAlign size of Rectangle to align.
-     * @param  alignAt point to align at.
-     * @return         top/left position of aligned rectangle
+     * @param toAlign size of Rectangle to align.
+     * @param alignAt point to align at.
+     * @return top/left position of aligned rectangle
      */
     public Point relativePos(final Dimension toAlign, final Point alignAt) {
         return alignOutside(toAlign, new Rectangle(alignAt.x, alignAt.y, 0, 0));
@@ -112,9 +117,9 @@ public enum Alignment {
     /**
      * Align Rectangle outside other rectangle with respect to the alignment.
      *
-     * @param  toAlign     size of rectangle to align
-     * @param  innerBounds bounds of inside rectangle
-     * @return             top/left point of aligned rectangle
+     * @param toAlign size of rectangle to align
+     * @param innerBounds bounds of inside rectangle
+     * @return top/left point of aligned rectangle
      */
     public Point alignOutside(final Dimension toAlign, final Rectangle innerBounds) {
         return this.alignOutside.apply(toAlign, innerBounds);
@@ -257,18 +262,16 @@ public enum Alignment {
     public Insets maskInsetsInverted(final int top, final int left, final int bottom, final int right, final int mask) {
         Insets masking = maskInsets(0, 0, 0, 0, 1);
         Insets maskVal = maskInsets(mask, mask, mask, mask, 0);
-        return new Insets(
-            top * masking.top + maskVal.top, left * masking.left + maskVal.left,
-            bottom * masking.bottom + maskVal.bottom, right * masking.right + maskVal.right
-        );
+        return new Insets(top * masking.top + maskVal.top, left * masking.left + maskVal.left,
+                bottom * masking.bottom + maskVal.bottom, right * masking.right + maskVal.right);
     }
 
     /**
      * Align Rectangle inside other rectangle with respect to the alignment.
      *
-     * @param  toAlign     size of rectangle to align
-     * @param  outerBounds bounds of outer rectangle
-     * @return             top/left point of aligned rectangle
+     * @param toAlign size of rectangle to align
+     * @param outerBounds bounds of outer rectangle
+     * @return top/left point of aligned rectangle
      */
     public Point alignInside(final Dimension toAlign, final Rectangle outerBounds) {
         return this.alignInside.apply(toAlign, outerBounds);

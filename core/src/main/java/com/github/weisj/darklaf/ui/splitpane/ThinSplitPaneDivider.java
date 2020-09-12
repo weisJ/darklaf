@@ -55,7 +55,8 @@ final class ThinSplitPaneDivider extends BasicSplitPaneDivider {
 
     @Override
     public boolean contains(final Point p) {
-        if (!isEnabled()) return false;
+        if (!isEnabled())
+            return false;
         return super.contains(p);
     }
 

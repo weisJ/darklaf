@@ -76,11 +76,11 @@ public class CreateUITable {
         String htmlFile = workingFolder + "defaults_" + os + ".html";
         Files.createDirectories(new File(workingFolder).toPath());
         File f = new File(htmlFile);
-        if (!f.exists()) Files.createFile(f.toPath());
+        if (!f.exists())
+            Files.createFile(f.toPath());
 
-        try (
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(htmlFile), StandardCharsets.UTF_8)
-        ) {
+        try (OutputStreamWriter writer =
+                new OutputStreamWriter(new FileOutputStream(htmlFile), StandardCharsets.UTF_8)) {
             CreateUITable tableCreator = new CreateUITable();
             writer.append("<html>\n");
             writer.append("<a href=\"../index.html\">back</a>\n");
@@ -98,23 +98,25 @@ public class CreateUITable {
 
         Set<String> groups = defaults.keySet().stream().map(key -> {
             String s = key.toString();
-            if (s.startsWith("%")) return "%";
-            if (s.contains(".")) return s.split("\\.")[0];
-            if (s.endsWith("UI")) return s.substring(0, s.length() - 2);
+            if (s.startsWith("%"))
+                return "%";
+            if (s.contains("."))
+                return s.split("\\.")[0];
+            if (s.endsWith("UI"))
+                return s.substring(0, s.length() - 2);
             return misc + s;
         }).collect(Collectors.toSet());
 
         Set<String> miscKeys = groups.stream().filter(s -> s.startsWith(misc)).map(s -> s.substring(misc.length()))
-            .collect(Collectors.toSet());
+                .collect(Collectors.toSet());
 
         StringBuilder builder = new StringBuilder();
         appendGroup(ident, defaults, builder, "%", "Theme Defaults");
         groups.stream().sorted().filter(s -> !s.startsWith(misc) && !s.equals("%"))
-            .forEach(group -> appendGroup(ident, defaults, builder, group, group));
+                .forEach(group -> appendGroup(ident, defaults, builder, group, group));
         builder.append(StringUtil.repeat(IDENT, ident)).append("<h3>").append("Miscellaneous").append("</h3>\n");
-        appendTable(
-            builder, defaults.entrySet().stream().filter(entry -> miscKeys.contains(entry.getKey().toString())).collect(Collectors.toSet()), ident
-        );
+        appendTable(builder, defaults.entrySet().stream().filter(entry -> miscKeys.contains(entry.getKey().toString()))
+                .collect(Collectors.toSet()), ident);
 
         return builder.toString();
     }
@@ -128,16 +130,17 @@ public class CreateUITable {
         return defaults;
     }
 
-    private void appendGroup(
-            final int ident, final UIDefaults defaults, final StringBuilder builder, final String group,
-            final String heading
-    ) {
+    private void appendGroup(final int ident, final UIDefaults defaults, final StringBuilder builder,
+            final String group, final String heading) {
         builder.append(StringUtil.repeat(IDENT, ident)).append("<h3>").append(heading).append("</h3>\n");
         Set<Map.Entry<Object, Object>> values = defaults.entrySet().stream().filter(entry -> {
             String key = entry.getKey().toString();
-            if (key.startsWith("%")) return true;
-            if (key.endsWith("UI")) return key.substring(0, key.length() - 2).equals(group);
-            if (key.contains(".")) return key.split("\\.")[0].equals(group);
+            if (key.startsWith("%"))
+                return true;
+            if (key.endsWith("UI"))
+                return key.substring(0, key.length() - 2).equals(group);
+            if (key.contains("."))
+                return key.split("\\.")[0].equals(group);
             return key.equals(group);
         }).collect(Collectors.toSet());
         appendTable(builder, values, ident);
@@ -145,9 +148,8 @@ public class CreateUITable {
         builder.append('\n');
     }
 
-    private void appendTable(
-            final StringBuilder builder, final Set<Map.Entry<Object, Object>> values, final int ident
-    ) {
+    private void appendTable(final StringBuilder builder, final Set<Map.Entry<Object, Object>> values,
+            final int ident) {
         builder.append(StringUtil.repeat(IDENT, ident)).append("<table>\n");
         builder.append(StringUtil.repeat(IDENT, ident + 1)).append("<tr>\n");
         builder.append(StringUtil.repeat(IDENT, ident + 2)).append("<th>Key</th>\n");
@@ -156,10 +158,11 @@ public class CreateUITable {
         builder.append(StringUtil.repeat(IDENT, ident + 2)).append("<th>Preview</th>\n");
         builder.append(StringUtil.repeat(IDENT, ident + 1)).append("</tr>\n");
         values.stream().filter(entry -> entry.getKey().toString().endsWith("UI"))
-            .forEach(entry -> appendRow(builder, entry, ident + 1));
+                .forEach(entry -> appendRow(builder, entry, ident + 1));
         values.stream().filter(entry -> !entry.getKey().toString().endsWith("UI")).sorted((o1, o2) -> {
             int res = o1.getValue().getClass().getSimpleName().compareTo(o2.getValue().getClass().getSimpleName());
-            if (res != 0) return res;
+            if (res != 0)
+                return res;
             Object val1 = o1.getValue();
             Object val2 = o2.getValue();
             if (val1 instanceof Comparable) {
@@ -173,8 +176,8 @@ public class CreateUITable {
 
     private String getTableStyle() {
         return "<style>\n" + "table {\n" + IDENT + "font-family: monospace;\n" + IDENT + "font-size: 10pt;\n" + IDENT
-            + "border-collapse: collapse;\n" + "}\n" + "th, td {\n" + IDENT + "padding: 4px 8px 4px 8px;\n" + "}\n"
-            + "tr:nth-child(even) {background-color: #f2f2f2;}\n" + "</style>\n";
+                + "border-collapse: collapse;\n" + "}\n" + "th, td {\n" + IDENT + "padding: 4px 8px 4px 8px;\n" + "}\n"
+                + "tr:nth-child(even) {background-color: #f2f2f2;}\n" + "</style>\n";
     }
 
     private void appendRow(final StringBuilder builder, final Map.Entry<Object, Object> entry, final int ident) {
@@ -199,17 +202,12 @@ public class CreateUITable {
         Object value = getValue(val);
         if (value instanceof Color) {
             return StringUtil.repeat(IDENT, ident)
-                + String
-                    .format(
-                        "<td style=\"background-color: #%s\" width=\"%d\" height=\"%d\">\n",
-                        ColorUtil.toHex((Color) value), SAMPLE_WIDTH, SAMPLE_HEIGHT
-                    );
+                    + String.format("<td style=\"background-color: #%s\" width=\"%d\" height=\"%d\">\n",
+                            ColorUtil.toHex((Color) value), SAMPLE_WIDTH, SAMPLE_HEIGHT);
         } else if (value instanceof DarkSVGIcon) {
             return parseSVGIcon((DarkSVGIcon) value, ident);
-        } else if (
-            (value instanceof Border && !(value instanceof EmptyBorder)) || value instanceof Font
-                || (value instanceof Icon && !(value instanceof EmptyIcon))
-        ) {
+        } else if ((value instanceof Border && !(value instanceof EmptyBorder)) || value instanceof Font
+                || (value instanceof Icon && !(value instanceof EmptyIcon))) {
             return parseImage(key, value, ident);
         }
         return StringUtil.repeat(IDENT, ident) + "<td></td>\n";
@@ -240,21 +238,22 @@ public class CreateUITable {
         } catch (IOException ignored) {
             return StringUtil.repeat(IDENT, ident) + "<td></td>\n";
         }
-        return StringUtil.repeat(IDENT, ident)
-            + String.format("<td style=\"padding:0px\" align=\"center\"><img src=\"%s\" alt=\"%s\"></td>\n", path, key);
+        return StringUtil.repeat(IDENT, ident) + String
+                .format("<td style=\"padding:0px\" align=\"center\"><img src=\"%s\" alt=\"%s\"></td>\n", path, key);
     }
 
     private String createImage(final Object value, final String name, final Dimension size) throws IOException {
         new File(workingFolder + "img/").mkdirs();
         String fileName = "img/" + name + ".png";
         File imageFile = new File(workingFolder + fileName);
-        if (!imageFile.createNewFile()) return fileName;
+        if (!imageFile.createNewFile())
+            return fileName;
         if (value instanceof Icon) {
             size.width = Math.max(size.width, ((Icon) value).getIconWidth());
             size.height = Math.max(size.height, ((Icon) value).getIconHeight());
         }
         JComponent comp =
-            (JComponent) new SampleRenderer().getTableCellRendererComponent(null, value, false, false, 0, 0);
+                (JComponent) new SampleRenderer().getTableCellRendererComponent(null, value, false, false, 0, 0);
         BufferedImage image = ImageUtil.createCompatibleTranslucentImage(size.width, size.height);
         Graphics g = image.getGraphics();
         if (!(value instanceof Icon) && !(value instanceof DropShadowBorder)) {
@@ -291,11 +290,13 @@ public class CreateUITable {
                 String id = ((LinearGradient) child).getId();
                 String match = "=\"url\\(#" + id + "\\)\"";
                 String fillReplacement = "fill=\"#" + ColorUtil.toHex(color) + "\"";
-                if (opacity != 1) fillReplacement += " fill-opacity=\"" + opacity + "\"";
+                if (opacity != 1)
+                    fillReplacement += " fill-opacity=\"" + opacity + "\"";
                 svg = svg.replaceAll("fill" + match, fillReplacement);
 
                 String strokeReplacement = "stroke=\"#" + ColorUtil.toHex(color) + "\"";
-                if (opacity != 1) strokeReplacement += " stroke-opacity=\"" + opacity + "\"";
+                if (opacity != 1)
+                    strokeReplacement += " stroke-opacity=\"" + opacity + "\"";
                 svg = svg.replaceAll("stroke" + match, strokeReplacement);
             }
         }
@@ -305,7 +306,8 @@ public class CreateUITable {
 
     private Color getColor(final UIDefaults defaults, final String key) {
         Object obj = getValue(defaults.get(key));
-        if (obj instanceof Color) return (Color) obj;
+        if (obj instanceof Color)
+            return (Color) obj;
         return null;
     }
 
@@ -330,9 +332,8 @@ public class CreateUITable {
         Object value = getValue(val);
         if (value instanceof Color) {
             Color color = (Color) value;
-            return String.format(
-                "#%s [%03d,%03d,%03d]", ColorUtil.toHex(color), color.getRed(), color.getGreen(), color.getBlue()
-            );
+            return String.format("#%s [%03d,%03d,%03d]", ColorUtil.toHex(color), color.getRed(), color.getGreen(),
+                    color.getBlue());
         } else if (value instanceof Insets) {
             Insets insets = (Insets) value;
             return String.format("Insets [%d,%d,%d,%d]", insets.top, insets.left, insets.bottom, insets.right);
@@ -354,7 +355,8 @@ public class CreateUITable {
         } else if (value instanceof Character) {
             return value.toString();
         }
-        if (value == null) return "null";
+        if (value == null)
+            return "null";
         return value.getClass().getSimpleName();
     }
 }

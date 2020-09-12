@@ -34,9 +34,7 @@ import com.github.weisj.darklaf.ui.cell.DarkCellRendererPane;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkListUI extends DarkListUIBridge implements CellConstants {
 
     protected static final String KEY_PREFIX = "JList.";
@@ -143,7 +141,7 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
                 return;
             }
             boolean lastColumn = colCounter == endColumn && getColumnCount() > 1
-                && colCounter * rowsPerColumn + rowCount >= dataModel.getSize();
+                    && colCounter * rowsPerColumn + rowCount >= dataModel.getSize();
             int bgWidth = lastColumn ? maxX - rowBounds.x : 0;
             int maxRow = lastColumn ? Integer.MAX_VALUE : rowCount;
 
@@ -152,7 +150,8 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
                 for (int column = colCounter - 1; rowBounds.height <= 0 && column >= 0; column--) {
                     rowBounds.height = getHeight(colCounter - 1, row);
                 }
-                if (rowBounds.height <= 0) rowBounds.height = getHeight(0, 0);
+                if (rowBounds.height <= 0)
+                    rowBounds.height = getHeight(0, 0);
 
                 g.setClip(rowBounds.x, rowBounds.y, bgWidth > 0 ? bgWidth : rowBounds.width, rowBounds.height);
                 g.clipRect(paintBounds.x, paintBounds.y, paintBounds.width, paintBounds.height);
@@ -174,11 +173,9 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
         return rendererDelegate;
     }
 
-    protected void paintCell(
-            final Graphics g, final int index, final Rectangle rowBounds, final ListCellRenderer<Object> cellRenderer,
-            final ListModel<Object> dataModel, final ListSelectionModel selModel, final int leadIndex, final int row,
-            final int bgWidth
-    ) {
+    protected void paintCell(final Graphics g, final int index, final Rectangle rowBounds,
+            final ListCellRenderer<Object> cellRenderer, final ListModel<Object> dataModel,
+            final ListSelectionModel selModel, final int leadIndex, final int row, final int bgWidth) {
         boolean empty = index < 0 || index >= list.getModel().getSize();
         Object value = empty ? null : dataModel.getElementAt(index);
         boolean cellHasFocus = list.hasFocus() && (index == leadIndex);
@@ -194,7 +191,7 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
             g.fillRect(cx, cy, bgWidth > 0 ? bgWidth : cw, ch);
         } else {
             Component rendererComponent =
-                cellRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                    cellRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             if (PropertyUtil.getBooleanProperty(list, KEY_SHRINK_WRAP)) {
                 // Shrink renderer to preferred size. This is mostly used on Windows
                 // where selection is only shown around the file name, instead of
@@ -235,11 +232,9 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
             if (row < 0) {
                 // If shift is down in multi-select, we should do nothing.
                 // For single select or non-shift-click, clear the selection
-                if (
-                    isFileList && !PropertyUtil.getBooleanProperty(list, KEY_FULL_ROW_SELECTION)
+                if (isFileList && !PropertyUtil.getBooleanProperty(list, KEY_FULL_ROW_SELECTION)
                         && e.getID() == MouseEvent.MOUSE_PRESSED
-                        && (!e.isShiftDown() || list.getSelectionMode() == ListSelectionModel.SINGLE_SELECTION)
-                ) {
+                        && (!e.isShiftDown() || list.getSelectionMode() == ListSelectionModel.SINGLE_SELECTION)) {
                     list.clearSelection();
                 }
             } else {

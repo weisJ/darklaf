@@ -57,8 +57,8 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
      * Create a new derivable image icon.
      *
      * @param imagePath the image path.
-     * @param width     the icon width.
-     * @param height    the icon height.
+     * @param width the icon width.
+     * @param height the icon height.
      */
     public DerivableImageIcon(final String imagePath, final int width, final int height) {
         this(imagePath, width, height, DEFAULT_SCALING_MODE);
@@ -67,12 +67,12 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
     /**
      * Create a new derivable image icon.
      *
-     * @param imagePath   the image path.
-     * @param width       the icon width.
-     * @param height      the icon height.
+     * @param imagePath the image path.
+     * @param width the icon width.
+     * @param height the icon height.
      * @param scalingMode One of {@link Image#SCALE_DEFAULT}, {@link Image#SCALE_FAST},
-     *                    {@link Image#SCALE_REPLICATE}, {@link Image#SCALE_AREA_AVERAGING},
-     *                    {@link Image#SCALE_SMOOTH}
+     *        {@link Image#SCALE_REPLICATE}, {@link Image#SCALE_AREA_AVERAGING},
+     *        {@link Image#SCALE_SMOOTH}
      */
     public DerivableImageIcon(final String imagePath, final int width, final int height, final int scalingMode) {
         this(() -> Toolkit.getDefaultToolkit().getImage(imagePath), width, height, scalingMode);
@@ -90,8 +90,8 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
     /**
      * Create a new derivable image icon.
      *
-     * @param url    the url to load the image from.
-     * @param width  the icon width.
+     * @param url the url to load the image from.
+     * @param width the icon width.
      * @param height the icon height.
      */
     public DerivableImageIcon(final URL url, final int width, final int height) {
@@ -101,12 +101,12 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
     /**
      * Create a new derivable image icon.
      *
-     * @param url         the url to load the image from.
-     * @param width       the icon width.
-     * @param height      the icon height.
+     * @param url the url to load the image from.
+     * @param width the icon width.
+     * @param height the icon height.
      * @param scalingMode One of {@link Image#SCALE_DEFAULT}, {@link Image#SCALE_FAST},
-     *                    {@link Image#SCALE_REPLICATE}, {@link Image#SCALE_AREA_AVERAGING},
-     *                    {@link Image#SCALE_SMOOTH}
+     *        {@link Image#SCALE_REPLICATE}, {@link Image#SCALE_AREA_AVERAGING},
+     *        {@link Image#SCALE_SMOOTH}
      */
     public DerivableImageIcon(final URL url, final int width, final int height, final int scalingMode) {
         this(() -> Toolkit.getDefaultToolkit().getImage(url), width, height, scalingMode);
@@ -120,9 +120,8 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
         this(imageSupplier, width, height, DEFAULT_SCALING_MODE);
     }
 
-    public DerivableImageIcon(
-            final Supplier<Image> imageSupplier, final int width, final int height, final int scalingMode
-    ) {
+    public DerivableImageIcon(final Supplier<Image> imageSupplier, final int width, final int height,
+            final int scalingMode) {
         this.width = width;
         this.height = height;
         this.scalingMode = scalingMode;
@@ -142,10 +141,10 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
     /**
      * Create a new derivable image icon with specified scalingMode.
      *
-     * @param icon        the source icon.
+     * @param icon the source icon.
      * @param scalingMode One of {@link Image#SCALE_DEFAULT}, {@link Image#SCALE_FAST},
-     *                    {@link Image#SCALE_REPLICATE}, {@link Image#SCALE_AREA_AVERAGING},
-     *                    {@link Image#SCALE_SMOOTH}
+     *        {@link Image#SCALE_REPLICATE}, {@link Image#SCALE_AREA_AVERAGING},
+     *        {@link Image#SCALE_SMOOTH}
      */
     public DerivableImageIcon(final ImageIcon icon, final int scalingMode) {
         this(icon != null ? icon.getImage() : null, scalingMode);
@@ -154,8 +153,8 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
     /**
      * Create a new derivable image icon with specified scalingMode.
      *
-     * @param icon   the source icon.
-     * @param width  the icon width.
+     * @param icon the source icon.
+     * @param width the icon width.
      * @param height the icon height.
      */
     public DerivableImageIcon(final ImageIcon icon, final int width, final int height) {
@@ -166,16 +165,17 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
      * Create a new derivable image icon with specified scalingMode. If the source image doesnt match
      * the specified dimensions it will be scaled accordingly.
      *
-     * @param icon        the source icon.
-     * @param width       the icon width.
-     * @param height      the icon height.
+     * @param icon the source icon.
+     * @param width the icon width.
+     * @param height the icon height.
      * @param scalingMode One of {@link Image#SCALE_DEFAULT}, {@link Image#SCALE_FAST},
-     *                    {@link Image#SCALE_REPLICATE}, {@link Image#SCALE_AREA_AVERAGING},
-     *                    {@link Image#SCALE_SMOOTH}
+     *        {@link Image#SCALE_REPLICATE}, {@link Image#SCALE_AREA_AVERAGING},
+     *        {@link Image#SCALE_SMOOTH}
      */
     public DerivableImageIcon(final ImageIcon icon, final int width, final int height, final int scalingMode) {
         this(icon != null ? icon.getImage() : null, width, height, scalingMode);
-        if (icon != null) setDescription(icon.getDescription());
+        if (icon != null)
+            setDescription(icon.getDescription());
     }
 
     /**
@@ -190,10 +190,10 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
     /**
      * Create a new derivable image icon with specified scalingMode.
      *
-     * @param img         the source image.
+     * @param img the source image.
      * @param scalingMode One of {@link Image#SCALE_DEFAULT}, {@link Image#SCALE_FAST},
-     *                    {@link Image#SCALE_REPLICATE}, {@link Image#SCALE_AREA_AVERAGING},
-     *                    {@link Image#SCALE_SMOOTH}
+     *        {@link Image#SCALE_REPLICATE}, {@link Image#SCALE_AREA_AVERAGING},
+     *        {@link Image#SCALE_SMOOTH}
      */
     public DerivableImageIcon(final Image img, final int scalingMode) {
         this(img, img != null ? img.getWidth(null) : 0, img != null ? img.getHeight(null) : 0, scalingMode);
@@ -203,8 +203,8 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
      * Create a new derivable image icon with default scalingMode. If the source image doesnt match the
      * specified dimensions it will be scaled accordingly.
      *
-     * @param img    the source image.
-     * @param width  the icon width.
+     * @param img the source image.
+     * @param width the icon width.
      * @param height the icon height.
      */
     public DerivableImageIcon(final Image img, final int width, final int height) {
@@ -215,12 +215,12 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
      * Create a new derivable image icon with specified scalingMode. If the source image doesnt match
      * the specified dimensions it will be scaled accordingly.
      *
-     * @param img         the source image.
-     * @param width       the icon width.
-     * @param height      the icon height.
+     * @param img the source image.
+     * @param width the icon width.
+     * @param height the icon height.
      * @param scalingMode One of {@link Image#SCALE_DEFAULT}, {@link Image#SCALE_FAST},
-     *                    {@link Image#SCALE_REPLICATE}, {@link Image#SCALE_AREA_AVERAGING},
-     *                    {@link Image#SCALE_SMOOTH}
+     *        {@link Image#SCALE_REPLICATE}, {@link Image#SCALE_AREA_AVERAGING},
+     *        {@link Image#SCALE_SMOOTH}
      */
     public DerivableImageIcon(final Image img, final int width, final int height, final int scalingMode) {
         this.width = width;
@@ -270,20 +270,24 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
     private void calculateSize() {
         Image originalImage = original.get();
         if (originalImage != null && (width < 0 || height < 0)) {
-            if (width < 0) width = originalImage.getWidth(null);
-            if (height < 0) height = originalImage.getHeight(null);
+            if (width < 0)
+                width = originalImage.getWidth(null);
+            if (height < 0)
+                height = originalImage.getHeight(null);
         }
     }
 
     @Override
     public int getIconWidth() {
-        if (width < 0) calculateSize();
+        if (width < 0)
+            calculateSize();
         return width;
     }
 
     @Override
     public int getIconHeight() {
-        if (height < 0) calculateSize();
+        if (height < 0)
+            calculateSize();
         return height;
     }
 

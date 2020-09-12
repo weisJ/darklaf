@@ -34,9 +34,7 @@ import com.github.weisj.darklaf.ui.list.DarkListUI;
 import com.github.weisj.darklaf.ui.scrollpane.DarkScrollBarUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkComboPopup extends BasicComboPopup {
 
     private final AdjustmentListener adjustmentListener = e -> {
@@ -57,7 +55,7 @@ public class DarkComboPopup extends BasicComboPopup {
     /**
      * Constructs a new instance of {@code BasicComboPopup}.
      *
-     * @param combo      an instance of {@code JComboBox}
+     * @param combo an instance of {@code JComboBox}
      * @param borderSize the size of the border
      */
     public DarkComboPopup(final JComboBox<Object> combo, final int borderSize) {
@@ -100,9 +98,8 @@ public class DarkComboPopup extends BasicComboPopup {
 
     @Override
     protected JScrollPane createScroller() {
-        overlayScrollPane = new OverlayScrollPane(
-            list, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
-        );
+        overlayScrollPane = new OverlayScrollPane(list, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         overlayScrollPane.getVerticalScrollBar().putClientProperty(DarkScrollBarUI.KEY_SMALL, Boolean.TRUE);
         return overlayScrollPane.getScrollPane();
     }
@@ -146,12 +143,10 @@ public class DarkComboPopup extends BasicComboPopup {
 
         // reduce the width of the scrollpane by the insets so that the popup
         // is the same width as the combo box.
-        popupSize.setSize(
-            popupSize.width - (insets.right + insets.left), getPopupHeightForRowCount(comboBox.getMaximumRowCount())
-        );
-        Rectangle popupBounds = computePopupBounds(
-            borderSize, comboBox.getBounds().height - borderSize, popupSize.width - 2 * borderSize, popupSize.height
-        );
+        popupSize.setSize(popupSize.width - (insets.right + insets.left),
+                getPopupHeightForRowCount(comboBox.getMaximumRowCount()));
+        Rectangle popupBounds = computePopupBounds(borderSize, comboBox.getBounds().height - borderSize,
+                popupSize.width - 2 * borderSize, popupSize.height);
         Dimension scrollSize = popupBounds.getSize();
         Point popupLocation = popupBounds.getLocation();
 
@@ -185,7 +180,8 @@ public class DarkComboPopup extends BasicComboPopup {
 
     @Override
     protected void togglePopup() {
-        if (comboBox.getItemCount() == 0) return;
+        if (comboBox.getItemCount() == 0)
+            return;
         if (visible) {
             visible = false;
             hide();

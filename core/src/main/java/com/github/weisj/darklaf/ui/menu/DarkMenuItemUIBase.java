@@ -72,13 +72,13 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
     }
 
     public void paint(final Graphics g, final JComponent c) {
-        paintMenuItem(
-            g, c, checkIcon, arrowIcon, selectionBackground, isSelected(c) ? selectionForeground : c.getForeground(), defaultTextIconGap
-        );
+        paintMenuItem(g, c, checkIcon, arrowIcon, selectionBackground,
+                isSelected(c) ? selectionForeground : c.getForeground(), defaultTextIconGap);
     }
 
     protected boolean isSelected(final JComponent menuItem) {
-        if (!(menuItem instanceof JMenuItem)) return false;
+        if (!(menuItem instanceof JMenuItem))
+            return false;
         return menuItem.isEnabled() && ((JMenuItem) menuItem).isArmed();
     }
 
@@ -86,15 +86,13 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         Rectangle accRect = lr.getAccRect();
         ButtonModel model = lh.getMenuItem().getModel();
         if (model.isEnabled()) {
-            accRect.x =
-                lh.getViewRect().x + lh.getViewRect().width - lh.getMenuItem().getIconTextGap() - lr.getAccRect().width;
+            accRect.x = lh.getViewRect().x + lh.getViewRect().width - lh.getMenuItem().getIconTextGap()
+                    - lr.getAccRect().width;
         }
     }
 
-    protected void paintMenuItem(
-            final Graphics g, final JComponent c, final Icon checkIcon, final Icon arrowIcon, final Color background,
-            final Color foreground, final int defaultTextIconGap
-    ) {
+    protected void paintMenuItem(final Graphics g, final JComponent c, final Icon checkIcon, final Icon arrowIcon,
+            final Color background, final Color foreground, final int defaultTextIconGap) {
         // Save original graphics font and color
         Font holdf = g.getFont();
         Color holdc = g.getColor();
@@ -121,21 +119,15 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         g.setFont(holdf);
     }
 
-    protected MenuItemLayoutHelper getMenuItemLayoutHelper(
-            final Icon checkIcon, final Icon arrowIcon, final int defaultTextIconGap, final JMenuItem mi,
-            final Rectangle viewRect
-    ) {
-        return new MenuItemLayoutHelper(
-            mi, checkIcon, arrowIcon, viewRect, defaultTextIconGap, acceleratorDelimiter,
-            mi.getComponentOrientation().isLeftToRight(), mi.getFont(), acceleratorFont,
-            MenuItemLayoutHelper.useCheckAndArrow(menuItem), getPropertyPrefix()
-        );
+    protected MenuItemLayoutHelper getMenuItemLayoutHelper(final Icon checkIcon, final Icon arrowIcon,
+            final int defaultTextIconGap, final JMenuItem mi, final Rectangle viewRect) {
+        return new MenuItemLayoutHelper(mi, checkIcon, arrowIcon, viewRect, defaultTextIconGap, acceleratorDelimiter,
+                mi.getComponentOrientation().isLeftToRight(), mi.getFont(), acceleratorFont,
+                MenuItemLayoutHelper.useCheckAndArrow(menuItem), getPropertyPrefix());
     }
 
-    protected void paintCheckIcon(
-            final Graphics g, final JMenuItem mi, final MenuItemLayoutHelper lh,
-            final MenuItemLayoutHelper.LayoutResult lr, final Color holdc, final Color foreground
-    ) {
+    protected void paintCheckIcon(final Graphics g, final JMenuItem mi, final MenuItemLayoutHelper lh,
+            final MenuItemLayoutHelper.LayoutResult lr, final Color holdc, final Color foreground) {
         if (lh.getCheckIcon() != null) {
             ButtonModel model = mi.getModel();
             if (model.isArmed() || (mi instanceof JMenu && model.isSelected())) {
@@ -150,18 +142,15 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         }
     }
 
-    protected void paintAccText(
-            final Graphics g, final JMenuItem mi, final MenuItemLayoutHelper lh,
-            final MenuItemLayoutHelper.LayoutResult lr
-    ) {
+    protected void paintAccText(final Graphics g, final JMenuItem mi, final MenuItemLayoutHelper lh,
+            final MenuItemLayoutHelper.LayoutResult lr) {
         GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         rightAlignAccText(lh, lr);
         if (!StringUtil.isBlank(lh.getAccText())) {
             g.setFont(lh.getAccFontMetrics().getFont());
             g.setColor(getAcceleratorForeground(mi));
-            SwingUtilities2.drawString(
-                mi, g, lh.getAccText(), lr.getAccRect().x, lr.getAccRect().y + lh.getAccFontMetrics().getAscent()
-            );
+            SwingUtilities2.drawString(mi, g, lh.getAccText(), lr.getAccRect().x,
+                    lr.getAccRect().y + lh.getAccFontMetrics().getAscent());
         }
         config.restore();
     }
@@ -173,7 +162,8 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
 
     protected Color getAcceleratorForeground(final AbstractButton b) {
         ButtonModel model = b.getModel();
-        if (!model.isEnabled()) return disabledForeground;
+        if (!model.isEnabled())
+            return disabledForeground;
         if (model.isArmed() || (b instanceof JMenu && model.isSelected())) {
             return acceleratorSelectionForeground;
         } else {
@@ -181,10 +171,8 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         }
     }
 
-    protected void paintIcon(
-            final Graphics g, final JMenuItem mi, final MenuItemLayoutHelper lh,
-            final MenuItemLayoutHelper.LayoutResult lr, final Color holdc
-    ) {
+    protected void paintIcon(final Graphics g, final JMenuItem mi, final MenuItemLayoutHelper lh,
+            final MenuItemLayoutHelper.LayoutResult lr, final Color holdc) {
         if (lh.getIcon() != null) {
             Icon icon;
             ButtonModel model = mi.getModel();
@@ -207,10 +195,8 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         }
     }
 
-    protected void paintText(
-            final Graphics g, final JMenuItem mi, final MenuItemLayoutHelper lh,
-            final MenuItemLayoutHelper.LayoutResult lr
-    ) {
+    protected void paintText(final Graphics g, final JMenuItem mi, final MenuItemLayoutHelper lh,
+            final MenuItemLayoutHelper.LayoutResult lr) {
         GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         if (!StringUtil.isBlank(lh.getText())) {
             if (lh.getHtmlView() != null) {
@@ -224,10 +210,8 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         config.restore();
     }
 
-    protected void paintArrowIcon(
-            final Graphics g, final JMenuItem mi, final MenuItemLayoutHelper lh,
-            final MenuItemLayoutHelper.LayoutResult lr, final Color foreground
-    ) {
+    protected void paintArrowIcon(final Graphics g, final JMenuItem mi, final MenuItemLayoutHelper lh,
+            final MenuItemLayoutHelper.LayoutResult lr, final Color foreground) {
         if (lh.getArrowIcon() != null) {
             ButtonModel model = mi.getModel();
             if (model.isArmed() || (mi instanceof JMenu && model.isSelected())) {
@@ -264,13 +248,12 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
     }
 
     @Override
-    protected Dimension getPreferredMenuItemSize(
-            final JComponent c, final Icon checkIcon, final Icon arrowIcon, final int defaultTextIconGap
-    ) {
+    protected Dimension getPreferredMenuItemSize(final JComponent c, final Icon checkIcon, final Icon arrowIcon,
+            final int defaultTextIconGap) {
 
         JMenuItem mi = (JMenuItem) c;
-        MenuItemLayoutHelper lh =
-            getMenuItemLayoutHelper(checkIcon, arrowIcon, defaultTextIconGap, mi, MenuItemLayoutHelper.createMaxRect());
+        MenuItemLayoutHelper lh = getMenuItemLayoutHelper(checkIcon, arrowIcon, defaultTextIconGap, mi,
+                MenuItemLayoutHelper.createMaxRect());
         Dimension result = new Dimension();
 
         // Calculate the result width
@@ -285,10 +268,8 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         MenuItemLayoutHelper.addMaxWidth(lh.getArrowSize(), lh.getGap(), result);
 
         // Calculate the result height
-        result.height = MenuItemLayoutHelper.max(
-            lh.getCheckSize().getHeight(), lh.getLabelSize().getHeight(), lh.getAccSize().getHeight(),
-            lh.getArrowSize().getHeight()
-        );
+        result.height = MenuItemLayoutHelper.max(lh.getCheckSize().getHeight(), lh.getLabelSize().getHeight(),
+                lh.getAccSize().getHeight(), lh.getArrowSize().getHeight());
 
         // Take into account menu item insets
         Insets insets = mi.getInsets();

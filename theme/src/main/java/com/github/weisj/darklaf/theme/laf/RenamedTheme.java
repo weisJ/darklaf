@@ -42,7 +42,8 @@ public class RenamedTheme extends ThemeDelegate {
 
     @Override
     public String getDisplayName() {
-        if (name != null) return name;
+        if (name != null)
+            return name;
         return super.getDisplayName();
     }
 }

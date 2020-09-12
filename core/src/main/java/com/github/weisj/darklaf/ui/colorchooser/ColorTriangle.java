@@ -176,12 +176,14 @@ public class ColorTriangle extends JComponent {
 
     protected void setHSBHue(final double hue) {
         hueHSB = hue;
-        if (hueHSB < 0) hueHSB += 1.0;
+        if (hueHSB < 0)
+            hueHSB += 1.0;
     }
 
     protected void setHSLHue(final double hue) {
         hueHSL = hue;
-        if (hueHSL < 0) hueHSL += 1.0;
+        if (hueHSL < 0)
+            hueHSL += 1.0;
     }
 
     protected void setValue(final double value) {
@@ -275,13 +277,13 @@ public class ColorTriangle extends JComponent {
 
     public int[] getValuesForModel(final DarkColorModel model) {
         if (model instanceof DarkColorModelHSB) {
-            return new int[] {(int) Math.round(getHue() * model.getMaximum(0)), (int) Math
-                .round(getHSBSaturation() * model.getMaximum(1)),
-                (int) Math.round(getHSBValue() * model.getMaximum(2))};
+            return new int[] {(int) Math.round(getHue() * model.getMaximum(0)),
+                    (int) Math.round(getHSBSaturation() * model.getMaximum(1)),
+                    (int) Math.round(getHSBValue() * model.getMaximum(2))};
         } else if (model instanceof DarkColorModelHSL) {
-            return new int[] {(int) Math.round(getHue() * model.getMaximum(0)), (int) Math
-                .round(getHSLSaturation() * model.getMaximum(1)),
-                (int) Math.round(getHSLValue() * model.getMaximum(2))};
+            return new int[] {(int) Math.round(getHue() * model.getMaximum(0)),
+                    (int) Math.round(getHSLSaturation() * model.getMaximum(1)),
+                    (int) Math.round(getHSLValue() * model.getMaximum(2))};
         } else {
             return model.getValuesFromColor(color);
         }
@@ -308,7 +310,8 @@ public class ColorTriangle extends JComponent {
     }
 
     protected void setColorFromRGB(final Object source, final int r, final int g, final int b) {
-        if (isMessaging) return;
+        if (isMessaging)
+            return;
         this.color = new Color(r, g, b);
         double[] hsb = DarkColorModelHSB.RGBtoHSBValues(r, g, b);
         double[] hsl = DarkColorModelHSL.RGBtoHSLValues(r, g, b);
@@ -324,7 +327,8 @@ public class ColorTriangle extends JComponent {
     }
 
     protected void setColorFromHSL(final Object source, final double h, final double s, final double l) {
-        if (isMessaging) return;
+        if (isMessaging)
+            return;
         setHSL(h, s, l);
         color = DarkColorModelHSL.getColorFromHSLValues(h, s, l);
         setHSB(DarkColorModelHSB.RGBtoHSBValues(color.getRed(), color.getGreen(), color.getBlue()));
@@ -335,7 +339,8 @@ public class ColorTriangle extends JComponent {
     }
 
     protected void setColorFromHSB(final Object source, final double h, final double s, final double b) {
-        if (isMessaging) return;
+        if (isMessaging)
+            return;
         setHSB(h, s, b);
         color = DarkColorModelHSB.getColorFromHSBValues(h, s, b);
         setHSL(DarkColorModelHSL.RGBtoHSLValues(color.getRed(), color.getGreen(), color.getBlue()));
@@ -447,9 +452,8 @@ public class ColorTriangle extends JComponent {
 
         circleShape = calculateCircleShape(x, y, size, outerSize);
         triangleShape = calculateTriangleShape(x, y, size, outerSize, rotationTransform);
-        outerIndicator = createOuterIndicator(
-            centerX, centerY, (innerRadius + outerRadius) / 2.0, rotationTransform, outerIndicatorRadius
-        );
+        outerIndicator = createOuterIndicator(centerX, centerY, (innerRadius + outerRadius) / 2.0, rotationTransform,
+                outerIndicatorRadius);
         innerIndicator = createInnerIndicator(rotationTransform, innerIndicatorRadius);
 
         invalid = false;
@@ -479,9 +483,8 @@ public class ColorTriangle extends JComponent {
         return createIndicatorShape(p, dotRadius);
     }
 
-    protected Shape createOuterIndicator(
-            final double cx, final double cy, final double radius, final AffineTransform transform, final int dotRadius
-    ) {
+    protected Shape createOuterIndicator(final double cx, final double cy, final double radius,
+            final AffineTransform transform, final int dotRadius) {
         dummy.setLocation(cx, cy - radius);
         transform.transform(dummy, dummy);
         return createIndicatorShape(dummy, dotRadius);
@@ -491,9 +494,8 @@ public class ColorTriangle extends JComponent {
         return new Ellipse2D.Double(p.getX() - radius, p.getY() - radius, 2 * radius, 2 * radius);
     }
 
-    protected Shape calculateTriangleShape(
-            final double x, final double y, final int size, final int outerSize, final AffineTransform transform
-    ) {
+    protected Shape calculateTriangleShape(final double x, final double y, final int size, final int outerSize,
+            final AffineTransform transform) {
         double diameter = (size - 2 * outerSize);
         double radius = diameter / 2.0;
         double sideLength = Math.cos(Math.PI / 6.0) * diameter;
@@ -514,21 +516,19 @@ public class ColorTriangle extends JComponent {
     protected Shape calculateCircleShape(final double x, final double y, final int size, final int outerSize) {
         outerRadius = size / 2.0;
         innerRadius = outerRadius - outerSize;
-        if (!circleInfo.update(x, y, size, outerSize) && circleShape != null) return circleShape;
+        if (!circleInfo.update(x, y, size, outerSize) && circleShape != null)
+            return circleShape;
 
         Area outer = new Area(new Ellipse2D.Double(x, y, size, size));
-        Area inner =
-            new Area(new Ellipse2D.Double(x + outerSize, y + outerSize, size - 2 * outerSize, size - 2 * outerSize));
+        Area inner = new Area(
+                new Ellipse2D.Double(x + outerSize, y + outerSize, size - 2 * outerSize, size - 2 * outerSize));
         outer.subtract(inner);
         return outer;
     }
 
     protected Point2D getTrianglePos(final double sat, final double val) {
-        return new Point2D.Double(
-            centerX + innerRadius * (2 * val - sat * val - 1) * SQRT3 / 2.0,
-            centerY + innerRadius * (1 - 3 * sat * val) / 2.0
-        );
-
+        return new Point2D.Double(centerX + innerRadius * (2 * val - sat * val - 1) * SQRT3 / 2.0,
+                centerY + innerRadius * (1 - 3 * sat * val) / 2.0);
     }
 
     @Override
@@ -570,10 +570,8 @@ public class ColorTriangle extends JComponent {
         }
 
         @Override
-        public PaintContext createContext(
-                final ColorModel cm, final Rectangle deviceBounds, final Rectangle2D userBounds,
-                final AffineTransform xform, final RenderingHints hints
-        ) {
+        public PaintContext createContext(final ColorModel cm, final Rectangle deviceBounds,
+                final Rectangle2D userBounds, final AffineTransform xform, final RenderingHints hints) {
             context.setHints(deviceBounds, xform);
             return context;
         }
@@ -597,7 +595,7 @@ public class ColorTriangle extends JComponent {
         }
     }
 
-    protected static abstract class ColorWheelPaintContext implements PaintContext {
+    protected abstract static class ColorWheelPaintContext implements PaintContext {
         protected Rectangle deviceBounds;
         protected double cx;
         protected double cy;
@@ -673,10 +671,8 @@ public class ColorTriangle extends JComponent {
         protected final double value;
         protected final double hue;
 
-        public PickResult(
-                final PickArea area, final double rotation, final double hue, final double saturation,
-                final double value
-        ) {
+        public PickResult(final PickArea area, final double rotation, final double hue, final double saturation,
+                final double value) {
             this.area = area;
             this.hue = hue;
             this.rotation = rotation;

@@ -35,7 +35,8 @@ public enum FontSizePreset {
     }
 
     public float adjustFontSize(final float size) {
-        if (percentage <= 0) return size;
+        if (percentage <= 0)
+            return size;
         return getType().adjustSize(size, percentage / 100f);
     }
 

@@ -31,9 +31,7 @@ import org.pbjar.jxlayer.plaf.ext.TransformUI;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
-/**
- * Popup menu that is aware of {@link org.pbjar.jxlayer.plaf.ext.TransformUI}.
- */
+/** Popup menu that is aware of {@link org.pbjar.jxlayer.plaf.ext.TransformUI}. */
 public class JXPopupMenu extends JPopupMenu {
 
     public JXPopupMenu() {

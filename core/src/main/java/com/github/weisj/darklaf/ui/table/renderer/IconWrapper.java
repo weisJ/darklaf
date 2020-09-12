@@ -57,7 +57,8 @@ public class IconWrapper extends JPanel {
 
     @Override
     public void doLayout() {
-        if (c == null) return;
+        if (c == null)
+            return;
         int w = getWidth();
         int h = getHeight();
         Border b = c.getBorder();

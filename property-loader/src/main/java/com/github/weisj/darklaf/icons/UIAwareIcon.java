@@ -23,9 +23,7 @@ package com.github.weisj.darklaf.icons;
 
 import javax.swing.*;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public interface UIAwareIcon extends DynamicIcon {
 
     UIAwareIcon getDual();

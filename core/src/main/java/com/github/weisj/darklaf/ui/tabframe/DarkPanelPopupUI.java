@@ -91,7 +91,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
         headerButtonFocusClickBackground = UIManager.getColor("TabFramePopup.headerButtonFocusClickBackground");
         accelerator = UIManager.getString("TabFramePopup.closeAccelerator");
         popupComponent.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-            .put(KeyStroke.getKeyStroke(accelerator), accelerator);
+                .put(KeyStroke.getKeyStroke(accelerator), accelerator);
         popupComponent.getActionMap().put(accelerator, closeAction);
         popupComponent.setLayout(new BorderLayout());
     }
@@ -182,7 +182,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
         uninstallListeners();
         popupComponent.removeAll();
         popupComponent.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-            .remove(KeyStroke.getKeyStroke(accelerator));
+                .remove(KeyStroke.getKeyStroke(accelerator));
         popupComponent.getActionMap().remove(accelerator);
         popupComponent = null;
     }
@@ -234,15 +234,18 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
                 setHeaderBackground(true);
             }
         } else if (TabFramePopup.KEY_CONTENT.equals(key)) {
-            if (content == null) return;
+            if (content == null)
+                return;
             content.add((Component) evt.getNewValue(), BorderLayout.CENTER);
             content.invalidate();
         } else if (TabFramePopup.KEY_TITLE.equals(key)) {
-            if (label == null) return;
+            if (label == null)
+                return;
             label.setText(evt.getNewValue().toString());
             label.repaint();
         } else if (TabFramePopup.KEY_ICON.equals(key)) {
-            if (label == null) return;
+            if (label == null)
+                return;
             label.setIcon((Icon) evt.getNewValue());
             label.repaint();
         } else if (TabFramePopup.KEY_VISIBLE_TAB.equals(key)) {
@@ -293,7 +296,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
                     Component peer = tabFrame.getPopupComponentAt(tabFrame.getPeer(popupComponent.getAlignment()));
                     peer.firePropertyChange(TabFramePopup.KEY_PEER_INSETS, 0, 1);
                 } catch (IndexOutOfBoundsException ignored) {
-                    /* may happen during transfer */}
+                    /* may happen during transfer */ }
             }
         }
     }
@@ -355,12 +358,14 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     public void eventDispatched(final AWTEvent event) {
         if (event.getID() == FocusEvent.FOCUS_GAINED) {
             Component focusOwner = FocusManager.getCurrentManager().getFocusOwner();
-            if (focusOwner instanceof JTabFrame) return;
-            if (focusOwner instanceof JRootPane) return;
+            if (focusOwner instanceof JTabFrame)
+                return;
+            if (focusOwner instanceof JRootPane)
+                return;
             boolean focus = DarkUIUtil.hasFocus(popupComponent);
             if (popupComponent.getTabFrame() != null) {
                 Container container =
-                    popupComponent.getTabFrame().getContentPane().getContainer(popupComponent.getAlignment());
+                        popupComponent.getTabFrame().getContentPane().getContainer(popupComponent.getAlignment());
                 focus = focus || DarkUIUtil.hasFocus(container);
             }
             setHeaderBackground(focus);
@@ -387,14 +392,10 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
         }
 
         public void setFocus(final boolean focus) {
-            putClientProperty(
-                DarkButtonUI.KEY_HOVER_COLOR,
-                focus ? ui.headerButtonFocusHoverBackground : ui.headerButtonHoverBackground
-            );
-            putClientProperty(
-                DarkButtonUI.KEY_CLICK_COLOR,
-                focus ? ui.headerButtonFocusClickBackground : ui.headerButtonClickBackground
-            );
+            putClientProperty(DarkButtonUI.KEY_HOVER_COLOR,
+                    focus ? ui.headerButtonFocusHoverBackground : ui.headerButtonHoverBackground);
+            putClientProperty(DarkButtonUI.KEY_CLICK_COLOR,
+                    focus ? ui.headerButtonFocusClickBackground : ui.headerButtonClickBackground);
         }
     }
 }

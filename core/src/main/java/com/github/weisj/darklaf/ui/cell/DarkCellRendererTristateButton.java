@@ -46,12 +46,10 @@ public class DarkCellRendererTristateButton
     }
 
     @Override
-    public CellTristateButton getTreeCellRendererComponent(
-            final JTree tree, final Object value, final boolean selected, final boolean expanded, final boolean leaf,
-            final int row, final boolean focus
-    ) {
+    public CellTristateButton getTreeCellRendererComponent(final JTree tree, final Object value, final boolean selected,
+            final boolean expanded, final boolean leaf, final int row, final boolean focus) {
         CellTristateButton renderer =
-            super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, focus);
+                super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, focus);
         renderer.setAllowsIndeterminate(!leaf);
         return renderer;
     }

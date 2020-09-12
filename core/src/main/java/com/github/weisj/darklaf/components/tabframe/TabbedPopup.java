@@ -50,8 +50,8 @@ public class TabbedPopup extends PanelPopup {
     /**
      * Creates a Popup that can hold multiple content panes using a TabbedPane.
      *
-     * @param title   the title of the popup.
-     * @param icon    the icon of the popup.
+     * @param title the title of the popup.
+     * @param icon the icon of the popup.
      * @param content the initial content pane.
      */
     public TabbedPopup(final String title, final Icon icon, final Component content) {
@@ -66,7 +66,7 @@ public class TabbedPopup extends PanelPopup {
      * Creates a Popup that can hold multiple content panes using a TabbedPane.
      *
      * @param title the title of the popup.
-     * @param icon  the icon of the popup.
+     * @param icon the icon of the popup.
      */
     public TabbedPopup(final String title, final Icon icon) {
         this(title, icon, null);
@@ -75,7 +75,7 @@ public class TabbedPopup extends PanelPopup {
     /**
      * Creates a Popup that can hold multiple content panes using a TabbedPane.
      *
-     * @param title   the title of the popup.
+     * @param title the title of the popup.
      * @param content the initial content pane.
      */
     public TabbedPopup(final String title, final Component content) {
@@ -124,7 +124,7 @@ public class TabbedPopup extends PanelPopup {
      * Gets the currently selected component from the TabbedPane.
      *
      * @return the selected component.
-     * @see    #getTabbedPane()
+     * @see #getTabbedPane()
      */
     public Component getContentPane() {
         return tabbedPane.getSelectedComponent();
@@ -138,7 +138,8 @@ public class TabbedPopup extends PanelPopup {
      * @param component the component to add.
      */
     public void setContentPane(final Component component) {
-        if (component == null) return;
+        if (component == null)
+            return;
         if (getContentPanes().contains(component)) {
             return;
         }
@@ -150,7 +151,7 @@ public class TabbedPopup extends PanelPopup {
      * tabs to the TabbedPane.
      *
      * @return a collection of components.
-     * @see    #getTabbedPane()
+     * @see #getTabbedPane()
      */
     public Collection<Component> getContentPanes() {
         int size = getTabbedPane().getTabCount();

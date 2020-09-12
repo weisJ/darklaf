@@ -29,9 +29,7 @@ import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
 import com.github.weisj.darklaf.icons.EmptyIcon;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
 
     protected final Icon leftOneTouch;
@@ -143,7 +141,7 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
         public Icon getIcon() {
             if (splitPane != null) {
                 return splitPane.getOrientation() == JSplitPane.HORIZONTAL_SPLIT ? getRightOneTouchIcon()
-                    : getBottomOneTouchIcon();
+                        : getBottomOneTouchIcon();
             }
             return EmptyIcon.create(0);
         }
@@ -154,7 +152,7 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
         public Icon getIcon() {
             if (splitPane != null) {
                 return splitPane.getOrientation() == JSplitPane.HORIZONTAL_SPLIT ? getLeftOneTouchIcon()
-                    : getTopOneTouchIcon();
+                        : getTopOneTouchIcon();
             }
             return EmptyIcon.create(0);
         }

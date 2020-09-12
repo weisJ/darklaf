@@ -56,15 +56,16 @@ public class MouseGrabberUtil {
     private static ChangeListener getOldMouseGrabber() {
         MenuSelectionManager menuSelectionManager = MenuSelectionManager.defaultManager();
         for (ChangeListener listener : menuSelectionManager.getChangeListeners()) {
-            if (listener == null) continue;
+            if (listener == null)
+                continue;
             Class<?> listenerClass = listener.getClass();
-            if (listenerClass == null) continue;
+            if (listenerClass == null)
+                continue;
             Class<?> enclosingClass = listenerClass.getEnclosingClass();
-            if (enclosingClass == null) continue;
-            if (
-                listenerClass.getName().endsWith("MouseGrabber")
-                    && enclosingClass.getName().endsWith("BasicPopupMenuUI")
-            ) {
+            if (enclosingClass == null)
+                continue;
+            if (listenerClass.getName().endsWith("MouseGrabber")
+                    && enclosingClass.getName().endsWith("BasicPopupMenuUI")) {
                 return listener;
             }
         }
@@ -76,7 +77,8 @@ public class MouseGrabberUtil {
      * add our own implementation for it that is a bit more generous with closing the popup.
      */
     private static void uninstallOldMouseGrabber(final ChangeListener oldMouseGrabber) {
-        if (oldMouseGrabber == null) return;
+        if (oldMouseGrabber == null)
+            return;
         MenuSelectionManager menuSelectionManager = MenuSelectionManager.defaultManager();
         menuSelectionManager.removeChangeListener(oldMouseGrabber);
         if (oldMouseGrabber instanceof AWTEventListener) {

@@ -101,7 +101,8 @@ public class NumberingPane extends JComponent {
     }
 
     public void addIconListener(final int offset, final IconListener listener) throws BadLocationException {
-        if (textComponent == null) return;
+        if (textComponent == null)
+            return;
         addIconListener(textComponent.getDocument().createPosition(offset), listener);
     }
 
@@ -116,7 +117,8 @@ public class NumberingPane extends JComponent {
     }
 
     public void removeIconListener(final int offset, final IconListener listener) throws BadLocationException {
-        if (textComponent == null) return;
+        if (textComponent == null)
+            return;
         removeIconListener(textComponent.getDocument().createPosition(offset), listener);
     }
 
@@ -136,7 +138,8 @@ public class NumberingPane extends JComponent {
     }
 
     public List<IconListener> getIconListeners(final int offset) throws BadLocationException {
-        if (textComponent == null) return new ArrayList<>();
+        if (textComponent == null)
+            return new ArrayList<>();
         return getIconListeners(textComponent.getDocument().createPosition(offset));
     }
 

@@ -33,7 +33,7 @@ public interface DefaultsAdjustmentTask {
      * {@link javax.swing.plaf.FontUIResource} and {@link javax.swing.plaf.ColorUIResource}.
      *
      * @param currentTheme the current theme.
-     * @param properties   the properties.
+     * @param properties the properties.
      */
     void run(final Theme currentTheme, final Properties properties);
 }

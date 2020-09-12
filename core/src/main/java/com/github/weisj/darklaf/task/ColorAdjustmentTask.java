@@ -52,8 +52,8 @@ public abstract class ColorAdjustmentTask implements DefaultsAdjustmentTask {
     }
 
     protected void adjust(final String listKey, final Properties listProperties, final Consumer<List<?>> action) {
-        Object obj = PropertyLoader
-            .parseValue(listKey, listProperties.getProperty(listKey), listProperties, DEFAULTS, DarkUIUtil.ICON_LOADER);
+        Object obj = PropertyLoader.parseValue(listKey, listProperties.getProperty(listKey), listProperties, DEFAULTS,
+                DarkUIUtil.ICON_LOADER);
         if (obj instanceof List<?>) {
             action.accept((List<?>) obj);
         }

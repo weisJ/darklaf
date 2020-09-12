@@ -118,7 +118,6 @@ public class PopupMenuDemo implements ComponentDemo {
                         });
                     }
                 }
-
             }
         });
 

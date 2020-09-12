@@ -83,7 +83,8 @@ public class TooltipTest extends AbstractImageTest {
                     Color bg = c.getBackground();
                     Assertions.assertNotNull(bg, "Background is null for " + c);
                     Assertions.assertEquals(0, bg.getAlpha(), "Background " + bg + " is opaque " + c);
-                    if (c instanceof Window) break;
+                    if (c instanceof Window)
+                        break;
                 }
                 Assertions.assertEquals(c, window, "Did not traverse full hierarchy");
 
@@ -104,7 +105,8 @@ public class TooltipTest extends AbstractImageTest {
         });
 
         Exception e = exception.get();
-        if (e != null) Assertions.fail(e.getMessage());
+        if (e != null)
+            Assertions.fail(e.getMessage());
     }
 
     private int getAlpha(final int rgb) {

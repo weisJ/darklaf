@@ -29,13 +29,14 @@ import com.github.weisj.darklaf.theme.info.*;
 public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
 
     private final PreferredThemeStyle fallbackStyle =
-        new PreferredThemeStyle(ContrastRule.STANDARD, ColorToneRule.LIGHT);
+            new PreferredThemeStyle(ContrastRule.STANDARD, ColorToneRule.LIGHT);
     private final WindowsPreferenceMonitor monitor = new WindowsPreferenceMonitor(this);
     private Consumer<PreferredThemeStyle> callback;
 
     @Override
     public PreferredThemeStyle getPreference() {
-        if (!WindowsLibrary.get().isLoaded()) return fallbackStyle;
+        if (!WindowsLibrary.get().isLoaded())
+            return fallbackStyle;
         boolean darkMode = JNIThemeInfoWindows.isDarkThemeEnabled();
         boolean highContrast = JNIThemeInfoWindows.isHighContrastEnabled();
         long fontScaling = JNIThemeInfoWindows.getFontScaleFactor();
@@ -43,9 +44,8 @@ public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
         return create(highContrast, darkMode, fontScaling, accentColorRGB);
     }
 
-    private PreferredThemeStyle create(
-            final boolean highContrast, final boolean darkMode, final long fontScaling, final int accentColorRGB
-    ) {
+    private PreferredThemeStyle create(final boolean highContrast, final boolean darkMode, final long fontScaling,
+            final int accentColorRGB) {
         ContrastRule contrastRule = highContrast ? ContrastRule.HIGH_CONTRAST : ContrastRule.STANDARD;
         ColorToneRule toneRule = darkMode ? ColorToneRule.DARK : ColorToneRule.LIGHT;
         FontSizeRule fontSizeRule = FontSizeRule.relativeAdjustment(fontScaling / 100f);
@@ -54,13 +54,13 @@ public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
     }
 
     private Color createColorFromRGB(final int rgb) {
-        if (rgb == 0) return null;
+        if (rgb == 0)
+            return null;
         return new Color(rgb);
     }
 
-    void reportPreferenceChange(
-            final boolean highContrast, final boolean darkMode, final long fontScaleFactor, final int accentColorRGB
-    ) {
+    void reportPreferenceChange(final boolean highContrast, final boolean darkMode, final long fontScaleFactor,
+            final int accentColorRGB) {
         if (callback != null) {
             PreferredThemeStyle style = create(highContrast, darkMode, fontScaleFactor, accentColorRGB);
             callback.accept(style);
@@ -69,7 +69,8 @@ public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
 
     @Override
     public void setReporting(final boolean reporting) {
-        if (reporting && !WindowsLibrary.get().isLoaded()) WindowsLibrary.get().updateLibrary();
+        if (reporting && !WindowsLibrary.get().isLoaded())
+            WindowsLibrary.get().updateLibrary();
         synchronized (monitor) {
             monitor.setRunning(reporting);
         }

@@ -32,10 +32,10 @@ public final class Insets2D implements Cloneable {
      * Creates and initializes a new <code>Insets</code> object with the specified top, left, bottom,
      * and right insets.
      *
-     * @param top    the inset from the top.
-     * @param left   the inset from the left.
+     * @param top the inset from the top.
+     * @param left the inset from the left.
      * @param bottom the inset from the bottom.
-     * @param right  the inset from the right.
+     * @param right the inset from the right.
      */
     public Insets2D(final double top, final double left, final double bottom, final double right) {
         this.top = top;
@@ -47,11 +47,11 @@ public final class Insets2D implements Cloneable {
     /**
      * Set top, left, bottom, and right to the specified values
      *
-     * @param top    the inset from the top.
-     * @param left   the inset from the left.
+     * @param top the inset from the top.
+     * @param left the inset from the left.
      * @param bottom the inset from the bottom.
-     * @param right  the inset from the right.
-     * @since        1.5
+     * @param right the inset from the right.
+     * @since 1.5
      */
     public void set(final double top, final double left, final double bottom, final double right) {
         this.top = top;
@@ -75,7 +75,7 @@ public final class Insets2D implements Cloneable {
         if (obj instanceof Insets2D) {
             Insets2D insets = (Insets2D) obj;
             return ((top == insets.top) && (left == insets.left) && (bottom == insets.bottom)
-                && (right == insets.right));
+                    && (right == insets.right));
         }
         return false;
     }

@@ -28,19 +28,16 @@ import javax.swing.*;
 public class ToggleButtonListCellRenderer implements ListCellRenderer<JToggleButton> {
 
     @Override
-    public Component getListCellRendererComponent(
-            final JList<? extends JToggleButton> list, final JToggleButton value, final int index,
-            final boolean isSelected, final boolean cellHasFocus
-    ) {
+    public Component getListCellRendererComponent(final JList<? extends JToggleButton> list, final JToggleButton value,
+            final int index, final boolean isSelected, final boolean cellHasFocus) {
         value.setBackground(isSelected ? list.getSelectionBackground() : list.getBackground());
         value.setForeground(isSelected ? list.getSelectionForeground() : list.getForeground());
         value.setEnabled(list.isEnabled());
         value.setFont(list.getFont());
         value.setFocusPainted(cellHasFocus);
         value.setBorderPainted(true);
-        value.setBorder(
-            isSelected ? UIManager.getBorder("List.focusCellHighlightBorder") : UIManager.getBorder("List.cellNoFocusBorder")
-        );
+        value.setBorder(isSelected ? UIManager.getBorder("List.focusCellHighlightBorder")
+                : UIManager.getBorder("List.cellNoFocusBorder"));
 
         return value;
     }

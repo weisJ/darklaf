@@ -35,9 +35,7 @@ import javax.swing.text.InternationalFormatter;
 
 import com.github.weisj.darklaf.util.PropertyKey;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkFormattedTextFieldUI extends DarkTextFieldUI implements PropertyChangeListener, DocumentListener {
 
     private JFormattedTextField textField;
@@ -97,7 +95,8 @@ public class DarkFormattedTextFieldUI extends DarkTextFieldUI implements Propert
     public void changedUpdate(final DocumentEvent e) {}
 
     protected void update() {
-        if (textField == null) return;
+        if (textField == null)
+            return;
         textField.putClientProperty(DarkTextUI.KEY_HAS_ERROR, !isInputValid(textField));
     }
 

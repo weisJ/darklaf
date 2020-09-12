@@ -25,9 +25,7 @@ import java.awt.*;
 
 import javax.swing.border.AbstractBorder;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class MutableLineBorder extends AbstractBorder {
 
     private Color color;
@@ -49,9 +47,8 @@ public class MutableLineBorder extends AbstractBorder {
     }
 
     @Override
-    public void paintBorder(
-            final Component c, final Graphics g, final int x, final int y, final int width, final int height
-    ) {
+    public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width,
+            final int height) {
         g.setColor(getColor());
         g.fillRect(x, y, width - getRight(), getTop());
         g.fillRect(x, y + getTop(), getLeft(), height - getTop());

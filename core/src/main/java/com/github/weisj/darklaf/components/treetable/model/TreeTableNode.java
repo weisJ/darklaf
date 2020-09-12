@@ -41,7 +41,8 @@ public interface TreeTableNode extends TreeNode {
 
     @Override
     default int getIndex(final TreeNode node) {
-        if (!(node instanceof TreeTableNode)) return -1;
+        if (!(node instanceof TreeTableNode))
+            return -1;
         return getIndex((TreeTableNode) node);
     }
 
@@ -56,7 +57,8 @@ public interface TreeTableNode extends TreeNode {
 
     @Override
     default TreeTableNode getChildAt(final int index) {
-        if (index < 0 || index >= getChildCount()) return null;
+        if (index < 0 || index >= getChildCount())
+            return null;
         return getChildren().get(index);
     }
 

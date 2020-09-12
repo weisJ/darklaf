@@ -28,7 +28,8 @@ public class EventHelperUtil {
     private static boolean eventHelperInstallerFlagSet;
 
     public static void installEventHelper() {
-        if (eventHelperInstallerFlagSet) return;
+        if (eventHelperInstallerFlagSet)
+            return;
         eventHelperInstallerFlagSet = true;
         new DummyBasicLookAndFeel().initialize();
     }

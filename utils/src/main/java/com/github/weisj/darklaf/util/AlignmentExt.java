@@ -25,10 +25,9 @@ import java.awt.*;
 
 public enum AlignmentExt {
     NORTH(Alignment.NORTH), SOUTH(Alignment.SOUTH), EAST(Alignment.EAST), WEST(Alignment.WEST), NORTH_EAST(
-            Alignment.NORTH_EAST
-    ), NORTH_WEST(Alignment.NORTH_WEST), SOUTH_EAST(Alignment.SOUTH_EAST), SOUTH_WEST(Alignment.SOUTH_WEST), CENTER(
-            Alignment.CENTER
-    ), LEFT(null), MIDDLE_HORIZONTAL(null), RIGHT(null), TOP(null), MIDDLE_VERTICAL(null), BOTTOM(null);
+            Alignment.NORTH_EAST), NORTH_WEST(Alignment.NORTH_WEST), SOUTH_EAST(Alignment.SOUTH_EAST), SOUTH_WEST(
+                    Alignment.SOUTH_WEST), CENTER(Alignment.CENTER), LEFT(
+                            null), MIDDLE_HORIZONTAL(null), RIGHT(null), TOP(null), MIDDLE_VERTICAL(null), BOTTOM(null);
 
     private final Alignment parent;
 
@@ -84,9 +83,7 @@ public enum AlignmentExt {
     public Insets maskInsetsInverted(final int top, final int left, final int bottom, final int right, final int mask) {
         Insets masking = maskInsets(0, 0, 0, 0, 1);
         Insets maskVal = maskInsets(mask, mask, mask, mask, 0);
-        return new Insets(
-            top * masking.top + maskVal.top, left * masking.left + maskVal.left,
-            bottom * masking.bottom + maskVal.bottom, right * masking.right + maskVal.right
-        );
+        return new Insets(top * masking.top + maskVal.top, left * masking.left + maskVal.left,
+                bottom * masking.bottom + maskVal.bottom, right * masking.right + maskVal.right);
     }
 }

@@ -31,9 +31,7 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkInternalFrameUI extends BasicInternalFrameUI implements PropertyChangeListener {
 
     protected JMenuBar currentMenuBar;
@@ -118,7 +116,8 @@ public class DarkInternalFrameUI extends BasicInternalFrameUI implements Propert
     }
 
     protected boolean shouldShowMenuBar(final JInternalFrame internalFrame) {
-        if (internalFrame == null) return false;
+        if (internalFrame == null)
+            return false;
         return internalFrame.isSelected() && !internalFrame.isClosed() && !internalFrame.isIcon();
     }
 }

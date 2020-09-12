@@ -31,9 +31,7 @@ import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.ui.cell.DarkCellBorder;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class TextTableCellEditorBorder extends DarkCellBorder {
 
     protected final Color borderColor;
@@ -44,9 +42,8 @@ public class TextTableCellEditorBorder extends DarkCellBorder {
     }
 
     @Override
-    public void paintBorder(
-            final Component c, final Graphics g, final int x, final int y, final int width, final int height
-    ) {
+    public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width,
+            final int height) {
         g.setColor(borderColor);
         JTable table = getTable(c);
         if (table != null) {

@@ -23,9 +23,7 @@ package com.github.weisj.darklaf.components;
 
 import java.util.EventListener;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public interface TabListener extends EventListener {
 
     void tabOpened(TabEvent e);

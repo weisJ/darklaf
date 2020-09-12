@@ -31,9 +31,7 @@ import javax.swing.plaf.ComponentUI;
 import com.github.weisj.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
 import com.github.weisj.darklaf.util.ResourceUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class ClosableTabComponent extends JPanel {
 
     private JTabbedPane pane;
@@ -159,9 +157,8 @@ public class ClosableTabComponent extends JPanel {
                 }
             };
             addMouseListener(mouseListener);
-            setToolTipText(
-                ResourceUtil.getResourceBundle("actions", tabComponent.pane).getString("Actions.closableTabbedPane.close")
-            );
+            setToolTipText(ResourceUtil.getResourceBundle("actions", tabComponent.pane)
+                    .getString("Actions.closableTabbedPane.close"));
         }
 
         @Override
@@ -171,7 +168,8 @@ public class ClosableTabComponent extends JPanel {
                 int tabCount = tabComponent.pane.getTabCount();
                 for (int i = tabCount - 1; i >= 0; i--) {
                     Component tabComp = tabComponent.pane.getTabComponentAt(i);
-                    if (tabComp == tabComponent) continue;
+                    if (tabComp == tabComponent)
+                        continue;
                     if (tabComp instanceof ClosableTabComponent && ((ClosableTabComponent) tabComp).isClosable()) {
                         tabComponent.pane.removeTabAt(i);
                     }

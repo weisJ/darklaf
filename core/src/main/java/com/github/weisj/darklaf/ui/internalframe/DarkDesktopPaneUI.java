@@ -51,9 +51,8 @@ public class DarkDesktopPaneUI extends BasicDesktopPaneUI {
     }
 
     public Rectangle getContentRegion() {
-        return new Rectangle(
-            0, menuBarHolder.getHeight(), desktop.getWidth(), desktop.getHeight() - menuBarHolder.getHeight()
-        );
+        return new Rectangle(0, menuBarHolder.getHeight(), desktop.getWidth(),
+                desktop.getHeight() - menuBarHolder.getHeight());
     }
 
     protected class DarkDesktopPaneLayout implements LayoutManager {

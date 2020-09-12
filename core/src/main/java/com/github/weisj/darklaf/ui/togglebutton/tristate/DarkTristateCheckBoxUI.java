@@ -27,9 +27,7 @@ import javax.swing.plaf.ComponentUI;
 import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
 import com.github.weisj.darklaf.ui.togglebutton.checkbox.DarkCheckBoxUI;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkTristateCheckBoxUI extends DarkCheckBoxUI {
 
     private Icon checkBoxIndeterminateIcon;

@@ -61,7 +61,8 @@ public class FontSizeRule {
     }
 
     public float adjustFontSize(final float size) {
-        if (preset != null) return preset.adjustFontSize(size);
+        if (preset != null)
+            return preset.adjustFontSize(size);
         return type.adjustSize(size, relativeAdjustment);
     }
 
@@ -95,14 +96,17 @@ public class FontSizeRule {
     }
 
     public int getPercentage() {
-        if (preset != null) return preset.getPercentage();
+        if (preset != null)
+            return preset.getPercentage();
         return Math.round(relativeAdjustment * 100);
     }
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         FontSizeRule that = (FontSizeRule) o;
         return Float.compare(that.getPercentage(), getPercentage()) == 0;
     }
@@ -129,6 +133,6 @@ public class FontSizeRule {
             }
         };
 
-        abstract public float adjustSize(final float size, final float relative);
+        public abstract float adjustSize(final float size, final float relative);
     }
 }

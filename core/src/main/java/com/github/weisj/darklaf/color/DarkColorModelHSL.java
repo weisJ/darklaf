@@ -25,9 +25,7 @@ import java.awt.*;
 
 import com.github.weisj.darklaf.util.LazyValue;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkColorModelHSL extends DarkColorModel {
 
     private static final int[] hsl = new int[3];
@@ -108,9 +106,8 @@ public class DarkColorModelHSL extends DarkColorModel {
         return Math.min(min, blue);
     }
 
-    private static double getHue(
-            final double red, final double green, final double blue, final double max, final double min
-    ) {
+    private static double getHue(final double red, final double green, final double blue, final double max,
+            final double min) {
         double hue = max - min;
         if (hue > 0.0f) {
             if (max == red) {

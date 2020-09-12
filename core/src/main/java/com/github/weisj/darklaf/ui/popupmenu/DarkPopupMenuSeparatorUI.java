@@ -28,9 +28,7 @@ import javax.swing.plaf.ComponentUI;
 
 import com.github.weisj.darklaf.ui.separator.DarkSeparatorUI;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkPopupMenuSeparatorUI extends DarkSeparatorUI {
 
     public static ComponentUI createUI(final JComponent c) {

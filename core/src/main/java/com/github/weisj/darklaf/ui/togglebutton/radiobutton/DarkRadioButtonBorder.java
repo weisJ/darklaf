@@ -29,9 +29,7 @@ import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkRadioButtonBorder extends EmptyBorder implements UIResource, ToggleButtonConstants {
 
     public DarkRadioButtonBorder() {

@@ -49,10 +49,8 @@ public class MacOSPreferenceMonitor {
         boolean newHighContrast = JNIThemeInfoMacOS.isHighContrastEnabled();
         Color newAccentColor = JNIThemeInfoMacOS.getAccentColor();
         Color newSelectionColor = JNIThemeInfoMacOS.getSelectionColor();
-        if (
-            darkMode != newDark || highContrast != newHighContrast || !Objects.equals(accentColor, newAccentColor)
-                || !Objects.equals(selectionColor, newSelectionColor)
-        ) {
+        if (darkMode != newDark || highContrast != newHighContrast || !Objects.equals(accentColor, newAccentColor)
+                || !Objects.equals(selectionColor, newSelectionColor)) {
             darkMode = newDark;
             accentColor = newAccentColor;
             selectionColor = newSelectionColor;
@@ -76,14 +74,16 @@ public class MacOSPreferenceMonitor {
     }
 
     private void stop() {
-        if (!running) return;
+        if (!running)
+            return;
         running = false;
         LOGGER.info("Stopped preference monitoring.");
         JNIThemeInfoMacOS.deletePreferenceChangeListener(listenerHandle);
     }
 
     public void setRunning(final boolean running) {
-        if (running == isRunning()) return;
+        if (running == isRunning())
+            return;
         if (running) {
             start();
         } else {

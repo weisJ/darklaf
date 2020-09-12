@@ -39,7 +39,8 @@ public class ToggleButtonFocusNavigationActions {
     }
 
     public void installActions() {
-        if (button == null) return;
+        if (button == null)
+            return;
         traversalKeysEnabled = button.getFocusTraversalKeysEnabled();
         button.setFocusTraversalKeysEnabled(false);
         button.addKeyListener(keyListener);
@@ -48,13 +49,14 @@ public class ToggleButtonFocusNavigationActions {
 
         button.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("UP"), "Previous");
         button.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("DOWN"), "Next");
-        button.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-            .put(KeyStroke.getKeyStroke("LEFT"), "Previous");
+        button.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("LEFT"),
+                "Previous");
         button.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("RIGHT"), "Next");
     }
 
     public void uninstallActions() {
-        if (button == null) return;
+        if (button == null)
+            return;
         if (!button.getFocusTraversalKeysEnabled()) {
             button.setFocusTraversalKeysEnabled(traversalKeysEnabled);
         }

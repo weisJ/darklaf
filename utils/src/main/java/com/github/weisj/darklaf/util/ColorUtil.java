@@ -25,14 +25,14 @@ import java.awt.*;
 
 import javax.swing.plaf.UIResource;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public final class ColorUtil {
 
     public static Color blendColors(final Color color1, final Color color2, final double percent) {
-        if (percent == 1) return color1;
-        if (percent == 0) return color2;
+        if (percent == 1)
+            return color1;
+        if (percent == 0)
+            return color2;
         double inverse_percent = 1.0 - percent;
         int redPart = (int) (color1.getRed() * percent + color2.getRed() * inverse_percent);
         int greenPart = (int) (color1.getGreen() * percent + color2.getGreen() * inverse_percent);
@@ -67,7 +67,8 @@ public final class ColorUtil {
     }
 
     public static String toHex(final Color color) {
-        if (color == null) return "";
+        if (color == null)
+            return "";
         int r = color.getRed();
         int b = color.getBlue();
         int g = color.getGreen();
@@ -80,9 +81,9 @@ public final class ColorUtil {
         }
 
         if (str.length() == 3) {
-            return new Color(
-                17 * Integer.valueOf(String.valueOf(str.charAt(0)), 16), 17 * Integer.valueOf(String.valueOf(str.charAt(1)), 16), 17 * Integer.valueOf(String.valueOf(str.charAt(2)), 16)
-            );
+            return new Color(17 * Integer.valueOf(String.valueOf(str.charAt(0)), 16),
+                    17 * Integer.valueOf(String.valueOf(str.charAt(1)), 16),
+                    17 * Integer.valueOf(String.valueOf(str.charAt(2)), 16));
         } else if (str.length() == 6) {
             return Color.decode("0x" + str);
         } else {
@@ -105,13 +106,12 @@ public final class ColorUtil {
     /**
      * Calculate the perceived brightness of a color.
      *
-     * @param  c the color.
-     * @return   the brightness from 0 to 255.
+     * @param c the color.
+     * @return the brightness from 0 to 255.
      */
     public static double getPerceivedBrightness(final Color c) {
-        return Math.sqrt(
-            0.299 * c.getRed() * c.getRed() + 0.587 * c.getGreen() * c.getGreen() + 0.114 * c.getBlue() * c.getBlue()
-        );
+        return Math.sqrt(0.299 * c.getRed() * c.getRed() + 0.587 * c.getGreen() * c.getGreen()
+                + 0.114 * c.getBlue() * c.getBlue());
     }
 
     public static double getLuminance(final Color c) {

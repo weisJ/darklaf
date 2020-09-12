@@ -38,9 +38,8 @@ public class KerningDemo implements ComponentDemo {
     @Override
     public JComponent createComponent() {
         JTextArea textArea = new JTextArea();
-        textArea.setFont(
-            textArea.getFont().deriveFont(Collections.singletonMap(TextAttribute.KERNING, TextAttribute.KERNING_ON))
-        );
+        textArea.setFont(textArea.getFont()
+                .deriveFont(Collections.singletonMap(TextAttribute.KERNING, TextAttribute.KERNING_ON)));
         textArea.setText(DemoResources.KERNING_TEST);
         textArea.setEditable(false);
         return new JScrollPane(textArea);

@@ -28,9 +28,7 @@ import com.github.weisj.darklaf.ui.text.dummy.DummyEditorPane;
 import com.github.weisj.darklaf.ui.text.dummy.DummyTextPaneUI;
 import com.github.weisj.darklaf.ui.text.dummy.DummyTextUIMethods;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public abstract class DarkTextPaneUIBridge extends DarkEditorPaneUI {
 
     private static final DummyEditorPane sharedDummyTextPane = new DummyEditorPane();

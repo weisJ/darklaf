@@ -37,9 +37,7 @@ import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.text.action.SelectLineAction;
 import com.github.weisj.darklaf.ui.text.action.SelectWordAction;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkCaret extends DefaultCaret implements UIResource {
 
     private static final int FLAG_SIZE = 3;
@@ -102,7 +100,8 @@ public class DarkCaret extends DefaultCaret implements UIResource {
 
     private boolean isEndOfLine(final JTextComponent target, final int dot) {
         Document doc = target.getDocument();
-        if (dot >= doc.getLength()) return true;
+        if (dot >= doc.getLength())
+            return true;
         try {
             return target.getText(dot, 1).equals("\n");
         } catch (BadLocationException e) {
@@ -175,7 +174,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
      * location to still be visible for contextual purposes while they are displayed.
      *
      * @param alwaysVisible Whether this caret should always be visible.
-     * @see                 #isAlwaysVisible()
+     * @see #isAlwaysVisible()
      */
     public void setAlwaysVisible(final boolean alwaysVisible) {
         if (alwaysVisible != this.alwaysVisible) {
@@ -189,9 +188,8 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     }
 
     public enum CaretStyle {
-        VERTICAL_LINE_STYLE(1, false), UNDERLINE_STYLE(1, true), BLOCK_STYLE(1, true), BLOCK_BORDER_STYLE(
-                1, true
-        ), THICK_VERTICAL_LINE_STYLE(2, false);
+        VERTICAL_LINE_STYLE(1, false), UNDERLINE_STYLE(1, true), BLOCK_STYLE(1, true), BLOCK_BORDER_STYLE(1,
+                true), THICK_VERTICAL_LINE_STYLE(2, false);
 
         private final int size;
         private final boolean charWidth;
@@ -236,11 +234,8 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                             selectedWordEvent = null;
                             break;
                         case 1:
-                            selectLine.actionPerformed(
-                                new ActionEvent(
-                                    textArea, ActionEvent.ACTION_PERFORMED, null, e.getWhen(), e.getModifiersEx()
-                                )
-                            );
+                            selectLine.actionPerformed(new ActionEvent(textArea, ActionEvent.ACTION_PERFORMED, null,
+                                    e.getWhen(), e.getModifiersEx()));
                             break;
                     }
                 }
@@ -430,7 +425,8 @@ public class DarkCaret extends DefaultCaret implements UIResource {
 
     protected boolean isPositionLTR(int position, final Position.Bias bias) {
         Document doc = getComponent().getDocument();
-        if (bias == Position.Bias.Backward && --position < 0) position = 0;
+        if (bias == Position.Bias.Backward && --position < 0)
+            position = 0;
         return isLeftToRight(doc, position, position);
     }
 
@@ -450,9 +446,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
         return true;
     }
 
-    /**
-     * Selects word based on a mouse event.
-     */
+    /** Selects word based on a mouse event. */
     private void selectWord(final MouseEvent e) {
         if (selectedWordEvent != null && selectedWordEvent.getX() == e.getX() && selectedWordEvent.getY() == e.getY()) {
             // We've already the done selection for this.
@@ -460,8 +454,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
         }
         JTextComponent textArea = getComponent();
         selectWord.actionPerformed(
-            new ActionEvent(textArea, ActionEvent.ACTION_PERFORMED, null, e.getWhen(), e.getModifiersEx())
-        );
+                new ActionEvent(textArea, ActionEvent.ACTION_PERFORMED, null, e.getWhen(), e.getModifiersEx()));
         selectedWordEvent = e;
     }
 
@@ -510,7 +503,8 @@ public class DarkCaret extends DefaultCaret implements UIResource {
         dot = Math.max(dot, 0);
 
         // The position (0,Backward) is out of range so disallow it.
-        if (dot == 0) dotBias = Position.Bias.Forward;
+        if (dot == 0)
+            dotBias = Position.Bias.Forward;
         dotLtr = isPositionLTR(d, dotBias);
     }
 

@@ -29,9 +29,7 @@ import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkColorTableCellRendererEditor extends AbstractCellEditor implements TableCellRenderer, TableCellEditor {
 
     private final JLabel label;
@@ -40,17 +38,15 @@ public class DarkColorTableCellRendererEditor extends AbstractCellEditor impleme
     public DarkColorTableCellRendererEditor() {
         label = new JLabel();
         label.setOpaque(true);
-
     }
 
     @Override
-    public Component getTableCellEditorComponent(
-            final JTable table, final Object value, final boolean isSelected, final int row, final int column
-    ) {
+    public Component getTableCellEditorComponent(final JTable table, final Object value, final boolean isSelected,
+            final int row, final int column) {
         if (!(value instanceof Color)) {
             cancelCellEditing();
-            return table.getCellRenderer(row, column)
-                .getTableCellRendererComponent(table, value, isSelected, true, row, column);
+            return table.getCellRenderer(row, column).getTableCellRendererComponent(table, value, isSelected, true, row,
+                    column);
         } else {
             changeColor((Color) value);
             SwingUtilities.invokeLater(() -> {
@@ -86,10 +82,8 @@ public class DarkColorTableCellRendererEditor extends AbstractCellEditor impleme
     }
 
     @Override
-    public Component getTableCellRendererComponent(
-            final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row,
-            final int column
-    ) {
+    public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
+            final boolean hasFocus, final int row, final int column) {
         changeColor((Color) value);
         return label;
     }

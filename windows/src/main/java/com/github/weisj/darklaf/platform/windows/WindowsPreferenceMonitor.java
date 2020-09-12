@@ -47,10 +47,8 @@ public class WindowsPreferenceMonitor {
         boolean newHighContrast = JNIThemeInfoWindows.isHighContrastEnabled();
         long newFotScale = JNIThemeInfoWindows.getFontScaleFactor();
         int newColor = JNIThemeInfoWindows.getAccentColor();
-        if (
-            darkMode != newDark || color != newColor || fontScaleFactor != newFotScale
-                || highContrast != newHighContrast
-        ) {
+        if (darkMode != newDark || color != newColor || fontScaleFactor != newFotScale
+                || highContrast != newHighContrast) {
             darkMode = newDark;
             fontScaleFactor = newFotScale;
             highContrast = newHighContrast;
@@ -74,14 +72,16 @@ public class WindowsPreferenceMonitor {
     }
 
     private void stop() {
-        if (!running) return;
+        if (!running)
+            return;
         LOGGER.info("Stopped preference monitoring.");
         running = false;
         JNIThemeInfoWindows.deleteEventHandler(eventHandler);
     }
 
     public void setRunning(final boolean running) {
-        if (running == isRunning()) return;
+        if (running == isRunning())
+            return;
         if (running) {
             start();
         } else {

@@ -26,9 +26,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.*;
 import javax.swing.text.*;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class SelectWordAction extends TextAction {
 
     protected final Action start;

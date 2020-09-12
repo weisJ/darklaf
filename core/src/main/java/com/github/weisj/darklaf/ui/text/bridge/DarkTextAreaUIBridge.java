@@ -34,9 +34,7 @@ import com.github.weisj.darklaf.ui.text.dummy.DummyTextArea;
 import com.github.weisj.darklaf.ui.text.dummy.DummyTextAreaUI;
 import com.github.weisj.darklaf.util.PropertyKey;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public abstract class DarkTextAreaUIBridge extends DarkTextUI {
 
     private static final JTextArea area = new DummyTextArea();
@@ -48,10 +46,8 @@ public abstract class DarkTextAreaUIBridge extends DarkTextUI {
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         super.propertyChange(evt);
-        if (
-            evt.getPropertyName().equals("lineWrap") || evt.getPropertyName().equals("wrapStyleWord")
-                || evt.getPropertyName().equals("tabSize")
-        ) {
+        if (evt.getPropertyName().equals("lineWrap") || evt.getPropertyName().equals("wrapStyleWord")
+                || evt.getPropertyName().equals("tabSize")) {
             // rebuild the view
             modelChanged();
         } else if (PropertyKey.EDITABLE.equals(evt.getPropertyName())) {

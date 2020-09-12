@@ -33,9 +33,7 @@ import com.github.weisj.darklaf.LafManager;
 
 public class TristateCheckBoxMenuItem extends JCheckBoxMenuItem {
 
-    /**
-     * Creates an initially unselected tristate check box menu item with no set text or icon.
-     */
+    /** Creates an initially unselected tristate check box menu item with no set text or icon. */
     public TristateCheckBoxMenuItem() {
         this(null, null, TristateState.DESELECTED);
     }
@@ -62,7 +60,7 @@ public class TristateCheckBoxMenuItem extends JCheckBoxMenuItem {
      * Creates a menu item whose properties are taken from the Action supplied.
      *
      * @param a the action of the {@code JCheckBoxMenuItem}
-     * @since   1.3
+     * @since 1.3
      */
     public TristateCheckBoxMenuItem(final Action a) {
         this();
@@ -82,7 +80,7 @@ public class TristateCheckBoxMenuItem extends JCheckBoxMenuItem {
     /**
      * Creates a tristate check box menu item with the specified text and selection state.
      *
-     * @param text  the text of the check box menu item.
+     * @param text the text of the check box menu item.
      * @param state the selected state of the check box menu item.
      */
     public TristateCheckBoxMenuItem(final String text, final TristateState state) {
@@ -92,8 +90,8 @@ public class TristateCheckBoxMenuItem extends JCheckBoxMenuItem {
     /**
      * Creates a tristate check box menu item with the specified text, icon, and selection state.
      *
-     * @param text  the text of the check box menu item.
-     * @param icon  the icon of the check box menu item.
+     * @param text the text of the check box menu item.
+     * @param icon the icon of the check box menu item.
      * @param state the selected state of the check box menu item.
      */
     public TristateCheckBoxMenuItem(final String text, final Icon icon, final TristateState state) {
@@ -117,7 +115,8 @@ public class TristateCheckBoxMenuItem extends JCheckBoxMenuItem {
     }
 
     private void iterateState() {
-        if (!getModel().isEnabled()) return;
+        if (!getModel().isEnabled())
+            return;
 
         grabFocus();
         getTristateModel().iterateState();
@@ -131,8 +130,7 @@ public class TristateCheckBoxMenuItem extends JCheckBoxMenuItem {
             modifiers = ((ActionEvent) currentEvent).getModifiers();
         }
         fireActionPerformed(
-            new ActionEvent(this, ActionEvent.ACTION_PERFORMED, getText(), System.currentTimeMillis(), modifiers)
-        );
+                new ActionEvent(this, ActionEvent.ACTION_PERFORMED, getText(), System.currentTimeMillis(), modifiers));
     }
 
     public TristateButtonModel getTristateModel() {

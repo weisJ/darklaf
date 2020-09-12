@@ -25,9 +25,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.*;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class PlainAction extends AbstractAction {
 
     private final Runnable action;

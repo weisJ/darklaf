@@ -37,10 +37,8 @@ public class TabFrameTabContainer extends JPanel implements TabFrameTab {
     private int index;
     private int accelerator;
 
-    public TabFrameTabContainer(
-            final JTabFrame parent, final JComponent content, final TabFrameTab oldTab, final Alignment alignment,
-            final int index
-    ) {
+    public TabFrameTabContainer(final JTabFrame parent, final JComponent content, final TabFrameTab oldTab,
+            final Alignment alignment, final int index) {
         super(new BorderLayout());
         this.parent = parent;
         this.oldTab = oldTab;
@@ -108,7 +106,8 @@ public class TabFrameTabContainer extends JPanel implements TabFrameTab {
 
     @Override
     public void setOrientation(final Alignment a) {
-        if (this.orientation == a) return;
+        if (this.orientation == a)
+            return;
         Alignment oldOrientation = this.orientation;
         this.orientation = a;
         firePropertyChange(KEY_ORIENTATION, oldOrientation, orientation);
@@ -121,7 +120,8 @@ public class TabFrameTabContainer extends JPanel implements TabFrameTab {
 
     @Override
     public void setSelected(final boolean selected) {
-        if (selected == this.selected) return;
+        if (selected == this.selected)
+            return;
         boolean oldSelected = this.selected;
         this.selected = selected;
         firePropertyChange(KEY_SELECTED, oldSelected, selected);
@@ -134,7 +134,8 @@ public class TabFrameTabContainer extends JPanel implements TabFrameTab {
 
     @Override
     public void setAccelerator(final int accelerator) {
-        if (this.accelerator == accelerator) return;
+        if (this.accelerator == accelerator)
+            return;
         int oldAccelerator = this.accelerator;
         this.accelerator = accelerator;
         firePropertyChange(KEY_ACCELERATOR, oldAccelerator, accelerator);

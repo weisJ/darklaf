@@ -46,6 +46,7 @@ public class CutMenuItem extends CopyMenuItem {
 
     @Override
     public void actionPerformed(final ActionEvent e) {
-        if (editor != null) editor.cut();
+        if (editor != null)
+            editor.cut();
     }
 }

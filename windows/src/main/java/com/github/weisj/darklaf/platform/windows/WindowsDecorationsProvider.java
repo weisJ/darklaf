@@ -104,9 +104,11 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
     @Override
     public void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults) {
         IconLoader iconLoader = IconLoader.get(WindowsDecorationsProvider.class);
-        PropertyLoader
-            .putProperties(PropertyLoader.loadProperties(WindowsDecorationsProvider.class, "windows_decorations", ""), properties, currentDefaults, iconLoader);
-        PropertyLoader
-            .putProperties(PropertyLoader.loadProperties(WindowsDecorationsProvider.class, "windows_icons", ""), properties, currentDefaults, iconLoader);
+        PropertyLoader.putProperties(
+                PropertyLoader.loadProperties(WindowsDecorationsProvider.class, "windows_decorations", ""), properties,
+                currentDefaults, iconLoader);
+        PropertyLoader.putProperties(
+                PropertyLoader.loadProperties(WindowsDecorationsProvider.class, "windows_icons", ""), properties,
+                currentDefaults, iconLoader);
     }
 }

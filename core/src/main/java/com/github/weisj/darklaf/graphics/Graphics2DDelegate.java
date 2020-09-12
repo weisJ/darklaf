@@ -87,40 +87,32 @@ public class Graphics2DDelegate extends Graphics2D {
     }
 
     @Override
-    public boolean drawImage(
-            final Image img, final int x, final int y, final int width, final int height, final ImageObserver observer
-    ) {
+    public boolean drawImage(final Image img, final int x, final int y, final int width, final int height,
+            final ImageObserver observer) {
         return g.drawImage(img, x, y, width, height, observer);
     }
 
     @Override
-    public boolean drawImage(
-            final Image img, final int x, final int y, final Color bgcolor, final ImageObserver observer
-    ) {
+    public boolean drawImage(final Image img, final int x, final int y, final Color bgcolor,
+            final ImageObserver observer) {
         return g.drawImage(img, x, y, bgcolor, observer);
     }
 
     @Override
-    public boolean drawImage(
-            final Image img, final int x, final int y, final int width, final int height, final Color bgcolor,
-            final ImageObserver observer
-    ) {
+    public boolean drawImage(final Image img, final int x, final int y, final int width, final int height,
+            final Color bgcolor, final ImageObserver observer) {
         return g.drawImage(img, x, y, width, height, bgcolor, observer);
     }
 
     @Override
-    public boolean drawImage(
-            final Image img, final int dx1, final int dy1, final int dx2, final int dy2, final int sx1, final int sy1,
-            final int sx2, final int sy2, final ImageObserver observer
-    ) {
+    public boolean drawImage(final Image img, final int dx1, final int dy1, final int dx2, final int dy2, final int sx1,
+            final int sy1, final int sx2, final int sy2, final ImageObserver observer) {
         return g.drawImage(img, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, observer);
     }
 
     @Override
-    public boolean drawImage(
-            final Image img, final int dx1, final int dy1, final int dx2, final int dy2, final int sx1, final int sy1,
-            final int sx2, final int sy2, final Color bgcolor, final ImageObserver observer
-    ) {
+    public boolean drawImage(final Image img, final int dx1, final int dy1, final int dx2, final int dy2, final int sx1,
+            final int sy1, final int sx2, final int sy2, final Color bgcolor, final ImageObserver observer) {
         return g.drawImage(img, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, bgcolor, observer);
     }
 
@@ -285,16 +277,14 @@ public class Graphics2DDelegate extends Graphics2D {
     }
 
     @Override
-    public void drawRoundRect(
-            final int x, final int y, final int width, final int height, final int arcWidth, final int arcHeight
-    ) {
+    public void drawRoundRect(final int x, final int y, final int width, final int height, final int arcWidth,
+            final int arcHeight) {
         g.drawRoundRect(x, y, width, height, arcWidth, arcHeight);
     }
 
     @Override
-    public void fillRoundRect(
-            final int x, final int y, final int width, final int height, final int arcWidth, final int arcHeight
-    ) {
+    public void fillRoundRect(final int x, final int y, final int width, final int height, final int arcWidth,
+            final int arcHeight) {
         g.fillRoundRect(x, y, width, height, arcWidth, arcHeight);
     }
 
@@ -309,16 +299,14 @@ public class Graphics2DDelegate extends Graphics2D {
     }
 
     @Override
-    public void drawArc(
-            final int x, final int y, final int width, final int height, final int startAngle, final int arcAngle
-    ) {
+    public void drawArc(final int x, final int y, final int width, final int height, final int startAngle,
+            final int arcAngle) {
         g.drawArc(x, y, width, height, startAngle, arcAngle);
     }
 
     @Override
-    public void fillArc(
-            final int x, final int y, final int width, final int height, final int startAngle, final int arcAngle
-    ) {
+    public void fillArc(final int x, final int y, final int width, final int height, final int startAngle,
+            final int arcAngle) {
         g.fillArc(x, y, width, height, startAngle, arcAngle);
     }
 

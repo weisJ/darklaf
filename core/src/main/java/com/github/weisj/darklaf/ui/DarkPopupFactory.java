@@ -54,13 +54,12 @@ public class DarkPopupFactory extends PopupFactory {
         return popup;
     }
 
-    protected Pair<Popup, PopupType> getEffectivePopup(
-            final Component owner, final Component contents, final int x, final int y
-    ) {
+    protected Pair<Popup, PopupType> getEffectivePopup(final Component owner, final Component contents, final int x,
+            final int y) {
         Popup popup = super.getPopup(owner, contents, x, y);
         PopupType type = getPopupType(popup);
         boolean forceHeavy =
-            type != PopupType.HEAVY_WEIGHT && PropertyUtil.getBooleanProperty(contents, KEY_FORCE_HEAVYWEIGHT);
+                type != PopupType.HEAVY_WEIGHT && PropertyUtil.getBooleanProperty(contents, KEY_FORCE_HEAVYWEIGHT);
         if (forceHeavy) {
             // Heavy weight owner forces a heavyweight popup.
             Window targetWindow = DarkUIUtil.getWindow(owner);
@@ -69,10 +68,8 @@ public class DarkPopupFactory extends PopupFactory {
         }
         if (type == PopupType.HEAVY_WEIGHT) {
             Window window = DarkUIUtil.getWindow(contents);
-            if (
-                (owner != null && window != null)
-                    && !Objects.equals(window.getGraphicsConfiguration(), owner.getGraphicsConfiguration())
-            ) {
+            if ((owner != null && window != null)
+                    && !Objects.equals(window.getGraphicsConfiguration(), owner.getGraphicsConfiguration())) {
                 /*
                  * Window uses incorrect graphics configuration. Setting the focusable window state will force the
                  * PopupFactory to dispose it and create a new window.
@@ -92,8 +89,10 @@ public class DarkPopupFactory extends PopupFactory {
 
     public static PopupType getPopupType(final Popup popup) {
         String popupClassName = popup.getClass().getSimpleName();
-        if (popupClassName.endsWith("LightWeightPopup")) return PopupType.LIGHT_WEIGHT;
-        if (popupClassName.endsWith("MediumWeightPopup")) return PopupType.MEDIUM_WEIGHT;
+        if (popupClassName.endsWith("LightWeightPopup"))
+            return PopupType.LIGHT_WEIGHT;
+        if (popupClassName.endsWith("MediumWeightPopup"))
+            return PopupType.MEDIUM_WEIGHT;
         return PopupType.HEAVY_WEIGHT;
     }
 
@@ -101,7 +100,8 @@ public class DarkPopupFactory extends PopupFactory {
         if (type == PopupType.MEDIUM_WEIGHT) {
             JRootPane rootPane = SwingUtilities.getRootPane(contents);
             // Prevents decorations from being reinstalled.
-            if (rootPane != null) rootPane.putClientProperty(DarkRootPaneUI.KEY_NO_DECORATIONS_UPDATE, true);
+            if (rootPane != null)
+                rootPane.putClientProperty(DarkRootPaneUI.KEY_NO_DECORATIONS_UPDATE, true);
         } else if (type == PopupType.HEAVY_WEIGHT) {
             Window window = SwingUtilities.getWindowAncestor(contents);
             if (window != null) {
@@ -113,9 +113,8 @@ public class DarkPopupFactory extends PopupFactory {
         }
     }
 
-    protected void setupWindow(
-            final Window window, final Component contents, final boolean isFocusable, final boolean startHidden
-    ) {
+    protected void setupWindow(final Window window, final Component contents, final boolean isFocusable,
+            final boolean startHidden) {
         boolean noDecorations = PropertyUtil.getBooleanProperty(contents, KEY_NO_DECORATION);
         boolean opaque = PropertyUtil.getBooleanProperty(contents, KEY_OPAQUE);
         JRootPane rootPane = window instanceof RootPaneContainer ? ((RootPaneContainer) window).getRootPane() : null;
@@ -125,15 +124,15 @@ public class DarkPopupFactory extends PopupFactory {
         setupWindowOpacity(startHidden, window);
     }
 
-    protected void setupWindowBackground(
-            final Window window, final JRootPane rootPane, final boolean opaque, final boolean decorations
-    ) {
+    protected void setupWindowBackground(final Window window, final JRootPane rootPane, final boolean opaque,
+            final boolean decorations) {
         /*
          * Sometimes the background is java.awt.SystemColor[i=7] It results in a flash of white background,
          * that is repainted with the proper popup background later. That is why we set window background
          * explicitly.
          */
-        if (rootPane == null) return;
+        if (rootPane == null)
+            return;
         rootPane.setOpaque(opaque);
         if (opaque) {
             Color bg = ColorUtil.toAlpha(rootPane.getBackground(), 255);
@@ -189,7 +188,8 @@ public class DarkPopupFactory extends PopupFactory {
 
     protected Color getTranslucentPopupBackground(final boolean decorated) {
         Color c = UIManager.getColor("PopupMenu.translucentBackground");
-        if (!decorated) c = new DarkColorUIResource(ColorUtil.toAlpha(c, 0));
+        if (!decorated)
+            c = new DarkColorUIResource(ColorUtil.toAlpha(c, 0));
         return c;
     }
 

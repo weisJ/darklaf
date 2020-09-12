@@ -45,7 +45,8 @@ public class UIUpdater implements ThemeChangeListener {
      * @param component the component.
      */
     public static void registerComponent(final JComponent component) {
-        if (component == null) return;
+        if (component == null)
+            return;
         removeComponent(component);
         UIUpdater updater = new UIUpdater(component);
         component.putClientProperty(KEY_UPDATER, updater);
@@ -89,6 +90,7 @@ public class UIUpdater implements ThemeChangeListener {
 
     @Override
     public void themeInstalled(final ThemeChangeEvent e) {
-        if (component != null) SwingUtilities.updateComponentTreeUI(component);
+        if (component != null)
+            SwingUtilities.updateComponentTreeUI(component);
     }
 }

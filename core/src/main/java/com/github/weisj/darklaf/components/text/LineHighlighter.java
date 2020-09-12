@@ -39,7 +39,7 @@ public class LineHighlighter implements Highlighter.HighlightPainter, ChangeList
      * Manually control the line color
      *
      * @param component text component that requires background line painting
-     * @param color     the color of the background line
+     * @param color the color of the background line
      */
     public LineHighlighter(final JTextComponent component, final Color color) {
         this.component = component;
@@ -85,13 +85,16 @@ public class LineHighlighter implements Highlighter.HighlightPainter, ChangeList
     private void resetHighlight() {
         // Use invokeLater to make sure updates to the Document are completed,
         // otherwise Undo processing causes the modelToView method to loop.
-        if (component == null) return;
+        if (component == null)
+            return;
         SwingUtilities.invokeLater(() -> {
             try {
-                if (component == null) return;
+                if (component == null)
+                    return;
                 int offset = component.getCaretPosition();
                 Rectangle view = component.modelToView(offset);
-                if (view == null) return;
+                if (view == null)
+                    return;
                 Rectangle currentView = view.getBounds();
 
                 // Remove the highlighting from the previously highlighted line

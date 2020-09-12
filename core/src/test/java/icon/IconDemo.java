@@ -72,15 +72,14 @@ public class IconDemo implements ComponentDemo {
 
         controlPanel.add(new JToggleButton("Light/Dark") {
             {
-                LafManager
-                    .addThemeChangeListener((ThemeInstalledListener) e -> setSelected(Theme.isDark(e.getNewTheme())));
+                LafManager.addThemeChangeListener(
+                        (ThemeInstalledListener) e -> setSelected(Theme.isDark(e.getNewTheme())));
                 putClientProperty("JToggleButton.variant", "slider");
                 addActionListener(e -> updateAwareIconStyle());
             }
         });
-        controlPanel.add(
-            new QuickColorChooser("Themed icon color", UIManager.getColor("TestIcon.color"), this::updateThemedIconColor)
-        );
+        controlPanel.add(new QuickColorChooser("Themed icon color", UIManager.getColor("TestIcon.color"),
+                this::updateThemedIconColor));
 
         return panel;
     }

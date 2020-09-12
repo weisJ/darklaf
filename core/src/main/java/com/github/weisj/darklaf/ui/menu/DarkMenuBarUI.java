@@ -28,9 +28,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicMenuBarUI;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkMenuBarUI extends BasicMenuBarUI {
 
     public static ComponentUI createUI(final JComponent c) {

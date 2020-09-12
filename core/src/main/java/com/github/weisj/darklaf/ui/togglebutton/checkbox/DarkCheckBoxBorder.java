@@ -29,9 +29,7 @@ import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkCheckBoxBorder extends EmptyBorder implements UIResource, ToggleButtonConstants {
 
     public DarkCheckBoxBorder() {

@@ -60,9 +60,9 @@ public class ForegroundColorGenerationTask extends ColorAdjustmentTask {
     }
 
     private void adjustForegroundList(final List<?> list, final Properties properties) {
-        list.stream().filter(o -> o instanceof Pair<?, ?>).map(Pair.class::cast).filter(
-            p -> p.getFirst() instanceof Color
-        ).forEach(p -> properties.put(p.getSecond(), makeForeground((Color) p.getFirst())));
+        list.stream().filter(o -> o instanceof Pair<?, ?>).map(Pair.class::cast)
+                .filter(p -> p.getFirst() instanceof Color)
+                .forEach(p -> properties.put(p.getSecond(), makeForeground((Color) p.getFirst())));
     }
 
     public static ColorUIResource makeForeground(final Color bg) {
@@ -75,15 +75,13 @@ public class ForegroundColorGenerationTask extends ColorAdjustmentTask {
         return makeAdjustedForeground(fg, bg, Bias.getBackground(), minimumBrightnessDifference);
     }
 
-    public static ColorUIResource makeAdjustedForeground(
-            final Color fg, final Color bg, final double minimumBrightnessDifference
-    ) {
+    public static ColorUIResource makeAdjustedForeground(final Color fg, final Color bg,
+            final double minimumBrightnessDifference) {
         return makeAdjustedForeground(fg, bg, Bias.getBackground(), minimumBrightnessDifference);
     }
 
-    public static ColorUIResource makeAdjustedForeground(
-            final Color fg, final Color bg, final Bias bias, final double minimumBrightnessDifference
-    ) {
+    public static ColorUIResource makeAdjustedForeground(final Color fg, final Color bg, final Bias bias,
+            final double minimumBrightnessDifference) {
         final double[] hslFG = DarkColorModelHSL.RGBtoHSLValues(fg.getRed(), fg.getGreen(), fg.getBlue());
         final double[] hslBG = DarkColorModelHSL.RGBtoHSLValues(bg.getRed(), bg.getGreen(), bg.getBlue());
         double bgBrightness = hslBG[2];
@@ -97,11 +95,11 @@ public class ForegroundColorGenerationTask extends ColorAdjustmentTask {
         }
 
         double bright1 =
-            fgBrightness > bgBrightness && (fgBrightness - bgBrightness) >= minimumBrightnessDifference ? hslFG[2]
-                : Math.min(bgBrightness + minimumBrightnessDifference, 1);
+                fgBrightness > bgBrightness && (fgBrightness - bgBrightness) >= minimumBrightnessDifference ? hslFG[2]
+                        : Math.min(bgBrightness + minimumBrightnessDifference, 1);
         double bright2 =
-            fgBrightness < bgBrightness && (bgBrightness - fgBrightness) >= minimumBrightnessDifference ? hslFG[2]
-                : Math.max(bgBrightness - minimumBrightnessDifference, 0);
+                fgBrightness < bgBrightness && (bgBrightness - fgBrightness) >= minimumBrightnessDifference ? hslFG[2]
+                        : Math.max(bgBrightness - minimumBrightnessDifference, 0);
 
         double brightness = b == Bias.WHITE ? bright1 : bright2;
         return new DarkColorUIResource(DarkColorModelHSL.getColorFromHSLValues(hslFG[0], hslFG[1], brightness));

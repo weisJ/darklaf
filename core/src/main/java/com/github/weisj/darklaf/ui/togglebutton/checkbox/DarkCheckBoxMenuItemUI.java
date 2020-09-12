@@ -26,9 +26,7 @@ import javax.swing.plaf.ComponentUI;
 
 import com.github.weisj.darklaf.ui.togglebutton.radiobutton.DarkRadioButtonMenuItemUI;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkCheckBoxMenuItemUI extends DarkRadioButtonMenuItemUI {
 
     private Icon stateIcon;

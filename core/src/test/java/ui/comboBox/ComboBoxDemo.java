@@ -61,11 +61,8 @@ public class ComboBoxDemo implements ComponentDemo {
         controlPanel.add(new JCheckBox("LeftToRight") {
             {
                 setSelected(comboBox.getComponentOrientation().isLeftToRight());
-                addActionListener(
-                    e -> comboBox.setComponentOrientation(
-                        isSelected() ? ComponentOrientation.LEFT_TO_RIGHT : ComponentOrientation.RIGHT_TO_LEFT
-                    )
-                );
+                addActionListener(e -> comboBox.setComponentOrientation(
+                        isSelected() ? ComponentOrientation.LEFT_TO_RIGHT : ComponentOrientation.RIGHT_TO_LEFT));
             }
         });
         controlPanel.add(new JCheckBox(ComboBoxConstants.KEY_IS_TREE_EDITOR) {

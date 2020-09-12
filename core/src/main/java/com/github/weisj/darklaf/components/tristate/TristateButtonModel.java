@@ -42,7 +42,8 @@ public class TristateButtonModel extends JToggleButton.ToggleButtonModel {
     }
 
     public void setIndeterminate() {
-        if (!allowsIndeterminate || isIndeterminate()) return;
+        if (!allowsIndeterminate || isIndeterminate())
+            return;
         setState(isSelected() ? TristateState.INDETERMINATE_DES : TristateState.INDETERMINATE_SEL);
     }
 
@@ -78,7 +79,8 @@ public class TristateButtonModel extends JToggleButton.ToggleButtonModel {
     }
 
     public void setState(final TristateState state) {
-        if (this.state == state) return;
+        if (this.state == state)
+            return;
         if (!allowsIndeterminate && state.isIndeterminate()) {
             return;
         }

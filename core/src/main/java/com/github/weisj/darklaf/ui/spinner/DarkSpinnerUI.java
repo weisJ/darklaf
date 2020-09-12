@@ -133,7 +133,8 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
                 super.layoutContainer(parent);
                 if (SpinnerConstants.isTreeOrTableCellEditor(spinner)) {
                     int adj = borderSize / 2;
-                    if (!spinner.getComponentOrientation().isLeftToRight()) adj *= -1;
+                    if (!spinner.getComponentOrientation().isLeftToRight())
+                        adj *= -1;
                     adjustButton(prevButton, adj);
                     adjustButton(nextButton, adj);
                 }
@@ -195,9 +196,8 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
     private JButton createArrow(final int direction) {
         int buttonPad = UIManager.getInt("Spinner.buttonPad");
         Insets insets = new Insets(0, buttonPad, 0, buttonPad);
-        JButton button = ArrowButton.createUpDownArrow(
-            spinner, getArrowIcon(direction), getArrowInactiveIcon(direction), direction, false, true, insets
-        );
+        JButton button = ArrowButton.createUpDownArrow(spinner, getArrowIcon(direction),
+                getArrowInactiveIcon(direction), direction, false, true, insets);
         Border buttonBorder = UIManager.getBorder("Spinner.arrowButtonBorder");
         if (buttonBorder instanceof UIResource) {
             // Wrap the border to avoid having the UIResource be replaced by
@@ -256,9 +256,8 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
         }
     }
 
-    protected void paintSpinBackground(
-            final Graphics2D g, final int width, final int height, final int bSize, final int arc
-    ) {
+    protected void paintSpinBackground(final Graphics2D g, final int width, final int height, final int bSize,
+            final int arc) {
         Rectangle arrowBounds = prevButton.getBounds();
         boolean leftToRight = spinner.getComponentOrientation().isLeftToRight();
 

@@ -53,22 +53,20 @@ public class GroupedButtonDemo implements ComponentDemo {
         return new DemoPanel(box);
     }
 
-    protected AbstractButton createButton(
-            final Icon icon, final Icon selected, final ButtonGroup bg, final AlignmentExt a, final AbstractButton prev
-    ) {
+    protected AbstractButton createButton(final Icon icon, final Icon selected, final ButtonGroup bg,
+            final AlignmentExt a, final AbstractButton prev) {
         return createButton(icon, selected, bg, a, false, prev);
     }
 
-    protected AbstractButton createButton(
-            final Icon icon, final Icon selected, final ButtonGroup bg, final AlignmentExt a, final boolean isSelected,
-            final AbstractButton prev
-    ) {
+    protected AbstractButton createButton(final Icon icon, final Icon selected, final ButtonGroup bg,
+            final AlignmentExt a, final boolean isSelected, final AbstractButton prev) {
         return new JToggleButton(icon) {
             {
                 setSelectedIcon(selected);
                 putClientProperty(DarkButtonUI.KEY_THIN, true);
                 putClientProperty(DarkButtonUI.KEY_CORNER, a);
-                if (prev != null) prev.putClientProperty(DarkButtonUI.KEY_RIGHT_NEIGHBOUR, this);
+                if (prev != null)
+                    prev.putClientProperty(DarkButtonUI.KEY_RIGHT_NEIGHBOUR, this);
                 putClientProperty(DarkButtonUI.KEY_LEFT_NEIGHBOUR, prev);
                 setSelected(isSelected);
                 bg.add(this);

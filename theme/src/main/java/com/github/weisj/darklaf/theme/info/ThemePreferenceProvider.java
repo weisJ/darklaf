@@ -32,9 +32,7 @@ public interface ThemePreferenceProvider {
      */
     PreferredThemeStyle getPreference();
 
-    /**
-     * Initialize all necessary resources.
-     */
+    /** Initialize all necessary resources. */
     void initialize();
 
     /**
@@ -55,7 +53,7 @@ public interface ThemePreferenceProvider {
      * Returns whether changes in theme preference are signaled to the callback.
      *
      * @return true if changes are reported.
-     * @see    #setCallback(Consumer)
+     * @see #setCallback(Consumer)
      */
     boolean isReporting();
 

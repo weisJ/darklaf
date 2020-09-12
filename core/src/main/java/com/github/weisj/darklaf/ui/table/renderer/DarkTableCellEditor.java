@@ -40,9 +40,7 @@ import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 import com.github.weisj.darklaf.util.PropertyValue;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkTableCellEditor extends DefaultCellEditor {
 
     private static final JCheckBox dummyCheckBox = new JCheckBox();
@@ -119,7 +117,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
                         if (editor instanceof JSpinner.DefaultEditor) {
                             JSpinner.DefaultEditor defaultEditor = ((JSpinner.DefaultEditor) editor);
                             JFormattedTextField.AbstractFormatter formatter =
-                                defaultEditor.getTextField().getFormatter();
+                                    defaultEditor.getTextField().getFormatter();
                             if (formatter instanceof DefaultFormatter) {
                                 ((DefaultFormatter) formatter).setValueClass(spinner.getValue().getClass());
                             }

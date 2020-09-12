@@ -65,7 +65,8 @@ public class PopupMenuContainer extends JPanel {
                 @Override
                 public void menuKeyPressed(final MenuKeyEvent e) {
                     SwingUtilities.invokeLater(() -> {
-                        if (popupMenu == null) return;
+                        if (popupMenu == null)
+                            return;
                         MenuElement[] path = e.getMenuSelectionManager().getSelectedPath();
                         if (path.length == 0) {
                             return;
@@ -97,7 +98,8 @@ public class PopupMenuContainer extends JPanel {
                 }
 
                 private void onHide() {
-                    if (popupMenu == null) return;
+                    if (popupMenu == null)
+                        return;
                     popupMenu.removePopupMenuListener(this);
                     popupMenu.removeMenuKeyListener(menuKeyListener);
                 }
@@ -152,9 +154,8 @@ public class PopupMenuContainer extends JPanel {
     }
 
     private OverlayScrollPane createScrollPane(final JComponent content) {
-        OverlayScrollPane overlayScrollPane = new OverlayScrollPane(
-            content, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
-        );
+        OverlayScrollPane overlayScrollPane = new OverlayScrollPane(content, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         JScrollBar bar = overlayScrollPane.getVerticalScrollBar();
         bar.putClientProperty(DarkScrollBarUI.KEY_SMALL, Boolean.TRUE);
         DarkUIUtil.doNotCancelPopupSetup(bar);

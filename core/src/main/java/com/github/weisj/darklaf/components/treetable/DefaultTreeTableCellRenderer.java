@@ -52,10 +52,8 @@ public class DefaultTreeTableCellRenderer extends JComponent implements TableCel
         }
     }
 
-    public Component getTableCellRendererComponent(
-            final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row,
-            final int column
-    ) {
+    public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
+            final boolean hasFocus, final int row, final int column) {
         paintingRow = row;
         rendererTree.setFocus(hasFocus || table.hasFocus());
         rendererTree.setSelectable(!hasFocus);

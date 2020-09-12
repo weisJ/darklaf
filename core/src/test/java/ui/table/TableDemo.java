@@ -50,7 +50,7 @@ public class TableDemo implements ComponentDemo {
         String[] columns = {"Id", "Name", "Hourly Rate", "Part Time", "Components"};
 
         Object[][] data =
-            {{1, "John", 40.0, false, "Item"}, {2, "Rambo", 70.0, false, 10}, {3, "Zorro", 60.0, true, "cell"}};
+                {{1, "John", 40.0, false, "Item"}, {2, "Rambo", 70.0, false, 10}, {3, "Zorro", 60.0, true, "cell"}};
         Class<?>[] columnClasses = {Integer.class, String.class, Double.class, Boolean.class, Object.class};
         AtomicBoolean editable = new AtomicBoolean(true);
         TableModel model = new DefaultTableModel() {
@@ -139,11 +139,8 @@ public class TableDemo implements ComponentDemo {
         controlPanel.add(new JCheckBox("LeftToRight") {
             {
                 setSelected(table.getComponentOrientation().isLeftToRight());
-                addActionListener(
-                    e -> table.setComponentOrientation(
-                        isSelected() ? ComponentOrientation.LEFT_TO_RIGHT : ComponentOrientation.RIGHT_TO_LEFT
-                    )
-                );
+                addActionListener(e -> table.setComponentOrientation(
+                        isSelected() ? ComponentOrientation.LEFT_TO_RIGHT : ComponentOrientation.RIGHT_TO_LEFT));
             }
         });
         controlPanel.add(new JCheckBox(DarkTableUI.KEY_ALTERNATE_ROW_COLOR) {
@@ -182,8 +179,7 @@ public class TableDemo implements ComponentDemo {
             {
                 setSelected(PropertyUtil.getBooleanProperty(table, DarkTableUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX));
                 addActionListener(
-                    e -> table.putClientProperty(DarkTableUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX, isSelected())
-                );
+                        e -> table.putClientProperty(DarkTableUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX, isSelected()));
             }
         }, "span");
         controlPanel.add(new JLabel(DarkTableUI.KEY_BOOLEAN_RENDER_TYPE + ":", JLabel.RIGHT));

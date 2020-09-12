@@ -33,7 +33,7 @@ public interface DefaultsInitTask {
      * {@link javax.swing.plaf.FontUIResource} and {@link javax.swing.plaf.ColorUIResource}.
      *
      * @param currentTheme the current theme being initialized.
-     * @param defaults     the current defaults to work with.
+     * @param defaults the current defaults to work with.
      */
     void run(final Theme currentTheme, final UIDefaults defaults);
 

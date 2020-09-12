@@ -43,7 +43,8 @@ public class DecorationsHandler {
     private boolean decorationsEnabled = true;
 
     public static DecorationsHandler getSharedInstance() {
-        if (sharedInstance == null) setSharedInstance(new DecorationsHandler());
+        if (sharedInstance == null)
+            setSharedInstance(new DecorationsHandler());
         return sharedInstance;
     }
 
@@ -84,12 +85,12 @@ public class DecorationsHandler {
 
     public boolean isCustomDecorationSupported() {
         return decorationsProvider.isCustomDecorationSupported() && decorationsEnabled
-            && LafManager.getInstalledTheme().useCustomDecorations();
+                && LafManager.getInstalledTheme().useCustomDecorations();
     }
 
     private boolean isNativeDecorationsEnabled() {
         return !PropertyValue.FALSE.equals(System.getProperty(DECORATIONS_FLAG))
-            && !PropertyValue.FALSE.equals(System.getProperty(DarkLaf.ALLOW_NATIVE_CODE_FLAG));
+                && !PropertyValue.FALSE.equals(System.getProperty(DarkLaf.ALLOW_NATIVE_CODE_FLAG));
     }
 
     public void initialize() {

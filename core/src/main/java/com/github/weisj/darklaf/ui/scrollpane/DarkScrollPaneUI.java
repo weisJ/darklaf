@@ -31,9 +31,7 @@ import javax.swing.plaf.basic.BasicScrollPaneUI;
 
 import com.github.weisj.darklaf.delegate.ScrollLayoutManagerDelegate;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkScrollPaneUI extends BasicScrollPaneUI {
 
     public static final String KEY_VERTICALS_SCROLL_BAR = "verticalScrollBar";
@@ -44,8 +42,8 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
         }
         JScrollBar scrollbar = scrollpane.getHorizontalScrollBar();
         scrollbar.setValueIsAdjusting(true);
-        ScrollBarUtil
-            .doScroll(scrollbar, scrollpane.getViewport(), e, scrollpane.getComponentOrientation().isLeftToRight());
+        ScrollBarUtil.doScroll(scrollbar, scrollpane.getViewport(), e,
+                scrollpane.getComponentOrientation().isLeftToRight());
         scrollbar.setValueIsAdjusting(false);
     };
     private final MouseWheelListener horizontalMouseWheelListener = e -> {
@@ -54,8 +52,8 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
         }
         JScrollBar scrollbar = scrollpane.getVerticalScrollBar();
         scrollbar.setValueIsAdjusting(true);
-        ScrollBarUtil
-            .doScroll(scrollbar, scrollpane.getViewport(), e, scrollpane.getComponentOrientation().isLeftToRight());
+        ScrollBarUtil.doScroll(scrollbar, scrollpane.getViewport(), e,
+                scrollpane.getComponentOrientation().isLeftToRight());
         scrollbar.setValueIsAdjusting(false);
     };
     private final MouseWheelListener mouseWheelListener = e -> {
@@ -63,10 +61,10 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
             return;
         }
         JScrollBar scrollbar =
-            e.isShiftDown() ? scrollpane.getHorizontalScrollBar() : scrollpane.getVerticalScrollBar();
+                e.isShiftDown() ? scrollpane.getHorizontalScrollBar() : scrollpane.getVerticalScrollBar();
         scrollbar.setValueIsAdjusting(true);
-        ScrollBarUtil
-            .doScroll(scrollbar, scrollpane.getViewport(), e, scrollpane.getComponentOrientation().isLeftToRight());
+        ScrollBarUtil.doScroll(scrollbar, scrollpane.getViewport(), e,
+                scrollpane.getComponentOrientation().isLeftToRight());
         scrollbar.setValueIsAdjusting(false);
     };
     private final PropertyChangeListener propertyChangeListener = e -> {

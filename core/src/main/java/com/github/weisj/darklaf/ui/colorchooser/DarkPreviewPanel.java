@@ -30,9 +30,7 @@ import sun.swing.SwingUtilities2;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkPreviewPanel extends JPanel {
 
     private static final int SQUARE_SIZE = 28;
@@ -46,7 +44,8 @@ public class DarkPreviewPanel extends JPanel {
     private Color oldColor = null;
 
     public void paintComponent(final Graphics g) {
-        if (oldColor == null) oldColor = getForeground();
+        if (oldColor == null)
+            oldColor = getForeground();
 
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
@@ -85,9 +84,8 @@ public class DarkPreviewPanel extends JPanel {
         g.setColor(color);
         g.fillRect(offsetX + INNER_GAP, INNER_GAP, SQUARE_SIZE - (INNER_GAP * 2), SQUARE_SIZE - (INNER_GAP * 2));
         g.setColor(Color.white);
-        g.fillRect(
-            offsetX + INNER_GAP * 2, INNER_GAP * 2, SQUARE_SIZE - (INNER_GAP * 4), SQUARE_SIZE - (INNER_GAP * 4)
-        );
+        g.fillRect(offsetX + INNER_GAP * 2, INNER_GAP * 2, SQUARE_SIZE - (INNER_GAP * 4),
+                SQUARE_SIZE - (INNER_GAP * 4));
 
         g.setColor(color);
         g.fillRect(offsetX, SQUARE_SIZE + SQUARE_GAP, SQUARE_SIZE, SQUARE_SIZE);
@@ -98,9 +96,8 @@ public class DarkPreviewPanel extends JPanel {
         g.setColor(color);
         g.fillRect(offsetX + INNER_GAP, INNER_GAP, SQUARE_SIZE - (INNER_GAP * 2), SQUARE_SIZE - (INNER_GAP * 2));
         g.setColor(Color.white);
-        g.fillRect(
-            offsetX + INNER_GAP * 2, INNER_GAP * 2, SQUARE_SIZE - (INNER_GAP * 4), SQUARE_SIZE - (INNER_GAP * 4)
-        );
+        g.fillRect(offsetX + INNER_GAP * 2, INNER_GAP * 2, SQUARE_SIZE - (INNER_GAP * 4),
+                SQUARE_SIZE - (INNER_GAP * 4));
         g.translate(-(SQUARE_SIZE + SQUARE_GAP), 0);
 
         g.translate(SQUARE_SIZE + SQUARE_GAP, SQUARE_SIZE + SQUARE_GAP);
@@ -116,9 +113,8 @@ public class DarkPreviewPanel extends JPanel {
         g.setColor(color);
         g.fillRect(offsetX + INNER_GAP, INNER_GAP, SQUARE_SIZE - (INNER_GAP * 2), SQUARE_SIZE - (INNER_GAP * 2));
         g.setColor(Color.black);
-        g.fillRect(
-            offsetX + INNER_GAP * 2, INNER_GAP * 2, SQUARE_SIZE - (INNER_GAP * 4), SQUARE_SIZE - (INNER_GAP * 4)
-        );
+        g.fillRect(offsetX + INNER_GAP * 2, INNER_GAP * 2, SQUARE_SIZE - (INNER_GAP * 4),
+                SQUARE_SIZE - (INNER_GAP * 4));
         g.translate(-((SQUARE_SIZE + SQUARE_GAP) * 2), 0);
 
         g.translate((SQUARE_SIZE + SQUARE_GAP) * 2, (SQUARE_SIZE + SQUARE_GAP));
@@ -129,7 +125,6 @@ public class DarkPreviewPanel extends JPanel {
         g.translate(-((SQUARE_SIZE + SQUARE_GAP) * 2), -(SQUARE_SIZE + SQUARE_GAP));
 
         return (SQUARE_SIZE * 3 + SQUARE_GAP * 2);
-
     }
 
     private int paintText(final Graphics g, final int offsetX) {
@@ -153,16 +148,16 @@ public class DarkPreviewPanel extends JPanel {
         g.fillRect(textXOffset, (height) + TEXT_GAP, width + (TEXT_GAP), height + 2);
 
         g.setColor(Color.black);
-        SwingUtilities2
-            .drawString(host, g, getSampleText(), textXOffset + (TEXT_GAP / 2), height + ascent + TEXT_GAP + 2);
+        SwingUtilities2.drawString(host, g, getSampleText(), textXOffset + (TEXT_GAP / 2),
+                height + ascent + TEXT_GAP + 2);
 
         g.setColor(Color.white);
 
         g.fillRect(textXOffset, (height + TEXT_GAP) * 2, width + (TEXT_GAP), height + 2);
 
         g.setColor(color);
-        SwingUtilities2
-            .drawString(host, g, getSampleText(), textXOffset + (TEXT_GAP / 2), ((height + TEXT_GAP) * 2) + ascent + 2);
+        SwingUtilities2.drawString(host, g, getSampleText(), textXOffset + (TEXT_GAP / 2),
+                ((height + TEXT_GAP) * 2) + ascent + 2);
 
         config.restore();
         return width + TEXT_GAP * 3;

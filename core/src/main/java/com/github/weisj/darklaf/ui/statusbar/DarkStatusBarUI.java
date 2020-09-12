@@ -29,9 +29,7 @@ import javax.swing.plaf.ComponentUI;
 import org.jdesktop.swingx.JXStatusBar;
 import org.jdesktop.swingx.plaf.basic.BasicStatusBarUI;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkStatusBarUI extends BasicStatusBarUI {
 
     protected Color background;

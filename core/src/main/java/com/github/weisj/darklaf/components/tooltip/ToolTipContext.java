@@ -42,13 +42,14 @@ public class ToolTipContext {
     private static ToolTipContext defaultContext;
 
     public static ToolTipContext getDefaultContext() {
-        if (defaultContext == null) defaultContext = createDefaultContext();
+        if (defaultContext == null)
+            defaultContext = createDefaultContext();
         return defaultContext;
     }
 
     public static ToolTipContext createDefaultContext() {
         return new ToolTipContext().setAlignment(Alignment.SOUTH).setCenterAlignment(Alignment.SOUTH)
-            .setAlignInside(false).setIgnoreBorder(true).setUseBestFit(true);
+                .setAlignInside(false).setIgnoreBorder(true).setUseBestFit(true);
     }
 
     public static void setDefaultContext(final ToolTipContext defaultContext) {
@@ -65,12 +66,14 @@ public class ToolTipContext {
 
         @Override
         public void mouseMoved(final MouseEvent e) {
-            if (hotSpotArea == null) return;
+            if (hotSpotArea == null)
+                return;
             checkExit(e);
         }
 
         private void checkExit(final MouseEvent e) {
-            if (!hideOnExit) return;
+            if (!hideOnExit)
+                return;
             if (hotSpotArea != null) {
                 if (!hotSpotArea.contains(e.getPoint())) {
                     ToolTipManager.sharedInstance().mousePressed(null);
@@ -96,9 +99,7 @@ public class ToolTipContext {
     private boolean bestFit;
     private Function<ToolTipContext, Point> fallBackPositionProvider;
 
-    /**
-     * Create a new tooltip context to ease the creation of custom tooltips.
-     */
+    /** Create a new tooltip context to ease the creation of custom tooltips. */
     public ToolTipContext() {
         this(null, null, null, null, true, null);
     }
@@ -115,18 +116,16 @@ public class ToolTipContext {
     /**
      * Create a new tooltip context to ease the creation of custom tooltips.
      *
-     * @param target              the component which the tooltip belongs to.
-     * @param alignment           {@link #setAlignment(Alignment)}
-     * @param centerAlignment     {@link #setCenterAlignment(Alignment)}
-     * @param alignmentStrategy   {@link #setAlignmentStrategy(AlignmentStrategy)}
-     * @param alignInside         {@link #setAlignInside(boolean)}
+     * @param target the component which the tooltip belongs to.
+     * @param alignment {@link #setAlignment(Alignment)}
+     * @param centerAlignment {@link #setCenterAlignment(Alignment)}
+     * @param alignmentStrategy {@link #setAlignmentStrategy(AlignmentStrategy)}
+     * @param alignInside {@link #setAlignInside(boolean)}
      * @param toolTipRectSupplier {@link #setToolTipRectSupplier(Function)}
      */
-    public ToolTipContext(
-            final JComponent target, final Alignment alignment, final Alignment centerAlignment,
+    public ToolTipContext(final JComponent target, final Alignment alignment, final Alignment centerAlignment,
             final AlignmentStrategy alignmentStrategy, final boolean alignInside,
-            final Function<MouseEvent, Rectangle> toolTipRectSupplier
-    ) {
+            final Function<MouseEvent, Rectangle> toolTipRectSupplier) {
         this.target = target;
         setUpdatePosition(false);
         setHideOnExit(false);
@@ -141,11 +140,12 @@ public class ToolTipContext {
     /**
      * Sets whether the position should be recalculated each time after the popup has been shown. This
      * may be useful if the tooltip should follow the mouse.
+     *
      * <p>
      * Default is false.
      *
-     * @param  updatePosition true if it should be recalculated.
-     * @return                this
+     * @param updatePosition true if it should be recalculated.
+     * @return this
      */
     public ToolTipContext setUpdatePosition(final boolean updatePosition) {
         return this;
@@ -154,7 +154,7 @@ public class ToolTipContext {
     /**
      * Create a new tooltip context to ease the creation of custom tooltips.
      *
-     * @param target    the component which the tooltip belongs to.
+     * @param target the component which the tooltip belongs to.
      * @param alignment {@link #setAlignment(Alignment)}
      */
     public ToolTipContext(final JComponent target, final Alignment alignment) {
@@ -164,12 +164,13 @@ public class ToolTipContext {
     /**
      * Sets whether the component should be aligned inside or outside the supplied rectangle if the
      * current alignment is not {@link Alignment#CENTER}. Default is true
+     *
      * <p>
      *
-     * @param  alignInside true if the tooltip should be aligned inside.
-     * @return             this.
-     * @see                #setAlignment(Alignment)
-     * @see                #setToolTipRectSupplier(Function)
+     * @param alignInside true if the tooltip should be aligned inside.
+     * @return this.
+     * @see #setAlignment(Alignment)
+     * @see #setToolTipRectSupplier(Function)
      */
     public ToolTipContext setAlignInside(final boolean alignInside) {
         this.alignInside = alignInside;
@@ -190,9 +191,9 @@ public class ToolTipContext {
      * {@link #setCenterAlignment(Alignment)}. The tooltip will either be aligned outside of the
      * rectangle or inside depending on {@link #setAlignInside(boolean)}.
      *
-     * @param  alignment the alignment.
-     * @return           this.
-     * @see              #setToolTipRectSupplier(Function)
+     * @param alignment the alignment.
+     * @return this.
+     * @see #setToolTipRectSupplier(Function)
      */
     public ToolTipContext setAlignment(final Alignment alignment) {
         this.alignment = alignment;
@@ -205,11 +206,12 @@ public class ToolTipContext {
     /**
      * When {@link #setAlignment(Alignment)} is {@link Alignment#CENTER} this property will define on
      * what side relative to the center point the tooltip will appear.
+     *
      * <p>
      * Default is {@link Alignment#NORTH}.
      *
-     * @param  centerAlignment the center alignment.
-     * @return                 this
+     * @param centerAlignment the center alignment.
+     * @return this
      */
     public ToolTipContext setCenterAlignment(final Alignment centerAlignment) {
         this.centerAlignment = centerAlignment;
@@ -222,12 +224,13 @@ public class ToolTipContext {
     /**
      * Set the alignment strategy which determines how the current mouse position is considered when
      * calculating the tooltip location.
+     *
      * <p>
      * Default will be {@link AlignmentStrategy#COMPONENT_BOTH}.
      *
-     * @param  alignmentStrategy the alignment strategy.
-     * @return                   this
-     * @see                      AlignmentStrategy
+     * @param alignmentStrategy the alignment strategy.
+     * @return this
+     * @see AlignmentStrategy
      */
     public ToolTipContext setAlignmentStrategy(final AlignmentStrategy alignmentStrategy) {
         this.alignmentStrategy = alignmentStrategy;
@@ -240,8 +243,8 @@ public class ToolTipContext {
     /**
      * Create a new tooltip context to ease the creation of custom tooltips.
      *
-     * @param target          the component which the tooltip belongs to.
-     * @param alignment       {@link #setAlignment(Alignment)}
+     * @param target the component which the tooltip belongs to.
+     * @param alignment {@link #setAlignment(Alignment)}
      * @param centerAlignment {@link #setCenterAlignment(Alignment)}
      */
     public ToolTipContext(final JComponent target, final Alignment alignment, final Alignment centerAlignment) {
@@ -251,8 +254,8 @@ public class ToolTipContext {
     /**
      * Create a new tooltip context to ease the creation of custom tooltips.
      *
-     * @param target      the component which the tooltip belongs to.
-     * @param alignment   {@link #setAlignment(Alignment)}
+     * @param target the component which the tooltip belongs to.
+     * @param alignment {@link #setAlignment(Alignment)}
      * @param alignInside {@link #setAlignInside(boolean)}
      */
     public ToolTipContext(final JComponent target, final Alignment alignment, final boolean alignInside) {
@@ -262,69 +265,63 @@ public class ToolTipContext {
     /**
      * Create a new tooltip context to ease the creation of custom tooltips.
      *
-     * @param target          the component which the tooltip belongs to.
-     * @param alignment       {@link #setAlignment(Alignment)}
+     * @param target the component which the tooltip belongs to.
+     * @param alignment {@link #setAlignment(Alignment)}
      * @param centerAlignment {@link #setCenterAlignment(Alignment)}
-     * @param alignInside     {@link #setAlignInside(boolean)}
+     * @param alignInside {@link #setAlignInside(boolean)}
      */
-    public ToolTipContext(
-            final JComponent target, final Alignment alignment, final Alignment centerAlignment,
-            final boolean alignInside
-    ) {
+    public ToolTipContext(final JComponent target, final Alignment alignment, final Alignment centerAlignment,
+            final boolean alignInside) {
         this(target, alignment, centerAlignment, null, alignInside, null);
     }
 
     /**
      * Create a new tooltip context to ease the creation of custom tooltips.
      *
-     * @param target            the component which the tooltip belongs to.
-     * @param alignment         {@link #setAlignment(Alignment)}
+     * @param target the component which the tooltip belongs to.
+     * @param alignment {@link #setAlignment(Alignment)}
      * @param alignmentStrategy {@link #setAlignmentStrategy(AlignmentStrategy)}
      */
-    public ToolTipContext(
-            final JComponent target, final Alignment alignment, final AlignmentStrategy alignmentStrategy
-    ) {
+    public ToolTipContext(final JComponent target, final Alignment alignment,
+            final AlignmentStrategy alignmentStrategy) {
         this(target, alignment, null, alignmentStrategy, true, null);
     }
 
     /**
      * Create a new tooltip context to ease the creation of custom tooltips.
      *
-     * @param target            the component which the tooltip belongs to.
-     * @param alignment         {@link #setAlignment(Alignment)}
-     * @param centerAlignment   {@link #setCenterAlignment(Alignment)}
+     * @param target the component which the tooltip belongs to.
+     * @param alignment {@link #setAlignment(Alignment)}
+     * @param centerAlignment {@link #setCenterAlignment(Alignment)}
      * @param alignmentStrategy {@link #setAlignmentStrategy(AlignmentStrategy)}
      */
-    public ToolTipContext(
-            final JComponent target, final Alignment alignment, final Alignment centerAlignment,
-            final AlignmentStrategy alignmentStrategy
-    ) {
+    public ToolTipContext(final JComponent target, final Alignment alignment, final Alignment centerAlignment,
+            final AlignmentStrategy alignmentStrategy) {
         this(target, alignment, centerAlignment, alignmentStrategy, true, null);
     }
 
     /**
      * Create a new tooltip context to ease the creation of custom tooltips.
      *
-     * @param target            the component which the tooltip belongs to.
-     * @param alignment         {@link #setAlignment(Alignment)}
+     * @param target the component which the tooltip belongs to.
+     * @param alignment {@link #setAlignment(Alignment)}
      * @param alignmentStrategy {@link #setAlignmentStrategy(AlignmentStrategy)}
-     * @param alignInside       {@link #setAlignInside(boolean)}
+     * @param alignInside {@link #setAlignInside(boolean)}
      */
-    public ToolTipContext(
-            final JComponent target, final Alignment alignment, final AlignmentStrategy alignmentStrategy,
-            final boolean alignInside
-    ) {
+    public ToolTipContext(final JComponent target, final Alignment alignment, final AlignmentStrategy alignmentStrategy,
+            final boolean alignInside) {
         this(target, alignment, null, alignmentStrategy, alignInside, null);
     }
 
     /**
      * Sets whether the tooltip should be closed if the mouse has left the area set by
      * {@link #setInsideArea(Area)}.
+     *
      * <p>
      * Default is false.
      *
-     * @param  hideOnExit true if tooltip should hide.
-     * @return            this.
+     * @param hideOnExit true if tooltip should hide.
+     * @return this.
      */
     public ToolTipContext setHideOnExit(final boolean hideOnExit) {
         this.hideOnExit = hideOnExit;
@@ -341,11 +338,12 @@ public class ToolTipContext {
     /**
      * Set the supplier for the rectangle which is used to calculate the location of the tooltip. The
      * coordinates should be relative to the components origin.
+     *
      * <p>
      * Default will be the component bounding rectangle.
      *
-     * @param  toolTipRectSupplier rectangle supplier method.
-     * @return                     this
+     * @param toolTipRectSupplier rectangle supplier method.
+     * @return this
      */
     public ToolTipContext setToolTipRectSupplier(final Function<MouseEvent, Rectangle> toolTipRectSupplier) {
         this.toolTipRectSupplier = toolTipRectSupplier;
@@ -357,11 +355,9 @@ public class ToolTipContext {
 
     public void updateToolTip() {
         if (toolTip != null) {
-            toolTip.putClientProperty(
-                DarkToolTipUI.KEY_POINTER_LOCATION,
-                alignment == Alignment.CENTER ? centerAlignment.opposite()
-                    : alignInside ? alignment : alignment.opposite()
-            );
+            toolTip.putClientProperty(DarkToolTipUI.KEY_POINTER_LOCATION,
+                    alignment == Alignment.CENTER ? centerAlignment.opposite()
+                            : alignInside ? alignment : alignment.opposite());
             toolTip.putClientProperty(DarkToolTipUI.KEY_INSETS, insets);
             toolTip.doLayout();
         }
@@ -370,11 +366,12 @@ public class ToolTipContext {
     /**
      * Set the area to check if the tooltip should hide. If the mouse is outside of the area the the
      * tooltip hides if {@link #setHideOnExit(boolean)} is true.
+     *
      * <p>
      * Defaults to
      *
-     * @param  insideRect the area to check.
-     * @return            this.
+     * @param insideRect the area to check.
+     * @return this.
      */
     public ToolTipContext setInsideArea(final Area insideRect) {
         this.hotSpotArea = insideRect;
@@ -384,11 +381,12 @@ public class ToolTipContext {
     /**
      * Sets whether the insets of the component insets should be subtracted from the area returned by
      * {@link #setToolTipRectSupplier(Function)}.
+     *
      * <p>
      * Default is false.
      *
-     * @param  applyInsetsToRect true if they should be applied.
-     * @return                   this.
+     * @param applyInsetsToRect true if they should be applied.
+     * @return this.
      */
     public ToolTipContext setApplyComponentInsetsToRect(final boolean applyInsetsToRect) {
         this.applyInsetsToRect = applyInsetsToRect;
@@ -396,9 +394,9 @@ public class ToolTipContext {
     }
 
     /**
-     * @param  insideRect the rectangle to check.
-     * @return            this
-     * @see               #setInsideArea(Area)
+     * @param insideRect the rectangle to check.
+     * @return this
+     * @see #setInsideArea(Area)
      */
     public ToolTipContext setInsideArea(final Rectangle insideRect) {
         return setInsideArea(new Area(insideRect));
@@ -407,8 +405,8 @@ public class ToolTipContext {
     /**
      * Sets insets for the tooltip.
      *
-     * @param  insets the insets to set.
-     * @return        this.
+     * @param insets the insets to set.
+     * @return this.
      */
     public ToolTipContext setToolTipInsets(final Insets insets) {
         this.insets = insets;
@@ -424,8 +422,8 @@ public class ToolTipContext {
      * Sets whether the border should be ignored when aligning outside. If true the tooltip is aligned
      * w.r.t. to the content rect and not the component bounds.
      *
-     * @param  ignoreBorder true if border insets should be ignored.
-     * @return              this.
+     * @param ignoreBorder true if border insets should be ignored.
+     * @return this.
      */
     public ToolTipContext setIgnoreBorder(final boolean ignoreBorder) {
         this.ignoreBorder = ignoreBorder;
@@ -435,8 +433,8 @@ public class ToolTipContext {
     /**
      * Sets whether the tooltip should try its best to fit inside the window/screen.
      *
-     * @param  bestFit true if best fit adjustments should be made.
-     * @return         this.
+     * @param bestFit true if best fit adjustments should be made.
+     * @return this.
      */
     public ToolTipContext setUseBestFit(final boolean bestFit) {
         this.bestFit = bestFit;
@@ -446,9 +444,9 @@ public class ToolTipContext {
     /**
      * Calculates the tooltip location.
      *
-     * @param mp         the mouse position in the target component coordinate space.
+     * @param mp the mouse position in the target component coordinate space.
      * @param mouseEvent the mouse event.
-     * @see              JComponent#getToolTipLocation(MouseEvent)
+     * @see JComponent#getToolTipLocation(MouseEvent)
      */
     public Point getToolTipLocation(final Point mp, final MouseEvent mouseEvent) {
         return getToolTipLocation(mp, mouseEvent, false, false);
@@ -457,20 +455,19 @@ public class ToolTipContext {
     /**
      * Calculates the tooltip location.
      *
-     * @param  mp                 the mouse position in the target component coordinate space.
-     * @param  mouseEvent         the mouse event.
-     * @param  centerHorizontally whether the tooltip should be aligned to the center horizontally
-     *                            regardless of alignment
-     * @param  centerVertically   whether the tooltip should be aligned to the center vertically
-     *                            regardless of alignment
-     * @return                    the tooltip location.
-     * @see                       JComponent#getToolTipLocation(MouseEvent)
+     * @param mp the mouse position in the target component coordinate space.
+     * @param mouseEvent the mouse event.
+     * @param centerHorizontally whether the tooltip should be aligned to the center horizontally
+     *        regardless of alignment
+     * @param centerVertically whether the tooltip should be aligned to the center vertically regardless
+     *        of alignment
+     * @return the tooltip location.
+     * @see JComponent#getToolTipLocation(MouseEvent)
      */
-    public Point getToolTipLocation(
-            final Point mp, final MouseEvent mouseEvent, final boolean centerHorizontally,
-            final boolean centerVertically
-    ) {
-        if (target == null) return null;
+    public Point getToolTipLocation(final Point mp, final MouseEvent mouseEvent, final boolean centerHorizontally,
+            final boolean centerVertically) {
+        if (target == null)
+            return null;
         updateToolTip();
         MouseEvent event = processEvent(mouseEvent, mp);
         Rectangle rect = getTargetRect(event, centerHorizontally, centerVertically);
@@ -493,9 +490,8 @@ public class ToolTipContext {
         return alignmentStrategy.align(compPoint, mousePoint);
     }
 
-    private Rectangle getTargetRect(
-            final MouseEvent event, final boolean centerHorizontally, final boolean centerVertically
-    ) {
+    private Rectangle getTargetRect(final MouseEvent event, final boolean centerHorizontally,
+            final boolean centerVertically) {
         Rectangle rect = toolTipRectSupplier.apply(event);
         if (ignoreBorder) {
             Border border = target.getBorder();
@@ -519,7 +515,8 @@ public class ToolTipContext {
     }
 
     private MouseEvent processEvent(final MouseEvent mouseEvent, final Point mp) {
-        if (mouseEvent != null) return mouseEvent;
+        if (mouseEvent != null)
+            return mouseEvent;
         return new MouseEvent(target, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), 0, mp.x, mp.y, 0, false, 0);
     }
 
@@ -535,7 +532,7 @@ public class ToolTipContext {
      * Get the tooltip.
      *
      * @return the tooltip.
-     * @see    JComponent#createToolTip()
+     * @see JComponent#createToolTip()
      */
     public JToolTip getToolTip() {
         if (toolTip == null) {
@@ -545,7 +542,8 @@ public class ToolTipContext {
     }
 
     public void updateToolTipUI() {
-        if (toolTip != null) toolTip.updateUI();
+        if (toolTip != null)
+            toolTip.updateUI();
     }
 
     private Dimension getContentSize() {
@@ -617,7 +615,8 @@ public class ToolTipContext {
     }
 
     public void setToolTip(final JToolTip toolTip) {
-        if (toolTip == null) return;
+        if (toolTip == null)
+            return;
         this.toolTip = toolTip;
         if (this.target != toolTip.getComponent()) {
             this.toolTip.setComponent(this.target);
@@ -630,7 +629,8 @@ public class ToolTipContext {
 
     public ToolTipContext setFallBackPositionProvider(final Function<ToolTipContext, Point> fallBackPositionProvider) {
         this.fallBackPositionProvider = fallBackPositionProvider;
-        if (fallBackPositionProvider == null) this.fallBackPositionProvider = c -> null;
+        if (fallBackPositionProvider == null)
+            this.fallBackPositionProvider = c -> null;
         return this;
     }
 }

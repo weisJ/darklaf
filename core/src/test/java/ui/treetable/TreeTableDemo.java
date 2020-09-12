@@ -74,17 +74,15 @@ public class TreeTableDemo implements ComponentDemo {
 
     protected static class DemoNode extends DefaultTreeTableNode {
 
-        public DemoNode(
-                final TreeTableNode parent, final String name, final String capital, final Date declared,
-                final Integer area
-        ) {
+        public DemoNode(final TreeTableNode parent, final String name, final String capital, final Date declared,
+                final Integer area) {
             super(parent, new Object[] {name, capital, declared, area});
         }
     }
 
     protected static class DemoModel extends DefaultTreeTableModel {
-        static protected String[] columnNames = {"TreeNode", "String", "Date", "Integer"};
-        static protected Class<?>[] columnTypes = {TreeTableModel.class, String.class, Date.class, Integer.class};
+        protected static String[] columnNames = {"TreeNode", "String", "Date", "Integer"};
+        protected static Class<?>[] columnTypes = {TreeTableModel.class, String.class, Date.class, Integer.class};
 
         public DemoModel(final TreeTableNode rootNode) {
             super(rootNode, columnNames);

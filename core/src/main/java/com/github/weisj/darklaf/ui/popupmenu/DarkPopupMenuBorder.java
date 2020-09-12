@@ -28,9 +28,7 @@ import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.components.border.MutableLineBorder;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkPopupMenuBorder extends MutableLineBorder implements UIResource {
 
     public DarkPopupMenuBorder() {

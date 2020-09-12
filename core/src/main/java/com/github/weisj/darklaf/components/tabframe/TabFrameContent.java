@@ -44,7 +44,7 @@ public interface TabFrameContent {
     /**
      * Enables a popup if possible.
      *
-     * @param a       the alignment.
+     * @param a the alignment.
      * @param enabled true if enabled.
      */
     void setEnabled(Alignment a, boolean enabled);
@@ -52,15 +52,15 @@ public interface TabFrameContent {
     /**
      * Returns whether the given popup is enabled.
      *
-     * @param  a the alignment of the popup.
-     * @return   true if enabled.
+     * @param a the alignment of the popup.
+     * @return true if enabled.
      */
     boolean isEnabled(Alignment a);
 
     /**
      * Sets the component at the specified position.
      *
-     * @param a         the alignment.
+     * @param a the alignment.
      * @param component the component.
      */
     void setComponentAt(final Alignment a, final Component component);
@@ -82,8 +82,8 @@ public interface TabFrameContent {
     /**
      * Get the popup container at the given location.
      *
-     * @param  alignment the alignment position.
-     * @return           the popup container.
+     * @param alignment the alignment position.
+     * @return the popup container.
      */
     PopupContainer getContainer(Alignment alignment);
 }

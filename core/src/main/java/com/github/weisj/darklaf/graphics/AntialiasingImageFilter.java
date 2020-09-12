@@ -38,9 +38,8 @@ public class AntialiasingImageFilter extends RGBImageFilter {
     private final int fgGreen;
     private final int fgBlue;
 
-    public AntialiasingImageFilter(
-            final BufferedImage destImg, final int destPosX, final int destPosY, final Color fg, final Color bg
-    ) {
+    public AntialiasingImageFilter(final BufferedImage destImg, final int destPosX, final int destPosY, final Color fg,
+            final Color bg) {
         this.destImg = destImg;
         this.destPosX = destPosX;
         this.destPosY = destPosY;

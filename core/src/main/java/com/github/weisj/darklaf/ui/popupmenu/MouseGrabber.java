@@ -57,11 +57,8 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
         // A grab needs to be added
         final Toolkit tk = Toolkit.getDefaultToolkit();
         AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
-            tk.addAWTEventListener(
-                MouseGrabber.this,
-                AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_WHEEL_EVENT_MASK
-                    | AWTEvent.WINDOW_EVENT_MASK | SunToolkit.GRAB_EVENT_MASK
-            );
+            tk.addAWTEventListener(MouseGrabber.this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK
+                    | AWTEvent.MOUSE_WHEEL_EVENT_MASK | AWTEvent.WINDOW_EVENT_MASK | SunToolkit.GRAB_EVENT_MASK);
             return null;
         });
 
@@ -162,18 +159,17 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
         // If the scroll is done inside a combobox, menuitem,
         // or inside a Popup#HeavyWeightWindow or inside a frame
         // popup should not close which is the standard behaviour
-        switch (me.getID()) {/*
-                              * Changed here: Make doNotCancelPopup accessible to all component. Allows for more
-                              * versatile PopupMenus.
-                              */
+        switch (me.getID()) {
+            /*
+             * Changed here: Make doNotCancelPopup accessible to all component. Allows for more versatile
+             * PopupMenus.
+             */
             case MouseEvent.MOUSE_PRESSED:
                 if (isInPopup(src) || (src instanceof JMenu && ((JMenu) src).isSelected())) {
                     return;
                 }
-                if (
-                    !PropertyUtil
-                        .isPropertyEqual(src, DarkPopupMenuUI.KEY_DO_NOT_CANCEL_POPUP, DarkPopupMenuUI.HIDE_POPUP_VALUE)
-                ) {
+                if (!PropertyUtil.isPropertyEqual(src, DarkPopupMenuUI.KEY_DO_NOT_CANCEL_POPUP,
+                        DarkPopupMenuUI.HIDE_POPUP_VALUE)) {
                     // Cancel popup only if this property was not set.
                     // If this property is set to TRUE component wants
                     // to deal with this event by himself.
@@ -211,12 +207,10 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
                 MenuSelectionManager.defaultManager().processMouseEvent(me);
                 break;
             case MouseEvent.MOUSE_WHEEL:
-                if (
-                    isInPopup(src) || ((src instanceof JComboBox) && ((JComboBox<?>) src).isPopupVisible())
+                if (isInPopup(src) || ((src instanceof JComboBox) && ((JComboBox<?>) src).isPopupVisible())
                         || ((src instanceof JWindow) && src.isVisible())
                         || ((src instanceof JMenuItem) && src.isVisible()) || (src instanceof JFrame)
-                        || (src instanceof JDialog)
-                ) {
+                        || (src instanceof JDialog)) {
                     return;
                 }
                 cancelPopupMenu();

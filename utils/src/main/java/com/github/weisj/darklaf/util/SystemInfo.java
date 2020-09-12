@@ -23,9 +23,7 @@ package com.github.weisj.darklaf.util;
 
 import java.util.regex.Pattern;
 
-/**
- * @author Konstantin Bulenkov
- */
+/** @author Konstantin Bulenkov */
 public class SystemInfo {
     public static final String X86 = "32";
     public static final String X64 = "64";

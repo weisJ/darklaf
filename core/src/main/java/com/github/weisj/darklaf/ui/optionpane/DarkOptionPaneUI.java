@@ -44,10 +44,11 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
         if (border != null) {
             bottom.setBorder(border);
         }
-        bottom
-            .setLayout(
-                new DarkButtonAreaLayout(DefaultLookup.getBoolean(optionPane, this, "OptionPane.sameSizeButtons", false), DefaultLookup.getInt(optionPane, this, "OptionPane.buttonPadding", 6), DefaultLookup.getInt(optionPane, this, "OptionPane.buttonOrientation", SwingConstants.CENTER), DefaultLookup.getBoolean(optionPane, this, "OptionPane.isYesLast", false))
-            );
+        bottom.setLayout(new DarkButtonAreaLayout(
+                DefaultLookup.getBoolean(optionPane, this, "OptionPane.sameSizeButtons", false),
+                DefaultLookup.getInt(optionPane, this, "OptionPane.buttonPadding", 6),
+                DefaultLookup.getInt(optionPane, this, "OptionPane.buttonOrientation", SwingConstants.CENTER),
+                DefaultLookup.getBoolean(optionPane, this, "OptionPane.isYesLast", false)));
         addButtonComponents(bottom, getButtons(), getInitialValueIndex());
         return bottom;
     }
@@ -60,6 +61,7 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
      * <code>ButtonAreaLayout</code> behaves in a similar manner to <code>FlowLayout</code>. It lays out
      * all components from left to right. If <code>syncAllWidths</code> is true, the widths of each
      * component will be set to the largest preferred size width.
+     *
      * <p>
      * This class should be treated as a &quot;protected&quot; inner class. Instantiate it only within
      * subclasses of {@code BasicOptionPaneUI}.
@@ -74,9 +76,8 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
          */
         private boolean useOrientation;
 
-        public DarkButtonAreaLayout(
-                final boolean syncAllSizes, final int padding, final int orientation, final boolean reverseButtons
-        ) {
+        public DarkButtonAreaLayout(final boolean syncAllSizes, final int padding, final int orientation,
+                final boolean reverseButtons) {
             this(syncAllSizes, padding);
             useOrientation = true;
             this.orientation = orientation;
@@ -87,7 +88,7 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
          * Constructs a new instance of {@code ButtonAreaLayout}.
          *
          * @param syncAllWidths if the width of children should be synchronized
-         * @param padding       the padding value
+         * @param padding the padding value
          */
         public DarkButtonAreaLayout(final boolean syncAllWidths, final int padding) {
             super(syncAllWidths, padding);
@@ -218,10 +219,10 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
                             x = insets.left;
                             if (getSyncAllWidths()) {
                                 xOffset = (container.getWidth() - insets.left - insets.right - totalButtonWidth)
-                                    / (numChildren - 1) + maxWidth;
+                                        / (numChildren - 1) + maxWidth;
                             } else {
                                 xOffset = (container.getWidth() - insets.left - insets.right - totalButtonWidth)
-                                    / (numChildren - 1);
+                                        / (numChildren - 1);
                             }
                         }
                         break;
@@ -266,9 +267,8 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
                             height = Math.max(height, aSize.height);
                             maxWidth = Math.max(maxWidth, aSize.width);
                         }
-                        return new Dimension(
-                            extraWidth + (maxWidth * numChildren) + (numChildren - 1) * padding, extraHeight + height
-                        );
+                        return new Dimension(extraWidth + (maxWidth * numChildren) + (numChildren - 1) * padding,
+                                extraHeight + height);
                     } else {
                         int totalWidth = 0;
 

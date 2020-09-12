@@ -30,7 +30,7 @@ import com.github.weisj.darklaf.util.Alignment;
 
 /**
  * @author Jannis Weis
- * @since  2019
+ * @since 2019
  */
 public class TabFrameLayout implements LayoutManager {
 
@@ -60,18 +60,16 @@ public class TabFrameLayout implements LayoutManager {
     public Dimension preferredLayoutSize(final Container parent) {
         Dimension b = tabFrame.getContentPane().getComponent().getPreferredSize();
         return new Dimension(
-            tabFrame.getLeftTabContainer().getWidth() + tabFrame.getRightTabContainer().getWidth() + b.width,
-            tabFrame.getTopTabContainer().getHeight() + tabFrame.getBottomTabContainer().getHeight() + b.height
-        );
+                tabFrame.getLeftTabContainer().getWidth() + tabFrame.getRightTabContainer().getWidth() + b.width,
+                tabFrame.getTopTabContainer().getHeight() + tabFrame.getBottomTabContainer().getHeight() + b.height);
     }
 
     @Override
     public Dimension minimumLayoutSize(final Container parent) {
         Dimension b = tabFrame.getContentPane().getComponent().getMinimumSize();
         return new Dimension(
-            tabFrame.getLeftTabContainer().getWidth() + tabFrame.getRightTabContainer().getWidth() + b.width,
-            tabFrame.getTopTabContainer().getHeight() + tabFrame.getBottomTabContainer().getHeight() + b.height
-        );
+                tabFrame.getLeftTabContainer().getWidth() + tabFrame.getRightTabContainer().getWidth() + b.width,
+                tabFrame.getTopTabContainer().getHeight() + tabFrame.getBottomTabContainer().getHeight() + b.height);
     }
 
     @Override
@@ -82,10 +80,14 @@ public class TabFrameLayout implements LayoutManager {
         int leftCount = tabFrame.getLeftTabCount();
         int rightCount = tabFrame.getRightTabCount();
 
-        if (isDraggedOver(Alignment.NORTH)) topCount++;
-        if (isDraggedOver(Alignment.SOUTH)) bottomCount++;
-        if (isDraggedOver(Alignment.EAST)) rightCount++;
-        if (isDraggedOver(Alignment.WEST)) leftCount++;
+        if (isDraggedOver(Alignment.NORTH))
+            topCount++;
+        if (isDraggedOver(Alignment.SOUTH))
+            bottomCount++;
+        if (isDraggedOver(Alignment.EAST))
+            rightCount++;
+        if (isDraggedOver(Alignment.WEST))
+            leftCount++;
 
         ui.getDropComponentBottom().setSize(0, 0);
         ui.getDropComponentLeft().setSize(0, 0);
@@ -106,10 +108,9 @@ public class TabFrameLayout implements LayoutManager {
         Component rightPane = ui.getRightContainer();
         Component topPane = ui.getTopContainer();
         Component bottomPane = ui.getBottomContainer();
-        tabFrame.getContentPane().getComponent().setBounds(
-            leftPane.getWidth(), topPane.getHeight(), dim.width - leftPane.getWidth() - rightPane.getWidth(),
-            dim.height - topPane.getHeight() - bottomPane.getHeight()
-        );
+        tabFrame.getContentPane().getComponent().setBounds(leftPane.getWidth(), topPane.getHeight(),
+                dim.width - leftPane.getWidth() - rightPane.getWidth(),
+                dim.height - topPane.getHeight() - bottomPane.getHeight());
     }
 
     protected void layoutTopTab(final Dimension dim, final int topCount, final int leftCount, final int rightCount) {
@@ -127,9 +128,8 @@ public class TabFrameLayout implements LayoutManager {
         }
     }
 
-    protected void layoutBottomTab(
-            final Dimension dim, final int bottomCount, final int leftCount, final int rightCount
-    ) {
+    protected void layoutBottomTab(final Dimension dim, final int bottomCount, final int leftCount,
+            final int rightCount) {
         Component bottomComp = tabFrame.getBottomTabContainer();
         if (bottomCount > 0) {
             bottomComp.setBounds(0, dim.height - bottomHeight, dim.width, bottomHeight);
@@ -144,9 +144,8 @@ public class TabFrameLayout implements LayoutManager {
         }
     }
 
-    protected void layoutHorizontalDrop(
-            final Alignment left, final int leftCount, final int rightCount, final int size, final int yOff
-    ) {
+    protected void layoutHorizontalDrop(final Alignment left, final int leftCount, final int rightCount, final int size,
+            final int yOff) {
         Alignment a = ui.getDestAlign();
         Dimension dropSize = ui.getDropSize();
         Component dropComp = ui.getDropComponent(left);
@@ -160,10 +159,8 @@ public class TabFrameLayout implements LayoutManager {
         }
     }
 
-    protected void layoutHorizontal(
-            final Dimension dim, final Alignment left, final Alignment right, final int yOff, final int leftCount,
-            final int rightCount, final int tabHeight
-    ) {
+    protected void layoutHorizontal(final Dimension dim, final Alignment left, final Alignment right, final int yOff,
+            final int leftCount, final int rightCount, final int tabHeight) {
         Point start = new Point(leftCount > 0 ? leftHeight : 0, yOff);
         int leftEnd = layoutTabArea(start, left, true, tabHeight - 1);
         start.x = rightCount > 0 ? dim.width - rightHeight : dim.width;
@@ -227,7 +224,7 @@ public class TabFrameLayout implements LayoutManager {
             int height = dim.height - topPane.getHeight() - bottomPane.getHeight();
             rightPane.setBounds(dim.width - rightHeight, topPane.getHeight(), size, height + (height % 2));
             tabFrame.getRightTabContainer()
-                .setPreferredSize(new Dimension(rightPane.getHeight(), rightPane.getWidth()));
+                    .setPreferredSize(new Dimension(rightPane.getHeight(), rightPane.getWidth()));
             tabFrame.getRightTabContainer().setSize(tabFrame.getRightTabContainer().getPreferredSize());
             if (rightCount > 0) {
                 Point start = new Point(0, 0);

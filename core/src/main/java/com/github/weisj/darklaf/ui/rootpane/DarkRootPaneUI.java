@@ -37,19 +37,17 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener {
 
     protected static final String KEY_PREFIX = "JRootPane.";
     public static final String KEY_NO_DECORATIONS_UPDATE = KEY_PREFIX + "noDecorationsUpdate";
     public static final String KEY_NO_DECORATIONS = KEY_PREFIX + "noDecorations";
     public static final String KEY_UNIFIED_MENUBAR = KEY_PREFIX + "unifiedMenuBar";
-    protected static final String[] borderKeys =
-        new String[] {"RootPane.border", "RootPane.frameBorder", "RootPane.plainDialogBorder",
-            "RootPane.informationDialogBorder", "RootPane.errorDialogBorder", "RootPane.colorChooserDialogBorder",
-            "RootPane.fileChooserDialogBorder", "RootPane.questionDialogBorder", "RootPane.warningDialogBorder"};
+    protected static final String[] borderKeys = new String[] {"RootPane.border", "RootPane.frameBorder",
+            "RootPane.plainDialogBorder", "RootPane.informationDialogBorder", "RootPane.errorDialogBorder",
+            "RootPane.colorChooserDialogBorder", "RootPane.fileChooserDialogBorder", "RootPane.questionDialogBorder",
+            "RootPane.warningDialogBorder"};
 
     private Window window;
     private CustomTitlePane titlePane;
@@ -81,7 +79,8 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     }
 
     protected void installBorder(final JRootPane root) {
-        if (root == null) return;
+        if (root == null)
+            return;
         LookAndFeel.installBorder(root, borderKeys[windowDecorationsStyle]);
     }
 
@@ -109,12 +108,14 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     }
 
     protected int decorationsStyleFromWindow(final Window window, final int windowDecorationsStyle) {
-        if (
-            DarkUIUtil.isUndecorated(window) || PropertyUtil.getBooleanProperty(rootPane, KEY_NO_DECORATIONS)
-        ) return JRootPane.NONE;
-        if (windowDecorationsStyle != JRootPane.NONE) return windowDecorationsStyle;
-        if (window instanceof JFrame) return JRootPane.FRAME;
-        if (window instanceof JDialog) return JRootPane.PLAIN_DIALOG;
+        if (DarkUIUtil.isUndecorated(window) || PropertyUtil.getBooleanProperty(rootPane, KEY_NO_DECORATIONS))
+            return JRootPane.NONE;
+        if (windowDecorationsStyle != JRootPane.NONE)
+            return windowDecorationsStyle;
+        if (window instanceof JFrame)
+            return JRootPane.FRAME;
+        if (window instanceof JDialog)
+            return JRootPane.PLAIN_DIALOG;
         return windowDecorationsStyle;
     }
 
@@ -149,13 +150,13 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
 
     private void installClientDecorations(final JRootPane root) {
         updateWindow(rootPane.getParent());
-        int style = decorationsStyleFromWindow(
-            window, windowDecorationsStyle < 0 ? root.getWindowDecorationStyle() : windowDecorationsStyle
-        );
+        int style = decorationsStyleFromWindow(window,
+                windowDecorationsStyle < 0 ? root.getWindowDecorationStyle() : windowDecorationsStyle);
         CustomTitlePane titlePane = DecorationsHandler.getSharedInstance().createTitlePane(root, style, window);
         installLayout(root);
         setTitlePane(root, titlePane);
-        if (titlePane != null) titlePane.setDecorationsStyle(windowDecorationsStyle);
+        if (titlePane != null)
+            titlePane.setDecorationsStyle(windowDecorationsStyle);
     }
 
     @Override
@@ -187,7 +188,8 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     private void updateWindow(final Component parent) {
         window = DarkUIUtil.getWindow(parent);
         windowDecorationsStyle = decorationsStyleFromWindow(window, windowDecorationsStyle);
-        if (titlePane != null) titlePane.setDecorationsStyle(windowDecorationsStyle);
+        if (titlePane != null)
+            titlePane.setDecorationsStyle(windowDecorationsStyle);
         installBorder(rootPane);
     }
 
@@ -209,15 +211,14 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
 
     @Override
     public void hierarchyChanged(final HierarchyEvent e) {
-        if (rootPane == null) return;
+        if (rootPane == null)
+            return;
         Component parent = rootPane.getParent();
         if (parent == null) {
             return;
         }
-        if (
-            parent.getClass().getName().startsWith("org.jdesktop.jdic.tray")
-                || (parent.getClass().getName().equals("javax.swing.Popup$HeavyWeightWindow"))
-        ) {
+        if (parent.getClass().getName().startsWith("org.jdesktop.jdic.tray")
+                || (parent.getClass().getName().equals("javax.swing.Popup$HeavyWeightWindow"))) {
             SwingUtilities.invokeLater(() -> {
                 if (rootPane != null) {
                     rootPane.removeHierarchyListener(this);
@@ -242,6 +243,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
 
     protected boolean decorationsEnabled(final JRootPane rootPane) {
         return !(rootPane.getParent() instanceof JInternalFrame)
-            && !PropertyUtil.getBooleanProperty(rootPane, KEY_NO_DECORATIONS_UPDATE) && rootPane.getParent() != null;
+                && !PropertyUtil.getBooleanProperty(rootPane, KEY_NO_DECORATIONS_UPDATE)
+                && rootPane.getParent() != null;
     }
 }

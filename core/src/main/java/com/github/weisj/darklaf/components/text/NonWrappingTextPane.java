@@ -30,7 +30,7 @@ import javax.swing.plaf.ComponentUI;
  * JTextPane that keeps the original width of text.
  *
  * @author Jannis Weis
- * @since  2018
+ * @since 2018
  */
 public class NonWrappingTextPane extends JTextPane {
 

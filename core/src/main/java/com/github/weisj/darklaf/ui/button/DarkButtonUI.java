@@ -47,9 +47,7 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
 
     protected static final Rectangle viewRect = new Rectangle();
@@ -99,8 +97,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     @Override
     protected void installDefaults(final AbstractButton b) {
         super.installDefaults(b);
-        PropertyUtil
-            .installProperty(b, ToolTipConstants.KEY_STYLE, ToolTipStyle.parse(UIManager.get("Button.toolTipStyle")));
+        PropertyUtil.installProperty(b, ToolTipConstants.KEY_STYLE,
+                ToolTipStyle.parse(UIManager.get("Button.toolTipStyle")));
         LookAndFeel.installProperty(b, PropertyKey.OPAQUE, false);
         borderSize = UIManager.getInt("Button.borderThickness");
         shadowHeight = UIManager.getInt("Button.shadowHeight");
@@ -126,11 +124,16 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         squareInsets = UIManager.getInsets("Button.squareBorderInsets");
         squareThinInsets = UIManager.getInsets("Button.squareThinBorderInsets");
         borderlessRectangularInsets = UIManager.getInsets("Button.borderlessRectangularInsets");
-        if (insets == null) insets = new Insets(0, 0, 0, 0);
-        if (thinInsets == null) thinInsets = new Insets(0, 0, 0, 0);
-        if (squareThinInsets == null) squareThinInsets = new Insets(0, 0, 0, 0);
-        if (squareInsets == null) squareInsets = new Insets(0, 0, 0, 0);
-        if (borderlessRectangularInsets == null) borderlessRectangularInsets = new Insets(0, 0, 0, 0);
+        if (insets == null)
+            insets = new Insets(0, 0, 0, 0);
+        if (thinInsets == null)
+            thinInsets = new Insets(0, 0, 0, 0);
+        if (squareThinInsets == null)
+            squareThinInsets = new Insets(0, 0, 0, 0);
+        if (squareInsets == null)
+            squareInsets = new Insets(0, 0, 0, 0);
+        if (borderlessRectangularInsets == null)
+            borderlessRectangularInsets = new Insets(0, 0, 0, 0);
         updateMargins(b);
     }
 
@@ -159,9 +162,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         AbstractButton b = (AbstractButton) c;
 
         prepareDelegate(b);
-        String text = layout(
-            layoutDelegate, b, SwingUtilities2.getFontMetrics(b, g, layoutDelegate.getFont()), b.getWidth(), b.getHeight()
-        );
+        String text = layout(layoutDelegate, b, SwingUtilities2.getFontMetrics(b, g, layoutDelegate.getFont()),
+                b.getWidth(), b.getHeight());
         paintButtonBackground(g, c);
 
         paintIcon(g, b, c);
@@ -177,7 +179,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
             int width = c.getWidth();
             int height = c.getHeight();
             Insets margin = b.getMargin();
-            if (margin instanceof UIResource) margin = null;
+            if (margin instanceof UIResource)
+                margin = null;
             if (ButtonConstants.isBorderlessVariant(c)) {
                 paintBorderlessBackground(b, g2, arc, width, height, margin);
             } else {
@@ -186,9 +189,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         }
     }
 
-    protected void paintDefaultBackground(
-            final AbstractButton c, final Graphics2D g, final int arc, final int width, final int height
-    ) {
+    protected void paintDefaultBackground(final AbstractButton c, final Graphics2D g, final int arc, final int width,
+            final int height) {
         boolean showShadow = DarkButtonBorder.showDropShadow(c);
         int shadow = showShadow ? shadowHeight : 0;
         int effectiveArc = ButtonConstants.chooseArcWithBorder(c, arc, 0, 0, borderSize);
@@ -212,9 +214,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         paintBackgroundRect(g2, effectiveArc, bgRect.x, bgRect.y, bgRect.width, bgRect.height);
     }
 
-    private void paintBackgroundRect(
-            final Graphics2D g2, final int effectiveArc, final int x, final int y, final int width, final int height
-    ) {
+    private void paintBackgroundRect(final Graphics2D g2, final int effectiveArc, final int x, final int y,
+            final int width, final int height) {
         if (effectiveArc == 0) {
             g2.fillRect(x, y, width, height);
         } else {
@@ -222,9 +223,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         }
     }
 
-    protected Rectangle getEffectiveRect(
-            final int width, final int height, final int adjustment, final AlignmentExt corner
-    ) {
+    protected Rectangle getEffectiveRect(final int width, final int height, final int adjustment,
+            final AlignmentExt corner) {
         Insets insetMask = new Insets(borderSize, borderSize, Math.max(borderSize, shadowHeight), borderSize);
         if (corner != null) {
             insetMask = corner.maskInsets(insetMask, adjustment);
@@ -236,9 +236,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         return new Rectangle(bx, by, bw, bh);
     }
 
-    protected void paintBorderlessBackground(
-            final AbstractButton b, final Graphics2D g, final int arc, final int width, final int height, final Insets m
-    ) {
+    protected void paintBorderlessBackground(final AbstractButton b, final Graphics2D g, final int arc, final int width,
+            final int height, final Insets m) {
         if (isRolloverBorderless(b)) {
             Insets ins = b.getInsets();
             int x = ins.left;
@@ -335,10 +334,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
 
     protected Color getForeground(final AbstractButton button) {
         Color fg = button.getForeground();
-        if (
-            fg instanceof UIResource && ButtonConstants.isDefaultButton(button)
-                && !ButtonConstants.isBorderlessVariant(button)
-        ) {
+        if (fg instanceof UIResource && ButtonConstants.isDefaultButton(button)
+                && !ButtonConstants.isBorderlessVariant(button)) {
             fg = defaultForeground;
         }
         if (fg instanceof UIResource && !button.getModel().isEnabled()) {
@@ -377,7 +374,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
 
     protected Color getBorderlessBackground(final AbstractButton c) {
         return isArmedBorderless(c) ? PropertyUtil.getColor(c, KEY_CLICK_COLOR, borderlessClick)
-            : PropertyUtil.getColor(c, KEY_HOVER_COLOR, borderlessHover);
+                : PropertyUtil.getColor(c, KEY_HOVER_COLOR, borderlessHover);
     }
 
     protected boolean isArmedBorderless(final AbstractButton b) {
@@ -389,10 +386,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         return armed ? borderlessOutlineClick : borderlessOutlineHover;
     }
 
-    protected String layout(
-            final AbstractButtonLayoutDelegate bl, final AbstractButton b, final FontMetrics fm, final int width,
-            final int height
-    ) {
+    protected String layout(final AbstractButtonLayoutDelegate bl, final AbstractButton b, final FontMetrics fm,
+            final int width, final int height) {
         Insets i = DarkUIUtil.addInsets(b.getInsets(), b.getMargin());
 
         AlignmentExt corner = DarkButtonBorder.getCornerFlag(b);
@@ -411,11 +406,9 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         textRect.x = textRect.y = textRect.width = textRect.height = 0;
         iconRect.x = iconRect.y = iconRect.width = iconRect.height = 0;
         // layout the text and icon
-        return SwingUtilities.layoutCompoundLabel(
-            bl, fm, bl.getText(), bl.getIcon(), bl.getVerticalAlignment(), bl.getHorizontalAlignment(),
-            bl.getVerticalTextPosition(), bl.getHorizontalTextPosition(), viewRect, iconRect, textRect,
-            bl.getText() == null || ButtonConstants.isIconOnly(b) ? 0 : bl.getIconTextGap()
-        );
+        return SwingUtilities.layoutCompoundLabel(bl, fm, bl.getText(), bl.getIcon(), bl.getVerticalAlignment(),
+                bl.getHorizontalAlignment(), bl.getVerticalTextPosition(), bl.getHorizontalTextPosition(), viewRect,
+                iconRect, textRect, bl.getText() == null || ButtonConstants.isIconOnly(b) ? 0 : bl.getIconTextGap());
     }
 
     @Override
@@ -443,16 +436,17 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
 
     protected void updateMargins(final AbstractButton b) {
         Insets margin = b.getMargin();
-        if (margin != null && !(margin instanceof UIResource)) return;
+        if (margin != null && !(margin instanceof UIResource))
+            return;
         Insets m = getMargins(b);
         b.setMargin(new InsetsUIResource(m.top, m.left, m.bottom, m.right));
     }
 
     private Insets getMargins(final AbstractButton b) {
-        if (ButtonConstants.isBorderlessRectangular(b)) return borderlessRectangularInsets;
+        if (ButtonConstants.isBorderlessRectangular(b))
+            return borderlessRectangularInsets;
         boolean square = ButtonConstants.isSquare(b);
         return ButtonConstants.isThin(b) ? square ? squareThinInsets : thinInsets : square ? squareInsets : insets;
-
     }
 
     @Override
@@ -460,7 +454,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         if (ButtonConstants.isBorderlessRectangular(c)) {
             return super.contains(c, x, y);
         }
-        if (!(x >= 0 && x <= c.getWidth() && y >= 0 && y <= c.getHeight())) return false;
+        if (!(x >= 0 && x <= c.getWidth() && y >= 0 && y <= c.getHeight()))
+            return false;
         int bs = c.getBorder() instanceof DarkButtonBorder && !ButtonConstants.isBorderless(c) ? borderSize : 0;
         int arc = getArc(c);
         hitArea.setRoundRect(bs, bs, c.getWidth() - 2 * bs, c.getHeight() - 2 * bs, arc, arc);

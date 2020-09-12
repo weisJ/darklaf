@@ -34,9 +34,7 @@ import javax.swing.plaf.ActionMapUIResource;
  * @author Scott Violet
  */
 public class LazyActionMap extends ActionMapUIResource {
-    /**
-     * Object to invoke <code>loadActionMap</code> on. This may be a Class object.
-     */
+    /** Object to invoke <code>loadActionMap</code> on. This may be a Class object. */
     private transient Object _loader;
 
     public LazyActionMap(final Class<?> loader) {
@@ -46,13 +44,14 @@ public class LazyActionMap extends ActionMapUIResource {
     /**
      * Installs an ActionMap that will be populated by invoking the <code>loadActionMap</code> method on
      * the specified Class when necessary.
+     *
      * <p>
      * This should be used if the ActionMap can be shared.
      *
-     * @param c           JComponent to install the ActionMap on.
+     * @param c JComponent to install the ActionMap on.
      * @param loaderClass Class object that gets loadActionMap invoked on.
      * @param defaultsKey Key to use to defaults table to check for existing map and what resulting Map
-     *                    will be registered on.
+     *        will be registered on.
      */
     public static void installLazyActionMap(final JComponent c, final Class<?> loaderClass, final String defaultsKey) {
         ActionMap map = (ActionMap) UIManager.get(defaultsKey);
@@ -66,13 +65,14 @@ public class LazyActionMap extends ActionMapUIResource {
     /**
      * Returns an ActionMap that will be populated by invoking the <code>loadActionMap</code> method on
      * the specified Class when necessary.
+     *
      * <p>
      * This should be used if the ActionMap can be shared.
      *
-     * @param  loaderClass Class object that gets loadActionMap invoked on.
-     * @param  defaultsKey Key to use to defaults table to check for existing map and what resulting Map
-     *                     will be registered on.
-     * @return             the action map
+     * @param loaderClass Class object that gets loadActionMap invoked on.
+     * @param defaultsKey Key to use to defaults table to check for existing map and what resulting Map
+     *        will be registered on.
+     * @return the action map
      */
     public static ActionMap getActionMap(final Class<?> loaderClass, final String defaultsKey) {
         ActionMap map = (ActionMap) UIManager.get(defaultsKey);

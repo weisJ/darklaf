@@ -41,7 +41,7 @@ public class TableCellContainer implements IndexedCellContainer<JTable, Pair<Int
     @Override
     public Rectangle getCellBoundsAt(final Pair<Integer, Integer> position, final boolean isEditing) {
         return isEditing ? table.getEditorComponent().getBounds()
-            : table.getCellRect(position.getFirst(), position.getSecond(), false);
+                : table.getCellRect(position.getFirst(), position.getSecond(), false);
     }
 
     @Override
@@ -67,19 +67,20 @@ public class TableCellContainer implements IndexedCellContainer<JTable, Pair<Int
     @Override
     public boolean isEditingCell(final Pair<Integer, Integer> position) {
         return isEditing() && position != null && table.getEditingColumn() == position.getSecond()
-            && table.getEditingRow() == position.getFirst();
+                && table.getEditingRow() == position.getFirst();
     }
 
     @Override
     public Component getCellRendererComponent(final Pair<Integer, Integer> position) {
-        if (position == null) return null;
+        if (position == null)
+            return null;
         int row = position.getFirst();
         int column = position.getSecond();
         boolean isSelected = table.isCellSelected(row, column);
         Object value = table.getValueAt(row, column);
         boolean focus = table.hasFocus();
-        return ui.getCellRenderer(row, column)
-            .getTableCellRendererComponent(table, value, isSelected, focus, row, column);
+        return ui.getCellRenderer(row, column).getTableCellRendererComponent(table, value, isSelected, focus, row,
+                column);
     }
 
     @Override

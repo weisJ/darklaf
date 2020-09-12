@@ -49,22 +49,18 @@ public class DarkTableCellRendererDelegate extends TableCellRendererDelegate imp
     }
 
     @Override
-    public Component getTableCellRendererComponent(
-            final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row,
-            final int column
-    ) {
+    public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
+            final boolean hasFocus, final int row, final int column) {
         boolean booleanRenderer = TableConstants.useBooleanEditorForValue(value, table, column);
         TableCellRenderer renderer = booleanRenderer ? getBooleanRenderer(table) : super.getDelegate();
         Component component = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
         boolean isRowFocus = DarkTableCellFocusBorder.isRowFocusBorder(table)
-            && table.getSelectionModel().getLeadSelectionIndex() == row;
+                && table.getSelectionModel().getLeadSelectionIndex() == row;
         boolean rowLeadSelection = table.getSelectionModel().getLeadSelectionIndex() == row;
         boolean columnLeadSelection = table.getColumnModel().getSelectionModel().getLeadSelectionIndex() == column;
-        if (
-            rowLeadSelection && !columnLeadSelection
-                && PropertyUtil.getBooleanProperty(table, TableConstants.KEY_FULL_ROW_FOCUS_BORDER)
-        ) {
+        if (rowLeadSelection && !columnLeadSelection
+                && PropertyUtil.getBooleanProperty(table, TableConstants.KEY_FULL_ROW_FOCUS_BORDER)) {
             columnLeadSelection = true;
         }
         boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table) && rowLeadSelection && columnLeadSelection;
@@ -78,10 +74,8 @@ public class DarkTableCellRendererDelegate extends TableCellRendererDelegate imp
         return component;
     }
 
-    public void setupBorderStyle(
-            final JTable table, final int row, final int column, final JComponent component,
-            final boolean isLeadSelectionCell, final boolean isRowFocus
-    ) {
+    public void setupBorderStyle(final JTable table, final int row, final int column, final JComponent component,
+            final boolean isLeadSelectionCell, final boolean isRowFocus) {
         Border focusBorder = UIManager.getBorder("Table.focusSelectedCellHighlightBorder");
         if ((isRowFocus || isLeadSelectionCell) && !table.isEditing()) {
             PropertyUtil.installBorder(component, focusBorder);

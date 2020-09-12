@@ -35,9 +35,7 @@ import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkTextBorder implements Border, UIResource {
 
     protected final Color errorBorderColor;
@@ -72,7 +70,8 @@ public class DarkTextBorder implements Border, UIResource {
         searchArc = UIManager.getInt("TextField.searchArc");
         searchFocusArc = UIManager.getInt("TextField.searchFocusArc");
         padding = UIManager.getInsets("TextField.insets");
-        if (padding == null) padding = new Insets(0, 0, 0, 0);
+        if (padding == null)
+            padding = new Insets(0, 0, 0, 0);
     }
 
     protected static boolean hasError(final Component c) {
@@ -95,9 +94,8 @@ public class DarkTextBorder implements Border, UIResource {
         return borderSize;
     }
 
-    public void paintBorder(
-            final Component c, final Graphics g2, final int x, final int y, final int width, final int height
-    ) {
+    public void paintBorder(final Component c, final Graphics g2, final int x, final int y, final int width,
+            final int height) {
         boolean editable = !(c instanceof JTextComponent) || ((JTextComponent) c).isEditable();
         boolean focus = DarkUIUtil.hasFocus(c);
         boolean error = hasError(c);
@@ -116,10 +114,8 @@ public class DarkTextBorder implements Border, UIResource {
         config.restore();
     }
 
-    public void paintFocus(
-            final Graphics2D g, final Component c, final int width, final int height, final boolean editable,
-            final boolean error, final boolean warning, final int focusArcSize
-    ) {
+    public void paintFocus(final Graphics2D g, final Component c, final int width, final int height,
+            final boolean editable, final boolean error, final boolean warning, final int focusArcSize) {
         if (error) {
             PaintUtil.paintOutlineBorder(g, width, height, focusArcSize, borderSize, c.hasFocus(), Outline.error);
         } else if (warning) {
@@ -129,10 +125,8 @@ public class DarkTextBorder implements Border, UIResource {
         }
     }
 
-    protected Color getBorderColor(
-            final boolean focus, final boolean error, final boolean warning, final boolean editable,
-            final boolean enabled
-    ) {
+    protected Color getBorderColor(final boolean focus, final boolean error, final boolean warning,
+            final boolean editable, final boolean enabled) {
         if (focus) {
             if (error) {
                 return focusErrorBorderColor;

@@ -41,16 +41,17 @@ import com.github.weisj.darklaf.util.ImageUtil;
  * rectangular components that do not have a default border installed as part of the look and feel,
  * or otherwise. For example, DropShadowBorder works wonderfully with JPanel, but horribly with
  * JComboBox.
+ *
  * <p>
  * Note: {@code DropShadowBorder} should usually be added to non-opaque components, otherwise the
  * background is likely to bleed through.
- * </p>
+ *
  * <p>
- * Note: Since generating drop shadows is relatively expensive operation, {@code DropShadowBorder}
- * keeps internal static cache that allows sharing same border for multiple re-rendering and between
- * different instances of the class. Since this cache is shared at class level and never reset, it
- * might bleed your app memory in case you tend to create many different borders rapidly.
- * </p>
+ * Note: Since generating drop shadows is relatively expensive operation, {@code
+ * DropShadowBorder} keeps internal static cache that allows sharing same border for multiple
+ * re-rendering and between different instances of the class. Since this cache is shared at class
+ * level and never reset, it might bleed your app memory in case you tend to create many different
+ * borders rapidly.
  *
  * @author rbair Adaptions made by
  * @author Jannis Weis
@@ -74,11 +75,9 @@ public class DropShadowBorder implements Border, Serializable {
         this(shadowColor, shadowSize, .5f, 12, false, true, true, true);
     }
 
-    public DropShadowBorder(
-            final Color shadowColor, final int shadowSize, final float shadowOpacity, final int cornerSize,
-            final boolean showTopShadow, final boolean showLeftShadow, final boolean showBottomShadow,
-            final boolean showRightShadow
-    ) {
+    public DropShadowBorder(final Color shadowColor, final int shadowSize, final float shadowOpacity,
+            final int cornerSize, final boolean showTopShadow, final boolean showLeftShadow,
+            final boolean showBottomShadow, final boolean showRightShadow) {
         setShadowColor(shadowColor);
         setShadowSize(shadowSize);
         setShadowOpacity(shadowOpacity);
@@ -90,9 +89,8 @@ public class DropShadowBorder implements Border, Serializable {
     }
 
     @Override
-    public void paintBorder(
-            final Component c, final Graphics graphics, final int x, final int y, final int width, final int height
-    ) {
+    public void paintBorder(final Component c, final Graphics graphics, final int x, final int y, final int width,
+            final int height) {
         final BufferedImage[] images = getImages();
         final Graphics2D g2 = (Graphics2D) graphics.create();
 
@@ -159,34 +157,28 @@ public class DropShadowBorder implements Border, Serializable {
 
             if (showLeftShadow) {
                 assert topLeftShadowPoint != null && bottomLeftShadowPoint != null;
-                drawImage(
-                    g2, images[Position.LEFT.ordinal()], x, topLeftShadowPoint.y + shadowSize, shadowSize,
-                    bottomLeftShadowPoint.y - topLeftShadowPoint.y - shadowSize
-                );
+                drawImage(g2, images[Position.LEFT.ordinal()], x, topLeftShadowPoint.y + shadowSize, shadowSize,
+                        bottomLeftShadowPoint.y - topLeftShadowPoint.y - shadowSize);
             }
 
             if (showBottomShadow) {
                 assert bottomLeftShadowPoint != null && bottomRightShadowPoint != null;
-                drawImage(
-                    g2, images[Position.BOTTOM.ordinal()], bottomLeftShadowPoint.x + shadowSize,
-                    y + height - shadowSize, bottomRightShadowPoint.x - bottomLeftShadowPoint.x - shadowSize, shadowSize
-                );
+                drawImage(g2, images[Position.BOTTOM.ordinal()], bottomLeftShadowPoint.x + shadowSize,
+                        y + height - shadowSize, bottomRightShadowPoint.x - bottomLeftShadowPoint.x - shadowSize,
+                        shadowSize);
             }
 
             if (showRightShadow) {
                 assert topRightShadowPoint != null && bottomRightShadowPoint != null;
-                drawImage(
-                    g2, images[Position.RIGHT.ordinal()], x + width - shadowSize, topRightShadowPoint.y + shadowSize,
-                    shadowSize, bottomRightShadowPoint.y - topRightShadowPoint.y - shadowSize
-                );
+                drawImage(g2, images[Position.RIGHT.ordinal()], x + width - shadowSize,
+                        topRightShadowPoint.y + shadowSize, shadowSize,
+                        bottomRightShadowPoint.y - topRightShadowPoint.y - shadowSize);
             }
 
             if (showTopShadow) {
                 assert topLeftShadowPoint != null && topRightShadowPoint != null;
-                drawImage(
-                    g2, images[Position.TOP.ordinal()], topLeftShadowPoint.x + shadowSize, y,
-                    topRightShadowPoint.x - topLeftShadowPoint.x - shadowSize, shadowSize
-                );
+                drawImage(g2, images[Position.TOP.ordinal()], topLeftShadowPoint.x + shadowSize, y,
+                        topRightShadowPoint.x - topLeftShadowPoint.x - shadowSize, shadowSize);
             }
 
             if (showLeftShadow || showTopShadow) {
@@ -205,7 +197,8 @@ public class DropShadowBorder implements Border, Serializable {
     }
 
     protected void drawImage(final Graphics g, final Image image, final Point p) {
-        if (p == null) return;
+        if (p == null)
+            return;
         g.drawImage(image, p.x, p.y, null);
     }
 
@@ -236,11 +229,8 @@ public class DropShadowBorder implements Border, Serializable {
             Graphics2D buffer = (Graphics2D) image.getGraphics();
 
             try (Disposable d = buffer::dispose) {
-                buffer.setPaint(
-                    new Color(
-                        shadowColor.getRed(), shadowColor.getGreen(), shadowColor.getBlue(), (int) (shadowOpacity * 255)
-                    )
-                );
+                buffer.setPaint(new Color(shadowColor.getRed(), shadowColor.getGreen(), shadowColor.getBlue(),
+                        (int) (shadowOpacity * 255)));
                 buffer.translate(shadowSize, shadowSize);
                 buffer.fill(rect);
             }
@@ -322,9 +312,7 @@ public class DropShadowBorder implements Border, Serializable {
         return ret;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public Insets getBorderInsets(final Component c) {
         int top = showTopShadow ? shadowSize : 0;
         int left = showLeftShadow ? shadowSize : 0;
@@ -333,9 +321,7 @@ public class DropShadowBorder implements Border, Serializable {
         return new Insets(top, left, bottom, right);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public boolean isBorderOpaque() {
         return false;
     }
@@ -391,7 +377,8 @@ public class DropShadowBorder implements Border, Serializable {
 
     public DropShadowBorder setShadowColor(final Color shadowColor) {
         this.shadowColor = shadowColor;
-        if (shadowColor == null) this.shadowColor = Color.BLACK;
+        if (shadowColor == null)
+            this.shadowColor = Color.BLACK;
         return this;
     }
 

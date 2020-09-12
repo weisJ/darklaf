@@ -61,19 +61,13 @@ public interface TabFramePopup {
      */
     Component getComponent();
 
-    /**
-     * Updates the ui of all components.
-     */
+    /** Updates the ui of all components. */
     void updateContentUI();
 
-    /**
-     * Close the popup.
-     */
+    /** Close the popup. */
     default void close() {
-        if (
-            getTabFrame() != null && getAlignment() != null && getIndex() >= 0
-                && getTabFrame().isSelected(getAlignment(), getIndex())
-        ) {
+        if (getTabFrame() != null && getAlignment() != null && getIndex() >= 0
+                && getTabFrame().isSelected(getAlignment(), getIndex())) {
             getTabFrame().closeTab(getAlignment(), getIndex());
         }
     }
@@ -121,14 +115,10 @@ public interface TabFramePopup {
      */
     void setAlignment(Alignment alignment);
 
-    /**
-     * Open the popup.
-     */
+    /** Open the popup. */
     default void open() {
-        if (
-            getTabFrame() != null && getAlignment() != null && getIndex() >= 0
-                && !getTabFrame().isSelected(getAlignment(), getIndex())
-        ) {
+        if (getTabFrame() != null && getAlignment() != null && getIndex() >= 0
+                && !getTabFrame().isSelected(getAlignment(), getIndex())) {
             getTabFrame().closeTab(getAlignment(), getIndex());
         }
     }

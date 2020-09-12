@@ -26,9 +26,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.*;
 import javax.swing.text.*;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class SelectLineAction extends TextAction {
 
     private final Action start;
@@ -91,7 +89,6 @@ public class SelectLineAction extends TextAction {
                 /* Shouldn't ever happen. */
                 ble.printStackTrace();
             }
-
         }
 
         private int getFirstNonWhitespacePos() {

@@ -29,9 +29,7 @@ import javax.swing.plaf.ComponentUI;
 
 import com.github.weisj.darklaf.ui.togglebutton.radiobutton.DarkRadioButtonUI;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkCheckBoxUI extends DarkRadioButtonUI {
 
     protected JCheckBox checkBox;
@@ -65,8 +63,7 @@ public class DarkCheckBoxUI extends DarkRadioButtonUI {
 
     @Override
     protected RectangularShape calculateHitArea() {
-        return new RoundRectangle2D.Float(
-            Math.max(iconRect.x, 0), Math.max(iconRect.y, 0), iconRect.width, iconRect.height, arcSize, arcSize
-        );
+        return new RoundRectangle2D.Float(Math.max(iconRect.x, 0), Math.max(iconRect.y, 0), iconRect.width,
+                iconRect.height, arcSize, arcSize);
     }
 }

@@ -38,7 +38,7 @@ public class Scale {
             SCALE_Y = 1;
         } else {
             DisplayMode mode =
-                GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode();
+                    GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode();
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
             SCALE_X = mode.getWidth() / (double) screenSize.width;
             SCALE_Y = mode.getHeight() / (double) screenSize.height;
@@ -47,25 +47,29 @@ public class Scale {
     }
 
     public static double scaleWidth(final double value, final GraphicsConfiguration gc) {
-        if (gc == null) return scaleWidth(value);
+        if (gc == null)
+            return scaleWidth(value);
         AffineTransform transform = gc.getDefaultTransform();
         return transform.getScaleX() * value;
     }
 
     public static double scaleHeight(final double value, final GraphicsConfiguration gc) {
-        if (gc == null) return scaleHeight(value);
+        if (gc == null)
+            return scaleHeight(value);
         AffineTransform transform = gc.getDefaultTransform();
         return transform.getScaleY() * value;
     }
 
     public static double inverseScaleWidth(final double value, final GraphicsConfiguration gc) {
-        if (gc == null) return inverseScaleWidth(value);
+        if (gc == null)
+            return inverseScaleWidth(value);
         AffineTransform transform = gc.getDefaultTransform();
         return (1 / transform.getScaleX()) * value;
     }
 
     public static double inverseScaleHeight(final double value, final GraphicsConfiguration gc) {
-        if (gc == null) return inverseScaleHeight(value);
+        if (gc == null)
+            return inverseScaleHeight(value);
         AffineTransform transform = gc.getDefaultTransform();
         return (1 / transform.getScaleY()) * value;
     }
@@ -127,12 +131,14 @@ public class Scale {
     }
 
     public static double getScaleX(final GraphicsConfiguration gc) {
-        if (gc == null) return SCALE_X;
+        if (gc == null)
+            return SCALE_X;
         return gc.getDefaultTransform().getScaleX();
     }
 
     public static double getScaleY(final GraphicsConfiguration gc) {
-        if (gc == null) return SCALE_Y;
+        if (gc == null)
+            return SCALE_Y;
         return gc.getDefaultTransform().getScaleY();
     }
 

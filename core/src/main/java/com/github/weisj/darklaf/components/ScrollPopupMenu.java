@@ -28,9 +28,7 @@ import javax.swing.*;
 import com.github.weisj.darklaf.ui.popupmenu.PopupMenuContainer;
 import com.github.weisj.darklaf.util.PropertyKey;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class ScrollPopupMenu extends JPopupMenu {
 
     private final PopupMenuContainer popupMenuContainer;
@@ -48,6 +46,7 @@ public class ScrollPopupMenu extends JPopupMenu {
     /**
      * Set the maximum height of the popup. If the size is larger than the specified maximum height the
      * content will be wrapped inside a scroll pane.
+     *
      * <p>
      * Note: A value of less than or equal to 0 indicates that the height should not be limited.
      *

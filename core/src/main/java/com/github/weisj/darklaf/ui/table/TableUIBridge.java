@@ -44,14 +44,10 @@ import com.github.weisj.darklaf.ui.DragRecognitionSupport;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-/**
- * The type Table ui bridge.
- */
+/** The type Table ui bridge. */
 public abstract class TableUIBridge extends BasicTableUI {
 
-    /**
-     * The constant BASELINE_COMPONENT_KEY.
-     */
+    /** The constant BASELINE_COMPONENT_KEY. */
     protected static final StringBuilder BASELINE_COMPONENT_KEY = new StringBuilder("Table.baselineComponent");
 
     //
@@ -61,9 +57,7 @@ public abstract class TableUIBridge extends BasicTableUI {
     //
     // Helper class for keyboard actions
     //
-    /**
-     * Local cache of Table's client property DarkTableUI.KEY_IS_FILE_LIST
-     */
+    /** Local cache of Table's client property DarkTableUI.KEY_IS_FILE_LIST */
     protected boolean isFileList = false;
 
     //
@@ -81,22 +75,22 @@ public abstract class TableUIBridge extends BasicTableUI {
     /**
      * Gets adjusted lead.
      *
-     * @param  table the table
-     * @param  row   the row
-     * @return       the adjusted lead
+     * @param table the table
+     * @param row the row
+     * @return the adjusted lead
      */
     protected static int getAdjustedLead(final JTable table, final boolean row) {
         return row ? getAdjustedLead(table, row, table.getSelectionModel())
-            : getAdjustedLead(table, row, table.getColumnModel().getSelectionModel());
+                : getAdjustedLead(table, row, table.getColumnModel().getSelectionModel());
     }
 
     /**
      * Gets adjusted lead.
      *
-     * @param  table the table
-     * @param  row   the row
-     * @param  model the model
-     * @return       the adjusted lead
+     * @param table the table
+     * @param row the row
+     * @param model the model
+     * @return the adjusted lead
      */
     protected static int getAdjustedLead(final JTable table, final boolean row, final ListSelectionModel model) {
         int index = model.getLeadSelectionIndex();
@@ -107,10 +101,10 @@ public abstract class TableUIBridge extends BasicTableUI {
     /**
      * Point outside pref size boolean.
      *
-     * @param  row    the row
-     * @param  column the column
-     * @param  p      the p
-     * @return        the boolean
+     * @param row the row
+     * @param column the column
+     * @param p the p
+     * @return the boolean
      */
     /*
      * Returns true if the given point is outside the preferredSize of the item at the given row of the
@@ -149,9 +143,7 @@ public abstract class TableUIBridge extends BasicTableUI {
         isFileList = PropertyUtil.getBooleanProperty(table, DarkTableUI.KEY_IS_FILE_LIST);
     }
 
-    /**
-     * Attaches listeners to the JTable.
-     */
+    /** Attaches listeners to the JTable. */
     protected void installListeners() {
         super.installListeners();
         mouseInputListener = createMouseInputListener();
@@ -183,18 +175,16 @@ public abstract class TableUIBridge extends BasicTableUI {
     /**
      * Gets input map.
      *
-     * @param  condition the condition
-     * @return           the input map
+     * @param condition the condition
+     * @return the input map
      */
     InputMap getInputMap(final int condition) {
         if (condition == JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT) {
             InputMap keyMap = (InputMap) DefaultLookup.get(table, this, "Table.ancestorInputMap");
             InputMap rtlKeyMap;
 
-            if (
-                table.getComponentOrientation().isLeftToRight() || ((rtlKeyMap =
-                    (InputMap) DefaultLookup.get(table, this, "Table.ancestorInputMap.RightToLeft")) == null)
-            ) {
+            if (table.getComponentOrientation().isLeftToRight() || ((rtlKeyMap =
+                    (InputMap) DefaultLookup.get(table, this, "Table.ancestorInputMap.RightToLeft")) == null)) {
                 return keyMap;
             } else {
                 rtlKeyMap.setParent(keyMap);
@@ -214,9 +204,7 @@ public abstract class TableUIBridge extends BasicTableUI {
         table = null;
     }
 
-    /**
-     * Uninstalls default properties.
-     */
+    /** Uninstalls default properties. */
     protected void uninstallDefaults() {
         if (table.getTransferHandler() instanceof UIResource) {
             table.setTransferHandler(null);
@@ -225,9 +213,7 @@ public abstract class TableUIBridge extends BasicTableUI {
 
     // Uninstallation
 
-    /**
-     * Unregisters listeners.
-     */
+    /** Unregisters listeners. */
     protected void uninstallListeners() {
         table.removeFocusListener(focusListener);
         table.removeKeyListener(keyListener);
@@ -243,17 +229,13 @@ public abstract class TableUIBridge extends BasicTableUI {
         mouseInputListener = null;
     }
 
-    /**
-     * Unregisters keyboard actions.
-     */
+    /** Unregisters keyboard actions. */
     protected void uninstallKeyboardActions() {
         SwingUtilities.replaceUIInputMap(table, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, null);
         SwingUtilities.replaceUIActionMap(table, null);
     }
 
-    /**
-     * Paint a representation of the <code>table</code> instance that was set in installUI().
-     */
+    /** Paint a representation of the <code>table</code> instance that was set in installUI(). */
     public abstract void paint(final Graphics g, final JComponent c);
 
     /**
@@ -305,10 +287,10 @@ public abstract class TableUIBridge extends BasicTableUI {
     /**
      * Returns the baseline.
      *
-     * @throws NullPointerException     {@inheritDoc}
+     * @throws NullPointerException {@inheritDoc}
      * @throws IllegalArgumentException {@inheritDoc}
-     * @see                             javax.swing.JComponent#getBaseline(int, int)
-     * @since                           1.6
+     * @see javax.swing.JComponent#getBaseline(int, int)
+     * @since 1.6
      */
     public int getBaseline(final JComponent c, final int width, final int height) {
         super.getBaseline(c, width, height);
@@ -328,8 +310,8 @@ public abstract class TableUIBridge extends BasicTableUI {
      * Returns an enum indicating how the baseline of the component changes as the size changes.
      *
      * @throws NullPointerException {@inheritDoc}
-     * @see                         javax.swing.JComponent#getBaseline(int, int)
-     * @since                       1.6
+     * @see javax.swing.JComponent#getBaseline(int, int)
+     * @since 1.6
      */
     public Component.BaselineResizeBehavior getBaselineResizeBehavior(final JComponent c) {
         super.getBaselineResizeBehavior(c);
@@ -339,8 +321,8 @@ public abstract class TableUIBridge extends BasicTableUI {
     /**
      * Create table size dimension.
      *
-     * @param  width the width
-     * @return       the dimension
+     * @param width the width
+     * @return the dimension
      */
     protected Dimension createTableSize(final long width) {
         int height = 0;
@@ -372,8 +354,8 @@ public abstract class TableUIBridge extends BasicTableUI {
     /**
      * Gets h drop line rect.
      *
-     * @param  loc the loc
-     * @return     the h drop line rect
+     * @param loc the loc
+     * @return the h drop line rect
      */
     protected Rectangle getHDropLineRect(final JTable.DropLocation loc) {
         if (!loc.isInsertRow()) {
@@ -408,9 +390,9 @@ public abstract class TableUIBridge extends BasicTableUI {
     /**
      * Extend rect rectangle.
      *
-     * @param  rect       the rect
-     * @param  horizontal the horizontal
-     * @return            the rectangle
+     * @param rect the rect
+     * @param horizontal the horizontal
+     * @return the rectangle
      */
     protected Rectangle extendRect(final Rectangle rect, final boolean horizontal) {
         if (rect == null) {
@@ -437,8 +419,8 @@ public abstract class TableUIBridge extends BasicTableUI {
     /**
      * Gets v drop line rect.
      *
-     * @param  loc the loc
-     * @return     the v drop line rect
+     * @param loc the loc
+     * @return the v drop line rect
      */
     protected Rectangle getVDropLineRect(final JTable.DropLocation loc) {
         if (!loc.isInsertColumn()) {
@@ -473,7 +455,7 @@ public abstract class TableUIBridge extends BasicTableUI {
     /**
      * Paint grid.
      *
-     * @param g    the g
+     * @param g the g
      * @param rMin the r min
      * @param rMax the r max
      * @param cMin the c min
@@ -489,93 +471,72 @@ public abstract class TableUIBridge extends BasicTableUI {
     /**
      * Paint cells.
      *
-     * @param g    the g
+     * @param g the g
      * @param rMin the r min
      * @param rMax the r max
      * @param cMin the c min
      * @param cMax the c max
      */
-    protected abstract void paintCells(
-            final Graphics g, final int rMin, final int rMax, final int cMin, final int cMax
-    );
+    protected abstract void paintCells(final Graphics g, final int rMin, final int rMax, final int cMin,
+            final int cMax);
 
     /**
      * Paint cell.
      *
-     * @param g        the g
+     * @param g the g
      * @param cellRect the cell rect
-     * @param row      the row
-     * @param column   the column
+     * @param row the row
+     * @param column the column
      */
     protected abstract void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column);
 
     /**
      * View index for column int.
      *
-     * @param  aColumn the a column
-     * @return         the int
+     * @param aColumn the a column
+     * @return the int
      */
     protected abstract int viewIndexForColumn(final TableColumn aColumn);
 
-    /**
-     * The type Handler.
-     */
+    /** The type Handler. */
     protected class Handler implements FocusListener, MouseInputListener, PropertyChangeListener, ListSelectionListener,
             ActionListener, DragRecognitionSupport.BeforeDrag, KeyListener {
 
         protected final FocusListener focusListener;
         protected final KeyListener keyListener;
 
-        /**
-         * The Dispatch component.
-         */
+        /** The Dispatch component. */
         // Component receiving mouse events during editing.
         // May not be editorComponent.
         protected Component dispatchComponent;
-        /**
-         * The Pressed row.
-         */
+        /** The Pressed row. */
         // The row and column where the press occurred and the
         // press event itself
         protected int pressedRow;
-        /**
-         * The Pressed col.
-         */
+        /** The Pressed col. */
         protected int pressedCol;
-        /**
-         * The Pressed event.
-         */
+        /** The Pressed event. */
         protected MouseEvent pressedEvent;
-        /**
-         * The Drag press did selection.
-         */
+        /** The Drag press did selection. */
         // Whether or not the mouse press (which is being considered as part
         // of a drag sequence) also caused the selection change to be fully
         // processed.
         protected boolean dragPressDidSelection;
-        /**
-         * The Drag started.
-         */
+        /** The Drag started. */
         // Set to true when a drag gesture has been fully recognized and DnD
         // begins. Use this to ignore further mouse events which could be
         // delivered if DnD is cancelled (via ESCAPE for example)
         protected boolean dragStarted;
 
-        /**
-         * The Should start timer.
-         */
+        /** The Should start timer. */
         // MouseInputListener
         // Whether or not we should start the editing timer on release
         protected boolean shouldStartTimer;
-        /**
-         * The Outside pref size.
-         */
+        /** The Outside pref size. */
         // To cache the return value of pointOutsidePrefSize since we use
         // it multiple times.
         protected boolean outsidePrefSize;
-        /**
-         * The Timer.
-         */
+        /** The Timer. */
         // Used to delay the start of editing.
         protected Timer timer = null;
 
@@ -586,27 +547,32 @@ public abstract class TableUIBridge extends BasicTableUI {
 
         @Override
         public void focusGained(final FocusEvent e) {
-            if (focusListener != null) focusListener.focusGained(e);
+            if (focusListener != null)
+                focusListener.focusGained(e);
         }
 
         @Override
         public void focusLost(final FocusEvent e) {
-            if (focusListener != null) focusListener.focusLost(e);
+            if (focusListener != null)
+                focusListener.focusLost(e);
         }
 
         @Override
         public void keyPressed(final KeyEvent e) {
-            if (keyListener != null) keyListener.keyPressed(e);
+            if (keyListener != null)
+                keyListener.keyPressed(e);
         }
 
         @Override
         public void keyReleased(final KeyEvent e) {
-            if (keyListener != null) keyListener.keyReleased(e);
+            if (keyListener != null)
+                keyListener.keyReleased(e);
         }
 
         @Override
         public void keyTyped(final KeyEvent e) {
-            if (keyListener != null) keyListener.keyTyped(e);
+            if (keyListener != null)
+                keyListener.keyTyped(e);
         }
 
         public void mouseClicked(final MouseEvent e) {}
@@ -631,7 +597,7 @@ public abstract class TableUIBridge extends BasicTableUI {
 
             if (isFileList) {
                 shouldStartTimer = table.isCellSelected(pressedRow, pressedCol) && !e.isShiftDown()
-                    && !DarkUIUtil.isMenuShortcutKeyDown(e) && !outsidePrefSize;
+                        && !DarkUIUtil.isMenuShortcutKeyDown(e) && !outsidePrefSize;
             }
 
             if (table.getDragEnabled()) {
@@ -686,10 +652,8 @@ public abstract class TableUIBridge extends BasicTableUI {
 
                 Point p = e.getPoint();
 
-                if (
-                    pressedEvent != null && table.rowAtPoint(p) == pressedRow && table.columnAtPoint(p) == pressedCol
-                        && table.editCellAt(pressedRow, pressedCol, pressedEvent)
-                ) {
+                if (pressedEvent != null && table.rowAtPoint(p) == pressedRow && table.columnAtPoint(p) == pressedCol
+                        && table.editCellAt(pressedRow, pressedCol, pressedEvent)) {
 
                     setDispatchComponent(pressedEvent);
                     repostEvent(pressedEvent);
@@ -715,10 +679,8 @@ public abstract class TableUIBridge extends BasicTableUI {
             if (outsidePrefSize) {
                 // If shift is down in multi-select, we should just return.
                 // For single select or non-shift-click, clear the selection
-                if (
-                    e.getID() == MouseEvent.MOUSE_PRESSED && (!e.isShiftDown()
-                        || table.getSelectionModel().getSelectionMode() == ListSelectionModel.SINGLE_SELECTION)
-                ) {
+                if (e.getID() == MouseEvent.MOUSE_PRESSED && (!e.isShiftDown()
+                        || table.getSelectionModel().getSelectionMode() == ListSelectionModel.SINGLE_SELECTION)) {
                     table.clearSelection();
                     TableCellEditor tce = table.getCellEditor();
                     if (tce != null) {
@@ -746,9 +708,7 @@ public abstract class TableUIBridge extends BasicTableUI {
             }
         }
 
-        /**
-         * Maybe start timer.
-         */
+        /** Maybe start timer. */
         protected void maybeStartTimer() {
             if (!shouldStartTimer) {
                 return;
@@ -778,8 +738,8 @@ public abstract class TableUIBridge extends BasicTableUI {
         /**
          * Repost event boolean.
          *
-         * @param  e the e
-         * @return   the boolean
+         * @param e the e
+         * @return the boolean
          */
         protected boolean repostEvent(final MouseEvent e) {
             // Check for isEditing() in case another event has
@@ -854,10 +814,8 @@ public abstract class TableUIBridge extends BasicTableUI {
             }
 
             // if this is a single selection table
-            if (
-                (table.getSelectionModel().getSelectionMode() == ListSelectionModel.SINGLE_SELECTION) && (table
-                    .getColumnModel().getSelectionModel().getSelectionMode() == ListSelectionModel.SINGLE_SELECTION)
-            ) {
+            if ((table.getSelectionModel().getSelectionMode() == ListSelectionModel.SINGLE_SELECTION) && (table
+                    .getColumnModel().getSelectionModel().getSelectionMode() == ListSelectionModel.SINGLE_SELECTION)) {
 
                 return true;
             }

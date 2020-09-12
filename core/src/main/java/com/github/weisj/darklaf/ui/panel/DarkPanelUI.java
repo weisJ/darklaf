@@ -26,15 +26,14 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.PanelUI;
 import javax.swing.plaf.basic.BasicPanelUI;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkPanelUI extends BasicPanelUI {
 
     private static PanelUI darkPanelUI;
 
     public static ComponentUI createUI(final JComponent c) {
-        if (darkPanelUI == null) darkPanelUI = new DarkPanelUI();
+        if (darkPanelUI == null)
+            darkPanelUI = new DarkPanelUI();
         return darkPanelUI;
     }
 }

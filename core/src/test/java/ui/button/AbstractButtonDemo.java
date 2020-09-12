@@ -63,11 +63,8 @@ public abstract class AbstractButtonDemo<T extends AbstractButton> implements Co
         controlPanel.add(new JCheckBox("LeftToRight") {
             {
                 setSelected(button.getComponentOrientation().isLeftToRight());
-                addActionListener(
-                    e -> button.setComponentOrientation(
-                        isSelected() ? ComponentOrientation.LEFT_TO_RIGHT : ComponentOrientation.RIGHT_TO_LEFT
-                    )
-                );
+                addActionListener(e -> button.setComponentOrientation(
+                        isSelected() ? ComponentOrientation.LEFT_TO_RIGHT : ComponentOrientation.RIGHT_TO_LEFT));
             }
         });
         controlPanel.add(new JCheckBox("Rollover") {
@@ -135,6 +132,7 @@ public abstract class AbstractButtonDemo<T extends AbstractButton> implements Co
         });
         controlPanel.add(new JCheckBox("Icon enabled") {
             final Icon icon = button.getIcon();
+
             {
                 setEnabled(icon != null);
                 setSelected(icon != null);
@@ -143,18 +141,10 @@ public abstract class AbstractButtonDemo<T extends AbstractButton> implements Co
         });
 
         controlPanel = panel.addControls();
-        controlPanel.add(
-            new QuickColorChooser(
-                DarkButtonUI.KEY_HOVER_COLOR, Color.BLACK,
-                (b, c) -> button.putClientProperty(DarkButtonUI.KEY_HOVER_COLOR, b ? c : null)
-            )
-        );
-        controlPanel.add(
-            new QuickColorChooser(
-                DarkButtonUI.KEY_CLICK_COLOR, Color.BLACK,
-                (b, c) -> button.putClientProperty(DarkButtonUI.KEY_CLICK_COLOR, b ? c : null)
-            )
-        );
+        controlPanel.add(new QuickColorChooser(DarkButtonUI.KEY_HOVER_COLOR, Color.BLACK,
+                (b, c) -> button.putClientProperty(DarkButtonUI.KEY_HOVER_COLOR, b ? c : null)));
+        controlPanel.add(new QuickColorChooser(DarkButtonUI.KEY_CLICK_COLOR, Color.BLACK,
+                (b, c) -> button.putClientProperty(DarkButtonUI.KEY_CLICK_COLOR, b ? c : null)));
 
         controlPanel = panel.addControls();
         controlPanel.add(new JLabel(DarkButtonUI.KEY_VARIANT + ":"));

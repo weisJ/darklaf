@@ -34,9 +34,7 @@ import com.github.weisj.darklaf.ui.text.dummy.DummyEditorPaneUI;
 import com.github.weisj.darklaf.ui.text.dummy.DummyTextUIMethods;
 import com.github.weisj.darklaf.util.PropertyKey;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public abstract class DarkEditorPaneUIBridge extends DarkTextUI {
 
     private static final DummyEditorPane shareDummyEditorPane = new DummyEditorPane();
@@ -79,10 +77,8 @@ public abstract class DarkEditorPaneUIBridge extends DarkTextUI {
     }
 
     protected void updateDisplayProperties() {
-        updateDisplayProperties(
-            (JEditorPane) getComponent(),
-            new PropertyChangeEvent(editorPane, PropertyKey.FONT, editorPane.getFont(), editorPane.getFont())
-        );
+        updateDisplayProperties((JEditorPane) getComponent(),
+                new PropertyChangeEvent(editorPane, PropertyKey.FONT, editorPane.getFont(), editorPane.getFont()));
     }
 
     protected void updateDisplayProperties(final JEditorPane c, final PropertyChangeEvent event) {
@@ -125,10 +121,9 @@ public abstract class DarkEditorPaneUIBridge extends DarkTextUI {
         if ("editorKit".equals(name) || PropertyKey.EDITABLE.equals(name)) {
             editorPane.setEditorPane((JEditorPane) getComponent());
             basicEditorPaneUI.propertyChange(evt);
-        } else if (
-            PropertyKey.FOREGROUND.equals(name) || PropertyKey.FONT.equals(name) || PropertyKey.DOCUMENT.equals(name)
-                || JEditorPane.W3C_LENGTH_UNITS.equals(name) || JEditorPane.HONOR_DISPLAY_PROPERTIES.equals(name)
-        ) {
+        } else if (PropertyKey.FOREGROUND.equals(name) || PropertyKey.FONT.equals(name)
+                || PropertyKey.DOCUMENT.equals(name) || JEditorPane.W3C_LENGTH_UNITS.equals(name)
+                || JEditorPane.HONOR_DISPLAY_PROPERTIES.equals(name)) {
             updateDisplayProperties((JEditorPane) getComponent(), evt);
         } else if ("focusAccelerator".equals(name)) {
             updateFocusAcceleratorBinding(evt);

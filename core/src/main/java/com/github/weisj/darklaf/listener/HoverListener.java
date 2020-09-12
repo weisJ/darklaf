@@ -26,9 +26,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.*;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class HoverListener implements MouseListener {
 
     private final JComponent component;
@@ -44,19 +42,13 @@ public class HoverListener implements MouseListener {
     }
 
     @Override
-    public void mouseClicked(final MouseEvent e) {
-
-    }
+    public void mouseClicked(final MouseEvent e) {}
 
     @Override
-    public void mousePressed(final MouseEvent e) {
-
-    }
+    public void mousePressed(final MouseEvent e) {}
 
     @Override
-    public void mouseReleased(final MouseEvent e) {
-
-    }
+    public void mouseReleased(final MouseEvent e) {}
 
     @Override
     public void mouseEntered(final MouseEvent e) {

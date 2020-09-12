@@ -29,9 +29,9 @@ import com.github.weisj.darklaf.util.LazyValue;
 
 public class TooltipAwareToggleButton extends JToggleButton implements ToolTipAware {
 
-    private final LazyValue<ToolTipContext> context = new LazyValue<>(
-        () -> new ToolTipContext().setAlignment(Alignment.SOUTH).setCenterAlignment(Alignment.SOUTH).setAlignInside(false).setIgnoreBorder(true)
-    );
+    private final LazyValue<ToolTipContext> context =
+            new LazyValue<>(() -> new ToolTipContext().setAlignment(Alignment.SOUTH).setCenterAlignment(Alignment.SOUTH)
+                    .setAlignInside(false).setIgnoreBorder(true));
 
     public TooltipAwareToggleButton() {
         this(null, null);

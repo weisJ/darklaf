@@ -27,9 +27,7 @@ import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import javax.swing.plaf.UIResource;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkToolBarBorder extends AbstractBorder implements UIResource, SwingConstants {
 
     protected final Icon horizontalGrip;
@@ -95,7 +93,8 @@ public class DarkToolBarBorder extends AbstractBorder implements UIResource, Swi
             if (parent instanceof JComponent && ((JComponent) parent).getLayout() instanceof BorderLayout) {
                 BorderLayout layout = (BorderLayout) ((JComponent) parent).getLayout();
                 Object constraints = layout.getConstraints(c);
-                if (constraints != null) return constraints.toString();
+                if (constraints != null)
+                    return constraints.toString();
             }
         }
         return "";

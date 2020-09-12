@@ -30,7 +30,6 @@ import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 
 public class NewTabButton extends TabButtonContainer {
 
-
     protected NewTabButton(final DarkTabbedPaneUI ui) {
         super(ui);
         int pad = UIManager.getInt("TabbedPane.newTabButton.pad");

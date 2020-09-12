@@ -111,7 +111,7 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
                     cx = insets.left + tw + contentInsets.left + tabAreaInsets.left + tabAreaInsets.right;
                     cy = insets.top + contentInsets.top;
                     cw = bounds.width - insets.left - insets.right - contentInsets.left - contentInsets.right - tw
-                        - tabAreaInsets.left - tabAreaInsets.right;
+                            - tabAreaInsets.left - tabAreaInsets.right;
                     ch = bounds.height - insets.top - insets.bottom - contentInsets.top - contentInsets.bottom;
                     break;
                 case SwingConstants.RIGHT:
@@ -122,7 +122,7 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
                     cx = insets.left + contentInsets.left;
                     cy = insets.top + contentInsets.top;
                     cw = bounds.width - insets.left - insets.right - contentInsets.left - contentInsets.right - tw
-                        - tabAreaInsets.left - tabAreaInsets.right;
+                            - tabAreaInsets.left - tabAreaInsets.right;
                     ch = bounds.height - insets.top - insets.bottom - contentInsets.top - contentInsets.bottom;
                     break;
                 case SwingConstants.BOTTOM:
@@ -144,7 +144,7 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
                     cy = insets.top + th + contentInsets.top + tabAreaInsets.top + tabAreaInsets.bottom;
                     cw = bounds.width - insets.left - insets.right - contentInsets.left - contentInsets.right;
                     ch = bounds.height - th - insets.top - insets.bottom - contentInsets.top - contentInsets.bottom
-                        - tabAreaInsets.top - tabAreaInsets.bottom;
+                            - tabAreaInsets.top - tabAreaInsets.bottom;
                     break;
             }
 
@@ -171,18 +171,15 @@ public class DarkTabbedPaneLayout extends TabbedPaneLayout {
                     } else if (child == ui.trailingComp && ui.trailingComp != null) {
                         ui.layoutTrailingComponent(child, tabWidth, tabHeight, insets, tx, ty, tw, th, tabPlacement);
                     } else if (child == ui.northComp && ui.northComp != null) {
-                        ui.northComp.setBounds(
-                            cx, cy - ui.northComp.getPreferredSize().height, cw, ui.northComp.getPreferredSize().height
-                        );
+                        ui.northComp.setBounds(cx, cy - ui.northComp.getPreferredSize().height, cw,
+                                ui.northComp.getPreferredSize().height);
                     } else if (child == ui.southComp && ui.southComp != null) {
                         ui.southComp.setBounds(cx, cy + ch, cw, ui.southComp.getPreferredSize().height);
                     } else if (child == ui.eastComp && ui.eastComp != null) {
                         ui.eastComp.setBounds(cx + cw, compY, ui.eastComp.getPreferredSize().width, compHeight);
                     } else if (child == ui.westComp && ui.westComp != null) {
-                        ui.westComp.setBounds(
-                            cx - ui.westComp.getPreferredSize().width, compY, ui.westComp.getPreferredSize().width,
-                            compHeight
-                        );
+                        ui.westComp.setBounds(cx - ui.westComp.getPreferredSize().width, compY,
+                                ui.westComp.getPreferredSize().width, compHeight);
                     } else {
                         child.setBounds(cx, cy, cw, ch);
                     }

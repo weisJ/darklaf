@@ -29,9 +29,7 @@ import javax.swing.table.TableCellEditor;
 
 import com.github.weisj.darklaf.ui.cell.CellToggleButton;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkTableCellEditorToggleButton extends AbstractCellEditor implements TableCellEditor, SwingConstants {
 
     private final JToggleButton toggleButton;
@@ -45,9 +43,8 @@ public class DarkTableCellEditorToggleButton extends AbstractCellEditor implemen
     }
 
     @Override
-    public JToggleButton getTableCellEditorComponent(
-            final JTable table, final Object value, final boolean isSelected, final int row, final int column
-    ) {
+    public JToggleButton getTableCellEditorComponent(final JTable table, final Object value, final boolean isSelected,
+            final int row, final int column) {
         if (value instanceof Boolean) {
             toggleButton.setSelected((Boolean) value);
         }

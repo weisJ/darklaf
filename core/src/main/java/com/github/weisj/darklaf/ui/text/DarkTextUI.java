@@ -52,9 +52,7 @@ import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public abstract class DarkTextUI extends BasicTextUI
         implements PropertyChangeListener, FocusListener, OpacityBufferedUI {
 
@@ -80,7 +78,8 @@ public abstract class DarkTextUI extends BasicTextUI
     }
 
     protected DarkCaret getDarkCaret() {
-        if (darkCaret == null) darkCaret = createDarkCaret();
+        if (darkCaret == null)
+            darkCaret = createDarkCaret();
         return darkCaret;
     }
 
@@ -107,8 +106,8 @@ public abstract class DarkTextUI extends BasicTextUI
         if (editor != null) {
             PropertyUtil.installProperty(editor, ToolTipConstants.KEY_STYLE, ToolTipStyle.PLAIN);
             PropertyUtil.installBooleanProperty(editor, KEY_ROUNDED_SELECTION, "TextComponent.roundedSelection");
-            PropertyUtil
-                .installBooleanProperty(editor, KEY_EXTEND_LINE_SELECTION, getPropertyPrefix() + ".extendSelection");
+            PropertyUtil.installBooleanProperty(editor, KEY_EXTEND_LINE_SELECTION,
+                    getPropertyPrefix() + ".extendSelection");
         }
         disabledColor = UIManager.getColor(getPropertyPrefix() + ".disabledBackground");
         inactiveColor = UIManager.getColor(getPropertyPrefix() + ".inactiveBackground");
@@ -118,7 +117,8 @@ public abstract class DarkTextUI extends BasicTextUI
     }
 
     public static boolean isBorderlessTextField(final JTextComponent textComponent) {
-        if (textComponent == null) return false;
+        if (textComponent == null)
+            return false;
         String className = textComponent.getClass().getName();
         return "javax.swing.plaf.basic.BasicComboBoxEditor$BorderlessTextField".equals(className);
     }
@@ -146,10 +146,12 @@ public abstract class DarkTextUI extends BasicTextUI
             // OpenJDK BorderlessTextField has a bug with its setBorder implementation
             // so we reset the border
             // See https://mail.openjdk.java.net/pipermail/swing-dev/2020-March/010226.html
-            if (editor.getBorder() != null) editor.setBorder(null);
+            if (editor.getBorder() != null)
+                editor.setBorder(null);
             return;
         }
-        if (uninstalling) return;
+        if (uninstalling)
+            return;
         MarginBorderWrapper.installBorder(editor);
     }
 
@@ -275,25 +277,28 @@ public abstract class DarkTextUI extends BasicTextUI
             } else if (border != null) {
                 ins = border.getBorderInsets(editor);
             }
-            if (ins == null) ins = new Insets(0, 0, 0, 0);
-            g.fillRect(
-                ins.left, ins.top, editor.getWidth() - ins.left - ins.right, editor.getHeight() - ins.top - ins.bottom
-            );
+            if (ins == null)
+                ins = new Insets(0, 0, 0, 0);
+            g.fillRect(ins.left, ins.top, editor.getWidth() - ins.left - ins.right,
+                    editor.getHeight() - ins.top - ins.bottom);
         }
     }
 
     protected boolean isInCell(final JComponent c) {
-        if (getBorder(c) instanceof DarkTextBorder) return false;
-        return DarkUIUtil.getParentOfType(JSpinner.class, c, 2) != null || DarkUIUtil.isInCell(c) || PropertyUtil
-            .getBooleanProperty(c, KEY_IS_TREE_EDITOR) || PropertyUtil.getBooleanProperty(c, KEY_IS_TABLE_EDITOR)
-            || PropertyUtil.getBooleanProperty(c, KEY_IS_LIST_EDITOR);
+        if (getBorder(c) instanceof DarkTextBorder)
+            return false;
+        return DarkUIUtil.getParentOfType(JSpinner.class, c, 2) != null || DarkUIUtil.isInCell(c)
+                || PropertyUtil.getBooleanProperty(c, KEY_IS_TREE_EDITOR)
+                || PropertyUtil.getBooleanProperty(c, KEY_IS_TABLE_EDITOR)
+                || PropertyUtil.getBooleanProperty(c, KEY_IS_LIST_EDITOR);
     }
 
     protected Container getRelevantParent(final Component comp) {
         Container parent = comp.getParent();
         if (parent instanceof JSpinner.DefaultEditor) {
             JSpinner spinner = DarkUIUtil.getParentOfType(JSpinner.class, comp, 2);
-            if (spinner != null) parent = spinner.getParent();
+            if (spinner != null)
+                parent = spinner.getParent();
         } else if (parent instanceof JComboBox) {
             parent = parent.getParent();
         }
@@ -345,7 +350,8 @@ public abstract class DarkTextUI extends BasicTextUI
     }
 
     protected DefaultTextRenderer getDefaultTextRenderer() {
-        if (defaultTextRenderer == null) defaultTextRenderer = createDefaultTextRenderer();
+        if (defaultTextRenderer == null)
+            defaultTextRenderer = createDefaultTextRenderer();
         return defaultTextRenderer;
     }
 
@@ -418,10 +424,9 @@ public abstract class DarkTextUI extends BasicTextUI
         JPopupMenu popupMenu = editor.getComponentPopupMenu();
         Component other = e.getOppositeComponent();
         MenuElement[] path = MenuSelectionManager.defaultManager().getSelectedPath();
-        if (
-            popupMenu != null && other != null && SwingUtilities.isDescendingFrom(popupMenu, other)
-                || path != null && path.length > 0 && path[0] == popupMenu
-        ) return;
+        if (popupMenu != null && other != null && SwingUtilities.isDescendingFrom(popupMenu, other)
+                || path != null && path.length > 0 && path[0] == popupMenu)
+            return;
         if (caret instanceof DarkCaret) {
             ((DarkCaret) caret).setPaintSelectionHighlight(false);
         }

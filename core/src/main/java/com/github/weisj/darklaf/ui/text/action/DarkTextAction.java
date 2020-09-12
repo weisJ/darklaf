@@ -39,7 +39,8 @@ public abstract class DarkTextAction extends TextAction {
     }
 
     protected void setupDeleteMode(final JTextComponent textComponent, final boolean isDeleteMode) {
-        if (textComponent == null) return;
+        if (textComponent == null)
+            return;
         Caret c = textComponent.getCaret();
         if (c instanceof DarkCaret) {
             ((DarkCaret) c).setExpandMode(isDeleteMode);

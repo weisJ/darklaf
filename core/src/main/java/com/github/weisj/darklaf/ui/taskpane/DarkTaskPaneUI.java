@@ -67,16 +67,14 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
     @Override
     protected void installListeners() {
         super.installListeners();
-        group.addPropertyChangeListener(
-            JXCollapsiblePane.ANIMATION_STATE_KEY, e -> isCollapsed = KEY_COLLAPSED.equals(e.getNewValue())
-        );
+        group.addPropertyChangeListener(JXCollapsiblePane.ANIMATION_STATE_KEY,
+                e -> isCollapsed = KEY_COLLAPSED.equals(e.getNewValue()));
     }
 
     @Override
     protected Border createContentPaneBorder() {
-        return new CompoundBorder(
-            new DarkContentPaneBorder(borderColor, arc), BorderFactory.createEmptyBorder(10, 10, 10, 10)
-        );
+        return new CompoundBorder(new DarkContentPaneBorder(borderColor, arc),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 
     @Override
@@ -91,7 +89,8 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
     }
 
     protected boolean isCollapsed() {
-        if (!group.isAnimated()) return group.isCollapsed();
+        if (!group.isAnimated())
+            return group.isCollapsed();
         return isCollapsed;
     }
 
@@ -104,9 +103,8 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
             this.color = color;
         }
 
-        public void paintBorder(
-                final Component c, final Graphics g, final int x, final int y, final int width, final int height
-        ) {
+        public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width,
+                final int height) {
             Rectangle clip = g.getClip().getBounds();
             int h = height + arc;
             g.setClip(clip.x, clip.y, width, h / 2 + 1);
@@ -173,9 +171,8 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
         }
 
         @Override
-        protected void paintExpandedControls(
-                final JXTaskPane group, final Graphics g, final int x, final int y, final int width, final int height
-        ) {
+        protected void paintExpandedControls(final JXTaskPane group, final Graphics g, final int x, final int y,
+                final int width, final int height) {
             ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g.setColor(getPaintColor(group));
             if (group.isCollapsed()) {

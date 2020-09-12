@@ -36,9 +36,7 @@ import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
 
     private final DropShadowBorder shadowBorder;
@@ -51,7 +49,8 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
 
     public DarkTooltipBorder() {
         margin = UIManager.getInsets("ToolTip.borderInsets");
-        if (margin == null) margin = new Insets(0, 0, 0, 0);
+        if (margin == null)
+            margin = new Insets(0, 0, 0, 0);
         bubbleBorder = new BubbleBorder(UIManager.getColor("ToolTip.borderColor"));
         bubbleBorder.setThickness(1);
         bubbleBorder.setPointerSize(8);
@@ -59,9 +58,8 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
         bubbleBorder.setPointerSide(Alignment.CENTER);
         int shadowSize = UIManager.getInt("ToolTip.shadowSize");
         float opacity = UIManager.getInt("ToolTip.shadowOpacity") / 100.0f;
-        shadowBorder = new DropShadowBorder(
-            UIManager.getColor("ToolTip.borderShadowColor"), shadowSize, opacity, 2 * shadowSize, false, true, true, true
-        );
+        shadowBorder = new DropShadowBorder(UIManager.getColor("ToolTip.borderShadowColor"), shadowSize, opacity,
+                2 * shadowSize, false, true, true, true);
         paintShadow = UIManager.getBoolean("ToolTip.paintShadow");
     }
 
@@ -71,20 +69,20 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
         }
         Insets ins = shadowBorder.getBorderInsets(null);
         adjustInsets(ins);
-        return bubbleBorder.getBubbleArea(
-            ins.left, ins.top, width - ins.left - ins.right, height - ins.top - ins.bottom,
-            bubbleBorder.getThickness() / 2f
-        );
+        return bubbleBorder.getBubbleArea(ins.left, ins.top, width - ins.left - ins.right,
+                height - ins.top - ins.bottom, bubbleBorder.getThickness() / 2f);
     }
 
     @Override
     public int getPointerOffset(final Component c, final Dimension dimension, final int thicknessFactor) {
-        if (!showPointer || isPlain(c)) return 0;
+        if (!showPointer || isPlain(c))
+            return 0;
         int offset = (int) bubbleBorder.getOffset(dimension.width - 2 * shadowBorder.getShadowSize(), dimension.height)
-            + shadowBorder.getShadowSize();
+                + shadowBorder.getShadowSize();
         int thickness = bubbleBorder.getThickness();
         Alignment align = bubbleBorder.getPointerSide();
-        if (align.isWest(false)) offset += thicknessFactor * thickness;
+        if (align.isWest(false))
+            offset += thicknessFactor * thickness;
         return offset;
     }
 
@@ -110,10 +108,10 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
     }
 
     @Override
-    public void paintBorder(
-            final Component c, final Graphics g, final int x, final int y, final int width, final int height
-    ) {
-        if (c instanceof JToolTip && ((JToolTip) c).getTipText() == null) return;
+    public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width,
+            final int height) {
+        if (c instanceof JToolTip && ((JToolTip) c).getTipText() == null)
+            return;
         GraphicsContext context = new GraphicsContext(g);
         if (isPlain(c)) {
             g.setColor(bubbleBorder.getColor());
@@ -122,24 +120,20 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
         }
         Insets ins = shadowBorder.getBorderInsets(c);
         adjustInsets(ins);
-        Area innerArea = bubbleBorder.getBubbleArea(
-            x + ins.left, y + ins.top, width - ins.left - ins.right, height - ins.top - ins.bottom,
-            bubbleBorder.getThickness()
-        );
+        Area innerArea = bubbleBorder.getBubbleArea(x + ins.left, y + ins.top, width - ins.left - ins.right,
+                height - ins.top - ins.bottom, bubbleBorder.getThickness());
         if (!skipShadow && paintShadow) {
             paintShadow(c, g, x, y, width, height, innerArea);
         }
-        Area outerArea = bubbleBorder
-            .getBubbleArea(x + ins.left, y + ins.top, width - ins.left - ins.right, height - ins.top - ins.bottom, 0);
+        Area outerArea = bubbleBorder.getBubbleArea(x + ins.left, y + ins.top, width - ins.left - ins.right,
+                height - ins.top - ins.bottom, 0);
         outerArea.subtract(innerArea);
         bubbleBorder.paintBorder(g, outerArea);
         context.restore();
     }
 
-    public void paintShadow(
-            final Component c, final Graphics g, final int x, final int y, final int width, final int height,
-            final Area bubbleArea
-    ) {
+    public void paintShadow(final Component c, final Graphics g, final int x, final int y, final int width,
+            final int height, final Area bubbleArea) {
         Shape oldClip = g.getClip();
         Area clip = new Area(new Rectangle2D.Double(x, y, width, height));
         clip.subtract(bubbleArea);
@@ -196,13 +190,15 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
     }
 
     protected boolean isPlain(final Component c) {
-        if (!(c instanceof JComponent)) return false;
+        if (!(c instanceof JComponent))
+            return false;
         Object prop = ((JComponent) c).getClientProperty(DarkToolTipUI.KEY_STYLE);
         return prop == ToolTipStyle.PLAIN || DarkToolTipUI.VARIANT_PLAIN.equals(prop);
     }
 
     public int getShadowSize(final Component c) {
-        if (isPlain(c)) return 0;
+        if (isPlain(c))
+            return 0;
         return shadowBorder.getShadowSize();
     }
 
@@ -219,7 +215,7 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
             case SOUTH_WEST:
             case EAST:
                 return Math.max(0, shadowBorder.getShadowSize() - bubbleBorder.getPointerSize())
-                    + bubbleBorder.getThickness();
+                        + bubbleBorder.getThickness();
             case NORTH:
             case NORTH_EAST:
             case NORTH_WEST:

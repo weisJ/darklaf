@@ -25,9 +25,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class ScrollLayoutManagerDelegate extends ScrollPaneLayout {
     private final ScrollPaneLayout delegate;
 

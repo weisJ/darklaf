@@ -31,9 +31,8 @@ public class DnDUtil {
         return createDragImage(c, new Rectangle(0, 0, c.getWidth(), c.getHeight()), lw, borderColor);
     }
 
-    public static Image createDragImage(
-            final Component c, final Rectangle bounds, final int lw, final Color borderColor
-    ) {
+    public static Image createDragImage(final Component c, final Rectangle bounds, final int lw,
+            final Color borderColor) {
         Image tabImage = ImageUtil.scaledImageFromComponent(c, bounds);
         int w = tabImage.getWidth(null);
         int h = tabImage.getHeight(null);

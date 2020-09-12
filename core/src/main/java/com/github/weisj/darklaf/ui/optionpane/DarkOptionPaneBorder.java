@@ -31,7 +31,8 @@ public class DarkOptionPaneBorder extends EmptyBorder {
     public DarkOptionPaneBorder() {
         super(0, 0, 0, 0);
         Insets insets = UIManager.getInsets("OptionPane.borderInsets");
-        if (insets == null) insets = new Insets(0, 0, 0, 0);
+        if (insets == null)
+            insets = new Insets(0, 0, 0, 0);
         left = insets.left;
         right = insets.right;
         top = insets.top;

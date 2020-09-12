@@ -175,7 +175,8 @@ public class MacOSTitlePane extends CustomTitlePane {
 
     @Override
     public Dimension getPreferredSize() {
-        if (decorationInformation == null) return new Dimension(0, 0);
+        if (decorationInformation == null)
+            return new Dimension(0, 0);
         int height = decorationInformation.titleBarHeight;
         if (hideTitleBar()) {
             height = 0;
@@ -186,8 +187,9 @@ public class MacOSTitlePane extends CustomTitlePane {
     }
 
     private boolean hideTitleBar() {
-        return (decorationInformation.windowHandle == 0) || JNIDecorationsMacOS
-            .isFullscreen(decorationInformation.windowHandle) || getDecorationStyle() == JRootPane.NONE;
+        return (decorationInformation.windowHandle == 0)
+                || JNIDecorationsMacOS.isFullscreen(decorationInformation.windowHandle)
+                || getDecorationStyle() == JRootPane.NONE;
     }
 
     private boolean useCustomTitle() {

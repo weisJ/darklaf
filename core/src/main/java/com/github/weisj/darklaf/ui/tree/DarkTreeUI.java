@@ -136,7 +136,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         collapsed = UIManager.getIcon("Tree.collapsed.unselected.unfocused.icon");
         collapsedDisabled = UIManager.getIcon("Tree.collapsed.disabled.icon");
         leadSelectionBorderInsets = UIManager.getInsets("Tree.leadSelectionBorderInsets");
-        if (leadSelectionBorderInsets == null) leadSelectionBorderInsets = new Insets(1, 1, 1, 1);
+        if (leadSelectionBorderInsets == null)
+            leadSelectionBorderInsets = new Insets(1, 1, 1, 1);
         PropertyUtil.installBooleanProperty(tree, KEY_RENDER_BOOLEAN_AS_CHECKBOX, "Tree.renderBooleanAsCheckBox");
         PropertyUtil.installProperty(tree, KEY_BOOLEAN_RENDER_TYPE, UIManager.getString("Tree.booleanRenderType"));
         PropertyUtil.installProperty(tree, KEY_LINE_STYLE, UIManager.getString("Tree.defaultLineStyle"));
@@ -171,7 +172,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     protected void installKeyboardActions() {
         super.installKeyboardActions();
 
-        if (PropertyUtil.getBooleanProperty(tree, KEY_MAC_ACTIONS_INSTALLED)) return;
+        if (PropertyUtil.getBooleanProperty(tree, KEY_MAC_ACTIONS_INSTALLED))
+            return;
 
         tree.putClientProperty(KEY_MAC_ACTIONS_INSTALLED, Boolean.TRUE);
 
@@ -183,9 +185,11 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
             @Override
             public void actionPerformed(final ActionEvent e) {
                 JTree tree = getTree(e);
-                if (tree == null) return;
+                if (tree == null)
+                    return;
                 int selectionRow = tree.getLeadSelectionRow();
-                if (selectionRow == -1) return;
+                if (selectionRow == -1)
+                    return;
 
                 if (isLeaf(selectionRow) || tree.isExpanded(selectionRow)) {
                     if (!PropertyUtil.getBooleanProperty(tree, KEY_IS_TABLE_TREE)) {
@@ -206,9 +210,11 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
             @Override
             public void actionPerformed(final ActionEvent e) {
                 final JTree tree = getTree(e);
-                if (tree == null) return;
+                if (tree == null)
+                    return;
                 int selectionRow = tree.getLeadSelectionRow();
-                if (selectionRow == -1) return;
+                if (selectionRow == -1)
+                    return;
 
                 if (isLeaf(selectionRow) || tree.isCollapsed(selectionRow)) {
                     if (!PropertyUtil.getBooleanProperty(tree, KEY_IS_TABLE_TREE)) {
@@ -249,9 +255,11 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
 
     protected boolean acceptExpandCollapseAction(final Object sender, final boolean collapsed) {
         JTree tree = DarkUIUtil.nullableCast(JTree.class, sender);
-        if (tree == null) return false;
+        if (tree == null)
+            return false;
         int selectionRow = tree.getLeadSelectionRow();
-        if (selectionRow == -1) return false;
+        if (selectionRow == -1)
+            return false;
         final boolean collapsedOrExpanded = collapsed ? tree.isCollapsed(selectionRow) : tree.isExpanded(selectionRow);
         if (isLeaf(selectionRow) || collapsedOrExpanded) {
             return !PropertyUtil.getBooleanProperty(tree, KEY_IS_TABLE_TREE);
@@ -272,9 +280,11 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     }
 
     protected void move(final JTree tree, final int offset) {
-        if (tree == null) return;
+        if (tree == null)
+            return;
         int selectionRow = tree.getLeadSelectionRow();
-        if (selectionRow == -1) return;
+        if (selectionRow == -1)
+            return;
         moveTo(tree, selectionRow + offset);
     }
 
@@ -293,20 +303,23 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
             boolean ltr = tree.getComponentOrientation().isLeftToRight();
             int ident = getRightChildIndent();
             int extra = ident - 1 + icon.getIconWidth() / 2;
-            if (ltr) bounds.x -= extra;
+            if (ltr)
+                bounds.x -= extra;
             bounds.width += extra;
         }
         tree.scrollRectToVisible(bounds);
     }
 
     protected void toggleEdit(final JTree tree) {
-        if (tree == null) return;
+        if (tree == null)
+            return;
         if (tree.isEditing()) {
             stopEditing(tree);
             return;
         }
         int selectionRow = tree.getLeadSelectionRow();
-        if (selectionRow == -1) return;
+        if (selectionRow == -1)
+            return;
         startEditingAtPath(tree, getPathForRow(tree, selectionRow));
     }
 
@@ -342,7 +355,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
             }
             boolean treeEditor = PropertyUtil.getBooleanProperty(owner, DarkTreeUI.KEY_IS_TREE_EDITOR);
             boolean treeRenderer =
-                !treeEditor && PropertyUtil.getBooleanProperty(owner, DarkTreeUI.KEY_IS_TREE_RENDERER);
+                    !treeEditor && PropertyUtil.getBooleanProperty(owner, DarkTreeUI.KEY_IS_TREE_RENDERER);
             return treeEditor || treeRenderer;
         }
         return true;
@@ -425,16 +438,17 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         g.translate(0, rowBounds.y);
     }
 
-    protected boolean paintSingleRow(
-            final Graphics g, final Rectangle paintBounds, final Insets insets, final TreePath path, final int row
-    ) {
-        if (path == null) return false;
+    protected boolean paintSingleRow(final Graphics g, final Rectangle paintBounds, final Insets insets,
+            final TreePath path, final int row) {
+        if (path == null)
+            return false;
         final int xOffset =
-            tree.getParent() instanceof JViewport ? ((JViewport) tree.getParent()).getViewPosition().x : 0;
+                tree.getParent() instanceof JViewport ? ((JViewport) tree.getParent()).getViewPosition().x : 0;
         final int containerWidth =
-            tree.getParent() instanceof JViewport ? tree.getParent().getWidth() : tree.getWidth();
+                tree.getParent() instanceof JViewport ? tree.getParent().getWidth() : tree.getWidth();
         final Rectangle cellBounds = getPathBounds(path, insets, boundsBuffer);
-        if (cellBounds == null) return false;
+        if (cellBounds == null)
+            return false;
         final int boundsX = cellBounds.x;
         final int boundsWidth = cellBounds.width;
 
@@ -469,9 +483,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         return (cellBounds.y + cellBounds.height) < paintBounds.y + paintBounds.height;
     }
 
-    protected void paintRowBackground(
-            final Graphics g, final Rectangle bounds, final TreePath path, final int row, final boolean selected
-    ) {
+    protected void paintRowBackground(final Graphics g, final Rectangle bounds, final TreePath path, final int row,
+            final boolean selected) {
         if (path != null) {
             g.setColor(CellUtil.getTreeBackground(tree, selected, row));
             g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
@@ -481,11 +494,10 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     /*
      * Paint all vertical legs for the whole tree in this row.
      */
-    protected void paintVerticalLegs(
-            final Graphics g, final Rectangle clipBounds, final Rectangle rowBounds, final Insets insets,
-            final TreePath path
-    ) {
-        if (!shouldPaintLines()) return;
+    protected void paintVerticalLegs(final Graphics g, final Rectangle clipBounds, final Rectangle rowBounds,
+            final Insets insets, final TreePath path) {
+        if (!shouldPaintLines())
+            return;
         int depth = path.getPathCount() - 1;
         if (depth == 0 && (!isRootVisible() || !getShowsRootHandles())) {
             // Parent is the root, which isn't visible.
@@ -496,7 +508,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
 
         TreePath parentPath = path;
         for (int currentDepth = depth - 1; currentDepth >= 0; currentDepth--) {
-            if (currentDepth == 0 && !isRootVisible()) continue;
+            if (currentDepth == 0 && !isRootVisible())
+                continue;
 
             int lineX = getRowX(-1, currentDepth);
             if (tree.getComponentOrientation().isLeftToRight()) {
@@ -505,7 +518,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
                 lineX = tree.getWidth() - lineX - insets.right + getRightChildIndent() - 1;
             }
 
-            if (lineX > clipRight || lineX < clipLeft) continue;
+            if (lineX > clipRight || lineX < clipLeft)
+                continue;
 
             parentPath = parentPath.getParentPath();
             g.setColor(getLineColor(parentPath));
@@ -541,7 +555,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
 
     @Override
     public void update(final Graphics g, final JComponent c) {
-        if (popupListener != null) popupListener.repaint();
+        if (popupListener != null)
+            popupListener.repaint();
         super.update(g, c);
     }
 
@@ -574,7 +589,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     }
 
     protected Icon getExpandedIcon(final boolean selected, final boolean focused) {
-        if (!tree.isEnabled()) return expandedDisabled;
+        if (!tree.isEnabled())
+            return expandedDisabled;
         if (selected) {
             return focused ? expandedFocusSelected : expandedSelected;
         } else {
@@ -583,7 +599,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     }
 
     protected Icon getCollapsedIcon(final boolean selected, final boolean focused) {
-        if (!tree.isEnabled()) return collapsedDisabled;
+        if (!tree.isEnabled())
+            return collapsedDisabled;
         if (selected) {
             return focused ? collapsedFocusSelected : collapsedSelected;
         } else {
@@ -597,11 +614,15 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
 
     protected boolean isChildOfSelectionPath(final TreePath path) {
         TreePath p = tree.isEditing() ? tree.getEditingPath() : tree.getSelectionPath();
-        if (p == null) return false;
-        if (Objects.equals(p, path)) return true;
-        if (tree.isExpanded(p)) return false;
+        if (p == null)
+            return false;
+        if (Objects.equals(p, path))
+            return true;
+        if (tree.isExpanded(p))
+            return false;
         TreePath parent = p.getParentPath();
-        if (parent == null) return false;
+        if (parent == null)
+            return false;
         return Objects.equals(parent.getLastPathComponent(), path.getLastPathComponent());
     }
 
@@ -618,32 +639,25 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         Stroke oldStroke = g2d.getStroke();
 
         BasicStroke dashedStroke =
-            new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 0, new float[] {2.0f}, 0);
+                new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 0, new float[] {2.0f}, 0);
         g2d.setStroke(dashedStroke);
         g2d.drawLine(x, y1, x, y2);
         g2d.setStroke(oldStroke);
     }
 
     @Override
-    protected void paintHorizontalPartOfLeg(
-            final Graphics g, final Rectangle clipBounds, final Insets insets, final Rectangle bounds,
-            final TreePath path, final int row, final boolean isExpanded, final boolean hasBeenExpanded,
-            final boolean isLeaf
-    ) {
-
-    }
+    protected void paintHorizontalPartOfLeg(final Graphics g, final Rectangle clipBounds, final Insets insets,
+            final Rectangle bounds, final TreePath path, final int row, final boolean isExpanded,
+            final boolean hasBeenExpanded, final boolean isLeaf) {}
 
     @Override
-    protected void paintVerticalPartOfLeg(
-            final Graphics g, final Rectangle clipBounds, final Insets insets, final TreePath path
-    ) {}
+    protected void paintVerticalPartOfLeg(final Graphics g, final Rectangle clipBounds, final Insets insets,
+            final TreePath path) {}
 
     @Override
-    protected void paintExpandControl(
-            final Graphics g, final Rectangle clipBounds, final Insets insets, final Rectangle bounds,
-            final TreePath path, final int row, final boolean isExpanded, final boolean hasBeenExpanded,
-            final boolean isLeaf
-    ) {
+    protected void paintExpandControl(final Graphics g, final Rectangle clipBounds, final Insets insets,
+            final Rectangle bounds, final TreePath path, final int row, final boolean isExpanded,
+            final boolean hasBeenExpanded, final boolean isLeaf) {
         if (!isLeaf(row)) {
             boolean isPathSelected = tree.isPathSelected(path);
             setExpandedIcon(getExpandedIcon(isPathSelected, tree.hasFocus() || tree.isEditing()));
@@ -653,9 +667,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     }
 
     @Override
-    protected void paintVerticalLine(
-            final Graphics g, final JComponent c, final int x, final int top, final int bottom
-    ) {
+    protected void paintVerticalLine(final Graphics g, final JComponent c, final int x, final int top,
+            final int bottom) {
         if (isDashedLine()) {
             drawDashedLine(g, x, top, bottom);
         } else {
@@ -678,7 +691,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     @Override
     protected boolean isToggleSelectionEvent(final MouseEvent e) {
         return SwingUtilities.isLeftMouseButton(e) && (SystemInfo.isMac ? e.isMetaDown() : e.isControlDown())
-            && !e.isPopupTrigger();
+                && !e.isPopupTrigger();
     }
 
     @Override

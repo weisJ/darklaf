@@ -75,7 +75,6 @@ public class DefaultColorPipette extends ColorPipetteBase {
     }
 
     @Override
-
     protected Window getOrCreatePickerWindow() {
         Window pickerWindow = getPickerWindow();
         if (pickerWindow == null) {
@@ -103,9 +102,8 @@ public class DefaultColorPipette extends ColorPipetteBase {
             zoomImage = parent.getGraphicsConfiguration().createCompatibleImage(SIZE, SIZE, Transparency.TRANSLUCENT);
 
             zoomGraphics = (Graphics2D) zoomImage.getGraphics();
-            zoomGraphics.setRenderingHint(
-                RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR
-            );
+            zoomGraphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                    RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
         }
 
         return pickerWindow;
@@ -128,7 +126,8 @@ public class DefaultColorPipette extends ColorPipetteBase {
         Window pickerWindow = getPickerWindow();
         if (pickerWindow != null && pickerWindow.isShowing()) {
             Point mouseLoc = updateLocation();
-            if (mouseLoc == null) return;
+            if (mouseLoc == null)
+                return;
             final Color c = getPixelColor(mouseLoc);
             if (!c.equals(getColor()) || !mouseLoc.equals(previousLocation) || force) {
                 setColor(c);
@@ -207,10 +206,8 @@ public class DefaultColorPipette extends ColorPipetteBase {
             Icon icon = pipette.getPipetteIcon();
             if (pipette.isKeyDown() && pipette.getPressedKeyCode() == KeyEvent.VK_SHIFT) {
                 Shape oldCLip = g.getClip();
-                Ellipse2D.Float circ = new Ellipse2D.Float(
-                    icon.getIconWidth() - 4, 2, getWidth() - icon.getIconWidth() - 2 + 4,
-                    getHeight() - 2 - icon.getIconHeight() + 4
-                );
+                Ellipse2D.Float circ = new Ellipse2D.Float(icon.getIconWidth() - 4, 2,
+                        getWidth() - icon.getIconWidth() - 2 + 4, getHeight() - 2 - icon.getIconHeight() + 4);
                 g.setClip(circ);
                 g.drawImage(pipette.zoomImage, icon.getIconWidth() - 4, 2, null);
                 g.setClip(oldCLip);

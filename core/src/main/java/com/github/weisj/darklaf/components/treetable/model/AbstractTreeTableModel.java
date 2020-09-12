@@ -67,10 +67,8 @@ public abstract class AbstractTreeTableModel implements TreeTableModel {
         listenerList.remove(TreeModelListener.class, l);
     }
 
-    private void fireTreeNode(
-            final int changeType, final Object source, final Object[] path, final int[] childIndices,
-            final Object[] children
-    ) {
+    private void fireTreeNode(final int changeType, final Object source, final Object[] path, final int[] childIndices,
+            final Object[] children) {
         Object[] listeners = listenerList.getListenerList();
         TreeModelEvent e = new TreeModelEvent(source, path, childIndices, children);
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
@@ -91,32 +89,27 @@ public abstract class AbstractTreeTableModel implements TreeTableModel {
                     default:
                         break;
                 }
-
             }
         }
     }
 
-    protected void fireTreeNodesChanged(
-            final Object source, final Object[] path, final int[] childIndices, final Object[] children
-    ) {
+    protected void fireTreeNodesChanged(final Object source, final Object[] path, final int[] childIndices,
+            final Object[] children) {
         fireTreeNode(CHANGED, source, path, childIndices, children);
     }
 
-    protected void fireTreeNodesInserted(
-            final Object source, final Object[] path, final int[] childIndices, final Object[] children
-    ) {
+    protected void fireTreeNodesInserted(final Object source, final Object[] path, final int[] childIndices,
+            final Object[] children) {
         fireTreeNode(INSERTED, source, path, childIndices, children);
     }
 
-    protected void fireTreeNodesRemoved(
-            final Object source, final Object[] path, final int[] childIndices, final Object[] children
-    ) {
+    protected void fireTreeNodesRemoved(final Object source, final Object[] path, final int[] childIndices,
+            final Object[] children) {
         fireTreeNode(REMOVED, source, path, childIndices, children);
     }
 
-    protected void fireTreeStructureChanged(
-            final Object source, final Object[] path, final int[] childIndices, final Object[] children
-    ) {
+    protected void fireTreeStructureChanged(final Object source, final Object[] path, final int[] childIndices,
+            final Object[] children) {
         fireTreeNode(STRUCTURE_CHANGED, source, path, childIndices, children);
     }
 }

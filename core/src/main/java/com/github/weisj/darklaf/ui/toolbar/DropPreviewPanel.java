@@ -27,9 +27,7 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DropPreviewPanel extends JComponent {
 
     private JToolBar toolBar;

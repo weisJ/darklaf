@@ -45,7 +45,7 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
     private final DarkTableCellEditorToggleButton checkBoxEditor = new DarkTableCellEditorToggleButton(editorCheckBox);
     private final JToggleButton editorRadioButton = new DarkCellRendererToggleButton.CellRadioButton(true);
     private final DarkTableCellEditorToggleButton radioButtonEditor =
-        new DarkTableCellEditorToggleButton(editorRadioButton);
+            new DarkTableCellEditorToggleButton(editorRadioButton);
 
     private boolean isBooleanEditor;
     private TableCellEditor currentEditor;
@@ -68,10 +68,12 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
 
     @Override
     public boolean isCellEditable(final EventObject anEvent) {
-        if (anEvent == null) return super.isCellEditable(null);
+        if (anEvent == null)
+            return super.isCellEditable(null);
         JTable table = ((JTable) anEvent.getSource());
         if (anEvent instanceof KeyEvent) {
-            if (DarkTableUI.ignoreKeyCodeOnEdit((KeyEvent) anEvent, table)) return false;
+            if (DarkTableUI.ignoreKeyCodeOnEdit((KeyEvent) anEvent, table))
+                return false;
         }
         if (TableConstants.isBooleanRenderingEnabled(table)) {
             if (anEvent instanceof MouseEvent && isMouseOverBooleanRenderer((MouseEvent) anEvent, table)) {
@@ -92,7 +94,7 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
                 p.x -= rect.x;
                 p.y -= rect.y;
                 JToggleButton editor =
-                    getBooleanEditor(table).getTableCellEditorComponent(table, true, false, row, col);
+                        getBooleanEditor(table).getTableCellEditorComponent(table, true, false, row, col);
                 editor.setBounds(rect);
                 return editor.contains(p);
             }
@@ -101,9 +103,8 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
     }
 
     @Override
-    public Component getTableCellEditorComponent(
-            final JTable table, final Object value, final boolean isSelected, final int row, final int column
-    ) {
+    public Component getTableCellEditorComponent(final JTable table, final Object value, final boolean isSelected,
+            final int row, final int column) {
         isBooleanEditor = TableConstants.useBooleanEditorForValue(value, table, column);
         currentEditor = isBooleanEditor ? getBooleanEditor(table) : getDelegate();
 
@@ -112,28 +113,23 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
         return editor;
     }
 
-    protected Component prepareEditorComponent(
-            final Component editor, final JTable table, final Object value, final boolean isSelected, final int row,
-            final int column
-    ) {
+    protected Component prepareEditorComponent(final Component editor, final JTable table, final Object value,
+            final boolean isSelected, final int row, final int column) {
         return prepareEditor(editor, table, value, isSelected, row, column);
     }
 
-    public static Component prepareEditor(
-            final Component editor, final JTable table, final Object value, final boolean isSelected, final int row,
-            final int column
-    ) {
-        Component renderer = table.getCellRenderer(row, column)
-            .getTableCellRendererComponent(table, value, isSelected, false, row, column);
+    public static Component prepareEditor(final Component editor, final JTable table, final Object value,
+            final boolean isSelected, final int row, final int column) {
+        Component renderer = table.getCellRenderer(row, column).getTableCellRendererComponent(table, value, isSelected,
+                false, row, column);
         setupEditorComponent(editor, value, renderer);
         Component comp = applyRendererIcon(editor, renderer);
         CellUtil.setupTableBackground(comp, table, false, row);
         return comp;
     }
 
-    protected static void setupEditorComponent(
-            final Component editorComponent, final Object value, final Component rendererComp
-    ) {
+    protected static void setupEditorComponent(final Component editorComponent, final Object value,
+            final Component rendererComp) {
         if (editorComponent instanceof JSpinner) {
             int alignment = getHorizontalAlignment(rendererComp);
             if (alignment >= 0) {
@@ -142,7 +138,8 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
         }
         if (editorComponent instanceof JTextField) {
             int alignment = getHorizontalAlignment(rendererComp);
-            if (alignment >= 0) ((JTextField) editorComponent).setHorizontalAlignment(alignment);
+            if (alignment >= 0)
+                ((JTextField) editorComponent).setHorizontalAlignment(alignment);
         }
     }
 
@@ -169,10 +166,8 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
     }
 
     protected DarkTableCellEditorToggleButton getBooleanEditor(final JTable table) {
-        if (
-            PropertyUtil
-                .isPropertyEqual(table, DarkTableUI.KEY_BOOLEAN_RENDER_TYPE, DarkTableUI.RENDER_TYPE_RADIOBUTTON)
-        ) {
+        if (PropertyUtil.isPropertyEqual(table, DarkTableUI.KEY_BOOLEAN_RENDER_TYPE,
+                DarkTableUI.RENDER_TYPE_RADIOBUTTON)) {
             return radioButtonEditor;
         }
         return checkBoxEditor;

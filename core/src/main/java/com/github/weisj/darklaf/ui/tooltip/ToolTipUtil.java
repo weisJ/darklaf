@@ -36,10 +36,12 @@ public class ToolTipUtil {
 
     public static void applyContext(final JToolTip toolTip) {
         JComponent target = toolTip.getComponent();
-        if (target == null) return;
+        if (target == null)
+            return;
 
         ToolTipContext context = getToolTipContext(toolTip);
-        if (context == null) return;
+        if (context == null)
+            return;
 
         context.setTarget(target);
         context.setToolTip(toolTip);
@@ -73,18 +75,14 @@ public class ToolTipUtil {
         Alignment[] alignments = getAlignments(targetAlignment);
         Point pos;
         BiConsumer<ToolTipContext, Alignment> setter =
-            isCenter ? ToolTipContext::setCenterAlignment : ToolTipContext::setAlignment;
+                isCenter ? ToolTipContext::setCenterAlignment : ToolTipContext::setAlignment;
         // Check if a position keeps the tooltip inside the window.
-        pos = tryAlignments(
-            alignments, context, p, tooltipBounds, windowBounds, screenBounds, setter, centerHorizontally,
-            centerVertically
-        );
+        pos = tryAlignments(alignments, context, p, tooltipBounds, windowBounds, screenBounds, setter,
+                centerHorizontally, centerVertically);
         if (pos == null) {
             // Try again with screen bounds instead.
-            pos = tryAlignments(
-                alignments, context, p, tooltipBounds, screenBounds, screenBounds, setter, centerHorizontally,
-                centerVertically
-            );
+            pos = tryAlignments(alignments, context, p, tooltipBounds, screenBounds, screenBounds, setter,
+                    centerHorizontally, centerVertically);
         }
 
         /*
@@ -102,22 +100,21 @@ public class ToolTipUtil {
         return pos;
     }
 
-    protected static Point tryAlignments(
-            final Alignment[] alignments, final ToolTipContext context, final Point p, final Rectangle tooltipBounds,
-            final Rectangle boundary, final Rectangle screenBoundary,
+    protected static Point tryAlignments(final Alignment[] alignments, final ToolTipContext context, final Point p,
+            final Rectangle tooltipBounds, final Rectangle boundary, final Rectangle screenBoundary,
             final BiConsumer<ToolTipContext, Alignment> setter, final boolean centerHorizontally,
-            final boolean centerVertically
-    ) {
+            final boolean centerVertically) {
         Point pos = null;
         for (Alignment a : alignments) {
             if ((centerHorizontally || centerVertically) && a.isDiagonal()) {
-                pos = tryPosition(
-                    a, context, p, tooltipBounds, boundary, screenBoundary, setter, centerHorizontally, centerVertically
-                );
-                if (pos != null) break;
+                pos = tryPosition(a, context, p, tooltipBounds, boundary, screenBoundary, setter, centerHorizontally,
+                        centerVertically);
+                if (pos != null)
+                    break;
             }
             pos = tryPosition(a, context, p, tooltipBounds, boundary, screenBoundary, setter, false, false);
-            if (pos != null) break;
+            if (pos != null)
+                break;
         }
         return pos;
     }
@@ -126,16 +123,14 @@ public class ToolTipUtil {
         // Example with start == NORTH: [NORTH, SOUTH, EAST, WEST, NORTH_EAST, SOUTH_WEST, NORTH_WEST,
         // SOUTH_EAST]
         return new Alignment[] {start, start.opposite(), start.clockwise().clockwise(),
-            start.anticlockwise().anticlockwise(), start.clockwise(), start.clockwise().opposite(),
-            start.anticlockwise(), start.anticlockwise().opposite()};
+                start.anticlockwise().anticlockwise(), start.clockwise(), start.clockwise().opposite(),
+                start.anticlockwise(), start.anticlockwise().opposite()};
     }
 
-    protected static Point tryPosition(
-            final Alignment a, final ToolTipContext context, final Point p, final Rectangle tooltipBounds,
-            final Rectangle boundary, final Rectangle screenBoundary,
+    protected static Point tryPosition(final Alignment a, final ToolTipContext context, final Point p,
+            final Rectangle tooltipBounds, final Rectangle boundary, final Rectangle screenBoundary,
             final BiConsumer<ToolTipContext, Alignment> setter, final boolean centerHorizontally,
-            final boolean centerVertically
-    ) {
+            final boolean centerVertically) {
         setter.accept(context, a);
         context.setCenterAlignment(a);
         context.updateToolTip();
@@ -143,18 +138,18 @@ public class ToolTipUtil {
         Point screenPos = new Point(pos.x, pos.y);
         SwingUtilities.convertPointToScreen(screenPos, context.getTarget());
         tooltipBounds.setLocation(screenPos);
-        if (!fits(tooltipBounds, boundary, screenBoundary)) pos = null;
+        if (!fits(tooltipBounds, boundary, screenBoundary))
+            pos = null;
         return pos;
     }
 
-    protected static boolean fits(
-            final Rectangle toolTipBounds, final Rectangle boundary, final Rectangle screenBoundary
-    ) {
+    protected static boolean fits(final Rectangle toolTipBounds, final Rectangle boundary,
+            final Rectangle screenBoundary) {
         if (boundary == screenBoundary) {
             return SwingUtilities.isRectangleContainingRectangle(boundary, toolTipBounds);
         }
         return SwingUtilities.isRectangleContainingRectangle(boundary, toolTipBounds)
-            && SwingUtilities.isRectangleContainingRectangle(screenBoundary, toolTipBounds);
+                && SwingUtilities.isRectangleContainingRectangle(screenBoundary, toolTipBounds);
     }
 
     protected static ToolTipContext getToolTipContext(final JToolTip tooltip) {
@@ -175,7 +170,8 @@ public class ToolTipUtil {
 
     public static void moveToolTip(final JToolTip toolTip, final int x, final int y, final JComponent target) {
         Window window = DarkUIUtil.getWindow(toolTip);
-        if (window == null) return;
+        if (window == null)
+            return;
         Point p = new Point(x, y);
         SwingUtilities.convertPointToScreen(p, target);
         WindowUtil.moveWindow(window, toolTip, p.x, p.y);

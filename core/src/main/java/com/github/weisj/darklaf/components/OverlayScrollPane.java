@@ -57,7 +57,7 @@ public class OverlayScrollPane extends JLayeredPane implements PropertyChangeLis
      * than the view and scrolling in underway or the mouse is over the scrollbar position.
      *
      * @param view the component to display in the scrollable viewport
-     * @see        JScrollPane#setViewportView
+     * @see JScrollPane#setViewportView
      */
     public OverlayScrollPane(final JComponent view) {
         this(view, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -72,7 +72,7 @@ public class OverlayScrollPane extends JLayeredPane implements PropertyChangeLis
      * {@link JScrollPane#setVerticalScrollBarPolicy(int)} and
      * {@link JScrollPane#setHorizontalScrollBarPolicy}.
      *
-     * @param view      the view of the component.
+     * @param view the view of the component.
      * @param vsbPolicy an integer that specifies the vertical scrollbar policy
      * @param hsbPolicy an integer that specifies the horizontal scrollbar policy
      */
@@ -177,7 +177,8 @@ public class OverlayScrollPane extends JLayeredPane implements PropertyChangeLis
     }
 
     protected void updateScrollPaneUI() {
-        if (scrollPane == null) return;
+        if (scrollPane == null)
+            return;
         scrollPane.setLayout(new ScrollLayoutManagerDelegate((ScrollPaneLayout) scrollPane.getLayout()) {
 
             @Override
@@ -300,14 +301,12 @@ public class OverlayScrollPane extends JLayeredPane implements PropertyChangeLis
 
         @Override
         public boolean contains(final int x, final int y) {
-            if (
-                scrollPane.getHorizontalScrollBar().isVisible()
-                    && scrollPane.getHorizontalScrollBar().getBounds().contains(x, y)
-            ) {
+            if (scrollPane.getHorizontalScrollBar().isVisible()
+                    && scrollPane.getHorizontalScrollBar().getBounds().contains(x, y)) {
                 return true;
             }
             return scrollPane.getVerticalScrollBar().isVisible()
-                && scrollPane.getVerticalScrollBar().getBounds().contains(x, y);
+                    && scrollPane.getVerticalScrollBar().getBounds().contains(x, y);
         }
 
         @Override

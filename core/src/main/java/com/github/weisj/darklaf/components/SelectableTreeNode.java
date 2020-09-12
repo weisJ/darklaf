@@ -25,9 +25,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.github.weisj.darklaf.components.tree.LabeledTreeNode;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class SelectableTreeNode extends DefaultMutableTreeNode implements LabeledTreeNode {
 
     private String label;

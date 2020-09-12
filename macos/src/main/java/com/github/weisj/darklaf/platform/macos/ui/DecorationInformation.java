@@ -34,11 +34,9 @@ class DecorationInformation {
     protected final int titleBarHeight;
     protected final float titleFontSize;
 
-    protected DecorationInformation(
-            final long windowHandle, final boolean fullWindowContentEnabled, final boolean transparentTitleBarEnabled,
-            final boolean jniInstalled, final JRootPane rootPane, final boolean titleVisible, final int titleBarHeight,
-            final float titleFontSize
-    ) {
+    protected DecorationInformation(final long windowHandle, final boolean fullWindowContentEnabled,
+            final boolean transparentTitleBarEnabled, final boolean jniInstalled, final JRootPane rootPane,
+            final boolean titleVisible, final int titleBarHeight, final float titleFontSize) {
         this.windowHandle = windowHandle;
         this.fullWindowContentEnabled = fullWindowContentEnabled;
         this.transparentTitleBarEnabled = transparentTitleBarEnabled;

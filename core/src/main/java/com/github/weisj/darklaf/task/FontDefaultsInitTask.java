@@ -56,9 +56,9 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     private static final String ALL_FONTS = "__all__";
 
     private static final Map<AttributedCharacterIterator.Attribute, Integer> ENABLE_KERNING =
-        Collections.singletonMap(TextAttribute.KERNING, TextAttribute.KERNING_ON);
+            Collections.singletonMap(TextAttribute.KERNING, TextAttribute.KERNING_ON);
     private static final Map<AttributedCharacterIterator.Attribute, Integer> DISABLE_KERNING =
-        Collections.singletonMap(TextAttribute.KERNING, null);
+            Collections.singletonMap(TextAttribute.KERNING, null);
     /*
      * On Catalina the are issues with font kerning and .AppleSystemUIFont. For now Helvetica Neue is
      * used instead.
@@ -91,9 +91,8 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
                 Set<String> blockedFontSet = new HashSet<>(blockedFonts);
                 boolean enabledAll = ALL_FONTS.equals(allowedFonts.get(0));
 
-                setupKerningPerFont(
-                    defaults, key -> (enabledAll || allowedFontsSet.contains(key)) && !blockedFontSet.contains(key)
-                );
+                setupKerningPerFont(defaults,
+                        key -> (enabledAll || allowedFontsSet.contains(key)) && !blockedFontSet.contains(key));
             }
         }
 
@@ -104,8 +103,10 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     }
 
     private boolean systemKerningEnabled() {
-        if (SystemInfo.isMac) return SystemInfo.isMacOSMojave;
-        if (SystemInfo.isWindows) return SystemInfo.isWindowsVista;
+        if (SystemInfo.isMac)
+            return SystemInfo.isMacOSMojave;
+        if (SystemInfo.isWindows)
+            return SystemInfo.isWindowsVista;
         return false;
     }
 
@@ -115,27 +116,21 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
             Map<?, ?> desktopHints = (Map<?, ?>) toolkit.getDesktopProperty(GraphicsUtil.DESKTOP_HINTS_KEY);
 
             Object aaHint = (desktopHints == null) ? null : desktopHints.get(RenderingHints.KEY_TEXT_ANTIALIASING);
-            if (
-                aaHint != null && aaHint != RenderingHints.VALUE_TEXT_ANTIALIAS_OFF
-                    && aaHint != RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT
-            ) {
+            if (aaHint != null && aaHint != RenderingHints.VALUE_TEXT_ANTIALIAS_OFF
+                    && aaHint != RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT) {
                 LOGGER.fine(String.format("Setting '%s' = '%s'", RenderingHints.KEY_TEXT_ANTIALIASING, aaHint));
-                LOGGER.fine(
-                    String.format(
-                        "Setting '%s' = '%s'", RenderingHints.KEY_TEXT_LCD_CONTRAST,
-                        RenderingHints.KEY_TEXT_LCD_CONTRAST
-                    )
-                );
+                LOGGER.fine(String.format("Setting '%s' = '%s'", RenderingHints.KEY_TEXT_LCD_CONTRAST,
+                        RenderingHints.KEY_TEXT_LCD_CONTRAST));
                 defaults.put(RenderingHints.KEY_TEXT_ANTIALIASING, aaHint);
-                defaults
-                    .put(RenderingHints.KEY_TEXT_LCD_CONTRAST, desktopHints.get(RenderingHints.KEY_TEXT_LCD_CONTRAST));
+                defaults.put(RenderingHints.KEY_TEXT_LCD_CONTRAST,
+                        desktopHints.get(RenderingHints.KEY_TEXT_LCD_CONTRAST));
             }
         }
     }
 
     private void loadFontProperties(final UIDefaults defaults) {
         Properties fontSizeProps =
-            PropertyLoader.loadProperties(DarkLaf.class, FONT_SIZE_DEFAULTS_NAME, FONT_PROPERTY_PATH);
+                PropertyLoader.loadProperties(DarkLaf.class, FONT_SIZE_DEFAULTS_NAME, FONT_PROPERTY_PATH);
         PropertyLoader.putProperties(fontSizeProps, defaults);
         Properties fontProps = PropertyLoader.loadProperties(DarkLaf.class, FONT_DEFAULTS_NAME, FONT_PROPERTY_PATH);
         PropertyLoader.putProperties(fontProps, defaults);
@@ -149,7 +144,8 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
         Font font = entry.getValue();
         String fontName = SystemInfo.isMacOSCatalina ? MAC_OS_CATALINA_FONT_NAME_FALLBACK : MAC_OS_FONT_NAME;
         Font macFont = FontUtil.createFont(fontName, font.getStyle(), font.getSize());
-        if (SystemInfo.isMacOSMojave) macFont = macFont.deriveFont(ENABLE_KERNING);
+        if (SystemInfo.isMacOSMojave)
+            macFont = macFont.deriveFont(ENABLE_KERNING);
         if (font instanceof UIResource) {
             macFont = new DarkFontUIResource(macFont);
         }
@@ -158,7 +154,8 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
 
     private Font mapWindowsFont(final Map.Entry<Object, Font> entry) {
         Font font = entry.getValue();
-        if (!SystemInfo.isWindowsVista) return font;
+        if (!SystemInfo.isWindowsVista)
+            return font;
         Font windowsFont = FontUtil.createFont(WINDOWS_10_FONT_NAME, font.getStyle(), font.getSize());
         if (font instanceof UIResource) {
             windowsFont = new DarkFontUIResource(windowsFont);
@@ -167,25 +164,29 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     }
 
     private void setupKerningPerFont(final UIDefaults defaults, final Predicate<String> kerningPredicate) {
-        PropertyLoader
-            .replacePropertiesOfType(Font.class, defaults, e -> kerningPredicate.test(e.getKey().toString()), f -> {
-                Font font = f.deriveFont(ENABLE_KERNING);
-                if (f instanceof UIResource) font = new DarkFontUIResource(font);
-                return font;
-            });
+        PropertyLoader.replacePropertiesOfType(Font.class, defaults, e -> kerningPredicate.test(e.getKey().toString()),
+                f -> {
+                    Font font = f.deriveFont(ENABLE_KERNING);
+                    if (f instanceof UIResource)
+                        font = new DarkFontUIResource(font);
+                    return font;
+                });
     }
 
     private void applyFontRule(final Theme currentTheme, final UIDefaults defaults) {
         FontSizeRule rule = currentTheme.getFontSizeRule();
-        if (rule == null || rule.getType() == FontSizeRule.AdjustmentType.NO_ADJUSTMENT) return;
+        if (rule == null || rule.getType() == FontSizeRule.AdjustmentType.NO_ADJUSTMENT)
+            return;
         PropertyLoader.replacePropertiesOfType(Font.class, defaults, f -> fontWithRule(f, rule));
     }
 
     private Font fontWithRule(final Font font, final FontSizeRule rule) {
-        if (font == null) return null;
+        if (font == null)
+            return null;
         float size = font.getSize2D();
         float newSize = rule.adjustFontSize(size);
-        if (newSize == size) return font;
+        if (newSize == size)
+            return font;
         if (newSize <= 0) {
             LOGGER.warning("Font " + font + " would be invisible after applying " + rule + ". Font won't be changed!");
             return font;

@@ -31,22 +31,20 @@ public class ClassFinder {
 
     public static <T> List<T> getInstancesOfType(final Class<T> type, final String... packages) {
         try (ResourceWalker walker = ResourceWalker.walkResources(packages)) {
-            return walker.stream().filter(p -> p.endsWith(".class")).map(p -> p.replace('/', '.')).map(
-                p -> p.substring(0, p.length() - 6)
-            ).map(ResourceWalker.orDefault(Class::forName, null)).filter(Objects::nonNull).filter(
-                type::isAssignableFrom
-            ).filter(cls -> !cls.isInterface()).filter(cls -> !Modifier.isAbstract(cls.getModifiers())).map(
-                cls -> (Class<T>) cls
-            ).map(ClassFinder::getInstance).filter(Objects::nonNull).map(type::cast).collect(Collectors.toList());
+            return walker.stream().filter(p -> p.endsWith(".class")).map(p -> p.replace('/', '.'))
+                    .map(p -> p.substring(0, p.length() - 6)).map(ResourceWalker.orDefault(Class::forName, null))
+                    .filter(Objects::nonNull).filter(type::isAssignableFrom).filter(cls -> !cls.isInterface())
+                    .filter(cls -> !Modifier.isAbstract(cls.getModifiers())).map(cls -> (Class<T>) cls)
+                    .map(ClassFinder::getInstance).filter(Objects::nonNull).map(type::cast)
+                    .collect(Collectors.toList());
         }
     }
 
     private static <T> T getInstance(final Class<T> type) {
         try {
             return type.getDeclaredConstructor().newInstance();
-        } catch (
-            InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e
-        ) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException
+                | NoSuchMethodException e) {
             e.printStackTrace();
             return null;
         }

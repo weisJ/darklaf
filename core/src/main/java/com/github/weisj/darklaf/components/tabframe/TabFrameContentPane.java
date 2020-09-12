@@ -166,7 +166,7 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
     /**
      * Show or hide the corresponding panel.
      *
-     * @param a       position of panel.
+     * @param a position of panel.
      * @param enabled true if should be shown.
      */
     public void setEnabled(final Alignment a, final boolean enabled) {
@@ -176,60 +176,49 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
     /**
      * Show or hide the corresponding panel.
      *
-     * @param a       position of panel.
+     * @param a position of panel.
      * @param enabled true if should be shown.
-     * @param force   whether to force the layout process.
+     * @param force whether to force the layout process.
      */
     public void setEnabled(final Alignment a, final boolean enabled, final boolean force) {
-        if (enabled == isEnabled(a) && !force) return;
+        if (enabled == isEnabled(a) && !force)
+            return;
         switch (a) {
             case NORTH:
-                changeStatus(
-                    enabled, Alignment.NORTH_EAST, topSplit, topSplitter,
-                    new LayoutProportions(VERTICAL_PROP_TOP, 1.0, 0.0, 0.0), new LayoutWeights(0.0, 0.0, 0.0, 1.0)
-                );
+                changeStatus(enabled, Alignment.NORTH_EAST, topSplit, topSplitter,
+                        new LayoutProportions(VERTICAL_PROP_TOP, 1.0, 0.0, 0.0), new LayoutWeights(0.0, 0.0, 0.0, 1.0));
                 break;
             case NORTH_EAST:
-                changeStatus(
-                    enabled, Alignment.NORTH, topSplit, topSplitter,
-                    new LayoutProportions(VERTICAL_PROP_TOP, 0.0, 0.0, 1.0), new LayoutWeights(0.0, 0.0, 1.0, 0.0)
-                );
+                changeStatus(enabled, Alignment.NORTH, topSplit, topSplitter,
+                        new LayoutProportions(VERTICAL_PROP_TOP, 0.0, 0.0, 1.0), new LayoutWeights(0.0, 0.0, 1.0, 0.0));
                 break;
             case EAST:
-                changeStatus(
-                    enabled, Alignment.SOUTH_EAST, rightSplit, rightSplitter,
-                    new LayoutProportions(HORIZONTAL_PROP_RIGHT, 1.0, 1.0, 0.0), new LayoutWeights(1.0, 1.0, 0.0, 1.0)
-                );
+                changeStatus(enabled, Alignment.SOUTH_EAST, rightSplit, rightSplitter,
+                        new LayoutProportions(HORIZONTAL_PROP_RIGHT, 1.0, 1.0, 0.0),
+                        new LayoutWeights(1.0, 1.0, 0.0, 1.0));
                 break;
             case SOUTH_EAST:
-                changeStatus(
-                    enabled, Alignment.EAST, rightSplit, rightSplitter,
-                    new LayoutProportions(HORIZONTAL_PROP_RIGHT, 0.0, 1.0, 1.0), new LayoutWeights(1.0, 1.0, 1.0, 0.0)
-                );
+                changeStatus(enabled, Alignment.EAST, rightSplit, rightSplitter,
+                        new LayoutProportions(HORIZONTAL_PROP_RIGHT, 0.0, 1.0, 1.0),
+                        new LayoutWeights(1.0, 1.0, 1.0, 0.0));
                 break;
             case NORTH_WEST:
-                changeStatus(
-                    enabled, Alignment.WEST, leftSplit, leftSplitter,
-                    new LayoutProportions(VERTICAL_PROP_TOP, 1.0, 0.0, 0.0), new LayoutWeights(0.0, 0.0, 0.0, 1.0)
-                );
+                changeStatus(enabled, Alignment.WEST, leftSplit, leftSplitter,
+                        new LayoutProportions(VERTICAL_PROP_TOP, 1.0, 0.0, 0.0), new LayoutWeights(0.0, 0.0, 0.0, 1.0));
                 break;
             case WEST:
-                changeStatus(
-                    enabled, Alignment.NORTH_WEST, leftSplit, leftSplitter,
-                    new LayoutProportions(VERTICAL_PROP_TOP, 0.0, 0.0, 1.0), new LayoutWeights(0.0, 0.0, 1.0, 0.0)
-                );
+                changeStatus(enabled, Alignment.NORTH_WEST, leftSplit, leftSplitter,
+                        new LayoutProportions(VERTICAL_PROP_TOP, 0.0, 0.0, 1.0), new LayoutWeights(0.0, 0.0, 1.0, 0.0));
                 break;
             case SOUTH_WEST:
-                changeStatus(
-                    enabled, Alignment.SOUTH, bottomSplit, bottomSplitter,
-                    new LayoutProportions(VERTICAL_PROP_BOTTOM, 1.0, 1.0, 0.0), new LayoutWeights(1.0, 1.0, 0.0, 1.0)
-                );
+                changeStatus(enabled, Alignment.SOUTH, bottomSplit, bottomSplitter,
+                        new LayoutProportions(VERTICAL_PROP_BOTTOM, 1.0, 1.0, 0.0),
+                        new LayoutWeights(1.0, 1.0, 0.0, 1.0));
                 break;
             case SOUTH:
-                changeStatus(
-                    enabled, Alignment.SOUTH_WEST, bottomSplit, bottomSplitter,
-                    new LayoutProportions(VERTICAL_PROP_BOTTOM, 0.0, 1.0, 1.0), new LayoutWeights(1.0, 1.0, 1.0, 0.0)
-                );
+                changeStatus(enabled, Alignment.SOUTH_WEST, bottomSplit, bottomSplitter,
+                        new LayoutProportions(VERTICAL_PROP_BOTTOM, 0.0, 1.0, 1.0),
+                        new LayoutWeights(1.0, 1.0, 1.0, 0.0));
                 break;
             case CENTER:
                 break;
@@ -240,17 +229,15 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
     /**
      * Change status of panel.
      *
-     * @param enabled     new status.
-     * @param peer        peer alignment.
-     * @param split       the split panel.
-     * @param splitter    the splitter panel.
+     * @param enabled new status.
+     * @param peer peer alignment.
+     * @param split the split panel.
+     * @param splitter the splitter panel.
      * @param proportions the layout proportions
-     * @param weights     the layout weights
+     * @param weights the layout weights
      */
-    private void changeStatus(
-            final boolean enabled, final Alignment peer, final ToggleSplitPane split, final ToggleSplitPane splitter,
-            final LayoutProportions proportions, final LayoutWeights weights
-    ) {
+    private void changeStatus(final boolean enabled, final Alignment peer, final ToggleSplitPane split,
+            final ToggleSplitPane splitter, final LayoutProportions proportions, final LayoutWeights weights) {
         if (enabled) {
             enable(split, weights.splitEnable);
             if (!isEnabled(peer)) {
@@ -307,8 +294,8 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
     /**
      * Returns whether the corresponding panel is currently enabled/visible.
      *
-     * @param  a the position of the panel.
-     * @return   true if enabled.
+     * @param a the position of the panel.
+     * @return true if enabled.
      */
     public boolean isEnabled(final Alignment a) {
         if (a == Alignment.CENTER) {
@@ -401,8 +388,8 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
     /**
      * Get the popup component at the position.
      *
-     * @param  a the position.
-     * @return   the popup component at position.
+     * @param a the position.
+     * @return the popup component at position.
      */
     public Component getPopupComponent(final Alignment a) {
         return getContainer(a).getPopup();
@@ -414,10 +401,8 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         protected final double splitDisable;
         protected final double splitterDisable;
 
-        public LayoutProportions(
-                final double splitRestore, final double splitterPeerDisable, final double splitDisable,
-                final double splitterDisable
-        ) {
+        public LayoutProportions(final double splitRestore, final double splitterPeerDisable, final double splitDisable,
+                final double splitterDisable) {
             this.splitRestore = splitRestore;
             this.splitterPeerDisable = splitterPeerDisable;
             this.splitDisable = splitDisable;
@@ -431,10 +416,8 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         protected final double splitDisable;
         protected final double splitterPeerDisable;
 
-        public LayoutWeights(
-                final double splitEnable, final double splitterDisable, final double splitDisable,
-                final double splitterPeerDisable
-        ) {
+        public LayoutWeights(final double splitEnable, final double splitterDisable, final double splitDisable,
+                final double splitterPeerDisable) {
             this.splitEnable = splitEnable;
             this.splitterDisable = splitterDisable;
             this.splitDisable = splitDisable;

@@ -173,9 +173,8 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
             }
 
             // Handle Escape key events here
-            protected boolean processKeyBinding(
-                    final KeyStroke ks, final KeyEvent e, final int condition, final boolean pressed
-            ) {
+            protected boolean processKeyBinding(final KeyStroke ks, final KeyEvent e, final int condition,
+                    final boolean pressed) {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE && getCellEditor() == null) {
                     // We are not editing, forward to filechooser.
                     chooser.dispatchEvent(e);
@@ -197,15 +196,15 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
         detailsTable.putClientProperty("JTable.autoStartsEdit", Boolean.FALSE);
         detailsTable.addKeyListener(detailsKeyListener);
         detailsTable.putClientProperty(DarkTableUI.KEY_FULL_ROW_FOCUS_BORDER, true);
-        detailsTable
-            .putClientProperty(DarkTableUI.KEY_FILE_CHOOSER_PARENT, (Supplier<JFileChooser>) this::getFileChooser);
+        detailsTable.putClientProperty(DarkTableUI.KEY_FILE_CHOOSER_PARENT,
+                (Supplier<JFileChooser>) this::getFileChooser);
         detailsTable.putClientProperty("JTable.fileNameColumnIndex", COLUMN_FILENAME);
 
         Font font = list.getFont();
         detailsTable.setFont(font);
 
         TableCellRenderer headerRenderer =
-            new AlignableTableHeaderRenderer(detailsTable.getTableHeader().getDefaultRenderer());
+                new AlignableTableHeaderRenderer(detailsTable.getTableHeader().getDefaultRenderer());
         detailsTable.getTableHeader().setDefaultRenderer(headerRenderer);
         TableCellRenderer cellRenderer = new DetailsTableCellRenderer(chooser);
         detailsTable.setDefaultRenderer(Object.class, cellRenderer);
@@ -412,7 +411,7 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
                 index = table.rowAtPoint(p);
 
                 boolean pointOutsidePrefSize =
-                    SwingUtilities2.pointOutsidePrefSize(table, index, table.columnAtPoint(p), p);
+                        SwingUtilities2.pointOutsidePrefSize(table, index, table.columnAtPoint(p), p);
 
                 if (pointOutsidePrefSize && !fullRowSelection) {
                     return;
@@ -424,11 +423,9 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
                     // Make a new event with the list as source, placing the
                     // click in the corresponding list cell.
                     Rectangle r = list.getCellBounds(index, index);
-                    MouseEvent newEvent = new MouseEvent(
-                        list, evt.getID(), evt.getWhen(), evt.getModifiersEx(), r.x + 1, r.y + r.height / 2,
-                        evt.getXOnScreen(), evt.getYOnScreen(), evt.getClickCount(), evt.isPopupTrigger(),
-                        evt.getButton()
-                    );
+                    MouseEvent newEvent = new MouseEvent(list, evt.getID(), evt.getWhen(), evt.getModifiersEx(),
+                            r.x + 1, r.y + r.height / 2, evt.getXOnScreen(), evt.getYOnScreen(), evt.getClickCount(),
+                            evt.isPopupTrigger(), evt.getButton());
                     SwingUtilities.convertMouseEvent(list, newEvent, list);
                     evt = newEvent;
                 }
@@ -441,11 +438,9 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
 
                 // For single click, we handle editing file name
                 if (evt.getClickCount() == 1 && source instanceof JList) {
-                    if (
-                        (!fc.isMultiSelectionEnabled() || fc.getSelectedFiles().length <= 1) && listSelectionModel
-                            .isSelectedIndex(index) && getEditIndex() == index && editFile == null
-                            && DarkUIUtil.isOverText(evt, index, list)
-                    ) {
+                    if ((!fc.isMultiSelectionEnabled() || fc.getSelectedFiles().length <= 1)
+                            && listSelectionModel.isSelectedIndex(index) && getEditIndex() == index && editFile == null
+                            && DarkUIUtil.isOverText(evt, index, list)) {
                         editFileName(index);
                     } else {
                         setEditIndex(index);
@@ -469,10 +464,8 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
     public class DarkFileRenderer extends DefaultListCellRenderer {
 
         @Override
-        public Component getListCellRendererComponent(
-                final JList<?> list, final Object value, final int index, final boolean isSelected,
-                final boolean cellHasFocus
-        ) {
+        public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,
+                final boolean isSelected, final boolean cellHasFocus) {
             Component comp = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             if (comp instanceof JLabel) {
                 File file = (File) value;
@@ -513,9 +506,8 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
             });
         }
 
-        public Component getTableCellEditorComponent(
-                final JTable table, final Object value, final boolean isSelected, final int row, final int column
-        ) {
+        public Component getTableCellEditorComponent(final JTable table, final Object value, final boolean isSelected,
+                final int row, final int column) {
             Object realValue = value instanceof File ? getFileChooser().getName((File) value) : value;
             return super.getTableCellEditorComponent(table, realValue, isSelected, row, column);
         }

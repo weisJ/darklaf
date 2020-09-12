@@ -45,7 +45,7 @@ import com.github.weisj.darklaf.util.Pair;
  * UI class for {@link JTabFrame}.
  *
  * @author Jannis Weis
- * @since  2018
+ * @since 2018
  */
 public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
 
@@ -372,7 +372,7 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
             int index = tab.getIndex();
             if (index >= 0) {
                 Rectangle rect =
-                    getTabRect(tabFrame.getTabComponentAt(a, index), a, tabFrame.getTabContainer(a), false);
+                        getTabRect(tabFrame.getTabComponentAt(a, index), a, tabFrame.getTabContainer(a), false);
                 Point pos = res.getSecond();
                 if (isForward(a)) {
                     if (pos.x <= rect.x + rect.width / 2 && pos.x >= rect.x) {
@@ -394,32 +394,40 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
         int threshold = size;
         int index = -10;
         if (tabFrame.getTopTabCount() == 0) {
-            if (layout.isDraggedOver(Alignment.NORTH)) threshold *= 2;
+            if (layout.isDraggedOver(Alignment.NORTH))
+                threshold *= 2;
             if (p.y < threshold) {
                 a = p.x >= tabFrame.getWidth() / 2 ? Alignment.NORTH_EAST : Alignment.NORTH;
             }
-            if (p.y < size) index = -1;
+            if (p.y < size)
+                index = -1;
         }
         if (a == null && tabFrame.getBottomTabCount() == 0) {
-            if (layout.isDraggedOver(Alignment.SOUTH)) threshold *= 2;
+            if (layout.isDraggedOver(Alignment.SOUTH))
+                threshold *= 2;
             if (p.y > tabFrame.getHeight() - threshold) {
                 a = p.x >= tabFrame.getWidth() / 2 ? Alignment.SOUTH : Alignment.SOUTH_WEST;
             }
-            if (p.y > tabFrame.getHeight() - size) index = -1;
+            if (p.y > tabFrame.getHeight() - size)
+                index = -1;
         }
         if (a == null && tabFrame.getLeftTabCount() == 0) {
-            if (layout.isDraggedOver(Alignment.WEST)) threshold *= 2;
+            if (layout.isDraggedOver(Alignment.WEST))
+                threshold *= 2;
             if (p.x < threshold) {
                 a = p.y >= tabFrame.getHeight() / 2 ? Alignment.WEST : Alignment.NORTH_WEST;
             }
-            if (p.x < size) index = -1;
+            if (p.x < size)
+                index = -1;
         }
         if (a == null && tabFrame.getRightTabCount() == 0) {
-            if (layout.isDraggedOver(Alignment.EAST)) threshold *= 2;
+            if (layout.isDraggedOver(Alignment.EAST))
+                threshold *= 2;
             if (p.x > tabFrame.getWidth() - threshold) {
                 a = p.y >= tabFrame.getHeight() / 2 ? Alignment.SOUTH_EAST : Alignment.EAST;
             }
-            if (p.x > tabFrame.getWidth() - size) index = -1;
+            if (p.x > tabFrame.getWidth() - size)
+                index = -1;
         }
         layout.setDraggedOver(false);
         if (a != null) {
@@ -432,9 +440,8 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
         dropSize.setSize(width, height);
     }
 
-    protected Rectangle getTabRect(
-            final TabFrameTab tab, final Alignment a, final Component tabComp, final boolean includeDropRect
-    ) {
+    protected Rectangle getTabRect(final TabFrameTab tab, final Alignment a, final Component tabComp,
+            final boolean includeDropRect) {
         tab.getComponent().getBounds(calcRect);
         SwingUtilities.convertRectangle(tab.getComponent(), calcRect, tabComp);
         if (includeDropRect && a == destAlign) {
@@ -466,9 +473,8 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
         }
     }
 
-    protected Pair<JTabFrame.TabFramePosition, Point> getNearestTabIndexAtImpl(
-            final JTabFrame tabFrame, final Point pos
-    ) {
+    protected Pair<JTabFrame.TabFramePosition, Point> getNearestTabIndexAtImpl(final JTabFrame tabFrame,
+            final Point pos) {
         Pair<JTabFrame.TabFramePosition, Point> res = getTabIndexAtImpl(tabFrame, pos);
         JTabFrame.TabFramePosition tab = res.getFirst();
         if (tab.getAlignment() != null && tab.getIndex() == -1) {

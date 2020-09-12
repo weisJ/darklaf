@@ -46,9 +46,7 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
 
     private static final int ROW_HEIGHT_FALLBACK = 22;
@@ -200,26 +198,26 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
     }
 
     protected boolean isScrollPaneRtl() {
-        if (!isInScrollPane()) return false;
+        if (!isInScrollPane())
+            return false;
         Container comp = DarkUIUtil.getUnwrappedParent(table).getParent();
         return !comp.getComponentOrientation().isLeftToRight();
     }
 
     protected boolean scrollBarVisible() {
         JScrollPane comp = DarkUIUtil.getParentOfType(JScrollPane.class, table, 2);
-        if (comp == null) return false;
+        if (comp == null)
+            return false;
         OverlayScrollPane overlayScrollPane = DarkUIUtil.getParentOfType(OverlayScrollPane.class, table, 3);
         return overlayScrollPane == null && comp.getVerticalScrollBar().isVisible();
     }
 
-    protected boolean showVerticalLine(
-            final boolean ltr, final boolean scrollVisible, final boolean scrollLtR, final int column,
-            final int draggedIndex, final int cMin, final int cMax
-    ) {
+    protected boolean showVerticalLine(final boolean ltr, final boolean scrollVisible, final boolean scrollLtR,
+            final int column, final int draggedIndex, final int cMin, final int cMax) {
         JTableHeader header = table.getTableHeader();
         int dist = header != null
-            ? adjustDistance(header.getDraggedDistance(), table.getCellRect(0, draggedIndex, true), table)
-            : 0;
+                ? adjustDistance(header.getDraggedDistance(), table.getCellRect(0, draggedIndex, true), table)
+                : 0;
         boolean isDragged = column == draggedIndex && dist != 0;
         if (!scrollVisible) {
             if (ltr) {
@@ -253,10 +251,8 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
     }
 
     @Override
-    protected void paintDraggedArea(
-            final Graphics g, final int rMin, final int rMax, final int cMin, final int cMax,
-            final TableColumn draggedColumn, final int distance
-    ) {
+    protected void paintDraggedArea(final Graphics g, final int rMin, final int rMax, final int cMin, final int cMax,
+            final TableColumn draggedColumn, final int distance) {
         int draggedColumnIndex = viewIndexForColumn(draggedColumn);
 
         Rectangle minCell = table.getCellRect(rMin, draggedColumnIndex, true);
@@ -277,7 +273,8 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
         int tableHeight = getPreferredSize(table).height;
         g.setColor(parent.getBackground());
         int width = vacatedColumnRect.width;
-        if (draggedColumnIndex < cMax) width--;
+        if (draggedColumnIndex < cMax)
+            width--;
 
         g.fillRect(vacatedColumnRect.x, 0, width, tableHeight);
 
@@ -312,7 +309,8 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
             }
             // Left
             if (dist != 0 || !onLeftEdge) {
-                if (draggedColumnIndex == cMin && scrollBarVisible() && isScrollPaneRtl()) x1++;
+                if (draggedColumnIndex == cMin && scrollBarVisible() && isScrollPaneRtl())
+                    x1++;
                 g.fillRect(x1 - 1, y1, 1, y2 - y1);
             }
             // Right
@@ -379,11 +377,13 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
                 default:
                     break;
             }
-            if (table == null) return false;
+            if (table == null)
+                return false;
             KeyStroke stroke = KeyStroke.getKeyStroke(event.getExtendedKeyCode(), event.getModifiersEx());
             String actionName =
-                String.valueOf(table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).get(stroke));
-            if ("null".equals(actionName)) actionName = null;
+                    String.valueOf(table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).get(stroke));
+            if ("null".equals(actionName))
+                actionName = null;
             String cutActionName = String.valueOf(TransferHandler.getCutAction().getValue(Action.NAME));
             String copyActionName = String.valueOf(TransferHandler.getCopyAction().getValue(Action.NAME));
             return Objects.equals(actionName, copyActionName) || Objects.equals(actionName, cutActionName);
@@ -391,9 +391,8 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
         return false;
     }
 
-    protected void paintCell(
-            final Graphics g, final Rectangle r, final int row, final int column, final int cMin, final int cMax
-    ) {
+    protected void paintCell(final Graphics g, final Rectangle r, final int row, final int column, final int cMin,
+            final int cMax) {
         // if (true) return;
         boolean isEditorCell = table.isEditing() && table.getEditingRow() == row && table.getEditingColumn() == column;
 
@@ -410,8 +409,10 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
 
         if (isEditorCell) {
             if (!table.getShowVerticalLines()) {
-                if (column > cMin) x--;
-                if (column > cMin && column < cMax) w++;
+                if (column > cMin)
+                    x--;
+                if (column > cMin && column < cMax)
+                    w++;
             }
         }
         if (isEditorCell) {
@@ -428,7 +429,8 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
 
     protected TableCellRenderer getCellRenderer(final int row, final int column) {
         TableCellRenderer renderer = table.getCellRenderer(row, column);
-        if (renderer instanceof DarkTableCellRendererDelegate) return renderer;
+        if (renderer instanceof DarkTableCellRendererDelegate)
+            return renderer;
         if (rendererDelegate == null) {
             rendererDelegate = new DarkTableCellRendererDelegate(renderer);
         }
@@ -463,14 +465,13 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
             if (isFileList && SwingUtilities.isLeftMouseButton(e)) {
                 int row = table.rowAtPoint(e.getPoint());
                 JFileChooser fc = getFileChooser();
-                if (row < 0 || fc == null) return;
+                if (row < 0 || fc == null)
+                    return;
                 int column = getFileNameColumnIndex();
                 boolean isSelected = table.getSelectionModel().getLeadSelectionIndex() == row
-                    && table.getColumnModel().getSelectionModel().getLeadSelectionIndex() == column;
-                if (
-                    (!fc.isMultiSelectionEnabled() || fc.getSelectedFiles().length <= 1) && isSelected
-                        && lastIndex == row && DarkUIUtil.isOverText(e, row, column, table)
-                ) {
+                        && table.getColumnModel().getSelectionModel().getLeadSelectionIndex() == column;
+                if ((!fc.isMultiSelectionEnabled() || fc.getSelectedFiles().length <= 1) && isSelected
+                        && lastIndex == row && DarkUIUtil.isOverText(e, row, column, table)) {
                     startEditing(row, column);
                 } else {
                     lastIndex = row;
@@ -479,8 +480,8 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
         }
 
         protected JFileChooser getFileChooser() {
-            Object obj =
-                PropertyUtil.getObject(table, DarkTableUI.KEY_FILE_CHOOSER_PARENT, Supplier.class, Object::new).get();
+            Object obj = PropertyUtil.getObject(table, DarkTableUI.KEY_FILE_CHOOSER_PARENT, Supplier.class, Object::new)
+                    .get();
             return obj instanceof JFileChooser ? (JFileChooser) obj : null;
         }
 
@@ -539,10 +540,8 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
             } else if (PropertyKey.COMPONENT_ORIENTATION.equals(key)) {
                 table.doLayout();
                 table.repaint();
-            } else if (
-                KEY_ALTERNATE_ROW_COLOR.equals(key) || KEY_RENDER_BOOLEAN_AS_CHECKBOX.equals(key)
-                    || KEY_BOOLEAN_RENDER_TYPE.equals(key)
-            ) {
+            } else if (KEY_ALTERNATE_ROW_COLOR.equals(key) || KEY_RENDER_BOOLEAN_AS_CHECKBOX.equals(key)
+                    || KEY_BOOLEAN_RENDER_TYPE.equals(key)) {
                 table.repaint();
             } else if (PropertyKey.ENABLED.equals(key)) {
                 DarkUIUtil.repaint(table.getTableHeader());

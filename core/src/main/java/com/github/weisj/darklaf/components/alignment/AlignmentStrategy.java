@@ -24,7 +24,6 @@ package com.github.weisj.darklaf.components.alignment;
 import java.awt.*;
 
 public enum AlignmentStrategy {
-
     MOUSE_BOTH {
         @Override
         public Point align(final Point compPoint, final Point mousePoint) {

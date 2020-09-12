@@ -26,9 +26,7 @@ import javax.swing.plaf.ComponentUI;
 
 import com.github.weisj.darklaf.ui.text.bridge.DarkTextPaneUIBridge;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkTextPaneUI extends DarkTextPaneUIBridge {
 
     public static ComponentUI createUI(final JComponent c) {

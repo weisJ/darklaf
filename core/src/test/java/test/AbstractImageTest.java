@@ -33,7 +33,7 @@ import com.github.weisj.darklaf.util.ImageUtil;
 
 public abstract class AbstractImageTest {
     private static final int SCALING_FACTOR = 3;
-    protected final static String WORKING_DIR = "image_test";
+    protected static final String WORKING_DIR = "image_test";
     private final String workingDir;
 
     public AbstractImageTest(final String dir) {

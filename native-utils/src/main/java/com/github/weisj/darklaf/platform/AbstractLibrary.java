@@ -42,9 +42,7 @@ public abstract class AbstractLibrary {
         this.logger = logger;
     }
 
-    /**
-     * Load the decorations-library if necessary.
-     */
+    /** Load the decorations-library if necessary. */
     public void updateLibrary() {
         if (!isLoaded() && !attemptedLoad) {
             loadLibrary();
@@ -88,14 +86,17 @@ public abstract class AbstractLibrary {
     }
 
     protected void info(final String message) {
-        if (logger != null) logger.info(message);
+        if (logger != null)
+            logger.info(message);
     }
 
     protected void warning(final String message) {
-        if (logger != null) logger.warning(message);
+        if (logger != null)
+            logger.warning(message);
     }
 
     protected void error(final String message, final Throwable e) {
-        if (logger != null) logger.log(Level.SEVERE, message, e);
+        if (logger != null)
+            logger.log(Level.SEVERE, message, e);
     }
 }

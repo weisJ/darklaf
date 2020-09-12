@@ -35,7 +35,7 @@ import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
 public class SampleRenderer extends JLabel implements TableCellRenderer {
 
     private final DarkCellRendererToggleButton<?> booleanRenderer =
-        new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellCheckBox(true));
+            new DarkCellRendererToggleButton<>(new DarkCellRendererToggleButton.CellCheckBox(true));
 
     public SampleRenderer() {
         super();
@@ -43,10 +43,8 @@ public class SampleRenderer extends JLabel implements TableCellRenderer {
         setOpaque(true);
     }
 
-    public Component getTableCellRendererComponent(
-            final JTable table, final Object sample, final boolean isSelected, final boolean hasFocus, final int row,
-            final int column
-    ) {
+    public Component getTableCellRendererComponent(final JTable table, final Object sample, final boolean isSelected,
+            final boolean hasFocus, final int row, final int column) {
         setBackground(null);
         setBorder(null);
         setIcon(null);

@@ -29,7 +29,6 @@ import java.beans.PropertyChangeEvent;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonListener;
 
-
 public class DarkButtonListener extends BasicButtonListener {
 
     private final DarkButtonUI ui;

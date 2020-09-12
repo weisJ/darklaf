@@ -34,7 +34,8 @@ public final class StringUtil {
     private StringUtil() {}
 
     public static String toHtml(final String text) {
-        if (text == null) return "";
+        if (text == null)
+            return "";
         if (!text.startsWith("<html>") && text.contains("\n")) {
             return "<html>" + text.replaceAll("\n", "<\\br>") + "</html>";
         }
@@ -79,9 +80,8 @@ public final class StringUtil {
         return split(s, separator, excludeSeparator, true);
     }
 
-    public static List<String> split(
-            final String s, final String separator, final boolean excludeSeparator, final boolean excludeEmptyStrings
-    ) {
+    public static List<String> split(final String s, final String separator, final boolean excludeSeparator,
+            final boolean excludeEmptyStrings) {
         if (separator.isEmpty()) {
             return Collections.singletonList(s);
         } else {
@@ -191,8 +191,10 @@ public final class StringUtil {
     }
 
     public static String repeat(final String s, final int count) {
-        if (count <= 0) return "";
-        if (count == 1) return s;
+        if (count <= 0)
+            return "";
+        if (count == 1)
+            return s;
         StringBuilder builder = new StringBuilder(s.length() * count);
         for (int i = 0; i < count; i++) {
             builder.append(s);

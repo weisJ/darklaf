@@ -57,15 +57,16 @@ public interface ButtonConstants {
         return PropertyUtil.getBooleanProperty(c, KEY_ALT_ARC);
     }
 
-    static int chooseArcWithBorder(
-            final Component c, final int arc, final int minimum, final int altArc, final int borderSize
-    ) {
+    static int chooseArcWithBorder(final Component c, final int arc, final int minimum, final int altArc,
+            final int borderSize) {
         return chooseArc(c, arc, minimum, altArc, c.getHeight() - 2 * borderSize);
     }
 
     static int chooseArc(final Component c, final int arc, final int minimum, final int altArc, final int roundedArc) {
-        if (ButtonConstants.isNoArc(c)) return minimum;
-        if (ButtonConstants.isRound(c)) return roundedArc;
+        if (ButtonConstants.isNoArc(c))
+            return minimum;
+        if (ButtonConstants.isRound(c))
+            return roundedArc;
         boolean alt = ButtonConstants.chooseAlternativeArc(c);
         return alt ? altArc : arc;
     }
@@ -84,11 +85,12 @@ public interface ButtonConstants {
 
     static boolean isThin(final Component c) {
         return PropertyUtil.getBooleanProperty(c, KEY_THIN)
-            || (c instanceof AbstractButton && ButtonConstants.doConvertToBorderless((AbstractButton) c));
+                || (c instanceof AbstractButton && ButtonConstants.doConvertToBorderless((AbstractButton) c));
     }
 
     static boolean isBorderlessVariant(final Component c) {
-        if (isBorderlessRectangular(c)) return true;
+        if (isBorderlessRectangular(c))
+            return true;
         if (c instanceof JButton || c instanceof JToggleButton) {
             return isBorderless(c) || doConvertToBorderless((AbstractButton) c);
         }
@@ -105,12 +107,12 @@ public interface ButtonConstants {
 
     static boolean doConvertToBorderless(final AbstractButton b) {
         return isIconOnly(b) && !b.isFocusable() && convertIconButtonToBorderless(b)
-            && (b instanceof JButton || b instanceof JToggleButton);
+                && (b instanceof JButton || b instanceof JToggleButton);
     }
 
     static boolean convertIconButtonToBorderless(final AbstractButton b) {
         return !(b instanceof UIResource) && UIManager.getBoolean("Button.convertIconOnlyToBorderless")
-            && !PropertyUtil.getBooleanProperty(b, KEY_NO_BORDERLESS_OVERWRITE);
+                && !PropertyUtil.getBooleanProperty(b, KEY_NO_BORDERLESS_OVERWRITE);
     }
 
     static boolean isIconOnly(final AbstractButton b) {

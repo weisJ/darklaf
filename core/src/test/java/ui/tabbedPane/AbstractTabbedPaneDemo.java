@@ -91,11 +91,8 @@ public abstract class AbstractTabbedPaneDemo<T extends JTabbedPane> implements C
         controlPanel.add(new JCheckBox("LeftToRight") {
             {
                 setSelected(tabbedPane.getComponentOrientation().isLeftToRight());
-                addActionListener(
-                    e -> tabbedPane.setComponentOrientation(
-                        isSelected() ? ComponentOrientation.LEFT_TO_RIGHT : ComponentOrientation.RIGHT_TO_LEFT
-                    )
-                );
+                addActionListener(e -> tabbedPane.setComponentOrientation(
+                        isSelected() ? ComponentOrientation.LEFT_TO_RIGHT : ComponentOrientation.RIGHT_TO_LEFT));
             }
         });
         controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_CENTER_TABS) {
@@ -114,35 +111,31 @@ public abstract class AbstractTabbedPaneDemo<T extends JTabbedPane> implements C
             {
                 setSelected(false);
                 addActionListener(
-                    e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_SHOW_NEW_TAB_BUTTON, isSelected())
-                );
+                        e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_SHOW_NEW_TAB_BUTTON, isSelected()));
             }
         });
         controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_LEADING_COMP) {
             {
                 setSelected(false);
                 JLabel leading = new PlaceholderLabel("Leading");
-                addActionListener(
-                    e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_LEADING_COMP, isSelected() ? leading : null)
-                );
+                addActionListener(e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_LEADING_COMP,
+                        isSelected() ? leading : null));
             }
         });
         controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_TRAILING_COMP) {
             {
                 setSelected(false);
                 JLabel trailing = new PlaceholderLabel("Trailing");
-                addActionListener(
-                    e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_TRAILING_COMP, isSelected() ? trailing : null)
-                );
+                addActionListener(e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_TRAILING_COMP,
+                        isSelected() ? trailing : null));
             }
         });
         controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_NORTH_COMP) {
             {
                 setSelected(false);
                 JLabel north = new PlaceholderLabel("North");
-                addActionListener(
-                    e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_NORTH_COMP, isSelected() ? north : null)
-                );
+                addActionListener(e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_NORTH_COMP,
+                        isSelected() ? north : null));
             }
         });
         controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_EAST_COMP) {
@@ -150,17 +143,15 @@ public abstract class AbstractTabbedPaneDemo<T extends JTabbedPane> implements C
                 setSelected(false);
                 JLabel east = new PlaceholderLabel("East");
                 addActionListener(
-                    e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_EAST_COMP, isSelected() ? east : null)
-                );
+                        e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_EAST_COMP, isSelected() ? east : null));
             }
         });
         controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_SOUTH_COMP) {
             {
                 setSelected(false);
                 JLabel south = new PlaceholderLabel("South");
-                addActionListener(
-                    e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_SOUTH_COMP, isSelected() ? south : null)
-                );
+                addActionListener(e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_SOUTH_COMP,
+                        isSelected() ? south : null));
             }
         });
         controlPanel.add(new JCheckBox(DarkTabbedPaneUI.KEY_WEST_COMP) {
@@ -168,8 +159,7 @@ public abstract class AbstractTabbedPaneDemo<T extends JTabbedPane> implements C
                 setSelected(false);
                 JLabel west = new PlaceholderLabel("West");
                 addActionListener(
-                    e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_WEST_COMP, isSelected() ? west : null)
-                );
+                        e -> tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_WEST_COMP, isSelected() ? west : null));
             }
         });
         return panel;

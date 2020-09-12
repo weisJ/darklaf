@@ -95,7 +95,8 @@ public final class DarkUIUtil {
     }
 
     public static Insets addInsets(final Insets ins1, final Insets ins2) {
-        if (ins2 == null) return ins1;
+        if (ins2 == null)
+            return ins1;
         if (ins1 != null) {
             ins1.left += ins2.left;
             ins1.right += ins2.right;
@@ -107,7 +108,8 @@ public final class DarkUIUtil {
     }
 
     public static Dimension addInsets(final Dimension dim, final Insets ins) {
-        if (dim == null || ins == null) return dim;
+        if (dim == null || ins == null)
+            return dim;
         dim.width += ins.left + ins.right;
         dim.height += ins.top + ins.bottom;
         return dim;
@@ -123,7 +125,8 @@ public final class DarkUIUtil {
     }
 
     public static void repaint(final Component component) {
-        if (component != null && component.isVisible()) component.repaint();
+        if (component != null && component.isVisible())
+            component.repaint();
     }
 
     public static void repaint(final JComponent component, final Rectangle bounds) {
@@ -134,10 +137,8 @@ public final class DarkUIUtil {
         repaint(component, bounds.x, bounds.y, bounds.width, bounds.height, immediately);
     }
 
-    public static void repaint(
-            final JComponent component, final int x, final int y, final int width, final int height,
-            final boolean immediately
-    ) {
+    public static void repaint(final JComponent component, final int x, final int y, final int width, final int height,
+            final boolean immediately) {
         if (component != null && component.isVisible()) {
             if (immediately) {
                 component.paintImmediately(x, y, width, height);
@@ -147,15 +148,13 @@ public final class DarkUIUtil {
         }
     }
 
-    public static <T extends Component> void repaintChild(
-            final T component, final Function<T, JComponent> func, final Rectangle bounds
-    ) {
+    public static <T extends Component> void repaintChild(final T component, final Function<T, JComponent> func,
+            final Rectangle bounds) {
         repaintChild(component, func, bounds, false);
     }
 
-    public static <T extends Component> void repaintChild(
-            final T component, final Function<T, JComponent> func, final Rectangle bounds, final boolean immediately
-    ) {
+    public static <T extends Component> void repaintChild(final T component, final Function<T, JComponent> func,
+            final Rectangle bounds, final boolean immediately) {
         if (component != null) {
             JComponent c = func.apply(component);
             Rectangle r = SwingUtilities.convertRectangle(component, bounds, c);
@@ -171,13 +170,15 @@ public final class DarkUIUtil {
     /**
      * Returns whether the component has the focus, or one of the subcomponents has it.
      *
-     * @param  c the component.
-     * @param  e an event associated with focusLost. optional (i.e. can be null).
-     * @return   true if the component or one of its subcomponents has the focus.
+     * @param c the component.
+     * @param e an event associated with focusLost. optional (i.e. can be null).
+     * @return true if the component or one of its subcomponents has the focus.
      */
     public static boolean hasFocus(final Component c, final FocusEvent e) {
-        if (c == null) return false;
-        if (c.hasFocus()) return true;
+        if (c == null)
+            return false;
+        if (c.hasFocus())
+            return true;
         if (c instanceof Window) {
             return hasFocus(c);
         }
@@ -193,20 +194,22 @@ public final class DarkUIUtil {
 
     public static boolean hasFocus(final Window w) {
         Component owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-        if (owner == null) return false;
+        if (owner == null)
+            return false;
         return SwingUtilities.getWindowAncestor(owner) == w;
     }
 
     public static Container getUnwrappedParent(final Component comp) {
-        if (comp == null) return null;
+        if (comp == null)
+            return null;
         return SwingUtilities.getUnwrappedParent(comp);
     }
 
     public static Component unwrapComponent(final Component component) {
-        if (component == null) return null;
-        if (
-            !(component.getParent() instanceof JLayer) && !(component.getParent() instanceof JViewport)
-        ) return component;
+        if (component == null)
+            return null;
+        if (!(component.getParent() instanceof JLayer) && !(component.getParent() instanceof JViewport))
+            return component;
         Container parent = component.getParent();
         while (parent instanceof JLayer || parent instanceof JViewport) {
             parent = parent.getParent();
@@ -235,12 +238,11 @@ public final class DarkUIUtil {
     }
 
     public static boolean isInCell(final Component c) {
-        if (getParentOfType(DarkTableHeaderRendererPane.class, c, CELL_SEARCH_DEPTH) != null) return false;
-        return getParentOfType(
-            c, CELL_SEARCH_DEPTH, CellRendererPane.class, CellEditor.class, TableCellRenderer.class,
-            TableCellEditor.class, TreeCellRenderer.class, TreeCellEditor.class, ListCellRenderer.class,
-            CellRenderer.class
-        ) != null;
+        if (getParentOfType(DarkTableHeaderRendererPane.class, c, CELL_SEARCH_DEPTH) != null)
+            return false;
+        return getParentOfType(c, CELL_SEARCH_DEPTH, CellRendererPane.class, CellEditor.class, TableCellRenderer.class,
+                TableCellEditor.class, TreeCellRenderer.class, TreeCellEditor.class, ListCellRenderer.class,
+                CellRenderer.class) != null;
     }
 
     public static <T> T getParentOfType(final Class<? extends T> cls, final Component c) {
@@ -253,7 +255,8 @@ public final class DarkUIUtil {
             if (cls.isAssignableFrom(eachParent.getClass())) {
                 return cls.cast(eachParent);
             }
-            if (depth >= searchDepth) break;
+            if (depth >= searchDepth)
+                break;
             depth++;
         }
         return null;
@@ -273,7 +276,8 @@ public final class DarkUIUtil {
                     return cls.cast(eachParent);
                 }
             }
-            if (depth >= searchDepth) break;
+            if (depth >= searchDepth)
+                break;
             depth++;
         }
         return null;
@@ -304,10 +308,12 @@ public final class DarkUIUtil {
         MenuElement result;
         if (forward) {
             result = nextEnabledChild(e, fromIndex + 1, e.length - 1);
-            if (result == null) result = nextEnabledChild(e, 0, fromIndex - 1);
+            if (result == null)
+                result = nextEnabledChild(e, 0, fromIndex - 1);
         } else {
             result = previousEnabledChild(e, fromIndex - 1, 0);
-            if (result == null) result = previousEnabledChild(e, e.length - 1, fromIndex + 1);
+            if (result == null)
+                result = previousEnabledChild(e, e.length - 1, fromIndex + 1);
         }
         return result;
     }
@@ -316,10 +322,8 @@ public final class DarkUIUtil {
         for (int i = fromIndex; i <= toIndex; i++) {
             if (e[i] != null) {
                 Component comp = e[i].getComponent();
-                if (
-                    comp != null && (comp.isEnabled() || UIManager.getBoolean("MenuItem.disabledAreNavigable"))
-                        && comp.isVisible()
-                ) {
+                if (comp != null && (comp.isEnabled() || UIManager.getBoolean("MenuItem.disabledAreNavigable"))
+                        && comp.isVisible()) {
                     return e[i];
                 }
             }
@@ -331,10 +335,8 @@ public final class DarkUIUtil {
         for (int i = fromIndex; i >= toIndex; i--) {
             if (e[i] != null) {
                 Component comp = e[i].getComponent();
-                if (
-                    comp != null && (comp.isEnabled() || UIManager.getBoolean("MenuItem.disabledAreNavigable"))
-                        && comp.isVisible()
-                ) {
+                if (comp != null && (comp.isEnabled() || UIManager.getBoolean("MenuItem.disabledAreNavigable"))
+                        && comp.isVisible()) {
                     return e[i];
                 }
             }
@@ -344,10 +346,11 @@ public final class DarkUIUtil {
 
     public static boolean isOverText(final MouseEvent e, final int index, final JList<?> list) {
         Rectangle bounds = list.getCellBounds(index, index);
-        if (!bounds.contains(e.getPoint())) return false;
+        if (!bounds.contains(e.getPoint()))
+            return false;
         // noinspection unchecked
-        Component cellRenderer = ((ListCellRenderer<Object>) list.getCellRenderer())
-            .getListCellRendererComponent(list, list.getModel().getElementAt(index), index, false, false);
+        Component cellRenderer = ((ListCellRenderer<Object>) list.getCellRenderer()).getListCellRendererComponent(list,
+                list.getModel().getElementAt(index), index, false, false);
         if (cellRenderer instanceof JLabel) {
             return isOverText((JLabel) cellRenderer, bounds, e.getPoint());
         } else {
@@ -358,17 +361,19 @@ public final class DarkUIUtil {
     public static boolean isOverText(final JLabel label, final Rectangle bounds, final Point p) {
         textRect.setBounds(0, 0, 0, 0);
         iconRect.setBounds(0, 0, 0, 0);
-        SwingUtilities.layoutCompoundLabel(
-            label, label.getFontMetrics(label.getFont()), label.getText(), label.getIcon(), label.getVerticalAlignment(), label.getHorizontalAlignment(), label.getVerticalTextPosition(), label.getHorizontalTextPosition(), bounds, iconRect, textRect, label.getIconTextGap()
-        );
+        SwingUtilities.layoutCompoundLabel(label, label.getFontMetrics(label.getFont()), label.getText(),
+                label.getIcon(), label.getVerticalAlignment(), label.getHorizontalAlignment(),
+                label.getVerticalTextPosition(), label.getHorizontalTextPosition(), bounds, iconRect, textRect,
+                label.getIconTextGap());
         return textRect.contains(p);
     }
 
     public static boolean isOverText(final MouseEvent e, final int row, final int column, final JTable table) {
         Rectangle bounds = table.getCellRect(row, column, false);
-        if (!bounds.contains(e.getPoint())) return false;
-        Component cellRenderer = table.getCellRenderer(row, column)
-            .getTableCellRendererComponent(table, table.getValueAt(row, column), false, false, row, column);
+        if (!bounds.contains(e.getPoint()))
+            return false;
+        Component cellRenderer = table.getCellRenderer(row, column).getTableCellRendererComponent(table,
+                table.getValueAt(row, column), false, false, row, column);
         if (cellRenderer instanceof JLabel) {
             return isOverText((JLabel) cellRenderer, bounds, e.getPoint());
         } else {
@@ -399,7 +404,8 @@ public final class DarkUIUtil {
 
     public static Insets getBorderInsets(final JComponent comp) {
         Border border = comp.getBorder();
-        if (border == null) return new InsetsUIResource(0, 0, 0, 0);
+        if (border == null)
+            return new InsetsUIResource(0, 0, 0, 0);
         return border.getBorderInsets(comp);
     }
 
@@ -411,7 +417,8 @@ public final class DarkUIUtil {
     }
 
     public static Rectangle getScreenBounds(final JComponent target, final Point p) {
-        if (p == null) return getScreenBounds(target, target.getLocationOnScreen());
+        if (p == null)
+            return getScreenBounds(target, target.getLocationOnScreen());
         return getScreenBounds(target, p.x, p.y);
     }
 
@@ -419,9 +426,8 @@ public final class DarkUIUtil {
         return getScreenBounds(target, x, y, true);
     }
 
-    public static Rectangle getScreenBounds(
-            final JComponent target, final int x, final int y, final boolean subtractInsets
-    ) {
+    public static Rectangle getScreenBounds(final JComponent target, final int x, final int y,
+            final boolean subtractInsets) {
         GraphicsConfiguration gc = target != null ? target.getGraphicsConfiguration() : null;
         if (gc == null) {
             gc = getGraphicsConfigurationForLocation(x, y);
@@ -444,7 +450,8 @@ public final class DarkUIUtil {
     }
 
     public static GraphicsConfiguration getGraphicsConfigurationForLocation(final int x, final int y) {
-        if (GraphicsEnvironment.isHeadless()) return null;
+        if (GraphicsEnvironment.isHeadless())
+            return null;
         GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice[] devices = env.getScreenDevices();
         for (GraphicsDevice device : devices) {
@@ -510,13 +517,14 @@ public final class DarkUIUtil {
 
     public static boolean supportsTransparency(final Window window) {
         Optional<GraphicsDevice> gd =
-            Optional.ofNullable(window).map(Window::getGraphicsConfiguration).map(GraphicsConfiguration::getDevice);
+                Optional.ofNullable(window).map(Window::getGraphicsConfiguration).map(GraphicsConfiguration::getDevice);
         return gd.map(d -> d.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT))
-            .orElse(false);
+                .orElse(false);
     }
 
     public static Dimension getPreferredSize(final JComponent component) {
-        if (component == null) return new Dimension(0, 0);
+        if (component == null)
+            return new Dimension(0, 0);
         LayoutManager menuBarLayout = component.getLayout();
         Dimension size = null;
         if (menuBarLayout != null) {
@@ -526,7 +534,8 @@ public final class DarkUIUtil {
     }
 
     public static <T> T nullableCast(final Class<T> type, final Object o) {
-        if (type != null && type.isInstance(o)) return type.cast(o);
+        if (type != null && type.isInstance(o))
+            return type.cast(o);
         return null;
     }
 }

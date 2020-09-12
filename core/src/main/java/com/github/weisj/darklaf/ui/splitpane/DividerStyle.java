@@ -22,9 +22,9 @@
 package com.github.weisj.darklaf.ui.splitpane;
 
 public enum DividerStyle {
-    GRIP(SplitPaneConstants.STYLE_GRIP, false, true), GRIP_BORDERLESS(
-            SplitPaneConstants.STYLE_GRIP_BORDERLESS, false, false
-    ), LINE(SplitPaneConstants.STYLE_LINE, true, true), INVISIBLE(SplitPaneConstants.STYLE_INVISIBLE, true, false);
+    GRIP(SplitPaneConstants.STYLE_GRIP, false, true), GRIP_BORDERLESS(SplitPaneConstants.STYLE_GRIP_BORDERLESS, false,
+            false), LINE(SplitPaneConstants.STYLE_LINE, true,
+                    true), INVISIBLE(SplitPaneConstants.STYLE_INVISIBLE, true, false);
 
     private final String name;
     private final boolean isThin;
@@ -42,7 +42,8 @@ public enum DividerStyle {
 
     public static DividerStyle get(final Object style, final DividerStyle fallback) {
         DividerStyle s = getNullableStyle(style);
-        if (s == null) return fallback;
+        if (s == null)
+            return fallback;
         return s;
     }
 
@@ -64,14 +65,17 @@ public enum DividerStyle {
     }
 
     static DividerStyle getNullableStyle(final Object obj) {
-        if (obj == null) return null;
-        if (obj instanceof DividerStyle) return (DividerStyle) obj;
+        if (obj == null)
+            return null;
+        if (obj instanceof DividerStyle)
+            return (DividerStyle) obj;
         try {
             return valueOf(obj.toString());
         } catch (IllegalArgumentException ignored) {
         }
         for (DividerStyle s : values()) {
-            if (s.name.equalsIgnoreCase(obj.toString())) return s;
+            if (s.name.equalsIgnoreCase(obj.toString()))
+                return s;
         }
         return null;
     }

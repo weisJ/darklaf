@@ -64,7 +64,8 @@ public class LazyValue<T> {
     }
 
     public T get() {
-        if (value == null) value = load();
+        if (value == null)
+            value = load();
         return value;
     }
 }

@@ -31,9 +31,7 @@ import com.github.weisj.darklaf.components.PlainAction;
 import com.github.weisj.darklaf.components.ScrollPopupMenu;
 import com.github.weisj.darklaf.util.StringUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchListener {
 
     private final Set<String> history;
@@ -44,8 +42,8 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
      * Create a search popup Menu.
      *
      * @param textField the text field.
-     * @param capacity  the length of the history.
-     * @param maxH      maximum height.
+     * @param capacity the length of the history.
+     * @param maxH maximum height.
      */
     public TextFieldHistoryPopup(final SearchTextField textField, final int capacity, final int maxH) {
         super(maxH);
@@ -72,7 +70,7 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
      * Get the capacity of the history.
      *
      * @return the capacity.
-     * @see    #setCapacity(int) setCapacity()
+     * @see #setCapacity(int) setCapacity()
      */
     public int getCapacity() {
         return capacity;
@@ -82,11 +80,12 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
      * Set the capacity of the history. If the size grows larger than the capacity the oldest entry will
      * be deleted.
      *
-     * @param  capacity                 the capacity.
+     * @param capacity the capacity.
      * @throws IllegalArgumentException if capacity is negative
      */
     public void setCapacity(final int capacity) throws IllegalArgumentException {
-        if (capacity < 0) throw new IllegalArgumentException("Negative history size is not supported");
+        if (capacity < 0)
+            throw new IllegalArgumentException("Negative history size is not supported");
         this.capacity = capacity;
     }
 
@@ -112,9 +111,9 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
      * deleted.
      *
      * @param entry the entry to add.
-     * @see         #getLength() getLength
-     * @see         #setCapacity(int) setCapacity
-     * @see         #getCapacity() getCapacity
+     * @see #getLength() getLength
+     * @see #setCapacity(int) setCapacity
+     * @see #getCapacity() getCapacity
      */
     public void addEntry(final String entry) {
         history.remove(entry);
@@ -123,7 +122,8 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
 
     @Override
     public void show(final Component invoker, final int x, final int y) {
-        if (history.size() == 0) return;
+        if (history.size() == 0)
+            return;
         super.show(invoker, x, y);
     }
 
@@ -143,9 +143,7 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
         super.showPopup();
     }
 
-    /**
-     * Clear all entries from the history.
-     */
+    /** Clear all entries from the history. */
     public void clearHistory() {
         history.clear();
     }

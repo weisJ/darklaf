@@ -35,10 +35,8 @@ public class DarkTableHeaderRendererDelegate extends TableCellRendererDelegate {
     }
 
     @Override
-    public Component getTableCellRendererComponent(
-            final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row,
-            final int column
-    ) {
+    public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
+            final boolean hasFocus, final int row, final int column) {
         Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         c.setEnabled(table.isEnabled());
         return c;

@@ -23,17 +23,13 @@ package com.github.weisj.darklaf.components;
 
 import java.beans.PropertyChangeEvent;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class TabPropertyChangeEvent extends PropertyChangeEvent {
 
     private final int index;
 
-    public TabPropertyChangeEvent(
-            final Object source, final String propertyName, final Object oldValue, final Object newValue,
-            final int index
-    ) {
+    public TabPropertyChangeEvent(final Object source, final String propertyName, final Object oldValue,
+            final Object newValue, final int index) {
         super(source, propertyName, oldValue, newValue);
         this.index = index;
     }

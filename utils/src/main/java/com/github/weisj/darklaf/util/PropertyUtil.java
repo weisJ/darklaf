@@ -34,17 +34,20 @@ import javax.swing.plaf.UIResource;
 public class PropertyUtil {
 
     public static void installBackground(final Component component, final Color color) {
-        if (component == null || color == null) return;
+        if (component == null || color == null)
+            return;
         component.setBackground(chooseColor(component.getBackground(), color));
     }
 
     public static void installForeground(final Component component, final Color color) {
-        if (component == null || color == null) return;
+        if (component == null || color == null)
+            return;
         component.setForeground(chooseColor(component.getForeground(), color));
     }
 
     public static void installBorder(final JComponent component, final Border border) {
-        if (component == null) return;
+        if (component == null)
+            return;
         Border b = component.getBorder();
         if (b == null || b instanceof UIResource) {
             component.setBorder(border);
@@ -74,7 +77,8 @@ public class PropertyUtil {
     }
 
     public static boolean getBooleanProperty(final JComponent c, final String property, final boolean defaultValue) {
-        if (c == null) return defaultValue;
+        if (c == null)
+            return defaultValue;
         Object obj = c.getClientProperty(property);
         if (!defaultValue) {
             return Boolean.TRUE.equals(obj);
@@ -88,19 +92,22 @@ public class PropertyUtil {
     }
 
     public static <T> boolean isPropertyEqual(final JComponent c, final String property, final T checkValue) {
-        if (c == null) return false;
+        if (c == null)
+            return false;
         Object obj = c.getClientProperty(property);
         return Objects.equals(checkValue, obj);
     }
 
     public static <T> T getObject(final Component c, final String key, final Class<T> type, final T defaultValue) {
-        if (!(c instanceof JComponent)) return defaultValue;
+        if (!(c instanceof JComponent))
+            return defaultValue;
         return getObject((JComponent) c, key, type, defaultValue);
     }
 
     public static <T> T getObject(final JComponent c, final String key, final Class<T> type, final T defaultValue) {
         Object obj = c.getClientProperty(key);
-        if (type.isInstance(obj)) return type.cast(obj);
+        if (type.isInstance(obj))
+            return type.cast(obj);
         return defaultValue;
     }
 
@@ -166,18 +173,20 @@ public class PropertyUtil {
 
     public static <T> List<T> getList(final UIDefaults defaults, final String key, final Class<T> type) {
         Object obj = defaults.get(key);
-        if (!(obj instanceof List)) return Collections.emptyList();
+        if (!(obj instanceof List))
+            return Collections.emptyList();
         List<?> list = (List<?>) obj;
         return asTypedList(list, type);
     }
 
     public static <T> List<T> asTypedList(final List<?> list, final Class<T> type) {
         return list.stream().filter(Objects::nonNull).filter(t -> type.isAssignableFrom(t.getClass())).map(type::cast)
-            .collect(Collectors.toList());
+                .collect(Collectors.toList());
     }
 
     public static Color chooseColor(final Color currentColor, final Color newColor) {
-        if (ColorUtil.canOverwriteColor(currentColor)) return newColor;
+        if (ColorUtil.canOverwriteColor(currentColor))
+            return newColor;
         return currentColor;
     }
 }

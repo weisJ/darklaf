@@ -35,7 +35,7 @@ import javax.swing.plaf.UIResource;
 /**
  * A transferable implementation for the default data transfer of some Swing components.
  *
- * @author  Timothy Prinzing
+ * @author Timothy Prinzing
  * @version 1.10 11/17/05
  */
 public class BasicTransferable implements Transferable, UIResource {
@@ -113,8 +113,8 @@ public class BasicTransferable implements Transferable, UIResource {
     /**
      * Returns whether the specified data flavor is supported for this object.
      *
-     * @param  flavor the requested flavor for the data
-     * @return        boolean indicating whether the data flavor is supported.
+     * @param flavor the requested flavor for the data
+     * @return boolean indicating whether the data flavor is supported.
      */
     public boolean isDataFlavorSupported(final DataFlavor flavor) {
         DataFlavor[] flavors = getTransferDataFlavors();
@@ -130,9 +130,9 @@ public class BasicTransferable implements Transferable, UIResource {
      * Returns an object which represents the data to be transferred. The class of the object returned
      * is defined by the representation class of the flavor.
      *
-     * @param  flavor                     the requested flavor for the data
+     * @param flavor the requested flavor for the data
      * @throws UnsupportedFlavorException if the requested data flavor is not supported.
-     * @see                               DataFlavor#getRepresentationClass
+     * @see DataFlavor#getRepresentationClass
      */
     public Object getTransferData(final DataFlavor flavor) throws UnsupportedFlavorException {
         if (isRicherFlavor(flavor)) {
@@ -201,8 +201,8 @@ public class BasicTransferable implements Transferable, UIResource {
     /**
      * Returns whether or not the specified data flavor is an HTML flavor that is supported.
      *
-     * @param  flavor the requested flavor for the data
-     * @return        boolean indicating whether or not the data flavor is supported
+     * @param flavor the requested flavor for the data
+     * @return boolean indicating whether or not the data flavor is supported
      */
     protected boolean isHTMLFlavor(final DataFlavor flavor) {
         DataFlavor[] flavors = htmlFlavors;
@@ -238,8 +238,8 @@ public class BasicTransferable implements Transferable, UIResource {
     /**
      * Returns whether or not the specified data flavor is an plain flavor that is supported.
      *
-     * @param  flavor the requested flavor for the data
-     * @return        boolean indicating whether or not the data flavor is supported
+     * @param flavor the requested flavor for the data
+     * @return boolean indicating whether or not the data flavor is supported
      */
     protected boolean isPlainFlavor(final DataFlavor flavor) {
         DataFlavor[] flavors = plainFlavors;
@@ -275,8 +275,8 @@ public class BasicTransferable implements Transferable, UIResource {
     /**
      * Returns whether or not the specified data flavor is a String flavor that is supported.
      *
-     * @param  flavor the requested flavor for the data
-     * @return        boolean indicating whether or not the data flavor is supported
+     * @param flavor the requested flavor for the data
+     * @return boolean indicating whether or not the data flavor is supported
      */
     protected boolean isStringFlavor(final DataFlavor flavor) {
         DataFlavor[] flavors = stringFlavors;

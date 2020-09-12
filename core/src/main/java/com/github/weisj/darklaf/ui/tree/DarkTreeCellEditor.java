@@ -45,9 +45,7 @@ import com.github.weisj.darklaf.ui.spinner.SpinnerConstants;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEditor, FocusListener {
 
     private static final JCheckBox dummyCheckBox = new JCheckBox();
@@ -97,18 +95,18 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
         comboBox.addPopupMenuListener(new PopupMenuListener() {
             @Override
             public void popupMenuWillBecomeVisible(final PopupMenuEvent e) {
-                if (tree != null) tree.repaint();
+                if (tree != null)
+                    tree.repaint();
             }
 
             @Override
             public void popupMenuWillBecomeInvisible(final PopupMenuEvent e) {
-                if (tree != null) tree.repaint();
+                if (tree != null)
+                    tree.repaint();
             }
 
             @Override
-            public void popupMenuCanceled(final PopupMenuEvent e) {
-
-            }
+            public void popupMenuCanceled(final PopupMenuEvent e) {}
         });
         comboBox.putClientProperty(ComboBoxConstants.KEY_IS_TREE_EDITOR, Boolean.TRUE);
         comboBox.addFocusListener(this);
@@ -153,10 +151,8 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
 
     @SuppressWarnings("unchecked")
     @Override
-    public Component getTreeCellEditorComponent(
-            final JTree tree, final Object value, final boolean isSelected, final boolean expanded, final boolean leaf,
-            final int row
-    ) {
+    public Component getTreeCellEditorComponent(final JTree tree, final Object value, final boolean isSelected,
+            final boolean expanded, final boolean leaf, final int row) {
         this.tree = tree;
         delegate.setValue(value);
         if (editorComponent instanceof JComboBox) {

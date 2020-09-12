@@ -43,10 +43,8 @@ public class TableCellRendererDelegate implements TableCellRenderer {
     }
 
     @Override
-    public Component getTableCellRendererComponent(
-            final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row,
-            final int column
-    ) {
+    public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
+            final boolean hasFocus, final int row, final int column) {
         return getDelegate().getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
     }
 }

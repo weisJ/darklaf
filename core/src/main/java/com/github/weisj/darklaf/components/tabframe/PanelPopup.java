@@ -32,7 +32,7 @@ import com.github.weisj.darklaf.util.Alignment;
  * Popup Component for {@link JTabFrame}.
  *
  * @author Jannis Weis
- * @since  2019
+ * @since 2019
  */
 public class PanelPopup extends JPanel implements TabFramePopup {
     private Component content;
@@ -46,7 +46,7 @@ public class PanelPopup extends JPanel implements TabFramePopup {
     /**
      * Creates a new Popup that holds one component.
      *
-     * @param title   the title of the component.
+     * @param title the title of the component.
      * @param content the content of the popup.
      */
     public PanelPopup(final String title, final Component content) {
@@ -56,8 +56,8 @@ public class PanelPopup extends JPanel implements TabFramePopup {
     /**
      * Creates a new Popup that holds one component.
      *
-     * @param title   the title of the component.
-     * @param icon    the icon of the popup.
+     * @param title the title of the component.
+     * @param icon the icon of the popup.
      * @param content the content of the popup.
      */
     public PanelPopup(final String title, final Icon icon, final Component content) {
@@ -140,9 +140,8 @@ public class PanelPopup extends JPanel implements TabFramePopup {
 
     @Override
     public void close() {
-        if (
-            parent != null && getAlignment() != null && getIndex() >= 0 && parent.isSelected(getAlignment(), getIndex())
-        ) {
+        if (parent != null && getAlignment() != null && getIndex() >= 0
+                && parent.isSelected(getAlignment(), getIndex())) {
             boolean oldOpen = isOpen();
             parent.closeTab(getAlignment(), getIndex());
             open = false;
@@ -175,8 +174,7 @@ public class PanelPopup extends JPanel implements TabFramePopup {
     public void setAlignment(final Alignment alignment) {
         if (alignment == null || this.alignment == Alignment.CENTER) {
             throw new IllegalArgumentException(
-                "Illegal alignment: " + (alignment != null ? alignment.toString() : "null")
-            );
+                    "Illegal alignment: " + (alignment != null ? alignment.toString() : "null"));
         }
         Alignment old = this.alignment;
         this.alignment = alignment;
@@ -185,10 +183,8 @@ public class PanelPopup extends JPanel implements TabFramePopup {
 
     @Override
     public void open() {
-        if (
-            parent != null && getAlignment() != null && getIndex() >= 0
-                && !parent.isSelected(getAlignment(), getIndex())
-        ) {
+        if (parent != null && getAlignment() != null && getIndex() >= 0
+                && !parent.isSelected(getAlignment(), getIndex())) {
             boolean oldOpen = isOpen();
             parent.openTab(getAlignment(), getIndex());
             open = true;

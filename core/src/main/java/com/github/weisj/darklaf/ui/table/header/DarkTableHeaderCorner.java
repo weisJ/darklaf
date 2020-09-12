@@ -26,9 +26,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkTableHeaderCorner extends JComponent implements UIResource {
 
     protected final Color borderColor;

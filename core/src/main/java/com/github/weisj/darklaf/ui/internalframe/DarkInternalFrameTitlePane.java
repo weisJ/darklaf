@@ -40,9 +40,7 @@ import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.tooltip.DarkToolTipUI;
 import com.github.weisj.darklaf.util.ResourceUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane implements PropertyChangeListener {
 
     protected static final int PAD = 5;

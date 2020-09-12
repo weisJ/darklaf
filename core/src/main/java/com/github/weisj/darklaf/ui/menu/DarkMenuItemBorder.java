@@ -24,9 +24,7 @@ package com.github.weisj.darklaf.ui.menu;
 import javax.swing.*;
 import javax.swing.plaf.BorderUIResource;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkMenuItemBorder extends BorderUIResource.EmptyBorderUIResource {
 
     public DarkMenuItemBorder() {

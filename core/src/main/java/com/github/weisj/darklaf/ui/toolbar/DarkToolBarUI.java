@@ -34,9 +34,7 @@ import javax.swing.plaf.basic.BasicToolBarUI;
 import com.github.weisj.darklaf.listener.MouseResponder;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkToolBarUI extends BasicToolBarUI {
 
     protected static final String KEY_PREFIX = "JToolBar.";
@@ -96,8 +94,10 @@ public class DarkToolBarUI extends BasicToolBarUI {
             boolean visible = false;
 
             Window ancestor = SwingUtilities.getWindowAncestor(toolBar);
-            if (ancestor != null) visible = ancestor.isVisible();
-            if (dragWindow != null) stopDrag();
+            if (ancestor != null)
+                visible = ancestor.isVisible();
+            if (dragWindow != null)
+                stopDrag();
 
             floating = b;
             RootPaneContainer floatingTB = getFloatingToolBar();
@@ -123,11 +123,13 @@ public class DarkToolBarUI extends BasicToolBarUI {
                     }
                 }
             } else {
-                if (floatingTB instanceof Window) ((Window) floatingTB).setVisible(false);
+                if (floatingTB instanceof Window)
+                    ((Window) floatingTB).setVisible(false);
                 floatingTB.getContentPane().remove(toolBar);
 
                 String constraint = getDockingConstraint(dockingSource, p);
-                if (constraint == null) constraint = BorderLayout.NORTH;
+                if (constraint == null)
+                    constraint = BorderLayout.NORTH;
                 setOrientation(mapConstraintToOrientation(constraint));
                 dockingSource.add(toolBar, constraint);
                 updateDockingSource(dockingSource);
@@ -177,7 +179,8 @@ public class DarkToolBarUI extends BasicToolBarUI {
     }
 
     protected String getDockingConstraint(final Component c, final Point p) {
-        if (p == null) return constraintBeforeFloating;
+        if (p == null)
+            return constraintBeforeFloating;
         if (c.contains(p)) {
             if (p.y < horizontalDim.height && isDockable(c, BorderLayout.NORTH)) {
                 return BorderLayout.NORTH;
@@ -211,7 +214,8 @@ public class DarkToolBarUI extends BasicToolBarUI {
             DarkDragWindow dw = getDragWindow();
             Point offset = dw.getOffset();
             PointerInfo pointerInfo = MouseInfo.getPointerInfo();
-            if (pointerInfo == null) return;
+            if (pointerInfo == null)
+                return;
 
             Point global = pointerInfo.getLocation();
             Point dragPoint = new Point(global.x - offset.x, global.y - offset.y);
@@ -240,7 +244,8 @@ public class DarkToolBarUI extends BasicToolBarUI {
     @Override
     public void setOrientation(final int orientation) {
         toolBar.setOrientation(orientation);
-        if (dragWindow != null) dragWindow.setOrientation(orientation);
+        if (dragWindow != null)
+            dragWindow.setOrientation(orientation);
     }
 
     protected int mapConstraintToOrientation(final String constraint) {
@@ -249,9 +254,8 @@ public class DarkToolBarUI extends BasicToolBarUI {
         if (constraint != null) {
             if (constraint.equals(BorderLayout.EAST) || constraint.equals(BorderLayout.WEST))
                 orientation = JToolBar.VERTICAL;
-            else if (
-                constraint.equals(BorderLayout.NORTH) || constraint.equals(BorderLayout.SOUTH)
-            ) orientation = JToolBar.HORIZONTAL;
+            else if (constraint.equals(BorderLayout.NORTH) || constraint.equals(BorderLayout.SOUTH))
+                orientation = JToolBar.HORIZONTAL;
         }
 
         return orientation;
@@ -292,7 +296,8 @@ public class DarkToolBarUI extends BasicToolBarUI {
     }
 
     public RootPaneContainer getFloatingToolBar() {
-        if (floatingToolBar == null) floatingToolBar = createFloatingWindow(toolBar);
+        if (floatingToolBar == null)
+            floatingToolBar = createFloatingWindow(toolBar);
         return floatingToolBar;
     }
 

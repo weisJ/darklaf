@@ -28,9 +28,7 @@ import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.icons.RotatableIcon;
 import com.github.weisj.darklaf.icons.TwoIcon;
 
-/**
- * Label that functions as an loading indicator.
- */
+/** Label that functions as an loading indicator. */
 public class LoadingIndicator extends JLabel {
 
     private final RotatableIcon loadIcon;
@@ -81,7 +79,8 @@ public class LoadingIndicator extends JLabel {
     }
 
     private void setAnimatorState(final boolean running) {
-        if (running == animator.isRunning()) return;
+        if (running == animator.isRunning())
+            return;
         if (running) {
             animator.resume();
         } else {
@@ -99,7 +98,7 @@ public class LoadingIndicator extends JLabel {
     /**
      * Returns whether the loading icon is animated and visible.
      *
-     * @see    #setRunning(boolean)
+     * @see #setRunning(boolean)
      * @return true if animated and visible.
      */
     public boolean isRunning() {

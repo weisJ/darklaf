@@ -25,9 +25,7 @@ import java.awt.*;
 
 import com.github.weisj.darklaf.util.LazyValue;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkColorModelHSB extends DarkColorModel {
 
     private static final float[] hsvVals = new float[3];
@@ -87,8 +85,8 @@ public class DarkColorModelHSB extends DarkColorModel {
     }
 
     public static Color getColorFromHSBValues(final double h, final double s, final double b) {
-        return Color
-            .getHSBColor((float) Math.max(Math.min(h, 1), 0), (float) Math.max(Math.min(s, 1), 0), (float) Math.max(Math.min(b, 1), 0));
+        return Color.getHSBColor((float) Math.max(Math.min(h, 1), 0), (float) Math.max(Math.min(s, 1), 0),
+                (float) Math.max(Math.min(b, 1), 0));
     }
 
     @Override

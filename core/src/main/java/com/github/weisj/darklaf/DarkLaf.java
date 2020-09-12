@@ -37,9 +37,7 @@ import com.github.weisj.darklaf.ui.popupmenu.MouseGrabberUtil;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkLaf extends ThemedLookAndFeel {
 
     public static final String SYSTEM_PROPERTY_PREFIX = "darklaf.";
@@ -49,9 +47,9 @@ public class DarkLaf extends ThemedLookAndFeel {
      * All tasks for initializing the ui defaults in order of execution.
      */
     private static final DefaultsInitTask[] INIT_TASKS = new DefaultsInitTask[] {new RemoveUnusedInitTask(),
-        new ThemeDefaultsInitTask(), new InputDefaultsInitTask(), new IdeaDefaultsInitTask(),
-        new FontDefaultsInitTask(), new StyleSheetInitTask(), new SystemDefaultsInitTask(),
-        new PlatformDefaultsInitTask(), new UserInitTask(), new UtilityDefaultsInitTask()};
+            new ThemeDefaultsInitTask(), new InputDefaultsInitTask(), new IdeaDefaultsInitTask(),
+            new FontDefaultsInitTask(), new StyleSheetInitTask(), new SystemDefaultsInitTask(),
+            new PlatformDefaultsInitTask(), new UserInitTask(), new UtilityDefaultsInitTask()};
     /*
      * The base look and feel. This may vary to handle different platform support.
      */
@@ -67,9 +65,7 @@ public class DarkLaf extends ThemedLookAndFeel {
      */
     private Theme theme;
 
-    /**
-     * Create Custom Darcula LaF.
-     */
+    /** Create Custom Darcula LaF. */
     public DarkLaf() {
         base = getBase();
     }
@@ -136,7 +132,8 @@ public class DarkLaf extends ThemedLookAndFeel {
             LafManager.setTheme(currentTheme);
         }
         for (DefaultsInitTask task : INIT_TASKS) {
-            if (task.onlyDuringInstallation() && !isInitialized) continue;
+            if (task.onlyDuringInstallation() && !isInitialized)
+                continue;
             task.run(currentTheme, defaults);
         }
         return defaults;

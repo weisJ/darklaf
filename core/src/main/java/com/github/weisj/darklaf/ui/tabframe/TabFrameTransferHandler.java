@@ -38,13 +38,11 @@ import com.github.weisj.darklaf.components.tabframe.TabFrameUI;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DnDUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class TabFrameTransferHandler extends TransferHandler implements DropTargetListener, SwingConstants {
 
     private static final String MIME_TYPE =
-        DataFlavor.javaJVMLocalObjectMimeType + ";class=com.github.weisj.darklaf.components.tabframe.JTabFrame";
+            DataFlavor.javaJVMLocalObjectMimeType + ";class=com.github.weisj.darklaf.components.tabframe.JTabFrame";
     private static TabbedPaneDragGestureRecognizer recognizer = null;
     private final Timer timer;
     private final Timer startTimer;
@@ -55,6 +53,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
      * way.
      */
     protected Point mouseLocation;
+
     private DataFlavor tabFlavor;
     private TabTransferable currentTransferable;
     private JTabFrame lastTabFrame;
@@ -69,26 +68,25 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
                 Point p = MouseInfo.getPointerInfo().getLocation();
                 SwingUtilities.convertPointFromScreen(p, lastTabFrame);
                 DropTargetDragEvent evt =
-                    new DropTargetDragEvent(lastTabFrame.getDropTarget().getDropTargetContext(), p, MOVE, MOVE);
+                        new DropTargetDragEvent(lastTabFrame.getDropTarget().getDropTargetContext(), p, MOVE, MOVE);
                 dragOver(evt);
             }
         });
         timer.setRepeats(true);
-        startTimer = new Timer(
-            200, e -> {
-                /*
-                 * Drag Exit can be funky. Ensure that the timer is really running.
-                 */
-                if (!timer.isRunning()) {
-                    timer.start();
-                }
+        startTimer = new Timer(200, e -> {
+            /*
+             * Drag Exit can be funky. Ensure that the timer is really running.
+             */
+            if (!timer.isRunning()) {
+                timer.start();
             }
-        );
+        });
         startTimer.setRepeats(false);
     }
 
     private TabFrameUI getUI(final Component c) {
-        if (c instanceof JTabFrame) return ((JTabFrame) c).getUI();
+        if (c instanceof JTabFrame)
+            return ((JTabFrame) c).getUI();
         return null;
     }
 
@@ -101,13 +99,11 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
         int action = a;
 
         // only mouse events supported for drag operations
-        if (
-            !(e instanceof MouseEvent)
+        if (!(e instanceof MouseEvent)
                 // only support known actions
                 || !(action == COPY || action == MOVE || action == LINK)
                 // only support valid source actions
-                || (srcActions & action) == 0
-        ) {
+                || (srcActions & action) == 0) {
 
             action = NONE;
         }
@@ -156,9 +152,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
         startTimer.restart();
     }
 
-    /**
-     * Overridden to include a check for a TabData flavor.
-     */
+    /** Overridden to include a check for a TabData flavor. */
     @Override
     public boolean canImport(final JComponent c, final DataFlavor[] flavors) {
         return hasTabFlavor(flavors);
@@ -167,8 +161,8 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
     /**
      * We can only move tabs, we cannot copy them.
      *
-     * @param  c This parameter is ignored.
-     * @return   <code>TransferHandler.MOVE</code>, as we can only move tabs.
+     * @param c This parameter is ignored.
+     * @return <code>TransferHandler.MOVE</code>, as we can only move tabs.
      */
     @Override
     public int getSourceActions(final JComponent c) {
@@ -223,10 +217,10 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
      * Called when the drag-and-drop operation has just completed. This creates a new tab identical to
      * the one "dragged" and places it in the destination <code>JTabbedPane</code>.
      *
-     * @param  c The component receiving the "drop" (the instance of <code>JTabbedPane</code>).
-     * @param  t The data being transfered (information about the tab and the component contained by the
-     *           tab).
-     * @return   Whether or not the import was successful.
+     * @param c The component receiving the "drop" (the instance of <code>JTabbedPane</code>).
+     * @param t The data being transfered (information about the tab and the component contained by the
+     *        tab).
+     * @return Whether or not the import was successful.
      */
     @Override
     public boolean importData(final JComponent c, final Transferable t) {
@@ -321,13 +315,12 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
             fireDragGestureRecognized(action, e.getPoint());
         }
 
-        /**
-         * register this DragGestureRecognizer's Listeners with the Component
-         */
+        /** register this DragGestureRecognizer's Listeners with the Component */
         protected void registerListeners() {}
 
         /**
          * unregister this DragGestureRecognizer's Listeners with the Component
+         *
          * <p>
          * subclasses must override this method
          */
@@ -335,12 +328,9 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
     }
 
     public static class UIResource extends TabFrameTransferHandler {
-
     }
 
-    /**
-     * Transferable representing a tab from a tabbed pane and its contents.
-     */
+    /** Transferable representing a tab from a tabbed pane and its contents. */
     public class TabTransferable implements Transferable {
 
         private final TabTransferData transferData;
@@ -355,7 +345,8 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
 
         @Override
         public DataFlavor[] getTransferDataFlavors() {
-            if (tabFlavor == null) return new DataFlavor[0];
+            if (tabFlavor == null)
+                return new DataFlavor[0];
             return new DataFlavor[] {tabFlavor};
         }
 
@@ -372,9 +363,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
             return transferData;
         }
 
-        /**
-         * The data remembered about the tab.
-         */
+        /** The data remembered about the tab. */
         public class TabTransferData {
 
             private final JTabFrame sourceTabFrame;
@@ -399,9 +388,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
 
         // --- DragGestureListener methods -----------------------------------
 
-        /**
-         * a Drag gesture has been recognized
-         */
+        /** a Drag gesture has been recognized */
         public void dragGestureRecognized(final DragGestureEvent dge) {
             JComponent c = (JComponent) dge.getComponent();
             TabFrameTransferHandler th = (TabFrameTransferHandler) c.getTransferHandler();
@@ -427,32 +414,24 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
 
         // --- DragSourceListener methods -----------------------------------
 
-        /**
-         * as the hotspot enters a platform dependent drop site
-         */
+        /** as the hotspot enters a platform dependent drop site */
         public void dragEnter(final DragSourceDragEvent dsde) {}
 
-        /**
-         * as the hotspot moves over a platform dependent drop site
-         */
+        /** as the hotspot moves over a platform dependent drop site */
         public void dragOver(final DragSourceDragEvent dsde) {}
 
         public void dropActionChanged(final DragSourceDragEvent dsde) {}
 
-        /**
-         * as the hotspot exits a platform dependent drop site
-         */
+        /** as the hotspot exits a platform dependent drop site */
         public void dragExit(final DragSourceEvent dsde) {}
 
-        /**
-         * as the operation completes
-         */
+        /** as the operation completes */
         public void dragDropEnd(final DragSourceDropEvent dsde) {
             DragSourceContext dsc = dsde.getDragSourceContext();
             JComponent c = (JComponent) dsc.getComponent();
             if (dsde.getDropSuccess()) {
-                ((TabFrameTransferHandler) c.getTransferHandler())
-                    .exportDone(c, dsc.getTransferable(), dsde.getDropAction());
+                ((TabFrameTransferHandler) c.getTransferHandler()).exportDone(c, dsc.getTransferable(),
+                        dsde.getDropAction());
             } else {
                 ((TabFrameTransferHandler) c.getTransferHandler()).exportDone(c, dsc.getTransferable(), NONE);
             }
@@ -463,10 +442,8 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
                 ui.clearSourceIndicator();
             }
             if (!dsde.getDropSuccess() && currentTransferable.transferData.wasSelected) {
-                selectTab(
-                    currentTransferable.transferData.sourceTabFrame, currentTransferable.transferData.tabAlignment,
-                    currentTransferable.transferData.tabIndex
-                );
+                selectTab(currentTransferable.transferData.sourceTabFrame,
+                        currentTransferable.transferData.tabAlignment, currentTransferable.transferData.tabIndex);
             }
             currentTransferable.transferData.sourceTabFrame.endTransfer();
             currentTransferable = null;

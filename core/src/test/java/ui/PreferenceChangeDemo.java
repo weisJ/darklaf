@@ -71,13 +71,11 @@ public class PreferenceChangeDemo implements ComponentDemo {
             {
                 setMargin(new Insets(5, 5, 5, 5));
                 setEditable(false);
-                setText(
-                    "Press start/stop to enable/disable preference monitoring.\n" + "Then do one of the following\n"
+                setText("Press start/stop to enable/disable preference monitoring.\n" + "Then do one of the following\n"
                         + " - switch between dark/light theme (Windows/macOS)\n"
                         + " - toggle high contrast mode (Windows/macOS)\n" + " - change accent color (Windows/macOS)\n"
                         + " - change selection color (macOS)\n" + " - change font scaling (Windows)\n"
-                        + "The theme should then adjust automatically (if monitoring is started).\n"
-                );
+                        + "The theme should then adjust automatically (if monitoring is started).\n");
             }
         });
         return panel;

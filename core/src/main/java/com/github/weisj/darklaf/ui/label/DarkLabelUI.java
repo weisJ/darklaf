@@ -36,9 +36,7 @@ import com.github.weisj.darklaf.graphics.StringPainter;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener {
 
     protected static DarkLabelUI darkLabelUI;
@@ -53,13 +51,15 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
     }
 
     public static ComponentUI createUI(final JComponent c) {
-        if (darkLabelUI == null) darkLabelUI = new DarkLabelUI();
+        if (darkLabelUI == null)
+            darkLabelUI = new DarkLabelUI();
         return darkLabelUI;
     }
 
     @Override
     public void installUI(final JComponent c) {
-        if (c != null) super.installUI(c);
+        if (c != null)
+            super.installUI(c);
     }
 
     @Override

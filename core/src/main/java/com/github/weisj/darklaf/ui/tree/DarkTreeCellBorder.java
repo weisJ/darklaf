@@ -30,9 +30,7 @@ import javax.swing.plaf.UIResource;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.cell.DarkCellBorderUIResource;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkTreeCellBorder extends DarkCellBorderUIResource implements Border, UIResource {
 
     protected final Color borderColor;
@@ -44,9 +42,8 @@ public class DarkTreeCellBorder extends DarkCellBorderUIResource implements Bord
     }
 
     @Override
-    public void paintBorder(
-            final Component c, final Graphics g, final int x, final int y, final int width, final int height
-    ) {
+    public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width,
+            final int height) {
         g.setColor(borderColor);
         PaintUtil.drawRect(g, 0, 0, width, height, 1);
     }

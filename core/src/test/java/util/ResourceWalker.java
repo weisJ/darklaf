@@ -44,7 +44,8 @@ public class ResourceWalker implements AutoCloseable {
     }
 
     public Stream<String> stream() {
-        if (stream != null) throw new IllegalStateException("Stream already open");
+        if (stream != null)
+            throw new IllegalStateException("Stream already open");
         Stream<String> s = Arrays.stream(packages).flatMap(this::walk);
         stream = s;
         return s;
@@ -73,8 +74,7 @@ public class ResourceWalker implements AutoCloseable {
         String pathName = pack;
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         Stream<URL> stream = enumerationAsStream(
-            orDefault(classLoader::getResources, Collections.<URL>emptyEnumeration()).apply(pathName)
-        );
+                orDefault(classLoader::getResources, Collections.<URL>emptyEnumeration()).apply(pathName));
         return stream.map(wrap(URL::toURI)).flatMap(uri -> {
             if ("jar".equals(uri.getScheme())) {
                 try {
@@ -107,15 +107,16 @@ public class ResourceWalker implements AutoCloseable {
     }
 
     private Stream<File> walkFolder(final File file) {
-        if (!file.isDirectory()) return Stream.of(file);
+        if (!file.isDirectory())
+            return Stream.of(file);
         File[] files = file.listFiles();
-        if (files == null) files = new File[0];
+        if (files == null)
+            files = new File[0];
         return Arrays.stream(files).flatMap(this::walkFolder);
     }
 
-    public static <T, K, E extends Throwable> Function<T, K> orDefault(
-            final CheckedFunction<T, K, E> wrappee, final K fallback
-    ) {
+    public static <T, K, E extends Throwable> Function<T, K> orDefault(final CheckedFunction<T, K, E> wrappee,
+            final K fallback) {
         return t -> {
             try {
                 return wrappee.apply(t);

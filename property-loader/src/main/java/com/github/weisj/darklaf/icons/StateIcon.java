@@ -26,9 +26,7 @@ import java.util.List;
 
 import javax.swing.*;
 
-/**
- * Icon that should be used with JCheckBox or JRadioButton. All icons should have the same size.
- */
+/** Icon that should be used with JCheckBox or JRadioButton. All icons should have the same size. */
 public class StateIcon implements Icon {
 
     private final Icon icon;
@@ -45,8 +43,7 @@ public class StateIcon implements Icon {
     public StateIcon(final Icon[] icons) {
         if (icons == null || icons.length < 6) {
             throw new IllegalArgumentException(
-                "Not enough icons given: count=" + (icons == null ? "null" : icons.length)
-            );
+                    "Not enough icons given: count=" + (icons == null ? "null" : icons.length));
         }
         this.icon = icons[0];
         this.disabledIcon = icons[1];
@@ -56,10 +53,8 @@ public class StateIcon implements Icon {
         this.selectedFocusedIcon = icons[5];
     }
 
-    public StateIcon(
-            final Icon icon, final Icon disabledIcon, final Icon focusedIcon, final Icon selectedIcon,
-            final Icon selectedDisabledIcon, final Icon selectedFocusedIcon
-    ) {
+    public StateIcon(final Icon icon, final Icon disabledIcon, final Icon focusedIcon, final Icon selectedIcon,
+            final Icon selectedDisabledIcon, final Icon selectedFocusedIcon) {
         this.icon = icon;
         this.disabledIcon = disabledIcon;
         this.focusedIcon = focusedIcon;
@@ -74,13 +69,14 @@ public class StateIcon implements Icon {
     }
 
     public Icon getIcon(final Component c) {
-        if (!(c instanceof AbstractButton)) return icon != null ? icon : EmptyIcon.create(0);
+        if (!(c instanceof AbstractButton))
+            return icon != null ? icon : EmptyIcon.create(0);
         AbstractButton b = (AbstractButton) c;
         boolean selected = b.isSelected();
         boolean enabled = b.isEnabled();
         boolean hasFocus = b.isFocusPainted() && b.hasFocus();
         Icon icn = selected ? enabled ? hasFocus ? selectedFocusedIcon : selectedIcon : selectedDisabledIcon
-            : enabled ? hasFocus ? focusedIcon : icon : disabledIcon;
+                : enabled ? hasFocus ? focusedIcon : icon : disabledIcon;
         return icn != null ? icn : EmptyIcon.create(0);
     }
 

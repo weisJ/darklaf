@@ -26,9 +26,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkCellBorder extends EmptyBorder {
 
     public DarkCellBorder() {

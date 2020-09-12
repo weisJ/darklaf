@@ -38,17 +38,14 @@ public class CustomThemedIcon extends ThemedSVGIcon {
         this(uriSupplier, displayWidth, displayHeight, null);
     }
 
-    public CustomThemedIcon(
-            final Supplier<URI> uriSupplier, final int displayWidth, final int displayHeight,
-            final Map<Object, Object> colors
-    ) {
+    public CustomThemedIcon(final Supplier<URI> uriSupplier, final int displayWidth, final int displayHeight,
+            final Map<Object, Object> colors) {
         super(uriSupplier, displayWidth, displayHeight);
         defaults = colors;
     }
 
-    public CustomThemedIcon(
-            final URI uri, final int displayWidth, final int displayHeight, final Map<Object, Object> colors
-    ) {
+    public CustomThemedIcon(final URI uri, final int displayWidth, final int displayHeight,
+            final Map<Object, Object> colors) {
         super(uri, displayWidth, displayHeight);
         defaults = colors;
     }
@@ -62,8 +59,8 @@ public class CustomThemedIcon extends ThemedSVGIcon {
     /**
      * Set a property if the underlying property map supports mutation.
      *
-     * @param  key                           the property key.
-     * @param  value                         the property value.
+     * @param key the property key.
+     * @param value the property value.
      * @throws UnsupportedOperationException if the underlying property map doesnt support mutation.
      */
     public void setProperty(final Object key, final Object value) throws UnsupportedOperationException {
@@ -73,8 +70,8 @@ public class CustomThemedIcon extends ThemedSVGIcon {
     /**
      * Get a property.
      *
-     * @param  key the property key.
-     * @return     the property value.
+     * @param key the property key.
+     * @return the property value.
      */
     public Object getProperty(final Object key) {
         return getProperties().get(key);
@@ -83,14 +80,15 @@ public class CustomThemedIcon extends ThemedSVGIcon {
     /**
      * Get a property of a given type.
      *
-     * @param  key  the property key.
-     * @param  type the type.
-     * @param  <T>  the types type parameter.
-     * @return      the property value if the type matches or null otherwise.
+     * @param key the property key.
+     * @param type the type.
+     * @param <T> the types type parameter.
+     * @return the property value if the type matches or null otherwise.
      */
     public <T> T getPropertyOfType(final Object key, final Class<T> type) {
         Object obj = getProperty(key);
-        if (type != null && type.isInstance(obj)) return type.cast(obj);
+        if (type != null && type.isInstance(obj))
+            return type.cast(obj);
         return null;
     }
 

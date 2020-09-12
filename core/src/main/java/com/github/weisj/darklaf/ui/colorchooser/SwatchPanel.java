@@ -31,9 +31,7 @@ import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.util.Alignment;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 abstract class SwatchPanel extends JPanel {
 
     protected Color[] colors;
@@ -41,7 +39,7 @@ abstract class SwatchPanel extends JPanel {
     protected Dimension numSwatches;
     protected Dimension gap;
     private final ToolTipContext toolTipContext = new ToolTipContext(this).setAlignment(Alignment.CENTER)
-        .setToolTipRectSupplier(this::getSwatchBounds).setHideOnExit(true);
+            .setToolTipRectSupplier(this::getSwatchBounds).setHideOnExit(true);
     private int selRow;
     private int selCol;
 
@@ -82,18 +80,15 @@ abstract class SwatchPanel extends JPanel {
                         if (selCol > 0 && SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
                             selCol--;
                             repaint();
-                        } else if (
-                            selCol < numSwatches.width - 1
-                                && !SwatchPanel.this.getComponentOrientation().isLeftToRight()
-                        ) {
+                        } else if (selCol < numSwatches.width - 1
+                                && !SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
                             selCol++;
                             repaint();
                         }
                         break;
                     case KeyEvent.VK_RIGHT:
-                        if (
-                            selCol < numSwatches.width - 1 && SwatchPanel.this.getComponentOrientation().isLeftToRight()
-                        ) {
+                        if (selCol < numSwatches.width - 1
+                                && SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
                             selCol++;
                             repaint();
                         } else if (selCol > 0 && !SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
@@ -119,12 +114,11 @@ abstract class SwatchPanel extends JPanel {
     @Override
     public void updateUI() {
         super.updateUI();
-        if (toolTipContext != null) toolTipContext.updateToolTipUI();
+        if (toolTipContext != null)
+            toolTipContext.updateToolTipUI();
     }
 
-    protected void initValues() {
-
-    }
+    protected void initValues() {}
 
     protected void initColors() {}
 
@@ -134,7 +128,8 @@ abstract class SwatchPanel extends JPanel {
 
     private Color getColorForCell(final int column, final int row) {
         int index = (row * numSwatches.width) + column;
-        if (index >= colors.length) return null;
+        if (index >= colors.length)
+            return null;
         return colors[(row * numSwatches.width) + column];
     }
 
@@ -183,7 +178,8 @@ abstract class SwatchPanel extends JPanel {
 
     public String getToolTipText(final MouseEvent e) {
         Color color = getColorForLocation(e.getX(), e.getY());
-        if (color == null) return null;
+        if (color == null)
+            return null;
         return color.getRed() + ", " + color.getGreen() + ", " + color.getBlue();
     }
 

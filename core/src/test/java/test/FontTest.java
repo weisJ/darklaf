@@ -100,10 +100,8 @@ public class FontTest extends AbstractImageTest {
     }
 
     private static void setFractionalMetrics(final boolean enabled) {
-        UIManager.put(
-            RenderingHints.KEY_FRACTIONALMETRICS,
-            enabled ? RenderingHints.VALUE_FRACTIONALMETRICS_ON : RenderingHints.VALUE_FRACTIONALMETRICS_OFF
-        );
+        UIManager.put(RenderingHints.KEY_FRACTIONALMETRICS,
+                enabled ? RenderingHints.VALUE_FRACTIONALMETRICS_ON : RenderingHints.VALUE_FRACTIONALMETRICS_OFF);
     }
 
     private static Font createFont(final String name) {

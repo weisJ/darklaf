@@ -56,12 +56,11 @@ public class SynthesisesLafProcessor extends AbstractProcessor {
             String synthesisedName = packageName + "." + synthesisedClassName;
 
             StringBuilder builder = new StringBuilder();
-            builder.append("package ").append(packageName).append(";\n\n").append("import ").append(themePath).append(
-                ";\n\n"
-            ).append("public class ").append(synthesisedClassName).append(" extends ").append(baseClassName).append(
-                " {\n\n"
-            ).append(IDENT).append("public ").append(synthesisedClassName).append("() {\n").append(IDENT).append(IDENT)
-                .append("super(new ").append(themeName).append("());\n").append(IDENT).append("}\n").append("}");
+            builder.append("package ").append(packageName).append(";\n\n").append("import ").append(themePath)
+                    .append(";\n\n").append("public class ").append(synthesisedClassName).append(" extends ")
+                    .append(baseClassName).append(" {\n\n").append(IDENT).append("public ").append(synthesisedClassName)
+                    .append("() {\n").append(IDENT).append(IDENT).append("super(new ").append(themeName)
+                    .append("());\n").append(IDENT).append("}\n").append("}");
 
             try {
                 JavaFileObject javaFileObject = processingEnv.getFiler().createSourceFile(synthesisedName);

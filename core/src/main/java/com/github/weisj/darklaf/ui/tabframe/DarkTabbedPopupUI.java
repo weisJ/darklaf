@@ -123,12 +123,10 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI implements TabFrameTabbe
         super.setHeaderBackground(focus);
         if (oldFocus != focus) {
             if (newTabButton != null) {
-                newTabButton.putClientProperty(
-                    DarkButtonUI.KEY_HOVER_COLOR, focus ? headerButtonFocusHoverBackground : headerButtonHoverBackground
-                );
-                newTabButton.putClientProperty(
-                    DarkButtonUI.KEY_CLICK_COLOR, focus ? headerButtonFocusClickBackground : headerButtonClickBackground
-                );
+                newTabButton.putClientProperty(DarkButtonUI.KEY_HOVER_COLOR,
+                        focus ? headerButtonFocusHoverBackground : headerButtonHoverBackground);
+                newTabButton.putClientProperty(DarkButtonUI.KEY_CLICK_COLOR,
+                        focus ? headerButtonFocusClickBackground : headerButtonClickBackground);
                 newTabButton.repaint();
             }
             holder.setBackground(focus ? headerFocusBackground : headerBackground);

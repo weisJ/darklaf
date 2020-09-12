@@ -83,9 +83,8 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
             }
         }
 
-        return new Dimension(
-            Math.max(Math.max(cpWidth, mbWidth), tpWidth) + i.left + i.right, cpHeight + mbHeight + tpHeight + i.top + i.bottom
-        );
+        return new Dimension(Math.max(Math.max(cpWidth, mbWidth), tpWidth) + i.left + i.right,
+                cpHeight + mbHeight + tpHeight + i.top + i.bottom);
     }
 
     public Dimension minimumLayoutSize(final Container parent) {
@@ -127,9 +126,8 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
             }
         }
 
-        return new Dimension(
-            Math.max(Math.max(cpWidth, mbWidth), tpWidth) + i.left + i.right, cpHeight + mbHeight + tpHeight + i.top + i.bottom
-        );
+        return new Dimension(Math.max(Math.max(cpWidth, mbWidth), tpWidth) + i.left + i.right,
+                cpHeight + mbHeight + tpHeight + i.top + i.bottom);
     }
 
     protected CustomTitlePane getTitlePane(final JRootPane root) {

@@ -76,8 +76,8 @@ public class DarkNumberingPaneUI extends ComponentUI {
     }
 
     protected void installDefaults(final JComponent c) {
-        LookAndFeel
-            .installColorsAndFont(c, "NumberingPane.background", "NumberingPane.foreground", "NumberingPane.font");
+        LookAndFeel.installColorsAndFont(c, "NumberingPane.background", "NumberingPane.foreground",
+                "NumberingPane.font");
         foregroundHighlight = UIManager.getColor("NumberingPane.currentLineForeground");
         backgroundHighlight = UIManager.getColor("NumberingPane.currentLineBackground");
         LookAndFeel.installProperty(c, PropertyKey.OPAQUE, true);
@@ -141,7 +141,8 @@ public class DarkNumberingPaneUI extends ComponentUI {
             g.setColor(c.getBackground());
             g.fillRect(0, 0, c.getWidth(), c.getHeight());
         }
-        if (textComponent == null || viewport == null) return;
+        if (textComponent == null || viewport == null)
+            return;
         FontMetrics metrics = textComponent.getFontMetrics(textComponent.getFont());
         int descent = metrics.getDescent();
 
@@ -164,10 +165,12 @@ public class DarkNumberingPaneUI extends ComponentUI {
 
     @Override
     public Dimension getPreferredSize(final JComponent c) {
-        if (textComponent == null || viewport == null) return super.getPreferredSize(c);
+        if (textComponent == null || viewport == null)
+            return super.getPreferredSize(c);
         int lines = textComponent.getDocument().getDefaultRootElement().getElementCount();
         int pad = 2 * OUTER_PAD;
-        if (maxIconWidth > 0) pad += PAD;
+        if (maxIconWidth > 0)
+            pad += PAD;
         textWidth = numberingPane.getFontMetrics(numberingPane.getFont()).stringWidth(String.valueOf(lines));
         return new Dimension(maxIconWidth + pad + textWidth, viewport.getView().getHeight());
     }
@@ -184,10 +187,8 @@ public class DarkNumberingPaneUI extends ComponentUI {
         return rect.y;
     }
 
-    protected void drawNumbering(
-            final Graphics g, final int startLine, final int endLine, final int yCur, final Element root,
-            final int descent
-    ) {
+    protected void drawNumbering(final Graphics g, final int startLine, final int endLine, final int yCur,
+            final Element root, final int descent) {
         GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         g.setColor(numberingPane.getForeground());
         Font font = numberingPane.getTextComponent().getFont();
@@ -212,7 +213,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
 
     protected void paintIcons(final Graphics g, final int startLine, final int endLine, final Element root) {
         List<Map.Entry<Position, Icon>> icons = numberingPane
-            .getIconsInRange(root.getElement(startLine).getStartOffset(), root.getElement(endLine).getEndOffset());
+                .getIconsInRange(root.getElement(startLine).getStartOffset(), root.getElement(endLine).getEndOffset());
         for (Map.Entry<Position, Icon> icon : icons) {
             Rectangle lineRect;
             try {
@@ -252,7 +253,8 @@ public class DarkNumberingPaneUI extends ComponentUI {
 
         @Override
         public void mouseClicked(final MouseEvent e) {
-            if (textComponent == null) return;
+            if (textComponent == null)
+                return;
             Point p = e.getPoint();
             int width = numberingPane.getWidth();
             if (p.x > PAD + OUTER_PAD + textWidth && p.x <= width - PAD) {
@@ -288,7 +290,8 @@ public class DarkNumberingPaneUI extends ComponentUI {
 
         @Override
         public void mousePressed(final MouseEvent e) {
-            if (textComponent == null) return;
+            if (textComponent == null)
+                return;
             Point p = e.getPoint();
             selectionLineStart = textComponent.viewToModel(new Point(0, p.y));
             selectionLineEnd = textComponent.viewToModel(new Point(textComponent.getWidth(), p.y));
@@ -306,7 +309,8 @@ public class DarkNumberingPaneUI extends ComponentUI {
 
         @Override
         public void mouseDragged(final MouseEvent e) {
-            if (numberingPane.getTextComponent() == null) return;
+            if (numberingPane.getTextComponent() == null)
+                return;
             JTextComponent textPane = numberingPane.getTextComponent();
             Point p = e.getPoint();
             if (selectionLineEnd >= 0 && selectionLineStart >= 0) {

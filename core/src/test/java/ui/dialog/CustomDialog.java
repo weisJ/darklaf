@@ -42,9 +42,7 @@ class CustomDialog extends JDialog implements ActionListener, PropertyChangeList
     private static final String btnString1 = "Enter";
     private static final String btnString2 = "Cancel";
 
-    /**
-     * Creates the reusable dialog.
-     */
+    /** Creates the reusable dialog. */
     public CustomDialog(final Frame aFrame, final String aWord, final DialogDemo parent) {
         super(aFrame, true);
         dd = parent;
@@ -80,8 +78,8 @@ class CustomDialog extends JDialog implements ActionListener, PropertyChangeList
         Object[] options = {btnString1, btnString2};
 
         // Create the JOptionPane.
-        optionPane =
-            new JOptionPane(array, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, null, options, options[0]);
+        optionPane = new JOptionPane(array, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, null, options,
+                options[0]);
 
         // Make this dialog display it.
         setContentPane(optionPane);
@@ -119,23 +117,17 @@ class CustomDialog extends JDialog implements ActionListener, PropertyChangeList
         return typedText;
     }
 
-    /**
-     * This method handles events for the text field.
-     */
+    /** This method handles events for the text field. */
     public void actionPerformed(final ActionEvent e) {
         optionPane.setValue(btnString1);
     }
 
-    /**
-     * This method reacts to state changes in the option pane.
-     */
+    /** This method reacts to state changes in the option pane. */
     public void propertyChange(final PropertyChangeEvent e) {
         String prop = e.getPropertyName();
 
-        if (
-            isVisible() && (e.getSource() == optionPane)
-                && (JOptionPane.VALUE_PROPERTY.equals(prop) || JOptionPane.INPUT_VALUE_PROPERTY.equals(prop))
-        ) {
+        if (isVisible() && (e.getSource() == optionPane)
+                && (JOptionPane.VALUE_PROPERTY.equals(prop) || JOptionPane.INPUT_VALUE_PROPERTY.equals(prop))) {
             Object value = optionPane.getValue();
 
             if (value == JOptionPane.UNINITIALIZED_VALUE) {
@@ -158,12 +150,11 @@ class CustomDialog extends JDialog implements ActionListener, PropertyChangeList
                 } else {
                     // text was invalid
                     textField.selectAll();
-                    JOptionPane.showMessageDialog(
-                        CustomDialog.this,
-                        "Sorry, \"" + typedText + "\" " + "isn't a valid response.\n" + "Please enter " + magicWord
-                            + ".",
-                        "Try again", JOptionPane.ERROR_MESSAGE
-                    );
+                    JOptionPane
+                            .showMessageDialog(
+                                    CustomDialog.this, "Sorry, \"" + typedText + "\" " + "isn't a valid response.\n"
+                                            + "Please enter " + magicWord + ".",
+                                    "Try again", JOptionPane.ERROR_MESSAGE);
                     typedText = null;
                     textField.requestFocusInWindow();
                 }
@@ -175,9 +166,7 @@ class CustomDialog extends JDialog implements ActionListener, PropertyChangeList
         }
     }
 
-    /**
-     * This method clears the dialog and hides it.
-     */
+    /** This method clears the dialog and hides it. */
     public void clearAndHide() {
         textField.setText(null);
         setVisible(false);

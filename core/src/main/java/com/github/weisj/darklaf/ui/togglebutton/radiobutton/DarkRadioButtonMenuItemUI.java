@@ -33,13 +33,12 @@ import com.github.weisj.darklaf.ui.menu.DarkMenuItemUIBase;
 import com.github.weisj.darklaf.ui.menu.MenuItemLayoutDelegate;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonMenuItemConstants;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements ToggleButtonMenuItemConstants {
 
     private final MouseClickListener clickListener = e -> SwingUtilities.invokeLater(() -> {
-        if (menuItem != null) menuItem.setArmed(true);
+        if (menuItem != null)
+            menuItem.setArmed(true);
     });
 
     protected MenuItemLayoutDelegate layoutDelegate = new ToggleButtonMenuItemLayoutDelegate(null);
@@ -84,10 +83,8 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements Tog
     }
 
     @Override
-    protected MenuItemLayoutHelper getMenuItemLayoutHelper(
-            final Icon checkIcon, final Icon arrowIcon, final int defaultTextIconGap, final JMenuItem mi,
-            final Rectangle viewRect
-    ) {
+    protected MenuItemLayoutHelper getMenuItemLayoutHelper(final Icon checkIcon, final Icon arrowIcon,
+            final int defaultTextIconGap, final JMenuItem mi, final Rectangle viewRect) {
         if (mi.getIcon() == null) {
             layoutDelegate.setDelegate(mi);
             return super.getMenuItemLayoutHelper(null, arrowIcon, defaultTextIconGap, layoutDelegate, viewRect);
@@ -97,10 +94,8 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements Tog
     }
 
     @Override
-    protected void paintCheckIcon(
-            final Graphics g2, final JMenuItem mi, final MenuItemLayoutHelper lh,
-            final MenuItemLayoutHelper.LayoutResult lr, final Color holdc, final Color foreground
-    ) {
+    protected void paintCheckIcon(final Graphics g2, final JMenuItem mi, final MenuItemLayoutHelper lh,
+            final MenuItemLayoutHelper.LayoutResult lr, final Color holdc, final Color foreground) {
         Rectangle rect = lr.getCheckRect();
         if (mi.getIcon() == null) {
             rect.y = lr.getIconRect().y;

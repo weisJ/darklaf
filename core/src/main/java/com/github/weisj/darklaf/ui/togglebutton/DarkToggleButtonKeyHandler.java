@@ -38,11 +38,13 @@ public class DarkToggleButtonKeyHandler implements KeyListener {
         if (stroke != null && e.getSource() instanceof AbstractButton) {
             AbstractButton source = (AbstractButton) e.getSource();
             ButtonModel model = source.getModel();
-            if (!(model instanceof DefaultButtonModel)) model = null;
+            if (!(model instanceof DefaultButtonModel))
+                model = null;
 
             DefaultButtonModel bm = model != null ? (DefaultButtonModel) model : null;
             ButtonGroup group = bm != null ? bm.getGroup() : null;
-            if (group == null || group.getButtonCount() == 0) group = null;
+            if (group == null || group.getButtonCount() == 0)
+                group = null;
 
             KeyboardFocusManager fm = KeyboardFocusManager.getCurrentKeyboardFocusManager();
             Container comp = group != null ? group.getElements().nextElement() : source;

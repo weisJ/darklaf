@@ -50,6 +50,7 @@ import com.github.weisj.darklaf.util.PropertyKey;
 /**
  * <b>WARNING:</b> This class is an implementation detail and is only public so that it can be used
  * by two packages. You should NOT consider this public API.
+ *
  * <p>
  * This component is intended to be used in a subclass of javax.swing.plaf.basic.BasicFileChooserUI.
  * It realies heavily on the implementation of BasicFileChooserUI, and is intended to be API
@@ -168,10 +169,10 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
 
         /**
          * Moves the keyboard focus to the first element whose prefix matches the sequence of alphanumeric
-         * keys pressed by the user with delay less than value of <code>timeFactor</code>. Subsequent same
-         * key presses move the keyboard focus to the next object that starts with the same letter until
-         * another key is pressed, then it is treated as the prefix with appropriate number of the same
-         * letters followed by first typed another letter.
+         * keys pressed by the user with delay less than value of <code>timeFactor
+         * </code>. Subsequent same key presses move the keyboard focus to the next object that starts with
+         * the same letter until another key is pressed, then it is treated as the prefix with appropriate
+         * number of the same letters followed by first typed another letter.
          */
         public void keyTyped(final KeyEvent e) {
             BasicDirectoryModel model = getModel();
@@ -234,7 +235,7 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
                 detailsTable.getSelectionModel().setSelectionInterval(index, index);
 
                 Rectangle cellRect =
-                    detailsTable.getCellRect(index, detailsTable.convertColumnIndexToView(COLUMN_FILENAME), false);
+                        detailsTable.getCellRect(index, detailsTable.convertColumnIndexToView(COLUMN_FILENAME), false);
                 detailsTable.scrollRectToVisible(cellRect);
             }
         }
@@ -335,8 +336,8 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
     /**
      * Returns true if specified FileChooser should use ShellFolder
      *
-     * @param  chooser the chooser
-     * @return         the boolean
+     * @param chooser the chooser
+     * @return the boolean
      */
     public static boolean usesShellFolder(final JFileChooser chooser) {
         Boolean prop = (Boolean) chooser.getClientProperty("FileChooser.useShellFolder");
@@ -503,10 +504,8 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
                     } else if (Objects.equals(cmd, ACTION_EDIT_FILE_NAME)) {
                         JFileChooser fc = getFileChooser();
                         int index = listSelectionModel.getMinSelectionIndex();
-                        if (
-                            index >= 0 && editFile == null
-                                && (!fc.isMultiSelectionEnabled() || fc.getSelectedFiles().length <= 1)
-                        ) {
+                        if (index >= 0 && editFile == null
+                                && (!fc.isMultiSelectionEnabled() || fc.getSelectedFiles().length <= 1)) {
 
                             editFileName(index);
                         }
@@ -655,9 +654,7 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
 
     protected abstract void cancelEdit();
 
-    /**
-     * @param index visual index of the file to be edited
-     */
+    /** @param index visual index of the file to be edited */
     protected abstract void editFileName(final int index);
 
     protected void applyEdit() {
@@ -681,9 +678,8 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
                 FileSystemView fsv = chooser.getFileSystemView();
                 File f2 = fsv.createFileObject(editFile.getParentFile(), newFileName);
                 if (f2.exists()) {
-                    JOptionPane.showMessageDialog(
-                        chooser, MessageFormat.format(renameErrorFileExistsText, oldFileName), renameErrorTitleText, JOptionPane.ERROR_MESSAGE
-                    );
+                    JOptionPane.showMessageDialog(chooser, MessageFormat.format(renameErrorFileExistsText, oldFileName),
+                            renameErrorTitleText, JOptionPane.ERROR_MESSAGE);
                 } else {
                     if (getModel().renameFile(editFile, f2)) {
                         if (fsv.isParent(chooser.getCurrentDirectory(), f2)) {
@@ -697,9 +693,8 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
                             // chooser.setSelectedFile(null);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(
-                            chooser, MessageFormat.format(renameErrorText, oldFileName), renameErrorTitleText, JOptionPane.ERROR_MESSAGE
-                        );
+                        JOptionPane.showMessageDialog(chooser, MessageFormat.format(renameErrorText, oldFileName),
+                                renameErrorTitleText, JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -773,7 +768,6 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
                         shouldIndex++;
                         actuallyIndex++;
                     }
-
                 }
 
                 while (shouldIndex < files.length) {
@@ -829,10 +823,8 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
         applyEdit();
         File f = (File) e.getNewValue();
         JFileChooser fc = getFileChooser();
-        if (
-            f != null && ((fc.isFileSelectionEnabled() && !f.isDirectory())
-                || (f.isDirectory() && fc.isDirectorySelectionEnabled()))
-        ) {
+        if (f != null && ((fc.isFileSelectionEnabled() && !f.isDirectory())
+                || (f.isDirectory() && fc.isDirectorySelectionEnabled()))) {
 
             setFileSelected();
         }
@@ -842,10 +834,8 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
         applyEdit();
         File[] files = (File[]) e.getNewValue();
         JFileChooser fc = getFileChooser();
-        if (
-            files != null && files.length > 0
-                && (files.length > 1 || fc.isDirectorySelectionEnabled() || !files[0].isDirectory())
-        ) {
+        if (files != null && files.length > 0
+                && (files.length > 1 || fc.isDirectorySelectionEnabled() || !files[0].isDirectory())) {
             setFileSelected();
         }
     }
@@ -1082,9 +1072,7 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
         }
     }
 
-    /**
-     * This model allows for sorting JList
-     */
+    /** This model allows for sorting JList */
     @SuppressWarnings("serial") // JDK-implementation class
     protected class SortableListModel extends AbstractListModel<Object>
             implements TableModelListener, RowSorterListener {
@@ -1221,12 +1209,14 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
                         FileSystemView fsv = chooser.getFileSystemView();
                         final File f2 = fsv.createFileObject(f.getParentFile(), newFileName);
                         if (f2.exists()) {
-                            JOptionPane
-                                .showMessageDialog(chooser, MessageFormat.format(renameErrorFileExistsText, oldFileName), renameErrorTitleText, JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(chooser,
+                                    MessageFormat.format(renameErrorFileExistsText, oldFileName), renameErrorTitleText,
+                                    JOptionPane.ERROR_MESSAGE);
                         } else {
                             if (DarkFilePaneUIBridge.this.getModel().renameFile(f, f2)) {
                                 if (fsv.isParent(chooser.getCurrentDirectory(), f2)) {
-                                    // The setSelectedFile method produces a new setValueAt invocation while the JTable
+                                    // The setSelectedFile method produces a new setValueAt invocation while the
+                                    // JTable
                                     // is editing. Postpone file selection to be sure that edit mode of the JTable
                                     // is completed
                                     SwingUtilities.invokeLater(() -> {
@@ -1241,9 +1231,9 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
                                     // chooser.setSelectedFile(null);
                                 }
                             } else {
-                                JOptionPane.showMessageDialog(
-                                    chooser, MessageFormat.format(renameErrorText, oldFileName), renameErrorTitleText, JOptionPane.ERROR_MESSAGE
-                                );
+                                JOptionPane.showMessageDialog(chooser,
+                                        MessageFormat.format(renameErrorText, oldFileName), renameErrorTitleText,
+                                        JOptionPane.ERROR_MESSAGE);
                             }
                         }
                     }
@@ -1256,7 +1246,7 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
                 return f.isDirectory() ? null : f.length();
             }
             return (col == COLUMN_FILENAME) ? f // always return the file itself for the 1st column
-                : ShellFolder.getFolderColumnValue(f, columnMap[col]);
+                    : ShellFolder.getFolderColumnValue(f, columnMap[col]);
         }
 
         public void intervalAdded(final ListDataEvent e) {
@@ -1368,8 +1358,8 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
                 }
             }
             if (detailsTableModel.getColumns()[column].isCompareByColumn()) {
-                return comparator
-                    .compare(getDetailsTableModel().getFileColumnValue(f1, column), getDetailsTableModel().getFileColumnValue(f2, column));
+                return comparator.compare(getDetailsTableModel().getFileColumnValue(f1, column),
+                        getDetailsTableModel().getFileColumnValue(f2, column));
             }
             // For this column we need to pass the file itself (not a
             // column value) to the comparator
@@ -1388,15 +1378,11 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
             df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, chooser.getLocale());
         }
 
-        public Component getTableCellRendererComponent(
-                final JTable table, final Object value, boolean isSelected, final boolean hasFocus, final int row,
-                final int column
-        ) {
+        public Component getTableCellRendererComponent(final JTable table, final Object value, boolean isSelected,
+                final boolean hasFocus, final int row, final int column) {
 
-            if (
-                (table.convertColumnIndexToModel(column) != COLUMN_FILENAME
-                    || (listViewWindowsStyle && !table.isFocusOwner())) && !fullRowSelection
-            ) {
+            if ((table.convertColumnIndexToModel(column) != COLUMN_FILENAME
+                    || (listViewWindowsStyle && !table.isFocusOwner())) && !fullRowSelection) {
                 isSelected = false;
             }
 
@@ -1460,13 +1446,11 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
             this.wrappedRenderer = wrappedRenderer;
         }
 
-        public Component getTableCellRendererComponent(
-                final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row,
-                final int column
-        ) {
+        public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
+                final boolean hasFocus, final int row, final int column) {
 
             Component c =
-                wrappedRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                    wrappedRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
             int modelColumn = table.convertColumnIndexToModel(column);
             ShellFolderColumnInfo columnInfo = detailsTableModel.getColumns()[modelColumn];

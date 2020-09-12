@@ -29,20 +29,14 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class ClosableTabbedPane extends JTabbedPane {
 
     @Override
-    public void insertTab(
-            final String title, final Icon icon, final Component component, final String tip, final int index
-    ) {
-        if (
-            notifyVetoableChangeListeners(
-                new TabPropertyChangeEvent(this, TabEvent.Type.TAB_OPENED.getCommand(), null, component, index)
-            )
-        ) {
+    public void insertTab(final String title, final Icon icon, final Component component, final String tip,
+            final int index) {
+        if (notifyVetoableChangeListeners(
+                new TabPropertyChangeEvent(this, TabEvent.Type.TAB_OPENED.getCommand(), null, component, index))) {
             return;
         }
         super.insertTab(title, icon, component, tip, index);
@@ -54,11 +48,8 @@ public class ClosableTabbedPane extends JTabbedPane {
     public void removeTabAt(final int index) {
         checkIndex(index);
         Component c = getComponentAt(index);
-        if (
-            notifyVetoableChangeListeners(
-                new TabPropertyChangeEvent(this, TabEvent.Type.TAB_CLOSING.getCommand(), getComponentAt(index), null, index)
-            )
-        ) {
+        if (notifyVetoableChangeListeners(new TabPropertyChangeEvent(this, TabEvent.Type.TAB_CLOSING.getCommand(),
+                getComponentAt(index), null, index))) {
             return;
         }
         notifyTabListeners(new TabEvent(this, TabEvent.Type.TAB_CLOSING, index, c));
@@ -79,8 +70,8 @@ public class ClosableTabbedPane extends JTabbedPane {
     /**
      * Returns the {@link ClosableTabComponent} at the given index or null if no tab component is set.
      *
-     * @param  index the index.
-     * @return       the {@link ClosableTabComponent} at the index.
+     * @param index the index.
+     * @return the {@link ClosableTabComponent} at the index.
      */
     public ClosableTabComponent getClosableTabComponent(final int index) {
         return DarkUIUtil.nullableCast(ClosableTabComponent.class, super.getTabComponentAt(index));
@@ -89,19 +80,20 @@ public class ClosableTabbedPane extends JTabbedPane {
     /**
      * Sets whether a given tab is closable.
      *
-     * @param index    the index of the tab.
+     * @param index the index of the tab.
      * @param closable true if closable.
      */
     public void setTabClosable(final int index, final boolean closable) {
         ClosableTabComponent tab = getClosableTabComponent(index);
-        if (tab != null) tab.setClosable(closable);
+        if (tab != null)
+            tab.setClosable(closable);
     }
 
     /**
      * Sets whether a given tab is closable.
      *
-     * @param  index the tab index.
-     * @return       true if closable.
+     * @param index the tab index.
+     * @return true if closable.
      */
     public boolean isTabClosable(final int index) {
         ClosableTabComponent tab = getClosableTabComponent(index);

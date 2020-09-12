@@ -24,9 +24,7 @@ package com.github.weisj.darklaf.components;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class TabEvent extends ActionEvent {
 
     private final Type type;
@@ -34,9 +32,8 @@ public class TabEvent extends ActionEvent {
     private final Component component;
     private final ClosableTabbedPane closableTabbedPane;
 
-    public TabEvent(
-            final ClosableTabbedPane closableTabbedPane, final Type type, final int tabIndex, final Component c
-    ) {
+    public TabEvent(final ClosableTabbedPane closableTabbedPane, final Type type, final int tabIndex,
+            final Component c) {
         super(closableTabbedPane, type.ordinal(), type.getCommand());
         this.type = type;
         this.tabIndex = tabIndex;

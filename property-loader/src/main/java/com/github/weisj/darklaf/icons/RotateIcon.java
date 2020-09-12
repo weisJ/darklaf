@@ -28,10 +28,10 @@ public interface RotateIcon {
     /**
      * Paint the icon with rotation.
      *
-     * @param c        the parent component.
-     * @param g        the graphics object.
-     * @param x        the x coordinate
-     * @param y        the y coordinate
+     * @param c the parent component.
+     * @param g the graphics object.
+     * @param x the x coordinate
+     * @param y the y coordinate
      * @param rotation the rotation in radians.
      */
     void paintIcon(Component c, Graphics g, int x, int y, double rotation);

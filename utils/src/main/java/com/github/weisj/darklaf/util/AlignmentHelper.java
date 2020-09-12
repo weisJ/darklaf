@@ -24,15 +24,12 @@ package com.github.weisj.darklaf.util;
 import java.awt.*;
 import java.util.function.BiFunction;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 final class AlignmentHelper {
 
-    /**
-     * Provided relative mapping functions.
-     */
+    /** Provided relative mapping functions. */
     static final Mapper HOR_CENTER_INSIDE = (d, r) -> r.x + (r.width - d.width) / 2;
+
     static final Mapper HOR_LEFT_INSIDE = (d, r) -> r.x;
     static final Mapper HOR_RIGHT_INSIDE = (d, r) -> r.x + r.width - d.width;
     static final Mapper VERT_CENTER_INSIDE = (d, r) -> r.y + (r.height - d.height) / 2;
@@ -49,17 +46,15 @@ final class AlignmentHelper {
     /**
      * Create mapper from component mapper.
      *
-     * @param  mapperX x component mapper.
-     * @param  mapperY y component mapper.
-     * @return         mapper that aligns a rectangle relative to other rectangle.
+     * @param mapperX x component mapper.
+     * @param mapperY y component mapper.
+     * @return mapper that aligns a rectangle relative to other rectangle.
      */
     static BiFunction<Dimension, Rectangle, Point> align(final Mapper mapperX, final Mapper mapperY) {
         return (d, p) -> new Point(mapperX.apply(d, p), mapperY.apply(d, p));
     }
 
-    /**
-     * Helper interface to avoid long type names.
-     */
+    /** Helper interface to avoid long type names. */
     private interface Mapper extends BiFunction<Dimension, Rectangle, Integer> {
     }
 }

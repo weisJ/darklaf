@@ -112,7 +112,8 @@ public class TristateTreeNode extends DefaultMutableTreeNode implements LabeledT
         for (Object node : children) {
             if (node instanceof TristateTreeNode) {
                 TristateState nodeState = ((TristateTreeNode) node).getUserObject();
-                if (state == null) state = nodeState;
+                if (state == null)
+                    state = nodeState;
                 if (state != nodeState) {
                     state = TristateState.INDETERMINATE_SEL;
                     break;

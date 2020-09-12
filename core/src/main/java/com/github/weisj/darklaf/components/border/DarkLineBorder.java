@@ -35,19 +35,16 @@ public class DarkLineBorder extends MutableLineBorder {
     private final Function<Color, Color> fallbackSupplier;
     protected Theme currentTheme;
 
-    public DarkLineBorder(
-            final int top, final int left, final int bottom, final int right, final String key,
-            final Function<Color, Color> fallbackSupplier
-    ) {
+    public DarkLineBorder(final int top, final int left, final int bottom, final int right, final String key,
+            final Function<Color, Color> fallbackSupplier) {
         super(top, left, bottom, right, null);
         this.key = key;
         this.fallbackSupplier = fallbackSupplier;
     }
 
     @Override
-    public void paintBorder(
-            final Component c, final Graphics g, final int x, final int y, final int width, final int height
-    ) {
+    public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width,
+            final int height) {
         g.setColor(getColor(c));
         g.fillRect(x, y, width - right, top);
         g.fillRect(x, y + top, left, height - top);

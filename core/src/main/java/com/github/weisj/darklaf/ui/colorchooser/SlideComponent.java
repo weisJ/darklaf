@@ -67,7 +67,8 @@ class SlideComponent extends JComponent implements ColorListener {
         this.knobFill = UIManager.getColor("ColorChooser.sliderKnobColor");
 
         toolTipContext.setAlignInside(false).setAlignment(vertical ? Alignment.WEST : Alignment.NORTH)
-            .setHideOnExit(false).setToolTipRectSupplier(e -> getKnobRect()).setToolTipInsets(new Insets(3, 0, 3, 0));
+                .setHideOnExit(false).setToolTipRectSupplier(e -> getKnobRect())
+                .setToolTipInsets(new Insets(3, 0, 3, 0));
 
         addMouseMotionListener(new MouseAdapter() {
             @Override
@@ -85,7 +86,8 @@ class SlideComponent extends JComponent implements ColorListener {
 
         addMouseWheelListener(event -> {
             int units = event.getUnitsToScroll();
-            if (units == 0) return;
+            if (units == 0)
+                return;
             int pointerValue = this.pointerValue + units;
             pointerValue = Math.max(pointerValue, OFFSET);
             int size = this.vertical ? getHeight() : getWidth();
@@ -142,7 +144,7 @@ class SlideComponent extends JComponent implements ColorListener {
         Point p = MouseInfo.getPointerInfo().getLocation();
         SwingUtilities.convertPointFromScreen(p, this);
         ToolTipManager.sharedInstance()
-            .mouseMoved(new MouseEvent(this, MouseEvent.MOUSE_MOVED, 0, 0, p.x, p.y, 0, false, 0));
+                .mouseMoved(new MouseEvent(this, MouseEvent.MOUSE_MOVED, 0, 0, p.x, p.y, 0, false, 0));
         for (Consumer<Integer> listener : listeners) {
             listener.accept(value);
         }
@@ -155,8 +157,7 @@ class SlideComponent extends JComponent implements ColorListener {
     public void setValue(final int value) {
         if (value < Unit.LEVEL.getMin() || value > Unit.LEVEL.getMax()) {
             throw new IllegalArgumentException(
-                "Value " + value + " not in range [" + Unit.LEVEL.getMin() + "," + Unit.LEVEL.getMax() + "]"
-            );
+                    "Value " + value + " not in range [" + Unit.LEVEL.getMin() + "," + Unit.LEVEL.getMax() + "]");
         }
         pointerValue = valueToPointerValue(value);
         this.value = value;
@@ -182,7 +183,8 @@ class SlideComponent extends JComponent implements ColorListener {
         borderColor = UIManager.getColor("ColorChooser.sliderBorderColor");
         shadowColor = UIManager.getColor("ColorChooser.sliderShadow");
         knobFill = UIManager.getColor("ColorChooser.sliderKnobColor");
-        if (toolTipContext != null) toolTipContext.updateToolTipUI();
+        if (toolTipContext != null)
+            toolTipContext.updateToolTipUI();
     }
 
     @Override
@@ -295,7 +297,6 @@ class SlideComponent extends JComponent implements ColorListener {
             @Override
             public String formatValue(final int value) {
                 return String.format("%d%s", (int) (value * ((max - min) / (LEVEL.max - LEVEL.min))), "%");
-
             }
         };
 

@@ -33,9 +33,7 @@ import javax.swing.plaf.basic.BasicSplitPaneUI;
 import com.github.weisj.darklaf.delegate.LayoutManagerDelegate;
 import com.github.weisj.darklaf.util.PropertyKey;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeListener, SplitPaneConstants {
 
     private static final int DIVIDER_DRAG_SIZE = 10;

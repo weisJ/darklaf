@@ -24,9 +24,7 @@ package com.github.weisj.darklaf.icons;
 import java.net.URI;
 import java.util.function.Supplier;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class ThemedSVGIcon extends DarkSVGIcon implements ThemedIcon {
 
     private Object currentTheme;

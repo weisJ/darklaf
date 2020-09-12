@@ -39,9 +39,7 @@ import javax.swing.text.DocumentFilter;
 import com.github.weisj.darklaf.color.DarkColorModel;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public final class ColorValueFormatter extends JFormattedTextField.AbstractFormatter
         implements FocusListener, ActionListener {
 
@@ -79,9 +77,8 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         }
 
         @Override
-        public void replace(
-                final FilterBypass fb, final int offset, final int length, final String text, final AttributeSet set
-        ) throws BadLocationException {
+        public void replace(final FilterBypass fb, final int offset, final int length, final String text,
+                final AttributeSet set) throws BadLocationException {
             if (isValid(fb.getDocument().getLength() + text.length() - length) && isValid(text)) {
                 StringBuilder newText = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()));
                 newText.replace(offset, offset + length, text);
@@ -104,9 +101,8 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         errorTimer.setRepeats(false);
     }
 
-    public static ColorValueFormatter init(
-            final DarkColorModel model, final int index, final boolean hex, final JFormattedTextField text
-    ) {
+    public static ColorValueFormatter init(final DarkColorModel model, final int index, final boolean hex,
+            final JFormattedTextField text) {
         ColorValueFormatter formatter = new ColorValueFormatter(model, index, hex);
         formatter.setText(text);
         text.setFormatterFactory(new DefaultFormatterFactory(formatter));

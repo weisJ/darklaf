@@ -34,7 +34,7 @@ import com.github.weisj.darklaf.util.StringUtil;
 
 /**
  * @author Jannis Weis
- * @since  2019
+ * @since 2019
  */
 public final class ScrollPaneDemo implements ComponentDemo {
 
@@ -60,11 +60,8 @@ public final class ScrollPaneDemo implements ComponentDemo {
         controlPanel.add(new JCheckBox("LeftToRight") {
             {
                 setSelected(scrollPane.getComponentOrientation().isLeftToRight());
-                addActionListener(
-                    e -> scrollPane.setComponentOrientation(
-                        isSelected() ? ComponentOrientation.LEFT_TO_RIGHT : ComponentOrientation.RIGHT_TO_LEFT
-                    )
-                );
+                addActionListener(e -> scrollPane.setComponentOrientation(
+                        isSelected() ? ComponentOrientation.LEFT_TO_RIGHT : ComponentOrientation.RIGHT_TO_LEFT));
             }
         }, "span");
 
@@ -72,29 +69,25 @@ public final class ScrollPaneDemo implements ComponentDemo {
         controlPanel.add(new JCheckBox("UpperLeft corner") {
             {
                 addActionListener(
-                    e -> scrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, isSelected() ? upperLeft : null)
-                );
+                        e -> scrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, isSelected() ? upperLeft : null));
             }
         });
         controlPanel.add(new JCheckBox("UpperRight corner") {
             {
                 addActionListener(
-                    e -> scrollPane.setCorner(JScrollPane.UPPER_RIGHT_CORNER, isSelected() ? upperRight : null)
-                );
+                        e -> scrollPane.setCorner(JScrollPane.UPPER_RIGHT_CORNER, isSelected() ? upperRight : null));
             }
         });
         controlPanel.add(new JCheckBox("LowerLeft corner") {
             {
                 addActionListener(
-                    e -> scrollPane.setCorner(JScrollPane.LOWER_LEFT_CORNER, isSelected() ? lowerLeft : null)
-                );
+                        e -> scrollPane.setCorner(JScrollPane.LOWER_LEFT_CORNER, isSelected() ? lowerLeft : null));
             }
         });
         controlPanel.add(new JCheckBox("LowerRight corner") {
             {
                 addActionListener(
-                    e -> scrollPane.setCorner(JScrollPane.LOWER_RIGHT_CORNER, isSelected() ? lowerRight : null)
-                );
+                        e -> scrollPane.setCorner(JScrollPane.LOWER_RIGHT_CORNER, isSelected() ? lowerRight : null));
             }
         });
         return panel;

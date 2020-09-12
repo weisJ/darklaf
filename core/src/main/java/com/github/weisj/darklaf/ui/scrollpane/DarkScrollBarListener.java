@@ -78,27 +78,20 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
 
     @Override
     public void mouseWheelMoved(final MouseWheelEvent e) {
-        if (
-            scrollbar.getParent() instanceof JScrollPane
-                && !((JScrollPane) scrollbar.getParent()).isWheelScrollingEnabled()
-        ) {
+        if (scrollbar.getParent() instanceof JScrollPane
+                && !((JScrollPane) scrollbar.getParent()).isWheelScrollingEnabled()) {
             return;
         }
-        if (
-            scrollbar.getOrientation() == JScrollBar.VERTICAL && !e.isShiftDown()
-                || scrollbar.getOrientation() == JScrollBar.HORIZONTAL && e.isShiftDown()
-        ) {
+        if (scrollbar.getOrientation() == JScrollBar.VERTICAL && !e.isShiftDown()
+                || scrollbar.getOrientation() == JScrollBar.HORIZONTAL && e.isShiftDown()) {
             scrollbar.setValueIsAdjusting(true);
             JScrollPane sp = PropertyUtil.getObject(scrollbar, KEY_SCROLL_PANE_PARENT, JScrollPane.class);
             if (scrollbar.getParent() instanceof JScrollPane) {
-                ScrollBarUtil.doScroll(
-                    scrollbar, ((JScrollPane) scrollbar.getParent()).getViewport(), e,
-                    scrollbar.getParent().getComponentOrientation().isLeftToRight()
-                );
+                ScrollBarUtil.doScroll(scrollbar, ((JScrollPane) scrollbar.getParent()).getViewport(), e,
+                        scrollbar.getParent().getComponentOrientation().isLeftToRight());
             } else if (sp != null) {
-                ScrollBarUtil.doScroll(
-                    scrollbar, sp.getViewport(), e, scrollbar.getParent().getComponentOrientation().isLeftToRight()
-                );
+                ScrollBarUtil.doScroll(scrollbar, sp.getViewport(), e,
+                        scrollbar.getParent().getComponentOrientation().isLeftToRight());
             } else {
                 ScrollBarUtil.doScroll(scrollbar, null, e, scrollbar.getComponentOrientation().isLeftToRight());
             }
@@ -158,12 +151,14 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
 
     @Override
     public void adjustmentValueChanged(final AdjustmentEvent e) {
-        if (!e.getValueIsAdjusting()) return;
+        if (!e.getValueIsAdjusting())
+            return;
 
         JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
         int extent = scrollBar.getModel().getExtent();
         int value = scrollBar.getValue() + extent;
-        if (value == extent || value == scrollBar.getMaximum()) return;
+        if (value == extent || value == scrollBar.getMaximum())
+            return;
 
         Point p = MouseInfo.getPointerInfo().getLocation();
         SwingUtilities.convertPointFromScreen(p, scrollbar);
@@ -188,10 +183,8 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
         resetAnimators(trackFadeinAnimator, trackFadeoutAnimator, mouseOverTrack, trackAlpha, MAX_TRACK_ALPHA);
     }
 
-    protected void resetAnimators(
-            final Animator fadeInAnimator, final Animator fadeOutAnimator, final boolean overAnimatedComponent,
-            final float currentAlpha, final float maxAlpha
-    ) {
+    protected void resetAnimators(final Animator fadeInAnimator, final Animator fadeOutAnimator,
+            final boolean overAnimatedComponent, final float currentAlpha, final float maxAlpha) {
         fadeInAnimator.reset();
         fadeOutAnimator.reset();
         if (scrollbar != null && (scrollbar.getValueIsAdjusting() || overAnimatedComponent)) {
@@ -226,10 +219,9 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
 
     protected class TrackFadeOutAnimator extends Animator {
         public TrackFadeOutAnimator() {
-            super(
-                "Track fadeout", DarkScrollBarListener.FADEOUT_FRAMES_COUNT,
-                DarkScrollBarListener.FADEOUT_FRAMES_COUNT * DarkScrollBarListener.FADEOUT_FRAME_COUNT_FACTOR, false
-            );
+            super("Track fadeout", DarkScrollBarListener.FADEOUT_FRAMES_COUNT,
+                    DarkScrollBarListener.FADEOUT_FRAMES_COUNT * DarkScrollBarListener.FADEOUT_FRAME_COUNT_FACTOR,
+                    false);
         }
 
         public void paintNow(final int frame, final int totalFrames, final int cycle) {
@@ -253,10 +245,8 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
 
     protected class ThumbFadeInAnimator extends Animator {
         public ThumbFadeInAnimator() {
-            super(
-                "Thumb fadein", DarkScrollBarListener.FADEIN_FRAMES_COUNT / 2,
-                DarkScrollBarListener.FADEIN_FRAMES_COUNT * DarkScrollBarListener.FADEIN_FRAME_COUNT_FACTOR, false
-            );
+            super("Thumb fadein", DarkScrollBarListener.FADEIN_FRAMES_COUNT / 2,
+                    DarkScrollBarListener.FADEIN_FRAMES_COUNT * DarkScrollBarListener.FADEIN_FRAME_COUNT_FACTOR, false);
         }
 
         @Override
@@ -284,10 +274,8 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
 
     protected class TrackFadeInAnimator extends Animator {
         public TrackFadeInAnimator() {
-            super(
-                "Track fadein", DarkScrollBarListener.FADEIN_FRAMES_COUNT,
-                DarkScrollBarListener.FADEIN_FRAMES_COUNT * DarkScrollBarListener.FADEIN_FRAME_COUNT_FACTOR, false
-            );
+            super("Track fadein", DarkScrollBarListener.FADEIN_FRAMES_COUNT,
+                    DarkScrollBarListener.FADEIN_FRAMES_COUNT * DarkScrollBarListener.FADEIN_FRAME_COUNT_FACTOR, false);
         }
 
         public void paintNow(final int frame, final int totalFrames, final int cycle) {
@@ -308,10 +296,9 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
 
     protected class ThumbFadeOutAnimator extends Animator {
         public ThumbFadeOutAnimator() {
-            super(
-                "Adjustment fadeout", DarkScrollBarListener.FADEOUT_FRAMES_COUNT,
-                DarkScrollBarListener.FADEOUT_FRAMES_COUNT * DarkScrollBarListener.FADEOUT_FRAME_COUNT_FACTOR, false
-            );
+            super("Adjustment fadeout", DarkScrollBarListener.FADEOUT_FRAMES_COUNT,
+                    DarkScrollBarListener.FADEOUT_FRAMES_COUNT * DarkScrollBarListener.FADEOUT_FRAME_COUNT_FACTOR,
+                    false);
         }
 
         @Override

@@ -46,7 +46,7 @@ public class ButtonGroupInfo {
 
     public static boolean isValidButton(final Object obj) {
         return obj instanceof AbstractButton && ((AbstractButton) obj).isEnabled()
-            && ((AbstractButton) obj).isVisible();
+                && ((AbstractButton) obj).isVisible();
     }
 
     protected boolean containsInGroup(final AbstractButton button) {

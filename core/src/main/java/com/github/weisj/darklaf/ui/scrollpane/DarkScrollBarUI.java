@@ -31,9 +31,7 @@ import javax.swing.plaf.basic.BasicScrollBarUI;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.util.ColorUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConstants {
 
     protected static final AlphaComposite COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER);
@@ -133,7 +131,8 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
             g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
         }
         float trackAlpha = scrollBarListener.getTrackAlpha();
-        if (trackAlpha == 0) return;
+        if (trackAlpha == 0)
+            return;
         g.setColor(getTrackColor());
         ((Graphics2D) g).setComposite(COMPOSITE.derive(trackAlpha));
         g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);

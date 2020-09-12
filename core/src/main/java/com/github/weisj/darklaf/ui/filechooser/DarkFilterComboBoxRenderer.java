@@ -30,10 +30,8 @@ import com.github.weisj.darklaf.ui.list.DarkListCellRendererDelegate;
 
 public class DarkFilterComboBoxRenderer extends DarkListCellRendererDelegate {
 
-    public Component getListCellRendererComponent(
-            final JList<?> list, final Object value, final int index, final boolean isSelected,
-            final boolean cellHasFocus
-    ) {
+    public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,
+            final boolean isSelected, final boolean cellHasFocus) {
 
         Object val = value;
         if (value instanceof FileFilter) {

@@ -146,7 +146,8 @@ public class ToggleSplitPane extends JSplitPane {
 
     @Override
     public void setDividerLocation(final int location) {
-        if (isInLayout) return;
+        if (isInLayout)
+            return;
         isInLayout = true;
         if (resizable) {
             super.setDividerLocation(location);
@@ -170,6 +171,6 @@ public class ToggleSplitPane extends JSplitPane {
     public int getMinimumDividerLocation() {
         Component comp = getRightComponent();
         return comp == null ? 0
-            : getOrientation() == HORIZONTAL_SPLIT ? comp.getMinimumSize().width : comp.getMinimumSize().height;
+                : getOrientation() == HORIZONTAL_SPLIT ? comp.getMinimumSize().width : comp.getMinimumSize().height;
     }
 }

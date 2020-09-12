@@ -21,9 +21,7 @@
  */
 package com.github.weisj.darklaf.ui.cell;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public interface CellToggleButton {
     void setHasFocus(final boolean hasFocus);
 }

@@ -40,9 +40,7 @@ import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
 
     private static final DarkTreeCellEditor checkBoxEditor = new DarkTreeCellEditor(new JCheckBox());
@@ -55,10 +53,8 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
         }
 
         @Override
-        public Component getTreeCellEditorComponent(
-                final JTree tree, final Object value, final boolean isSelected, final boolean expanded,
-                final boolean leaf, final int row
-        ) {
+        public Component getTreeCellEditorComponent(final JTree tree, final Object value, final boolean isSelected,
+                final boolean expanded, final boolean leaf, final int row) {
             Component component = super.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
             if (component instanceof TristateCheckBox) {
                 ((TristateCheckBox) component).setAllowsIndeterminate(!leaf);
@@ -72,9 +68,8 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
         this(tree, renderer, null);
     }
 
-    public DarkDefaultTreeEditor(
-            final JTree tree, final DefaultTreeCellRenderer renderer, final DarkTreeCellEditor editor
-    ) {
+    public DarkDefaultTreeEditor(final JTree tree, final DefaultTreeCellRenderer renderer,
+            final DarkTreeCellEditor editor) {
         super(tree, renderer, editor);
         realEditor = new TreeCellEditorDelegate(realEditor) {
             @Override
@@ -113,20 +108,18 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
     }
 
     @Override
-    public Component getTreeCellEditorComponent(
-            final JTree tree, final Object value, final boolean isSelected, final boolean expanded, final boolean leaf,
-            final int row
-    ) {
+    public Component getTreeCellEditorComponent(final JTree tree, final Object value, final boolean isSelected,
+            final boolean expanded, final boolean leaf, final int row) {
         Component comp = super.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
         comp.setComponentOrientation(tree.getComponentOrientation());
         Object unwrapped = DarkTreeCellRendererDelegate.unwrapValue(value);
         if (isBooleanRenderer(unwrapped, tree)) {
             Component editor =
-                getBooleanEditor(tree).getTreeCellEditorComponent(tree, unwrapped, isSelected, expanded, leaf, row);
+                    getBooleanEditor(tree).getTreeCellEditorComponent(tree, unwrapped, isSelected, expanded, leaf, row);
             prepareBooleanEditor(comp, editor, tree);
         } else if (unwrapped instanceof TristateState) {
             Component editor =
-                tristateButtonEditor.getTreeCellEditorComponent(tree, unwrapped, isSelected, expanded, leaf, row);
+                    tristateButtonEditor.getTreeCellEditorComponent(tree, unwrapped, isSelected, expanded, leaf, row);
             prepareBooleanEditor(comp, editor, tree);
         }
         return comp;
@@ -140,9 +133,8 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
     }
 
     protected DarkTreeCellEditor getBooleanEditor(final JTree table) {
-        if (
-            PropertyUtil.isPropertyEqual(table, DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE, DarkTreeUI.RENDER_TYPE_RADIOBUTTON)
-        ) {
+        if (PropertyUtil.isPropertyEqual(table, DarkTreeUI.KEY_BOOLEAN_RENDER_TYPE,
+                DarkTreeUI.RENDER_TYPE_RADIOBUTTON)) {
             return radioButtonEditor;
         }
         return checkBoxEditor;
@@ -150,7 +142,8 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
 
     protected Object getValue(final JTree tree, final int row) {
         TreePath path = tree.getPathForRow(row);
-        if (path == null) return false;
+        if (path == null)
+            return false;
         return DarkTreeCellRendererDelegate.unwrapValue(path.getLastPathComponent());
     }
 
@@ -203,19 +196,22 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
 
     protected DarkTreeCellRendererDelegate getRendererDelegate(final JTree tree) {
         DarkTreeUI ui = DarkUIUtil.getUIOfType(tree.getUI(), DarkTreeUI.class);
-        if (ui == null) return null;
+        if (ui == null)
+            return null;
         return DarkUIUtil.nullableCast(DarkTreeCellRendererDelegate.class, ui.getCellRenderer());
     }
 
     protected JComponent getBooleanRendererComponent(final JTree tree) {
         DarkTreeCellRendererDelegate rend = getRendererDelegate(tree);
-        if (rend == null) return null;
+        if (rend == null)
+            return null;
         return rend.getBooleanRenderer(tree).getButton();
     }
 
     protected JComponent getTristateRendererComponent(final JTree tree) {
         DarkTreeCellRendererDelegate rend = getRendererDelegate(tree);
-        if (rend == null) return null;
+        if (rend == null)
+            return null;
         return rend.getTristateRenderer(tree).getButton();
     }
 }

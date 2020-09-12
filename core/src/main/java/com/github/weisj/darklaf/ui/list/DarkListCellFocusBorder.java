@@ -37,9 +37,8 @@ public class DarkListCellFocusBorder extends DarkCellBorderUIResource {
     }
 
     @Override
-    public void paintBorder(
-            final Component c, final Graphics g, final int x, final int y, final int width, final int height
-    ) {
+    public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width,
+            final int height) {
         super.paintBorder(c, g, x, y, width, height);
         g.setColor(borderColor);
         PaintUtil.drawRect(g, 0, 0, width, height, 1);

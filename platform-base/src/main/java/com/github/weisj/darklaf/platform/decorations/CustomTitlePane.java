@@ -31,9 +31,7 @@ public abstract class CustomTitlePane extends JComponent {
 
     public abstract void uninstall(final boolean removeDecorations);
 
-    /**
-     * Do not call directly.
-     */
+    /** Do not call directly. */
     protected abstract void install();
 
     @Override

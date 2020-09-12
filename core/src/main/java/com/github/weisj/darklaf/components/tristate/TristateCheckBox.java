@@ -47,7 +47,8 @@ public class TristateCheckBox extends JCheckBox {
     }
 
     private void iterateState() {
-        if (!getModel().isEnabled()) return;
+        if (!getModel().isEnabled())
+            return;
         getTristateModel().iterateState();
     }
 

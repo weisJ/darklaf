@@ -51,14 +51,15 @@ public class DarkComboBoxBorder implements Border, UIResource {
         borderColor = UIManager.getColor("ComboBox.activeBorderColor");
         inactiveBorderColor = UIManager.getColor("ComboBox.inactiveBorderColor");
         cellPadding = UIManager.getInsets("ComboBox.cellEditorInsets");
-        if (boxPadding == null) boxPadding = new Insets(0, 0, 0, 0);
-        if (cellPadding == null) cellPadding = new Insets(0, 0, 0, 0);
+        if (boxPadding == null)
+            boxPadding = new Insets(0, 0, 0, 0);
+        if (cellPadding == null)
+            cellPadding = new Insets(0, 0, 0, 0);
     }
 
     @Override
-    public void paintBorder(
-            final Component c, final Graphics g2, final int x, final int y, final int width, final int height
-    ) {
+    public void paintBorder(final Component c, final Graphics g2, final int x, final int y, final int width,
+            final int height) {
         JComboBox<?> comboBox = ui.getComboBox();
         AbstractButton arrowButton = ui.getArrowButton();
         if (comboBox == null || arrowButton == null) {
@@ -100,10 +101,8 @@ public class DarkComboBoxBorder implements Border, UIResource {
         g.translate(-x, -y);
     }
 
-    protected void paintCellBorder(
-            final Component c, final int width, final int height, final boolean isTableCellEditor, final Graphics2D g,
-            final Color borderColor
-    ) {
+    protected void paintCellBorder(final Component c, final int width, final int height,
+            final boolean isTableCellEditor, final Graphics2D g, final Color borderColor) {
         g.setColor(borderColor);
         Component parent = c.getParent();
         if (isTableCellEditor && parent instanceof JTable) {
@@ -122,8 +121,7 @@ public class DarkComboBoxBorder implements Border, UIResource {
     public Insets getBorderInsets(final Component c) {
         if (ComboBoxConstants.isTreeOrTableCellEditor(c)) {
             return CellUtil.adjustEditorInsets(
-                new InsetsUIResource(cellPadding.top, cellPadding.left, cellPadding.bottom, cellPadding.right), c
-            );
+                    new InsetsUIResource(cellPadding.top, cellPadding.left, cellPadding.bottom, cellPadding.right), c);
         }
         if (c.getComponentOrientation().isLeftToRight()) {
             return new InsetsUIResource(boxPadding.top, boxPadding.left, boxPadding.bottom, borderSize);

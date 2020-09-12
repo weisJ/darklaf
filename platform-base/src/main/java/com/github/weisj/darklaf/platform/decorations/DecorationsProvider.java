@@ -31,11 +31,11 @@ public interface DecorationsProvider {
     /**
      * Create the custom title pane.
      *
-     * @param  rootPane        The root pane to create the title pane for.
-     * @param  decorationStyle The style of the decorations.
-     * @param  window          The target window.
-     * @return                 the custom title pane.
-     * @see                    JRootPane#getWindowDecorationStyle()
+     * @param rootPane The root pane to create the title pane for.
+     * @param decorationStyle The style of the decorations.
+     * @param window The target window.
+     * @return the custom title pane.
+     * @see JRootPane#getWindowDecorationStyle()
      */
     CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle, final Window window);
 
@@ -46,27 +46,21 @@ public interface DecorationsProvider {
      */
     boolean isCustomDecorationSupported();
 
-    /**
-     * Initialize all necessary resources.
-     */
+    /** Initialize all necessary resources. */
     void initialize();
 
     /**
      * Load the necessary properties into the defaults.
      *
-     * @param properties      the properties to load the values into.
+     * @param properties the properties to load the values into.
      * @param currentDefaults the current ui defaults.
      */
     void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults);
 
-    /**
-     * Initialize the window of a popup menu.
-     */
+    /** Initialize the window of a popup menu. */
     default void installPopupWindow(final Window window) {}
 
-    /**
-     * Uninstall the window of a popup menu.
-     */
+    /** Uninstall the window of a popup menu. */
     default void uninstallPopupWindow(final Window window) {}
 
     /**
@@ -81,7 +75,7 @@ public interface DecorationsProvider {
      * Adjust the window insets.
      *
      * @param window the corresponding window.
-     * @param i      the insets to adjust.
+     * @param i the insets to adjust.
      */
     default void adjustWindowInsets(final Window window, final Insets i) {}
 }

@@ -45,9 +45,8 @@ public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
         applyColors(currentTheme, properties, accentColor, selectionColor);
     }
 
-    public void applyColors(
-            final Theme currentTheme, final Properties properties, final Color accentColor, final Color selectionColor
-    ) {
+    public void applyColors(final Theme currentTheme, final Properties properties, final Color accentColor,
+            final Color selectionColor) {
         if (!currentTheme.supportsCustomAccentColor() && !currentTheme.supportsCustomSelectionColor()) {
             // No custom colors are supported. Nothing needs to be mapped.
             return;
@@ -57,7 +56,8 @@ public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
             return;
         }
         Properties props = currentTheme.loadAccentProperties();
-        if (props == null || props.isEmpty()) return;
+        if (props == null || props.isEmpty())
+            return;
         if (accentColor != null) {
             adjustColors(MAIN_ACCENT_LIST_KEY, accentColor, props, properties);
         }
@@ -66,9 +66,8 @@ public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
         }
     }
 
-    private void adjustColors(
-            final String listKey, final Color c, final Properties listProperties, final Properties properties
-    ) {
+    private void adjustColors(final String listKey, final Color c, final Properties listProperties,
+            final Properties properties) {
         adjust(listKey, listProperties, list -> {
             double[] hsb = DarkColorModelHSB.RGBtoHSBValues(c.getRed(), c.getGreen(), c.getBlue());
             adjustColorList(list, hsb, properties);
@@ -79,15 +78,14 @@ public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
         ColorInfo info = new ColorInfo();
         for (Object o : list) {
             setColorInfo(o, info);
-            if (info.key == null) continue;
+            if (info.key == null)
+                continue;
             Object c = mapColor(info, hsb, properties);
             if (c instanceof Color) {
                 properties.put(info.key, c);
             } else {
-                LOGGER.warning(
-                    "Color with key '" + info.key + "' could not be adjusted because the value '" + c + ", '"
-                        + c.getClass() + " is not a color"
-                );
+                LOGGER.warning("Color with key '" + info.key + "' could not be adjusted because the value '" + c + ", '"
+                        + c.getClass() + " is not a color");
             }
         }
     }
@@ -101,14 +99,14 @@ public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
         if (o instanceof Pair<?, ?>) {
             Object first = ((Pair<?, ?>) o).getFirst();
             Object second = ((Pair<?, ?>) o).getSecond();
-            if (!(first instanceof String)) return;
-            if (!(second instanceof List<?>)) return;
+            if (!(first instanceof String))
+                return;
+            if (!(second instanceof List<?>))
+                return;
             String key = first.toString();
             List<?> list = (List<?>) second;
-            if (
-                list.size() != 3 || !(list.get(0) instanceof Integer) || !(list.get(1) instanceof Integer)
-                    || !(list.get(2) instanceof Integer)
-            ) {
+            if (list.size() != 3 || !(list.get(0) instanceof Integer) || !(list.get(1) instanceof Integer)
+                    || !(list.get(2) instanceof Integer)) {
                 return;
             }
             info.set(key, (Integer) list.get(0), (Integer) list.get(1), (Integer) list.get(2));
@@ -118,9 +116,8 @@ public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
     private Object mapColor(final ColorInfo info, final double[] hsbMatch, final Properties properties) {
         Object obj = properties.get(info.key);
         if (obj instanceof Color) {
-            Color color = DarkColorModelHSB.getColorFromHSBValues(
-                mapValue(hsbMatch[0], info.hAdj), mapValue(hsbMatch[1], info.sAdj), mapValue(hsbMatch[2], info.bAdj)
-            );
+            Color color = DarkColorModelHSB.getColorFromHSBValues(mapValue(hsbMatch[0], info.hAdj),
+                    mapValue(hsbMatch[1], info.sAdj), mapValue(hsbMatch[2], info.bAdj));
             return new DarkColorUIResource(color);
         }
         return obj;

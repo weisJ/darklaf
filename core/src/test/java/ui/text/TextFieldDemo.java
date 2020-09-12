@@ -62,11 +62,8 @@ public class TextFieldDemo implements ComponentDemo {
         controlPanel.add(new JCheckBox("LeftToRight") {
             {
                 setSelected(textField.getComponentOrientation().isLeftToRight());
-                addActionListener(
-                    e -> textField.setComponentOrientation(
-                        isSelected() ? ComponentOrientation.LEFT_TO_RIGHT : ComponentOrientation.RIGHT_TO_LEFT
-                    )
-                );
+                addActionListener(e -> textField.setComponentOrientation(
+                        isSelected() ? ComponentOrientation.LEFT_TO_RIGHT : ComponentOrientation.RIGHT_TO_LEFT));
             }
         });
         controlPanel.add(new JCheckBox(DarkTextUI.KEY_ROUNDED_SELECTION) {
@@ -77,18 +74,14 @@ public class TextFieldDemo implements ComponentDemo {
         });
         controlPanel.add(new JCheckBox(DarkTextFieldUI.KEY_VARIANT + " = " + DarkTextFieldUI.VARIANT_SEARCH) {
             {
-                addActionListener(
-                    e -> textField.putClientProperty(
-                        DarkTextFieldUI.KEY_VARIANT, isSelected() ? DarkTextFieldUI.VARIANT_SEARCH : ""
-                    )
-                );
+                addActionListener(e -> textField.putClientProperty(DarkTextFieldUI.KEY_VARIANT,
+                        isSelected() ? DarkTextFieldUI.VARIANT_SEARCH : ""));
             }
         });
         controlPanel.add(new JCheckBox(DarkTextFieldUI.KEY_SHOW_CLEAR) {
             {
                 textField.addPropertyChangeListener(
-                    e -> setSelected(PropertyUtil.getBooleanProperty(textField, DarkTextFieldUI.KEY_SHOW_CLEAR))
-                );
+                        e -> setSelected(PropertyUtil.getBooleanProperty(textField, DarkTextFieldUI.KEY_SHOW_CLEAR)));
                 addActionListener(e -> textField.putClientProperty(DarkTextFieldUI.KEY_SHOW_CLEAR, isSelected()));
             }
         });

@@ -77,7 +77,8 @@ public class DarkMenuUI extends BasicMenuUI {
 
             @Override
             public void mouseReleased(final MouseEvent e) {
-                if (!menu.isEnabled()) return;
+                if (!menu.isEnabled())
+                    return;
                 if (pressed && wasEnabled) {
                     pressed = false;
                     return;
@@ -104,20 +105,20 @@ public class DarkMenuUI extends BasicMenuUI {
 
     public void paint(final Graphics g, final JComponent c) {
         GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
-        paintMenuItem(
-            g, c, checkIcon, getArrowIcon(), selectionBackground, isSelected(c) ? selectionForeground : c.getForeground(), defaultTextIconGap
-        );
+        paintMenuItem(g, c, checkIcon, getArrowIcon(), selectionBackground,
+                isSelected(c) ? selectionForeground : c.getForeground(), defaultTextIconGap);
         config.restore();
     }
 
     protected Icon getArrowIcon() {
         boolean hover =
-            menuItem.getModel().isArmed() || (menuItem instanceof JMenu && menuItem.getModel().isSelected());
+                menuItem.getModel().isArmed() || (menuItem instanceof JMenu && menuItem.getModel().isSelected());
         return hover ? arrowIconHover : arrowIcon;
     }
 
     protected boolean isSelected(final JComponent menuItem) {
-        if (!(menuItem instanceof JMenuItem)) return false;
+        if (!(menuItem instanceof JMenuItem))
+            return false;
         return menuItem.isEnabled() && ((JMenuItem) menuItem).isArmed();
     }
 }

@@ -32,7 +32,7 @@ import javax.swing.plaf.UIResource;
  * lazily at their point of usage.
  *
  * @author Jannis Weis
- * @since  2019
+ * @since 2019
  */
 public class DarkUIAwareIcon implements UIAwareIcon, UIResource, Serializable {
 
@@ -49,15 +49,14 @@ public class DarkUIAwareIcon implements UIAwareIcon, UIResource, Serializable {
     /**
      * Create new ui aware icon.
      *
-     * @param darkKey     key to load icon for dark mode.
-     * @param lightKey    key to load icon for light mode.
-     * @param w           width of icon.
-     * @param h           height of icon.
+     * @param darkKey key to load icon for dark mode.
+     * @param lightKey key to load icon for light mode.
+     * @param w width of icon.
+     * @param h height of icon.
      * @param parentClass the class to resolve the path while lazy loading.
      */
-    public DarkUIAwareIcon(
-            final String darkKey, final String lightKey, final int w, final int h, final Class<?> parentClass
-    ) {
+    public DarkUIAwareIcon(final String darkKey, final String lightKey, final int w, final int h,
+            final Class<?> parentClass) {
         this.darkKey = darkKey;
         this.lightKey = lightKey;
         this.w = w;

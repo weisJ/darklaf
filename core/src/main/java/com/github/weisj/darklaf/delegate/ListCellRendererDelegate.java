@@ -42,10 +42,8 @@ public class ListCellRendererDelegate<T> implements ListCellRenderer<T> {
     }
 
     @Override
-    public Component getListCellRendererComponent(
-            final JList<? extends T> list, final T value, final int index, final boolean isSelected,
-            final boolean cellHasFocus
-    ) {
+    public Component getListCellRendererComponent(final JList<? extends T> list, final T value, final int index,
+            final boolean isSelected, final boolean cellHasFocus) {
         return getDelegate().getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
     }
 }

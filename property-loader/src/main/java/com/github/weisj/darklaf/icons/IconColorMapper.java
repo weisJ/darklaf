@@ -38,9 +38,7 @@ import com.kitfox.svg.animation.AnimationElement;
 import com.kitfox.svg.app.beans.SVGIcon;
 import com.kitfox.svg.xml.StyleAttribute;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public final class IconColorMapper {
     private static final Logger LOGGER = LogUtil.getLogger(IconLoader.class);
     private static final Color FALLBACK_COLOR = Color.RED;
@@ -69,7 +67,7 @@ public final class IconColorMapper {
                 String uri = diagram.getXMLBase().toASCIIString();
                 String name = uri.substring(Math.min(uri.lastIndexOf('/') + 1, uri.length() - 1));
                 return "Themed icon '" + name
-                    + "' has no color definitions. Consider loading it as a standard icon or add missing definitions";
+                        + "' has no color definitions. Consider loading it as a standard icon or add missing definitions";
             });
             return;
         }
@@ -107,13 +105,15 @@ public final class IconColorMapper {
                         }
                     }
 
-                    if (opacity1 < 0) opacity1 = opacity;
-                    if (opacity2 < 0) opacity2 = opacity;
+                    if (opacity1 < 0)
+                        opacity1 = opacity;
+                    if (opacity2 < 0)
+                        opacity2 = opacity;
                 }
 
                 Color c = resolveColor(id, getFallbacks(colorFallbacks), FALLBACK_COLOR, defaults);
                 Pair<LinearGradient, Runnable> result =
-                    createColor(c, id, opacityKey, colorFallbacks, opacity1, opacity2);
+                        createColor(c, id, opacityKey, colorFallbacks, opacity1, opacity2);
                 LinearGradient gradient = result.getFirst();
                 Runnable finalizer = result.getSecond();
                 themedDefs.loaderAddChild(null, gradient);
@@ -133,16 +133,14 @@ public final class IconColorMapper {
         return resolveColor(id, getFallbacks(fallbacks), FALLBACK_COLOR, propertyMap);
     }
 
-    private static Color resolveColor(
-            final String key, final String[] fallbacks, final Color fallbackColor, final Map<Object, Object> propertyMap
-    ) {
+    private static Color resolveColor(final String key, final String[] fallbacks, final Color fallbackColor,
+            final Map<Object, Object> propertyMap) {
         Color color = get(propertyMap, key, fallbacks, Color.class);
 
         if (color == null) {
             color = fallbackColor;
-            LOGGER.warning(
-                "Could not load color with id '" + key + "' fallbacks" + Arrays.toString(fallbacks) + ". Using color '" + fallbackColor + "' instead."
-            );
+            LOGGER.warning("Could not load color with id '" + key + "' fallbacks" + Arrays.toString(fallbacks)
+                    + ". Using color '" + fallbackColor + "' instead.");
         }
         return color;
     }
@@ -170,12 +168,14 @@ public final class IconColorMapper {
     }
 
     private static String[] getFallbacks(final StyleAttribute fallbacks) {
-        if (fallbacks == null) return new String[0];
+        if (fallbacks == null)
+            return new String[0];
         return fallbacks.getStringList();
     }
 
     private static float getOpacity(final String key, final String[] fallbacks, final Map<Object, Object> propertyMap) {
-        if ((key == null || key.isEmpty()) && (fallbacks == null || fallbacks.length == 0)) return -1;
+        if ((key == null || key.isEmpty()) && (fallbacks == null || fallbacks.length == 0))
+            return -1;
         // UIManager defaults to 0, if the value isn't an integer (or null).
         Number obj = get(propertyMap, key, fallbacks, Number.class);
         if (obj instanceof Integer) {
@@ -204,10 +204,8 @@ public final class IconColorMapper {
         return attribute.getStringValue();
     }
 
-    private static Pair<LinearGradient, Runnable> createColor(
-            final Color c, final String name, final String opacityKey, final StyleAttribute fallbacks,
-            final float opacity1, final float opacity2
-    ) throws SVGElementException {
+    private static Pair<LinearGradient, Runnable> createColor(final Color c, final String name, final String opacityKey,
+            final StyleAttribute fallbacks, final float opacity1, final float opacity2) throws SVGElementException {
         LinearGradient grad = new LinearGradient();
         grad.addAttribute("id", AnimationElement.AT_XML, name);
         if (opacityKey != null && !opacityKey.isEmpty()) {
@@ -243,24 +241,24 @@ public final class IconColorMapper {
         return getFromMap(map, key, null, type);
     }
 
-    private static <T> T get(
-            final Map<Object, Object> map, final Object key, final Object[] fallbacks, final Class<T> type
-    ) {
+    private static <T> T get(final Map<Object, Object> map, final Object key, final Object[] fallbacks,
+            final Class<T> type) {
         T obj = getFromMap(map, key, fallbacks, type);
-        if (obj == null) return getFromMap(UIManager.getDefaults(), key, fallbacks, type);
+        if (obj == null)
+            return getFromMap(UIManager.getDefaults(), key, fallbacks, type);
         return obj;
     }
 
-    private static <T> T getFromMap(
-            final Map<Object, Object> map, final Object key, final Object[] fallbacks, final Class<T> type
-    ) {
+    private static <T> T getFromMap(final Map<Object, Object> map, final Object key, final Object[] fallbacks,
+            final Class<T> type) {
         Object obj = map.get(key);
         if (fallbacks != null) {
             for (int i = 0; i < fallbacks.length && !type.isInstance(obj); i++) {
                 obj = map.get(fallbacks[i]);
             }
         }
-        if (type.isInstance(obj)) return type.cast(obj);
+        if (type.isInstance(obj))
+            return type.cast(obj);
         return null;
     }
 

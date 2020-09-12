@@ -29,9 +29,7 @@ import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.cell.DarkCellBorderUIResource;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkTableCellFocusBorder extends DarkCellBorderUIResource {
 
     protected final Color rowBorderColor;
@@ -43,9 +41,8 @@ public class DarkTableCellFocusBorder extends DarkCellBorderUIResource {
     }
 
     @Override
-    public void paintBorder(
-            final Component c, final Graphics g, final int x, final int y, final int width, final int height
-    ) {
+    public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width,
+            final int height) {
         super.paintBorder(c, g, x, y, width, height);
         if (isRowFocusBorder(c)) {
             g.setColor(rowBorderColor);

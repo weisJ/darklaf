@@ -24,5 +24,4 @@ package com.github.weisj.darklaf.ui.table.header;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererPane;
 
 public class DarkTableHeaderRendererPane extends DarkCellRendererPane {
-
 }

@@ -55,26 +55,25 @@ public class TabDragListener extends MouseAdapter {
     @SuppressWarnings("unchecked")
     @Override
     public void mouseDragged(final MouseEvent e) {
-        if (!tabComponent.isEnabled()) return;
-        if (origin == null) origin = e.getPoint();
-        if (distance(origin, e.getPoint()) < 100) return;
+        if (!tabComponent.isEnabled())
+            return;
+        if (origin == null)
+            origin = e.getPoint();
+        if (distance(origin, e.getPoint()) < 100)
+            return;
         TransferHandler th = tabComponent.getTabFrame().getTransferHandler();
         if (th != null && tabComponent.getTabFrame().isDndEnabled()) {
             Point p = e.getPoint();
             JXLayer<? extends JComponent> layer =
-                DarkUIUtil.getParentOfType(JXLayer.class, tabComponent.getComponent(), 3);
+                    DarkUIUtil.getParentOfType(JXLayer.class, tabComponent.getComponent(), 3);
             p = SwingXUtil.convertPointToParent(tabComponent.getComponent(), layer, p);
-            p = SwingUtilities.convertPoint(
-                layer != null ? layer : tabComponent.getComponent().getParent(), p, tabComponent.getTabFrame()
-            );
+            p = SwingUtilities.convertPoint(layer != null ? layer : tabComponent.getComponent().getParent(), p,
+                    tabComponent.getTabFrame());
             tabComponent.getTabFrame().initTransfer(tabComponent.getOrientation(), tabComponent.getIndex());
             th.exportAsDrag(
-                tabComponent.getTabFrame(),
-                new MouseEvent(
-                    tabComponent.getTabFrame(), e.getID(), e.getWhen(), e.getModifiersEx(), p.x, p.y, e.getClickCount(),
-                    e.isPopupTrigger(), e.getButton()
-                ), TransferHandler.MOVE
-            );
+                    tabComponent.getTabFrame(), new MouseEvent(tabComponent.getTabFrame(), e.getID(), e.getWhen(),
+                            e.getModifiersEx(), p.x, p.y, e.getClickCount(), e.isPopupTrigger(), e.getButton()),
+                    TransferHandler.MOVE);
         }
     }
 

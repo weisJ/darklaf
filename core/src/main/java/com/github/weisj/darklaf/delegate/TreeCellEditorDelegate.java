@@ -37,10 +37,8 @@ public class TreeCellEditorDelegate implements TreeCellEditor {
     }
 
     @Override
-    public Component getTreeCellEditorComponent(
-            final JTree tree, final Object value, final boolean isSelected, final boolean expanded, final boolean leaf,
-            final int row
-    ) {
+    public Component getTreeCellEditorComponent(final JTree tree, final Object value, final boolean isSelected,
+            final boolean expanded, final boolean leaf, final int row) {
         return delegate.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
     }
 

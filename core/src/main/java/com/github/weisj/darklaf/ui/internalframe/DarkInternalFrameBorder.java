@@ -29,9 +29,7 @@ import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.components.border.DropShadowBorder;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkInternalFrameBorder extends DropShadowBorder implements UIResource {
 
     private final float activeOpacity;
@@ -52,9 +50,8 @@ public class DarkInternalFrameBorder extends DropShadowBorder implements UIResou
     }
 
     @Override
-    public void paintBorder(
-            final Component c, final Graphics graphics, final int x, final int y, final int width, final int height
-    ) {
+    public void paintBorder(final Component c, final Graphics graphics, final int x, final int y, final int width,
+            final int height) {
         if (c instanceof JInternalFrame && ((JInternalFrame) c).isMaximum()) {
             return;
         }

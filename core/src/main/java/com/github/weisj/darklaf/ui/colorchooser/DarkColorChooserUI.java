@@ -38,9 +38,7 @@ import com.github.weisj.darklaf.color.DarkColorModelRGB;
 import com.github.weisj.darklaf.listener.AncestorAdapter;
 import com.github.weisj.darklaf.util.PropertyKey;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkColorChooserUI extends BasicColorChooserUI {
 
     private final PropertyChangeListener propertyChangeListener = e -> {
@@ -78,10 +76,10 @@ public class DarkColorChooserUI extends BasicColorChooserUI {
 
     @Override
     protected AbstractColorChooserPanel[] createDefaultChoosers() {
-        return new AbstractColorChooserPanel[] {new DarkColorChooserPanel(
-            DarkColorModelRGB.getInstance(), DarkColorModelHSB.getInstance(), DarkColorModelHSL.getInstance(),
-            DarkColorModelCMYK.getInstance()
-        ), new DarkSwatchesChooserPanel(),};
+        return new AbstractColorChooserPanel[] {
+                new DarkColorChooserPanel(DarkColorModelRGB.getInstance(), DarkColorModelHSB.getInstance(),
+                        DarkColorModelHSL.getInstance(), DarkColorModelCMYK.getInstance()),
+                new DarkSwatchesChooserPanel(),};
     }
 
     @Override

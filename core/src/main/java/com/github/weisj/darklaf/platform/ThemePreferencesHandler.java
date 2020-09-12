@@ -40,11 +40,12 @@ public class ThemePreferencesHandler {
 
     private static ThemePreferencesHandler sharedInstance;
     private final ThemeEventSupport<ThemePreferenceChangeEvent, ThemePreferenceListener> changeSupport =
-        new ThemeEventSupport<>();
+            new ThemeEventSupport<>();
     private ThemePreferenceProvider preferenceProvider;
 
     public static ThemePreferencesHandler getSharedInstance() {
-        if (sharedInstance == null) setSharedInstance(new ThemePreferencesHandler());
+        if (sharedInstance == null)
+            setSharedInstance(new ThemePreferencesHandler());
         return sharedInstance;
     }
 
@@ -91,12 +92,12 @@ public class ThemePreferencesHandler {
 
     private boolean isNativePreferencesEnabled() {
         return !PropertyValue.FALSE.equals(System.getProperty(PREFERENCE_REPORTING_FLAG))
-            && !PropertyValue.FALSE.equals(System.getProperty(DarkLaf.ALLOW_NATIVE_CODE_FLAG));
+                && !PropertyValue.FALSE.equals(System.getProperty(DarkLaf.ALLOW_NATIVE_CODE_FLAG));
     }
 
     public boolean isPreferenceChangeReportingEnabled() {
         return preferenceProvider.canReport() && preferenceProvider.isReporting()
-            && !PropertyValue.FALSE.equals(System.getProperty(PREFERENCE_REPORTING_FLAG));
+                && !PropertyValue.FALSE.equals(System.getProperty(PREFERENCE_REPORTING_FLAG));
     }
 
     public boolean supportsNativeAccentColor() {

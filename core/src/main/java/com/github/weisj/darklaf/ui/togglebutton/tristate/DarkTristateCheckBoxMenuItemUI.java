@@ -28,9 +28,7 @@ import com.github.weisj.darklaf.components.tristate.TristateButtonModel;
 import com.github.weisj.darklaf.components.tristate.TristateCheckBoxMenuItem;
 import com.github.weisj.darklaf.ui.togglebutton.checkbox.DarkCheckBoxMenuItemUI;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkTristateCheckBoxMenuItemUI extends DarkCheckBoxMenuItemUI {
     private Icon checkBoxIndeterminateIcon;
     private Icon checkBoxIndeterminateDisabledIcon;

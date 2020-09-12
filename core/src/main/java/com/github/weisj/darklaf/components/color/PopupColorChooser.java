@@ -43,7 +43,8 @@ public class PopupColorChooser extends JToolTip {
     protected static ToolTipContext context;
 
     protected SmallColorChooser getChooser(final Color initial, final Consumer<Color> callback) {
-        if (chooser == null) chooser = new SmallColorChooser(initial, callback);
+        if (chooser == null)
+            chooser = new SmallColorChooser(initial, callback);
         SmallColorChooser smallColorChooser = chooser;
         if (chooser.getParent() != null) {
             // Already in use. Create new one.
@@ -55,7 +56,8 @@ public class PopupColorChooser extends JToolTip {
     }
 
     protected ToolTipContext getContext() {
-        if (context == null) context = createToolTipContext();
+        if (context == null)
+            context = createToolTipContext();
         return context;
     }
 
@@ -80,10 +82,8 @@ public class PopupColorChooser extends JToolTip {
         super.setBackground(bg);
     }
 
-    public static void showColorChooser(
-            final JComponent parent, final Color initial, final Consumer<Color> callback,
-            final Consumer<AWTEvent> onClose
-    ) {
+    public static void showColorChooser(final JComponent parent, final Color initial, final Consumer<Color> callback,
+            final Consumer<AWTEvent> onClose) {
         JToolTip toolTip = new PopupColorChooser(parent, initial, callback);
         /*
          * Position is (0,0) as the ToolTipContext figures out the correct location.
@@ -106,10 +106,11 @@ public class PopupColorChooser extends JToolTip {
         AWTEventListener listener = event -> {
             if (event instanceof MouseEvent) {
                 int id = event.getID();
-                if (id != MouseEvent.MOUSE_CLICKED && id != MouseEvent.MOUSE_PRESSED) return;
+                if (id != MouseEvent.MOUSE_CLICKED && id != MouseEvent.MOUSE_PRESSED)
+                    return;
             }
             boolean doClose = event instanceof FocusEvent && (!(DarkUIUtil.hasFocus(toolTip, (FocusEvent) event)
-                || DarkUIUtil.hasFocus(toolTip) || DarkUIUtil.hasFocus(parent, (FocusEvent) event)));
+                    || DarkUIUtil.hasFocus(toolTip) || DarkUIUtil.hasFocus(parent, (FocusEvent) event)));
             if (!doClose) {
                 Point p = MouseInfo.getPointerInfo().getLocation();
                 Point p2 = new Point(p);
@@ -125,26 +126,27 @@ public class PopupColorChooser extends JToolTip {
         close.set(e -> {
             popup.hide();
             Toolkit.getDefaultToolkit().removeAWTEventListener(listener);
-            if (window != null) window.removeComponentListener(windowListener);
-            if (onClose != null) onClose.accept(e);
+            if (window != null)
+                window.removeComponentListener(windowListener);
+            if (onClose != null)
+                onClose.accept(e);
         });
         SwingUtilities.invokeLater(() -> {
             window.addComponentListener(windowListener);
-            Toolkit.getDefaultToolkit()
-                .addAWTEventListener(listener, AWTEvent.FOCUS_EVENT_MASK | AWTEvent.MOUSE_EVENT_MASK);
+            Toolkit.getDefaultToolkit().addAWTEventListener(listener,
+                    AWTEvent.FOCUS_EVENT_MASK | AWTEvent.MOUSE_EVENT_MASK);
         });
     }
 
     protected ToolTipContext createToolTipContext() {
         return new ToolTipContext().setAlignment(Alignment.CENTER).setCenterAlignment(Alignment.SOUTH)
-            .setUseBestFit(true).setToolTipInsets(new Insets(2, 2, 2, 2)).setFallBackPositionProvider(c -> {
-                Window window = DarkUIUtil.getWindow(c.getTarget());
-                Dimension size = c.getToolTip().getPreferredSize();
-                Rectangle bounds = window.getBounds();
-                return new Point(
-                    bounds.x + (bounds.width - size.width) / 2, bounds.y + (bounds.height - size.height) / 2
-                );
-            });
+                .setUseBestFit(true).setToolTipInsets(new Insets(2, 2, 2, 2)).setFallBackPositionProvider(c -> {
+                    Window window = DarkUIUtil.getWindow(c.getTarget());
+                    Dimension size = c.getToolTip().getPreferredSize();
+                    Rectangle bounds = window.getBounds();
+                    return new Point(bounds.x + (bounds.width - size.width) / 2,
+                            bounds.y + (bounds.height - size.height) / 2);
+                });
     }
 
     @Override

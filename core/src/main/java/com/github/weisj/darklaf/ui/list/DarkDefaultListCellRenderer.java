@@ -28,10 +28,8 @@ import javax.swing.*;
 public class DarkDefaultListCellRenderer extends DefaultListCellRenderer {
 
     @Override
-    public Component getListCellRendererComponent(
-            final JList<?> list, final Object value, final int index, final boolean isSelected,
-            final boolean cellHasFocus
-    ) {
+    public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,
+            final boolean isSelected, final boolean cellHasFocus) {
         Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         if (component instanceof JLabel) {
             JLabel label = (JLabel) component;

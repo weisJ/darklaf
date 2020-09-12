@@ -27,16 +27,13 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class TabbedPaneUtil implements SwingConstants {
 
     private static final Rectangle EMPTY_RECT = new Rectangle(0, 0, 0, 0);
 
-    public static int getDroppedTabIndex(
-            final Rectangle tabBounds, final JTabbedPane tabbedPane, final DarkTabbedPaneUI ui, final Point p
-    ) {
+    public static int getDroppedTabIndex(final Rectangle tabBounds, final JTabbedPane tabbedPane,
+            final DarkTabbedPaneUI ui, final Point p) {
         int tab = tabbedPane.indexAtLocation(p.x, p.y);
         if (ui != null) {
             if (tab == -1) {
@@ -109,36 +106,30 @@ public class TabbedPaneUtil implements SwingConstants {
         return tab;
     }
 
-    public static Rectangle getDropRect(
-            final DarkTabbedPaneUI ui, final JTabbedPane destTabbedPane, final JTabbedPane source,
-            final Point mouseLocation, final Rectangle tabBounds, final int tab, final int sourceIndex,
-            final int lastTab
-    ) {
-        if (destTabbedPane.getTabCount() == 0) return new Rectangle(0, 0, 0, 0);
+    public static Rectangle getDropRect(final DarkTabbedPaneUI ui, final JTabbedPane destTabbedPane,
+            final JTabbedPane source, final Point mouseLocation, final Rectangle tabBounds, final int tab,
+            final int sourceIndex, final int lastTab) {
+        if (destTabbedPane.getTabCount() == 0)
+            return new Rectangle(0, 0, 0, 0);
         int tabPlacement = destTabbedPane.getTabPlacement();
         Rectangle destRect = destTabbedPane.getBoundsAt(Math.min(tab, destTabbedPane.getTabCount() - 1));
 
         if (ui.scrollableTabLayoutEnabled()) {
-            calculateDropRectScrollLayout(
-                destTabbedPane, source, tabBounds, tab, sourceIndex, lastTab, tabPlacement, destRect
-            );
+            calculateDropRectScrollLayout(destTabbedPane, source, tabBounds, tab, sourceIndex, lastTab, tabPlacement,
+                    destRect);
         } else {
-            calculateDropRectWrapLayout(
-                ui, destTabbedPane, source, mouseLocation, tabBounds, tab, sourceIndex, destRect
-            );
+            calculateDropRectWrapLayout(ui, destTabbedPane, source, mouseLocation, tabBounds, tab, sourceIndex,
+                    destRect);
         }
         return tabBounds;
     }
 
-    private static void calculateDropRectScrollLayout(
-            final JTabbedPane destTabbedPane, final JTabbedPane source, final Rectangle tabBounds, final int tab,
-            final int sourceIndex, final int lastTab, final int tabPlacement, final Rectangle destRect
-    ) {
+    private static void calculateDropRectScrollLayout(final JTabbedPane destTabbedPane, final JTabbedPane source,
+            final Rectangle tabBounds, final int tab, final int sourceIndex, final int lastTab, final int tabPlacement,
+            final Rectangle destRect) {
         boolean lastInSource = false;
-        if (
-            destTabbedPane == source
-                && (tab == sourceIndex || (sourceIndex == source.getTabCount() - 1 && tab == source.getTabCount()))
-        ) {
+        if (destTabbedPane == source
+                && (tab == sourceIndex || (sourceIndex == source.getTabCount() - 1 && tab == source.getTabCount()))) {
             lastInSource = true;
             destRect.width = tabBounds.width;
             destRect.height = tabBounds.height;
@@ -183,11 +174,9 @@ public class TabbedPaneUtil implements SwingConstants {
         }
     }
 
-    private static void calculateDropRectWrapLayout(
-            final DarkTabbedPaneUI ui, final JTabbedPane destTabbedPane, final JTabbedPane source,
-            final Point mouseLocation, final Rectangle tabBounds, final int tab, final int sourceIndex,
-            final Rectangle destRect
-    ) {
+    private static void calculateDropRectWrapLayout(final DarkTabbedPaneUI ui, final JTabbedPane destTabbedPane,
+            final JTabbedPane source, final Point mouseLocation, final Rectangle tabBounds, final int tab,
+            final int sourceIndex, final Rectangle destRect) {
         if (source == destTabbedPane && (tab == sourceIndex || tab == sourceIndex + 1)) {
             tabBounds.setRect(0, 0, 0, 0);
         } else {
@@ -210,10 +199,8 @@ public class TabbedPaneUtil implements SwingConstants {
                 tabBounds.x = destRect.x;
                 tabBounds.width = Math.min(tabBounds.width / 2, destRect.width / 2);
             } else {
-                if (
-                    destRect.y + destRect.height <= mouseLocation.y && prev.y <= mouseLocation.y
-                        && mouseLocation.y <= prev.y + prev.height
-                ) {
+                if (destRect.y + destRect.height <= mouseLocation.y && prev.y <= mouseLocation.y
+                        && mouseLocation.y <= prev.y + prev.height) {
                     destRect.x = prev.x + prev.width;
                     destRect.y = prev.y;
                     destRect.height = prev.height;
@@ -240,19 +227,20 @@ public class TabbedPaneUtil implements SwingConstants {
         }
     }
 
-    public static boolean moveTabs(
-            final JTabbedPane sourcePane, final JTabbedPane tabbedPane, final int sourceIndex, final int tab
-    ) {
+    public static boolean moveTabs(final JTabbedPane sourcePane, final JTabbedPane tabbedPane, final int sourceIndex,
+            final int tab) {
 
         if (tabbedPane == sourcePane && sourceIndex == tab) {
             // Nothing to do. Just select the tab to be sure.
             Component comp = sourcePane.getTabComponentAt(tab);
-            if (comp != null) comp.setVisible(true);
+            if (comp != null)
+                comp.setVisible(true);
             selectTab(sourcePane, sourceIndex);
             return false;
         }
         int destIndex = tab;
-        if (tabbedPane.getTabCount() == 0) destIndex = 0;
+        if (tabbedPane.getTabCount() == 0)
+            destIndex = 0;
         if (destIndex < 0 || destIndex > tabbedPane.getTabCount()) {
             return false;
         }
@@ -268,7 +256,8 @@ public class TabbedPaneUtil implements SwingConstants {
 
         int index = destIndex;
         if (tabbedPane == sourcePane) {
-            if (sourceIndex < index) index--;
+            if (sourceIndex < index)
+                index--;
         }
 
         tabbedPane.insertTab(tabName, icon, comp, toolTip, index);
@@ -289,7 +278,7 @@ public class TabbedPaneUtil implements SwingConstants {
      * subclasses to do more stuff than simply select the tab.
      *
      * @param tabbedPane The tabbed pane.
-     * @param index      The index of the tab to select.
+     * @param index The index of the tab to select.
      */
     protected static void selectTab(final JTabbedPane tabbedPane, final int index) {
         SwingUtilities.invokeLater(() -> {

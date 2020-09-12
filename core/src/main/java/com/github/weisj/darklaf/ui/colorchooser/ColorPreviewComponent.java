@@ -25,9 +25,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class ColorPreviewComponent extends JComponent {
     protected final Color borderColor;
     private Color color;

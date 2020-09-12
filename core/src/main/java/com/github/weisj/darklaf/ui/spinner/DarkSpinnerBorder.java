@@ -55,14 +55,15 @@ public class DarkSpinnerBorder implements Border, UIResource {
         borderSize = UIManager.getInt("Spinner.borderThickness");
         cellInsets = UIManager.getInsets("Spinner.cellEditorInsets");
         insets = UIManager.getInsets("Spinner.insets");
-        if (insets == null) insets = new Insets(0, 0, 0, 0);
-        if (cellInsets == null) cellInsets = new Insets(0, 0, 0, 0);
+        if (insets == null)
+            insets = new Insets(0, 0, 0, 0);
+        if (cellInsets == null)
+            cellInsets = new Insets(0, 0, 0, 0);
     }
 
     @Override
-    public void paintBorder(
-            final Component c, final Graphics g2, final int x, final int y, final int width, final int height
-    ) {
+    public void paintBorder(final Component c, final Graphics g2, final int x, final int y, final int width,
+            final int height) {
         boolean tableCellEditor = SpinnerConstants.isTableCellEditor(c);
         boolean treeCellEditor = !tableCellEditor && SpinnerConstants.isTreeCellEditor(c);
 
@@ -77,7 +78,7 @@ public class DarkSpinnerBorder implements Border, UIResource {
             JComponent editor = spinner.getEditor();
             if (editor != null) {
                 int off = spinner.getComponentOrientation().isLeftToRight() ? editor.getBounds().x + editor.getWidth()
-                    : editor.getBounds().x - 1 - borderSize;
+                        : editor.getBounds().x - 1 - borderSize;
                 g.setColor(getBorderColor(spinner));
                 if (!treeCellEditor) {
                     g.fillRect(off, size, 1, height - 2 * size);
@@ -116,8 +117,7 @@ public class DarkSpinnerBorder implements Border, UIResource {
     public Insets getBorderInsets(final Component c) {
         if (SpinnerConstants.isTreeOrTableCellEditor(c)) {
             return CellUtil.adjustEditorInsets(
-                new InsetsUIResource(cellInsets.top, cellInsets.left, cellInsets.bottom, cellInsets.right), c
-            );
+                    new InsetsUIResource(cellInsets.top, cellInsets.left, cellInsets.bottom, cellInsets.right), c);
         }
         return new InsetsUIResource(insets.top, insets.left, insets.bottom, insets.right);
     }

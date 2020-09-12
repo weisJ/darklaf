@@ -46,6 +46,7 @@ public class PasteMenuItem extends EditMenuItem {
 
     @Override
     public void actionPerformed(final ActionEvent e) {
-        if (editor != null) editor.paste();
+        if (editor != null)
+            editor.paste();
     }
 }

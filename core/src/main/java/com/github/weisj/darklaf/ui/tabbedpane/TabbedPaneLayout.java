@@ -49,9 +49,7 @@ public abstract class TabbedPaneLayout implements LayoutManager {
         return calculateSize(true);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @SuppressWarnings("deprecation")
     public void layoutContainer(final Container parent) {
         /*
@@ -139,9 +137,9 @@ public abstract class TabbedPaneLayout implements LayoutManager {
                 if (child == ui.tabContainer) {
 
                     int tabContainerWidth = totalTabWidth == 0 ? bounds.width
-                        : totalTabWidth + insets.left + insets.right + contentInsets.left + contentInsets.right;
+                            : totalTabWidth + insets.left + insets.right + contentInsets.left + contentInsets.right;
                     int tabContainerHeight = totalTabHeight == 0 ? bounds.height
-                        : totalTabHeight + insets.top + insets.bottom + contentInsets.top + contentInsets.bottom;
+                            : totalTabHeight + insets.top + insets.bottom + contentInsets.top + contentInsets.bottom;
 
                     int tabContainerX = 0;
                     int tabContainerY = 0;
@@ -164,9 +162,7 @@ public abstract class TabbedPaneLayout implements LayoutManager {
         }
     }
 
-    /**
-     * Calculates the layout info.
-     */
+    /** Calculates the layout info. */
     public void calculateLayoutInfo() {
         int tabCount = ui.tabPane.getTabCount();
         ui.assureRectsCreated(tabCount);
@@ -180,7 +176,7 @@ public abstract class TabbedPaneLayout implements LayoutManager {
      * Calculate the tab rectangles.
      *
      * @param tabPlacement the tab placement
-     * @param tabCount     the tab count
+     * @param tabCount the tab count
      */
     protected void calculateTabRects(final int tabPlacement, final int tabCount) {
         FontMetrics metrics = ui.getFontMetrics();
@@ -267,7 +263,7 @@ public abstract class TabbedPaneLayout implements LayoutManager {
                 }
                 // Initialize y position in case there's just one run
                 rect.y = y;
-                rect.height = ui.maxTabHeight/* - 2 */;
+                rect.height = ui.maxTabHeight /* - 2 */;
 
             } else {
                 // Tabs on LEFT or RIGHT...
@@ -295,8 +291,7 @@ public abstract class TabbedPaneLayout implements LayoutManager {
                 }
                 // Initialize x position in case there's just one column
                 rect.x = x;
-                rect.width = ui.maxTabWidth/* - 2 */;
-
+                rect.width = ui.maxTabWidth /* - 2 */;
             }
             if (i == selectedIndex) {
                 ui.selectedRun = ui.runCount - 1;
@@ -373,9 +368,9 @@ public abstract class TabbedPaneLayout implements LayoutManager {
      * Normalizes the tab runs.
      *
      * @param tabPlacement the tab placement
-     * @param tabCount     the tab count
-     * @param start        the start
-     * @param max          the max
+     * @param tabCount the tab count
+     * @param start the start
+     * @param max the max
      */
     protected void normalizeTabRuns(final int tabPlacement, final int tabCount, final int start, final int max) {
         boolean verticalTabRuns = (tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT);
@@ -448,12 +443,13 @@ public abstract class TabbedPaneLayout implements LayoutManager {
      * Rotates the run-index array so that the selected run is run[0].
      *
      * @param tabPlacement the tab placement
-     * @param selectedRun  the selected run
+     * @param selectedRun the selected run
      */
     protected void rotateTabRuns(final int tabPlacement, final int selectedRun) {
         for (int i = 0; i < selectedRun; i++) {
             int save = ui.tabRuns[0];
-            if (ui.runCount - 1 >= 0) System.arraycopy(ui.tabRuns, 1, ui.tabRuns, 0, ui.runCount - 1);
+            if (ui.runCount - 1 >= 0)
+                System.arraycopy(ui.tabRuns, 1, ui.tabRuns, 0, ui.runCount - 1);
             ui.tabRuns[ui.runCount - 1] = save;
         }
     }
@@ -462,9 +458,9 @@ public abstract class TabbedPaneLayout implements LayoutManager {
      * Pads the tab run.
      *
      * @param tabPlacement the tab placement
-     * @param start        the start
-     * @param end          the end
-     * @param max          the max
+     * @param start the start
+     * @param end the end
+     * @param max the max
      */
     protected void padTabRun(final int tabPlacement, final int start, final int end, final int max) {
         Rectangle lastRect = ui.rects[end];
@@ -500,7 +496,7 @@ public abstract class TabbedPaneLayout implements LayoutManager {
     /**
      * Pads selected tab.
      *
-     * @param tabPlacement  the tab placement
+     * @param tabPlacement the tab placement
      * @param selectedIndex the selected index
      */
     protected void padSelectedTab(final int tabPlacement, final int selectedIndex) {
@@ -546,8 +542,8 @@ public abstract class TabbedPaneLayout implements LayoutManager {
     /**
      * Returns the calculated size.
      *
-     * @param  minimum use the minimum size or preferred size
-     * @return         the calculated size
+     * @param minimum use the minimum size or preferred size
+     * @return the calculated size
      */
     protected Dimension calculateSize(final boolean minimum) {
         int tabPlacement = ui.tabPane.getTabPlacement();
@@ -597,19 +593,16 @@ public abstract class TabbedPaneLayout implements LayoutManager {
                 tabExtent = preferredTabAreaHeight(tabPlacement, width - tabAreaInsets.left - tabAreaInsets.right);
                 height += tabExtent;
         }
-        return new Dimension(
-            width + insets.left + insets.right + contentInsets.left + contentInsets.right,
-            height + insets.bottom + insets.top + contentInsets.top + contentInsets.bottom
-        );
-
+        return new Dimension(width + insets.left + insets.right + contentInsets.left + contentInsets.right,
+                height + insets.bottom + insets.top + contentInsets.top + contentInsets.bottom);
     }
 
     /**
      * Returns the preferred tab area width.
      *
-     * @param  tabPlacement the tab placement
-     * @param  height       the height
-     * @return              the preferred tab area widty
+     * @param tabPlacement the tab placement
+     * @param height the height
+     * @return the preferred tab area widty
      */
     protected int preferredTabAreaWidth(final int tabPlacement, final int height) {
         FontMetrics metrics = ui.getFontMetrics();
@@ -639,9 +632,9 @@ public abstract class TabbedPaneLayout implements LayoutManager {
     /**
      * Returns the preferred tab area height.
      *
-     * @param  tabPlacement the tab placement
-     * @param  width        the width
-     * @return              the preferred tab area height
+     * @param tabPlacement the tab placement
+     * @param width the width
+     * @return the preferred tab area height
      */
     protected int preferredTabAreaHeight(final int tabPlacement, final int width) {
         FontMetrics metrics = ui.getFontMetrics();

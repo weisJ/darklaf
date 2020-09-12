@@ -68,7 +68,7 @@ public class ThemeSettings implements ThemePreferenceListener {
     /**
      * Show the settings as a dialog.
      *
-     * @param  parent                the parent component.
+     * @param parent the parent component.
      * @throws IllegalStateException If {@link #getSettingsPanel()} is already in use.
      */
     public static void showSettingsDialog(final Component parent) {
@@ -78,8 +78,8 @@ public class ThemeSettings implements ThemePreferenceListener {
     /**
      * Show the settings as a dialog.
      *
-     * @param  parent                the parent component.
-     * @param  modalityType          the modality type.
+     * @param parent the parent component.
+     * @param modalityType the modality type.
      * @throws IllegalStateException If {@link #getSettingsPanel()} is already in use.
      */
     public static void showSettingsDialog(final Component parent, final Dialog.ModalityType modalityType) {
@@ -117,8 +117,8 @@ public class ThemeSettings implements ThemePreferenceListener {
     /**
      * Show the settings as a dialog.
      *
-     * @param  parent                the parent component.
-     * @param  modal                 the modality type.
+     * @param parent the parent component.
+     * @param modal the modality type.
      * @throws IllegalStateException If {@link #getSettingsPanel()} is already in use.
      */
     public void showDialog(final Component parent, final Dialog.ModalityType modal) {
@@ -153,11 +153,11 @@ public class ThemeSettings implements ThemePreferenceListener {
      * Returns whether the option to follow the system settings is enabled.
      *
      * @return true if enabled.
-     * @see    #isSystemPreferencesEnabled() (boolean)
-     * @see    #isThemeFollowsSystem()
-     * @see    #isAccentColorFollowsSystem()
-     * @see    #isSelectionColorFollowsSystem()
-     * @see    #isFontSizeFollowsSystem()
+     * @see #isSystemPreferencesEnabled() (boolean)
+     * @see #isThemeFollowsSystem()
+     * @see #isAccentColorFollowsSystem()
+     * @see #isSelectionColorFollowsSystem()
+     * @see #isFontSizeFollowsSystem()
      */
     public boolean isSystemPreferencesEnabled() {
         return currentConfiguration.isSystemPreferencesEnabled();
@@ -167,7 +167,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * Returns whether the accent color follows the system settings.
      *
      * @return true if accent color follows system settings.
-     * @see    #setAccentColorFollowsSystem(boolean)
+     * @see #setAccentColorFollowsSystem(boolean)
      */
     public boolean isAccentColorFollowsSystem() {
         return currentConfiguration.isAccentColorFollowsSystem();
@@ -177,7 +177,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * Returns whether the font size follows the system settings.
      *
      * @return true if font size follows system settings.
-     * @see    #setFontSizeFollowsSystem(boolean)
+     * @see #setFontSizeFollowsSystem(boolean)
      */
     public boolean isFontSizeFollowsSystem() {
         return currentConfiguration.isFontSizeFollowsSystem();
@@ -187,7 +187,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * Returns whether the selection color follows the system settings.
      *
      * @return true if selection color follows system settings.
-     * @see    #setSelectionColorFollowsSystem(boolean)
+     * @see #setSelectionColorFollowsSystem(boolean)
      */
     public boolean isSelectionColorFollowsSystem() {
         return currentConfiguration.isSelectionColorFollowsSystem();
@@ -197,7 +197,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * Returns whether the theme follows the system settings.
      *
      * @return true if theme follows system settings.
-     * @see    #setThemeFollowsSystem(boolean)
+     * @see #setThemeFollowsSystem(boolean)
      */
     public boolean isThemeFollowsSystem() {
         return currentConfiguration.isThemeFollowsSystem();
@@ -208,7 +208,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * {@link LafManager#getTheme()} as the current settings might not have been applied.
      *
      * @return the current selected accent color rule.
-     * @see    #setAccentColorRule(AccentColorRule)
+     * @see #setAccentColorRule(AccentColorRule)
      */
     public AccentColorRule getAccentColorRule() {
         return currentConfiguration.getAccentColorRule();
@@ -219,7 +219,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * {@link LafManager#getTheme()} as the current settings might not have been applied.
      *
      * @return the current selected font size rule.
-     * @see    #setFontSizeRule(FontSizeRule)
+     * @see #setFontSizeRule(FontSizeRule)
      */
     public FontSizeRule getFontSizeRule() {
         return currentConfiguration.getFontSizeRule();
@@ -230,7 +230,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * current settings might not have been applied.
      *
      * @return the current selected theme.
-     * @see    #setTheme(Theme)
+     * @see #setTheme(Theme)
      */
     public Theme getTheme() {
         return currentConfiguration.getTheme();
@@ -240,10 +240,10 @@ public class ThemeSettings implements ThemePreferenceListener {
      * Enables the option to follow system preferences.
      *
      * @param enabled true if enabled.
-     * @see           #setAccentColorFollowsSystem(boolean)
-     * @see           #setSelectionColorFollowsSystem(boolean)
-     * @see           #setFontSizeFollowsSystem(boolean)
-     * @see           #setThemeFollowsSystem(boolean)
+     * @see #setAccentColorFollowsSystem(boolean)
+     * @see #setSelectionColorFollowsSystem(boolean)
+     * @see #setFontSizeFollowsSystem(boolean)
+     * @see #setThemeFollowsSystem(boolean)
      */
     public void setSystemPreferencesEnabled(final boolean enabled) {
         if (isSystemPreferencesEnabled() != enabled) {
@@ -258,7 +258,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * {@link #isSelectionColorFollowsSystem()} is true.
      *
      * @param accentColorFollowsSystem true if accent color should follow system.
-     * @see                            #isAccentColorFollowsSystem()
+     * @see #isAccentColorFollowsSystem()
      */
     public void setAccentColorFollowsSystem(final boolean accentColorFollowsSystem) {
         if (isAccentColorFollowsSystem() != accentColorFollowsSystem) {
@@ -273,7 +273,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * {@link #isSelectionColorFollowsSystem()} is true.
      *
      * @param fontSizeFollowsSystem true if font size should follow system.
-     * @see                         #isFontSizeFollowsSystem()
+     * @see #isFontSizeFollowsSystem()
      */
     public void setFontSizeFollowsSystem(final boolean fontSizeFollowsSystem) {
         if (isFontSizeFollowsSystem() != fontSizeFollowsSystem) {
@@ -288,7 +288,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * {@link #isSelectionColorFollowsSystem()} is true.
      *
      * @param selectionColorFollowsSystem true if selection color should follow system.
-     * @see                               #isSelectionColorFollowsSystem()
+     * @see #isSelectionColorFollowsSystem()
      */
     public void setSelectionColorFollowsSystem(final boolean selectionColorFollowsSystem) {
         if (isSelectionColorFollowsSystem() != selectionColorFollowsSystem) {
@@ -303,7 +303,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * {@link #isSelectionColorFollowsSystem()} is true.
      *
      * @param themeFollowsSystem true if theme should follow system.
-     * @see                      #isThemeFollowsSystem()
+     * @see #isThemeFollowsSystem()
      */
     public void setThemeFollowsSystem(final boolean themeFollowsSystem) {
         if (isThemeFollowsSystem() != themeFollowsSystem) {
@@ -317,7 +317,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * Sets the font accent color rule. The theme is not updated until {@link #apply()} is called.
      *
      * @param accentColorRule the accent color rule
-     * @see                   #getAccentColorRule()
+     * @see #getAccentColorRule()
      */
     public void setAccentColorRule(final AccentColorRule accentColorRule) {
         if (!Objects.equals(getAccentColorRule(), accentColorRule)) {
@@ -331,7 +331,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * Sets the font size rule. The theme is not updated until {@link #apply()} is called.
      *
      * @param fontSizeRule the font size rule.
-     * @see                #getFontSizeRule()
+     * @see #getFontSizeRule()
      */
     public void setFontSizeRule(final FontSizeRule fontSizeRule) {
         if (!Objects.equals(getFontSizeRule(), fontSizeRule)) {
@@ -345,7 +345,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * Sets the theme. The theme is not updated until {@link #apply()} is called.
      *
      * @param theme the theme.
-     * @see         #getTheme()
+     * @see #getTheme()
      */
     public void setTheme(final Theme theme) {
         if (!Objects.equals(getTheme(), theme)) {
@@ -382,9 +382,7 @@ public class ThemeSettings implements ThemePreferenceListener {
         return box;
     }
 
-    /**
-     * Updates all values according to the current settings.
-     */
+    /** Updates all values according to the current settings. */
     public void refresh() {
         Theme theme = LafManager.getTheme();
         currentConfiguration.setTheme(theme);
@@ -402,9 +400,7 @@ public class ThemeSettings implements ThemePreferenceListener {
         settingsPanel.ifPresent(ThemeSettingsPanel::updateConfiguration);
     }
 
-    /**
-     * Saves the settings.
-     */
+    /** Saves the settings. */
     public void save() {
         fetchFromSettingsPanel();
         LafManager.enabledPreferenceChangeReporting(currentConfiguration.isSystemPreferencesEnabled());
@@ -425,9 +421,7 @@ public class ThemeSettings implements ThemePreferenceListener {
         peek();
     }
 
-    /**
-     * Sets the theme according to the selected options. Does not save the settings.
-     */
+    /** Sets the theme according to the selected options. Does not save the settings. */
     public void peek() {
         applyTheme(getEffectiveTheme());
     }
@@ -438,7 +432,8 @@ public class ThemeSettings implements ThemePreferenceListener {
 
     private Theme getEffectiveTheme(final PreferredThemeStyle themeStyle) {
         Theme baseTheme = getEffectiveBaseTheme(themeStyle);
-        if (baseTheme == null) return null;
+        if (baseTheme == null)
+            return null;
         FontSizeRule fontSizeRule = getEffectiveFontSizeRule(baseTheme, themeStyle);
         AccentColorRule accentColorRule = getEffectiveAccentColorRule(baseTheme);
         return baseTheme.derive(fontSizeRule, accentColorRule);
@@ -449,12 +444,14 @@ public class ThemeSettings implements ThemePreferenceListener {
     }
 
     private FontSizeRule getEffectiveFontSizeRule(final Theme theme, final PreferredThemeStyle preferredThemeStyle) {
-        if (theme == null) return FontSizeRule.getDefault();
+        if (theme == null)
+            return FontSizeRule.getDefault();
         return isFontSizeFollowsSystem() ? preferredThemeStyle.getFontSizeRule() : getFontSizeRule();
     }
 
     private AccentColorRule getEffectiveAccentColorRule(final Theme theme) {
-        if (theme == null) return AccentColorRule.getDefault();
+        if (theme == null)
+            return AccentColorRule.getDefault();
         return currentConfiguration.getAccentColorRule();
     }
 
@@ -469,8 +466,10 @@ public class ThemeSettings implements ThemePreferenceListener {
     }
 
     protected void applyTheme(final Theme theme) {
-        if (theme == null) return;
-        if (LafManager.getTheme().appearsEqualTo(theme)) return;
+        if (theme == null)
+            return;
+        if (LafManager.getTheme().appearsEqualTo(theme))
+            return;
         SwingUtilities.invokeLater(() -> {
             LafManager.installTheme(theme);
             refresh();

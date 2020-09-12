@@ -28,9 +28,7 @@ import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.components.border.MutableLineBorder;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkTableHeaderBorder extends MutableLineBorder implements UIResource {
 
     public DarkTableHeaderBorder() {
@@ -39,9 +37,8 @@ public class DarkTableHeaderBorder extends MutableLineBorder implements UIResour
     }
 
     @Override
-    public void paintBorder(
-            final Component c, final Graphics g, final int x, final int y, final int width, final int height
-    ) {
+    public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width,
+            final int height) {
         super.paintBorder(c, g, x, y, width, height);
     }
 

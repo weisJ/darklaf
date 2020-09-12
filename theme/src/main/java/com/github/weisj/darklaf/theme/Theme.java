@@ -36,9 +36,7 @@ import com.github.weisj.darklaf.theme.info.*;
 import com.github.weisj.darklaf.theme.laf.RenamedTheme;
 import com.github.weisj.darklaf.util.LogUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     private static final Logger LOGGER = LogUtil.getLogger(Theme.class);
 
@@ -57,8 +55,8 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     /**
      * Create a derived theme with the given display name.
      *
-     * @param  newName the new display name.
-     * @return         the derived theme.
+     * @param newName the new display name.
+     * @return the derived theme.
      */
     public Theme withDisplayName(final String newName) {
         return new RenamedTheme(this, newName);
@@ -67,9 +65,9 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     /**
      * Create a derived theme with the given {@link FontSizeRule} and {@link AccentColorRule}.
      *
-     * @param  fontSizeRule    the font size rule.
-     * @param  accentColorRule the accent color rule.
-     * @return                 the derived theme.
+     * @param fontSizeRule the font size rule.
+     * @param accentColorRule the accent color rule.
+     * @return the derived theme.
      */
     public Theme derive(final FontSizeRule fontSizeRule, final AccentColorRule accentColorRule) {
         return new ThemeDelegate(this, fontSizeRule, accentColorRule);
@@ -77,9 +75,9 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
 
     /**
      * Creates a copy of this theme. This is not equivalent to {@link #clone()} in the sense that
-     * <code>clone().getClass() == this.getClass()</code> and
-     * <code>copy().getClass() != this.getClass()</code>. Nonetheless the copy theme behaves exactly the
-     * same as the original.
+     * <code>clone().getClass() == this.getClass()</code> and <code>
+     * copy().getClass() != this.getClass()</code>. Nonetheless the copy theme behaves exactly the same
+     * as the original.
      *
      * @return a copy of the theme.
      */
@@ -91,33 +89,36 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      * Returns whether the theme is a dark theme. This is used to determine the default mode for [aware]
      * icons.
      *
-     * @param  theme the theme.
-     * @return       true if dark.
+     * @param theme the theme.
+     * @return true if dark.
      */
     public static boolean isDark(final Theme theme) {
-        if (theme == null) return false;
+        if (theme == null)
+            return false;
         return theme.getColorToneRule() == ColorToneRule.DARK;
     }
 
     /**
      * Returns whether the theme is a high contrast theme.
      *
-     * @param  theme the theme.
-     * @return       true if the theme is a high contrast theme.
+     * @param theme the theme.
+     * @return true if the theme is a high contrast theme.
      */
     public static boolean isHighContrast(final Theme theme) {
-        if (theme == null) return false;
+        if (theme == null)
+            return false;
         return theme.getContrastRule() == ContrastRule.HIGH_CONTRAST;
     }
 
     /**
      * Load the theme defaults.
+     *
      * <p>
      * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()} to return the
      * class of the theme you are overwriting. In this case you should use
      * {@link #loadWithClass(String, Class)} instead of {@link #load(String)}.
      *
-     * @param properties      the properties to load the values into.
+     * @param properties the properties to load the values into.
      * @param currentDefaults the current ui defaults.
      */
     public void loadDefaults(final Properties properties, final UIDefaults currentDefaults) {
@@ -126,36 +127,39 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
 
     /**
      * Customize the global values.
+     *
      * <p>
      * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()} to return the
      * class of the theme you are overwriting. In this case you should use
      * {@link #loadWithClass(String, Class)} instead of {@link #load(String)}.
      *
-     * @param properties      the properties to load the values into.
+     * @param properties the properties to load the values into.
      * @param currentDefaults the current ui defaults.
      */
     public void customizeGlobals(final Properties properties, final UIDefaults currentDefaults) {}
 
     /**
      * Customize the icon defaults.
+     *
      * <p>
      * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()} to return the
      * class of the theme you are overwriting. In this case you should use
      * {@link #loadWithClass(String, Class)} instead of {@link #load(String)}.
      *
-     * @param properties      the properties to load the value into.
+     * @param properties the properties to load the value into.
      * @param currentDefaults the current ui defaults.
      */
     public void customizeIconTheme(final Properties properties, final UIDefaults currentDefaults) {}
 
     /**
      * Load the general properties file for the icon themes.
+     *
      * <p>
      * Note: When overwriting a theme you also have overwrite {@link #getLoaderClass()} to return the
      * class of the theme you are overwriting. In this case you should use
      * {@link #loadWithClass(String, Class)} instead of {@link #load(String)}.
      *
-     * @param properties      the properties to load the value into.
+     * @param properties the properties to load the value into.
      * @param currentDefaults the current ui defaults.
      */
     public void loadIconTheme(final Properties properties, final UIDefaults currentDefaults) {
@@ -177,22 +181,24 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
 
     /**
      * Customize the platform defaults.
+     *
      * <p>
      * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)} instead of
      * {@link #load(String)}.
      *
-     * @param properties      the properties to load the values into.
+     * @param properties the properties to load the values into.
      * @param currentDefaults the current ui defaults.
      */
     public void customizePlatformProperties(final Properties properties, final UIDefaults currentDefaults) {}
 
     /**
      * Customize the ui defaults.
+     *
      * <p>
      * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)} instead of
      * {@link #load(String)}.
      *
-     * @param properties      the properties to load the values into.
+     * @param properties the properties to load the values into.
      * @param currentDefaults the current ui defaults.
      */
     public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults) {}
@@ -207,17 +213,17 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     /**
      * Load custom properties that are located under {@link #getResourcePath()}, with the name
      * {@link #getPrefix()}_{propertySuffix}.properties
+     *
      * <p>
      * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)} instead of
      * {@link #load(String)}.
      *
-     * @param propertySuffix  the property suffix.
-     * @param properties      the properties to load into.
+     * @param propertySuffix the property suffix.
+     * @param properties the properties to load into.
      * @param currentDefaults the current ui defaults.
      */
-    protected final void loadCustomProperties(
-            final String propertySuffix, final Properties properties, final UIDefaults currentDefaults
-    ) {
+    protected final void loadCustomProperties(final String propertySuffix, final Properties properties,
+            final UIDefaults currentDefaults) {
         PropertyLoader.putProperties(loadPropertyFile(propertySuffix), properties, currentDefaults);
     }
 
@@ -233,11 +239,12 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
 
     /**
      * Load a .properties file using {@link #getLoaderClass()}} to resolve the file path.
+     *
      * <p>
      * Note: When overwriting a theme you should use {@link #loadWithClass(String, Class)} instead.
      *
-     * @param  name the properties file to load.
-     * @return      the properties.
+     * @param name the properties file to load.
+     * @return the properties.
      */
     protected final Properties load(final String name) {
         return loadWithClass(name, getLoaderClass());
@@ -246,9 +253,9 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     /**
      * Load a .properties file.
      *
-     * @param  name        the properties file to load.
-     * @param  loaderClass the class to resolve the file location from.
-     * @return             the properties.
+     * @param name the properties file to load.
+     * @param loaderClass the class to resolve the file location from.
+     * @return the properties.
      */
     protected final Properties loadWithClass(final String name, final Class<?> loaderClass) {
         final Properties properties = new Properties();
@@ -322,8 +329,8 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     /**
      * Get the path for the file [prefix]_[name].properties in the themes resource location.
      *
-     * @param  name the of the file.
-     * @return      the path relative to the location of {@link #getLoaderClass()}.
+     * @param name the of the file.
+     * @return the path relative to the location of {@link #getLoaderClass()}.
      */
     protected String getPropertyFilePath(final String name) {
         return getResourcePath() + getPrefix() + "_" + name + ".properties";
@@ -334,8 +341,8 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      * location of the theme adds the theme property prefix and appends ".properties" e.g. "test" -&gt;
      * [resource_location]/[prefix_of_theme]_test.properties.
      *
-     * @param  name the properties name.
-     * @return      the properties.
+     * @param name the properties name.
+     * @return the properties.
      */
     public final Properties loadPropertyFile(final String name) {
         return loadPropertyFile(name, false);
@@ -346,14 +353,15 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      * location of the theme adds the theme property prefix and appends ".properties" e.g. "test" -&gt;
      * [resource_location]/[prefix_of_theme]_test.properties.
      *
-     * @param  name   the properties name.
-     * @param  silent if true no warnings are issues if the file is not present. Instead, an empty
-     *                property instance is returned.
-     * @return        the properties.
+     * @param name the properties name.
+     * @param silent if true no warnings are issues if the file is not present. Instead, an empty
+     *        property instance is returned.
+     * @return the properties.
      */
     public final Properties loadPropertyFile(final String name, final boolean silent) {
         Level level = LOGGER.getLevel();
-        if (silent) LOGGER.setLevel(Level.OFF);
+        if (silent)
+            LOGGER.setLevel(Level.OFF);
         Properties properties = load(getPropertyFilePath(name));
         LOGGER.setLevel(level);
         return properties;
@@ -422,18 +430,22 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
 
     @Override
     public int compareTo(final Theme o) {
-        if (o == null) return 1;
+        if (o == null)
+            return 1;
         int stringComp = getName().compareTo(o.getName());
         int contrastCompare = Boolean.compare(isHighContrast(this), isHighContrast(o));
         int toneCompare = Boolean.compare(isDark(this), isDark(o));
-        if (contrastCompare != 0) return contrastCompare;
-        if (toneCompare != 0) return toneCompare;
+        if (contrastCompare != 0)
+            return contrastCompare;
+        if (toneCompare != 0)
+            return toneCompare;
         return stringComp;
     }
 
     @Override
     public int compare(final Theme o1, final Theme o2) {
-        if (o1 == null) return -1;
+        if (o1 == null)
+            return -1;
         return o1.compareTo(o2);
     }
 
@@ -444,15 +456,17 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
     /**
      * Returns whether the appearance of the given theme is equal to the appearance if [this].
      *
-     * @param  theme the other theme.
-     * @return       true if they appear equal.
+     * @param theme the other theme.
+     * @return true if they appear equal.
      */
     public boolean appearsEqualTo(final Theme theme) {
-        if (theme == null) return false;
-        if (!Objects.equals(getThemeClass(), theme.getThemeClass())) return false;
-        return Objects.equals(getAccentColorRule(), theme.getAccentColorRule()) && Objects.equals(
-            getColorToneRule(), theme.getColorToneRule()
-        ) && Objects.equals(getContrastRule(), theme.getContrastRule())
-            && Objects.equals(getFontSizeRule(), theme.getFontSizeRule());
+        if (theme == null)
+            return false;
+        if (!Objects.equals(getThemeClass(), theme.getThemeClass()))
+            return false;
+        return Objects.equals(getAccentColorRule(), theme.getAccentColorRule())
+                && Objects.equals(getColorToneRule(), theme.getColorToneRule())
+                && Objects.equals(getContrastRule(), theme.getContrastRule())
+                && Objects.equals(getFontSizeRule(), theme.getFontSizeRule());
     }
 }

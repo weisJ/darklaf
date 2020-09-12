@@ -30,9 +30,7 @@ import javax.swing.table.TableColumnModel;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public abstract class DarkTableUIBridge extends TableUIBridge {
 
     protected Color dropLine;
@@ -45,9 +43,7 @@ public abstract class DarkTableUIBridge extends TableUIBridge {
         dropLineShort = UIManager.getColor("Table.dropLineShortColor");
     }
 
-    /**
-     * Paint a representation of the <code>table</code> instance that was set in installUI().
-     */
+    /** Paint a representation of the <code>table</code> instance that was set in installUI(). */
     @Override
     public void paint(final Graphics g, final JComponent c) {
         Rectangle clip = g.getClipBounds();
@@ -60,8 +56,7 @@ public abstract class DarkTableUIBridge extends TableUIBridge {
         if (table.getRowCount() <= 0 || table.getColumnCount() <= 0 ||
         // this check prevents us from painting the entire table
         // when the clip doesn't intersect our bounds at all
-            !bounds.intersects(clip)
-        ) {
+                !bounds.intersects(clip)) {
 
             paintDropLines(g);
             return;
@@ -248,19 +243,16 @@ public abstract class DarkTableUIBridge extends TableUIBridge {
     @Deprecated
     protected final void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column) {}
 
-    protected abstract void paintCell(
-            final Graphics g, final Rectangle cellRect, final int row, final int column, final int cMin, final int cMax
-    );
+    protected abstract void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column,
+            final int cMin, final int cMax);
 
     @Override
     protected int viewIndexForColumn(final TableColumn aColumn) {
         return viewIndexForColumn(aColumn, table);
     }
 
-    protected abstract void paintDraggedArea(
-            final Graphics g, final int rMin, final int rMax, final int cMin, final int cMax,
-            final TableColumn draggedColumn, final int distance
-    );
+    protected abstract void paintDraggedArea(final Graphics g, final int rMin, final int rMax, final int cMin,
+            final int cMax, final TableColumn draggedColumn, final int distance);
 
     public static int viewIndexForColumn(final TableColumn aColumn, final JTable table) {
         TableColumnModel cm = table.getColumnModel();

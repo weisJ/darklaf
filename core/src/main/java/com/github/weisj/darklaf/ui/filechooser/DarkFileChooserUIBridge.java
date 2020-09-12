@@ -123,8 +123,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     /**
      * Constructs a new instance of {@code MetalFileChooserUI}.
      *
-     * @param  c a component
-     * @return   a new instance of {@code MetalFileChooserUI}
+     * @param c a component
+     * @return a new instance of {@code MetalFileChooserUI}
      */
     public static ComponentUI createUI(final JComponent c) {
         return new MetalFileChooserUI((JFileChooser) c);
@@ -271,10 +271,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     protected void doSelectedFileChanged(final PropertyChangeEvent e) {
         File f = (File) e.getNewValue();
         JFileChooser fc = getFileChooser();
-        if (
-            f != null && ((fc.isFileSelectionEnabled() && !f.isDirectory())
-                || (f.isDirectory() && fc.isDirectorySelectionEnabled()))
-        ) {
+        if (f != null && ((fc.isFileSelectionEnabled() && !f.isDirectory())
+                || (f.isDirectory() && fc.isDirectorySelectionEnabled()))) {
 
             setFileName(fileNameString(f));
         }
@@ -283,10 +281,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     protected void doSelectedFilesChanged(final PropertyChangeEvent e) {
         File[] files = (File[]) e.getNewValue();
         JFileChooser fc = getFileChooser();
-        if (
-            files != null && files.length > 0
-                && (files.length > 1 || fc.isDirectorySelectionEnabled() || !files[0].isDirectory())
-        ) {
+        if (files != null && files.length > 0
+                && (files.length > 1 || fc.isDirectorySelectionEnabled() || !files[0].isDirectory())) {
             setFileName(fileNameString(files));
         }
     }
@@ -322,10 +318,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
 
         JFileChooser fc = getFileChooser();
         File currentDirectory = fc.getCurrentDirectory();
-        if (
-            currentDirectory != null && fc.isDirectorySelectionEnabled() && !fc.isFileSelectionEnabled()
-                && fc.getFileSystemView().isFileSystem(currentDirectory)
-        ) {
+        if (currentDirectory != null && fc.isDirectorySelectionEnabled() && !fc.isFileSelectionEnabled()
+                && fc.getFileSystemView().isFileSystem(currentDirectory)) {
 
             setFileName(currentDirectory.getPath());
         } else {
@@ -374,9 +368,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
         }
     }
 
-    /**
-     * Removes control buttons from bottom panel.
-     */
+    /** Removes control buttons from bottom panel. */
     protected void removeControlButtons() {
         getBottomPanel().remove(getButtonPanel());
     }
@@ -430,8 +422,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     /**
      * Creates a selection listener for the list of files and directories.
      *
-     * @param  fc a <code>JFileChooser</code>
-     * @return    a <code>ListSelectionListener</code>
+     * @param fc a <code>JFileChooser</code>
+     * @return a <code>ListSelectionListener</code>
      */
     public ListSelectionListener createListSelectionListener(final JFileChooser fc) {
         return super.createListSelectionListener(fc);
@@ -442,7 +434,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
      * by the UI on a selection event.
      *
      * @param directorySelected if a directory is currently selected.
-     * @since                   1.4
+     * @since 1.4
      */
     protected void setDirectorySelected(final boolean directorySelected) {
         super.setDirectorySelected(directorySelected);
@@ -483,8 +475,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     /**
      * Constructs a new instance of {@code DataModel} for {@code DirectoryComboBox}.
      *
-     * @param  fc a {@code JFileChooser}
-     * @return    a new instance of {@code DataModel} for {@code DirectoryComboBox}
+     * @param fc a {@code JFileChooser}
+     * @return a new instance of {@code DataModel} for {@code DirectoryComboBox}
      */
     protected DirectoryComboBoxModel createDirectoryComboBoxModel(final JFileChooser fc) {
         return new DirectoryComboBoxModel();
@@ -493,8 +485,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     /**
      * Constructs a new instance of {@code DirectoryComboBoxRenderer}.
      *
-     * @param  fc a {@code JFileChooser}
-     * @return    a new instance of {@code DirectoryComboBoxRenderer}
+     * @param fc a {@code JFileChooser}
+     * @return a new instance of {@code DirectoryComboBoxRenderer}
      */
     protected DefaultListCellRenderer createDirectoryComboBoxRenderer(final JFileChooser fc) {
         return new DirectoryComboBoxRenderer();
@@ -544,10 +536,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
             return null;
         } else {
             JFileChooser fc = getFileChooser();
-            if (
-                (fc.isDirectorySelectionEnabled() && !fc.isFileSelectionEnabled()) || (fc.isDirectorySelectionEnabled()
-                    && fc.isFileSelectionEnabled() && fc.getFileSystemView().isFileSystemRoot(file))
-            ) {
+            if ((fc.isDirectorySelectionEnabled() && !fc.isFileSelectionEnabled()) || (fc.isDirectorySelectionEnabled()
+                    && fc.isFileSelectionEnabled() && fc.getFileSystemView().isFileSystemRoot(file))) {
                 return file.getPath();
             } else {
                 return file.getName();
@@ -585,9 +575,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
         return buttonPanel;
     }
 
-    /**
-     * Adds control buttons to bottom panel.
-     */
+    /** Adds control buttons to bottom panel. */
     protected void addControlButtons() {
         getBottomPanel().add(getButtonPanel());
     }
@@ -601,8 +589,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     /**
      * Constructs a details view.
      *
-     * @param  fc a {@code JFileChooser}
-     * @return    the list
+     * @param fc a {@code JFileChooser}
+     * @return the list
      */
     protected JPanel createList(final JFileChooser fc) {
         return filePane.createList();
@@ -611,8 +599,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     /**
      * Constructs a details view.
      *
-     * @param  fc a {@code JFileChooser}
-     * @return    the details view
+     * @param fc a {@code JFileChooser}
+     * @return the details view
      */
     protected JPanel createDetailsView(final JFileChooser fc) {
         return filePane.createDetailsView();
@@ -623,8 +611,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
      * least as large, in both height and width, as the preferred size recommended by the file chooser's
      * layout manager.
      *
-     * @param  c a <code>JFileChooser</code>
-     * @return   a <code>Dimension</code> specifying the preferred width and height of the file chooser
+     * @param c a <code>JFileChooser</code>
+     * @return a <code>Dimension</code> specifying the preferred width and height of the file chooser
      */
     @Override
     public Dimension getPreferredSize(final JComponent c) {
@@ -640,8 +628,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     /**
      * Returns the minimum size of the <code>JFileChooser</code>.
      *
-     * @param  c a <code>JFileChooser</code>
-     * @return   a <code>Dimension</code> specifying the minimum width and height of the file chooser
+     * @param c a <code>JFileChooser</code>
+     * @return a <code>Dimension</code> specifying the minimum width and height of the file chooser
      */
     @Override
     public Dimension getMinimumSize(final JComponent c) {
@@ -651,8 +639,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     /**
      * Returns the maximum size of the <code>JFileChooser</code>.
      *
-     * @param  c a <code>JFileChooser</code>
-     * @return   a <code>Dimension</code> specifying the maximum width and height of the file chooser
+     * @param c a <code>JFileChooser</code>
+     * @return a <code>Dimension</code> specifying the maximum width and height of the file chooser
      */
     @Override
     public Dimension getMaximumSize(final JComponent c) {
@@ -672,15 +660,11 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
         }
     }
 
-    /**
-     * Render different type sizes and styles.
-     */
+    /** Render different type sizes and styles. */
     @SuppressWarnings("serial") // Superclass is not serializable across versions
     public static class FilterComboBoxRenderer extends DefaultListCellRenderer {
-        public Component getListCellRendererComponent(
-                final JList<?> list, final Object value, final int index, final boolean isSelected,
-                final boolean cellHasFocus
-        ) {
+        public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,
+                final boolean isSelected, final boolean cellHasFocus) {
 
             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
@@ -727,9 +711,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
                         height = Math.max(height, aSize.height);
                         maxWidth = Math.max(maxWidth, aSize.width);
                     }
-                    return new Dimension(
-                        extraWidth + numChildren * maxWidth + (numChildren - 1) * hGap, extraHeight + height
-                    );
+                    return new Dimension(extraWidth + numChildren * maxWidth + (numChildren - 1) * hGap,
+                            extraHeight + height);
                 }
             }
             return new Dimension(0, 0);
@@ -842,10 +825,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
     class DirectoryComboBoxRenderer extends DefaultListCellRenderer {
         final IndentIcon ii = new IndentIcon();
 
-        public Component getListCellRendererComponent(
-                final JList<?> list, final Object value, final int index, final boolean isSelected,
-                final boolean cellHasFocus
-        ) {
+        public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,
+                final boolean isSelected, final boolean cellHasFocus) {
 
             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
@@ -885,9 +866,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
         }
     }
 
-    /**
-     * Data model for a type-face selection combo-box.
-     */
+    /** Data model for a type-face selection combo-box. */
     @SuppressWarnings("serial") // Superclass is not serializable across versions
     protected class DirectoryComboBoxModel extends AbstractListModel<Object> implements ComboBoxModel<Object> {
         final Vector<File> directories = new Vector<>();
@@ -896,9 +875,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
         final JFileChooser chooser = getFileChooser();
         final FileSystemView fsv = chooser.getFileSystemView();
 
-        /**
-         * Constructs an instance of {@code DirectoryComboBoxModel}.
-         */
+        /** Constructs an instance of {@code DirectoryComboBoxModel}. */
         public DirectoryComboBoxModel() {
             // Add the current directory to the model, and make it the
             // selectedDirectory
@@ -925,7 +902,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
             directories.clear();
 
             File[] baseFolders =
-                (useShellFolder) ? (File[]) ShellFolder.get("fileChooserComboBoxFolders") : fsv.getRoots();
+                    (useShellFolder) ? (File[]) ShellFolder.get("fileChooserComboBoxFolders") : fsv.getRoots();
             directories.addAll(Arrays.asList(baseFolders));
 
             // Get the canonical (full) path. This has the side
@@ -987,8 +964,8 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
         /**
          * Returns the depth of {@code i}-th file.
          *
-         * @param  i an index
-         * @return   the depth of {@code i}-th file
+         * @param i an index
+         * @return the depth of {@code i}-th file
          */
         public int getDepth(final int i) {
             return (depths != null && i >= 0 && i < depths.length) ? depths[i] : 0;
@@ -1012,21 +989,15 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
         }
     }
 
-    /**
-     * Data model for a type-face selection combo-box.
-     */
+    /** Data model for a type-face selection combo-box. */
     @SuppressWarnings("serial") // Same-version serialization only
     protected class FilterComboBoxModel extends AbstractListModel<Object>
             implements ComboBoxModel<Object>, PropertyChangeListener {
 
-        /**
-         * An array of file filters.
-         */
+        /** An array of file filters. */
         protected FileFilter[] filters;
 
-        /**
-         * Constructs an instance of {@code FilterComboBoxModel}.
-         */
+        /** Constructs an instance of {@code FilterComboBoxModel}. */
         protected FilterComboBoxModel() {
             super();
             filters = getFileChooser().getChoosableFileFilters();
@@ -1092,15 +1063,11 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
         }
     }
 
-    /**
-     * Acts when DirectoryComboBox has changed the selected item.
-     */
+    /** Acts when DirectoryComboBox has changed the selected item. */
     @SuppressWarnings("serial") // Superclass is not serializable across versions
     protected class DirectoryComboBoxAction extends AbstractAction {
 
-        /**
-         * Constructs a new instance of {@code DirectoryComboBoxAction}.
-         */
+        /** Constructs a new instance of {@code DirectoryComboBoxAction}. */
         protected DirectoryComboBoxAction() {
             super("DirectoryComboBoxAction");
         }

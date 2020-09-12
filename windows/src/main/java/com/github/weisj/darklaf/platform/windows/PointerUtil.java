@@ -32,8 +32,8 @@ public class PointerUtil {
     /**
      * Get the window handle for the window the given component descends from.
      *
-     * @param  component the component.
-     * @return           the handle.
+     * @param component the component.
+     * @return the handle.
      */
     public static long getHWND(final Component component) {
         Window window = component instanceof Window ? (Window) component : SwingUtilities.getWindowAncestor(component);

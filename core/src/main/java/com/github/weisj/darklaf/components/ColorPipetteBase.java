@@ -98,9 +98,8 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
     @Override
     public Window show() {
         Window picker = getOrCreatePickerWindow();
-        Toolkit.getDefaultToolkit().addAWTEventListener(
-            this, AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_EVENT_MASK | AWTEvent.KEY_EVENT_MASK
-        );
+        Toolkit.getDefaultToolkit().addAWTEventListener(this,
+                AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_EVENT_MASK | AWTEvent.KEY_EVENT_MASK);
         updateLocation();
         picker.setVisible(true);
         return picker;
@@ -146,7 +145,8 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
 
     protected Point updateLocation() {
         PointerInfo pointerInfo = MouseInfo.getPointerInfo();
-        if (pointerInfo == null) return null;
+        if (pointerInfo == null)
+            return null;
 
         Point mouseLocation = pointerInfo.getLocation();
         Window pickerWindow = getPickerWindow();
@@ -170,7 +170,8 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
 
     @Override
     public void eventDispatched(final AWTEvent event) {
-        if (pickerWindow == null || !pickerWindow.isVisible()) return;
+        if (pickerWindow == null || !pickerWindow.isVisible())
+            return;
         switch (event.getID()) {
             case MouseEvent.MOUSE_PRESSED:
                 ((MouseEvent) event).consume();

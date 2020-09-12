@@ -23,8 +23,6 @@ package com.github.weisj.darklaf.ui.list;
 
 import com.github.weisj.darklaf.ui.cell.DarkCellBorderUIResource;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkListCellBorder extends DarkCellBorderUIResource {
 }

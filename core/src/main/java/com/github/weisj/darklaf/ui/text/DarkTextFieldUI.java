@@ -42,9 +42,7 @@ import com.github.weisj.darklaf.ui.text.bridge.DarkTextFieldUIBridge;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyChangeListener, MouseClickListener {
 
     protected static final String KEY_PREFIX = "JTextField.";
@@ -105,7 +103,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     protected Icon getSearchIcon(final JTextComponent c) {
         boolean enabled = c.isEnabled();
         return isSearchFieldWithHistoryPopup(c) ? enabled ? searchWithHistory : searchWithHistoryDisabled
-            : enabled ? search : searchDisabled;
+                : enabled ? search : searchDisabled;
     }
 
     @Override
@@ -160,12 +158,14 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         boolean ltr = c.getComponentOrientation().isLeftToRight();
         if (doPaintLeftIcon(c)) {
             int w = getLeftIcon(c).getIconWidth() + padding.left;
-            if (ltr) r.x += w;
+            if (ltr)
+                r.x += w;
             r.width -= w;
         }
         if (doPaintRightIcon(c)) {
             int w = getRightIcon(c).getIconWidth() + padding.right;
-            if (!ltr) r.x += w;
+            if (!ltr)
+                r.x += w;
             r.width -= w;
         }
     }
@@ -185,15 +185,16 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         if (textRect.contains(p)) {
             getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
         } else {
-            Cursor cursor =
-                action == ClickAction.NONE ? Cursor.getDefaultCursor() : Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+            Cursor cursor = action == ClickAction.NONE ? Cursor.getDefaultCursor()
+                    : Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
             getComponent().setCursor(cursor);
         }
     }
 
     protected ClickAction getActionUnder(final Point p) {
         JTextComponent c = getComponent();
-        if (!c.isEnabled()) return ClickAction.NONE;
+        if (!c.isEnabled())
+            return ClickAction.NONE;
         if (isOver(getRightIconCoord(), getRightIcon(c), p) && doPaintRightIcon(c)) {
             return ClickAction.RIGHT_ACTION;
         }
@@ -229,8 +230,10 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
 
     protected void paintIcons(final Graphics g) {
         JTextComponent c = getComponent();
-        if (doPaintLeftIcon(c)) paintLeftIcon(g);
-        if (doPaintRightIcon(c)) paintRightIcon(g);
+        if (doPaintLeftIcon(c))
+            paintLeftIcon(g);
+        if (doPaintRightIcon(c))
+            paintRightIcon(g);
     }
 
     protected boolean doPaintLeftIcon(final JTextComponent c) {
@@ -262,8 +265,8 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         Rectangle r = getDrawingRect(getComponent());
         int w = getRightIcon(getComponent()).getIconWidth();
         int right = getBorderInsets(getComponent()).right + padding.right;
-        return DarkUIUtil
-            .adjustForOrientation(new Point(r.x + r.width - w - right, r.y + (r.height - w) / 2), w, editor);
+        return DarkUIUtil.adjustForOrientation(new Point(r.x + r.width - w - right, r.y + (r.height - w) / 2), w,
+                editor);
     }
 
     protected void showSearchPopup() {
@@ -294,7 +297,8 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         search = UIManager.getIcon("TextField.search.search.icon");
         searchDisabled = UIManager.getIcon("TextField.search.search.disabled.icon");
         padding = UIManager.getInsets("TextField.insets");
-        if (padding == null) padding = new Insets(0, 0, 0, 0);
+        if (padding == null)
+            padding = new Insets(0, 0, 0, 0);
     }
 
     @Override

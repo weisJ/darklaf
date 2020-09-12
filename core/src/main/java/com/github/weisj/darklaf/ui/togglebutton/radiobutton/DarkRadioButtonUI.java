@@ -42,9 +42,7 @@ import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonFocusNavigationActions;
 import com.github.weisj.darklaf.util.PropertyKey;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyChangeListener, ToggleButtonConstants {
 
     protected static final Rectangle viewRect = new Rectangle();
@@ -148,10 +146,8 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
         }
     }
 
-    public static void paintText(
-            final Graphics2D g, final AbstractButton b, final Rectangle textRect, final String text,
-            final FontMetrics fm, final Color disabledTextColor
-    ) {
+    public static void paintText(final Graphics2D g, final AbstractButton b, final Rectangle textRect,
+            final String text, final FontMetrics fm, final Color disabledTextColor) {
         g.setColor(b.isEnabled() ? b.getForeground() : disabledTextColor);
         int mnemIndex = b.isEnabled() ? b.getDisplayedMnemonicIndex() : -1;
         StringPainter.drawStringUnderlineCharAt(g, b, text, mnemIndex, textRect, b.getFont(), fm);
@@ -210,10 +206,9 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
         iconRect.x = iconRect.y = iconRect.width = iconRect.height = 0;
         textRect.x = textRect.y = textRect.width = textRect.height = 0;
 
-        String text = SwingUtilities.layoutCompoundLabel(
-            b, fm, b.getText(), getDefaultIcon(), b.getVerticalAlignment(), b.getHorizontalAlignment(),
-            b.getVerticalTextPosition(), b.getHorizontalTextPosition(), viewRect, iconRect, textRect, b.getIconTextGap()
-        );
+        String text = SwingUtilities.layoutCompoundLabel(b, fm, b.getText(), getDefaultIcon(), b.getVerticalAlignment(),
+                b.getHorizontalAlignment(), b.getVerticalTextPosition(), b.getHorizontalTextPosition(), viewRect,
+                iconRect, textRect, b.getIconTextGap());
         iconRect.y += iconBaselineOffset;
         if (ToggleButtonConstants.isInCell(b)) {
             hitArea = calculateHitArea();
@@ -245,9 +240,8 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
         if (PropertyKey.COMPONENT_ORIENTATION.equals(key)) {
             radioButton.repaint();
             hitArea.setFrame(0, 0, 0, 0);
-        } else if (
-            DarkToggleButtonUI.KEY_IS_TREE_EDITOR.equals(key) || DarkToggleButtonUI.KEY_IS_TABLE_EDITOR.equals(key)
-        ) {
+        } else if (DarkToggleButtonUI.KEY_IS_TREE_EDITOR.equals(key)
+                || DarkToggleButtonUI.KEY_IS_TABLE_EDITOR.equals(key)) {
             radioButton.repaint();
             hitArea.setFrame(0, 0, 0, 0);
         } else if (DarkToggleButtonUI.KEY_CLEAR_HIT_AREA.equals(key)) {

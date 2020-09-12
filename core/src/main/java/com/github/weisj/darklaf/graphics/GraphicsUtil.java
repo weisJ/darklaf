@@ -41,11 +41,13 @@ public final class GraphicsUtil {
     private GraphicsUtil() {}
 
     public static void setOpaqueBuffered(final JComponent c, final boolean opaqueBuffered) {
-        if (c != null) c.putClientProperty(KEY_OPAQUE_BUFFERED, opaqueBuffered);
+        if (c != null)
+            c.putClientProperty(KEY_OPAQUE_BUFFERED, opaqueBuffered);
     }
 
     public static boolean isOpaqueBuffered(final JComponent c) {
-        if (!SystemInfo.isWindows) return false;
+        if (!SystemInfo.isWindows)
+            return false;
         return PropertyUtil.getBooleanProperty(c, KEY_OPAQUE_BUFFERED);
     }
 
@@ -53,16 +55,13 @@ public final class GraphicsUtil {
         return setupAntialiasing(g2, true, false);
     }
 
-    public static GraphicsContext setupAntialiasing(
-            final Graphics g2, final boolean enableAA, final boolean ignoreSystemSettings
-    ) {
+    public static GraphicsContext setupAntialiasing(final Graphics g2, final boolean enableAA,
+            final boolean ignoreSystemSettings) {
         GraphicsContext config = new GraphicsContext(g2);
         if (ignoreSystemSettings && g2 instanceof Graphics2D) {
             Graphics2D g = (Graphics2D) g2;
-            g.setRenderingHint(
-                RenderingHints.KEY_TEXT_ANTIALIASING,
-                enableAA ? RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HBGR : RenderingHints.VALUE_TEXT_ANTIALIAS_OFF
-            );
+            g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                    enableAA ? RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HBGR : RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
         }
         return config;
     }
@@ -88,10 +87,8 @@ public final class GraphicsUtil {
         Graphics2D g2 = (Graphics2D) g;
         GraphicsContext context = new GraphicsContext(g2);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setRenderingHint(
-            RenderingHints.KEY_STROKE_CONTROL,
-            useQuartz() ? RenderingHints.VALUE_STROKE_PURE : RenderingHints.VALUE_STROKE_NORMALIZE
-        );
+        g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL,
+                useQuartz() ? RenderingHints.VALUE_STROKE_PURE : RenderingHints.VALUE_STROKE_NORMALIZE);
         return context;
     }
 

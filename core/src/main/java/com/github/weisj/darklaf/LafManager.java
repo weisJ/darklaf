@@ -58,7 +58,7 @@ public final class LafManager {
     private static final Collection<DefaultsAdjustmentTask> uiDefaultsTasks = new ArrayList<>();
     private static final Collection<DefaultsInitTask> uiInitTasks = new ArrayList<>();
     private static final ThemeEventSupport<ThemeChangeEvent, ThemeChangeListener> eventSupport =
-        new ThemeEventSupport<>();
+            new ThemeEventSupport<>();
 
     static {
         setLogLevel(Level.WARNING);
@@ -68,7 +68,7 @@ public final class LafManager {
     /**
      * Enable logging for the Look and Feel. true means Level.INFO, false Level.SEVERE.
      *
-     * @see              #setLogLevel(Level)
+     * @see #setLogLevel(Level)
      * @param logEnabled true if messages should be logged.
      */
     public static void enableLogging(final boolean logEnabled) {
@@ -121,6 +121,7 @@ public final class LafManager {
     /**
      * Enabled whether changes in the preferred theme style should be reported to
      * {@link ThemePreferenceListener}s. On some platforms this setting may do nothing.
+     *
      * <p>
      * Warning: If preference reporting is enabled it <b>needs</b> to be disabled before closing the
      * program. Not doing so can result in memory leaks and prevent the classloader from being garbage
@@ -130,7 +131,8 @@ public final class LafManager {
      */
     public static void enabledPreferenceChangeReporting(final boolean enabled) {
         ThemePreferencesHandler.getSharedInstance().enablePreferenceChangeReporting(enabled);
-        if (ThemeSettings.isInitialized()) ThemeSettings.getInstance().setSystemPreferencesEnabled(enabled);
+        if (ThemeSettings.isInitialized())
+            ThemeSettings.getInstance().setSystemPreferencesEnabled(enabled);
     }
 
     /**
@@ -148,9 +150,9 @@ public final class LafManager {
      * will receive events if preferences have changed.
      *
      * @param listener the listener to add.
-     * @see            ThemePreferenceListener
-     * @see            #enabledPreferenceChangeReporting(boolean)
-     * @see            #isPreferenceChangeReportingEnabled()
+     * @see ThemePreferenceListener
+     * @see #enabledPreferenceChangeReporting(boolean)
+     * @see #isPreferenceChangeReportingEnabled()
      */
     public static void addThemePreferenceChangeListener(final ThemePreferenceListener listener) {
         ThemePreferencesHandler.getSharedInstance().addThemePreferenceChangeListener(listener);
@@ -160,9 +162,9 @@ public final class LafManager {
      * Removes a {@link ThemePreferenceListener}.
      *
      * @param listener the listener to remove.
-     * @see            ThemePreferenceListener
-     * @see            #enabledPreferenceChangeReporting(boolean)
-     * @see            #isPreferenceChangeReportingEnabled()
+     * @see ThemePreferenceListener
+     * @see #enabledPreferenceChangeReporting(boolean)
+     * @see #isPreferenceChangeReportingEnabled()
      */
     public static void removeThemePreferenceChangeListener(final ThemePreferenceListener listener) {
         ThemePreferencesHandler.getSharedInstance().removeThemePreferenceChangeListener(listener);
@@ -191,8 +193,8 @@ public final class LafManager {
      * native os settings to determine these values.
      *
      * @return the preferred theme style.
-     * @see    #isPreferenceChangeReportingEnabled()
-     * @see    #enabledPreferenceChangeReporting(boolean)
+     * @see #isPreferenceChangeReportingEnabled()
+     * @see #enabledPreferenceChangeReporting(boolean)
      */
     public static PreferredThemeStyle getPreferredThemeStyle() {
         return ThemePreferencesHandler.getSharedInstance().getPreferredThemeStyle();
@@ -203,10 +205,11 @@ public final class LafManager {
      * for a given preferred theme style.
      *
      * @return the theme provider.
-     * @see    PreferredThemeStyle
+     * @see PreferredThemeStyle
      */
     public static ThemeProvider getThemeProvider() {
-        if (themeProvider == null) themeProvider = createDefaultThemeProvider();
+        if (themeProvider == null)
+            themeProvider = createDefaultThemeProvider();
         return themeProvider;
     }
 
@@ -215,7 +218,7 @@ public final class LafManager {
      * for a given preferred theme style.
      *
      * @param themeProvider the theme provider.
-     * @see                 PreferredThemeStyle
+     * @see PreferredThemeStyle
      */
     public static void setThemeProvider(final ThemeProvider themeProvider) {
         LafManager.themeProvider = themeProvider;
@@ -231,8 +234,8 @@ public final class LafManager {
     /**
      * Get the associated theme for the given preferred style.
      *
-     * @param  style the preferred theme style.
-     * @return       the associated Theme or best match if there is none associated.
+     * @param style the preferred theme style.
+     * @return the associated Theme or best match if there is none associated.
      */
     public static Theme themeForPreferredStyle(final PreferredThemeStyle style) {
         return getThemeProvider().getTheme(style);
@@ -244,7 +247,8 @@ public final class LafManager {
      * @param themes the themes to register.
      */
     public static void registerTheme(final Theme... themes) {
-        if (themes == null) return;
+        if (themes == null)
+            return;
         for (Theme theme : themes) {
             registerTheme(theme);
         }
@@ -262,8 +266,8 @@ public final class LafManager {
     /**
      * Remove a register a theme. Registered themes are returned in {@link #getRegisteredThemes()}.
      *
-     * @param  theme the theme to register.
-     * @return       returns whether the theme was previously registered.
+     * @param theme the theme to register.
+     * @return returns whether the theme was previously registered.
      */
     public static boolean unregisterTheme(final Theme theme) {
         return registeredThemes.remove(theme);
@@ -290,7 +294,7 @@ public final class LafManager {
      */
     public static UIManager.LookAndFeelInfo[] getRegisteredThemeInfos() {
         return registeredThemes.stream().sorted().map(ThemedDarklafInfo::new).filter(ThemedDarklafInfo::exists)
-            .toArray(UIManager.LookAndFeelInfo[]::new);
+                .toArray(UIManager.LookAndFeelInfo[]::new);
     }
 
     /**
@@ -372,7 +376,8 @@ public final class LafManager {
             eventSupport.dispatchEvent(new ThemeChangeEvent(old, theme), ThemeChangeListener::themeChanged);
             LOGGER.fine(() -> "Setting theme to " + theme);
         }
-        if (ThemeSettings.isInitialized()) ThemeSettings.getInstance().refresh();
+        if (ThemeSettings.isInitialized())
+            ThemeSettings.getInstance().refresh();
     }
 
     /**
@@ -411,7 +416,8 @@ public final class LafManager {
      * @param theme the theme to install.
      */
     public static void installTheme(final Theme theme) {
-        if (theme == getTheme() && isInstalled()) return;
+        if (theme == getTheme() && isInstalled())
+            return;
         setTheme(theme);
         install();
     }
@@ -420,7 +426,7 @@ public final class LafManager {
      * Overload for {@link #installTheme(Theme)}.
      *
      * @param theme the theme to install.
-     * @see         #installTheme(Theme) installTheme().
+     * @see #installTheme(Theme) installTheme().
      */
     public static void install(final Theme theme) {
         installTheme(theme);
@@ -446,9 +452,7 @@ public final class LafManager {
         eventSupport.dispatchEvent(new ThemeChangeEvent(null, getTheme()), ThemeChangeListener::themeInstalled);
     }
 
-    /**
-     * Update the component ui classes for all current windows.
-     */
+    /** Update the component ui classes for all current windows. */
     public static void updateLaf() {
         for (final Window w : Window.getWindows()) {
             updateLafRecursively(w);
@@ -521,16 +525,19 @@ public final class LafManager {
     /**
      * Get the closest match of a registered theme for the given theme.
      *
-     * @param  theme the theme to match to.
-     * @return       the closes match. NonNull.
+     * @param theme the theme to match to.
+     * @return the closes match. NonNull.
      */
     public static Theme getClosestMatchForTheme(final Theme theme) {
-        if (theme == null) return themeForPreferredStyle(null);
+        if (theme == null)
+            return themeForPreferredStyle(null);
         for (Theme registered : getRegisteredThemes()) {
-            if (registered.equals(theme)) return registered;
+            if (registered.equals(theme))
+                return registered;
         }
         for (Theme registered : getRegisteredThemes()) {
-            if (registered.getThemeClass().equals(theme.getThemeClass())) return registered;
+            if (registered.getThemeClass().equals(theme.getThemeClass()))
+                return registered;
         }
         return themeForPreferredStyle(null);
     }

@@ -54,8 +54,8 @@ public class JNIThemeInfoWindows {
     /**
      * Create a monitor event handler.
      *
-     * @param  callback the event callback.
-     * @return          the event handler pointer.
+     * @param callback the event callback.
+     * @return the event handler pointer.
      */
     public static native long createEventHandler(final Runnable callback);
 

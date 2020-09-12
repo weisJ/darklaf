@@ -35,7 +35,6 @@ public interface DelegatingListSelectionModel extends ListSelectionModel {
     @Override
     default void addSelectionInterval(final int index0, final int index1) {
         getListDelegate().addSelectionInterval(index0, index1);
-
     }
 
     @Override

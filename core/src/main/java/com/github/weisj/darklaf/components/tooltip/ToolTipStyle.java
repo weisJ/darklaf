@@ -35,8 +35,10 @@ public enum ToolTipStyle implements ToolTipConstants {
     }
 
     public static ToolTipStyle parse(final Object style) {
-        if (style instanceof ToolTipStyle) return (ToolTipStyle) style;
-        if (style == null) return null;
+        if (style instanceof ToolTipStyle)
+            return (ToolTipStyle) style;
+        if (style == null)
+            return null;
         String name = style.toString();
         if (VARIANT_PLAIN_BALLOON.equalsIgnoreCase(name) || ToolTipStyle.PLAIN_BALLOON.name().equalsIgnoreCase(name)) {
             return ToolTipStyle.PLAIN_BALLOON;

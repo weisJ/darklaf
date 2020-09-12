@@ -50,14 +50,12 @@ public class SearchTextFieldWithHistory extends SearchTextField {
      * number of columns. This is the constructor through which the other constructors feed. If the
      * document is <code>null</code>, a default model is created.
      *
-     * @param  doc                      the text storage to use; if this is <code>null</code>, a default
-     *                                  will be provided by calling the <code>createDefaultModel</code>
-     *                                  method
-     * @param  text                     the initial string to display, or <code>null</code>
-     * @param  columns                  the number of columns to use to calculate the preferred width
-     *                                  &gt;= 0; if <code>columns</code> is set to zero, the preferred
-     *                                  width will be whatever naturally results from the component
-     *                                  implementation
+     * @param doc the text storage to use; if this is <code>null</code>, a default will be provided by
+     *        calling the <code>createDefaultModel</code> method
+     * @param text the initial string to display, or <code>null</code>
+     * @param columns the number of columns to use to calculate the preferred width &gt;= 0; if <code>
+     *     columns</code> is set to zero, the preferred width will be whatever naturally results from
+     *        the component implementation
      * @throws IllegalArgumentException if <code>columns</code> &lt; 0
      */
     public SearchTextFieldWithHistory(final Document doc, final String text, final int columns) {
@@ -81,8 +79,8 @@ public class SearchTextFieldWithHistory extends SearchTextField {
      * model is created and the initial string is set to <code>null</code>.
      *
      * @param columns the number of columns to use to calculate the preferred width; if columns is set
-     *                to zero, the preferred width will be whatever naturally results from the component
-     *                implementation
+     *        to zero, the preferred width will be whatever naturally results from the component
+     *        implementation
      */
     public SearchTextFieldWithHistory(final int columns) {
         this(null, null, columns);
@@ -92,10 +90,10 @@ public class SearchTextFieldWithHistory extends SearchTextField {
      * Constructs a new <code>TextField</code> initialized with the specified text and columns. A
      * default model is created.
      *
-     * @param text    the text to be displayed, or <code>null</code>
+     * @param text the text to be displayed, or <code>null</code>
      * @param columns the number of columns to use to calculate the preferred width; if columns is set
-     *                to zero, the preferred width will be whatever naturally results from the component
-     *                implementation
+     *        to zero, the preferred width will be whatever naturally results from the component
+     *        implementation
      */
     public SearchTextFieldWithHistory(final String text, final int columns) {
         this(null, text, columns);
@@ -104,6 +102,7 @@ public class SearchTextFieldWithHistory extends SearchTextField {
     /**
      * Set the maximum height of the popup. If the size is larger than the specified maximum height the
      * content will be wrapped inside a scroll pane.
+     *
      * <p>
      * Note: A value of less than or equal to 0 indicates that the height should not be limited.
      *
@@ -122,9 +121,7 @@ public class SearchTextFieldWithHistory extends SearchTextField {
         return history.getHistory();
     }
 
-    /**
-     * Clear all entries from the history.
-     */
+    /** Clear all entries from the history. */
     public void clearHistory() {
         history.clearHistory();
     }
@@ -134,9 +131,9 @@ public class SearchTextFieldWithHistory extends SearchTextField {
      * deleted.
      *
      * @param entry the entry to add.
-     * @see         #getLength() getLength
-     * @see         #setCapacity(int) setCapacity
-     * @see         #getCapacity() getCapacity
+     * @see #getLength() getLength
+     * @see #setCapacity(int) setCapacity
+     * @see #getCapacity() getCapacity
      */
     public void addEntry(final String entry) {
         history.addEntry(entry);
@@ -146,7 +143,7 @@ public class SearchTextFieldWithHistory extends SearchTextField {
      * Get the capacity of the history.
      *
      * @return the capacity.
-     * @see    #setCapacity(int) setCapacity()
+     * @see #setCapacity(int) setCapacity()
      */
     public int getCapacity() {
         return history.getCapacity();
@@ -156,7 +153,7 @@ public class SearchTextFieldWithHistory extends SearchTextField {
      * Set the capacity of the history. If the size grows larger than the capacity the oldest entry will
      * be deleted.
      *
-     * @param  capacity                 the capacity.
+     * @param capacity the capacity.
      * @throws IllegalArgumentException if capacity is negative
      */
     public void setCapacity(final int capacity) throws IllegalArgumentException {

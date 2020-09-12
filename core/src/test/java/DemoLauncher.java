@@ -38,9 +38,9 @@ public class DemoLauncher implements ComponentDemo {
 
     public DemoLauncher() {
         Class<ComponentDemo> demoType = ComponentDemo.class;
-        demoClasses = ClassFinder.getInstancesOfType(demoType, "ui", "icon", "defaults").stream().filter(
-            obj -> !(obj instanceof DemoLauncher)
-        ).map(DemoEntry::new).sorted(Comparator.comparing(DemoEntry::toString)).collect(Collectors.toList());
+        demoClasses = ClassFinder.getInstancesOfType(demoType, "ui", "icon", "defaults").stream()
+                .filter(obj -> !(obj instanceof DemoLauncher)).map(DemoEntry::new)
+                .sorted(Comparator.comparing(DemoEntry::toString)).collect(Collectors.toList());
     }
 
     @Override
@@ -50,8 +50,7 @@ public class DemoLauncher implements ComponentDemo {
         box.add(demos);
         JButton button = new JButton("Start");
         button.addActionListener(
-            e -> Optional.ofNullable(((DemoEntry) demos.getSelectedItem())).ifPresent(DemoEntry::start)
-        );
+                e -> Optional.ofNullable(((DemoEntry) demos.getSelectedItem())).ifPresent(DemoEntry::start));
         box.add(Box.createHorizontalStrut(10));
         box.add(button);
         return new DemoPanel(box);

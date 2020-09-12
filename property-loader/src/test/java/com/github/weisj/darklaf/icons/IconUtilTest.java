@@ -33,7 +33,8 @@ public class IconUtilTest {
 
     @Test
     public void testWeakFrameCache() {
-        if (GraphicsEnvironment.isHeadless()) return;
+        if (GraphicsEnvironment.isHeadless())
+            return;
         Object obj = new Object();
         WeakReference<Object> ref = new WeakReference<>(obj);
         int count = 100;

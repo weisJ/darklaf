@@ -68,11 +68,8 @@ public class TreeDemo implements ComponentDemo {
         controlPanel.add(new JCheckBox("LeftToRight") {
             {
                 setSelected(tree.getComponentOrientation().isLeftToRight());
-                addActionListener(
-                    e -> tree.setComponentOrientation(
-                        isSelected() ? ComponentOrientation.LEFT_TO_RIGHT : ComponentOrientation.RIGHT_TO_LEFT
-                    )
-                );
+                addActionListener(e -> tree.setComponentOrientation(
+                        isSelected() ? ComponentOrientation.LEFT_TO_RIGHT : ComponentOrientation.RIGHT_TO_LEFT));
             }
         });
         controlPanel.add(new JCheckBox("show root") {
@@ -131,7 +128,7 @@ public class TreeDemo implements ComponentDemo {
         DefaultMutableTreeNode child1 = new SelectableTreeNode("Leaf B (boolean)", true);
         DefaultMutableTreeNode parent2 = new DefaultMutableTreeNode("Node B");
         DefaultMutableTreeNode child2 =
-            new DefaultMutableTreeNode("Leaf that is unnecessary verbose and ridiculously long C");
+                new DefaultMutableTreeNode("Leaf that is unnecessary verbose and ridiculously long C");
         DefaultMutableTreeNode parent3 = new DefaultMutableTreeNode("Nested");
 
         DefaultMutableTreeNode current = parent3;
@@ -157,12 +154,10 @@ public class TreeDemo implements ComponentDemo {
         JTree tree = new JTree(root);
         tree.setCellRenderer(new DefaultTreeCellRenderer() {
             @Override
-            public Component getTreeCellRendererComponent(
-                    final JTree tree, final Object value, final boolean sel, final boolean expanded, final boolean leaf,
-                    final int row, final boolean hasFocus
-            ) {
+            public Component getTreeCellRendererComponent(final JTree tree, final Object value, final boolean sel,
+                    final boolean expanded, final boolean leaf, final int row, final boolean hasFocus) {
                 Component component =
-                    super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+                        super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
                 component.setEnabled(tree.isEnabled() && (value != parent1 && value != child));
                 return component;
             }

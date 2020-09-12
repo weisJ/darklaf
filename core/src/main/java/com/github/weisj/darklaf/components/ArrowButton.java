@@ -30,9 +30,7 @@ import javax.swing.plaf.basic.BasicArrowButton;
 import com.github.weisj.darklaf.icons.UIAwareIcon;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public final class ArrowButton implements SwingConstants {
 
     private ArrowButton() {}
@@ -41,10 +39,8 @@ public final class ArrowButton implements SwingConstants {
         return createUpDownArrow(parent, orientation, center, false, new Insets(0, 0, 0, 0));
     }
 
-    public static JButton createUpDownArrow(
-            final JComponent parent, final int orientation, final boolean center, final boolean applyInsetsOnSize,
-            final Insets insets
-    ) {
+    public static JButton createUpDownArrow(final JComponent parent, final int orientation, final boolean center,
+            final boolean applyInsetsOnSize, final Insets insets) {
         UIAwareIcon icon;
         switch (orientation) {
             case NORTH:
@@ -59,10 +55,8 @@ public final class ArrowButton implements SwingConstants {
         return createUpDownArrow(parent, icon, icon.getDual(), orientation, center, applyInsetsOnSize, insets);
     }
 
-    public static JButton createUpDownArrow(
-            final JComponent parent, final Icon activeIcon, final Icon inactiveIcon, final int orientation,
-            final boolean center, final boolean applyInsetsOnSize, final Insets insets
-    ) {
+    public static JButton createUpDownArrow(final JComponent parent, final Icon activeIcon, final Icon inactiveIcon,
+            final int orientation, final boolean center, final boolean applyInsetsOnSize, final Insets insets) {
         return new BasicArrowButton(orientation, null, null, null, null) {
             {
                 putClientProperty(DarkButtonUI.KEY_NO_BORDERLESS_OVERWRITE, true);
@@ -87,18 +81,14 @@ public final class ArrowButton implements SwingConstants {
                 if (!applyInsetsOnSize) {
                     return new DimensionUIResource(getIcon().getIconWidth(), getIcon().getIconHeight());
                 } else {
-                    return new DimensionUIResource(
-                        getIcon().getIconWidth() + insets.left + insets.right,
-                        getIcon().getIconHeight() + insets.top + insets.bottom
-                    );
+                    return new DimensionUIResource(getIcon().getIconWidth() + insets.left + insets.right,
+                            getIcon().getIconHeight() + insets.top + insets.bottom);
                 }
             }
 
             @Override
-            public void paintTriangle(
-                    final Graphics g, final int x, final int y, final int size, final int direction,
-                    final boolean isEnabled
-            ) {
+            public void paintTriangle(final Graphics g, final int x, final int y, final int size, final int direction,
+                    final boolean isEnabled) {
                 getIcon().paintIcon(this, g, x, y);
             }
 

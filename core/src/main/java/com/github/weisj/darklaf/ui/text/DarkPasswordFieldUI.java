@@ -34,9 +34,7 @@ import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.ui.text.bridge.DarkPasswordFieldUIBridge;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
 
     protected static final String KEY_PREFIX = "JPasswordField.";
@@ -122,7 +120,8 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
 
     @Override
     public void mouseClicked(final MouseEvent e) {
-        if (hasShowIcon(getComponent())) return;
+        if (hasShowIcon(getComponent()))
+            return;
         super.mouseClicked(e);
     }
 

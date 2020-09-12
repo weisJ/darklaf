@@ -47,7 +47,7 @@ import com.github.weisj.darklaf.util.ColorUtil;
 public class SmallColorChooser extends JPanel {
 
     private static final DarkColorModel[] COLOR_MODELS = new DarkColorModel[] {DarkColorModelRGB.getInstance(),
-        DarkColorModelHSB.getInstance(), DarkColorModelHSL.getInstance()};
+            DarkColorModelHSB.getInstance(), DarkColorModelHSL.getInstance()};
 
     protected ColorTriangle colorTriangle;
     protected ColorPreviewComponent previewComponent;
@@ -94,7 +94,8 @@ public class SmallColorChooser extends JPanel {
         colorTriangle.addListener((c, o) -> {
             previewComponent.setColor(c);
             for (DarkColorModel model : COLOR_MODELS) {
-                if (o != model) updateMap.get(model).run();
+                if (o != model)
+                    updateMap.get(model).run();
             }
             if (o != hexField) {
                 hexField.setText(ColorUtil.toHex(c));
@@ -104,7 +105,7 @@ public class SmallColorChooser extends JPanel {
             try {
                 String hexStr = String.format("%1$-" + 8 + "s", hexField.getText()).replaceAll(" ", "F");
                 int[] rgb = new int[] {Integer.valueOf(hexStr.substring(0, 2), 16),
-                    Integer.valueOf(hexStr.substring(2, 4), 16), Integer.valueOf(hexStr.substring(4, 6), 16)};
+                        Integer.valueOf(hexStr.substring(2, 4), 16), Integer.valueOf(hexStr.substring(4, 6), 16)};
                 setColor(hexField, DarkColorModelRGB.getInstance(), rgb);
             } catch (NumberFormatException | IndexOutOfBoundsException ignore) {
             }
@@ -116,12 +117,14 @@ public class SmallColorChooser extends JPanel {
     }
 
     protected void setColor(final Object source, final DarkColorModel model, final int... values) {
-        if (isValueChanging()) return;
+        if (isValueChanging())
+            return;
         setValueChanging(true);
         if (model != null) {
             colorTriangle.setColorFromModel(source, model, values);
         }
-        if (callback != null) callback.accept(colorTriangle.getColor());
+        if (callback != null)
+            callback.accept(colorTriangle.getColor());
         setValueChanging(false);
     }
 
@@ -181,10 +184,8 @@ public class SmallColorChooser extends JPanel {
         Icon pipetteIcon = UIManager.getIcon("ColorChooser.pipette.icon");
         Icon pipetteHoverIcon = UIManager.getIcon("ColorChooser.pipetteRollover.icon");
         JButton pipetteButton = new JButton();
-        DefaultColorPipette pipette = new DefaultColorPipette(
-            this,
-            (c, o) -> setColor(pipetteButton, DarkColorModelRGB.getInstance(), c.getRed(), c.getGreen(), c.getBlue())
-        );
+        DefaultColorPipette pipette = new DefaultColorPipette(this, (c, o) -> setColor(pipetteButton,
+                DarkColorModelRGB.getInstance(), c.getRed(), c.getGreen(), c.getBlue()));
         pipetteButton.putClientProperty(DarkButtonUI.KEY_THIN, Boolean.TRUE);
         pipetteButton.putClientProperty(DarkButtonUI.KEY_SQUARE, Boolean.TRUE);
         pipetteButton.setRolloverEnabled(true);
@@ -258,7 +259,8 @@ public class SmallColorChooser extends JPanel {
 
             label.setValue(String.valueOf(slider.getValue()));
             slider.addChangeListener(e -> {
-                if (isValueChanging()) return;
+                if (isValueChanging())
+                    return;
                 int[] values = new int[count];
                 for (int j = 0; j < count; j++) {
                     values[j] = sliders[j].getValue();
@@ -316,7 +318,8 @@ public class SmallColorChooser extends JPanel {
 
         public void setValue(final String value) {
             this.value = value;
-            if (this.value == null) this.value = "";
+            if (this.value == null)
+                this.value = "";
             setText(before + ": " + value + after);
         }
     }

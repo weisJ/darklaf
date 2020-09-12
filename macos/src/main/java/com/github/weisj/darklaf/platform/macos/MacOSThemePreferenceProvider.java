@@ -32,13 +32,14 @@ import com.github.weisj.darklaf.util.SystemInfo;
 public class MacOSThemePreferenceProvider implements ThemePreferenceProvider {
 
     private final PreferredThemeStyle fallbackStyle =
-        new PreferredThemeStyle(ContrastRule.STANDARD, ColorToneRule.LIGHT);
+            new PreferredThemeStyle(ContrastRule.STANDARD, ColorToneRule.LIGHT);
     private final MacOSPreferenceMonitor monitor = new MacOSPreferenceMonitor(this);
     private Consumer<PreferredThemeStyle> callback;
 
     @Override
     public PreferredThemeStyle getPreference() {
-        if (!MacOSLibrary.get().isLoaded()) return fallbackStyle;
+        if (!MacOSLibrary.get().isLoaded())
+            return fallbackStyle;
         boolean darkMode = JNIThemeInfoMacOS.isDarkThemeEnabled();
         boolean highContrast = JNIThemeInfoMacOS.isHighContrastEnabled();
         Color accentColor = JNIThemeInfoMacOS.getAccentColor();
@@ -46,18 +47,16 @@ public class MacOSThemePreferenceProvider implements ThemePreferenceProvider {
         return create(highContrast, darkMode, accentColor, selectionColor);
     }
 
-    private PreferredThemeStyle create(
-            final boolean highContrast, final boolean darkMode, final Color accentColor, final Color selectionColor
-    ) {
+    private PreferredThemeStyle create(final boolean highContrast, final boolean darkMode, final Color accentColor,
+            final Color selectionColor) {
         ContrastRule contrastRule = highContrast ? ContrastRule.HIGH_CONTRAST : ContrastRule.STANDARD;
         ColorToneRule toneRule = darkMode ? ColorToneRule.DARK : ColorToneRule.LIGHT;
         AccentColorRule accentColorRule = AccentColorRule.fromColor(accentColor, selectionColor);
         return new PreferredThemeStyle(contrastRule, toneRule, accentColorRule);
     }
 
-    void reportPreferenceChange(
-            final boolean dark, final boolean highContrast, final Color accentColor, final Color selectionColor
-    ) {
+    void reportPreferenceChange(final boolean dark, final boolean highContrast, final Color accentColor,
+            final Color selectionColor) {
         if (callback != null) {
             PreferredThemeStyle style = create(dark, highContrast, accentColor, selectionColor);
             callback.accept(style);
@@ -66,7 +65,8 @@ public class MacOSThemePreferenceProvider implements ThemePreferenceProvider {
 
     @Override
     public void setReporting(final boolean reporting) {
-        if (reporting && !MacOSLibrary.get().isLoaded()) MacOSLibrary.get().updateLibrary();
+        if (reporting && !MacOSLibrary.get().isLoaded())
+            MacOSLibrary.get().updateLibrary();
         synchronized (monitor) {
             monitor.setRunning(reporting);
         }
@@ -89,7 +89,8 @@ public class MacOSThemePreferenceProvider implements ThemePreferenceProvider {
              */
             JNIThemeInfoMacOS.patchAppBundle(!SystemInfo.isJavaVersionAtLeast("12"));
             SwingUtilities.invokeLater(() -> {
-                /* Do nothing. This simply forces native resources to be loaded */ });
+                /* Do nothing. This simply forces native resources to be loaded */
+            });
             JNIThemeInfoMacOS.unpatchAppBundle();
         }
     }

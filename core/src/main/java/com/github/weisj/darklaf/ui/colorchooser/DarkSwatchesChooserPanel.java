@@ -32,9 +32,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.colorchooser.ColorSelectionModel;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
 
     private SwatchPanel swatchPanel;
@@ -50,9 +48,7 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
     }
 
     @Override
-    public void updateChooser() {
-
-    }
+    public void updateChooser() {}
 
     @Override
     protected void buildChooser() {

@@ -33,9 +33,7 @@ import javax.swing.plaf.basic.BasicDesktopIconUI;
 import com.github.weisj.darklaf.components.uiresource.JButtonUIResource;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkDesktopIconUI extends BasicDesktopIconUI implements PropertyChangeListener {
 
     protected JButton button;
@@ -101,8 +99,8 @@ public class DarkDesktopIconUI extends BasicDesktopIconUI implements PropertyCha
     @Override
     protected void installDefaults() {
         super.installDefaults();
-        LookAndFeel
-            .installColorsAndFont(desktopIcon, "DesktopIcon.background", "DesktopIcon.foreground", "DesktopIcon.font");
+        LookAndFeel.installColorsAndFont(desktopIcon, "DesktopIcon.background", "DesktopIcon.foreground",
+                "DesktopIcon.font");
     }
 
     @Override

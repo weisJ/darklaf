@@ -39,12 +39,12 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
     private static final String GLOBAL_PREFIX = "global.";
     private static final String MAC_OS_MENU_BAR_KEY = "apple.laf.useScreenMenuBar";
     private static final String[] UI_PROPERTIES = new String[] {"borders", "button", "cell", "checkBox", "colorChooser",
-        "comboBox", "fileChooser", "tristate", "internalFrame", "label", "list", "menu", "menuBar", "menuItem",
-        "numberingPane", "optionPane", "panel", "popupMenu", "progressBar", "radioButton", "rootPane", "scrollBar",
-        "scrollPane", "separator", "slider", "spinner", "splitPane", "statusBar", "tabbedPane", "tabFrame", "table",
-        "taskPane", "text", "toggleButton", "toolBar", "toolTip", "tree", "misc"};
+            "comboBox", "fileChooser", "tristate", "internalFrame", "label", "list", "menu", "menuBar", "menuItem",
+            "numberingPane", "optionPane", "panel", "popupMenu", "progressBar", "radioButton", "rootPane", "scrollBar",
+            "scrollPane", "separator", "slider", "spinner", "splitPane", "statusBar", "tabbedPane", "tabFrame", "table",
+            "taskPane", "text", "toggleButton", "toolBar", "toolTip", "tree", "misc"};
     private static final String[] ICON_PROPERTIES = new String[] {"checkBox", "radioButton", "slider", "dialog",
-        "files", "frame", "indicator", "menu", "misc", "navigation", "progress"};
+            "files", "frame", "indicator", "menu", "misc", "navigation", "progress"};
     private static final String ACCENT_COLOR_KEY = "effectiveAccentColor";
     private static final String ACCENT_COLOR_BACKUP_KEY = "themeAccentColor";
     private static final String ACCENT_COLOR_SOURCE_KEY = "widgetFillDefault";
@@ -92,29 +92,23 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
     }
 
     private void backupAccentColors(final Properties uiProps) {
-        uiProps
-            .put(
-                ACCENT_COLOR_BACKUP_KEY, Objects.requireNonNull(uiProps.get(PropertyLoader.asKey(ACCENT_COLOR_SOURCE_KEY)), ACCENT_COLOR_SOURCE_KEY)
-            );
-        uiProps.put(
-            SELECTION_COLOR_BACKUP_KEY, Objects.requireNonNull(
-                uiProps.get(PropertyLoader.asKey(SELECTION_COLOR_SOURCE_KEY)), SELECTION_COLOR_SOURCE_KEY
-            )
-        );
+        uiProps.put(ACCENT_COLOR_BACKUP_KEY, Objects
+                .requireNonNull(uiProps.get(PropertyLoader.asKey(ACCENT_COLOR_SOURCE_KEY)), ACCENT_COLOR_SOURCE_KEY));
+        uiProps.put(SELECTION_COLOR_BACKUP_KEY, Objects.requireNonNull(
+                uiProps.get(PropertyLoader.asKey(SELECTION_COLOR_SOURCE_KEY)), SELECTION_COLOR_SOURCE_KEY));
     }
 
     private void initAccentProperties(final Theme currentTheme, final Properties uiProps) {
         Color accentColor = currentTheme.getAccentColorRule().getAccentColor();
         Color selectionColor = currentTheme.getAccentColorRule().getSelectionColor();
         uiProps.put(ACCENT_COLOR_KEY, accentColor != null ? accentColor : uiProps.get(ACCENT_COLOR_BACKUP_KEY));
-        uiProps.put(
-            SELECTION_COLOR_KEY, selectionColor != null ? selectionColor : uiProps.get(SELECTION_COLOR_BACKUP_KEY)
-        );
+        uiProps.put(SELECTION_COLOR_KEY,
+                selectionColor != null ? selectionColor : uiProps.get(SELECTION_COLOR_BACKUP_KEY));
     }
 
     private void initGlobals(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {
-        PropertyLoader
-            .putProperties(PropertyLoader.loadProperties(DarkLaf.class, "globals", "properties/"), uiProps, defaults);
+        PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, "globals", "properties/"), uiProps,
+                defaults);
 
         currentTheme.customizeGlobals(uiProps, defaults);
         installGlobals(uiProps, defaults);
@@ -127,20 +121,18 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
                 globalSettings.put(((String) key).substring(GLOBAL_PREFIX.length()), uiProps.get(key));
             }
         }
-        PropertyLoader.replaceProperties(
-            defaults, e -> e.getKey() instanceof String && ((String) e.getKey()).contains("."), e -> {
-                final String s = (String) e.getKey();
-                final String globalKey = s.substring(s.lastIndexOf('.') + 1);
-                return globalSettings.get(globalKey);
-            }
-        );
+        PropertyLoader.replaceProperties(defaults,
+                e -> e.getKey() instanceof String && ((String) e.getKey()).contains("."), e -> {
+                    final String s = (String) e.getKey();
+                    final String globalKey = s.substring(s.lastIndexOf('.') + 1);
+                    return globalSettings.get(globalKey);
+                });
     }
 
     private void initUIProperties(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {
         for (String property : UI_PROPERTIES) {
-            PropertyLoader.putProperties(
-                PropertyLoader.loadProperties(DarkLaf.class, property, "properties/ui/"), uiProps, defaults
-            );
+            PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, property, "properties/ui/"),
+                    uiProps, defaults);
         }
         currentTheme.customizeUIProperties(uiProps, defaults);
     }
@@ -148,17 +140,16 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
     private void initIconTheme(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {
         currentTheme.loadIconTheme(uiProps, defaults);
         for (String property : ICON_PROPERTIES) {
-            PropertyLoader.putProperties(
-                PropertyLoader.loadProperties(DarkLaf.class, property, "properties/icons/"), uiProps, defaults
-            );
+            PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, property, "properties/icons/"),
+                    uiProps, defaults);
         }
         currentTheme.customizeIconTheme(uiProps, defaults);
     }
 
     private void initPlatformProperties(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {
         PropertyLoader.putProperties(
-            PropertyLoader.loadProperties(DarkLaf.class, SystemInfo.getOsName(), "properties/platform/"), uiProps, defaults
-        );
+                PropertyLoader.loadProperties(DarkLaf.class, SystemInfo.getOsName(), "properties/platform/"), uiProps,
+                defaults);
         currentTheme.customizePlatformProperties(uiProps, defaults);
     }
 

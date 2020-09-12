@@ -36,9 +36,7 @@ import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.button.ButtonConstants;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonConstants {
 
     private static final Rectangle rect = new Rectangle();
@@ -101,9 +99,8 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
 
         if (c.hasFocus()) {
             g.translate(-borderSize, -borderSize);
-            PaintUtil.paintFocusBorder(
-                g, bounds.width + 2 * borderSize, bounds.height + 2 * borderSize, bounds.height, borderSize
-            );
+            PaintUtil.paintFocusBorder(g, bounds.width + 2 * borderSize, bounds.height + 2 * borderSize, bounds.height,
+                    borderSize);
             g.translate(borderSize, borderSize);
         }
 
@@ -129,10 +126,8 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
 
     @Override
     protected Color getForeground(final AbstractButton button) {
-        if (
-            button.isSelected() && button.isEnabled() && button.getForeground() instanceof UIResource
-                && !ToggleButtonConstants.isSlider(button) && !ButtonConstants.isBorderlessVariant(button)
-        ) {
+        if (button.isSelected() && button.isEnabled() && button.getForeground() instanceof UIResource
+                && !ToggleButtonConstants.isSlider(button) && !ButtonConstants.isBorderlessVariant(button)) {
             return selectedForeground;
         }
         return super.getForeground(button);
@@ -144,7 +139,8 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
         boolean clicked = b.getModel().isArmed();
         boolean isSelected = b.isSelected();
         if (c.isEnabled()) {
-            if (isSelected) return background;
+            if (isSelected)
+                return background;
             if (clicked) {
                 return clickBackground;
             } else if (rollOver) {
@@ -224,10 +220,9 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
         iconRect.x = iconRect.y = iconRect.width = iconRect.height = 0;
 
         // layout the text and icon
-        return SwingUtilities.layoutCompoundLabel(
-            b, fm, b.getText(), b.getIcon(), b.getVerticalAlignment(), horizontalPos, b.getVerticalTextPosition(),
-            b.getHorizontalTextPosition(), viewRect, iconRect, textRect, b.getText() == null ? 0 : b.getIconTextGap()
-        );
+        return SwingUtilities.layoutCompoundLabel(b, fm, b.getText(), b.getIcon(), b.getVerticalAlignment(),
+                horizontalPos, b.getVerticalTextPosition(), b.getHorizontalTextPosition(), viewRect, iconRect, textRect,
+                b.getText() == null ? 0 : b.getIconTextGap());
     }
 
     public Dimension getPreferredSize(final JComponent c) {
@@ -240,7 +235,8 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
 
     @Override
     public boolean contains(final JComponent c, final int x, final int y) {
-        if (!ToggleButtonConstants.isSlider(c)) return super.contains(c, x, y);
+        if (!ToggleButtonConstants.isSlider(c))
+            return super.contains(c, x, y);
         if ((hitArea.isEmpty()) && c instanceof JToggleButton) {
             JToggleButton b = (JToggleButton) c;
             layoutSlider(b, b.getFontMetrics(layoutDelegate.getFont()), b.getWidth(), b.getHeight());

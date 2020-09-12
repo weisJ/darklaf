@@ -33,9 +33,7 @@ import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.util.Alignment;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class BubbleBorder extends AbstractBorder {
 
     private final Insets insets;
@@ -58,12 +56,12 @@ public class BubbleBorder extends AbstractBorder {
     /**
      * Create new TextBubbleBorder.
      *
-     * @param color       Colour of bubble.
-     * @param thickness   Line thickness of border.
-     * @param radius      corner radius of border.
+     * @param color Colour of bubble.
+     * @param thickness Line thickness of border.
+     * @param radius corner radius of border.
      * @param pointerSize size of pointer. You can set this size to 0 to achieve no pointer, but it is
-     *                    not desirable. The appropriate method for this is to set using
-     *                    {@link BubbleBorder#setPointerSide(Alignment)} to. {@link Alignment#CENTER}
+     *        not desirable. The appropriate method for this is to set using
+     *        {@link BubbleBorder#setPointerSide(Alignment)} to. {@link Alignment#CENTER}
      */
     public BubbleBorder(final Color color, final int thickness, final int radius, final int pointerSize) {
         this.color = color;
@@ -87,8 +85,8 @@ public class BubbleBorder extends AbstractBorder {
     /**
      * Set the border colour.
      *
-     * @param  color border colour
-     * @return       this
+     * @param color border colour
+     * @return this
      */
     public BubbleBorder setColor(final Color color) {
         this.color = color;
@@ -107,8 +105,8 @@ public class BubbleBorder extends AbstractBorder {
     /**
      * Set the with of the pointer base.
      *
-     * @param  pointerWidth the width of the pointer base.
-     * @return              this
+     * @param pointerWidth the width of the pointer base.
+     * @return this
      */
     public BubbleBorder setPointerWidth(final int pointerWidth) {
         this.pointerWidth = pointerWidth;
@@ -127,8 +125,8 @@ public class BubbleBorder extends AbstractBorder {
     /**
      * Set the border thickness.
      *
-     * @param  n new thickness
-     * @return   this
+     * @param n new thickness
+     * @return this
      */
     public BubbleBorder setThickness(final int n) {
         thickness = Math.max(n, 0);
@@ -147,8 +145,8 @@ public class BubbleBorder extends AbstractBorder {
     /**
      * Set the pointer size Clips at 0.
      *
-     * @param  size size of pointer.
-     * @return      this
+     * @param size size of pointer.
+     * @return this
      */
     public BubbleBorder setPointerSize(final int size) {
         pointerSize = Math.max(size, 0);
@@ -194,8 +192,8 @@ public class BubbleBorder extends AbstractBorder {
     /**
      * Set the corner radius.
      *
-     * @param  radius radius of corner.
-     * @return        this
+     * @param radius radius of corner.
+     * @return this
      */
     public BubbleBorder setRadius(final int radius) {
         this.radius = radius;
@@ -217,8 +215,8 @@ public class BubbleBorder extends AbstractBorder {
      * {@link Alignment#SOUTH_EAST} and {@link Alignment#SOUTH_WEST} {@link Alignment#CENTER} results in
      * no pointer.
      *
-     * @param  side direction in which the pointer should point.
-     * @return      this.
+     * @param side direction in which the pointer should point.
+     * @return this.
      */
     public BubbleBorder setPointerSide(final Alignment side) {
         this.pointerSide = side;
@@ -257,9 +255,8 @@ public class BubbleBorder extends AbstractBorder {
     }
 
     @Override
-    public void paintBorder(
-            final Component c, final Graphics g, final int x, final int y, final int width, final int height
-    ) {
+    public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width,
+            final int height) {
         Area area = getBorderArea(x, y, width, height);
         paintBorder(g, area);
     }
@@ -316,18 +313,14 @@ public class BubbleBorder extends AbstractBorder {
         config.restore();
     }
 
-    public RoundRectangle2D.Float calculateBubbleRect(
-            final float x, final float y, final float width, final float height
-    ) {
-        return new RoundRectangle2D.Float(
-            x + insets.left, y + insets.top, width - insets.left - insets.right, height - insets.top - insets.bottom,
-            radius, radius
-        );
+    public RoundRectangle2D.Float calculateBubbleRect(final float x, final float y, final float width,
+            final float height) {
+        return new RoundRectangle2D.Float(x + insets.left, y + insets.top, width - insets.left - insets.right,
+                height - insets.top - insets.bottom, radius, radius);
     }
 
-    private Path2D creatPointerShape(
-            final double pointerPad, final double pSize, final double pWidth, final RoundRectangle2D.Float bubble
-    ) {
+    private Path2D creatPointerShape(final double pointerPad, final double pSize, final double pWidth,
+            final RoundRectangle2D.Float bubble) {
         final double w = pWidth / 2.0;
         final Path2D pointer = new Path2D.Double(Path2D.WIND_EVEN_ODD);
         double x = bubble.x;
@@ -336,26 +329,26 @@ public class BubbleBorder extends AbstractBorder {
             case WEST:
                 pointer.moveTo(x, y + pointerPad - w); // Top
                 pointer.lineTo(x - pSize, y + pointerPad);
-                pointer.lineTo(x, y + pointerPad + w);// bottom
+                pointer.lineTo(x, y + pointerPad + w); // bottom
                 break;
             case EAST:
-                pointer.moveTo(x + bubble.width, y + pointerPad - w);// top
+                pointer.moveTo(x + bubble.width, y + pointerPad - w); // top
                 pointer.lineTo(x + bubble.width + pSize, y + pointerPad);
-                pointer.lineTo(x + bubble.width, y + pointerPad + w);// bottom
+                pointer.lineTo(x + bubble.width, y + pointerPad + w); // bottom
                 break;
             case NORTH:
             case NORTH_WEST:
             case NORTH_EAST:
-                pointer.moveTo(x + pointerPad - w, y);// left
+                pointer.moveTo(x + pointerPad - w, y); // left
                 pointer.lineTo(x + pointerPad, y - pSize);
-                pointer.lineTo(x + pointerPad + w, y);// right
+                pointer.lineTo(x + pointerPad + w, y); // right
                 break;
             case SOUTH:
             case SOUTH_WEST:
             case SOUTH_EAST:
-                pointer.moveTo(x + pointerPad - w, y + bubble.height);// left
+                pointer.moveTo(x + pointerPad - w, y + bubble.height); // left
                 pointer.lineTo(x + pointerPad, y + bubble.height + pSize);
-                pointer.lineTo(x + pointerPad + w, y + bubble.height);// right
+                pointer.lineTo(x + pointerPad + w, y + bubble.height); // right
                 break;
             default:
                 break;

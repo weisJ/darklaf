@@ -124,9 +124,8 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         try {
             String hexStr = String.format("%1$-" + 8 + "s", textHex.getText()).replaceAll(" ", "F");
             int alpha = isColorTransparencySelectionEnabled() ? Integer.valueOf(hexStr.substring(6, 8), 16) : 255;
-            return new Color(
-                Integer.valueOf(hexStr.substring(0, 2), 16), Integer.valueOf(hexStr.substring(2, 4), 16), Integer.valueOf(hexStr.substring(4, 6), 16), alpha
-            );
+            return new Color(Integer.valueOf(hexStr.substring(0, 2), 16), Integer.valueOf(hexStr.substring(2, 4), 16),
+                    Integer.valueOf(hexStr.substring(4, 6), 16), alpha);
         } catch (NumberFormatException | IndexOutOfBoundsException ignore) {
         }
         return null;
@@ -147,20 +146,24 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
 
     @Override
     public void colorChanged(final Color color, final Object source) {
-        if (isChanging || color == null) return;
+        if (isChanging || color == null)
+            return;
         isChanging = true;
         currentColor = color;
         ColorSelectionModel model = getColorSelectionModel();
-        if (model != null) model.setSelectedColor(currentColor);
+        if (model != null)
+            model.setSelectedColor(currentColor);
         applyColorToFields(color);
-        if (source != textHex) textHex.setValue(color);
+        if (source != textHex)
+            textHex.setValue(color);
         previewComponent.setColor(color);
         colorWheelPanel.setColor(color, this);
         isChanging = false;
     }
 
     protected void onModelChange() {
-        if (isChanging) return;
+        if (isChanging)
+            return;
         isChanging = true;
         colorWheelPanel.setModel(getDarkColorModel());
         updateDescriptors();

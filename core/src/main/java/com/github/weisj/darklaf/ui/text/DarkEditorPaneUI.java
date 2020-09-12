@@ -26,9 +26,7 @@ import javax.swing.plaf.ComponentUI;
 
 import com.github.weisj.darklaf.ui.text.bridge.DarkEditorPaneUIBridge;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkEditorPaneUI extends DarkEditorPaneUIBridge {
 
     public static ComponentUI createUI(final JComponent c) {

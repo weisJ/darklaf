@@ -31,9 +31,8 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 public class ScrollBarUtil implements ScrollBarConstants {
 
     @SuppressWarnings("MagicConstant")
-    public static void doScroll(
-            final JScrollBar toScroll, final JViewport vp, final MouseWheelEvent e, final boolean leftToRight
-    ) {
+    public static void doScroll(final JScrollBar toScroll, final JViewport vp, final MouseWheelEvent e,
+            final boolean leftToRight) {
         int direction = e.getWheelRotation() < 0 ? -1 : 1;
         int orientation = toScroll.getOrientation();
         if (!leftToRight && orientation == JScrollBar.HORIZONTAL) {
@@ -132,9 +131,8 @@ public class ScrollBarUtil implements ScrollBarConstants {
         }
     }
 
-    static void scrollByUnits(
-            final JScrollBar scrollbar, final int direction, final int units, final boolean limitToBlock
-    ) {
+    static void scrollByUnits(final JScrollBar scrollbar, final int direction, final int units,
+            final boolean limitToBlock) {
         // This method is called from BasicScrollPaneUI to implement wheel
         // scrolling, as well as from scrollByUnit().
         int delta;

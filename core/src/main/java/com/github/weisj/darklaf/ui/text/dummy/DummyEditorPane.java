@@ -59,25 +59,29 @@ public class DummyEditorPane extends JEditorPane {
 
     @Override
     public Document getDocument() {
-        if (editorPane == null) return super.getDocument();
+        if (editorPane == null)
+            return super.getDocument();
         return editorPane.getDocument();
     }
 
     @Override
     public Font getFont() {
-        if (editorPane == null) return null;
+        if (editorPane == null)
+            return null;
         return editorPane.getFont();
     }
 
     @Override
     public Color getForeground() {
-        if (editorPane == null) return null;
+        if (editorPane == null)
+            return null;
         return editorPane.getForeground();
     }
 
     @Override
     public Color getBackground() {
-        if (editorPane == null) return null;
+        if (editorPane == null)
+            return null;
         return editorPane.getBackground();
     }
 
@@ -139,7 +143,8 @@ public class DummyEditorPane extends JEditorPane {
     public void setLayout(final LayoutManager mgr) {
         if (mgr instanceof DocumentListener) {
             Document doc = getDocument();
-            if (doc != null) doc.removeDocumentListener((DocumentListener) mgr);
+            if (doc != null)
+                doc.removeDocumentListener((DocumentListener) mgr);
         }
     }
 }

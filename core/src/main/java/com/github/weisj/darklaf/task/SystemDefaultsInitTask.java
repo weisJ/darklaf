@@ -43,7 +43,7 @@ public class SystemDefaultsInitTask implements DefaultsInitTask {
         Properties overwrites = PropertyLoader.loadProperties(DarkLaf.class, OVERWRITES_NAME, OVERWRITES_PATH);
         overwrites.values().removeIf(v -> System.getProperty(DarkLaf.SYSTEM_PROPERTY_PREFIX + v.toString()) == null);
         overwrites.entrySet()
-            .forEach(e -> e.setValue(System.getProperty(DarkLaf.SYSTEM_PROPERTY_PREFIX + e.getValue().toString())));
+                .forEach(e -> e.setValue(System.getProperty(DarkLaf.SYSTEM_PROPERTY_PREFIX + e.getValue().toString())));
         PropertyLoader.putProperties(overwrites, defaults);
     }
 }

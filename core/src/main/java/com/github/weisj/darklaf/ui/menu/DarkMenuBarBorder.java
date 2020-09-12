@@ -28,9 +28,7 @@ import javax.swing.border.Border;
 import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkMenuBarBorder implements Border, UIResource {
 
     protected final Color borderColor;

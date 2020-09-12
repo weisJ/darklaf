@@ -29,11 +29,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.*;
 
-/**
- * @author Konstantin Bulenkov
- */
+/** @author Konstantin Bulenkov */
 public abstract class Animator {
-    private final static ScheduledExecutorService scheduler = createScheduler();
+    private static final ScheduledExecutorService scheduler = createScheduler();
     private final int totalFrames;
     private final int cycleDuration;
     private final boolean forward;
@@ -50,10 +48,8 @@ public abstract class Animator {
         this(name, totalFrames, cycleDuration, repeatable, true);
     }
 
-    public Animator(
-            final String name, final int totalFrames, final int cycleDuration, final boolean repeatable,
-            final boolean forward
-    ) {
+    public Animator(final String name, final int totalFrames, final int cycleDuration, final boolean repeatable,
+            final boolean forward) {
         this.totalFrames = totalFrames;
         this.cycleDuration = cycleDuration;
         this.repeatable = repeatable;
@@ -69,7 +65,8 @@ public abstract class Animator {
 
     public void reset() {
         currentFrame %= totalFrames;
-        if (!forward) currentFrame = totalFrames - currentFrame;
+        if (!forward)
+            currentFrame = totalFrames - currentFrame;
     }
 
     private static ScheduledExecutorService createScheduler() {
@@ -82,7 +79,6 @@ public abstract class Animator {
         executor.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);
         executor.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
         return executor;
-
     }
 
     public void suspend() {
@@ -143,7 +139,8 @@ public abstract class Animator {
     }
 
     private void onTick() {
-        if (isDisposed() || ticker == null) return;
+        if (isDisposed() || ticker == null)
+            return;
 
         if (startTime == -1) {
             startTime = System.currentTimeMillis();
@@ -154,7 +151,8 @@ public abstract class Animator {
         final double totalTime = stopTime - startTime;
 
         final int newFrame = (int) (passedTime * totalFrames / totalTime) + startFrame;
-        if (currentFrame > 0 && newFrame == currentFrame) return;
+        if (currentFrame > 0 && newFrame == currentFrame)
+            return;
         currentFrame = newFrame;
 
         if (currentFrame >= totalFrames) {
@@ -171,9 +169,7 @@ public abstract class Animator {
 
     public abstract void paintNow(int frame, int totalFrames, int cycle);
 
-    protected void paintCycleEnd() {
-
-    }
+    protected void paintCycleEnd() {}
 
     public void dispose() {
         disposed = true;

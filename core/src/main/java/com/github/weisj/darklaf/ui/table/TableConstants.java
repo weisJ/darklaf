@@ -49,6 +49,6 @@ public interface TableConstants extends CellConstants {
 
     static boolean useBooleanEditorForValue(final Object value, final JTable table, final int column) {
         return value instanceof Boolean && (Boolean.class.isAssignableFrom(table.getColumnClass(column))
-            || TableConstants.isBooleanRenderingEnabled(table));
+                || TableConstants.isBooleanRenderingEnabled(table));
     }
 }

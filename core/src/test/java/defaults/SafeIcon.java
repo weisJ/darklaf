@@ -29,16 +29,20 @@ import javax.swing.*;
 
 /**
  * Thanks to Jeanette for the use of this code found at:
+ *
  * <p>
  * https://jdnc-incubator.dev.java.net/source/browse/jdnc-incubator/src/kleopatra/java/org
  * /jdesktop/swingx/renderer/UIPropertiesViewer.java?rev=1.2&view=markup
+ *
  * <p>
  * Some ui-icons misbehave in that they unconditionally class-cast to the component type they are
  * mostly painted on. Consequently they blow up if we are trying to paint them anywhere else (f.i.
  * in a renderer).
+ *
  * <p>
  * This Icon is an adaption of a cool trick by Darryl Burke found at
  * http://tips4java.wordpress.com/2008/12/18/icon-table-cell-renderer
+ *
  * <p>
  * The base idea is to instantiate a component of the type expected by the icon, let it paint into
  * the graphics of a bufferedImage and create an ImageIcon from it. In subsequent calls the

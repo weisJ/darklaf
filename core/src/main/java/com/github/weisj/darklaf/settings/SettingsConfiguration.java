@@ -56,11 +56,11 @@ public class SettingsConfiguration {
      * Returns whether the option to follow the system settings is enabled.
      *
      * @return true if enabled.
-     * @see    #isSystemPreferencesEnabled() (boolean)
-     * @see    #isThemeFollowsSystem()
-     * @see    #isAccentColorFollowsSystem()
-     * @see    #isSelectionColorFollowsSystem()
-     * @see    #isFontSizeFollowsSystem()
+     * @see #isSystemPreferencesEnabled() (boolean)
+     * @see #isThemeFollowsSystem()
+     * @see #isAccentColorFollowsSystem()
+     * @see #isSelectionColorFollowsSystem()
+     * @see #isFontSizeFollowsSystem()
      */
     public boolean isSystemPreferencesEnabled() {
         return isSystemPreferencesEnabled;
@@ -70,7 +70,7 @@ public class SettingsConfiguration {
      * Returns whether the accent color follows the system settings.
      *
      * @return true if accent color follows system settings.
-     * @see    #setAccentColorFollowsSystem(boolean)
+     * @see #setAccentColorFollowsSystem(boolean)
      */
     public boolean isAccentColorFollowsSystem() {
         return isAccentColorFollowsSystem;
@@ -80,7 +80,7 @@ public class SettingsConfiguration {
      * Returns whether the font size follows the system settings.
      *
      * @return true if font size follows system settings.
-     * @see    #setFontSizeFollowsSystem(boolean)
+     * @see #setFontSizeFollowsSystem(boolean)
      */
     public boolean isFontSizeFollowsSystem() {
         return isFontSizeFollowsSystem;
@@ -90,7 +90,7 @@ public class SettingsConfiguration {
      * Returns whether the selection color follows the system settings.
      *
      * @return true if selection color follows system settings.
-     * @see    #setSelectionColorFollowsSystem(boolean)
+     * @see #setSelectionColorFollowsSystem(boolean)
      */
     public boolean isSelectionColorFollowsSystem() {
         return isSelectionColorFollowsSystem;
@@ -100,7 +100,7 @@ public class SettingsConfiguration {
      * Returns whether the theme follows the system settings.
      *
      * @return true if theme follows system settings.
-     * @see    #setThemeFollowsSystem(boolean)
+     * @see #setThemeFollowsSystem(boolean)
      */
     public boolean isThemeFollowsSystem() {
         return isThemeFollowsSystem;
@@ -111,7 +111,7 @@ public class SettingsConfiguration {
      * {@link LafManager#getTheme()} as the current settings might not have been applied.
      *
      * @return the current selected accent color rule.
-     * @see    #setAccentColorRule(AccentColorRule)
+     * @see #setAccentColorRule(AccentColorRule)
      */
     public AccentColorRule getAccentColorRule() {
         return accentColorRule;
@@ -122,7 +122,7 @@ public class SettingsConfiguration {
      * {@link LafManager#getTheme()} as the current settings might not have been applied.
      *
      * @return the current selected font size rule.
-     * @see    #setFontSizeRule(FontSizeRule)
+     * @see #setFontSizeRule(FontSizeRule)
      */
     public FontSizeRule getFontSizeRule() {
         return fontSizeRule;
@@ -133,7 +133,7 @@ public class SettingsConfiguration {
      * current settings might not have been applied.
      *
      * @return the current selected theme.
-     * @see    #setTheme(Theme)
+     * @see #setTheme(Theme)
      */
     public Theme getTheme() {
         return theme;
@@ -143,10 +143,10 @@ public class SettingsConfiguration {
      * Enables the option to follow system preferences.
      *
      * @param enabled true if enabled.
-     * @see           #setAccentColorFollowsSystem(boolean)
-     * @see           #setSelectionColorFollowsSystem(boolean)
-     * @see           #setFontSizeFollowsSystem(boolean)
-     * @see           #setThemeFollowsSystem(boolean)
+     * @see #setAccentColorFollowsSystem(boolean)
+     * @see #setSelectionColorFollowsSystem(boolean)
+     * @see #setFontSizeFollowsSystem(boolean)
+     * @see #setThemeFollowsSystem(boolean)
      */
     public void setSystemPreferencesEnabled(final boolean enabled) {
         isSystemPreferencesEnabled = enabled;
@@ -157,7 +157,7 @@ public class SettingsConfiguration {
      * {@link #isSelectionColorFollowsSystem()} is true.
      *
      * @param accentColorFollowsSystem true if accent color should follow system.
-     * @see                            #isAccentColorFollowsSystem()
+     * @see #isAccentColorFollowsSystem()
      */
     public void setAccentColorFollowsSystem(final boolean accentColorFollowsSystem) {
         isAccentColorFollowsSystem = accentColorFollowsSystem;
@@ -168,7 +168,7 @@ public class SettingsConfiguration {
      * {@link #isSelectionColorFollowsSystem()} is true.
      *
      * @param fontSizeFollowsSystem true if font size should follow system.
-     * @see                         #isFontSizeFollowsSystem()
+     * @see #isFontSizeFollowsSystem()
      */
     public void setFontSizeFollowsSystem(final boolean fontSizeFollowsSystem) {
         isFontSizeFollowsSystem = fontSizeFollowsSystem;
@@ -179,7 +179,7 @@ public class SettingsConfiguration {
      * {@link #isSelectionColorFollowsSystem()} is true.
      *
      * @param selectionColorFollowsSystem true if selection color should follow system.
-     * @see                               #isSelectionColorFollowsSystem()
+     * @see #isSelectionColorFollowsSystem()
      */
     public void setSelectionColorFollowsSystem(final boolean selectionColorFollowsSystem) {
         isSelectionColorFollowsSystem = selectionColorFollowsSystem;
@@ -190,7 +190,7 @@ public class SettingsConfiguration {
      * {@link #isSelectionColorFollowsSystem()} is true.
      *
      * @param themeFollowsSystem true if theme should follow system.
-     * @see                      #isThemeFollowsSystem()
+     * @see #isThemeFollowsSystem()
      */
     public void setThemeFollowsSystem(final boolean themeFollowsSystem) {
         isThemeFollowsSystem = themeFollowsSystem;
@@ -200,7 +200,7 @@ public class SettingsConfiguration {
      * Sets the font accent color rule.
      *
      * @param accentColorRule the accent color rule.
-     * @see                   #getAccentColorRule()
+     * @see #getAccentColorRule()
      */
     public void setAccentColorRule(final AccentColorRule accentColorRule) {
         this.accentColorRule = accentColorRule;
@@ -210,7 +210,7 @@ public class SettingsConfiguration {
      * Sets the font size rule.
      *
      * @param fontSizeRule the font size rule.
-     * @see                #getFontSizeRule()
+     * @see #getFontSizeRule()
      */
     public void setFontSizeRule(final FontSizeRule fontSizeRule) {
         this.fontSizeRule = fontSizeRule;
@@ -220,7 +220,7 @@ public class SettingsConfiguration {
      * Sets the theme.
      *
      * @param theme the theme.
-     * @see         #getTheme()
+     * @see #getTheme()
      */
     public void setTheme(final Theme theme) {
         this.theme = theme;
@@ -240,7 +240,7 @@ public class SettingsConfiguration {
 
     public boolean isSystemSelectionColorSupported() {
         return isSystemPreferencesEnabled()
-            && ThemePreferencesHandler.getSharedInstance().supportsNativeSelectionColor();
+                && ThemePreferencesHandler.getSharedInstance().supportsNativeSelectionColor();
     }
 
     public boolean isSystemThemeSupported() {
@@ -250,9 +250,9 @@ public class SettingsConfiguration {
     @Override
     public String toString() {
         return "SettingsConfiguration{" + "isSystemPreferencesEnabled=" + isSystemPreferencesEnabled
-            + ", isAccentColorFollowsSystem=" + isAccentColorFollowsSystem + ", isFontSizeFollowsSystem="
-            + isFontSizeFollowsSystem + ", isThemeFollowsSystem=" + isThemeFollowsSystem
-            + ", isSelectionColorFollowsSystem=" + isSelectionColorFollowsSystem + ", accentColorRule="
-            + accentColorRule + ", fontSizeRule=" + fontSizeRule + ", theme=" + theme + '}';
+                + ", isAccentColorFollowsSystem=" + isAccentColorFollowsSystem + ", isFontSizeFollowsSystem="
+                + isFontSizeFollowsSystem + ", isThemeFollowsSystem=" + isThemeFollowsSystem
+                + ", isSelectionColorFollowsSystem=" + isSelectionColorFollowsSystem + ", accentColorRule="
+                + accentColorRule + ", fontSizeRule=" + fontSizeRule + ", theme=" + theme + '}';
     }
 }

@@ -45,10 +45,8 @@ public class DarkListCellRendererDelegate extends ListCellRendererDelegate<Objec
     }
 
     @Override
-    public Component getListCellRendererComponent(
-            final JList<?> list, final Object value, final int index, final boolean isSelected,
-            final boolean cellHasFocus
-    ) {
+    public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,
+            final boolean isSelected, final boolean cellHasFocus) {
         boolean isEditing = PropertyUtil.getBooleanProperty(list, DarkListUI.KEY_IS_EDITING);
         boolean leadIndex = isEditing && list.getSelectionModel().getLeadSelectionIndex() == index;
         boolean sel = isSelected && !leadIndex;

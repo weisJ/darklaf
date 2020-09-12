@@ -24,9 +24,7 @@ package com.github.weisj.darklaf.util;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public final class ImageUtil {
 
     private ImageUtil() {}
@@ -34,9 +32,9 @@ public final class ImageUtil {
     /**
      * Create image from component.
      *
-     * @param  c      the component.
-     * @param  bounds the bounds inside the component to capture.
-     * @return        image containing the captured area.
+     * @param c the component.
+     * @param bounds the bounds inside the component to capture.
+     * @return image containing the captured area.
      */
     public static BufferedImage imageFromComponent(final Component c, final Rectangle bounds) {
         return scaledImageFromComponent(c, bounds, 1.0, 1.0, true);
@@ -45,9 +43,9 @@ public final class ImageUtil {
     /**
      * Create image from component.
      *
-     * @param  c      the component.
-     * @param  bounds the bounds inside the component to capture.
-     * @return        image containing the captured area.
+     * @param c the component.
+     * @param bounds the bounds inside the component to capture.
+     * @return image containing the captured area.
      */
     public static BufferedImage imageFromComponent(final Component c, final Rectangle bounds, final boolean print) {
         return scaledImageFromComponent(c, bounds, 1.0, 1.0, print);
@@ -56,9 +54,9 @@ public final class ImageUtil {
     /**
      * Create image from component.
      *
-     * @param  c      the component.
-     * @param  bounds the bounds inside the component to capture.
-     * @return        image containing the captured area.
+     * @param c the component.
+     * @param bounds the bounds inside the component to capture.
+     * @return image containing the captured area.
      */
     public static BufferedImage scaledImageFromComponent(final Component c, final Rectangle bounds) {
         GraphicsConfiguration gc = c.getGraphicsConfiguration();
@@ -68,15 +66,14 @@ public final class ImageUtil {
     /**
      * Create image from component.
      *
-     * @param  c      the component.
-     * @param  bounds the bounds inside the component to capture.
-     * @param  scalex the x scale
-     * @param  scaley the y scale
-     * @return        image containing the captured area.
+     * @param c the component.
+     * @param bounds the bounds inside the component to capture.
+     * @param scalex the x scale
+     * @param scaley the y scale
+     * @return image containing the captured area.
      */
-    public static BufferedImage scaledImageFromComponent(
-            final Component c, final Rectangle bounds, final double scalex, final double scaley, final boolean print
-    ) {
+    public static BufferedImage scaledImageFromComponent(final Component c, final Rectangle bounds, final double scalex,
+            final double scaley, final boolean print) {
         BufferedImage image;
         boolean scale = scalex != 1.0 || scaley != 1.0;
         if (scale) {
@@ -101,17 +98,17 @@ public final class ImageUtil {
 
     public static BufferedImage createCompatibleImage(final int width, final int height) {
         return isHeadless() ? new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
-            : getGraphicsConfiguration().createCompatibleImage(width, height, Transparency.OPAQUE);
+                : getGraphicsConfiguration().createCompatibleImage(width, height, Transparency.OPAQUE);
     }
 
     public static BufferedImage createCompatibleTransparentImage(final int width, final int height) {
         return isHeadless() ? new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
-            : getGraphicsConfiguration().createCompatibleImage(width, height, Transparency.BITMASK);
+                : getGraphicsConfiguration().createCompatibleImage(width, height, Transparency.BITMASK);
     }
 
     public static BufferedImage createCompatibleTranslucentImage(final int width, final int height) {
         return isHeadless() ? new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
-            : getGraphicsConfiguration().createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+                : getGraphicsConfiguration().createCompatibleImage(width, height, Transparency.TRANSLUCENT);
     }
 
     private static boolean isHeadless() {

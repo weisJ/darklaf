@@ -29,9 +29,7 @@ import java.util.logging.LogRecord;
 
 import com.github.weisj.darklaf.util.StringUtil;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class LogFormatter extends Formatter {
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLACK = "\u001B[30m";

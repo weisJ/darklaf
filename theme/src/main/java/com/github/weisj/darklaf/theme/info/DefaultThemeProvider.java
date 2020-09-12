@@ -34,10 +34,8 @@ public class DefaultThemeProvider implements ThemeProvider {
         this(new IntelliJTheme(), new DarculaTheme(), new HighContrastLightTheme(), new HighContrastDarkTheme());
     }
 
-    public DefaultThemeProvider(
-            final Theme lightTheme, final Theme darkTheme, final Theme lightHighContrastTheme,
-            final Theme darkHighContrastTheme
-    ) {
+    public DefaultThemeProvider(final Theme lightTheme, final Theme darkTheme, final Theme lightHighContrastTheme,
+            final Theme darkHighContrastTheme) {
         /*
          * Ensure the given themes actually serve the purpose they are intended for.
          */
@@ -46,16 +44,14 @@ public class DefaultThemeProvider implements ThemeProvider {
         }
         if (Theme.isDark(lightHighContrastTheme)) {
             throw new UnsupportedThemeException(
-                "Given light high-contrast theme " + lightHighContrastTheme + " is declared as dark"
-            );
+                    "Given light high-contrast theme " + lightHighContrastTheme + " is declared as dark");
         }
         if (!Theme.isDark(darkTheme)) {
             throw new UnsupportedThemeException("Given dark theme " + darkTheme + "is not declared as dark");
         }
         if (!Theme.isDark(darkHighContrastTheme)) {
             throw new UnsupportedThemeException(
-                "Given dark high-contrast theme " + darkTheme + "is not declared as dark"
-            );
+                    "Given dark high-contrast theme " + darkTheme + "is not declared as dark");
         }
         /*
          * A high contrast theme may serve as a standard theme, but a standard theme should never be used
@@ -63,13 +59,11 @@ public class DefaultThemeProvider implements ThemeProvider {
          */
         if (!Theme.isHighContrast(lightHighContrastTheme)) {
             throw new UnsupportedThemeException(
-                "Given light high-contrast theme " + lightHighContrastTheme + " is not declared as high-contrast"
-            );
+                    "Given light high-contrast theme " + lightHighContrastTheme + " is not declared as high-contrast");
         }
         if (!Theme.isHighContrast(darkHighContrastTheme)) {
             throw new UnsupportedThemeException(
-                "Given dark high-contrast theme " + darkHighContrastTheme + " is not declared as high-contrast"
-            );
+                    "Given dark high-contrast theme " + darkHighContrastTheme + " is not declared as high-contrast");
         }
         this.lightTheme = lightTheme;
         this.darkTheme = darkTheme;
@@ -79,11 +73,12 @@ public class DefaultThemeProvider implements ThemeProvider {
 
     @Override
     public Theme getTheme(final PreferredThemeStyle themeStyle) {
-        if (themeStyle == null) return lightTheme;
+        if (themeStyle == null)
+            return lightTheme;
         boolean dark = themeStyle.getColorToneRule() == ColorToneRule.DARK;
         boolean highContrast = themeStyle.getContrastRule() == ContrastRule.HIGH_CONTRAST;
         Theme theme = dark ? highContrast ? darkHighContrastTheme : darkTheme
-            : highContrast ? lightHighContrastTheme : lightTheme;
+                : highContrast ? lightHighContrastTheme : lightTheme;
 
         return theme.derive(themeStyle.getFontSizeRule(), themeStyle.getAccentColorRule());
     }

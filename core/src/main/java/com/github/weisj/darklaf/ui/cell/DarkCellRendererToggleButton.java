@@ -33,9 +33,7 @@ import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 import com.github.weisj.darklaf.ui.tree.DarkTreeCellRendererDelegate;
 
-/**
- * @author Jannis Weis
- */
+/** @author Jannis Weis */
 public class DarkCellRendererToggleButton<T extends JToggleButton & CellToggleButton>
         implements TableCellRenderer, TreeCellRenderer, SwingConstants {
 
@@ -47,10 +45,8 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellToggleBu
     }
 
     @Override
-    public Component getTableCellRendererComponent(
-            final JTable table, final Object value, final boolean isSelected, final boolean focus, final int row,
-            final int column
-    ) {
+    public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
+            final boolean focus, final int row, final int column) {
         if (value instanceof Boolean) {
             toggleButton.setSelected((Boolean) value);
         }
@@ -60,10 +56,8 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellToggleBu
     }
 
     @Override
-    public T getTreeCellRendererComponent(
-            final JTree tree, final Object value, final boolean selected, final boolean expanded, final boolean leaf,
-            final int row, final boolean focus
-    ) {
+    public T getTreeCellRendererComponent(final JTree tree, final Object value, final boolean selected,
+            final boolean expanded, final boolean leaf, final int row, final boolean focus) {
         if (value instanceof Boolean) {
             toggleButton.setSelected((Boolean) value);
         } else {

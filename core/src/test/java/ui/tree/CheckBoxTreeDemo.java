@@ -49,7 +49,8 @@ public class CheckBoxTreeDemo implements ComponentDemo {
     }
 
     private TristateTreeNode populate(final TristateTreeNode node, final int count, final int depth) {
-        if (depth == 0) return node;
+        if (depth == 0)
+            return node;
         for (int i = 0; i < count; i++) {
             node.add(populate(new TristateTreeNode(StringUtil.repeat("Node", depth)), count, depth - 1));
         }

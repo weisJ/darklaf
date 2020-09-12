@@ -85,7 +85,8 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
     }
 
     private void updatePopup(final I index, final Point p) {
-        if (cellContainer.getComponent() == null || index == null) return;
+        if (cellContainer.getComponent() == null || index == null)
+            return;
         final boolean isEditing = cellContainer.isEditingCell(index);
         final Rectangle allocation = cellContainer.getAllocation();
         final Rectangle cellBounds = cellContainer.getCellBoundsAt(index, isEditing);
@@ -125,25 +126,24 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
         leave();
     }
 
-    private Rectangle calculatePopupBounds(
-            final Rectangle cellBounds, final Rectangle visibleBounds, final boolean addBorder
-    ) {
+    private Rectangle calculatePopupBounds(final Rectangle cellBounds, final Rectangle visibleBounds,
+            final boolean addBorder) {
         Rectangle rect = new Rectangle(visibleBounds);
         boolean ltr = cellContainer.getComponent().getComponentOrientation().isLeftToRight();
         popupComponent.setBorderInsets(1, 1, 1, 1);
 
         if (isRespectCellWidth()) {
-            if (
-                cellBounds.x >= visibleBounds.x
-                    && cellBounds.x + cellBounds.width <= visibleBounds.x + visibleBounds.width
-            ) {
+            if (cellBounds.x >= visibleBounds.x
+                    && cellBounds.x + cellBounds.width <= visibleBounds.x + visibleBounds.width) {
                 rect.x = cellBounds.x;
                 rect.width = cellBounds.width;
             } else {
                 int upperDiff = Math.max(cellBounds.x + cellBounds.width - visibleBounds.x - visibleBounds.width, 0);
                 int lowerDiff = Math.max(visibleBounds.x - cellBounds.x, 0);
-                if (ltr && upperDiff > 0) lowerDiff = 0;
-                if (!ltr && lowerDiff > 0) upperDiff = 0;
+                if (ltr && upperDiff > 0)
+                    lowerDiff = 0;
+                if (!ltr && lowerDiff > 0)
+                    upperDiff = 0;
                 if (upperDiff >= lowerDiff) {
                     rect.x = visibleBounds.x + visibleBounds.width;
                     rect.width = upperDiff;
@@ -156,16 +156,15 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
             }
         }
         if (isRespectCellHeight()) {
-            if (
-                (cellBounds.y >= visibleBounds.y
-                    && cellBounds.y + cellBounds.height <= visibleBounds.y + visibleBounds.height)
-            ) {
+            if ((cellBounds.y >= visibleBounds.y
+                    && cellBounds.y + cellBounds.height <= visibleBounds.y + visibleBounds.height)) {
                 rect.y = cellBounds.y;
                 rect.height = cellBounds.height;
             } else {
                 int upperDiff = Math.max(cellBounds.y + cellBounds.height - visibleBounds.y - visibleBounds.height, 0);
                 int lowerDiff = Math.max(visibleBounds.y - cellBounds.y, 0);
-                if (upperDiff > 0) lowerDiff = 0;
+                if (upperDiff > 0)
+                    lowerDiff = 0;
                 if (upperDiff >= lowerDiff) {
                     rect.y = visibleBounds.y + visibleBounds.height;
                     rect.height = upperDiff;
@@ -207,8 +206,10 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
     }
 
     public void repaint() {
-        if (!cellContainer.getComponent().isShowing()) return;
-        if (popup != null) popupComponent.repaint();
+        if (!cellContainer.getComponent().isShowing())
+            return;
+        if (popup != null)
+            popupComponent.repaint();
         if (lastIndex != null) {
             Point p = MouseInfo.getPointerInfo().getLocation();
             SwingUtilities.convertPointFromScreen(p, cellContainer.getComponent());
@@ -223,16 +224,14 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
             popupComponent.setRendererBounds(rendererBounds);
             if (popup != null) {
                 Point p = popupComponent.isShowing() ? popupComponent.getLocationOnScreen() : null;
-                if (
-                    p == null || p.x != bounds.x || p.y != bounds.y || popupComponent.getWidth() != bounds.width
-                        || popupComponent.getHeight() != bounds.height
-                ) {
+                if (p == null || p.x != bounds.x || p.y != bounds.y || popupComponent.getWidth() != bounds.width
+                        || popupComponent.getHeight() != bounds.height) {
                     movePopup(bounds);
                 }
             }
             if (popup == null) {
-                popup = PopupFactory.getSharedInstance()
-                    .getPopup(cellContainer.getComponent(), popupComponent, bounds.x, bounds.y);
+                popup = PopupFactory.getSharedInstance().getPopup(cellContainer.getComponent(), popupComponent,
+                        bounds.x, bounds.y);
                 popup.show();
                 if (DarkPopupFactory.getPopupType(popup) == DarkPopupFactory.PopupType.HEAVY_WEIGHT) {
                     // Ensure heavy weight popup is at desired location.
@@ -247,7 +246,8 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
     }
 
     private void movePopup(final Rectangle bounds) {
-        if (popup == null) return;
+        if (popup == null)
+            return;
         DarkPopupFactory.PopupType popupType = DarkPopupFactory.getPopupType(popup);
         Window w = DarkUIUtil.getWindow(popupComponent);
         if (popupType == DarkPopupFactory.PopupType.HEAVY_WEIGHT) {
@@ -275,10 +275,8 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
         JRootPane rootPane = ((RootPaneContainer) parentWindow).getRootPane();
         Component comp = DarkUIUtil.getParentBeforeMatching(popupComponent.getParent(), c -> c == layeredPane);
         Rectangle windowBounds = parentWindow.getBounds();
-        if (
-            windowBounds.contains(bounds.x, bounds.y)
-                && windowBounds.contains(bounds.x + bounds.width, bounds.y + bounds.height)
-        ) {
+        if (windowBounds.contains(bounds.x, bounds.y)
+                && windowBounds.contains(bounds.x + bounds.width, bounds.y + bounds.height)) {
             Point windowPos = rootPane.getLocationOnScreen();
             bounds.x -= windowPos.x;
             bounds.y -= windowPos.y;
@@ -371,8 +369,10 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
             Component renderer = cellHintPopupListener.getRenderer();
             if (rendererBounds != null && renderer != null) {
                 Color bg = cellHintPopupListener.getBackground(renderer);
-                if (bg == null) bg = cellHintPopupListener.cellContainer.getComponent().getBackground();
-                if (bg == null) bg = getBackground();
+                if (bg == null)
+                    bg = cellHintPopupListener.cellContainer.getComponent().getBackground();
+                if (bg == null)
+                    bg = getBackground();
                 if (bg != null) {
                     g.setColor(bg);
                     g.fillRect(0, 0, getWidth(), getHeight());

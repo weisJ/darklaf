@@ -107,10 +107,8 @@ public class PaintUtil {
         return warningGlow;
     }
 
-    private static void doPaint(
-            final Graphics2D g, final float width, final float height, final float arc, final float bw,
-            final boolean inside
-    ) {
+    private static void doPaint(final Graphics2D g, final float width, final float height, final float arc,
+            final float bw, final boolean inside) {
         GraphicsContext context = GraphicsUtil.setupStrokePainting(g);
         Shape outerRect;
         Shape innerRect;
@@ -130,32 +128,26 @@ public class PaintUtil {
         context.restore();
     }
 
-    public static void paintFocusBorder(
-            final Graphics2D g, final int width, final int height, final float arc, final float bw
-    ) {
+    public static void paintFocusBorder(final Graphics2D g, final int width, final int height, final float arc,
+            final float bw) {
         paintFocusBorder(g, width, height, arc, bw, true);
     }
 
-    public static void paintFocusBorder(
-            final Graphics2D g, final int width, final int height, final float arc, final float bw, final boolean active
-    ) {
+    public static void paintFocusBorder(final Graphics2D g, final int width, final int height, final float arc,
+            final float bw, final boolean active) {
         GraphicsContext config = new GraphicsContext(g);
         g.setComposite(PaintUtil.glowComposite);
         paintOutlineBorder(g, width, height, arc, bw, active, Outline.focus);
         config.restore();
     }
 
-    public static void paintOutlineBorder(
-            final Graphics2D g, final int width, final int height, final float arc, final float bw,
-            final boolean hasFocus, final Outline type
-    ) {
+    public static void paintOutlineBorder(final Graphics2D g, final int width, final int height, final float arc,
+            final float bw, final boolean hasFocus, final Outline type) {
         paintOutlineBorder(g, width, height, arc, bw, hasFocus, type, true);
     }
 
-    public static void paintOutlineBorder(
-            final Graphics2D g, final int width, final int height, final float arc, final float bw,
-            final boolean hasFocus, final Outline type, final boolean withLineBorder
-    ) {
+    public static void paintOutlineBorder(final Graphics2D g, final int width, final int height, final float arc,
+            final float bw, final boolean hasFocus, final Outline type, final boolean withLineBorder) {
         type.setGraphicsColor(g, hasFocus);
         doPaint(g, width, height, arc, withLineBorder ? bw + getStrokeWidth(g) : bw, false);
     }
@@ -164,9 +156,8 @@ public class PaintUtil {
         fillFocusRect(g, x, y, width, height, true);
     }
 
-    public static void fillFocusRect(
-            final Graphics2D g, final int x, final int y, final int width, final int height, final boolean active
-    ) {
+    public static void fillFocusRect(final Graphics2D g, final int x, final int y, final int width, final int height,
+            final boolean active) {
         GraphicsContext config = new GraphicsContext(g);
         g.setComposite(PaintUtil.glowComposite);
         Outline.focus.setGraphicsColor(g, active);
@@ -174,22 +165,18 @@ public class PaintUtil {
         config.restore();
     }
 
-    public static void paintFocusOval(
-            final Graphics2D g, final int x, final int y, final int width, final int height, final int bw
-    ) {
+    public static void paintFocusOval(final Graphics2D g, final int x, final int y, final int width, final int height,
+            final int bw) {
         paintFocusOval(g, (float) x, (float) y, (float) width, (float) height, (float) bw);
     }
 
-    public static void paintFocusOval(
-            final Graphics2D g, final float x, final float y, final float width, final float height, final float bw
-    ) {
+    public static void paintFocusOval(final Graphics2D g, final float x, final float y, final float width,
+            final float height, final float bw) {
         paintFocusOval(g, x, y, width, height, true, bw);
     }
 
-    public static void paintFocusOval(
-            final Graphics2D g, final float x, final float y, final float width, final float height,
-            final boolean active, final float bw
-    ) {
+    public static void paintFocusOval(final Graphics2D g, final float x, final float y, final float width,
+            final float height, final boolean active, final float bw) {
         GraphicsContext config = new GraphicsContext(g);
         g.setComposite(PaintUtil.glowComposite);
         Outline.focus.setGraphicsColor(g, active);
@@ -206,25 +193,21 @@ public class PaintUtil {
         return stroke instanceof BasicStroke ? ((BasicStroke) stroke).getLineWidth() : 1f;
     }
 
-    public static void paintLineBorder(
-            final Graphics2D g, final float x, final float y, final float width, final float height, final int arc
-    ) {
+    public static void paintLineBorder(final Graphics2D g, final float x, final float y, final float width,
+            final float height, final int arc) {
         float lw = getStrokeWidth(g);
         g.translate(x, y);
         doPaint(g, width, height, arc, lw, true);
         g.translate(-x, -y);
     }
 
-    public static void fillRoundRect(
-            final Graphics2D g, final float x, final float y, final float width, final float height, final int arc
-    ) {
+    public static void fillRoundRect(final Graphics2D g, final float x, final float y, final float width,
+            final float height, final int arc) {
         fillRoundRect(g, x, y, width, height, arc, true);
     }
 
-    public static void fillRoundRect(
-            final Graphics2D g, final float x, final float y, final float width, final float height, final int arc,
-            final boolean adjustForBorder
-    ) {
+    public static void fillRoundRect(final Graphics2D g, final float x, final float y, final float width,
+            final float height, final int arc, final boolean adjustForBorder) {
         GraphicsContext context = GraphicsUtil.setupStrokePainting(g);
         int stroke = adjustForBorder ? (int) getStrokeWidth(g) : 0;
         float lw = Scale.equalWithError(Scale.getScaleX(g), 1f) ? stroke : stroke / 2f;
@@ -246,9 +229,8 @@ public class PaintUtil {
         drawRect(g, rect, 1);
     }
 
-    public static void drawRect(
-            final Graphics g, final int x, final int y, final int width, final int height, final int thickness
-    ) {
+    public static void drawRect(final Graphics g, final int x, final int y, final int width, final int height,
+            final int thickness) {
         g.fillRect(x, y, width, thickness);
         g.fillRect(x, y + thickness, thickness, height - 2 * thickness);
         g.fillRect(x + width - thickness, y + thickness, thickness, height - 2 * thickness);
@@ -259,15 +241,12 @@ public class PaintUtil {
         drawRect(g, r.x, r.y, r.width, r.height, lineWidths);
     }
 
-    public static void drawRect(
-            final Graphics g, final int x, final int y, final int width, final int height, final Insets lineWidths
-    ) {
+    public static void drawRect(final Graphics g, final int x, final int y, final int width, final int height,
+            final Insets lineWidths) {
         g.fillRect(x, y, width, lineWidths.top);
         g.fillRect(x, y + lineWidths.top, lineWidths.left, height - lineWidths.top - lineWidths.bottom);
-        g.fillRect(
-            x + width - lineWidths.right, y + lineWidths.top, lineWidths.right,
-            height - lineWidths.left - lineWidths.right
-        );
+        g.fillRect(x + width - lineWidths.right, y + lineWidths.top, lineWidths.right,
+                height - lineWidths.left - lineWidths.right);
         g.fillRect(x, y + height - lineWidths.bottom, width, lineWidths.bottom);
     }
 

@@ -119,10 +119,8 @@ public class ColorWrapper extends Color {
     }
 
     @Override
-    public synchronized PaintContext createContext(
-            final ColorModel cm, final Rectangle r, final Rectangle2D r2d, final AffineTransform xform,
-            final RenderingHints hints
-    ) {
+    public synchronized PaintContext createContext(final ColorModel cm, final Rectangle r, final Rectangle2D r2d,
+            final AffineTransform xform, final RenderingHints hints) {
         return getColor().createContext(cm, r, r2d, xform, hints);
     }
 

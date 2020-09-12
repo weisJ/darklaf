@@ -37,9 +37,8 @@ public class SwingXUtil {
         return convertPointToParent(source, layer, p);
     }
 
-    public static <T extends JComponent> Point convertPointToParent(
-            final Component source, final JXLayer<T> layer, final Point p
-    ) {
+    public static <T extends JComponent> Point convertPointToParent(final Component source, final JXLayer<T> layer,
+            final Point p) {
         if (layer != null && layer.getUI() instanceof TransformUI) {
             TransformUI ui = (TransformUI) layer.getUI();
             Point pos = SwingUtilities.convertPoint(source, p, layer);

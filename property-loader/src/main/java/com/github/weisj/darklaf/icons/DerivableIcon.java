@@ -28,9 +28,9 @@ public interface DerivableIcon<T extends Icon> extends Icon {
     /**
      * Derive a new icon with the specified size.
      *
-     * @param  width  the new width
-     * @param  height the new height.
-     * @return        the derived icon.
+     * @param width the new width
+     * @param height the new height.
+     * @return the derived icon.
      */
     T derive(final int width, final int height);
 }

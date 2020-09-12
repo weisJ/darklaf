@@ -47,15 +47,14 @@ public class TabFrameTabLabel extends JLabel implements TabFrameTab {
     /**
      * Create new TabComponent for the frame of {@link JTabFrame}.
      *
-     * @param title       the title.
-     * @param icon        the icon.
+     * @param title the title.
+     * @param icon the icon.
      * @param orientation the alignment.
-     * @param index       the index.
-     * @param parent      the parent layout manager.
+     * @param index the index.
+     * @param parent the parent layout manager.
      */
-    public TabFrameTabLabel(
-            final String title, final Icon icon, final Alignment orientation, final int index, final JTabFrame parent
-    ) {
+    public TabFrameTabLabel(final String title, final Icon icon, final Alignment orientation, final int index,
+            final JTabFrame parent) {
         this.index = index;
         this.accelerator = -1;
         this.parent = parent;
@@ -104,7 +103,8 @@ public class TabFrameTabLabel extends JLabel implements TabFrameTab {
 
     @Override
     public void setOrientation(final Alignment a) {
-        if (this.orientation == a) return;
+        if (this.orientation == a)
+            return;
         Alignment oldOrientation = this.orientation;
         this.orientation = a;
         firePropertyChange(KEY_ORIENTATION, oldOrientation, orientation);
@@ -117,7 +117,8 @@ public class TabFrameTabLabel extends JLabel implements TabFrameTab {
 
     @Override
     public void setSelected(final boolean selected) {
-        if (selected == this.selected) return;
+        if (selected == this.selected)
+            return;
         boolean oldSelected = this.selected;
         this.selected = selected;
         firePropertyChange(KEY_SELECTED, oldSelected, selected);
@@ -130,7 +131,8 @@ public class TabFrameTabLabel extends JLabel implements TabFrameTab {
 
     @Override
     public void setAccelerator(final int accelerator) {
-        if (this.accelerator == accelerator) return;
+        if (this.accelerator == accelerator)
+            return;
         int oldAccelerator = this.accelerator;
         this.accelerator = accelerator;
         firePropertyChange(KEY_ACCELERATOR, oldAccelerator, accelerator);
@@ -164,7 +166,8 @@ public class TabFrameTabLabel extends JLabel implements TabFrameTab {
      * @param title the title
      */
     public void setTitle(final String title) {
-        if (Objects.equals(title, this.title)) return;
+        if (Objects.equals(title, this.title))
+            return;
         String oldTitle = this.title;
         this.title = title;
         firePropertyChange(KEY_TITLE, oldTitle, selected);
