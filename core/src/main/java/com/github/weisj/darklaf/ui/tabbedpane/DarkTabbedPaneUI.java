@@ -418,12 +418,23 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
     @Override
     protected int calculateTabAreaHeight(final int tabPlacement, final int horizRunCount, final int maxTabHeight) {
-        return Math.max(super.calculateTabAreaHeight(tabPlacement, horizRunCount, maxTabHeight), getFallBackSize());
+        int height =
+            Math.max(super.calculateTabAreaHeight(tabPlacement, horizRunCount, maxTabHeight), getFallBackSize());
+        if (isHorizontalTabPlacement()) {
+            if (leadingComp != null) height = Math.max(height, leadingComp.getPreferredSize().height);
+            if (trailingComp != null) height = Math.max(height, trailingComp.getPreferredSize().height);
+        }
+        return height;
     }
 
     @Override
     protected int calculateTabAreaWidth(final int tabPlacement, final int vertRunCount, final int maxTabWidth) {
-        return Math.max(super.calculateTabAreaWidth(tabPlacement, vertRunCount, maxTabWidth), getFallBackSize());
+        int width = Math.max(super.calculateTabAreaWidth(tabPlacement, vertRunCount, maxTabWidth), getFallBackSize());
+        if (!isHorizontalTabPlacement()) {
+            if (leadingComp != null) width = Math.max(width, leadingComp.getPreferredSize().width);
+            if (trailingComp != null) width = Math.max(width, trailingComp.getPreferredSize().width);
+        }
+        return width;
     }
 
     public void setDnDIndicatorRect(
@@ -462,9 +473,12 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
     protected int getFallBackSize() {
         int max = 0;
-        if (scrollableTabLayoutEnabled() && scrollableTabSupport.newTabButton.isVisible()) {
-            max = Math.max(scrollableTabSupport.newTabButton.getPreferredSize().height, 27);
+        if (scrollableTabLayoutEnabled()) {
+            if (scrollableTabSupport.newTabButton.isVisible()) {
+                max = Math.max(scrollableTabSupport.newTabButton.getPreferredSize().height, max);
+            }
         }
+        max = Math.max(max, 27);
         return max;
     }
 
@@ -817,11 +831,11 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         return newTabIcon;
     }
 
-    public JComponent createNewTabButton() {
+    public TabButtonContainer createNewTabButton() {
         return new NewTabButton(this);
     }
 
-    public DarkTabAreaButton createMoreTabsButton() {
+    public TabButtonContainer createMoreTabsButton() {
         return new MoreTabsButton(this);
     }
 }

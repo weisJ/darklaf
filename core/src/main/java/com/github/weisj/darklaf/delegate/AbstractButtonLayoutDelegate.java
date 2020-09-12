@@ -100,6 +100,11 @@ public class AbstractButtonLayoutDelegate extends AbstractButton {
     }
 
     @Override
+    public Insets getMargin() {
+        return delegate.getMargin();
+    }
+
+    @Override
     public ComponentOrientation getComponentOrientation() {
         return delegate.getComponentOrientation();
     }

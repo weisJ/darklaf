@@ -200,7 +200,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
                             cx - ui.westComp.getPreferredSize().width, compY, ui.westComp.getPreferredSize().width,
                             compHeight
                         );
-                    } else if (child != moreTabs && child != newTab) {
+                    } else if (child != moreTabs && child != newTab && child != null) {
                         child.setBounds(cx, cy, cw, ch);
                     }
                 }
@@ -303,7 +303,9 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         ui.selectedRun = 0;
         ui.runCount = 1;
 
-        Rectangle tabBounds = new Rectangle(0, 0, 0, 0);
+        int tabAreaWidth = Math.max(ui.calculateTabAreaWidth(tabPlacement, 0, 0), ui.maxTabWidth);
+        int tabAreaHeight = Math.max(ui.calculateTabAreaHeight(tabPlacement, 0, 0), ui.maxTabHeight);
+        Rectangle tabBounds = new Rectangle(0, 0, tabAreaWidth, tabAreaHeight);
         for (int i = 0; i < tabCount; i++) {
             calculateRect(i, tabBounds, metrics, verticalTabRuns, tabPlacement);
         }
@@ -364,7 +366,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
                 }
             }
             if (ui.scrollableTabSupport.newTabButton.isVisible()) {
-                layoutNewTabButton(true, leftToRight, leftMargin, returnAt, tabCount);
+                layoutNewTabButton(true, leftToRight, leftMargin, rightMargin, tabCount);
             }
 
         } else {
@@ -400,7 +402,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
             ui.currentShiftY = ui.currentShiftYTmp;
 
             if (ui.scrollableTabSupport.newTabButton.isVisible()) {
-                layoutNewTabButton(false, leftToRight, topMargin, returnAt, tabCount);
+                layoutNewTabButton(false, leftToRight, topMargin, bottomMargin, tabCount);
             }
         }
         ui.tabScroller.tabPanel.setPreferredSize(tabBounds.getSize());
@@ -567,28 +569,26 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
             } else {
                 ui.tabRuns[0] = 0;
                 ui.maxTabWidth = 0;
-                tabBounds.height = ui.maxTabHeight;
                 rect.x = tabBounds.x;
             }
             rect.width = ui.calculateTabWidth(tabPlacement, i, metrics);
             tabBounds.width = rect.x + rect.width;
             ui.maxTabWidth = Math.max(ui.maxTabWidth, rect.width);
-            rect.y = tabBounds.y;
-            rect.height = ui.maxTabHeight;
+            rect.height = tabBounds.height;
+            rect.y = tabBounds.y + tabBounds.height - rect.height;
         } else {
             if (i > 0) {
                 rect.y = ui.rects[i - 1].y + ui.rects[i - 1].height;
             } else {
                 ui.tabRuns[0] = 0;
                 ui.maxTabHeight = 0;
-                tabBounds.width = ui.maxTabWidth;
                 rect.y = tabBounds.y;
             }
             rect.height = ui.calculateTabHeight(tabPlacement, i, metrics.getHeight());
             tabBounds.height = rect.y + rect.height;
             ui.maxTabHeight = Math.max(ui.maxTabHeight, rect.height);
-            rect.x = tabBounds.x;
-            rect.width = ui.maxTabWidth;
+            rect.width = tabBounds.width;
+            rect.x = tabBounds.x + tabBounds.width - rect.width;
         }
     }
 

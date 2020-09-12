@@ -23,6 +23,7 @@ dependencies {
     testImplementation("org.swinglabs:swingx")
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("com.fifesoft:rsyntaxtextarea")
+    testImplementation("com.github.lgooddatepicker:LGoodDatePicker")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 
     annotationProcessor("com.google.auto.service:auto-service")

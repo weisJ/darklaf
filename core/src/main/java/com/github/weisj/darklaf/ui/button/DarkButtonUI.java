@@ -26,6 +26,7 @@ import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicButtonListener;
 import javax.swing.plaf.basic.BasicButtonUI;
@@ -73,6 +74,13 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     protected Color borderlessOutlineHover;
     protected Color borderlessOutlineClick;
     protected Color shadowColor;
+
+    protected Insets insets;
+    protected Insets thinInsets;
+    protected Insets squareInsets;
+    protected Insets squareThinInsets;
+    protected Insets borderlessRectangularInsets;
+
     protected AbstractButton button;
     protected int arc;
     protected int altArc;
@@ -113,6 +121,17 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         arc = UIManager.getInt("Button.arc");
         altArc = UIManager.getInt("Button.altArc");
         drawOutline = UIManager.getBoolean("Button.borderless.drawOutline");
+        insets = UIManager.getInsets("Button.borderInsets");
+        thinInsets = UIManager.getInsets("Button.thinBorderInsets");
+        squareInsets = UIManager.getInsets("Button.squareBorderInsets");
+        squareThinInsets = UIManager.getInsets("Button.squareThinBorderInsets");
+        borderlessRectangularInsets = UIManager.getInsets("Button.borderlessRectangularInsets");
+        if (insets == null) insets = new Insets(0, 0, 0, 0);
+        if (thinInsets == null) thinInsets = new Insets(0, 0, 0, 0);
+        if (squareThinInsets == null) squareThinInsets = new Insets(0, 0, 0, 0);
+        if (squareInsets == null) squareInsets = new Insets(0, 0, 0, 0);
+        if (borderlessRectangularInsets == null) borderlessRectangularInsets = new Insets(0, 0, 0, 0);
+        updateMargins(b);
     }
 
     @Override
@@ -138,12 +157,12 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     public void paint(final Graphics g, final JComponent c) {
         GraphicsContext config = new GraphicsContext(g);
         AbstractButton b = (AbstractButton) c;
-        paintButtonBackground(g, c);
 
         prepareDelegate(b);
         String text = layout(
             layoutDelegate, b, SwingUtilities2.getFontMetrics(b, g, layoutDelegate.getFont()), b.getWidth(), b.getHeight()
         );
+        paintButtonBackground(g, c);
 
         paintIcon(g, b, c);
         config.restoreClip();
@@ -158,7 +177,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
             int width = c.getWidth();
             int height = c.getHeight();
             Insets margin = b.getMargin();
-            if (margin instanceof UIResource) margin = new Insets(0, 0, 0, 0);
+            if (margin instanceof UIResource) margin = null;
             if (ButtonConstants.isBorderlessVariant(c)) {
                 paintBorderlessBackground(b, g2, arc, width, height, margin);
             } else {
@@ -218,18 +237,45 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     }
 
     protected void paintBorderlessBackground(
-            final AbstractButton b, final Graphics2D g, final int arc, final int width, final int height,
-            final Insets margin
+            final AbstractButton b, final Graphics2D g, final int arc, final int width, final int height, final Insets m
     ) {
         if (isRolloverBorderless(b)) {
+            Insets ins = b.getInsets();
+            int x = ins.left;
+            int y = ins.top;
+            int w = width - ins.left - ins.right;
+            int h = height - ins.top - ins.bottom;
+            Insets margin = m;
+            if (margin == null) {
+                margin = new Insets(0, 0, 0, 0);
+            } else {
+                // Ensure margins really only affect the size of the background around the content.
+                // If the button is larger than expected adjust the margin s.t. the shadow background is
+                // only painted in the area around the viewRect specified by the margin.
+                Rectangle r = iconRect.union(textRect);
+                int prefWidth = r.width + margin.right + margin.left + ins.left + ins.right;
+                int prefHeight = r.height + margin.top + margin.bottom + ins.top + ins.bottom;
+                margin = new Insets(margin.top, margin.left, margin.bottom, margin.right);
+                if (w > prefWidth) {
+                    margin.left = r.x - margin.left;
+                    margin.right = w - (r.x + r.width + margin.right);
+                }
+                if (h > prefHeight) {
+                    margin.top = r.y - margin.top;
+                    margin.bottom = h - (r.y + r.height + margin.bottom);
+                }
+            }
+            x += margin.left;
+            y += margin.top;
+            w -= margin.left + margin.right;
+            h -= margin.top + margin.bottom;
+
             GraphicsUtil.setupAAPainting(g);
             g.setColor(getBorderlessBackground(b));
             if (ButtonConstants.isBorderlessRectangular(b)) {
-                g.fillRect(
-                    margin.left, margin.top, width - margin.left - margin.right, height - margin.top - margin.bottom
-                );
+                g.fillRect(x, y, w, h);
             } else if (ButtonConstants.doConvertToBorderless(b)) {
-                int size = Math.min(width - margin.left - margin.right, height - margin.left - margin.right);
+                int size = Math.min(w, h);
                 if (!drawOutline) {
                     g.fillRoundRect((width - size) / 2, (height - size) / 2, size, size, arc, arc);
                 } else {
@@ -238,16 +284,10 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
                 }
             } else {
                 if (!drawOutline) {
-                    g.fillRoundRect(
-                        margin.left, margin.top, width - margin.left - margin.right,
-                        height - margin.top - margin.bottom, arc, arc
-                    );
+                    g.fillRoundRect(x, y, w, h, arc, arc);
                 } else {
                     g.setColor(getBorderlessOutline(b));
-                    PaintUtil.paintLineBorder(
-                        g, margin.left, margin.top, width - margin.left - margin.right,
-                        height - margin.top - margin.bottom, arc
-                    );
+                    PaintUtil.paintLineBorder(g, x, y, w, h, arc);
                 }
             }
         }
@@ -290,7 +330,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     }
 
     protected int getArc(final Component c) {
-        return ButtonConstants.chooseArc(c, arc, 0, altArc, borderSize);
+        return ButtonConstants.chooseArcWithBorder(c, arc, 0, altArc, borderSize);
     }
 
     protected Color getForeground(final AbstractButton button) {
@@ -353,7 +393,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
             final AbstractButtonLayoutDelegate bl, final AbstractButton b, final FontMetrics fm, final int width,
             final int height
     ) {
-        Insets i = b.getInsets();
+        Insets i = DarkUIUtil.addInsets(b.getInsets(), b.getMargin());
 
         AlignmentExt corner = DarkButtonBorder.getCornerFlag(b);
         if (corner != null) {
@@ -367,9 +407,6 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
 
         viewRect.setRect(0, 0, width, height);
         DarkUIUtil.applyInsets(viewRect, i);
-
-        Insets margins = b.getMargin();
-        if (!(margins instanceof UIResource)) DarkUIUtil.applyInsets(viewRect, margins);
 
         textRect.x = textRect.y = textRect.width = textRect.height = 0;
         iconRect.x = iconRect.y = iconRect.width = iconRect.height = 0;
@@ -386,6 +423,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         AbstractButton b = (AbstractButton) c;
         prepareDelegate(b);
         Dimension dim = BasicGraphicsUtils.getPreferredButtonSize(layoutDelegate, b.getIconTextGap());
+        DarkUIUtil.addInsets(dim, b.getMargin());
         if (ButtonConstants.isSquare(b)) {
             int size = Math.max(dim.width, dim.height);
             dim.setSize(size, size);
@@ -401,6 +439,20 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         } else {
             layoutDelegate.setFont(f);
         }
+    }
+
+    protected void updateMargins(final AbstractButton b) {
+        Insets margin = b.getMargin();
+        if (margin != null && !(margin instanceof UIResource)) return;
+        Insets m = getMargins(b);
+        b.setMargin(new InsetsUIResource(m.top, m.left, m.bottom, m.right));
+    }
+
+    private Insets getMargins(final AbstractButton b) {
+        if (ButtonConstants.isBorderlessRectangular(b)) return borderlessRectangularInsets;
+        boolean square = ButtonConstants.isSquare(b);
+        return ButtonConstants.isThin(b) ? square ? squareThinInsets : thinInsets : square ? squareInsets : insets;
+
     }
 
     @Override

@@ -39,8 +39,8 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
 
     protected static final int SCROLL_REWIND_DELAY = 1200;
     protected final ScrollPopupMenu scrollPopupMenu;
-    protected final DarkTabAreaButton moreTabsButton;
-    protected final JComponent newTabButton;
+    protected final TabButtonContainer moreTabsButton;
+    protected final TabButtonContainer newTabButton;
     protected final Timer timer;
     protected long lastClickEvent;
     private final DarkTabbedPaneUI ui;
@@ -55,8 +55,8 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
         viewport.addMouseWheelListener(this);
 
         moreTabsButton = ui.createMoreTabsButton();
+        moreTabsButton.button.addActionListener(this);
         moreTabsButton.setVisible(false);
-        moreTabsButton.addActionListener(this);
 
         newTabButton = ui.createNewTabButton();
         newTabButton.setVisible(PropertyUtil.getBooleanProperty(ui.tabPane, DarkTabbedPaneUI.KEY_SHOW_NEW_TAB_BUTTON));

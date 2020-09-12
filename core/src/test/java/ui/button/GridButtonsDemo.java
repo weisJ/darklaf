@@ -29,7 +29,7 @@ import javax.swing.*;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
-import com.github.weisj.darklaf.ui.button.DarkButtonUI;
+import com.github.weisj.darklaf.ui.button.ButtonConstants;
 import com.github.weisj.darklaf.util.AlignmentExt;
 
 public class GridButtonsDemo implements ComponentDemo {
@@ -72,16 +72,16 @@ public class GridButtonsDemo implements ComponentDemo {
             final AlignmentExt a
     ) {
         Optional.ofNullable(get(buttons, x, y)).ifPresent(b -> {
-            b.putClientProperty(DarkButtonUI.KEY_CORNER, a);
+            b.putClientProperty(ButtonConstants.KEY_CORNER, a);
 
-            b.putClientProperty(DarkButtonUI.KEY_TOP_LEFT_NEIGHBOUR, get(buttons, x - 1, y - 1));
-            b.putClientProperty(DarkButtonUI.KEY_TOP_NEIGHBOUR, get(buttons, x, y - 1));
-            b.putClientProperty(DarkButtonUI.KEY_TOP_RIGHT_NEIGHBOUR, get(buttons, x + 1, y - 1));
-            b.putClientProperty(DarkButtonUI.KEY_LEFT_NEIGHBOUR, get(buttons, x - 1, y));
-            b.putClientProperty(DarkButtonUI.KEY_RIGHT_NEIGHBOUR, get(buttons, x + 1, y));
-            b.putClientProperty(DarkButtonUI.KEY_BOTTOM_LEFT_NEIGHBOUR, get(buttons, x - 1, y + 1));
-            b.putClientProperty(DarkButtonUI.KEY_BOTTOM_NEIGHBOUR, get(buttons, x, y + 1));
-            b.putClientProperty(DarkButtonUI.KEY_BOTTOM_RIGHT_NEIGHBOUR, get(buttons, x + 1, y + 1));
+            b.putClientProperty(ButtonConstants.KEY_TOP_LEFT_NEIGHBOUR, get(buttons, x - 1, y - 1));
+            b.putClientProperty(ButtonConstants.KEY_TOP_NEIGHBOUR, get(buttons, x, y - 1));
+            b.putClientProperty(ButtonConstants.KEY_TOP_RIGHT_NEIGHBOUR, get(buttons, x + 1, y - 1));
+            b.putClientProperty(ButtonConstants.KEY_LEFT_NEIGHBOUR, get(buttons, x - 1, y));
+            b.putClientProperty(ButtonConstants.KEY_RIGHT_NEIGHBOUR, get(buttons, x + 1, y));
+            b.putClientProperty(ButtonConstants.KEY_BOTTOM_LEFT_NEIGHBOUR, get(buttons, x - 1, y + 1));
+            b.putClientProperty(ButtonConstants.KEY_BOTTOM_NEIGHBOUR, get(buttons, x, y + 1));
+            b.putClientProperty(ButtonConstants.KEY_BOTTOM_RIGHT_NEIGHBOUR, get(buttons, x + 1, y + 1));
 
             c.gridx = x;
             c.gridy = y;
@@ -103,7 +103,7 @@ public class GridButtonsDemo implements ComponentDemo {
     protected AbstractButton createButton(final int number, final ButtonGroup bg, final boolean isSelected) {
         AbstractButton b = new JToggleButton();
         b.setText(String.valueOf(number));
-        b.putClientProperty(DarkButtonUI.KEY_THIN, true);
+        b.putClientProperty(ButtonConstants.KEY_SQUARE, true);
         b.setSelected(isSelected);
         bg.add(b);
         return b;

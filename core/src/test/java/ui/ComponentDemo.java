@@ -102,6 +102,8 @@ public interface ComponentDemo {
                 targetSize.width = Math.min(targetSize.width, dim.width);
                 targetSize.height = Math.min(targetSize.height, dim.height);
                 window.setSize(targetSize);
+            } else {
+                window.setSize(dimension);
             }
 
             window.setVisible(true);

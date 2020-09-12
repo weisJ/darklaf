@@ -21,12 +21,14 @@
  */
 package com.github.weisj.darklaf.ui.button;
 
+import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonListener;
+
 
 public class DarkButtonListener extends BasicButtonListener {
 
@@ -73,6 +75,7 @@ public class DarkButtonListener extends BasicButtonListener {
         AbstractButton b = (AbstractButton) e.getSource();
         String key = e.getPropertyName();
         if (key.startsWith("JButton.")) {
+            ui.updateMargins(b);
             b.doLayout();
             b.repaint();
         }

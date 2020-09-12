@@ -106,6 +106,13 @@ public final class DarkUIUtil {
         return null;
     }
 
+    public static Dimension addInsets(final Dimension dim, final Insets ins) {
+        if (dim == null || ins == null) return dim;
+        dim.width += ins.left + ins.right;
+        dim.height += ins.top + ins.bottom;
+        return dim;
+    }
+
     public static void removeInsets(final Rectangle rectangle, final Insets insets) {
         if (insets != null && rectangle != null) {
             rectangle.x -= insets.left;

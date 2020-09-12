@@ -34,10 +34,7 @@ import com.github.weisj.darklaf.components.tabframe.TabFrameTabbedPopupUI;
 import com.github.weisj.darklaf.components.tabframe.TabbedPopup;
 import com.github.weisj.darklaf.components.uiresource.JPanelUIResource;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
-import com.github.weisj.darklaf.ui.tabbedpane.DarkTabAreaButton;
-import com.github.weisj.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
-import com.github.weisj.darklaf.ui.tabbedpane.MoreTabsButton;
-import com.github.weisj.darklaf.ui.tabbedpane.NewTabButton;
+import com.github.weisj.darklaf.ui.tabbedpane.*;
 
 public class DarkTabbedPopupUI extends DarkPanelPopupUI implements TabFrameTabbedPopupUI {
 
@@ -112,7 +109,9 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI implements TabFrameTabbe
         buttonHolder.add(Box.createHorizontalStrut(1));
         buttonHolder.add(closeButton);
         buttonHolder.add(Box.createHorizontalStrut(1));
+        buttonHolder.setBorder(UIManager.getBorder("TabFramePopup.headerBorder"));
         buttonHolder.setOpaque(false);
+
         tabbedPane.setOpaque(false);
         tabbedPane.putClientProperty("JTabbedPane.leadingComponent", label);
         tabbedPane.putClientProperty("JTabbedPane.trailingComponent", buttonHolder);
@@ -232,14 +231,20 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI implements TabFrameTabbe
         }
 
         @Override
-        public JComponent createNewTabButton() {
+        public TabButtonContainer createNewTabButton() {
             TabFrameNewTabButton b = new TabFrameNewTabButton(this);
             newTabButton = b.getButton();
             return b;
         }
 
         @Override
-        public DarkTabAreaButton createMoreTabsButton() {
+        protected int getFallBackSize() {
+            // We have to add 1 to compensate for the tabArea border.
+            return trailingComp != null ? trailingComp.getPreferredSize().height + 1 : super.getFallBackSize();
+        }
+
+        @Override
+        public TabButtonContainer createMoreTabsButton() {
             return new TabFrameMoreTabsButton(this);
         }
     }

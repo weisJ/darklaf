@@ -19,30 +19,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.ui.tabbedpane;
-
-import java.awt.*;
-import java.awt.event.ActionListener;
+package ui.datepicker;
 
 import javax.swing.*;
-import javax.swing.plaf.UIResource;
 
-public class DarkTabAreaButton extends JButton implements UIResource {
+import ui.ComponentDemo;
 
-    private final DarkTabbedPaneUI ui;
+import com.github.lgooddatepicker.demo.BasicDemo;
 
-    public DarkTabAreaButton(final DarkTabbedPaneUI ui) {
-        this.ui = ui;
+public class LGoodDatePickerDemo implements ComponentDemo {
+
+    public static void main(final String[] args) {
+        ComponentDemo.showDemo(new LGoodDatePickerDemo());
     }
 
     @Override
-    public void paint(final Graphics g) {
-        super.paint(g);
-        paintButton(g);
-        ui.paintTabAreaBorder(g, ui.tabPane.getTabPlacement(), 0, 0, getWidth(), getHeight());
+    public JComponent createComponent() {
+        return (JComponent) new BasicDemo().getContentPane();
     }
 
-    protected void paintButton(final Graphics g) {}
-
-    public void addActionListener(final ActionListener actionListener) {}
+    @Override
+    public String getTitle() {
+        return "LGoodDatePicker Demo";
+    }
 }

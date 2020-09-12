@@ -51,11 +51,6 @@ public class DarkButtonBorder implements Border, UIResource {
     private final int minimumArc;
     private final int borderSize;
     private final int shadowSize;
-    private Insets insets;
-    private Insets thinInsets;
-    private Insets squareInsets;
-    private Insets squareThinInsets;
-    private Insets borderlessRectangularInsets;
 
     public DarkButtonBorder() {
         focusBorderColor = UIManager.getColor("Button.focusBorderColor");
@@ -69,16 +64,6 @@ public class DarkButtonBorder implements Border, UIResource {
         minimumArc = UIManager.getInt("Button.minimumArc");
         borderSize = UIManager.getInt("Button.borderThickness");
         shadowSize = UIManager.getInt("Button.shadowHeight");
-        insets = UIManager.getInsets("Button.borderInsets");
-        thinInsets = UIManager.getInsets("Button.thinBorderInsets");
-        squareInsets = UIManager.getInsets("Button.squareBorderInsets");
-        squareThinInsets = UIManager.getInsets("Button.squareThinBorderInsets");
-        borderlessRectangularInsets = UIManager.getInsets("Button.borderlessRectangularInsets");
-        if (insets == null) insets = new Insets(0, 0, 0, 0);
-        if (thinInsets == null) thinInsets = new Insets(0, 0, 0, 0);
-        if (squareThinInsets == null) squareThinInsets = new Insets(0, 0, 0, 0);
-        if (squareInsets == null) squareInsets = new Insets(0, 0, 0, 0);
-        if (borderlessRectangularInsets == null) borderlessRectangularInsets = new Insets(0, 0, 0, 0);
     }
 
     public static boolean showDropShadow(final JComponent c) {
@@ -274,17 +259,13 @@ public class DarkButtonBorder implements Border, UIResource {
 
     public Insets getBorderInsets(final Component c) {
         if (ButtonConstants.isBorderlessRectangular(c)) {
-            return new InsetsUIResource(
-                borderlessRectangularInsets.top, borderlessRectangularInsets.left, borderlessRectangularInsets.bottom,
-                borderlessRectangularInsets.right
-            );
+            return new InsetsUIResource(0, 0, 0, 0);
         }
         boolean shadowVariant = ButtonConstants.isBorderless(c);
         int shadow = shadowVariant ? 0 : getShadowSize();
-        boolean square = ButtonConstants.isSquare(c);
-        Insets pad =
-            ButtonConstants.isThin(c) ? square ? squareThinInsets : thinInsets : square ? squareInsets : insets;
-        return maskInsets(new InsetsUIResource(pad.top, pad.left, pad.bottom, pad.right), c, shadow);
+        return maskInsets(
+            new InsetsUIResource(borderSize, borderSize, Math.max(borderSize, shadow), borderSize), c, shadow
+        );
     }
 
     protected Insets maskInsets(final Insets ins, final Component c, final int shadow) {

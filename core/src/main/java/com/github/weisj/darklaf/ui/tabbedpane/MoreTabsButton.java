@@ -25,36 +25,32 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.components.uiresource.JButtonUIResource;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 
-public class MoreTabsButton extends DarkTabAreaButton {
+public class MoreTabsButton extends TabButtonContainer {
 
     protected final static String INFINITY = "\u221e";
-    protected final Icon icon;
-    protected final DarkTabbedPaneUI ui;
-    protected final int pad;
+    private final int pad;
 
     public MoreTabsButton(final DarkTabbedPaneUI ui) {
         super(ui);
-        this.ui = ui;
-        setLayout(null);
-        icon = ui.getMoreTabsIcon();
-        setForeground(UIManager.getColor("TabbedPane.moreTabsButton.foreground"));
         pad = UIManager.getInt("TabbedPane.moreTabsButton.pad");
-        setFont(UIManager.getFont("TabbedPane.moreTabsButton.font"));
-        setIcon(new MoreTabsIcon(icon, this));
-        putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS);
-        putClientProperty(DarkButtonUI.KEY_SQUARE, true);
-        putClientProperty(DarkButtonUI.KEY_THIN, true);
-        setMargin(new Insets(pad, pad, pad, pad));
-        setFocusable(false);
-        setOpaque(true);
+        button.setMargin(new Insets(pad, pad, pad, pad));
     }
 
     @Override
-    public Color getBackground() {
-        if (ui == null) return super.getBackground();
-        return ui.getTabAreaBackground();
+    protected JButton createButton() {
+        JButton button = new JButtonUIResource();
+        button.setForeground(UIManager.getColor("TabbedPane.moreTabsButton.foreground"));
+        button.setFont(UIManager.getFont("TabbedPane.moreTabsButton.font"));
+        button.setIcon(new MoreTabsIcon(ui.getMoreTabsIcon(), this));
+        button.putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS);
+        button.putClientProperty(DarkButtonUI.KEY_THIN, true);
+        button.setFocusable(false);
+        button.setRolloverEnabled(true);
+        button.setOpaque(false);
+        return button;
     }
 
     protected String getLabelString() {
@@ -89,7 +85,7 @@ public class MoreTabsButton extends DarkTabAreaButton {
 
         @Override
         public int getIconHeight() {
-            return icon.getIconHeight() + button.pad;
+            return icon.getIconHeight();
         }
     }
 }
