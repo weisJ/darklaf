@@ -42,10 +42,7 @@ import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.graphics.StringPainter;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonFocusNavigationActions;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
-import com.github.weisj.darklaf.util.AlignmentExt;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.PropertyKey;
-import com.github.weisj.darklaf.util.PropertyUtil;
+import com.github.weisj.darklaf.util.*;
 
 /** @author Jannis Weis */
 public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
@@ -351,12 +348,11 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         return fg;
     }
 
-    protected Color getBackgroundColor(final JComponent c) {
-        boolean defaultButton = ButtonConstants.isDefaultButton(c);
-        AbstractButton b = (AbstractButton) c;
+    protected Color getBackgroundColor(final AbstractButton b) {
+        boolean defaultButton = ButtonConstants.isDefaultButton(b);
         boolean rollOver = b.isRolloverEnabled() && b.getModel().isRollover();
         boolean clicked = b.getModel().isArmed();
-        if (c.isEnabled()) {
+        if (b.isEnabled()) {
             if (defaultButton) {
                 if (clicked) {
                     return defaultClickBackground;
@@ -371,7 +367,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
                 } else if (rollOver) {
                     return hoverBackground;
                 } else {
-                    return background;
+                    return PropertyUtil.chooseColor(b.getBackground(), background);
                 }
             }
         } else {

@@ -205,9 +205,12 @@ public interface ComponentDemo {
             }
         }
         JCheckBoxMenuItem aaPainting = new JCheckBoxMenuItem("Translucent Antialiasing");
-        aaPainting.addActionListener(e -> StringPainter.setTranslucentAAPaintingEnabled(aaPainting.isSelected()));
-        aaPainting.setSelected(StringPainter.isTranslucentAAPaintingEnabled());
         JCheckBoxMenuItem experimentalAA = new JCheckBoxMenuItem("Experimental Antialiasing");
+        aaPainting.addActionListener(e -> {
+            StringPainter.setTranslucentAAPaintingEnabled(aaPainting.isSelected());
+            experimentalAA.setEnabled(aaPainting.isSelected());
+        });
+        aaPainting.setSelected(StringPainter.isTranslucentAAPaintingEnabled());
         experimentalAA
                 .addActionListener(e -> StringPainter.setExperimentalAntialiasingEnabled(experimentalAA.isSelected()));
         experimentalAA.setSelected(StringPainter.isExperimentalAntialiasingEnabled());
