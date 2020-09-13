@@ -106,9 +106,6 @@ public class DarkLaf extends ThemedLookAndFeel {
         PopupFactory.setSharedInstance(new DarkPopupFactory());
         setupDecorations();
         isInitialized = true;
-        if (theme == null) {
-            theme = LafManager.getTheme();
-        }
         SwingUtilities.invokeLater(LafManager::notifyThemeInstalled);
     }
 
@@ -166,7 +163,7 @@ public class DarkLaf extends ThemedLookAndFeel {
 
     @Override
     public Theme getTheme() {
-        return theme;
+        return theme != null ? theme : LafManager.getTheme();
     }
 
     @Override
