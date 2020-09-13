@@ -179,18 +179,28 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
             int width = c.getWidth();
             int height = c.getHeight();
             Insets margin = b.getMargin();
-            if (margin instanceof UIResource)
+            if (margin instanceof UIResource) {
                 margin = null;
+            }
             if (ButtonConstants.isBorderlessVariant(c)) {
                 paintBorderlessBackground(b, g2, arc, width, height, margin);
+            } else if (b.getBorder() instanceof DarkButtonBorder) {
+                paintDarklafBorderBackground(b, g2, arc, width, height);
             } else {
-                paintDefaultBackground(b, g2, arc, width, height);
+                paintDefaultBackgroud(b, g2, width, height);
             }
         }
     }
 
-    protected void paintDefaultBackground(final AbstractButton c, final Graphics2D g, final int arc, final int width,
+    protected void paintDefaultBackgroud(final AbstractButton b, final Graphics2D g, final int width,
             final int height) {
+        Insets ins = b.getInsets();
+        g.setColor(getBackgroundColor(b));
+        PaintUtil.fillRect(g, ins.left, ins.top, width - ins.left - ins.right, height - ins.top - ins.bottom);
+    }
+
+    protected void paintDarklafBorderBackground(final AbstractButton c, final Graphics2D g, final int arc,
+            final int width, final int height) {
         boolean showShadow = DarkButtonBorder.showDropShadow(c);
         int shadow = showShadow ? shadowHeight : 0;
         int effectiveArc = ButtonConstants.chooseArcWithBorder(c, arc, 0, 0, borderSize);
@@ -240,10 +250,6 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
             final int height, final Insets m) {
         if (isRolloverBorderless(b)) {
             Insets ins = b.getInsets();
-            int x = ins.left;
-            int y = ins.top;
-            int w = width - ins.left - ins.right;
-            int h = height - ins.top - ins.bottom;
             Insets margin = m;
             if (margin == null) {
                 margin = new Insets(0, 0, 0, 0);
@@ -255,19 +261,20 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
                 int prefWidth = r.width + margin.right + margin.left + ins.left + ins.right;
                 int prefHeight = r.height + margin.top + margin.bottom + ins.top + ins.bottom;
                 margin = new Insets(margin.top, margin.left, margin.bottom, margin.right);
-                if (w > prefWidth) {
+                if (width > prefWidth) {
                     margin.left = r.x - margin.left;
-                    margin.right = w - (r.x + r.width + margin.right);
+                    margin.right = width - (r.x + r.width + margin.right);
                 }
-                if (h > prefHeight) {
+                if (height > prefHeight) {
                     margin.top = r.y - margin.top;
-                    margin.bottom = h - (r.y + r.height + margin.bottom);
+                    margin.bottom = height - (r.y + r.height + margin.bottom);
                 }
             }
-            x += margin.left;
-            y += margin.top;
-            w -= margin.left + margin.right;
-            h -= margin.top + margin.bottom;
+
+            int x = Math.max(ins.left, margin.left);
+            int y = Math.max(ins.top, margin.top);
+            int w = width - x - Math.max(ins.right, margin.right);
+            int h = height - y - Math.max(ins.bottom, margin.bottom);
 
             GraphicsUtil.setupAAPainting(g);
             g.setColor(getBorderlessBackground(b));
