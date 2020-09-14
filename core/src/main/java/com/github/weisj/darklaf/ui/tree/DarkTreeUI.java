@@ -90,6 +90,9 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
 
     protected DarkTreeCellRendererDelegate rendererDelegate;
 
+    private int dashLength;
+    private int dashGapLength;
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTreeUI();
     }
@@ -142,6 +145,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         PropertyUtil.installProperty(tree, KEY_BOOLEAN_RENDER_TYPE, UIManager.getString("Tree.booleanRenderType"));
         PropertyUtil.installProperty(tree, KEY_LINE_STYLE, UIManager.getString("Tree.defaultLineStyle"));
         LookAndFeel.installProperty(tree, JTree.SHOWS_ROOT_HANDLES_PROPERTY, true);
+        dashLength = UIManager.getInt("Tree.dash.length");
+        dashGapLength = UIManager.getInt("Tree.dash.gaplength");
     }
 
     protected CellRendererPane createCellRendererPane() {
@@ -171,156 +176,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     @Override
     protected void installKeyboardActions() {
         super.installKeyboardActions();
-
-        if (PropertyUtil.getBooleanProperty(tree, KEY_MAC_ACTIONS_INSTALLED))
-            return;
-
-        tree.putClientProperty(KEY_MAC_ACTIONS_INSTALLED, Boolean.TRUE);
-
-        installInputMap(tree.getInputMap(JComponent.WHEN_FOCUSED));
-
-        final ActionMap actionMap = tree.getActionMap();
-
-        actionMap.put("expand_or_move_down", new TreeUIAction() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                JTree tree = getTree(e);
-                if (tree == null)
-                    return;
-                int selectionRow = tree.getLeadSelectionRow();
-                if (selectionRow == -1)
-                    return;
-
-                if (isLeaf(selectionRow) || tree.isExpanded(selectionRow)) {
-                    if (!PropertyUtil.getBooleanProperty(tree, KEY_IS_TABLE_TREE)) {
-                        moveTo(tree, selectionRow + 1);
-                    }
-                } else {
-                    tree.expandRow(selectionRow);
-                }
-                tree.repaint();
-            }
-
-            public boolean accept(final Object sender) {
-                return acceptExpandCollapseAction(sender, false);
-            }
-        });
-
-        actionMap.put("collapse_or_move_up", new TreeUIAction() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                final JTree tree = getTree(e);
-                if (tree == null)
-                    return;
-                int selectionRow = tree.getLeadSelectionRow();
-                if (selectionRow == -1)
-                    return;
-
-                if (isLeaf(selectionRow) || tree.isCollapsed(selectionRow)) {
-                    if (!PropertyUtil.getBooleanProperty(tree, KEY_IS_TABLE_TREE)) {
-                        moveTo(tree, selectionRow - 1);
-                    }
-                } else {
-                    tree.collapseRow(selectionRow);
-                }
-                tree.repaint();
-            }
-
-            public boolean accept(final Object sender) {
-                return acceptExpandCollapseAction(sender, true);
-            }
-        });
-
-        actionMap.put("move_down", new TreeUIAction() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                move(getTree(e), 1);
-            }
-        });
-
-        actionMap.put("move_up", new TreeUIAction() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                move(getTree(e), -1);
-            }
-        });
-
-        actionMap.put("toggle_edit", new TreeUIAction() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                toggleEdit(getTree(e));
-            }
-        });
-    }
-
-    protected boolean acceptExpandCollapseAction(final Object sender, final boolean collapsed) {
-        JTree tree = DarkUIUtil.nullableCast(JTree.class, sender);
-        if (tree == null)
-            return false;
-        int selectionRow = tree.getLeadSelectionRow();
-        if (selectionRow == -1)
-            return false;
-        final boolean collapsedOrExpanded = collapsed ? tree.isCollapsed(selectionRow) : tree.isExpanded(selectionRow);
-        if (isLeaf(selectionRow) || collapsedOrExpanded) {
-            return !PropertyUtil.getBooleanProperty(tree, KEY_IS_TABLE_TREE);
-        }
-        return true;
-    }
-
-    protected void installInputMap(final InputMap inputMap) {
-        inputMap.put(KeyStroke.getKeyStroke("pressed LEFT"), "collapse_or_move_up");
-        inputMap.put(KeyStroke.getKeyStroke("pressed RIGHT"), "expand_or_move_down");
-        inputMap.put(KeyStroke.getKeyStroke("pressed DOWN"), "move_down");
-        inputMap.put(KeyStroke.getKeyStroke("pressed UP"), "move_up");
-        inputMap.put(KeyStroke.getKeyStroke("pressed ENTER"), "toggle_edit");
-    }
-
-    protected JTree getTree(final ActionEvent e) {
-        return DarkUIUtil.nullableCast(JTree.class, e.getSource());
-    }
-
-    protected void move(final JTree tree, final int offset) {
-        if (tree == null)
-            return;
-        int selectionRow = tree.getLeadSelectionRow();
-        if (selectionRow == -1)
-            return;
-        moveTo(tree, selectionRow + offset);
-    }
-
-    protected void moveTo(final JTree tree, final int row) {
-        int newRow = Math.max(Math.min(row, tree.getRowCount() - 1), 0);
-        tree.setSelectionRow(newRow);
-        scrollRowToVisible(tree, newRow);
-        tree.repaint();
-    }
-
-    protected void scrollRowToVisible(final JTree tree, final int row) {
-        Rectangle bounds = tree.getRowBounds(row);
-        if (!isLeaf(row)) {
-            boolean expanded = tree.isExpanded(row);
-            Icon icon = expanded ? getExpandedIcon() : getCollapsedIcon();
-            boolean ltr = tree.getComponentOrientation().isLeftToRight();
-            int ident = getRightChildIndent();
-            int extra = ident - 1 + icon.getIconWidth() / 2;
-            if (ltr)
-                bounds.x -= extra;
-            bounds.width += extra;
-        }
-        tree.scrollRectToVisible(bounds);
-    }
-
-    protected void toggleEdit(final JTree tree) {
-        if (tree == null)
-            return;
-        if (tree.isEditing()) {
-            stopEditing(tree);
-            return;
-        }
-        int selectionRow = tree.getLeadSelectionRow();
-        if (selectionRow == -1)
-            return;
-        startEditingAtPath(tree, getPathForRow(tree, selectionRow));
+        TreeUIAction.installActions(tree);
     }
 
     @Override
@@ -638,8 +494,9 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         Graphics2D g2d = (Graphics2D) g;
         Stroke oldStroke = g2d.getStroke();
 
-        BasicStroke dashedStroke =
-                new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 0, new float[] {2.0f}, 0);
+        float[] dash = {dashLength, dashGapLength};
+        float phase = y1 % (dashLength + dashGapLength);
+        BasicStroke dashedStroke = new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 0, dash, phase);
         g2d.setStroke(dashedStroke);
         g2d.drawLine(x, y1, x, y2);
         g2d.setStroke(oldStroke);
@@ -663,7 +520,27 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
             setExpandedIcon(getExpandedIcon(isPathSelected, tree.hasFocus() || tree.isEditing()));
             setCollapsedIcon(getCollapsedIcon(isPathSelected, tree.hasFocus() || tree.isEditing()));
         }
-        super.paintExpandControl(g, clipBounds, insets, bounds, path, row, isExpanded, hasBeenExpanded, isLeaf);
+        // Draw icons if not a leaf and either hasn't been loaded,
+        // or the model child count is > 0.
+        if (!isLeaf) {
+            int iconCenterX;
+            if (tree.getComponentOrientation().isLeftToRight()) {
+                iconCenterX = bounds.x - getRightChildIndent() + 1;
+            } else {
+                iconCenterX = bounds.x + bounds.width + getRightChildIndent() - 1;
+            }
+            int iconCenterY = bounds.y + (bounds.height / 2);
+
+            if (isExpanded) {
+                Icon expandedIcon = getExpandedIcon();
+                if (expandedIcon != null)
+                    drawCentered(tree, g, expandedIcon, iconCenterX, iconCenterY);
+            } else {
+                Icon collapsedIcon = getCollapsedIcon();
+                if (collapsedIcon != null)
+                    drawCentered(tree, g, collapsedIcon, iconCenterX, iconCenterY);
+            }
+        }
     }
 
     @Override
@@ -708,7 +585,170 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         }
     }
 
-    private abstract static class TreeUIAction extends AbstractAction implements UIResource {
+    protected static boolean isLeaf(final JTree tree, final int row) {
+        TreePath path = tree.getPathForRow(row);
+
+        if (path != null)
+            return tree.getModel().isLeaf(path.getLastPathComponent());
+        return true;
+    }
+
+    protected abstract static class TreeUIAction extends AbstractAction implements UIResource {
+
+        protected static void installActions(final JTree tree) {
+            if (PropertyUtil.getBooleanProperty(tree, KEY_MAC_ACTIONS_INSTALLED))
+                return;
+
+            tree.putClientProperty(KEY_MAC_ACTIONS_INSTALLED, Boolean.TRUE);
+
+            installInputMap(tree.getInputMap(JComponent.WHEN_FOCUSED));
+
+            final ActionMap actionMap = tree.getActionMap();
+            actionMap.put("expand_or_move_down", new TreeUIAction() {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    JTree tree = getTree(e);
+                    if (tree == null)
+                        return;
+                    int selectionRow = tree.getLeadSelectionRow();
+                    if (selectionRow == -1)
+                        return;
+
+                    if (isLeaf(tree, selectionRow) || tree.isExpanded(selectionRow)) {
+                        if (!PropertyUtil.getBooleanProperty(tree, KEY_IS_TABLE_TREE)) {
+                            moveTo(tree, selectionRow + 1);
+                        }
+                    } else {
+                        tree.expandRow(selectionRow);
+                    }
+                    tree.repaint();
+                }
+
+                public boolean accept(final Object sender) {
+                    return acceptExpandCollapseAction(sender, false);
+                }
+            });
+
+            actionMap.put("collapse_or_move_up", new TreeUIAction() {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    final JTree tree = getTree(e);
+                    if (tree == null)
+                        return;
+                    int selectionRow = tree.getLeadSelectionRow();
+                    if (selectionRow == -1)
+                        return;
+
+                    if (isLeaf(tree, selectionRow) || tree.isCollapsed(selectionRow)) {
+                        if (!PropertyUtil.getBooleanProperty(tree, KEY_IS_TABLE_TREE)) {
+                            moveTo(tree, selectionRow - 1);
+                        }
+                    } else {
+                        tree.collapseRow(selectionRow);
+                    }
+                    tree.repaint();
+                }
+
+                public boolean accept(final Object sender) {
+                    return acceptExpandCollapseAction(sender, true);
+                }
+            });
+
+            actionMap.put("move_down", new TreeUIAction() {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    move(getTree(e), 1);
+                }
+            });
+
+            actionMap.put("move_up", new TreeUIAction() {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    move(getTree(e), -1);
+                }
+            });
+
+            actionMap.put("toggle_edit", new TreeUIAction() {
+                @Override
+                public void actionPerformed(final ActionEvent e) {
+                    toggleEdit(getTree(e));
+                }
+            });
+        }
+
+        protected static void installInputMap(final InputMap inputMap) {
+            inputMap.put(KeyStroke.getKeyStroke("pressed LEFT"), "collapse_or_move_up");
+            inputMap.put(KeyStroke.getKeyStroke("pressed RIGHT"), "expand_or_move_down");
+            inputMap.put(KeyStroke.getKeyStroke("pressed DOWN"), "move_down");
+            inputMap.put(KeyStroke.getKeyStroke("pressed UP"), "move_up");
+            inputMap.put(KeyStroke.getKeyStroke("pressed ENTER"), "toggle_edit");
+        }
+
+        protected JTree getTree(final ActionEvent e) {
+            return DarkUIUtil.nullableCast(JTree.class, e.getSource());
+        }
+
+        protected void toggleEdit(final JTree tree) {
+            if (tree == null)
+                return;
+            if (tree.isEditing()) {
+                tree.stopEditing();
+                return;
+            }
+            int selectionRow = tree.getLeadSelectionRow();
+            if (selectionRow == -1)
+                return;
+            tree.startEditingAtPath(tree.getPathForRow(selectionRow));
+        }
+
+        protected void move(final JTree tree, final int offset) {
+            if (tree == null)
+                return;
+            int selectionRow = tree.getLeadSelectionRow();
+            if (selectionRow == -1)
+                return;
+            moveTo(tree, selectionRow + offset);
+        }
+
+        protected void moveTo(final JTree tree, final int row) {
+            int newRow = Math.max(Math.min(row, tree.getRowCount() - 1), 0);
+            tree.setSelectionRow(newRow);
+            scrollRowToVisible(tree, newRow);
+            tree.repaint();
+        }
+
+        protected void scrollRowToVisible(final JTree tree, final int row) {
+            Rectangle bounds = tree.getRowBounds(row);
+            if (!isLeaf(tree, row)) {
+                boolean expanded = tree.isExpanded(row);
+                BasicTreeUI ui = DarkUIUtil.getUIOfType(tree.getUI(), BasicTreeUI.class);
+                if (ui != null) {
+                    Icon icon = expanded ? ui.getExpandedIcon() : ui.getCollapsedIcon();
+                    boolean ltr = tree.getComponentOrientation().isLeftToRight();
+                    int ident = ui.getRightChildIndent();
+                    int extra = ident - 1 + icon.getIconWidth() / 2;
+                    if (ltr)
+                        bounds.x -= extra;
+                    bounds.width += extra;
+                }
+            }
+            tree.scrollRectToVisible(bounds);
+        }
+
+        protected boolean acceptExpandCollapseAction(final Object sender, final boolean collapsed) {
+            JTree tree = DarkUIUtil.nullableCast(JTree.class, sender);
+            if (tree == null)
+                return false;
+            int selectionRow = tree.getLeadSelectionRow();
+            if (selectionRow == -1)
+                return false;
+            final boolean collapsedOrExpanded =
+                    collapsed ? tree.isCollapsed(selectionRow) : tree.isExpanded(selectionRow);
+            if (isLeaf(tree, selectionRow) || collapsedOrExpanded) {
+                return !PropertyUtil.getBooleanProperty(tree, KEY_IS_TABLE_TREE);
+            }
+            return true;
+        }
     }
 
     private class DarkTreeMouseListener extends MouseAdapter {
