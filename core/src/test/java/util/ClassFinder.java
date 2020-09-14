@@ -27,12 +27,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.github.weisj.darklaf.util.Lambdas;
+
 public class ClassFinder {
 
     public static <T> List<T> getInstancesOfType(final Class<T> type, final String... packages) {
         try (ResourceWalker walker = ResourceWalker.walkResources(packages)) {
             return walker.stream().filter(p -> p.endsWith(".class")).map(p -> p.replace('/', '.'))
-                    .map(p -> p.substring(0, p.length() - 6)).map(ResourceWalker.orDefault(Class::forName, null))
+                    .map(p -> p.substring(0, p.length() - 6)).map(Lambdas.orDefault(Class::forName, null))
                     .filter(Objects::nonNull).filter(type::isAssignableFrom).filter(cls -> !cls.isInterface())
                     .filter(cls -> !Modifier.isAbstract(cls.getModifiers())).map(cls -> (Class<T>) cls)
                     .map(ClassFinder::getInstance).filter(Objects::nonNull).map(type::cast)

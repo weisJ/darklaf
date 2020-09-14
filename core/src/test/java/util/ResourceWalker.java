@@ -29,9 +29,10 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+
+import com.github.weisj.darklaf.util.Lambdas;
 
 public class ResourceWalker implements AutoCloseable {
 
@@ -74,8 +75,8 @@ public class ResourceWalker implements AutoCloseable {
         String pathName = pack;
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         Stream<URL> stream = enumerationAsStream(
-                orDefault(classLoader::getResources, Collections.<URL>emptyEnumeration()).apply(pathName));
-        return stream.map(wrap(URL::toURI)).flatMap(uri -> {
+                Lambdas.orDefault(classLoader::getResources, Collections.<URL>emptyEnumeration()).apply(pathName));
+        return stream.map(Lambdas.wrap(URL::toURI)).flatMap(uri -> {
             if ("jar".equals(uri.getScheme())) {
                 try {
                     FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap());
@@ -113,31 +114,5 @@ public class ResourceWalker implements AutoCloseable {
         if (files == null)
             files = new File[0];
         return Arrays.stream(files).flatMap(this::walkFolder);
-    }
-
-    public static <T, K, E extends Throwable> Function<T, K> orDefault(final CheckedFunction<T, K, E> wrappee,
-            final K fallback) {
-        return t -> {
-            try {
-                return wrappee.apply(t);
-            } catch (final Throwable e) {
-                return fallback;
-            }
-        };
-    }
-
-    public static <T, K, E extends Throwable> Function<T, K> wrap(final CheckedFunction<T, K, E> wrappee) {
-        return t -> {
-            try {
-                return wrappee.apply(t);
-            } catch (final Throwable e) {
-                throw new RuntimeException(e);
-            }
-        };
-    }
-
-    public interface CheckedFunction<T, K, E extends Throwable> {
-
-        K apply(final T value) throws E;
     }
 }

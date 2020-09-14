@@ -66,8 +66,12 @@ public interface ComponentDemo {
         LafManager.setLogLevel(Level.FINE);
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         SwingUtilities.invokeLater(() -> {
-            if (!LafManager.isInstalled()) {
-                LafManager.install(demo.createTheme());
+            if (demo.useDarkLaf()) {
+                if (!LafManager.isInstalled()) {
+                    LafManager.install(demo.createTheme());
+                }
+            } else {
+                installSystemLaf();
             }
             Window window;
             if (!asDialog) {
@@ -108,6 +112,10 @@ public interface ComponentDemo {
             window.setVisible(true);
             window.setLocationRelativeTo(null);
         });
+    }
+
+    default boolean useDarkLaf() {
+        return true;
     }
 
     default Dimension getDisplayDimension() {
@@ -234,23 +242,27 @@ public interface ComponentDemo {
         });
         dev.add(new JCheckBoxMenuItem("Darklaf/System Laf") {
             {
-                setSelected(true);
+                setSelected(LafManager.isInstalled());
                 addActionListener(e -> {
                     if (isSelected()) {
                         LafManager.install();
                     } else {
-                        try {
-                            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                            LafManager.updateLaf();
-                        } catch (ClassNotFoundException | UnsupportedLookAndFeelException | IllegalAccessException
-                                | InstantiationException classNotFoundException) {
-                            classNotFoundException.printStackTrace();
-                        }
+                        installSystemLaf();
                     }
                 });
             }
         });
         return dev;
+    }
+
+    static void installSystemLaf() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            LafManager.updateLaf();
+        } catch (ClassNotFoundException | UnsupportedLookAndFeelException | IllegalAccessException
+                | InstantiationException classNotFoundException) {
+            classNotFoundException.printStackTrace();
+        }
     }
 
     String getTitle();
