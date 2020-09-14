@@ -79,8 +79,7 @@ public class LoadingIndicator extends JLabel {
     }
 
     private void setAnimatorState(final boolean running) {
-        if (running == animator.isRunning())
-            return;
+        if (running == animator.isRunning()) return;
         if (running) {
             animator.resume();
         } else {

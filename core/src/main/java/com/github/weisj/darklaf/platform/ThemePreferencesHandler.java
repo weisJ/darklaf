@@ -44,8 +44,7 @@ public class ThemePreferencesHandler {
     private ThemePreferenceProvider preferenceProvider;
 
     public static ThemePreferencesHandler getSharedInstance() {
-        if (sharedInstance == null)
-            setSharedInstance(new ThemePreferencesHandler());
+        if (sharedInstance == null) setSharedInstance(new ThemePreferencesHandler());
         return sharedInstance;
     }
 

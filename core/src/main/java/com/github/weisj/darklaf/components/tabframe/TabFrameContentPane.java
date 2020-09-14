@@ -181,8 +181,7 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
      * @param force whether to force the layout process.
      */
     public void setEnabled(final Alignment a, final boolean enabled, final boolean force) {
-        if (enabled == isEnabled(a) && !force)
-            return;
+        if (enabled == isEnabled(a) && !force) return;
         switch (a) {
             case NORTH:
                 changeStatus(enabled, Alignment.NORTH_EAST, topSplit, topSplitter,

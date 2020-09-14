@@ -74,16 +74,14 @@ public class MacOSPreferenceMonitor {
     }
 
     private void stop() {
-        if (!running)
-            return;
+        if (!running) return;
         running = false;
         LOGGER.info("Stopped preference monitoring.");
         JNIThemeInfoMacOS.deletePreferenceChangeListener(listenerHandle);
     }
 
     public void setRunning(final boolean running) {
-        if (running == isRunning())
-            return;
+        if (running == isRunning()) return;
         if (running) {
             start();
         } else {

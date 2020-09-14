@@ -158,14 +158,12 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         boolean ltr = c.getComponentOrientation().isLeftToRight();
         if (doPaintLeftIcon(c)) {
             int w = getLeftIcon(c).getIconWidth() + padding.left;
-            if (ltr)
-                r.x += w;
+            if (ltr) r.x += w;
             r.width -= w;
         }
         if (doPaintRightIcon(c)) {
             int w = getRightIcon(c).getIconWidth() + padding.right;
-            if (!ltr)
-                r.x += w;
+            if (!ltr) r.x += w;
             r.width -= w;
         }
     }
@@ -193,8 +191,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
 
     protected ClickAction getActionUnder(final Point p) {
         JTextComponent c = getComponent();
-        if (!c.isEnabled())
-            return ClickAction.NONE;
+        if (!c.isEnabled()) return ClickAction.NONE;
         if (isOver(getRightIconCoord(), getRightIcon(c), p) && doPaintRightIcon(c)) {
             return ClickAction.RIGHT_ACTION;
         }
@@ -230,10 +227,8 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
 
     protected void paintIcons(final Graphics g) {
         JTextComponent c = getComponent();
-        if (doPaintLeftIcon(c))
-            paintLeftIcon(g);
-        if (doPaintRightIcon(c))
-            paintRightIcon(g);
+        if (doPaintLeftIcon(c)) paintLeftIcon(g);
+        if (doPaintRightIcon(c)) paintRightIcon(g);
     }
 
     protected boolean doPaintLeftIcon(final JTextComponent c) {
@@ -297,8 +292,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         search = UIManager.getIcon("TextField.search.search.icon");
         searchDisabled = UIManager.getIcon("TextField.search.search.disabled.icon");
         padding = UIManager.getInsets("TextField.insets");
-        if (padding == null)
-            padding = new Insets(0, 0, 0, 0);
+        if (padding == null) padding = new Insets(0, 0, 0, 0);
     }
 
     @Override

@@ -41,13 +41,11 @@ public final class GraphicsUtil {
     private GraphicsUtil() {}
 
     public static void setOpaqueBuffered(final JComponent c, final boolean opaqueBuffered) {
-        if (c != null)
-            c.putClientProperty(KEY_OPAQUE_BUFFERED, opaqueBuffered);
+        if (c != null) c.putClientProperty(KEY_OPAQUE_BUFFERED, opaqueBuffered);
     }
 
     public static boolean isOpaqueBuffered(final JComponent c) {
-        if (!SystemInfo.isWindows)
-            return false;
+        if (!SystemInfo.isWindows) return false;
         return PropertyUtil.getBooleanProperty(c, KEY_OPAQUE_BUFFERED);
     }
 

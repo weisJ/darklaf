@@ -38,8 +38,7 @@ public class MacOSThemePreferenceProvider implements ThemePreferenceProvider {
 
     @Override
     public PreferredThemeStyle getPreference() {
-        if (!MacOSLibrary.get().isLoaded())
-            return fallbackStyle;
+        if (!MacOSLibrary.get().isLoaded()) return fallbackStyle;
         boolean darkMode = JNIThemeInfoMacOS.isDarkThemeEnabled();
         boolean highContrast = JNIThemeInfoMacOS.isHighContrastEnabled();
         Color accentColor = JNIThemeInfoMacOS.getAccentColor();
@@ -65,8 +64,7 @@ public class MacOSThemePreferenceProvider implements ThemePreferenceProvider {
 
     @Override
     public void setReporting(final boolean reporting) {
-        if (reporting && !MacOSLibrary.get().isLoaded())
-            MacOSLibrary.get().updateLibrary();
+        if (reporting && !MacOSLibrary.get().isLoaded()) MacOSLibrary.get().updateLibrary();
         synchronized (monitor) {
             monitor.setRunning(reporting);
         }

@@ -32,8 +32,7 @@ public class DarkPanelUI extends BasicPanelUI {
     private static PanelUI darkPanelUI;
 
     public static ComponentUI createUI(final JComponent c) {
-        if (darkPanelUI == null)
-            darkPanelUI = new DarkPanelUI();
+        if (darkPanelUI == null) darkPanelUI = new DarkPanelUI();
         return darkPanelUI;
     }
 }

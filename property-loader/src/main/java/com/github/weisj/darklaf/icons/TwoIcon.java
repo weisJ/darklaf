@@ -78,8 +78,7 @@ public class TwoIcon implements Icon {
         int l = leftIcon.getIconWidth();
         int r = rightIcon.getIconWidth();
         int gap = 0;
-        if (l != 0 && r != 0)
-            gap = iconGap;
+        if (l != 0 && r != 0) gap = iconGap;
         return l + r + gap;
     }
 

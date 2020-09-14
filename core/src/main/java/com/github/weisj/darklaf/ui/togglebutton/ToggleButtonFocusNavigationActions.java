@@ -39,8 +39,7 @@ public class ToggleButtonFocusNavigationActions {
     }
 
     public void installActions() {
-        if (button == null)
-            return;
+        if (button == null) return;
         traversalKeysEnabled = button.getFocusTraversalKeysEnabled();
         button.setFocusTraversalKeysEnabled(false);
         button.addKeyListener(keyListener);
@@ -55,8 +54,7 @@ public class ToggleButtonFocusNavigationActions {
     }
 
     public void uninstallActions() {
-        if (button == null)
-            return;
+        if (button == null) return;
         if (!button.getFocusTraversalKeysEnabled()) {
             button.setFocusTraversalKeysEnabled(traversalKeysEnabled);
         }

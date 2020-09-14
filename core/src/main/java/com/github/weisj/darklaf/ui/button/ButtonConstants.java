@@ -63,10 +63,8 @@ public interface ButtonConstants {
     }
 
     static int chooseArc(final Component c, final int arc, final int minimum, final int altArc, final int roundedArc) {
-        if (ButtonConstants.isNoArc(c))
-            return minimum;
-        if (ButtonConstants.isRound(c))
-            return roundedArc;
+        if (ButtonConstants.isNoArc(c)) return minimum;
+        if (ButtonConstants.isRound(c)) return roundedArc;
         boolean alt = ButtonConstants.chooseAlternativeArc(c);
         return alt ? altArc : arc;
     }
@@ -89,8 +87,7 @@ public interface ButtonConstants {
     }
 
     static boolean isBorderlessVariant(final Component c) {
-        if (isBorderlessRectangular(c))
-            return true;
+        if (isBorderlessRectangular(c)) return true;
         if (c instanceof JButton || c instanceof JToggleButton) {
             return isBorderless(c) || doConvertToBorderless((AbstractButton) c);
         }

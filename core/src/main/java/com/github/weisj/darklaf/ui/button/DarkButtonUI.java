@@ -121,16 +121,11 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         squareInsets = UIManager.getInsets("Button.squareBorderInsets");
         squareThinInsets = UIManager.getInsets("Button.squareThinBorderInsets");
         borderlessRectangularInsets = UIManager.getInsets("Button.borderlessRectangularInsets");
-        if (insets == null)
-            insets = new Insets(0, 0, 0, 0);
-        if (thinInsets == null)
-            thinInsets = new Insets(0, 0, 0, 0);
-        if (squareThinInsets == null)
-            squareThinInsets = new Insets(0, 0, 0, 0);
-        if (squareInsets == null)
-            squareInsets = new Insets(0, 0, 0, 0);
-        if (borderlessRectangularInsets == null)
-            borderlessRectangularInsets = new Insets(0, 0, 0, 0);
+        if (insets == null) insets = new Insets(0, 0, 0, 0);
+        if (thinInsets == null) thinInsets = new Insets(0, 0, 0, 0);
+        if (squareThinInsets == null) squareThinInsets = new Insets(0, 0, 0, 0);
+        if (squareInsets == null) squareInsets = new Insets(0, 0, 0, 0);
+        if (borderlessRectangularInsets == null) borderlessRectangularInsets = new Insets(0, 0, 0, 0);
         updateMargins(b);
     }
 
@@ -439,15 +434,13 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
 
     protected void updateMargins(final AbstractButton b) {
         Insets margin = b.getMargin();
-        if (margin != null && !(margin instanceof UIResource))
-            return;
+        if (margin != null && !(margin instanceof UIResource)) return;
         Insets m = getMargins(b);
         b.setMargin(new InsetsUIResource(m.top, m.left, m.bottom, m.right));
     }
 
     private Insets getMargins(final AbstractButton b) {
-        if (ButtonConstants.isBorderlessRectangular(b))
-            return borderlessRectangularInsets;
+        if (ButtonConstants.isBorderlessRectangular(b)) return borderlessRectangularInsets;
         boolean square = ButtonConstants.isSquare(b);
         return ButtonConstants.isThin(b) ? square ? squareThinInsets : thinInsets : square ? squareInsets : insets;
     }
@@ -457,8 +450,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         if (ButtonConstants.isBorderlessRectangular(c)) {
             return super.contains(c, x, y);
         }
-        if (!(x >= 0 && x <= c.getWidth() && y >= 0 && y <= c.getHeight()))
-            return false;
+        if (!(x >= 0 && x <= c.getWidth() && y >= 0 && y <= c.getHeight())) return false;
         int bs = c.getBorder() instanceof DarkButtonBorder && !ButtonConstants.isBorderless(c) ? borderSize : 0;
         int arc = getArc(c);
         hitArea.setRoundRect(bs, bs, c.getWidth() - 2 * bs, c.getHeight() - 2 * bs, arc, arc);

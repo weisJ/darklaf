@@ -547,32 +547,27 @@ public abstract class TableUIBridge extends BasicTableUI {
 
         @Override
         public void focusGained(final FocusEvent e) {
-            if (focusListener != null)
-                focusListener.focusGained(e);
+            if (focusListener != null) focusListener.focusGained(e);
         }
 
         @Override
         public void focusLost(final FocusEvent e) {
-            if (focusListener != null)
-                focusListener.focusLost(e);
+            if (focusListener != null) focusListener.focusLost(e);
         }
 
         @Override
         public void keyPressed(final KeyEvent e) {
-            if (keyListener != null)
-                keyListener.keyPressed(e);
+            if (keyListener != null) keyListener.keyPressed(e);
         }
 
         @Override
         public void keyReleased(final KeyEvent e) {
-            if (keyListener != null)
-                keyListener.keyReleased(e);
+            if (keyListener != null) keyListener.keyReleased(e);
         }
 
         @Override
         public void keyTyped(final KeyEvent e) {
-            if (keyListener != null)
-                keyListener.keyTyped(e);
+            if (keyListener != null) keyListener.keyTyped(e);
         }
 
         public void mouseClicked(final MouseEvent e) {}

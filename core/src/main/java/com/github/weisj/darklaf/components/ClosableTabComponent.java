@@ -168,8 +168,7 @@ public class ClosableTabComponent extends JPanel {
                 int tabCount = tabComponent.pane.getTabCount();
                 for (int i = tabCount - 1; i >= 0; i--) {
                     Component tabComp = tabComponent.pane.getTabComponentAt(i);
-                    if (tabComp == tabComponent)
-                        continue;
+                    if (tabComp == tabComponent) continue;
                     if (tabComp instanceof ClosableTabComponent && ((ClosableTabComponent) tabComp).isClosable()) {
                         tabComponent.pane.removeTabAt(i);
                     }

@@ -242,8 +242,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     protected void paintFocusIndicator(final Graphics g, final int tabPlacement, final Rectangle r, final int tabIndex,
             final Rectangle iconRect, final Rectangle textRect, final boolean isSelected) {
         if (isSelected) {
-            if (!drawFocusBar())
-                return;
+            if (!drawFocusBar()) return;
             g.setColor(getAccentColor());
             switch (tabPlacement) {
                 case LEFT:
@@ -355,8 +354,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
 
     @Override
     public void setRolloverTab(final int index) {
-        if (dragging)
-            return;
+        if (dragging) return;
         int oldRollover = rolloverTabIndex;
         super.setRolloverTab(index);
         if (oldRollover != getRolloverTab()) {
@@ -413,10 +411,8 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         int height =
                 Math.max(super.calculateTabAreaHeight(tabPlacement, horizRunCount, maxTabHeight), getFallBackSize());
         if (isHorizontalTabPlacement()) {
-            if (leadingComp != null)
-                height = Math.max(height, leadingComp.getPreferredSize().height);
-            if (trailingComp != null)
-                height = Math.max(height, trailingComp.getPreferredSize().height);
+            if (leadingComp != null) height = Math.max(height, leadingComp.getPreferredSize().height);
+            if (trailingComp != null) height = Math.max(height, trailingComp.getPreferredSize().height);
         }
         return height;
     }
@@ -425,10 +421,8 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     protected int calculateTabAreaWidth(final int tabPlacement, final int vertRunCount, final int maxTabWidth) {
         int width = Math.max(super.calculateTabAreaWidth(tabPlacement, vertRunCount, maxTabWidth), getFallBackSize());
         if (!isHorizontalTabPlacement()) {
-            if (leadingComp != null)
-                width = Math.max(width, leadingComp.getPreferredSize().width);
-            if (trailingComp != null)
-                width = Math.max(width, trailingComp.getPreferredSize().width);
+            if (leadingComp != null) width = Math.max(width, leadingComp.getPreferredSize().width);
+            if (trailingComp != null) width = Math.max(width, trailingComp.getPreferredSize().width);
         }
         return width;
     }
@@ -646,8 +640,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     protected Icon getMoreTabsIcon() {
-        if (moreTabsIcon == null)
-            moreTabsIcon = UIManager.getIcon("TabbedPane.moreTabs.icon");
+        if (moreTabsIcon == null) moreTabsIcon = UIManager.getIcon("TabbedPane.moreTabs.icon");
         return moreTabsIcon;
     }
 
@@ -812,8 +805,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     }
 
     public Icon getNewTabIcon() {
-        if (newTabIcon == null)
-            newTabIcon = UIManager.getIcon("TabbedPane.newTab.icon");
+        if (newTabIcon == null) newTabIcon = UIManager.getIcon("TabbedPane.newTab.icon");
         return newTabIcon;
     }
 

@@ -149,8 +149,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
         GraphicsConfiguration gc = c != null ? c.getGraphicsConfiguration() : null;
         double sx = Scale.getScaleX(gc);
         double sy = Scale.getScaleY(gc);
-        if (!update && Scale.equalWithError(scaleX, sx) && Scale.equalWithError(scaleY, sy) && image != null)
-            return;
+        if (!update && Scale.equalWithError(scaleX, sx) && Scale.equalWithError(scaleY, sy) && image != null) return;
         scaleX = sx;
         scaleY = sy;
         double effectiveScaleX = loadedWithExtraScale ? scaleX * extraScale : scaleX;
@@ -196,10 +195,8 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
 
     private boolean isExactRotation(final double rotation) {
         double r = rotation;
-        if (r < 0)
-            r += 2 * Math.PI;
-        if (r > 2 * Math.PI)
-            r -= 2 * Math.PI;
+        if (r < 0) r += 2 * Math.PI;
+        if (r > 2 * Math.PI) r -= 2 * Math.PI;
         return Scale.equalWithError(r, 0) || Scale.equalWithError(r, Math.PI / 2) || Scale.equalWithError(r, Math.PI)
                 || Scale.equalWithError(r, 3 * Math.PI / 2);
     }
@@ -239,8 +236,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
     }
 
     public SVGIcon getSVGIcon() {
-        if (!loaded.get())
-            ensureSVGLoaded();
+        if (!loaded.get()) ensureSVGLoaded();
         return icon;
     }
 }

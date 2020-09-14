@@ -131,8 +131,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
             g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
         }
         float trackAlpha = scrollBarListener.getTrackAlpha();
-        if (trackAlpha == 0)
-            return;
+        if (trackAlpha == 0) return;
         g.setColor(getTrackColor());
         ((Graphics2D) g).setComposite(COMPOSITE.derive(trackAlpha));
         g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);

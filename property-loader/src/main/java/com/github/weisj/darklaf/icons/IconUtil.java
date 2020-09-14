@@ -50,8 +50,7 @@ public class IconUtil {
     }
 
     public static Image createFrameIcon(final Icon icon, final Window c) {
-        if (icon == null)
-            return null;
+        if (icon == null) return null;
         if (c != null) {
             if (isDynamic(icon)) {
                 windowIconSet.put(c, icon);
@@ -77,8 +76,7 @@ public class IconUtil {
     }
 
     public static Image iconToImage(final Icon icon, final Component c) {
-        if (icon == null)
-            return null;
+        if (icon == null) return null;
         int w = icon.getIconWidth();
         int h = icon.getIconHeight();
         GraphicsConfiguration gc = c.getGraphicsConfiguration();
@@ -90,8 +88,7 @@ public class IconUtil {
     }
 
     public static Image createScaledImage(final Icon icon, final double scalex, final double scaley) {
-        if (icon == null)
-            return null;
+        if (icon == null) return null;
         int w = (int) (scalex * icon.getIconWidth());
         int h = (int) (scaley * icon.getIconHeight());
         if (icon instanceof ImageSource) {

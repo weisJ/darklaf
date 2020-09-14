@@ -116,8 +116,7 @@ public class DarkInternalFrameUI extends BasicInternalFrameUI implements Propert
     }
 
     protected boolean shouldShowMenuBar(final JInternalFrame internalFrame) {
-        if (internalFrame == null)
-            return false;
+        if (internalFrame == null) return false;
         return internalFrame.isSelected() && !internalFrame.isClosed() && !internalFrame.isIcon();
     }
 }

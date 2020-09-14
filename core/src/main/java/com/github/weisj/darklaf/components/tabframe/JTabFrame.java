@@ -91,11 +91,9 @@ public class JTabFrame extends JComponent {
     protected void updatePopupUIs() {
         if (popupLists != null) {
             for (List<TabFramePopup> list : popupLists) {
-                if (list == null)
-                    continue;
+                if (list == null) continue;
                 for (TabFramePopup popup : list) {
-                    if (popup == null)
-                        continue;
+                    if (popup == null) continue;
                     popup.updateContentUI();
                 }
             }
@@ -551,11 +549,9 @@ public class JTabFrame extends JComponent {
      */
     public void toggleTab(final Alignment a, final int index, final boolean enabled) {
         int oldIndex = selectedIndices[a.getIndex()];
-        if (content.isEnabled(a) == enabled && oldIndex == index)
-            return;
+        if (content.isEnabled(a) == enabled && oldIndex == index) return;
         TabFrameTab compAtIndex = getTabComponentAt(a, index);
-        if (!compAtIndex.isEnabled())
-            return;
+        if (!compAtIndex.isEnabled()) return;
         compAtIndex.setSelected(enabled);
         notifySelectionChange(compAtIndex);
         setPopupVisibility(compAtIndex, enabled);
@@ -631,8 +627,7 @@ public class JTabFrame extends JComponent {
      * @param c the popup to close.
      */
     public void closeTab(final TabFramePopup c) {
-        if (c == null)
-            return;
+        if (c == null) return;
         closeTab(c.getAlignment(), c.getIndex());
     }
 
@@ -664,8 +659,7 @@ public class JTabFrame extends JComponent {
      * @param c the popup to open.
      */
     public void openTab(final TabFramePopup c) {
-        if (c == null)
-            return;
+        if (c == null) return;
         openTab(c.getAlignment(), c.getIndex());
     }
 
@@ -924,8 +918,7 @@ public class JTabFrame extends JComponent {
      * @return true if selected.
      */
     public boolean isSelected(final Alignment a, final int index) {
-        if (a == null)
-            return false;
+        if (a == null) return false;
         return selectedIndices[a.ordinal()] == index;
     }
 

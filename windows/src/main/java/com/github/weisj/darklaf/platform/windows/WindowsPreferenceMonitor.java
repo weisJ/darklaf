@@ -72,16 +72,14 @@ public class WindowsPreferenceMonitor {
     }
 
     private void stop() {
-        if (!running)
-            return;
+        if (!running) return;
         LOGGER.info("Stopped preference monitoring.");
         running = false;
         JNIThemeInfoWindows.deleteEventHandler(eventHandler);
     }
 
     public void setRunning(final boolean running) {
-        if (running == isRunning())
-            return;
+        if (running == isRunning()) return;
         if (running) {
             start();
         } else {

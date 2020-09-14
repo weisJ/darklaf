@@ -37,8 +37,7 @@ import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonMenuItemConstants;
 public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements ToggleButtonMenuItemConstants {
 
     private final MouseClickListener clickListener = e -> SwingUtilities.invokeLater(() -> {
-        if (menuItem != null)
-            menuItem.setArmed(true);
+        if (menuItem != null) menuItem.setArmed(true);
     });
 
     protected MenuItemLayoutDelegate layoutDelegate = new ToggleButtonMenuItemLayoutDelegate(null);

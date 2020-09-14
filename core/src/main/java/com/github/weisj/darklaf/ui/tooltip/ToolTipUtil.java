@@ -36,12 +36,10 @@ public class ToolTipUtil {
 
     public static void applyContext(final JToolTip toolTip) {
         JComponent target = toolTip.getComponent();
-        if (target == null)
-            return;
+        if (target == null) return;
 
         ToolTipContext context = getToolTipContext(toolTip);
-        if (context == null)
-            return;
+        if (context == null) return;
 
         context.setTarget(target);
         context.setToolTip(toolTip);
@@ -109,12 +107,10 @@ public class ToolTipUtil {
             if ((centerHorizontally || centerVertically) && a.isDiagonal()) {
                 pos = tryPosition(a, context, p, tooltipBounds, boundary, screenBoundary, setter, centerHorizontally,
                         centerVertically);
-                if (pos != null)
-                    break;
+                if (pos != null) break;
             }
             pos = tryPosition(a, context, p, tooltipBounds, boundary, screenBoundary, setter, false, false);
-            if (pos != null)
-                break;
+            if (pos != null) break;
         }
         return pos;
     }
@@ -138,8 +134,7 @@ public class ToolTipUtil {
         Point screenPos = new Point(pos.x, pos.y);
         SwingUtilities.convertPointToScreen(screenPos, context.getTarget());
         tooltipBounds.setLocation(screenPos);
-        if (!fits(tooltipBounds, boundary, screenBoundary))
-            pos = null;
+        if (!fits(tooltipBounds, boundary, screenBoundary)) pos = null;
         return pos;
     }
 
@@ -170,8 +165,7 @@ public class ToolTipUtil {
 
     public static void moveToolTip(final JToolTip toolTip, final int x, final int y, final JComponent target) {
         Window window = DarkUIUtil.getWindow(toolTip);
-        if (window == null)
-            return;
+        if (window == null) return;
         Point p = new Point(x, y);
         SwingUtilities.convertPointToScreen(p, target);
         WindowUtil.moveWindow(window, toolTip, p.x, p.y);

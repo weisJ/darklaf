@@ -105,10 +105,8 @@ public final class IconColorMapper {
                         }
                     }
 
-                    if (opacity1 < 0)
-                        opacity1 = opacity;
-                    if (opacity2 < 0)
-                        opacity2 = opacity;
+                    if (opacity1 < 0) opacity1 = opacity;
+                    if (opacity2 < 0) opacity2 = opacity;
                 }
 
                 Color c = resolveColor(id, getFallbacks(colorFallbacks), FALLBACK_COLOR, defaults);
@@ -168,14 +166,12 @@ public final class IconColorMapper {
     }
 
     private static String[] getFallbacks(final StyleAttribute fallbacks) {
-        if (fallbacks == null)
-            return new String[0];
+        if (fallbacks == null) return new String[0];
         return fallbacks.getStringList();
     }
 
     private static float getOpacity(final String key, final String[] fallbacks, final Map<Object, Object> propertyMap) {
-        if ((key == null || key.isEmpty()) && (fallbacks == null || fallbacks.length == 0))
-            return -1;
+        if ((key == null || key.isEmpty()) && (fallbacks == null || fallbacks.length == 0)) return -1;
         // UIManager defaults to 0, if the value isn't an integer (or null).
         Number obj = get(propertyMap, key, fallbacks, Number.class);
         if (obj instanceof Integer) {
@@ -244,8 +240,7 @@ public final class IconColorMapper {
     private static <T> T get(final Map<Object, Object> map, final Object key, final Object[] fallbacks,
             final Class<T> type) {
         T obj = getFromMap(map, key, fallbacks, type);
-        if (obj == null)
-            return getFromMap(UIManager.getDefaults(), key, fallbacks, type);
+        if (obj == null) return getFromMap(UIManager.getDefaults(), key, fallbacks, type);
         return obj;
     }
 
@@ -257,8 +252,7 @@ public final class IconColorMapper {
                 obj = map.get(fallbacks[i]);
             }
         }
-        if (type.isInstance(obj))
-            return type.cast(obj);
+        if (type.isInstance(obj)) return type.cast(obj);
         return null;
     }
 

@@ -150,8 +150,7 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
                 for (int column = colCounter - 1; rowBounds.height <= 0 && column >= 0; column--) {
                     rowBounds.height = getHeight(colCounter - 1, row);
                 }
-                if (rowBounds.height <= 0)
-                    rowBounds.height = getHeight(0, 0);
+                if (rowBounds.height <= 0) rowBounds.height = getHeight(0, 0);
 
                 g.setClip(rowBounds.x, rowBounds.y, bgWidth > 0 ? bgWidth : rowBounds.width, rowBounds.height);
                 g.clipRect(paintBounds.x, paintBounds.y, paintBounds.width, paintBounds.height);

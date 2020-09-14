@@ -198,16 +198,14 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
     }
 
     protected boolean isScrollPaneRtl() {
-        if (!isInScrollPane())
-            return false;
+        if (!isInScrollPane()) return false;
         Container comp = DarkUIUtil.getUnwrappedParent(table).getParent();
         return !comp.getComponentOrientation().isLeftToRight();
     }
 
     protected boolean scrollBarVisible() {
         JScrollPane comp = DarkUIUtil.getParentOfType(JScrollPane.class, table, 2);
-        if (comp == null)
-            return false;
+        if (comp == null) return false;
         OverlayScrollPane overlayScrollPane = DarkUIUtil.getParentOfType(OverlayScrollPane.class, table, 3);
         return overlayScrollPane == null && comp.getVerticalScrollBar().isVisible();
     }
@@ -273,8 +271,7 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
         int tableHeight = getPreferredSize(table).height;
         g.setColor(parent.getBackground());
         int width = vacatedColumnRect.width;
-        if (draggedColumnIndex < cMax)
-            width--;
+        if (draggedColumnIndex < cMax) width--;
 
         g.fillRect(vacatedColumnRect.x, 0, width, tableHeight);
 
@@ -309,8 +306,7 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
             }
             // Left
             if (dist != 0 || !onLeftEdge) {
-                if (draggedColumnIndex == cMin && scrollBarVisible() && isScrollPaneRtl())
-                    x1++;
+                if (draggedColumnIndex == cMin && scrollBarVisible() && isScrollPaneRtl()) x1++;
                 g.fillRect(x1 - 1, y1, 1, y2 - y1);
             }
             // Right
@@ -377,13 +373,11 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
                 default:
                     break;
             }
-            if (table == null)
-                return false;
+            if (table == null) return false;
             KeyStroke stroke = KeyStroke.getKeyStroke(event.getExtendedKeyCode(), event.getModifiersEx());
             String actionName =
                     String.valueOf(table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).get(stroke));
-            if ("null".equals(actionName))
-                actionName = null;
+            if ("null".equals(actionName)) actionName = null;
             String cutActionName = String.valueOf(TransferHandler.getCutAction().getValue(Action.NAME));
             String copyActionName = String.valueOf(TransferHandler.getCopyAction().getValue(Action.NAME));
             return Objects.equals(actionName, copyActionName) || Objects.equals(actionName, cutActionName);
@@ -409,10 +403,8 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
 
         if (isEditorCell) {
             if (!table.getShowVerticalLines()) {
-                if (column > cMin)
-                    x--;
-                if (column > cMin && column < cMax)
-                    w++;
+                if (column > cMin) x--;
+                if (column > cMin && column < cMax) w++;
             }
         }
         if (isEditorCell) {
@@ -429,8 +421,7 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
 
     protected TableCellRenderer getCellRenderer(final int row, final int column) {
         TableCellRenderer renderer = table.getCellRenderer(row, column);
-        if (renderer instanceof DarkTableCellRendererDelegate)
-            return renderer;
+        if (renderer instanceof DarkTableCellRendererDelegate) return renderer;
         if (rendererDelegate == null) {
             rendererDelegate = new DarkTableCellRendererDelegate(renderer);
         }
@@ -465,8 +456,7 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
             if (isFileList && SwingUtilities.isLeftMouseButton(e)) {
                 int row = table.rowAtPoint(e.getPoint());
                 JFileChooser fc = getFileChooser();
-                if (row < 0 || fc == null)
-                    return;
+                if (row < 0 || fc == null) return;
                 int column = getFileNameColumnIndex();
                 boolean isSelected = table.getSelectionModel().getLeadSelectionIndex() == row
                         && table.getColumnModel().getSelectionModel().getLeadSelectionIndex() == column;

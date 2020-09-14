@@ -96,8 +96,7 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
         if (scrollPopupMenu.isVisible()) {
             scrollPopupMenu.setVisible(false);
         } else {
-            if (!ui.tabPane.isEnabled())
-                return;
+            if (!ui.tabPane.isEnabled()) return;
             if (lastClickEvent == 0 || (System.currentTimeMillis() - lastClickEvent) > 250) {
                 Dimension pref = scrollPopupMenu.getPreferredSize();
                 boolean leftToRight = ui.tabPane.getComponentOrientation().isLeftToRight();
@@ -135,19 +134,16 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
 
     @Override
     public void mouseWheelMoved(final MouseWheelEvent e) {
-        if (!ui.tabPane.isEnabled() || ui.tabPane.getTabCount() == 0)
-            return;
+        if (!ui.tabPane.isEnabled() || ui.tabPane.getTabCount() == 0) return;
         int tabPosition = ui.tabPane.getTabPlacement();
         int scrollAmount = -1 * e.getUnitsToScroll() * e.getScrollAmount();
         int scrolled;
         if (tabPosition == SwingConstants.LEFT || tabPosition == SwingConstants.RIGHT) {
-            if (e.isShiftDown() || !moreTabsButton.isVisible())
-                return;
+            if (e.isShiftDown() || !moreTabsButton.isVisible()) return;
             timer.stop();
             scrolled = scroll(scrollAmount, false);
         } else {
-            if (!e.isShiftDown() || !moreTabsButton.isVisible())
-                return;
+            if (!e.isShiftDown() || !moreTabsButton.isVisible()) return;
             timer.stop();
             scrolled = scroll(scrollAmount, true);
         }

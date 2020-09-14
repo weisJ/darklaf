@@ -65,8 +65,7 @@ public abstract class Animator {
 
     public void reset() {
         currentFrame %= totalFrames;
-        if (!forward)
-            currentFrame = totalFrames - currentFrame;
+        if (!forward) currentFrame = totalFrames - currentFrame;
     }
 
     private static ScheduledExecutorService createScheduler() {
@@ -139,8 +138,7 @@ public abstract class Animator {
     }
 
     private void onTick() {
-        if (isDisposed() || ticker == null)
-            return;
+        if (isDisposed() || ticker == null) return;
 
         if (startTime == -1) {
             startTime = System.currentTimeMillis();
@@ -151,8 +149,7 @@ public abstract class Animator {
         final double totalTime = stopTime - startTime;
 
         final int newFrame = (int) (passedTime * totalFrames / totalTime) + startFrame;
-        if (currentFrame > 0 && newFrame == currentFrame)
-            return;
+        if (currentFrame > 0 && newFrame == currentFrame) return;
         currentFrame = newFrame;
 
         if (currentFrame >= totalFrames) {

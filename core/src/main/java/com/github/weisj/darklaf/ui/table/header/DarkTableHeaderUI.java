@@ -285,8 +285,7 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
     }
 
     protected boolean isScrollPaneRtl() {
-        if (!isInScrollPane())
-            return false;
+        if (!isInScrollPane()) return false;
         Container comp = DarkUIUtil.getUnwrappedParent(header).getParent();
         return !comp.getComponentOrientation().isLeftToRight();
     }

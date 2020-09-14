@@ -77,8 +77,7 @@ public class DarkMenuUI extends BasicMenuUI {
 
             @Override
             public void mouseReleased(final MouseEvent e) {
-                if (!menu.isEnabled())
-                    return;
+                if (!menu.isEnabled()) return;
                 if (pressed && wasEnabled) {
                     pressed = false;
                     return;
@@ -117,8 +116,7 @@ public class DarkMenuUI extends BasicMenuUI {
     }
 
     protected boolean isSelected(final JComponent menuItem) {
-        if (!(menuItem instanceof JMenuItem))
-            return false;
+        if (!(menuItem instanceof JMenuItem)) return false;
         return menuItem.isEnabled() && ((JMenuItem) menuItem).isArmed();
     }
 }

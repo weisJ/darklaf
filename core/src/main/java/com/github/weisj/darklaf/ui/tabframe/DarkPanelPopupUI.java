@@ -234,18 +234,15 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
                 setHeaderBackground(true);
             }
         } else if (TabFramePopup.KEY_CONTENT.equals(key)) {
-            if (content == null)
-                return;
+            if (content == null) return;
             content.add((Component) evt.getNewValue(), BorderLayout.CENTER);
             content.invalidate();
         } else if (TabFramePopup.KEY_TITLE.equals(key)) {
-            if (label == null)
-                return;
+            if (label == null) return;
             label.setText(evt.getNewValue().toString());
             label.repaint();
         } else if (TabFramePopup.KEY_ICON.equals(key)) {
-            if (label == null)
-                return;
+            if (label == null) return;
             label.setIcon((Icon) evt.getNewValue());
             label.repaint();
         } else if (TabFramePopup.KEY_VISIBLE_TAB.equals(key)) {
@@ -358,10 +355,8 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     public void eventDispatched(final AWTEvent event) {
         if (event.getID() == FocusEvent.FOCUS_GAINED) {
             Component focusOwner = FocusManager.getCurrentManager().getFocusOwner();
-            if (focusOwner instanceof JTabFrame)
-                return;
-            if (focusOwner instanceof JRootPane)
-                return;
+            if (focusOwner instanceof JTabFrame) return;
+            if (focusOwner instanceof JRootPane) return;
             boolean focus = DarkUIUtil.hasFocus(popupComponent);
             if (popupComponent.getTabFrame() != null) {
                 Container container =

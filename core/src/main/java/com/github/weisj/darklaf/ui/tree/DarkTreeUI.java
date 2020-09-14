@@ -139,8 +139,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         collapsed = UIManager.getIcon("Tree.collapsed.unselected.unfocused.icon");
         collapsedDisabled = UIManager.getIcon("Tree.collapsed.disabled.icon");
         leadSelectionBorderInsets = UIManager.getInsets("Tree.leadSelectionBorderInsets");
-        if (leadSelectionBorderInsets == null)
-            leadSelectionBorderInsets = new Insets(1, 1, 1, 1);
+        if (leadSelectionBorderInsets == null) leadSelectionBorderInsets = new Insets(1, 1, 1, 1);
         PropertyUtil.installBooleanProperty(tree, KEY_RENDER_BOOLEAN_AS_CHECKBOX, "Tree.renderBooleanAsCheckBox");
         PropertyUtil.installProperty(tree, KEY_BOOLEAN_RENDER_TYPE, UIManager.getString("Tree.booleanRenderType"));
         PropertyUtil.installProperty(tree, KEY_LINE_STYLE, UIManager.getString("Tree.defaultLineStyle"));
@@ -296,15 +295,13 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
 
     protected boolean paintSingleRow(final Graphics g, final Rectangle paintBounds, final Insets insets,
             final TreePath path, final int row) {
-        if (path == null)
-            return false;
+        if (path == null) return false;
         final int xOffset =
                 tree.getParent() instanceof JViewport ? ((JViewport) tree.getParent()).getViewPosition().x : 0;
         final int containerWidth =
                 tree.getParent() instanceof JViewport ? tree.getParent().getWidth() : tree.getWidth();
         final Rectangle cellBounds = getPathBounds(path, insets, boundsBuffer);
-        if (cellBounds == null)
-            return false;
+        if (cellBounds == null) return false;
         final int boundsX = cellBounds.x;
         final int boundsWidth = cellBounds.width;
 
@@ -352,8 +349,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
      */
     protected void paintVerticalLegs(final Graphics g, final Rectangle clipBounds, final Rectangle rowBounds,
             final Insets insets, final TreePath path) {
-        if (!shouldPaintLines())
-            return;
+        if (!shouldPaintLines()) return;
         int depth = path.getPathCount() - 1;
         if (depth == 0 && (!isRootVisible() || !getShowsRootHandles())) {
             // Parent is the root, which isn't visible.
@@ -364,8 +360,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
 
         TreePath parentPath = path;
         for (int currentDepth = depth - 1; currentDepth >= 0; currentDepth--) {
-            if (currentDepth == 0 && !isRootVisible())
-                continue;
+            if (currentDepth == 0 && !isRootVisible()) continue;
 
             int lineX = getRowX(-1, currentDepth);
             if (tree.getComponentOrientation().isLeftToRight()) {
@@ -374,8 +369,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
                 lineX = tree.getWidth() - lineX - insets.right + getRightChildIndent() - 1;
             }
 
-            if (lineX > clipRight || lineX < clipLeft)
-                continue;
+            if (lineX > clipRight || lineX < clipLeft) continue;
 
             parentPath = parentPath.getParentPath();
             g.setColor(getLineColor(parentPath));
@@ -411,8 +405,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
 
     @Override
     public void update(final Graphics g, final JComponent c) {
-        if (popupListener != null)
-            popupListener.repaint();
+        if (popupListener != null) popupListener.repaint();
         super.update(g, c);
     }
 
@@ -445,8 +438,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     }
 
     protected Icon getExpandedIcon(final boolean selected, final boolean focused) {
-        if (!tree.isEnabled())
-            return expandedDisabled;
+        if (!tree.isEnabled()) return expandedDisabled;
         if (selected) {
             return focused ? expandedFocusSelected : expandedSelected;
         } else {
@@ -455,8 +447,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     }
 
     protected Icon getCollapsedIcon(final boolean selected, final boolean focused) {
-        if (!tree.isEnabled())
-            return collapsedDisabled;
+        if (!tree.isEnabled()) return collapsedDisabled;
         if (selected) {
             return focused ? collapsedFocusSelected : collapsedSelected;
         } else {
@@ -470,15 +461,11 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
 
     protected boolean isChildOfSelectionPath(final TreePath path) {
         TreePath p = tree.isEditing() ? tree.getEditingPath() : tree.getSelectionPath();
-        if (p == null)
-            return false;
-        if (Objects.equals(p, path))
-            return true;
-        if (tree.isExpanded(p))
-            return false;
+        if (p == null) return false;
+        if (Objects.equals(p, path)) return true;
+        if (tree.isExpanded(p)) return false;
         TreePath parent = p.getParentPath();
-        if (parent == null)
-            return false;
+        if (parent == null) return false;
         return Objects.equals(parent.getLastPathComponent(), path.getLastPathComponent());
     }
 
@@ -533,12 +520,10 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
 
             if (isExpanded) {
                 Icon expandedIcon = getExpandedIcon();
-                if (expandedIcon != null)
-                    drawCentered(tree, g, expandedIcon, iconCenterX, iconCenterY);
+                if (expandedIcon != null) drawCentered(tree, g, expandedIcon, iconCenterX, iconCenterY);
             } else {
                 Icon collapsedIcon = getCollapsedIcon();
-                if (collapsedIcon != null)
-                    drawCentered(tree, g, collapsedIcon, iconCenterX, iconCenterY);
+                if (collapsedIcon != null) drawCentered(tree, g, collapsedIcon, iconCenterX, iconCenterY);
             }
         }
     }
@@ -588,16 +573,14 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     protected static boolean isLeaf(final JTree tree, final int row) {
         TreePath path = tree.getPathForRow(row);
 
-        if (path != null)
-            return tree.getModel().isLeaf(path.getLastPathComponent());
+        if (path != null) return tree.getModel().isLeaf(path.getLastPathComponent());
         return true;
     }
 
     protected abstract static class TreeUIAction extends AbstractAction implements UIResource {
 
         protected static void installActions(final JTree tree) {
-            if (PropertyUtil.getBooleanProperty(tree, KEY_MAC_ACTIONS_INSTALLED))
-                return;
+            if (PropertyUtil.getBooleanProperty(tree, KEY_MAC_ACTIONS_INSTALLED)) return;
 
             tree.putClientProperty(KEY_MAC_ACTIONS_INSTALLED, Boolean.TRUE);
 
@@ -608,11 +591,9 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
                 @Override
                 public void actionPerformed(final ActionEvent e) {
                     JTree tree = getTree(e);
-                    if (tree == null)
-                        return;
+                    if (tree == null) return;
                     int selectionRow = tree.getLeadSelectionRow();
-                    if (selectionRow == -1)
-                        return;
+                    if (selectionRow == -1) return;
 
                     if (isLeaf(tree, selectionRow) || tree.isExpanded(selectionRow)) {
                         if (!PropertyUtil.getBooleanProperty(tree, KEY_IS_TABLE_TREE)) {
@@ -633,11 +614,9 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
                 @Override
                 public void actionPerformed(final ActionEvent e) {
                     final JTree tree = getTree(e);
-                    if (tree == null)
-                        return;
+                    if (tree == null) return;
                     int selectionRow = tree.getLeadSelectionRow();
-                    if (selectionRow == -1)
-                        return;
+                    if (selectionRow == -1) return;
 
                     if (isLeaf(tree, selectionRow) || tree.isCollapsed(selectionRow)) {
                         if (!PropertyUtil.getBooleanProperty(tree, KEY_IS_TABLE_TREE)) {
@@ -689,24 +668,20 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         }
 
         protected void toggleEdit(final JTree tree) {
-            if (tree == null)
-                return;
+            if (tree == null) return;
             if (tree.isEditing()) {
                 tree.stopEditing();
                 return;
             }
             int selectionRow = tree.getLeadSelectionRow();
-            if (selectionRow == -1)
-                return;
+            if (selectionRow == -1) return;
             tree.startEditingAtPath(tree.getPathForRow(selectionRow));
         }
 
         protected void move(final JTree tree, final int offset) {
-            if (tree == null)
-                return;
+            if (tree == null) return;
             int selectionRow = tree.getLeadSelectionRow();
-            if (selectionRow == -1)
-                return;
+            if (selectionRow == -1) return;
             moveTo(tree, selectionRow + offset);
         }
 
@@ -727,8 +702,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
                     boolean ltr = tree.getComponentOrientation().isLeftToRight();
                     int ident = ui.getRightChildIndent();
                     int extra = ident - 1 + icon.getIconWidth() / 2;
-                    if (ltr)
-                        bounds.x -= extra;
+                    if (ltr) bounds.x -= extra;
                     bounds.width += extra;
                 }
             }
@@ -737,11 +711,9 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
 
         protected boolean acceptExpandCollapseAction(final Object sender, final boolean collapsed) {
             JTree tree = DarkUIUtil.nullableCast(JTree.class, sender);
-            if (tree == null)
-                return false;
+            if (tree == null) return false;
             int selectionRow = tree.getLeadSelectionRow();
-            if (selectionRow == -1)
-                return false;
+            if (selectionRow == -1) return false;
             final boolean collapsedOrExpanded =
                     collapsed ? tree.isCollapsed(selectionRow) : tree.isExpanded(selectionRow);
             if (isLeaf(tree, selectionRow) || collapsedOrExpanded) {

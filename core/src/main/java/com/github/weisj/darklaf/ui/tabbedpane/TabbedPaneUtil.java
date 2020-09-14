@@ -109,8 +109,7 @@ public class TabbedPaneUtil implements SwingConstants {
     public static Rectangle getDropRect(final DarkTabbedPaneUI ui, final JTabbedPane destTabbedPane,
             final JTabbedPane source, final Point mouseLocation, final Rectangle tabBounds, final int tab,
             final int sourceIndex, final int lastTab) {
-        if (destTabbedPane.getTabCount() == 0)
-            return new Rectangle(0, 0, 0, 0);
+        if (destTabbedPane.getTabCount() == 0) return new Rectangle(0, 0, 0, 0);
         int tabPlacement = destTabbedPane.getTabPlacement();
         Rectangle destRect = destTabbedPane.getBoundsAt(Math.min(tab, destTabbedPane.getTabCount() - 1));
 
@@ -233,14 +232,12 @@ public class TabbedPaneUtil implements SwingConstants {
         if (tabbedPane == sourcePane && sourceIndex == tab) {
             // Nothing to do. Just select the tab to be sure.
             Component comp = sourcePane.getTabComponentAt(tab);
-            if (comp != null)
-                comp.setVisible(true);
+            if (comp != null) comp.setVisible(true);
             selectTab(sourcePane, sourceIndex);
             return false;
         }
         int destIndex = tab;
-        if (tabbedPane.getTabCount() == 0)
-            destIndex = 0;
+        if (tabbedPane.getTabCount() == 0) destIndex = 0;
         if (destIndex < 0 || destIndex > tabbedPane.getTabCount()) {
             return false;
         }
@@ -256,8 +253,7 @@ public class TabbedPaneUtil implements SwingConstants {
 
         int index = destIndex;
         if (tabbedPane == sourcePane) {
-            if (sourceIndex < index)
-                index--;
+            if (sourceIndex < index) index--;
         }
 
         tabbedPane.insertTab(tabName, icon, comp, toolTip, index);

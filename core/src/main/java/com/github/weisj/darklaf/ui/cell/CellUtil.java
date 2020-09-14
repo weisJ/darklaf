@@ -473,8 +473,7 @@ public class CellUtil {
         int row = table.getEditingRow();
         int col = table.getEditingColumn();
         if (!table.getShowHorizontalLines()) {
-            if (row > CellUtil.getMinRowIndex(table))
-                g.fillRect(0, 0, width, 1);
+            if (row > CellUtil.getMinRowIndex(table)) g.fillRect(0, 0, width, 1);
             g.fillRect(0, height - 1, width, 1);
         }
         boolean isWrapper = isInWrapper(c);
@@ -529,8 +528,7 @@ public class CellUtil {
         if (table != null && !table.getShowVerticalLines()) {
             int cMin = getMinColumnIndex(table);
             int column = table.getEditingColumn();
-            if (column > cMin)
-                ins.left++;
+            if (column > cMin) ins.left++;
         }
         return ins;
     }

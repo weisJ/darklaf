@@ -45,92 +45,79 @@ public class MenuItemLayoutDelegate extends JMenuItem {
 
     @Override
     public Insets getInsets(final Insets insets) {
-        if (delegate != null)
-            return delegate.getInsets(insets);
+        if (delegate != null) return delegate.getInsets(insets);
         return super.getInsets(insets);
     }
 
     @Override
     public Insets getInsets() {
-        if (delegate != null)
-            return delegate.getInsets();
+        if (delegate != null) return delegate.getInsets();
         return super.getInsets();
     }
 
     @Override
     public Font getFont() {
-        if (delegate != null)
-            return delegate.getFont();
+        if (delegate != null) return delegate.getFont();
         return super.getFont();
     }
 
     @Override
     public ComponentOrientation getComponentOrientation() {
-        if (delegate != null)
-            return delegate.getComponentOrientation();
+        if (delegate != null) return delegate.getComponentOrientation();
         return super.getComponentOrientation();
     }
 
     @Override
     public Container getParent() {
-        if (delegate != null)
-            return delegate.getParent();
+        if (delegate != null) return delegate.getParent();
         return super.getParent();
     }
 
     @Override
     public KeyStroke getAccelerator() {
-        if (delegate != null)
-            return delegate.getAccelerator();
+        if (delegate != null) return delegate.getAccelerator();
         return super.getAccelerator();
     }
 
     @Override
     public int getVerticalAlignment() {
-        if (delegate != null)
-            return delegate.getVerticalAlignment();
+        if (delegate != null) return delegate.getVerticalAlignment();
         return super.getVerticalAlignment();
     }
 
     @Override
     public int getHorizontalAlignment() {
-        if (delegate != null)
-            return delegate.getHorizontalAlignment();
+        if (delegate != null) return delegate.getHorizontalAlignment();
         return super.getHorizontalAlignment();
     }
 
     @Override
     public int getVerticalTextPosition() {
-        if (delegate != null)
-            return delegate.getVerticalTextPosition();
+        if (delegate != null) return delegate.getVerticalTextPosition();
         return super.getVerticalTextPosition();
     }
 
     @Override
     public int getHorizontalTextPosition() {
-        if (delegate != null)
-            return delegate.getHorizontalTextPosition();
+        if (delegate != null) return delegate.getHorizontalTextPosition();
         return super.getHorizontalTextPosition();
     }
 
     @Override
     public FontMetrics getFontMetrics(final Font font) {
-        if (delegate != null)
-            return delegate.getFontMetrics(font);
+        if (delegate != null) return delegate.getFontMetrics(font);
         return super.getFontMetrics(font);
     }
 
     @Override
     public Icon getIcon() {
-        if (delegate != null)
-            return delegate.getIcon();
+        if (delegate != null) return delegate.getIcon();
         return super.getIcon();
     }
 
     @Override
     public String getText() {
-        if (delegate != null)
-            return delegate.getText();
+        if (delegate != null) return delegate.getText();
         return super.getText();
     }
 }

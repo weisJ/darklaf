@@ -43,8 +43,7 @@ public class PopupColorChooser extends JToolTip {
     protected static ToolTipContext context;
 
     protected SmallColorChooser getChooser(final Color initial, final Consumer<Color> callback) {
-        if (chooser == null)
-            chooser = new SmallColorChooser(initial, callback);
+        if (chooser == null) chooser = new SmallColorChooser(initial, callback);
         SmallColorChooser smallColorChooser = chooser;
         if (chooser.getParent() != null) {
             // Already in use. Create new one.
@@ -56,8 +55,7 @@ public class PopupColorChooser extends JToolTip {
     }
 
     protected ToolTipContext getContext() {
-        if (context == null)
-            context = createToolTipContext();
+        if (context == null) context = createToolTipContext();
         return context;
     }
 
@@ -106,8 +104,7 @@ public class PopupColorChooser extends JToolTip {
         AWTEventListener listener = event -> {
             if (event instanceof MouseEvent) {
                 int id = event.getID();
-                if (id != MouseEvent.MOUSE_CLICKED && id != MouseEvent.MOUSE_PRESSED)
-                    return;
+                if (id != MouseEvent.MOUSE_CLICKED && id != MouseEvent.MOUSE_PRESSED) return;
             }
             boolean doClose = event instanceof FocusEvent && (!(DarkUIUtil.hasFocus(toolTip, (FocusEvent) event)
                     || DarkUIUtil.hasFocus(toolTip) || DarkUIUtil.hasFocus(parent, (FocusEvent) event)));
@@ -126,10 +123,8 @@ public class PopupColorChooser extends JToolTip {
         close.set(e -> {
             popup.hide();
             Toolkit.getDefaultToolkit().removeAWTEventListener(listener);
-            if (window != null)
-                window.removeComponentListener(windowListener);
-            if (onClose != null)
-                onClose.accept(e);
+            if (window != null) window.removeComponentListener(windowListener);
+            if (onClose != null) onClose.accept(e);
         });
         SwingUtilities.invokeLater(() -> {
             window.addComponentListener(windowListener);

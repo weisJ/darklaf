@@ -85,8 +85,7 @@ public class ClosableTabbedPane extends JTabbedPane {
      */
     public void setTabClosable(final int index, final boolean closable) {
         ClosableTabComponent tab = getClosableTabComponent(index);
-        if (tab != null)
-            tab.setClosable(closable);
+        if (tab != null) tab.setClosable(closable);
     }
 
     /**

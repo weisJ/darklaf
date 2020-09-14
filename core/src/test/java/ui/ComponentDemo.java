@@ -158,8 +158,7 @@ public interface ComponentDemo {
         Enumeration<AbstractButton> enumeration = bg.getElements();
         while (enumeration.hasMoreElements()) {
             JMenuItem mi = (JMenuItem) enumeration.nextElement();
-            if (Objects.equals(currentThemeName, mi.getName()))
-                return mi;
+            if (Objects.equals(currentThemeName, mi.getName())) return mi;
         }
         return null;
     }

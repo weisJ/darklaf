@@ -126,8 +126,7 @@ public class ThemeSettingsPanel extends JPanel {
             boolean selected = Objects.equals(radioButton.getColor(), currentColor)
                     || (radioButton == defaultButton && Objects.equals(defaultColor, currentColor));
             bg.setSelected(radioButton.getModel(), selected);
-            if (selected)
-                return true;
+            if (selected) return true;
         }
         return false;
     }
@@ -257,8 +256,7 @@ public class ThemeSettingsPanel extends JPanel {
         }
         if (!updateButtonGroup(bg, color, defaultButton, defaultColor)) {
             customButton.setSelected(true);
-            if (customButton.getColor() == null)
-                customButton.setColor(color);
+            if (customButton.getColor() == null) customButton.setColor(color);
         }
     }
 
@@ -371,14 +369,10 @@ public class ThemeSettingsPanel extends JPanel {
             if (!enabledSystemPreferences.getTristateModel().isIndeterminate()) {
                 boolean selected = enabledSystemPreferences.getTristateModel().isSelected();
 
-                if (themeFollowsSystem.isEnabled())
-                    themeFollowsSystem.setSelected(selected);
-                if (accentColorFollowsSystem.isEnabled())
-                    accentColorFollowsSystem.setSelected(selected);
-                if (selectionColorFollowsSystem.isEnabled())
-                    selectionColorFollowsSystem.setSelected(selected);
-                if (fontSizeFollowsSystem.isEnabled())
-                    fontSizeFollowsSystem.setSelected(selected);
+                if (themeFollowsSystem.isEnabled()) themeFollowsSystem.setSelected(selected);
+                if (accentColorFollowsSystem.isEnabled()) accentColorFollowsSystem.setSelected(selected);
+                if (selectionColorFollowsSystem.isEnabled()) selectionColorFollowsSystem.setSelected(selected);
+                if (fontSizeFollowsSystem.isEnabled()) fontSizeFollowsSystem.setSelected(selected);
             }
             update();
         });
@@ -564,8 +558,7 @@ public class ThemeSettingsPanel extends JPanel {
         }
 
         private AccentColorRule getAccentColorRule(final Theme theme) {
-            if (theme == null)
-                return AccentColorRule.getDefault();
+            if (theme == null) return AccentColorRule.getDefault();
             Color accentColor = getAccentColor(theme, isAccentColorFollowsSystem());
             Color selectionColor = getSelectionColor(theme, isSelectionColorFollowsSystem());
             return AccentColorRule.fromColor(accentColor, selectionColor);
@@ -592,8 +585,7 @@ public class ThemeSettingsPanel extends JPanel {
         }
 
         private FontSizeRule getFontSizeRule(final Theme theme, final PreferredThemeStyle preferredThemeStyle) {
-            if (theme == null)
-                return FontSizeRule.getDefault();
+            if (theme == null) return FontSizeRule.getDefault();
             return isFontSizeFollowsSystem() ? preferredThemeStyle.getFontSizeRule()
                     : FontSizeRule.relativeAdjustment(fontSlider.getValue()); // Todo
         }

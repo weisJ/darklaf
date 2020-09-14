@@ -93,8 +93,7 @@ public class DarkToolBarBorder extends AbstractBorder implements UIResource, Swi
             if (parent instanceof JComponent && ((JComponent) parent).getLayout() instanceof BorderLayout) {
                 BorderLayout layout = (BorderLayout) ((JComponent) parent).getLayout();
                 Object constraints = layout.getConstraints(c);
-                if (constraints != null)
-                    return constraints.toString();
+                if (constraints != null) return constraints.toString();
             }
         }
         return "";

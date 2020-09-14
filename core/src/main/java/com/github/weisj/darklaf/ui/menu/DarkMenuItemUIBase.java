@@ -77,8 +77,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
     }
 
     protected boolean isSelected(final JComponent menuItem) {
-        if (!(menuItem instanceof JMenuItem))
-            return false;
+        if (!(menuItem instanceof JMenuItem)) return false;
         return menuItem.isEnabled() && ((JMenuItem) menuItem).isArmed();
     }
 
@@ -162,8 +161,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
 
     protected Color getAcceleratorForeground(final AbstractButton b) {
         ButtonModel model = b.getModel();
-        if (!model.isEnabled())
-            return disabledForeground;
+        if (!model.isEnabled()) return disabledForeground;
         if (model.isArmed() || (b instanceof JMenu && model.isSelected())) {
             return acceleratorSelectionForeground;
         } else {

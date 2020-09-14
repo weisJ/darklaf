@@ -139,8 +139,7 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
         boolean clicked = b.getModel().isArmed();
         boolean isSelected = b.isSelected();
         if (b.isEnabled()) {
-            if (isSelected)
-                return PropertyUtil.chooseColor(b.getBackground(), background);
+            if (isSelected) return PropertyUtil.chooseColor(b.getBackground(), background);
             if (clicked) {
                 return clickBackground;
             } else if (rollOver) {
@@ -235,8 +234,7 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
 
     @Override
     public boolean contains(final JComponent c, final int x, final int y) {
-        if (!ToggleButtonConstants.isSlider(c))
-            return super.contains(c, x, y);
+        if (!ToggleButtonConstants.isSlider(c)) return super.contains(c, x, y);
         if ((hitArea.isEmpty()) && c instanceof JToggleButton) {
             JToggleButton b = (JToggleButton) c;
             layoutSlider(b, b.getFontMetrics(layoutDelegate.getFont()), b.getWidth(), b.getHeight());

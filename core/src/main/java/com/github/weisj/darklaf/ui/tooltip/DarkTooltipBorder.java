@@ -49,8 +49,7 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
 
     public DarkTooltipBorder() {
         margin = UIManager.getInsets("ToolTip.borderInsets");
-        if (margin == null)
-            margin = new Insets(0, 0, 0, 0);
+        if (margin == null) margin = new Insets(0, 0, 0, 0);
         bubbleBorder = new BubbleBorder(UIManager.getColor("ToolTip.borderColor"));
         bubbleBorder.setThickness(1);
         bubbleBorder.setPointerSize(8);
@@ -75,14 +74,12 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
 
     @Override
     public int getPointerOffset(final Component c, final Dimension dimension, final int thicknessFactor) {
-        if (!showPointer || isPlain(c))
-            return 0;
+        if (!showPointer || isPlain(c)) return 0;
         int offset = (int) bubbleBorder.getOffset(dimension.width - 2 * shadowBorder.getShadowSize(), dimension.height)
                 + shadowBorder.getShadowSize();
         int thickness = bubbleBorder.getThickness();
         Alignment align = bubbleBorder.getPointerSide();
-        if (align.isWest(false))
-            offset += thicknessFactor * thickness;
+        if (align.isWest(false)) offset += thicknessFactor * thickness;
         return offset;
     }
 
@@ -110,8 +107,7 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
     @Override
     public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width,
             final int height) {
-        if (c instanceof JToolTip && ((JToolTip) c).getTipText() == null)
-            return;
+        if (c instanceof JToolTip && ((JToolTip) c).getTipText() == null) return;
         GraphicsContext context = new GraphicsContext(g);
         if (isPlain(c)) {
             g.setColor(bubbleBorder.getColor());
@@ -190,15 +186,13 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
     }
 
     protected boolean isPlain(final Component c) {
-        if (!(c instanceof JComponent))
-            return false;
+        if (!(c instanceof JComponent)) return false;
         Object prop = ((JComponent) c).getClientProperty(DarkToolTipUI.KEY_STYLE);
         return prop == ToolTipStyle.PLAIN || DarkToolTipUI.VARIANT_PLAIN.equals(prop);
     }
 
     public int getShadowSize(final Component c) {
-        if (isPlain(c))
-            return 0;
+        if (isPlain(c)) return 0;
         return shadowBorder.getShadowSize();
     }
 

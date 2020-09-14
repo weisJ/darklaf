@@ -80,14 +80,10 @@ public class TabFrameLayout implements LayoutManager {
         int leftCount = tabFrame.getLeftTabCount();
         int rightCount = tabFrame.getRightTabCount();
 
-        if (isDraggedOver(Alignment.NORTH))
-            topCount++;
-        if (isDraggedOver(Alignment.SOUTH))
-            bottomCount++;
-        if (isDraggedOver(Alignment.EAST))
-            rightCount++;
-        if (isDraggedOver(Alignment.WEST))
-            leftCount++;
+        if (isDraggedOver(Alignment.NORTH)) topCount++;
+        if (isDraggedOver(Alignment.SOUTH)) bottomCount++;
+        if (isDraggedOver(Alignment.EAST)) rightCount++;
+        if (isDraggedOver(Alignment.WEST)) leftCount++;
 
         ui.getDropComponentBottom().setSize(0, 0);
         ui.getDropComponentLeft().setSize(0, 0);

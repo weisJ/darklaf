@@ -108,8 +108,7 @@ public class DarkTabbedPaneHandler extends TabbedPaneHandler {
         } else if (DarkTabbedPaneUI.KEY_DND.equals(key)) {
             ui.dndEnabled = PropertyUtil.getBooleanProperty(ui.tabPane, DarkTabbedPaneUI.KEY_DND);
             DropTarget dropTarget = ui.tabPane.getDropTarget();
-            if (dropTarget != null)
-                dropTarget.setActive(ui.dndEnabled);
+            if (dropTarget != null) dropTarget.setActive(ui.dndEnabled);
         } else if (PropertyKey.COMPONENT_ORIENTATION.equals(key)) {
             ui.tabPane.doLayout();
             ui.tabPane.repaint();
@@ -183,8 +182,7 @@ public class DarkTabbedPaneHandler extends TabbedPaneHandler {
     @Override
     public void mouseDragged(final MouseEvent e) {
         super.mouseDragged(e);
-        if (!ui.dndEnabled)
-            return;
+        if (!ui.dndEnabled) return;
         if (origin == null) {
             origin = e.getPoint();
             pressedIndex = ui.tabForCoordinate(ui.tabPane, e.getX(), e.getY());

@@ -42,8 +42,7 @@ public class ToolTipContext {
     private static ToolTipContext defaultContext;
 
     public static ToolTipContext getDefaultContext() {
-        if (defaultContext == null)
-            defaultContext = createDefaultContext();
+        if (defaultContext == null) defaultContext = createDefaultContext();
         return defaultContext;
     }
 
@@ -66,14 +65,12 @@ public class ToolTipContext {
 
         @Override
         public void mouseMoved(final MouseEvent e) {
-            if (hotSpotArea == null)
-                return;
+            if (hotSpotArea == null) return;
             checkExit(e);
         }
 
         private void checkExit(final MouseEvent e) {
-            if (!hideOnExit)
-                return;
+            if (!hideOnExit) return;
             if (hotSpotArea != null) {
                 if (!hotSpotArea.contains(e.getPoint())) {
                     ToolTipManager.sharedInstance().mousePressed(null);
@@ -466,8 +463,7 @@ public class ToolTipContext {
      */
     public Point getToolTipLocation(final Point mp, final MouseEvent mouseEvent, final boolean centerHorizontally,
             final boolean centerVertically) {
-        if (target == null)
-            return null;
+        if (target == null) return null;
         updateToolTip();
         MouseEvent event = processEvent(mouseEvent, mp);
         Rectangle rect = getTargetRect(event, centerHorizontally, centerVertically);
@@ -515,8 +511,7 @@ public class ToolTipContext {
     }
 
     private MouseEvent processEvent(final MouseEvent mouseEvent, final Point mp) {
-        if (mouseEvent != null)
-            return mouseEvent;
+        if (mouseEvent != null) return mouseEvent;
         return new MouseEvent(target, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), 0, mp.x, mp.y, 0, false, 0);
     }
 
@@ -542,8 +537,7 @@ public class ToolTipContext {
     }
 
     public void updateToolTipUI() {
-        if (toolTip != null)
-            toolTip.updateUI();
+        if (toolTip != null) toolTip.updateUI();
     }
 
     private Dimension getContentSize() {
@@ -615,8 +609,7 @@ public class ToolTipContext {
     }
 
     public void setToolTip(final JToolTip toolTip) {
-        if (toolTip == null)
-            return;
+        if (toolTip == null) return;
         this.toolTip = toolTip;
         if (this.target != toolTip.getComponent()) {
             this.toolTip.setComponent(this.target);
@@ -629,8 +622,7 @@ public class ToolTipContext {
 
     public ToolTipContext setFallBackPositionProvider(final Function<ToolTipContext, Point> fallBackPositionProvider) {
         this.fallBackPositionProvider = fallBackPositionProvider;
-        if (fallBackPositionProvider == null)
-            this.fallBackPositionProvider = c -> null;
+        if (fallBackPositionProvider == null) this.fallBackPositionProvider = c -> null;
         return this;
     }
 }

@@ -117,8 +117,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
     protected JComponent createControlPanel(final JFileChooser fileChooser) {
         JComponent accessoryPanel = getAccessoryPanel();
         JComponent accessory = fileChooser.getAccessory();
-        if (accessory != null)
-            accessoryPanel.add(accessory);
+        if (accessory != null) accessoryPanel.add(accessory);
         return accessoryPanel;
     }
 
@@ -366,8 +365,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
     }
 
     public BasicFileView getFileView() {
-        if (fileView == null)
-            fileView = createFileView();
+        if (fileView == null) fileView = createFileView();
         return fileView;
     }
 
@@ -402,8 +400,7 @@ public class DarkFileChooserUI extends DarkFileChooserUIBridge {
                 } else {
                     try {
                         String mimeType = Files.probeContentType(f.toPath());
-                        if (mimeType == null)
-                            mimeType = "";
+                        if (mimeType == null) mimeType = "";
                         if (mimeType.startsWith(MIME_IMAGE)) {
                             icon = imageFileIcon;
                         } else if (mimeType.startsWith(MIME_TEXT)) {

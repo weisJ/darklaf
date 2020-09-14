@@ -40,8 +40,7 @@ public class LazyImageIconSupplier extends AbstractLazyIconSupplier<ImageIcon> i
     @Override
     public Image get() {
         ImageIcon imageIcon = getIcon();
-        if (imageIcon != null)
-            return imageIcon.getImage();
+        if (imageIcon != null) return imageIcon.getImage();
         return null;
     }
 }

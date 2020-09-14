@@ -114,8 +114,7 @@ abstract class SwatchPanel extends JPanel {
     @Override
     public void updateUI() {
         super.updateUI();
-        if (toolTipContext != null)
-            toolTipContext.updateToolTipUI();
+        if (toolTipContext != null) toolTipContext.updateToolTipUI();
     }
 
     protected void initValues() {}
@@ -128,8 +127,7 @@ abstract class SwatchPanel extends JPanel {
 
     private Color getColorForCell(final int column, final int row) {
         int index = (row * numSwatches.width) + column;
-        if (index >= colors.length)
-            return null;
+        if (index >= colors.length) return null;
         return colors[(row * numSwatches.width) + column];
     }
 
@@ -178,8 +176,7 @@ abstract class SwatchPanel extends JPanel {
 
     public String getToolTipText(final MouseEvent e) {
         Color color = getColorForLocation(e.getX(), e.getY());
-        if (color == null)
-            return null;
+        if (color == null) return null;
         return color.getRed() + ", " + color.getGreen() + ", " + color.getBlue();
     }
 

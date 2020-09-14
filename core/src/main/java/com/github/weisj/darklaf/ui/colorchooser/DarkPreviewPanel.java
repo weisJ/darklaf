@@ -44,8 +44,7 @@ public class DarkPreviewPanel extends JPanel {
     private Color oldColor = null;
 
     public void paintComponent(final Graphics g) {
-        if (oldColor == null)
-            oldColor = getForeground();
+        if (oldColor == null) oldColor = getForeground();
 
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());

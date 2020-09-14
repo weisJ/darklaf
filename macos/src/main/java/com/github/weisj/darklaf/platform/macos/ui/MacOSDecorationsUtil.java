@@ -35,8 +35,7 @@ public class MacOSDecorationsUtil {
     private static final String TRANSPARENT_TITLE_BAR_KEY = "apple.awt.transparentTitleBar";
 
     protected static DecorationInformation installDecorations(final JRootPane rootPane) {
-        if (rootPane == null)
-            return null;
+        if (rootPane == null) return null;
         Window window = SwingUtilities.getWindowAncestor(rootPane);
         long windowHandle = JNIDecorationsMacOS.getComponentPointer(window);
         if (windowHandle == 0) {
@@ -66,8 +65,7 @@ public class MacOSDecorationsUtil {
     }
 
     protected static void uninstallDecorations(final DecorationInformation information) {
-        if (information == null || information.windowHandle == 0)
-            return;
+        if (information == null || information.windowHandle == 0) return;
         if (information.jniInstalled) {
             JNIDecorationsMacOS.uninstallDecorations(information.windowHandle);
         } else {

@@ -432,8 +432,7 @@ public class ThemeSettings implements ThemePreferenceListener {
 
     private Theme getEffectiveTheme(final PreferredThemeStyle themeStyle) {
         Theme baseTheme = getEffectiveBaseTheme(themeStyle);
-        if (baseTheme == null)
-            return null;
+        if (baseTheme == null) return null;
         FontSizeRule fontSizeRule = getEffectiveFontSizeRule(baseTheme, themeStyle);
         AccentColorRule accentColorRule = getEffectiveAccentColorRule(baseTheme);
         return baseTheme.derive(fontSizeRule, accentColorRule);
@@ -444,14 +443,12 @@ public class ThemeSettings implements ThemePreferenceListener {
     }
 
     private FontSizeRule getEffectiveFontSizeRule(final Theme theme, final PreferredThemeStyle preferredThemeStyle) {
-        if (theme == null)
-            return FontSizeRule.getDefault();
+        if (theme == null) return FontSizeRule.getDefault();
         return isFontSizeFollowsSystem() ? preferredThemeStyle.getFontSizeRule() : getFontSizeRule();
     }
 
     private AccentColorRule getEffectiveAccentColorRule(final Theme theme) {
-        if (theme == null)
-            return AccentColorRule.getDefault();
+        if (theme == null) return AccentColorRule.getDefault();
         return currentConfiguration.getAccentColorRule();
     }
 
@@ -466,10 +463,8 @@ public class ThemeSettings implements ThemePreferenceListener {
     }
 
     protected void applyTheme(final Theme theme) {
-        if (theme == null)
-            return;
-        if (LafManager.getTheme().appearsEqualTo(theme))
-            return;
+        if (theme == null) return;
+        if (LafManager.getTheme().appearsEqualTo(theme)) return;
         SwingUtilities.invokeLater(() -> {
             LafManager.installTheme(theme);
             refresh();

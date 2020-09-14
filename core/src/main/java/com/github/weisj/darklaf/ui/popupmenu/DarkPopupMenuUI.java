@@ -101,8 +101,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
     @Override
     public Popup getPopup(final JPopupMenu popup, final int x, final int y) {
         PopupMenuContainer container = getPopupMenuContainer();
-        if (container == null)
-            return super.getPopup(popup, x, y);
+        if (container == null) return super.getPopup(popup, x, y);
         int maxHeight = DarkUIUtil.getScreenBounds(popup, x, y, false).height;
         return container.createPopup(popup, x, y, maxHeight);
     }

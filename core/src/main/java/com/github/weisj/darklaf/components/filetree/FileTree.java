@@ -82,15 +82,13 @@ public class FileTree extends JTree {
 
     public Path getSelectedFile() {
         TreePath path = getSelectionPath();
-        if (path == null)
-            return null;
+        if (path == null) return null;
         return ((FileTreeNode) path.getLastPathComponent()).getFile();
     }
 
     public List<Path> getSelectedFiles() {
         TreePath[] paths = getSelectionPaths();
-        if (paths == null)
-            return Collections.emptyList();
+        if (paths == null) return Collections.emptyList();
         return Arrays.stream(getSelectionPaths()).map(TreePath::getLastPathComponent).map(FileTreeNode.class::cast)
                 .map(FileTreeNode::getFile).collect(Collectors.toList());
     }

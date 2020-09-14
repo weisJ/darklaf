@@ -176,14 +176,12 @@ public class ColorTriangle extends JComponent {
 
     protected void setHSBHue(final double hue) {
         hueHSB = hue;
-        if (hueHSB < 0)
-            hueHSB += 1.0;
+        if (hueHSB < 0) hueHSB += 1.0;
     }
 
     protected void setHSLHue(final double hue) {
         hueHSL = hue;
-        if (hueHSL < 0)
-            hueHSL += 1.0;
+        if (hueHSL < 0) hueHSL += 1.0;
     }
 
     protected void setValue(final double value) {
@@ -310,8 +308,7 @@ public class ColorTriangle extends JComponent {
     }
 
     protected void setColorFromRGB(final Object source, final int r, final int g, final int b) {
-        if (isMessaging)
-            return;
+        if (isMessaging) return;
         this.color = new Color(r, g, b);
         double[] hsb = DarkColorModelHSB.RGBtoHSBValues(r, g, b);
         double[] hsl = DarkColorModelHSL.RGBtoHSLValues(r, g, b);
@@ -327,8 +324,7 @@ public class ColorTriangle extends JComponent {
     }
 
     protected void setColorFromHSL(final Object source, final double h, final double s, final double l) {
-        if (isMessaging)
-            return;
+        if (isMessaging) return;
         setHSL(h, s, l);
         color = DarkColorModelHSL.getColorFromHSLValues(h, s, l);
         setHSB(DarkColorModelHSB.RGBtoHSBValues(color.getRed(), color.getGreen(), color.getBlue()));
@@ -339,8 +335,7 @@ public class ColorTriangle extends JComponent {
     }
 
     protected void setColorFromHSB(final Object source, final double h, final double s, final double b) {
-        if (isMessaging)
-            return;
+        if (isMessaging) return;
         setHSB(h, s, b);
         color = DarkColorModelHSB.getColorFromHSBValues(h, s, b);
         setHSL(DarkColorModelHSL.RGBtoHSLValues(color.getRed(), color.getGreen(), color.getBlue()));
@@ -516,8 +511,7 @@ public class ColorTriangle extends JComponent {
     protected Shape calculateCircleShape(final double x, final double y, final int size, final int outerSize) {
         outerRadius = size / 2.0;
         innerRadius = outerRadius - outerSize;
-        if (!circleInfo.update(x, y, size, outerSize) && circleShape != null)
-            return circleShape;
+        if (!circleInfo.update(x, y, size, outerSize) && circleShape != null) return circleShape;
 
         Area outer = new Area(new Ellipse2D.Double(x, y, size, size));
         Area inner = new Area(

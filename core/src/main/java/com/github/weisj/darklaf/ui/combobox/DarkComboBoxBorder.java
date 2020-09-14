@@ -51,10 +51,8 @@ public class DarkComboBoxBorder implements Border, UIResource {
         borderColor = UIManager.getColor("ComboBox.activeBorderColor");
         inactiveBorderColor = UIManager.getColor("ComboBox.inactiveBorderColor");
         cellPadding = UIManager.getInsets("ComboBox.cellEditorInsets");
-        if (boxPadding == null)
-            boxPadding = new Insets(0, 0, 0, 0);
-        if (cellPadding == null)
-            cellPadding = new Insets(0, 0, 0, 0);
+        if (boxPadding == null) boxPadding = new Insets(0, 0, 0, 0);
+        if (cellPadding == null) cellPadding = new Insets(0, 0, 0, 0);
     }
 
     @Override

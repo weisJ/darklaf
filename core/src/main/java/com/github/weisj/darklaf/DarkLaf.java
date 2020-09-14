@@ -129,8 +129,7 @@ public class DarkLaf extends ThemedLookAndFeel {
             LafManager.setTheme(currentTheme);
         }
         for (DefaultsInitTask task : INIT_TASKS) {
-            if (task.onlyDuringInstallation() && !isInitialized)
-                continue;
+            if (task.onlyDuringInstallation() && !isInitialized) continue;
             task.run(currentTheme, defaults);
         }
         return defaults;

@@ -87,8 +87,7 @@ public class CustomThemedIcon extends ThemedSVGIcon {
      */
     public <T> T getPropertyOfType(final Object key, final Class<T> type) {
         Object obj = getProperty(key);
-        if (type != null && type.isInstance(obj))
-            return type.cast(obj);
+        if (type != null && type.isInstance(obj)) return type.cast(obj);
         return null;
     }
 

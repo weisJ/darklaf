@@ -448,8 +448,7 @@ public abstract class TabbedPaneLayout implements LayoutManager {
     protected void rotateTabRuns(final int tabPlacement, final int selectedRun) {
         for (int i = 0; i < selectedRun; i++) {
             int save = ui.tabRuns[0];
-            if (ui.runCount - 1 >= 0)
-                System.arraycopy(ui.tabRuns, 1, ui.tabRuns, 0, ui.runCount - 1);
+            if (ui.runCount - 1 >= 0) System.arraycopy(ui.tabRuns, 1, ui.tabRuns, 0, ui.runCount - 1);
             ui.tabRuns[ui.runCount - 1] = save;
         }
     }

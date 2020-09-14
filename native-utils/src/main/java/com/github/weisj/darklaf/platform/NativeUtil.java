@@ -91,8 +91,7 @@ public class NativeUtil {
         Path temp = temporaryDir.resolve(filename);
 
         try (InputStream is = NativeUtil.class.getResourceAsStream(path)) {
-            if (!temporaryDir.toFile().canWrite())
-                throw new IOException("Can't write to temporary directory.");
+            if (!temporaryDir.toFile().canWrite()) throw new IOException("Can't write to temporary directory.");
             Files.copy(is, temp.toAbsolutePath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             delete(temp);

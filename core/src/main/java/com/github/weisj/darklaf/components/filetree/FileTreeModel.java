@@ -72,8 +72,7 @@ public class FileTreeModel extends DefaultTreeModel {
     }
 
     public void setShowHiddenFiles(final boolean showHiddenFiles) {
-        if (showHiddenFiles == this.showHiddenFiles)
-            return;
+        if (showHiddenFiles == this.showHiddenFiles) return;
         this.showHiddenFiles = showHiddenFiles;
         reload();
     }

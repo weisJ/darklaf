@@ -68,12 +68,10 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
 
     @Override
     public boolean isCellEditable(final EventObject anEvent) {
-        if (anEvent == null)
-            return super.isCellEditable(null);
+        if (anEvent == null) return super.isCellEditable(null);
         JTable table = ((JTable) anEvent.getSource());
         if (anEvent instanceof KeyEvent) {
-            if (DarkTableUI.ignoreKeyCodeOnEdit((KeyEvent) anEvent, table))
-                return false;
+            if (DarkTableUI.ignoreKeyCodeOnEdit((KeyEvent) anEvent, table)) return false;
         }
         if (TableConstants.isBooleanRenderingEnabled(table)) {
             if (anEvent instanceof MouseEvent && isMouseOverBooleanRenderer((MouseEvent) anEvent, table)) {
@@ -138,8 +136,7 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
         }
         if (editorComponent instanceof JTextField) {
             int alignment = getHorizontalAlignment(rendererComp);
-            if (alignment >= 0)
-                ((JTextField) editorComponent).setHorizontalAlignment(alignment);
+            if (alignment >= 0) ((JTextField) editorComponent).setHorizontalAlignment(alignment);
         }
     }
 

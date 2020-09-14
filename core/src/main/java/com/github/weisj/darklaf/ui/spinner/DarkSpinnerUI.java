@@ -133,8 +133,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
                 super.layoutContainer(parent);
                 if (SpinnerConstants.isTreeOrTableCellEditor(spinner)) {
                     int adj = borderSize / 2;
-                    if (!spinner.getComponentOrientation().isLeftToRight())
-                        adj *= -1;
+                    if (!spinner.getComponentOrientation().isLeftToRight()) adj *= -1;
                     adjustButton(prevButton, adj);
                     adjustButton(nextButton, adj);
                 }

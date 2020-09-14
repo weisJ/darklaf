@@ -65,8 +65,7 @@ public class PopupMenuContainer extends JPanel {
                 @Override
                 public void menuKeyPressed(final MenuKeyEvent e) {
                     SwingUtilities.invokeLater(() -> {
-                        if (popupMenu == null)
-                            return;
+                        if (popupMenu == null) return;
                         MenuElement[] path = e.getMenuSelectionManager().getSelectedPath();
                         if (path.length == 0) {
                             return;
@@ -98,8 +97,7 @@ public class PopupMenuContainer extends JPanel {
                 }
 
                 private void onHide() {
-                    if (popupMenu == null)
-                        return;
+                    if (popupMenu == null) return;
                     popupMenu.removePopupMenuListener(this);
                     popupMenu.removeMenuKeyListener(menuKeyListener);
                 }

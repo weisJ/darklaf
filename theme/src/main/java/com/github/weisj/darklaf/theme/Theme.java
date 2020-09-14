@@ -93,8 +93,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      * @return true if dark.
      */
     public static boolean isDark(final Theme theme) {
-        if (theme == null)
-            return false;
+        if (theme == null) return false;
         return theme.getColorToneRule() == ColorToneRule.DARK;
     }
 
@@ -105,8 +104,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      * @return true if the theme is a high contrast theme.
      */
     public static boolean isHighContrast(final Theme theme) {
-        if (theme == null)
-            return false;
+        if (theme == null) return false;
         return theme.getContrastRule() == ContrastRule.HIGH_CONTRAST;
     }
 
@@ -360,8 +358,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      */
     public final Properties loadPropertyFile(final String name, final boolean silent) {
         Level level = LOGGER.getLevel();
-        if (silent)
-            LOGGER.setLevel(Level.OFF);
+        if (silent) LOGGER.setLevel(Level.OFF);
         Properties properties = load(getPropertyFilePath(name));
         LOGGER.setLevel(level);
         return properties;
@@ -430,22 +427,18 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
 
     @Override
     public int compareTo(final Theme o) {
-        if (o == null)
-            return 1;
+        if (o == null) return 1;
         int stringComp = getName().compareTo(o.getName());
         int contrastCompare = Boolean.compare(isHighContrast(this), isHighContrast(o));
         int toneCompare = Boolean.compare(isDark(this), isDark(o));
-        if (contrastCompare != 0)
-            return contrastCompare;
-        if (toneCompare != 0)
-            return toneCompare;
+        if (contrastCompare != 0) return contrastCompare;
+        if (toneCompare != 0) return toneCompare;
         return stringComp;
     }
 
     @Override
     public int compare(final Theme o1, final Theme o2) {
-        if (o1 == null)
-            return -1;
+        if (o1 == null) return -1;
         return o1.compareTo(o2);
     }
 
@@ -460,10 +453,8 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
      * @return true if they appear equal.
      */
     public boolean appearsEqualTo(final Theme theme) {
-        if (theme == null)
-            return false;
-        if (!Objects.equals(getThemeClass(), theme.getThemeClass()))
-            return false;
+        if (theme == null) return false;
+        if (!Objects.equals(getThemeClass(), theme.getThemeClass())) return false;
         return Objects.equals(getAccentColorRule(), theme.getAccentColorRule())
                 && Objects.equals(getColorToneRule(), theme.getColorToneRule())
                 && Objects.equals(getContrastRule(), theme.getContrastRule())

@@ -61,13 +61,10 @@ public class AccentColorRule {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         AccentColorRule that = (AccentColorRule) o;
-        if (!Objects.equals(accentColor, that.accentColor))
-            return false;
+        if (!Objects.equals(accentColor, that.accentColor)) return false;
         return Objects.equals(selectionColor, that.selectionColor);
     }
 

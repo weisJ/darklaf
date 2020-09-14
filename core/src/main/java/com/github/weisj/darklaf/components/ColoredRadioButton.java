@@ -82,8 +82,7 @@ public class ColoredRadioButton extends JRadioButton {
 
     private void updateColorUI() {
         ColoredRadioButtonUI ui = DarkUIUtil.getUIOfType(getUI(), ColoredRadioButtonUI.class);
-        if (ui != null)
-            ui.setColors(color, focusColor);
+        if (ui != null) ui.setColors(color, focusColor);
         repaint();
     }
 

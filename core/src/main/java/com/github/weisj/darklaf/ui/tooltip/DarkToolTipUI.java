@@ -63,8 +63,7 @@ public class DarkToolTipUI extends BasicToolTipUI
     protected final MouseListener mouseListener = new MouseAdapter() {
         @Override
         public void mouseEntered(final MouseEvent e) {
-            if (e.getButton() == MouseEvent.BUTTON1)
-                return;
+            if (e.getButton() == MouseEvent.BUTTON1) return;
             /*
              * We redispatch the event to the ToolTipManager with a corrected location. Because the
              * ToolTipManager check for outside using >= width/height instead of > width/height and due to the
@@ -73,10 +72,8 @@ public class DarkToolTipUI extends BasicToolTipUI
              */
             Point p = e.getPoint();
             Component c = toolTip.getComponent();
-            if (p.x == c.getWidth())
-                p.x--;
-            if (p.y == c.getHeight())
-                p.y--;
+            if (p.x == c.getWidth()) p.x--;
+            if (p.y == c.getHeight()) p.y--;
             p.x = Math.max(p.x, 0);
             p.y = Math.max(p.y, 0);
             ToolTipManager.sharedInstance().mouseEntered(new MouseEvent(c, e.getID(), e.getWhen(), e.getModifiersEx(),
@@ -345,8 +342,7 @@ public class DarkToolTipUI extends BasicToolTipUI
 
     protected void updateTipText(final JToolTip tooltip) {
         effectiveTipText = tooltip.getTipText();
-        if (effectiveTipText == null)
-            effectiveTipText = "";
+        if (effectiveTipText == null) effectiveTipText = "";
     }
 
     protected void scheduleAnimation() {
@@ -361,10 +357,8 @@ public class DarkToolTipUI extends BasicToolTipUI
         JComponent comp = toolTip.getComponent();
         ToolTipStyle style = comp != null ? ToolTipStyle.parse(comp.getClientProperty(KEY_STYLE)) : null;
         ToolTipStyle tooltipStyle = ToolTipStyle.parse(toolTip.getClientProperty(KEY_STYLE));
-        if (style == null)
-            style = tooltipStyle;
-        if (style == null)
-            style = ToolTipStyle.parse(UIManager.get("ToolTip.defaultStyle"));
+        if (style == null) style = tooltipStyle;
+        if (style == null) style = ToolTipStyle.parse(UIManager.get("ToolTip.defaultStyle"));
         if (style != tooltipStyle) {
             toolTip.putClientProperty(KEY_STYLE, style);
         }
@@ -407,8 +401,7 @@ public class DarkToolTipUI extends BasicToolTipUI
         public void paintNow(final int frame, final int totalFrames, final int cycle) {
             alpha = ((float) frame * MAX_ALPHA) / totalFrames;
             Window window = SwingUtilities.getWindowAncestor(toolTip);
-            if (window != null)
-                window.setOpacity(alpha);
+            if (window != null) window.setOpacity(alpha);
             Border border = toolTip.getBorder();
             if (border instanceof DarkTooltipBorder) {
                 ((DarkTooltipBorder) border).setSkipShadow(false);

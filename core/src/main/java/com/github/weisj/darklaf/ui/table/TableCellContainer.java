@@ -72,8 +72,7 @@ public class TableCellContainer implements IndexedCellContainer<JTable, Pair<Int
 
     @Override
     public Component getCellRendererComponent(final Pair<Integer, Integer> position) {
-        if (position == null)
-            return null;
+        if (position == null) return null;
         int row = position.getFirst();
         int column = position.getSecond();
         boolean isSelected = table.isCellSelected(row, column);

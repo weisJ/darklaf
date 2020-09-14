@@ -42,8 +42,7 @@ public class RotatableIconAnimator extends Timer {
 
     public RotatableIconAnimator(final int frames, final RotatableIcon icon, final JComponent parent) {
         super(100, null);
-        if (icon == null)
-            throw new IllegalArgumentException("Icon is null");
+        if (icon == null) throw new IllegalArgumentException("Icon is null");
         addActionListener(this::onAction);
         setRepeats(true);
         this.icon = icon;
@@ -52,8 +51,7 @@ public class RotatableIconAnimator extends Timer {
     }
 
     public void resume() {
-        if (!isRunning())
-            start();
+        if (!isRunning()) start();
     }
 
     public void onAction(final ActionEvent e) {
@@ -71,7 +69,6 @@ public class RotatableIconAnimator extends Timer {
     }
 
     public void suspend() {
-        if (isRunning())
-            stop();
+        if (isRunning()) stop();
     }
 }

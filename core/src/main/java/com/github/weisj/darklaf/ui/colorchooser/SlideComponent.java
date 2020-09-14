@@ -86,8 +86,7 @@ class SlideComponent extends JComponent implements ColorListener {
 
         addMouseWheelListener(event -> {
             int units = event.getUnitsToScroll();
-            if (units == 0)
-                return;
+            if (units == 0) return;
             int pointerValue = this.pointerValue + units;
             pointerValue = Math.max(pointerValue, OFFSET);
             int size = this.vertical ? getHeight() : getWidth();
@@ -183,8 +182,7 @@ class SlideComponent extends JComponent implements ColorListener {
         borderColor = UIManager.getColor("ColorChooser.sliderBorderColor");
         shadowColor = UIManager.getColor("ColorChooser.sliderShadow");
         knobFill = UIManager.getColor("ColorChooser.sliderKnobColor");
-        if (toolTipContext != null)
-            toolTipContext.updateToolTipUI();
+        if (toolTipContext != null) toolTipContext.updateToolTipUI();
     }
 
     @Override

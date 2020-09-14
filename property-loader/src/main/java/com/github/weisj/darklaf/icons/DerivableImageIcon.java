@@ -174,8 +174,7 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
      */
     public DerivableImageIcon(final ImageIcon icon, final int width, final int height, final int scalingMode) {
         this(icon != null ? icon.getImage() : null, width, height, scalingMode);
-        if (icon != null)
-            setDescription(icon.getDescription());
+        if (icon != null) setDescription(icon.getDescription());
     }
 
     /**
@@ -270,24 +269,20 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
     private void calculateSize() {
         Image originalImage = original.get();
         if (originalImage != null && (width < 0 || height < 0)) {
-            if (width < 0)
-                width = originalImage.getWidth(null);
-            if (height < 0)
-                height = originalImage.getHeight(null);
+            if (width < 0) width = originalImage.getWidth(null);
+            if (height < 0) height = originalImage.getHeight(null);
         }
     }
 
     @Override
     public int getIconWidth() {
-        if (width < 0)
-            calculateSize();
+        if (width < 0) calculateSize();
         return width;
     }
 
     @Override
     public int getIconHeight() {
-        if (height < 0)
-            calculateSize();
+        if (height < 0) calculateSize();
         return height;
     }
 

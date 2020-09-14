@@ -180,8 +180,7 @@ public class DarkComboPopup extends BasicComboPopup {
 
     @Override
     protected void togglePopup() {
-        if (comboBox.getItemCount() == 0)
-            return;
+        if (comboBox.getItemCount() == 0) return;
         if (visible) {
             visible = false;
             hide();

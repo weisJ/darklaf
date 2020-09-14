@@ -69,8 +69,7 @@ public class StateIcon implements Icon {
     }
 
     public Icon getIcon(final Component c) {
-        if (!(c instanceof AbstractButton))
-            return icon != null ? icon : EmptyIcon.create(0);
+        if (!(c instanceof AbstractButton)) return icon != null ? icon : EmptyIcon.create(0);
         AbstractButton b = (AbstractButton) c;
         boolean selected = b.isSelected();
         boolean enabled = b.isEnabled();

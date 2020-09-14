@@ -65,8 +65,7 @@ public class GroupedButtonDemo implements ComponentDemo {
                 setSelectedIcon(selected);
                 putClientProperty(DarkButtonUI.KEY_THIN, true);
                 putClientProperty(DarkButtonUI.KEY_CORNER, a);
-                if (prev != null)
-                    prev.putClientProperty(DarkButtonUI.KEY_RIGHT_NEIGHBOUR, this);
+                if (prev != null) prev.putClientProperty(DarkButtonUI.KEY_RIGHT_NEIGHBOUR, this);
                 putClientProperty(DarkButtonUI.KEY_LEFT_NEIGHBOUR, prev);
                 setSelected(isSelected);
                 bg.add(this);

@@ -83,8 +83,7 @@ public class QuickColorChooser extends JPanel {
             final Supplier<Color> supplier, final Supplier<Boolean> activationCheck) {
         AtomicBoolean isShowing = new AtomicBoolean(false);
         component.addMouseListener((MouseClickListener) e -> {
-            if (!component.isEnabled() || isShowing.get() || !activationCheck.get())
-                return;
+            if (!component.isEnabled() || isShowing.get() || !activationCheck.get()) return;
             isShowing.set(true);
             PopupColorChooser.showColorChooser(component, supplier.get(), c -> {
                 if (c != null) {
@@ -99,8 +98,7 @@ public class QuickColorChooser extends JPanel {
     }
 
     public void setSelected(final boolean selected) {
-        if (checkBox != null)
-            checkBox.setSelected(selected);
+        if (checkBox != null) checkBox.setSelected(selected);
     }
 
     public Color getColor() {

@@ -50,8 +50,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     private final MouseListener mouseListener = new MouseAdapter() {
         @Override
         public void mouseClicked(final MouseEvent e) {
-            if (!tabComponent.isEnabled())
-                return;
+            if (!tabComponent.isEnabled()) return;
             if (SwingUtilities.isLeftMouseButton(e)) {
                 tabComponent.getTabFrame().toggleTab(tabComponent.getOrientation(), tabComponent.getIndex(),
                         !tabComponent.isSelected());
@@ -143,8 +142,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
             updateText();
         } else if (TabFrameTab.KEY_ACCELERATOR.equals(key)) {
             updateText();
-            if (tabComponent == null)
-                return;
+            if (tabComponent == null) return;
             uninstallAccelerator(tabComponent.getTabFrame());
             installAccelerator(tabComponent.getTabFrame());
         } else if (TabFrameTab.KEY_ORIENTATION.equals(key)) {
@@ -175,11 +173,9 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     }
 
     protected void installAccelerator(final JTabFrame tabFrame) {
-        if (tabFrame == null)
-            return;
+        if (tabFrame == null) return;
         int acc = tabComponent.getAccelerator();
-        if (acc < 0)
-            return;
+        if (acc < 0) return;
         tabFrame.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
                 KeyStroke.getKeyStroke(UIManager.getString("TabFrame.acceleratorKeyCode") + " " + acc),
                 ACCELERATOR_PREFIX + acc);
@@ -207,16 +203,14 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     }
 
     protected void uninstallAccelerator(final JTabFrame tabFrame) {
-        if (tabFrame == null)
-            return;
+        if (tabFrame == null) return;
         int acc = tabComponent.getAccelerator();
         String accAction = ACCELERATOR_PREFIX + acc;
         tabFrame.getActionMap().remove(accAction);
     }
 
     public Color getBackground(final TabFrameTabLabel tab) {
-        if (printing || !tab.isEnabled())
-            return tab.getBackground();
+        if (printing || !tab.isEnabled()) return tab.getBackground();
         return tab.isSelected() ? selectedColor
                 : hoverListener.isHover() && !tab.getTabFrame().isInTransfer() ? hoverColor : tab.getBackground();
     }
@@ -227,8 +221,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     }
 
     public Color getTabForeground(final TabFrameTabLabel tab) {
-        if (printing)
-            return tab.getForeground();
+        if (printing) return tab.getForeground();
         return tab.isSelected() ? selectedFontColor
                 : hoverListener.isHover() && !tab.getTabFrame().isInTransfer() ? fontHoverColor : tab.getForeground();
     }

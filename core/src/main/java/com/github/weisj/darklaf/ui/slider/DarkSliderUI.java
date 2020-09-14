@@ -781,8 +781,7 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
             int pos = isHorizontal() ? evt.getX() : evt.getY();
             int loc = getLocationForValue(getSnappedValue(evt));
             offset = (loc < 0) ? 0 : pos - loc;
-            if (iconRect.contains(evt.getPoint()))
-                return;
+            if (iconRect.contains(evt.getPoint())) return;
             super.mousePressed(evt);
         }
 

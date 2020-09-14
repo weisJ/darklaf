@@ -138,8 +138,7 @@ public class TabbedPopup extends PanelPopup {
      * @param component the component to add.
      */
     public void setContentPane(final Component component) {
-        if (component == null)
-            return;
+        if (component == null) return;
         if (getContentPanes().contains(component)) {
             return;
         }

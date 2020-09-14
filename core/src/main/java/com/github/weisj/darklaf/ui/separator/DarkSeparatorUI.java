@@ -46,13 +46,11 @@ public class DarkSeparatorUI extends BasicSeparatorUI {
         color = UIManager.getColor("Separator.foreground");
         size = UIManager.getDimension("Separator.size");
         insets = UIManager.getInsets("Separator.insets");
-        if (insets == null)
-            insets = new Insets(0, 0, 0, 0);
+        if (insets == null) insets = new Insets(0, 0, 0, 0);
     }
 
     public void paint(final Graphics g, final JComponent c) {
-        if (!(c instanceof JSeparator))
-            return;
+        if (!(c instanceof JSeparator)) return;
         checkSize(c);
         g.setColor(color);
         if (((JSeparator) c).getOrientation() == JSeparator.VERTICAL) {
@@ -77,31 +75,25 @@ public class DarkSeparatorUI extends BasicSeparatorUI {
     }
 
     private void checkSize(final JComponent c) {
-        if (resizeLock)
-            return;
+        if (resizeLock) return;
         Container parent = c.getParent();
-        if (parent == null)
-            return;
+        if (parent == null) return;
         LayoutManager lm = parent.getLayout();
-        if (!(lm instanceof BoxLayout || parent instanceof JToolBar))
-            return;
+        if (!(lm instanceof BoxLayout || parent instanceof JToolBar)) return;
         resizeLock = true;
         Dimension dim = parent.getSize();
         Rectangle bounds = c.getBounds();
         if (((JSeparator) c).getOrientation() == JSeparator.VERTICAL) {
-            if (bounds.height != dim.height)
-                c.setBounds(bounds.x, 0, bounds.width, dim.height);
+            if (bounds.height != dim.height) c.setBounds(bounds.x, 0, bounds.width, dim.height);
         } else {
-            if (bounds.width != dim.width)
-                c.setBounds(0, bounds.y, dim.width, bounds.height);
+            if (bounds.width != dim.width) c.setBounds(0, bounds.y, dim.width, bounds.height);
         }
         resizeLock = false;
     }
 
     @SuppressWarnings("SuspiciousNameCombination")
     public Dimension getPreferredSize(final JComponent c) {
-        if (c == null)
-            return new Dimension(size);
+        if (c == null) return new Dimension(size);
         if (((JSeparator) c).getOrientation() == JSeparator.VERTICAL) {
             return new Dimension(size.width, size.height);
         } else {

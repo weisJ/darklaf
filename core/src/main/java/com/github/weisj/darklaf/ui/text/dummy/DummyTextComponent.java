@@ -90,8 +90,7 @@ public class DummyTextComponent extends JTextComponent {
     public void setLayout(final LayoutManager mgr) {
         if (mgr instanceof DocumentListener) {
             Document doc = getDocument();
-            if (doc != null)
-                doc.removeDocumentListener((DocumentListener) mgr);
+            if (doc != null) doc.removeDocumentListener((DocumentListener) mgr);
         }
     }
 }

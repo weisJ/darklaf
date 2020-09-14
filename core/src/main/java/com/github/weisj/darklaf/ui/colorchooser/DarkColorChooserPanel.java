@@ -146,24 +146,20 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
 
     @Override
     public void colorChanged(final Color color, final Object source) {
-        if (isChanging || color == null)
-            return;
+        if (isChanging || color == null) return;
         isChanging = true;
         currentColor = color;
         ColorSelectionModel model = getColorSelectionModel();
-        if (model != null)
-            model.setSelectedColor(currentColor);
+        if (model != null) model.setSelectedColor(currentColor);
         applyColorToFields(color);
-        if (source != textHex)
-            textHex.setValue(color);
+        if (source != textHex) textHex.setValue(color);
         previewComponent.setColor(color);
         colorWheelPanel.setColor(color, this);
         isChanging = false;
     }
 
     protected void onModelChange() {
-        if (isChanging)
-            return;
+        if (isChanging) return;
         isChanging = true;
         colorWheelPanel.setModel(getDarkColorModel());
         updateDescriptors();

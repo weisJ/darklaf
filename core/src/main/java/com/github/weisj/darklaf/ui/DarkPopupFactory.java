@@ -89,10 +89,8 @@ public class DarkPopupFactory extends PopupFactory {
 
     public static PopupType getPopupType(final Popup popup) {
         String popupClassName = popup.getClass().getSimpleName();
-        if (popupClassName.endsWith("LightWeightPopup"))
-            return PopupType.LIGHT_WEIGHT;
-        if (popupClassName.endsWith("MediumWeightPopup"))
-            return PopupType.MEDIUM_WEIGHT;
+        if (popupClassName.endsWith("LightWeightPopup")) return PopupType.LIGHT_WEIGHT;
+        if (popupClassName.endsWith("MediumWeightPopup")) return PopupType.MEDIUM_WEIGHT;
         return PopupType.HEAVY_WEIGHT;
     }
 
@@ -100,8 +98,7 @@ public class DarkPopupFactory extends PopupFactory {
         if (type == PopupType.MEDIUM_WEIGHT) {
             JRootPane rootPane = SwingUtilities.getRootPane(contents);
             // Prevents decorations from being reinstalled.
-            if (rootPane != null)
-                rootPane.putClientProperty(DarkRootPaneUI.KEY_NO_DECORATIONS_UPDATE, true);
+            if (rootPane != null) rootPane.putClientProperty(DarkRootPaneUI.KEY_NO_DECORATIONS_UPDATE, true);
         } else if (type == PopupType.HEAVY_WEIGHT) {
             Window window = SwingUtilities.getWindowAncestor(contents);
             if (window != null) {
@@ -131,8 +128,7 @@ public class DarkPopupFactory extends PopupFactory {
          * that is repainted with the proper popup background later. That is why we set window background
          * explicitly.
          */
-        if (rootPane == null)
-            return;
+        if (rootPane == null) return;
         rootPane.setOpaque(opaque);
         if (opaque) {
             Color bg = ColorUtil.toAlpha(rootPane.getBackground(), 255);
@@ -188,8 +184,7 @@ public class DarkPopupFactory extends PopupFactory {
 
     protected Color getTranslucentPopupBackground(final boolean decorated) {
         Color c = UIManager.getColor("PopupMenu.translucentBackground");
-        if (!decorated)
-            c = new DarkColorUIResource(ColorUtil.toAlpha(c, 0));
+        if (!decorated) c = new DarkColorUIResource(ColorUtil.toAlpha(c, 0));
         return c;
     }
 

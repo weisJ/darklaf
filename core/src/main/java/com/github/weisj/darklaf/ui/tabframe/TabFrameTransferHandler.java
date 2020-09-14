@@ -85,8 +85,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
     }
 
     private TabFrameUI getUI(final Component c) {
-        if (c instanceof JTabFrame)
-            return ((JTabFrame) c).getUI();
+        if (c instanceof JTabFrame) return ((JTabFrame) c).getUI();
         return null;
     }
 
@@ -345,8 +344,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
 
         @Override
         public DataFlavor[] getTransferDataFlavors() {
-            if (tabFlavor == null)
-                return new DataFlavor[0];
+            if (tabFlavor == null) return new DataFlavor[0];
             return new DataFlavor[] {tabFlavor};
         }
 

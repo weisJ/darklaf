@@ -116,8 +116,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
      */
     @Override
     public void paint(final Graphics g, final int offs0, final int offs1, final Shape bounds, final JTextComponent c) {
-        if (!enabled)
-            return;
+        if (!enabled) return;
         Graphics2D g2d = (Graphics2D) g;
         GraphicsContext context = new GraphicsContext(g2d);
         color = c.getSelectedTextColor();
@@ -160,8 +159,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     @Override
     public Shape paintLayer(final Graphics g, final int offs0, final int offs1, final Shape bounds,
             final JTextComponent c, final View view) {
-        if (!enabled)
-            return bounds;
+        if (!enabled) return bounds;
         color = (Color) view.getAttributes().getAttribute(StyleConstantsEx.SelectedForeground);
         if (color == null) {
             color = StyleConstants.getForeground(view.getAttributes());
@@ -253,8 +251,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
         int nextLineStart = currentLineEnd + 1;
         int nextLineEnd = getOffset(c, c.getWidth(), getPosRect(c, nextLineStart).y);
-        if (nextLineEnd < nextLineStart)
-            nextLineEnd = nextLineStart;
+        if (nextLineEnd < nextLineStart) nextLineEnd = nextLineStart;
 
         boolean isEndOfLine = offs1 >= c.getDocument().getLength() - 1 || getPosRect(c, offs1 + 1).y > posOffs1.y;
         boolean isStartOfLine = offs0 == 0 || getPosRect(c, offs0 - 1).y < posOffs0.y;
@@ -308,8 +305,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
             paintPreviousLine =
                     hasLineAbove && (previousLineStart == previousLineEnd || previousLineEnd == selectionStart);
             previousLineVisible = hasLineAbove;
-            if (nextLineRect.y != posEnd.y)
-                nextLineVisible = hasLineBelow;
+            if (nextLineRect.y != posEnd.y) nextLineVisible = hasLineBelow;
 
             boolean extendRight = isPaintingPreceding || (hasLineBelow && (endX(layerRect) == endX(currentLineRect)));
             extendRight &= offs1 < selectionEnd;
@@ -319,8 +315,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
             extendLine(c, ins, layerRect, extendLeft, extendRight);
             extendLine(c, ins, currentLineRect, extendLeft, extendRight);
 
-            if (isPaintingPreceding)
-                layerRect.height = currentLineRect.height;
+            if (isPaintingPreceding) layerRect.height = currentLineRect.height;
         }
 
         boolean canRoundLeft = rounded && (isStartOfLine || startX(currentLineRect) == startX(layerRect));
@@ -497,14 +492,10 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
              * First paint the whole rounded rectangle and remove any non visible arcs.
              */
             g.fillRoundRect(r.x, r.y, r.width, r.height, aw, ah);
-            if (!topLeft)
-                g.fillRect(r.x, r.y, aw, ah);
-            if (!topRight)
-                g.fillRect(r.x + r.width - aw, r.y, aw, ah);
-            if (!bottomLeft)
-                g.fillRect(r.x, r.y + r.height - ah, aw, ah);
-            if (!bottomRight)
-                g.fillRect(r.x + r.width - aw, r.y + r.height - ah, aw, ah);
+            if (!topLeft) g.fillRect(r.x, r.y, aw, ah);
+            if (!topRight) g.fillRect(r.x + r.width - aw, r.y, aw, ah);
+            if (!bottomLeft) g.fillRect(r.x, r.y + r.height - ah, aw, ah);
+            if (!bottomRight) g.fillRect(r.x + r.width - aw, r.y + r.height - ah, aw, ah);
         }
         context.restoreClip();
         return shape;
@@ -512,8 +503,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
 
     private Rectangle paintArcs(final Graphics2D g, final GraphicsContext context, final Rectangle r,
             final boolean topLeft, final boolean topRight, final boolean bottomLeft, final boolean bottomRight) {
-        if (r.isEmpty())
-            return r;
+        if (r.isEmpty()) return r;
         Rectangle alloc = new Rectangle(r);
         if (topLeft || bottomLeft) {
             alloc.x -= arcSize;

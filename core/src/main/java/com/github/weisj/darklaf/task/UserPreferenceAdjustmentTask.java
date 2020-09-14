@@ -31,8 +31,7 @@ public abstract class UserPreferenceAdjustmentTask implements DefaultsAdjustment
     @Override
     public void run(final Theme currentTheme, final Properties properties) {
         for (DefaultsAdjustmentTask task : getTasks()) {
-            if (task != null)
-                task.run(currentTheme, properties);
+            if (task != null) task.run(currentTheme, properties);
         }
     }
 

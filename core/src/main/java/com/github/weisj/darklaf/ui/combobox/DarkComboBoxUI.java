@@ -75,8 +75,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         inactiveBackground = UIManager.getColor("ComboBox.inactiveBackground");
         inactiveForeground = UIManager.getColor("ComboBox.disabledForeground");
         arrowBackground = UIManager.getColor("ComboBox.arrowBackground");
-        if (boxPadding == null)
-            boxPadding = new Insets(0, 0, 0, 0);
+        if (boxPadding == null) boxPadding = new Insets(0, 0, 0, 0);
     }
 
     protected void installBorder(final JComponent c) {
@@ -248,18 +247,14 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
     }
 
     protected Color getBackground(final JComboBox<?> c) {
-        if (!c.isEnabled())
-            return inactiveBackground;
-        if (c.isEditable())
-            return editBackground;
+        if (!c.isEnabled()) return inactiveBackground;
+        if (c.isEditable()) return editBackground;
         return background;
     }
 
     protected Color getArrowBackground(final JComboBox<?> c) {
-        if (!c.isEnabled())
-            return inactiveBackground;
-        if (c.isEditable())
-            return arrowBackground;
+        if (!c.isEnabled()) return inactiveBackground;
+        if (c.isEditable()) return arrowBackground;
         return background;
     }
 
@@ -272,8 +267,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
                 super.layoutContainer(parent);
                 if (ComboBoxConstants.isTreeOrTableCellEditor(comboBox)) {
                     int adj = borderSize / 2;
-                    if (!comboBox.getComponentOrientation().isLeftToRight())
-                        adj *= -1;
+                    if (!comboBox.getComponentOrientation().isLeftToRight()) adj *= -1;
                     Rectangle bounds = arrowButton.getBounds();
                     bounds.x += adj;
                     arrowButton.setBounds(bounds);

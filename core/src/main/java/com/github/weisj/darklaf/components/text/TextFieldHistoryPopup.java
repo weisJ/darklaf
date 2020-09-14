@@ -84,8 +84,7 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
      * @throws IllegalArgumentException if capacity is negative
      */
     public void setCapacity(final int capacity) throws IllegalArgumentException {
-        if (capacity < 0)
-            throw new IllegalArgumentException("Negative history size is not supported");
+        if (capacity < 0) throw new IllegalArgumentException("Negative history size is not supported");
         this.capacity = capacity;
     }
 
@@ -122,8 +121,7 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
 
     @Override
     public void show(final Component invoker, final int x, final int y) {
-        if (history.size() == 0)
-            return;
+        if (history.size() == 0) return;
         super.show(invoker, x, y);
     }
 

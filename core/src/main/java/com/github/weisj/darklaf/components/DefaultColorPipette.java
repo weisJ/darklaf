@@ -126,8 +126,7 @@ public class DefaultColorPipette extends ColorPipetteBase {
         Window pickerWindow = getPickerWindow();
         if (pickerWindow != null && pickerWindow.isShowing()) {
             Point mouseLoc = updateLocation();
-            if (mouseLoc == null)
-                return;
+            if (mouseLoc == null) return;
             final Color c = getPixelColor(mouseLoc);
             if (!c.equals(getColor()) || !mouseLoc.equals(previousLocation) || force) {
                 setColor(c);

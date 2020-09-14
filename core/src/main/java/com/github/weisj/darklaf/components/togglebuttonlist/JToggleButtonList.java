@@ -64,8 +64,7 @@ public class JToggleButtonList extends JList<JToggleButton> {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 int leadIndex = getSelectionModel().getLeadSelectionIndex();
-                if (leadIndex >= 0)
-                    setSelected(leadIndex, !JToggleButtonList.this.isSelected(leadIndex));
+                if (leadIndex >= 0) setSelected(leadIndex, !JToggleButtonList.this.isSelected(leadIndex));
             }
         });
         super.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

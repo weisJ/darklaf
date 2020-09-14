@@ -120,8 +120,7 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
 
     @Override
     public void mouseClicked(final MouseEvent e) {
-        if (hasShowIcon(getComponent()))
-            return;
+        if (hasShowIcon(getComponent())) return;
         super.mouseClicked(e);
     }
 

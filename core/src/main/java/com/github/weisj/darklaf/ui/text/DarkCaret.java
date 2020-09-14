@@ -100,8 +100,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
 
     private boolean isEndOfLine(final JTextComponent target, final int dot) {
         Document doc = target.getDocument();
-        if (dot >= doc.getLength())
-            return true;
+        if (dot >= doc.getLength()) return true;
         try {
             return target.getText(dot, 1).equals("\n");
         } catch (BadLocationException e) {
@@ -188,8 +187,8 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     }
 
     public enum CaretStyle {
-        VERTICAL_LINE_STYLE(1, false), UNDERLINE_STYLE(1, true), BLOCK_STYLE(1, true), BLOCK_BORDER_STYLE(1,
-                true), THICK_VERTICAL_LINE_STYLE(2, false);
+        VERTICAL_LINE_STYLE(1, false), UNDERLINE_STYLE(1, true), BLOCK_STYLE(1, true), BLOCK_BORDER_STYLE(1, true),
+        THICK_VERTICAL_LINE_STYLE(2, false);
 
         private final int size;
         private final boolean charWidth;
@@ -425,8 +424,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
 
     protected boolean isPositionLTR(int position, final Position.Bias bias) {
         Document doc = getComponent().getDocument();
-        if (bias == Position.Bias.Backward && --position < 0)
-            position = 0;
+        if (bias == Position.Bias.Backward && --position < 0) position = 0;
         return isLeftToRight(doc, position, position);
     }
 
@@ -503,8 +501,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
         dot = Math.max(dot, 0);
 
         // The position (0,Backward) is out of range so disallow it.
-        if (dot == 0)
-            dotBias = Position.Bias.Forward;
+        if (dot == 0) dotBias = Position.Bias.Forward;
         dotLtr = isPositionLTR(d, dotBias);
     }
 

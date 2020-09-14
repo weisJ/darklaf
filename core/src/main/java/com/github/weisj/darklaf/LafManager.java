@@ -131,8 +131,7 @@ public final class LafManager {
      */
     public static void enabledPreferenceChangeReporting(final boolean enabled) {
         ThemePreferencesHandler.getSharedInstance().enablePreferenceChangeReporting(enabled);
-        if (ThemeSettings.isInitialized())
-            ThemeSettings.getInstance().setSystemPreferencesEnabled(enabled);
+        if (ThemeSettings.isInitialized()) ThemeSettings.getInstance().setSystemPreferencesEnabled(enabled);
     }
 
     /**
@@ -208,8 +207,7 @@ public final class LafManager {
      * @see PreferredThemeStyle
      */
     public static ThemeProvider getThemeProvider() {
-        if (themeProvider == null)
-            themeProvider = createDefaultThemeProvider();
+        if (themeProvider == null) themeProvider = createDefaultThemeProvider();
         return themeProvider;
     }
 
@@ -247,8 +245,7 @@ public final class LafManager {
      * @param themes the themes to register.
      */
     public static void registerTheme(final Theme... themes) {
-        if (themes == null)
-            return;
+        if (themes == null) return;
         for (Theme theme : themes) {
             registerTheme(theme);
         }
@@ -376,8 +373,7 @@ public final class LafManager {
             eventSupport.dispatchEvent(new ThemeChangeEvent(old, theme), ThemeChangeListener::themeChanged);
             LOGGER.fine(() -> "Setting theme to " + theme);
         }
-        if (ThemeSettings.isInitialized())
-            ThemeSettings.getInstance().refresh();
+        if (ThemeSettings.isInitialized()) ThemeSettings.getInstance().refresh();
     }
 
     /**
@@ -416,8 +412,7 @@ public final class LafManager {
      * @param theme the theme to install.
      */
     public static void installTheme(final Theme theme) {
-        if (theme == getTheme() && isInstalled())
-            return;
+        if (theme == getTheme() && isInstalled()) return;
         setTheme(theme);
         install();
     }
@@ -529,15 +524,12 @@ public final class LafManager {
      * @return the closes match. NonNull.
      */
     public static Theme getClosestMatchForTheme(final Theme theme) {
-        if (theme == null)
-            return themeForPreferredStyle(null);
+        if (theme == null) return themeForPreferredStyle(null);
         for (Theme registered : getRegisteredThemes()) {
-            if (registered.equals(theme))
-                return registered;
+            if (registered.equals(theme)) return registered;
         }
         for (Theme registered : getRegisteredThemes()) {
-            if (registered.getThemeClass().equals(theme.getThemeClass()))
-                return registered;
+            if (registered.getThemeClass().equals(theme.getThemeClass())) return registered;
         }
         return themeForPreferredStyle(null);
     }

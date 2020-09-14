@@ -95,8 +95,7 @@ public class DarkFormattedTextFieldUI extends DarkTextFieldUI implements Propert
     public void changedUpdate(final DocumentEvent e) {}
 
     protected void update() {
-        if (textField == null)
-            return;
+        if (textField == null) return;
         textField.putClientProperty(DarkTextUI.KEY_HAS_ERROR, !isInputValid(textField));
     }
 

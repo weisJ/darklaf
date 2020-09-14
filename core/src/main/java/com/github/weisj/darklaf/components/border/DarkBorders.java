@@ -36,33 +36,27 @@ public final class DarkBorders {
 
     public static Border createLineBorder(final int top, final int left, final int bottom, final int right) {
         if (top == 0 && left == 0 && bottom == 0 && right == 0) {
-            if (sharedBorderEmpty == null)
-                sharedBorderEmpty = createDarkLineBorder(0, 0, 0, 0);
+            if (sharedBorderEmpty == null) sharedBorderEmpty = createDarkLineBorder(0, 0, 0, 0);
             return sharedBorderEmpty;
         }
         if (top == 1 && left == 0 && bottom == 0 && right == 0) {
-            if (sharedBorderT == null)
-                sharedBorderT = createDarkLineBorder(1, 0, 0, 0);
+            if (sharedBorderT == null) sharedBorderT = createDarkLineBorder(1, 0, 0, 0);
             return sharedBorderT;
         }
         if (top == 0 && left == 1 && bottom == 0 && right == 0) {
-            if (sharedBorderL == null)
-                sharedBorderL = createDarkLineBorder(0, 1, 0, 0);
+            if (sharedBorderL == null) sharedBorderL = createDarkLineBorder(0, 1, 0, 0);
             return sharedBorderL;
         }
         if (top == 0 && left == 0 && bottom == 1 && right == 0) {
-            if (sharedBorderB == null)
-                sharedBorderB = createDarkLineBorder(0, 0, 1, 0);
+            if (sharedBorderB == null) sharedBorderB = createDarkLineBorder(0, 0, 1, 0);
             return sharedBorderB;
         }
         if (top == 0 && left == 0 && bottom == 0 && right == 1) {
-            if (sharedBorderR == null)
-                sharedBorderR = createDarkLineBorder(0, 0, 0, 1);
+            if (sharedBorderR == null) sharedBorderR = createDarkLineBorder(0, 0, 0, 1);
             return sharedBorderR;
         }
         if (top == 1 && left == 1 && bottom == 1 && right == 1) {
-            if (sharedBorderTLBR == null)
-                sharedBorderTLBR = createDarkLineBorder(1, 1, 1, 1);
+            if (sharedBorderTLBR == null) sharedBorderTLBR = createDarkLineBorder(1, 1, 1, 1);
             return sharedBorderTLBR;
         }
         return createDarkLineBorder(top, left, bottom, right);

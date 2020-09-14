@@ -79,8 +79,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     }
 
     protected void installBorder(final JRootPane root) {
-        if (root == null)
-            return;
+        if (root == null) return;
         LookAndFeel.installBorder(root, borderKeys[windowDecorationsStyle]);
     }
 
@@ -110,12 +109,9 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     protected int decorationsStyleFromWindow(final Window window, final int windowDecorationsStyle) {
         if (DarkUIUtil.isUndecorated(window) || PropertyUtil.getBooleanProperty(rootPane, KEY_NO_DECORATIONS))
             return JRootPane.NONE;
-        if (windowDecorationsStyle != JRootPane.NONE)
-            return windowDecorationsStyle;
-        if (window instanceof JFrame)
-            return JRootPane.FRAME;
-        if (window instanceof JDialog)
-            return JRootPane.PLAIN_DIALOG;
+        if (windowDecorationsStyle != JRootPane.NONE) return windowDecorationsStyle;
+        if (window instanceof JFrame) return JRootPane.FRAME;
+        if (window instanceof JDialog) return JRootPane.PLAIN_DIALOG;
         return windowDecorationsStyle;
     }
 
@@ -155,8 +151,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
         CustomTitlePane titlePane = DecorationsHandler.getSharedInstance().createTitlePane(root, style, window);
         installLayout(root);
         setTitlePane(root, titlePane);
-        if (titlePane != null)
-            titlePane.setDecorationsStyle(windowDecorationsStyle);
+        if (titlePane != null) titlePane.setDecorationsStyle(windowDecorationsStyle);
     }
 
     @Override
@@ -188,8 +183,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     private void updateWindow(final Component parent) {
         window = DarkUIUtil.getWindow(parent);
         windowDecorationsStyle = decorationsStyleFromWindow(window, windowDecorationsStyle);
-        if (titlePane != null)
-            titlePane.setDecorationsStyle(windowDecorationsStyle);
+        if (titlePane != null) titlePane.setDecorationsStyle(windowDecorationsStyle);
         installBorder(rootPane);
     }
 
@@ -211,8 +205,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
 
     @Override
     public void hierarchyChanged(final HierarchyEvent e) {
-        if (rootPane == null)
-            return;
+        if (rootPane == null) return;
         Component parent = rootPane.getParent();
         if (parent == null) {
             return;

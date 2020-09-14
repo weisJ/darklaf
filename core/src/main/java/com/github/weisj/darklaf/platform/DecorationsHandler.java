@@ -43,8 +43,7 @@ public class DecorationsHandler {
     private boolean decorationsEnabled = true;
 
     public static DecorationsHandler getSharedInstance() {
-        if (sharedInstance == null)
-            setSharedInstance(new DecorationsHandler());
+        if (sharedInstance == null) setSharedInstance(new DecorationsHandler());
         return sharedInstance;
     }
 

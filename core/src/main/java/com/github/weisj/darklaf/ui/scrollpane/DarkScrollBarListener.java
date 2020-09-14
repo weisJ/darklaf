@@ -151,14 +151,12 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
 
     @Override
     public void adjustmentValueChanged(final AdjustmentEvent e) {
-        if (!e.getValueIsAdjusting())
-            return;
+        if (!e.getValueIsAdjusting()) return;
 
         JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
         int extent = scrollBar.getModel().getExtent();
         int value = scrollBar.getValue() + extent;
-        if (value == extent || value == scrollBar.getMaximum())
-            return;
+        if (value == extent || value == scrollBar.getMaximum()) return;
 
         Point p = MouseInfo.getPointerInfo().getLocation();
         SwingUtilities.convertPointFromScreen(p, scrollbar);

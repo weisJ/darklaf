@@ -35,8 +35,7 @@ public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
 
     @Override
     public PreferredThemeStyle getPreference() {
-        if (!WindowsLibrary.get().isLoaded())
-            return fallbackStyle;
+        if (!WindowsLibrary.get().isLoaded()) return fallbackStyle;
         boolean darkMode = JNIThemeInfoWindows.isDarkThemeEnabled();
         boolean highContrast = JNIThemeInfoWindows.isHighContrastEnabled();
         long fontScaling = JNIThemeInfoWindows.getFontScaleFactor();
@@ -54,8 +53,7 @@ public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
     }
 
     private Color createColorFromRGB(final int rgb) {
-        if (rgb == 0)
-            return null;
+        if (rgb == 0) return null;
         return new Color(rgb);
     }
 
@@ -69,8 +67,7 @@ public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
 
     @Override
     public void setReporting(final boolean reporting) {
-        if (reporting && !WindowsLibrary.get().isLoaded())
-            WindowsLibrary.get().updateLibrary();
+        if (reporting && !WindowsLibrary.get().isLoaded()) WindowsLibrary.get().updateLibrary();
         synchronized (monitor) {
             monitor.setRunning(reporting);
         }

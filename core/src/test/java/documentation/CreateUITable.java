@@ -76,8 +76,7 @@ public class CreateUITable {
         String htmlFile = workingFolder + "defaults_" + os + ".html";
         Files.createDirectories(new File(workingFolder).toPath());
         File f = new File(htmlFile);
-        if (!f.exists())
-            Files.createFile(f.toPath());
+        if (!f.exists()) Files.createFile(f.toPath());
 
         try (OutputStreamWriter writer =
                 new OutputStreamWriter(new FileOutputStream(htmlFile), StandardCharsets.UTF_8)) {
@@ -98,12 +97,9 @@ public class CreateUITable {
 
         Set<String> groups = defaults.keySet().stream().map(key -> {
             String s = key.toString();
-            if (s.startsWith("%"))
-                return "%";
-            if (s.contains("."))
-                return s.split("\\.")[0];
-            if (s.endsWith("UI"))
-                return s.substring(0, s.length() - 2);
+            if (s.startsWith("%")) return "%";
+            if (s.contains(".")) return s.split("\\.")[0];
+            if (s.endsWith("UI")) return s.substring(0, s.length() - 2);
             return misc + s;
         }).collect(Collectors.toSet());
 
@@ -135,12 +131,9 @@ public class CreateUITable {
         builder.append(StringUtil.repeat(IDENT, ident)).append("<h3>").append(heading).append("</h3>\n");
         Set<Map.Entry<Object, Object>> values = defaults.entrySet().stream().filter(entry -> {
             String key = entry.getKey().toString();
-            if (key.startsWith("%"))
-                return true;
-            if (key.endsWith("UI"))
-                return key.substring(0, key.length() - 2).equals(group);
-            if (key.contains("."))
-                return key.split("\\.")[0].equals(group);
+            if (key.startsWith("%")) return true;
+            if (key.endsWith("UI")) return key.substring(0, key.length() - 2).equals(group);
+            if (key.contains(".")) return key.split("\\.")[0].equals(group);
             return key.equals(group);
         }).collect(Collectors.toSet());
         appendTable(builder, values, ident);
@@ -161,8 +154,7 @@ public class CreateUITable {
                 .forEach(entry -> appendRow(builder, entry, ident + 1));
         values.stream().filter(entry -> !entry.getKey().toString().endsWith("UI")).sorted((o1, o2) -> {
             int res = o1.getValue().getClass().getSimpleName().compareTo(o2.getValue().getClass().getSimpleName());
-            if (res != 0)
-                return res;
+            if (res != 0) return res;
             Object val1 = o1.getValue();
             Object val2 = o2.getValue();
             if (val1 instanceof Comparable) {
@@ -246,8 +238,7 @@ public class CreateUITable {
         new File(workingFolder + "img/").mkdirs();
         String fileName = "img/" + name + ".png";
         File imageFile = new File(workingFolder + fileName);
-        if (!imageFile.createNewFile())
-            return fileName;
+        if (!imageFile.createNewFile()) return fileName;
         if (value instanceof Icon) {
             size.width = Math.max(size.width, ((Icon) value).getIconWidth());
             size.height = Math.max(size.height, ((Icon) value).getIconHeight());
@@ -290,13 +281,11 @@ public class CreateUITable {
                 String id = ((LinearGradient) child).getId();
                 String match = "=\"url\\(#" + id + "\\)\"";
                 String fillReplacement = "fill=\"#" + ColorUtil.toHex(color) + "\"";
-                if (opacity != 1)
-                    fillReplacement += " fill-opacity=\"" + opacity + "\"";
+                if (opacity != 1) fillReplacement += " fill-opacity=\"" + opacity + "\"";
                 svg = svg.replaceAll("fill" + match, fillReplacement);
 
                 String strokeReplacement = "stroke=\"#" + ColorUtil.toHex(color) + "\"";
-                if (opacity != 1)
-                    strokeReplacement += " stroke-opacity=\"" + opacity + "\"";
+                if (opacity != 1) strokeReplacement += " stroke-opacity=\"" + opacity + "\"";
                 svg = svg.replaceAll("stroke" + match, strokeReplacement);
             }
         }
@@ -306,8 +295,7 @@ public class CreateUITable {
 
     private Color getColor(final UIDefaults defaults, final String key) {
         Object obj = getValue(defaults.get(key));
-        if (obj instanceof Color)
-            return (Color) obj;
+        if (obj instanceof Color) return (Color) obj;
         return null;
     }
 
@@ -355,8 +343,7 @@ public class CreateUITable {
         } else if (value instanceof Character) {
             return value.toString();
         }
-        if (value == null)
-            return "null";
+        if (value == null) return "null";
         return value.getClass().getSimpleName();
     }
 }

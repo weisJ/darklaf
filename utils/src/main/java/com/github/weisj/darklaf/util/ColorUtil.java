@@ -29,10 +29,8 @@ import javax.swing.plaf.UIResource;
 public final class ColorUtil {
 
     public static Color blendColors(final Color color1, final Color color2, final double percent) {
-        if (percent == 1)
-            return color1;
-        if (percent == 0)
-            return color2;
+        if (percent == 1) return color1;
+        if (percent == 0) return color2;
         double inverse_percent = 1.0 - percent;
         int redPart = (int) (color1.getRed() * percent + color2.getRed() * inverse_percent);
         int greenPart = (int) (color1.getGreen() * percent + color2.getGreen() * inverse_percent);
@@ -67,8 +65,7 @@ public final class ColorUtil {
     }
 
     public static String toHex(final Color color) {
-        if (color == null)
-            return "";
+        if (color == null) return "";
         int r = color.getRed();
         int b = color.getBlue();
         int g = color.getGreen();

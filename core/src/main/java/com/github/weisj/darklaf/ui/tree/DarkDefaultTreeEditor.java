@@ -142,8 +142,7 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
 
     protected Object getValue(final JTree tree, final int row) {
         TreePath path = tree.getPathForRow(row);
-        if (path == null)
-            return false;
+        if (path == null) return false;
         return DarkTreeCellRendererDelegate.unwrapValue(path.getLastPathComponent());
     }
 
@@ -196,22 +195,19 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
 
     protected DarkTreeCellRendererDelegate getRendererDelegate(final JTree tree) {
         DarkTreeUI ui = DarkUIUtil.getUIOfType(tree.getUI(), DarkTreeUI.class);
-        if (ui == null)
-            return null;
+        if (ui == null) return null;
         return DarkUIUtil.nullableCast(DarkTreeCellRendererDelegate.class, ui.getCellRenderer());
     }
 
     protected JComponent getBooleanRendererComponent(final JTree tree) {
         DarkTreeCellRendererDelegate rend = getRendererDelegate(tree);
-        if (rend == null)
-            return null;
+        if (rend == null) return null;
         return rend.getBooleanRenderer(tree).getButton();
     }
 
     protected JComponent getTristateRendererComponent(final JTree tree) {
         DarkTreeCellRendererDelegate rend = getRendererDelegate(tree);
-        if (rend == null)
-            return null;
+        if (rend == null) return null;
         return rend.getTristateRenderer(tree).getButton();
     }
 }

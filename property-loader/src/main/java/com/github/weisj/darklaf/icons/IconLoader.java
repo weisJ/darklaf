@@ -249,8 +249,7 @@ public final class IconLoader {
                 return awareIconMap.get(key);
             }
             Icon icon = getWildcardIcon(iconMap, key, w, h);
-            if (icon != null)
-                return icon;
+            if (icon != null) return icon;
         }
 
         // Icon not found or caching is disabled.
@@ -393,14 +392,12 @@ public final class IconLoader {
     }
 
     private int getDefaultWidth(final String path) {
-        if (!isSVGIcon(path))
-            return -1;
+        if (!isSVGIcon(path)) return -1;
         return DEFAULT_W;
     }
 
     private int getDefaultHeight(final String path) {
-        if (!isSVGIcon(path))
-            return -1;
+        if (!isSVGIcon(path)) return -1;
         return DEFAULT_H;
     }
 
@@ -427,10 +424,8 @@ public final class IconLoader {
 
         @Override
         public boolean equals(final Object o) {
-            if (this == o)
-                return true;
-            if (o == null || getClass() != o.getClass())
-                return false;
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
 
             IconKey iconKey = (IconKey) o;
 
@@ -438,10 +433,8 @@ public final class IconLoader {
                 // Math any size.
                 return Objects.equals(path, iconKey.path);
             }
-            if (w != iconKey.w)
-                return false;
-            if (h != iconKey.h)
-                return false;
+            if (w != iconKey.w) return false;
+            if (h != iconKey.h) return false;
             return Objects.equals(path, iconKey.path);
         }
 

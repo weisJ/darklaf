@@ -68,8 +68,7 @@ public class TreeRendererComponent extends Container {
 
     private int getOffset() {
         Icon icon = defaultRenderer.getIcon();
-        if (icon == null)
-            return 0;
+        if (icon == null) return 0;
         return icon.getIconWidth() + defaultRenderer.getIconTextGap();
     }
 
@@ -111,8 +110,7 @@ public class TreeRendererComponent extends Container {
                 icon.paintIcon(this, g, width - icon.getIconWidth(), yLoc);
             }
         }
-        if (renderComponent != null)
-            renderComponent.paint(g);
+        if (renderComponent != null) renderComponent.paint(g);
     }
 
     /** Calculate the y location for the icon. */
@@ -128,21 +126,18 @@ public class TreeRendererComponent extends Container {
     @Override
     public void setFont(final Font f) {
         super.setFont(f);
-        if (renderComponent != null)
-            renderComponent.setFont(f);
+        if (renderComponent != null) renderComponent.setFont(f);
     }
 
     @Override
     public void setForeground(final Color c) {
         super.setForeground(c);
-        if (renderComponent != null)
-            renderComponent.setForeground(c);
+        if (renderComponent != null) renderComponent.setForeground(c);
     }
 
     @Override
     public void setBackground(final Color c) {
         super.setBackground(c);
-        if (renderComponent != null)
-            renderComponent.setBackground(c);
+        if (renderComponent != null) renderComponent.setBackground(c);
     }
 }

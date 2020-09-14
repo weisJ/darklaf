@@ -34,8 +34,7 @@ public final class StringUtil {
     private StringUtil() {}
 
     public static String toHtml(final String text) {
-        if (text == null)
-            return "";
+        if (text == null) return "";
         if (!text.startsWith("<html>") && text.contains("\n")) {
             return "<html>" + text.replaceAll("\n", "<\\br>") + "</html>";
         }
@@ -191,10 +190,8 @@ public final class StringUtil {
     }
 
     public static String repeat(final String s, final int count) {
-        if (count <= 0)
-            return "";
-        if (count == 1)
-            return s;
+        if (count <= 0) return "";
+        if (count == 1) return s;
         StringBuilder builder = new StringBuilder(s.length() * count);
         for (int i = 0; i < count; i++) {
             builder.append(s);

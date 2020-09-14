@@ -51,15 +51,13 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
     }
 
     public static ComponentUI createUI(final JComponent c) {
-        if (darkLabelUI == null)
-            darkLabelUI = new DarkLabelUI();
+        if (darkLabelUI == null) darkLabelUI = new DarkLabelUI();
         return darkLabelUI;
     }
 
     @Override
     public void installUI(final JComponent c) {
-        if (c != null)
-            super.installUI(c);
+        if (c != null) super.installUI(c);
     }
 
     @Override

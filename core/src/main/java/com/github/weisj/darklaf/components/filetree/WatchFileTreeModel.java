@@ -101,8 +101,7 @@ public class WatchFileTreeModel extends FileTreeModel {
     }
 
     public void startWatching() {
-        if (watchTask != null)
-            return;
+        if (watchTask != null) return;
         isScheduled.set(true);
         watchTask = scheduler.schedule(this::watch, 0, TimeUnit.SECONDS);
     }
@@ -158,10 +157,8 @@ public class WatchFileTreeModel extends FileTreeModel {
     protected void register(final FileTreeNode node) {
         synchronized (getLock()) {
             WatchService ws = getWatchService();
-            if (ws == null || !Files.isDirectory(node.file))
-                return;
-            if (getNodeMap().containsKey(node.file))
-                return;
+            if (ws == null || !Files.isDirectory(node.file)) return;
+            if (getNodeMap().containsKey(node.file)) return;
             try {
                 LOGGER.finer(() -> "Register watch service for \"" + node.file + "\"");
                 node.watchKey = node.file.register(ws, StandardWatchEventKinds.ENTRY_CREATE,
@@ -174,8 +171,7 @@ public class WatchFileTreeModel extends FileTreeModel {
 
     protected void unregister(final FileTreeNode node) {
         synchronized (getLock()) {
-            if (node.watchKey == null)
-                return;
+            if (node.watchKey == null) return;
             LOGGER.finer(() -> "Unregister watch service for \"" + node.file + "\"");
             getNodeMap().remove(node.file);
             node.watchKey.cancel();

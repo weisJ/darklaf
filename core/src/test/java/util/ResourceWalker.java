@@ -45,8 +45,7 @@ public class ResourceWalker implements AutoCloseable {
     }
 
     public Stream<String> stream() {
-        if (stream != null)
-            throw new IllegalStateException("Stream already open");
+        if (stream != null) throw new IllegalStateException("Stream already open");
         Stream<String> s = Arrays.stream(packages).flatMap(this::walk);
         stream = s;
         return s;
@@ -108,11 +107,9 @@ public class ResourceWalker implements AutoCloseable {
     }
 
     private Stream<File> walkFolder(final File file) {
-        if (!file.isDirectory())
-            return Stream.of(file);
+        if (!file.isDirectory()) return Stream.of(file);
         File[] files = file.listFiles();
-        if (files == null)
-            files = new File[0];
+        if (files == null) files = new File[0];
         return Arrays.stream(files).flatMap(this::walkFolder);
     }
 }

@@ -48,8 +48,7 @@ public class WatchFileTree extends FileTree {
 
     @Override
     public void setFileTreeModel(final FileTreeModel fileTreeModel) {
-        if (getModel() == fileTreeModel)
-            return;
+        if (getModel() == fileTreeModel) return;
         if (getModel() instanceof WatchFileTreeModel) {
             ((WatchFileTreeModel) getModel()).stopWatching();
         }

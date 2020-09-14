@@ -103,10 +103,8 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     }
 
     private boolean systemKerningEnabled() {
-        if (SystemInfo.isMac)
-            return SystemInfo.isMacOSMojave;
-        if (SystemInfo.isWindows)
-            return SystemInfo.isWindowsVista;
+        if (SystemInfo.isMac) return SystemInfo.isMacOSMojave;
+        if (SystemInfo.isWindows) return SystemInfo.isWindowsVista;
         return false;
     }
 
@@ -144,8 +142,7 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
         Font font = entry.getValue();
         String fontName = SystemInfo.isMacOSCatalina ? MAC_OS_CATALINA_FONT_NAME_FALLBACK : MAC_OS_FONT_NAME;
         Font macFont = FontUtil.createFont(fontName, font.getStyle(), font.getSize());
-        if (SystemInfo.isMacOSMojave)
-            macFont = macFont.deriveFont(ENABLE_KERNING);
+        if (SystemInfo.isMacOSMojave) macFont = macFont.deriveFont(ENABLE_KERNING);
         if (font instanceof UIResource) {
             macFont = new DarkFontUIResource(macFont);
         }
@@ -154,8 +151,7 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
 
     private Font mapWindowsFont(final Map.Entry<Object, Font> entry) {
         Font font = entry.getValue();
-        if (!SystemInfo.isWindowsVista)
-            return font;
+        if (!SystemInfo.isWindowsVista) return font;
         Font windowsFont = FontUtil.createFont(WINDOWS_10_FONT_NAME, font.getStyle(), font.getSize());
         if (font instanceof UIResource) {
             windowsFont = new DarkFontUIResource(windowsFont);
@@ -167,26 +163,22 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
         PropertyLoader.replacePropertiesOfType(Font.class, defaults, e -> kerningPredicate.test(e.getKey().toString()),
                 f -> {
                     Font font = f.deriveFont(ENABLE_KERNING);
-                    if (f instanceof UIResource)
-                        font = new DarkFontUIResource(font);
+                    if (f instanceof UIResource) font = new DarkFontUIResource(font);
                     return font;
                 });
     }
 
     private void applyFontRule(final Theme currentTheme, final UIDefaults defaults) {
         FontSizeRule rule = currentTheme.getFontSizeRule();
-        if (rule == null || rule.getType() == FontSizeRule.AdjustmentType.NO_ADJUSTMENT)
-            return;
+        if (rule == null || rule.getType() == FontSizeRule.AdjustmentType.NO_ADJUSTMENT) return;
         PropertyLoader.replacePropertiesOfType(Font.class, defaults, f -> fontWithRule(f, rule));
     }
 
     private Font fontWithRule(final Font font, final FontSizeRule rule) {
-        if (font == null)
-            return null;
+        if (font == null) return null;
         float size = font.getSize2D();
         float newSize = rule.adjustFontSize(size);
-        if (newSize == size)
-            return font;
+        if (newSize == size) return font;
         if (newSize <= 0) {
             LOGGER.warning("Font " + font + " would be invisible after applying " + rule + ". Font won't be changed!");
             return font;

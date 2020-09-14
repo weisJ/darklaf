@@ -61,8 +61,7 @@ public class DefaultTreeTableModel extends AbstractTreeTableModel {
     @Override
     public Object getValueAt(final Object node, final int column) {
         TreeTableNode treeTableNode = DarkUIUtil.nullableCast(TreeTableNode.class, node);
-        if (treeTableNode == null)
-            return null;
+        if (treeTableNode == null) return null;
         return treeTableNode.getValueAt(column);
     }
 

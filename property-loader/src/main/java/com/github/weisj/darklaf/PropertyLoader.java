@@ -124,8 +124,7 @@ public final class PropertyLoader {
             Object parsed = parseValue(key, value, accumulator, currentDefaults, iconLoader);
             if (parsed != null) {
                 String k = parseKey(key);
-                if (parsed instanceof FallbackValue && accumulator.containsKey(k))
-                    continue;
+                if (parsed instanceof FallbackValue && accumulator.containsKey(k)) continue;
                 accumulator.put(parseKey(key), parsed);
             } else {
                 currentDefaults.remove(parseKey(key));
@@ -158,8 +157,7 @@ public final class PropertyLoader {
     }
 
     private static String parseKey(final String key) {
-        if (debugMode)
-            return key;
+        if (debugMode) return key;
         return key.startsWith(String.valueOf(REFERENCE_PREFIX)) ? key.substring(1) : key;
     }
 
@@ -217,8 +215,7 @@ public final class PropertyLoader {
         } else if (value.startsWith(String.valueOf(REFERENCE_PREFIX))) {
             returnVal = parseReference(key, value, accumulator, currentDefaults);
         }
-        if (!(returnVal instanceof LoadError))
-            return maybeWrap(returnVal, isFallback);
+        if (!(returnVal instanceof LoadError)) return maybeWrap(returnVal, isFallback);
         return maybeWrap(value, isFallback);
     }
 
@@ -291,21 +288,14 @@ public final class PropertyLoader {
             } else {
                 break;
             }
-            if (val.isEmpty())
-                break;
+            if (val.isEmpty()) break;
         }
-        if (base == null)
-            base = parseExplicitFont(value);
-        if (base == null && accumulator.get(key) instanceof Font)
-            base = (Font) accumulator.get(key);
-        if (base == null)
-            base = currentDefaults.getFont(key);
-        if (base == null)
-            base = FontUtil.createFont(null, Font.PLAIN, 12);
-        if (size <= 0)
-            size = base.getSize();
-        if (style < 0)
-            style = base.getStyle();
+        if (base == null) base = parseExplicitFont(value);
+        if (base == null && accumulator.get(key) instanceof Font) base = (Font) accumulator.get(key);
+        if (base == null) base = currentDefaults.getFont(key);
+        if (base == null) base = FontUtil.createFont(null, Font.PLAIN, 12);
+        if (size <= 0) size = base.getSize();
+        if (style < 0) style = base.getStyle();
         Font font = base.deriveFont(style, size);
         font = new DarkFontUIResource(font.deriveFont(attributes));
         return font;
@@ -362,10 +352,8 @@ public final class PropertyLoader {
         String rest = key.substring(index + 1);
         key = key.substring(0, index);
         Font font = null;
-        if (accumulator.get(key) instanceof Font)
-            font = (Font) accumulator.get(key);
-        if (font == null)
-            font = currentDefaults.getFont(key);
+        if (accumulator.get(key) instanceof Font) font = (Font) accumulator.get(key);
+        if (font == null) font = currentDefaults.getFont(key);
         return new Pair<>(font, rest);
     }
 
@@ -377,15 +365,13 @@ public final class PropertyLoader {
     private static <T> List<T> parseList(final ParseFunction<T> mapper, final String value,
             final Map<Object, Object> accumulator, final UIDefaults currentDefaults, final IconLoader iconLoader,
             final char start, final char end, final char delimiter) {
-        if (value == null || value.isEmpty())
-            return new ArrayList<>();
+        if (value == null || value.isEmpty()) return new ArrayList<>();
         String val = value;
         if (val.charAt(0) == start) {
             val = value.substring(1, value.length() - 1);
         }
         String[] values = val.split(String.valueOf(delimiter));
-        if (values.length == 0)
-            return Collections.emptyList();
+        if (values.length == 0) return Collections.emptyList();
         return Arrays.stream(values).map(k -> mapper.parseValue(k, accumulator, currentDefaults, iconLoader))
                 .collect(Collectors.toList());
     }
@@ -475,8 +461,7 @@ public final class PropertyLoader {
     }
 
     public static String asKey(final String key) {
-        if (debugMode)
-            return REFERENCE_PREFIX + key;
+        if (debugMode) return REFERENCE_PREFIX + key;
         return key;
     }
 

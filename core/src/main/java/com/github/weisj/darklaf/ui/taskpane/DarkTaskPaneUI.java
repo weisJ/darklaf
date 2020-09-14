@@ -89,8 +89,7 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
     }
 
     protected boolean isCollapsed() {
-        if (!group.isAnimated())
-            return group.isCollapsed();
+        if (!group.isAnimated()) return group.isCollapsed();
         return isCollapsed;
     }
 

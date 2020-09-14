@@ -177,8 +177,7 @@ public class OverlayScrollPane extends JLayeredPane implements PropertyChangeLis
     }
 
     protected void updateScrollPaneUI() {
-        if (scrollPane == null)
-            return;
+        if (scrollPane == null) return;
         scrollPane.setLayout(new ScrollLayoutManagerDelegate((ScrollPaneLayout) scrollPane.getLayout()) {
 
             @Override

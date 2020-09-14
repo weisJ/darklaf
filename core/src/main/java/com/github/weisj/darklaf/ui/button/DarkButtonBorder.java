@@ -153,8 +153,7 @@ public class DarkButtonBorder implements Border, UIResource {
         if (paintLeft) {
             AlignmentExt corner = getCornerFlag(left);
             Insets ins = new Insets(0, 0, 0, 0);
-            if (corner != null)
-                ins = corner.maskInsets(ins, borderSize);
+            if (corner != null) ins = corner.maskInsets(ins, borderSize);
 
             int h = height - Math.max(0, getShadowSize(left) - borderSize);
             g2.translate(-3 * borderSize + 1, -ins.top);
@@ -166,8 +165,7 @@ public class DarkButtonBorder implements Border, UIResource {
         if (paintRight) {
             AlignmentExt corner = getCornerFlag(right);
             Insets ins = new Insets(0, 0, 0, 0);
-            if (corner != null)
-                ins = corner.maskInsets(ins, borderSize);
+            if (corner != null) ins = corner.maskInsets(ins, borderSize);
 
             int h = height - Math.max(0, getShadowSize(right) - borderSize);
             g2.translate(width - borderSize - 1, -ins.top);
@@ -180,8 +178,7 @@ public class DarkButtonBorder implements Border, UIResource {
         if (paintTop) {
             AlignmentExt corner = getCornerFlag(top);
             Insets ins = new Insets(0, 0, 0, 0);
-            if (corner != null)
-                ins = corner.maskInsets(ins, borderSize);
+            if (corner != null) ins = corner.maskInsets(ins, borderSize);
 
             g2.translate(-ins.left, -3 * borderSize + 1);
             PaintUtil.paintFocusBorder(g2, width + ins.right + ins.left, 4 * borderSize, getFocusArc(top), borderSize);
@@ -209,8 +206,7 @@ public class DarkButtonBorder implements Border, UIResource {
         if (paintBottom) {
             AlignmentExt corner = getCornerFlag(bottom);
             Insets ins = new Insets(0, 0, 0, 0);
-            if (corner != null)
-                ins = corner.maskInsets(ins, borderSize);
+            if (corner != null) ins = corner.maskInsets(ins, borderSize);
 
             g2.translate(-ins.left, height - borderSize - 1);
             PaintUtil.paintFocusBorder(g2, width + ins.left + ins.right, 4 * borderSize, getFocusArc(bottom),
@@ -270,8 +266,7 @@ public class DarkButtonBorder implements Border, UIResource {
 
     protected Insets maskInsets(final Insets ins, final Component c, final int shadow) {
         AlignmentExt alignment = getCornerFlag(c);
-        if (alignment == null)
-            return ins;
+        if (alignment == null) return ins;
         Insets insetMask = new Insets(borderSize, borderSize, Math.max(borderSize, shadow), borderSize);
         insetMask = alignment.maskInsetsInverted(insetMask);
         ins.top -= insetMask.top;

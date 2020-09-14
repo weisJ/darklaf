@@ -115,8 +115,7 @@ public class TristateCheckBoxMenuItem extends JCheckBoxMenuItem {
     }
 
     private void iterateState() {
-        if (!getModel().isEnabled())
-            return;
+        if (!getModel().isEnabled()) return;
 
         grabFocus();
         getTristateModel().iterateState();

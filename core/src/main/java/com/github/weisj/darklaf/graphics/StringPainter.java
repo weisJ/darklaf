@@ -103,8 +103,7 @@ public class StringPainter {
     public static <T extends JComponent> void drawStringImpl(final Graphics g, final T c, final View view,
             final String text, final Rectangle textRect, final Font font, final FontMetrics fm, final int mnemIndex,
             final Color background) {
-        if (text == null || text.equals(""))
-            return;
+        if (text == null || text.equals("")) return;
 
         GraphicsContext context = GraphicsUtil.setupAntialiasing(g);
 
@@ -212,8 +211,7 @@ public class StringPainter {
         try {
             Field surfaceField = graphics2D.getClass().getField("surfaceData");
             Object surfaceDataValue = surfaceField.get(graphics2D);
-            if (surfaceDataValue == null)
-                return null;
+            if (surfaceDataValue == null) return null;
 
             Field imgField;
             try {

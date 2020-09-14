@@ -56,8 +56,7 @@ public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
             return;
         }
         Properties props = currentTheme.loadAccentProperties();
-        if (props == null || props.isEmpty())
-            return;
+        if (props == null || props.isEmpty()) return;
         if (accentColor != null) {
             adjustColors(MAIN_ACCENT_LIST_KEY, accentColor, props, properties);
         }
@@ -78,8 +77,7 @@ public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
         ColorInfo info = new ColorInfo();
         for (Object o : list) {
             setColorInfo(o, info);
-            if (info.key == null)
-                continue;
+            if (info.key == null) continue;
             Object c = mapColor(info, hsb, properties);
             if (c instanceof Color) {
                 properties.put(info.key, c);
@@ -99,10 +97,8 @@ public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
         if (o instanceof Pair<?, ?>) {
             Object first = ((Pair<?, ?>) o).getFirst();
             Object second = ((Pair<?, ?>) o).getSecond();
-            if (!(first instanceof String))
-                return;
-            if (!(second instanceof List<?>))
-                return;
+            if (!(first instanceof String)) return;
+            if (!(second instanceof List<?>)) return;
             String key = first.toString();
             List<?> list = (List<?>) second;
             if (list.size() != 3 || !(list.get(0) instanceof Integer) || !(list.get(1) instanceof Integer)

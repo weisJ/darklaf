@@ -146,8 +146,7 @@ public class ToggleSplitPane extends JSplitPane {
 
     @Override
     public void setDividerLocation(final int location) {
-        if (isInLayout)
-            return;
+        if (isInLayout) return;
         isInLayout = true;
         if (resizable) {
             super.setDividerLocation(location);

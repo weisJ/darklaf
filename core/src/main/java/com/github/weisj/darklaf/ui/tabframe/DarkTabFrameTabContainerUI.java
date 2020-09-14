@@ -91,11 +91,9 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
     }
 
     protected void installAccelerator(final JTabFrame tabFrame) {
-        if (tabFrame == null)
-            return;
+        if (tabFrame == null) return;
         int acc = tabContainer.getAccelerator();
-        if (acc < 0)
-            return;
+        if (acc < 0) return;
         tabFrame.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
                 KeyStroke.getKeyStroke(UIManager.getString("TabFrame.acceleratorKeyCode") + " " + acc),
                 ACCELERATOR_PREFIX + acc);
@@ -148,8 +146,7 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
     }
 
     protected void uninstallAccelerator(final JTabFrame tabFrame) {
-        if (tabFrame == null)
-            return;
+        if (tabFrame == null) return;
         int acc = tabContainer.getAccelerator();
         String accAction = ACCELERATOR_PREFIX + acc;
         tabFrame.getActionMap().remove(accAction);
@@ -181,12 +178,10 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
                 ((Component) newVal).addMouseMotionListener(dragListener);
             }
         } else if (TabFrameTab.KEY_SELECTED.equals(key)) {
-            if (tabContainer == null)
-                return;
+            if (tabContainer == null) return;
             tabContainer.repaint();
         } else if (TabFrameTab.KEY_ACCELERATOR.equals(key)) {
-            if (tabContainer == null)
-                return;
+            if (tabContainer == null) return;
             uninstallAccelerator(tabContainer.getTabFrame());
             installAccelerator(tabContainer.getTabFrame());
         } else if (TabFrameTab.KEY_TAB_FRAME_PARENT.equals(key)) {
@@ -209,8 +204,7 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
     }
 
     public Color getBackground(final TabFrameTabContainer tab) {
-        if (printing)
-            return tab.getBackground();
+        if (printing) return tab.getBackground();
         return tab.isSelected() ? selectedColor
                 : hoverListener.isHover() && !tab.getTabFrame().isInTransfer() ? hoverColor : tab.getBackground();
     }

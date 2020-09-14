@@ -57,8 +57,7 @@ public class TreeCellContainer implements IndexedCellContainer<JTree, Integer> {
 
     @Override
     public Color getBackgroundAt(final Integer position, final Component renderer) {
-        if (position == null)
-            return null;
+        if (position == null) return null;
         return CellUtil.getTreeBackground(tree, tree.isRowSelected(position), position);
     }
 
@@ -69,8 +68,7 @@ public class TreeCellContainer implements IndexedCellContainer<JTree, Integer> {
 
     @Override
     public Component getCellRendererComponent(final Integer row) {
-        if (row == null)
-            return null;
+        if (row == null) return null;
         TreeCellRenderer renderer = ui.getCellRenderer();
         TreePath path = tree.getPathForRow(row);
         boolean isExpanded = tree.isExpanded(row);

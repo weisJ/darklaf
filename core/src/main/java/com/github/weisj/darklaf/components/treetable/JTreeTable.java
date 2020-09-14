@@ -73,8 +73,7 @@ public class JTreeTable extends JTable implements TreeSelectionListener {
             DarkTreeUI ui = DarkUIUtil.getUIOfType(tree.getUI(), DarkTreeUI.class);
             if (ui != null) {
                 CellHintPopupListener<JTree, ?> listener = ui.getPopupListener();
-                if (listener != null)
-                    listener.repaint();
+                if (listener != null) listener.repaint();
             }
         });
     }
@@ -93,8 +92,7 @@ public class JTreeTable extends JTable implements TreeSelectionListener {
                     tree.processEvent(e);
                 }
             }
-            if (((InputEvent) e).isConsumed())
-                return;
+            if (((InputEvent) e).isConsumed()) return;
         }
         super.processEvent(e);
     }

@@ -88,8 +88,7 @@ public class JNIThemeInfoMacOS {
     public static Color getSelectionColor() {
         int rgba = nativeGetSelectionColor();
         // If rgba == 0 then it has an alpha channel != 255, so it is invalid.
-        if (rgba == 0)
-            return null;
+        if (rgba == 0) return null;
         return new Color(rgba);
     }
 

@@ -94,8 +94,7 @@ public class SmallColorChooser extends JPanel {
         colorTriangle.addListener((c, o) -> {
             previewComponent.setColor(c);
             for (DarkColorModel model : COLOR_MODELS) {
-                if (o != model)
-                    updateMap.get(model).run();
+                if (o != model) updateMap.get(model).run();
             }
             if (o != hexField) {
                 hexField.setText(ColorUtil.toHex(c));
@@ -117,14 +116,12 @@ public class SmallColorChooser extends JPanel {
     }
 
     protected void setColor(final Object source, final DarkColorModel model, final int... values) {
-        if (isValueChanging())
-            return;
+        if (isValueChanging()) return;
         setValueChanging(true);
         if (model != null) {
             colorTriangle.setColorFromModel(source, model, values);
         }
-        if (callback != null)
-            callback.accept(colorTriangle.getColor());
+        if (callback != null) callback.accept(colorTriangle.getColor());
         setValueChanging(false);
     }
 
@@ -259,8 +256,7 @@ public class SmallColorChooser extends JPanel {
 
             label.setValue(String.valueOf(slider.getValue()));
             slider.addChangeListener(e -> {
-                if (isValueChanging())
-                    return;
+                if (isValueChanging()) return;
                 int[] values = new int[count];
                 for (int j = 0; j < count; j++) {
                     values[j] = sliders[j].getValue();
@@ -318,8 +314,7 @@ public class SmallColorChooser extends JPanel {
 
         public void setValue(final String value) {
             this.value = value;
-            if (this.value == null)
-                this.value = "";
+            if (this.value == null) this.value = "";
             setText(before + ": " + value + after);
         }
     }

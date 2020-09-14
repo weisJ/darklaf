@@ -95,14 +95,12 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
         comboBox.addPopupMenuListener(new PopupMenuListener() {
             @Override
             public void popupMenuWillBecomeVisible(final PopupMenuEvent e) {
-                if (tree != null)
-                    tree.repaint();
+                if (tree != null) tree.repaint();
             }
 
             @Override
             public void popupMenuWillBecomeInvisible(final PopupMenuEvent e) {
-                if (tree != null)
-                    tree.repaint();
+                if (tree != null) tree.repaint();
             }
 
             @Override

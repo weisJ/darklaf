@@ -50,10 +50,8 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         FileTreeNode that = (FileTreeNode) o;
         return Objects.equals(file, that.file);
     }
@@ -69,8 +67,7 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
 
     private int addSorted(final List<FileTreeNode> nodes, final FileTreeNode node) {
         int index = Collections.binarySearch(nodes, node);
-        if (index < 0)
-            index = ~index;
+        if (index < 0) index = ~index;
         nodes.add(index, node);
         model.register(node);
         return index;
@@ -90,10 +87,8 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
     }
 
     protected void reload(final int depth) {
-        if (depth < 0)
-            return;
-        if (children.get() == null)
-            return;
+        if (depth < 0) return;
+        if (children.get() == null) return;
         List<FileTreeNode> fileList = children.get();
         this.<ReloadOp>doInBackground(pub -> {
             taskCount.getAndIncrement();
@@ -131,8 +126,7 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
                 }
             }
         }, () -> {
-            if (depth > 0)
-                fileList.forEach(n -> n.reload(depth - 1));
+            if (depth > 0) fileList.forEach(n -> n.reload(depth - 1));
             taskCount.getAndDecrement();
         });
     }
@@ -245,15 +239,13 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
     }
 
     public boolean isNodeChild(final TreeNode aNode) {
-        if (aNode == null)
-            return false;
+        if (aNode == null) return false;
         return (aNode.getParent() == this);
     }
 
     @Override
     public int compareTo(final FileTreeNode o) {
-        if (o == null)
-            return -1;
+        if (o == null) return -1;
         boolean thisDir = Files.isDirectory(file);
         boolean oDir = Files.isDirectory(o.file);
         if (thisDir == oDir) {
@@ -289,8 +281,7 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
 
         @Override
         protected void reload(final int depth) {
-            if (depth < 0)
-                return;
+            if (depth < 0) return;
             List<FileTreeNode> nodes = children.get();
             createInitialDirectories().forEach(p -> {
                 FileTreeNode node = model.createNode(this, p);
@@ -307,8 +298,7 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
                 return false;
             });
 
-            if (depth > 0)
-                children.get().forEach(n -> n.reload(depth - 1));
+            if (depth > 0) children.get().forEach(n -> n.reload(depth - 1));
         }
 
         @Override

@@ -197,8 +197,7 @@ public class DropShadowBorder implements Border, Serializable {
     }
 
     protected void drawImage(final Graphics g, final Image image, final Point p) {
-        if (p == null)
-            return;
+        if (p == null) return;
         g.drawImage(image, p.x, p.y, null);
     }
 
@@ -377,8 +376,7 @@ public class DropShadowBorder implements Border, Serializable {
 
     public DropShadowBorder setShadowColor(final Color shadowColor) {
         this.shadowColor = shadowColor;
-        if (shadowColor == null)
-            this.shadowColor = Color.BLACK;
+        if (shadowColor == null) this.shadowColor = Color.BLACK;
         return this;
     }
 

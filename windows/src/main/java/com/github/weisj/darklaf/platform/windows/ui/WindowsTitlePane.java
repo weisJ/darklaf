@@ -238,8 +238,7 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     public void install() {
         if (window != null) {
-            if (!installDecorations())
-                return;
+            if (!installDecorations()) return;
             if (window instanceof Frame) {
                 titleLabel.setText(((Frame) window).getTitle());
                 setState(((Frame) window).getExtendedState());
@@ -267,10 +266,8 @@ public class WindowsTitlePane extends CustomTitlePane {
     }
 
     private boolean installDecorations() {
-        if (getDecorationStyle() == JRootPane.NONE)
-            return false;
-        if (!window.isDisplayable())
-            return false;
+        if (getDecorationStyle() == JRootPane.NONE) return false;
+        if (!window.isDisplayable()) return false;
         if (window instanceof Dialog || window instanceof Frame) {
             windowHandle = PointerUtil.getHWND(window);
             if (windowHandle != 0) {
@@ -705,8 +702,7 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     private boolean hideTitleBar() {
         String title = titleLabel.getText();
-        if (title == null)
-            title = "";
+        if (title == null) title = "";
         return windowHandle == 0 || (getDecorationStyle() == JRootPane.NONE && (menuBar == null || !menuBar.isVisible())
                 && title.length() == 0)
         // e.g. VCLJ achieves fullscreen by hiding the titlebar through jni and setting visibility
@@ -717,16 +713,14 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     @Override
     public Dimension getPreferredSize() {
-        if (hideTitleBar())
-            return new Dimension(0, 0);
+        if (hideTitleBar()) return new Dimension(0, 0);
         int height = computeHeight();
         int width = computeWidth();
         return new Dimension(width, height + 1);
     }
 
     private int computeHeight() {
-        if (hideTitleBar())
-            return 0;
+        if (hideTitleBar()) return 0;
         FontMetrics fm = rootPane.getFontMetrics(getFont());
         int height = fm.getHeight() + 7;
         if (menuBar != null) {
@@ -793,8 +787,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         }
 
         public void layoutContainer(final Container c) {
-            if (hideTitleBar())
-                return;
+            if (hideTitleBar()) return;
             boolean leftToRight = isLeftToRight(window);
             boolean frame = getDecorationStyle() == JRootPane.FRAME;
             boolean undecorated = getDecorationStyle() == JRootPane.NONE;
@@ -904,8 +897,7 @@ public class WindowsTitlePane extends CustomTitlePane {
                 repaint();
             } else if (PropertyKey.BACKGROUND.equals(name) && pce.getNewValue() instanceof Color) {
                 Color color = (Color) pce.getNewValue();
-                if (color == null)
-                    return;
+                if (color == null) return;
                 JNIDecorationsWindows.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
             }
         }
