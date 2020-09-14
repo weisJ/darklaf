@@ -24,10 +24,7 @@ package com.github.weisj.darklaf.components.filetree;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -76,12 +73,12 @@ public class WatchFileTreeModel extends FileTreeModel {
         super(fileSystemView);
     }
 
-    public WatchFileTreeModel(final FileSystemView fileSystemView, final File root, final boolean showHiddenFiles) {
-        super(fileSystemView, root, showHiddenFiles);
+    public WatchFileTreeModel(final FileSystemView fileSystemView, final boolean showHiddenFiles, final File... roots) {
+        super(fileSystemView, showHiddenFiles, roots);
     }
 
-    public WatchFileTreeModel(final FileSystemView fileSystemView, final Path root, final boolean showHiddenFiles) {
-        super(fileSystemView, root, showHiddenFiles);
+    public WatchFileTreeModel(final FileSystemView fileSystemView, final boolean showHiddenFiles, final Path... roots) {
+        super(fileSystemView, showHiddenFiles, roots);
     }
 
     @Override

@@ -23,6 +23,8 @@ package com.github.weisj.darklaf.components.filetree;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Collections;
 
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.tree.DefaultTreeModel;
@@ -33,28 +35,29 @@ public class FileTreeModel extends DefaultTreeModel {
     protected boolean showHiddenFiles;
 
     public FileTreeModel(final FileSystemView fileSystemView) {
-        this(fileSystemView, (Path) null, false);
+        this(fileSystemView, false, (Path[]) null);
     }
 
-    public FileTreeModel(final FileSystemView fileSystemView, final File root, final boolean showHiddenFiles) {
-        this(fileSystemView, root != null ? root.toPath() : null, showHiddenFiles);
+    public FileTreeModel(final FileSystemView fileSystemView, final boolean showHiddenFiles, final File... roots) {
+        this(fileSystemView, showHiddenFiles,
+                roots != null ? Arrays.stream(roots).map(File::toPath).toArray(Path[]::new) : null);
     }
 
-    public FileTreeModel(final FileSystemView fileSystemView, final Path root, final boolean showHiddenFiles) {
+    public FileTreeModel(final FileSystemView fileSystemView, final boolean showHiddenFiles, final Path... roots) {
         super(null);
         init();
         this.showHiddenFiles = showHiddenFiles;
         this.fsv = fileSystemView;
-        this.root = createRoot(root);
+        this.root = createRoot(roots);
     }
 
     protected void init() {}
 
-    protected FileTreeNode createRoot(final Path root) {
-        if (root == null) {
-            return new FileTreeNode.RootNode(this);
+    protected FileTreeNode createRoot(final Path... roots) {
+        if (roots == null || roots.length != 1) {
+            return new FileTreeNode.RootNode(this, roots == null ? Collections.emptyList() : Arrays.asList(roots));
         } else {
-            return createNode(null, root);
+            return createNode(null, roots[0]);
         }
     }
 

@@ -24,9 +24,9 @@ package com.github.weisj.darklaf.components.filetree;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import javax.swing.*;
@@ -37,6 +37,7 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
     protected final FileTreeNode parent;
     protected final FileTreeModel model;
     protected final Path file;
+    protected AtomicInteger taskCount = new AtomicInteger();
     protected AtomicReference<List<FileTreeNode>> children;
     protected WatchKey watchKey;
 
@@ -75,18 +76,13 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
         return index;
     }
 
-    private void add(final List<FileTreeNode> nodes, final FileTreeNode node) {
-        int index = addSorted(nodes, node);
-        model.nodesWereInserted(FileTreeNode.this, new int[] {index});
-    }
-
-    private void remove(final List<FileTreeNode> nodes, final FileTreeNode node) {
+    private int remove(final List<FileTreeNode> nodes, final FileTreeNode node) {
         int index = nodes.indexOf(node);
-        if (index < 0)
-            return;
-        nodes.remove(node);
-        model.unregister(node);
-        model.nodesWereRemoved(FileTreeNode.this, new int[] {index}, new Object[] {node});
+        if (index >= 0) {
+            nodes.remove(node);
+            model.unregister(node);
+        }
+        return index;
     }
 
     public void reload() {
@@ -99,30 +95,45 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
         if (children.get() == null)
             return;
         List<FileTreeNode> fileList = children.get();
-        doInBackground((Consumer<FileTreeNode> proc) -> {
-            traverseChildren(this::toNodes).accept(proc);
-            fileList.stream().filter(n -> Files.notExists(n.file)).forEach(proc);
-        }, chunks -> {
-            for (FileTreeNode node : chunks) {
-                if (Files.notExists(node.file)) {
-                    remove(fileList, node);
-                } else {
-                    if (model.showHiddenFiles) {
-                        if (!fileList.contains(node)) {
-                            add(fileList, node);
-                        }
+        this.<ReloadOp>doInBackground(pub -> {
+            taskCount.getAndIncrement();
+            this.traverseChildren(s -> {
+                Stream.concat(s.map(this::toNode), fileList.stream()).map(n -> {
+                    if (Files.notExists(n.file)) {
+                        return ReloadOp.remove(n, remove(fileList, n));
                     } else {
-                        if (isHidden(node.file)) {
-                            remove(fileList, node);
-                        } else if (!fileList.contains(node)) {
-                            add(fileList, node);
+                        if (model.showHiddenFiles) {
+                            if (!fileList.contains(n)) {
+                                return ReloadOp.add(n, addSorted(fileList, n));
+                            }
+                        } else {
+                            if (isHidden(n.file)) {
+                                return ReloadOp.remove(n, remove(fileList, n));
+                            } else if (!fileList.contains(n)) {
+                                return ReloadOp.add(n, addSorted(fileList, n));
+                            }
                         }
+                    }
+                    return null;
+                }).forEach(pub);
+            });
+        }, chunk -> {
+            for (ReloadOp op : chunk) {
+                if (op != null) {
+                    switch (op.type) {
+                        case ADD:
+                            model.nodesWereInserted(FileTreeNode.this, new int[] {op.index});
+                            break;
+                        case REMOVE:
+                            model.nodesWereRemoved(FileTreeNode.this, new int[] {op.index}, new Object[] {op.node});
+                            break;
                     }
                 }
             }
         }, () -> {
             if (depth > 0)
                 fileList.forEach(n -> n.reload(depth - 1));
+            taskCount.getAndDecrement();
         });
     }
 
@@ -132,18 +143,14 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
                 return list;
             }
             List<FileTreeNode> fileList = Collections.synchronizedList(new ArrayList<>());
-            doInBackground(
-                    traverseChildren(asNodes(stream -> stream.filter(p -> model.showHiddenFiles || !isHidden(p)))),
-                    chunks -> {
-                        Collections.sort(fileList);
-                        int[] indices = new int[chunks.size()];
-                        int i = 0;
-                        for (FileTreeNode node : chunks) {
-                            indices[i] = addSorted(fileList, node);
-                            i++;
-                        }
-                        model.nodesWereInserted(FileTreeNode.this, indices);
-                    });
+            this.<Integer>doInBackground(pub -> {
+                traverseChildren(s -> {
+                    s.filter(p -> model.showHiddenFiles || !isHidden(p)).map(this::toNode)
+                            .map(n -> addSorted(fileList, n)).forEach(pub);
+                });
+            }, chunks -> {
+                model.nodesWereInserted(FileTreeNode.this, chunks.stream().mapToInt(Integer::intValue).toArray());
+            });
             return fileList;
         });
     }
@@ -156,24 +163,17 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
         }
     }
 
-    private Function<Stream<Path>, Stream<FileTreeNode>> asNodes(
-            final Function<Stream<Path>, Stream<Path>> transformer) {
-        return stream -> toNodes(transformer.apply(stream));
+    private FileTreeNode toNode(final Path path) {
+        return model.createNode(FileTreeNode.this, path);
     }
 
-    private Stream<FileTreeNode> toNodes(final Stream<Path> stream) {
-        return stream.map(p -> model.createNode(FileTreeNode.this, p));
-    }
-
-    private <T> Consumer<Consumer<T>> traverseChildren(final Function<Stream<Path>, Stream<T>> transformer) {
-        return publish -> {
-            if (Files.isDirectory(file)) {
-                try (Stream<Path> files = Files.walk(file, 1, FileVisitOption.FOLLOW_LINKS)) {
-                    transformer.apply(files.filter(p -> !file.equals(p)).filter(Files::isReadable)).forEach(publish);
-                } catch (IOException ignored) {
-                }
+    private void traverseChildren(final Consumer<Stream<Path>> consumer) {
+        if (Files.isDirectory(file)) {
+            try (Stream<Path> files = Files.walk(file, 1, FileVisitOption.FOLLOW_LINKS)) {
+                consumer.accept(files.filter(p -> !file.equals(p)).filter(Files::isReadable));
+            } catch (IOException ignored) {
             }
-        };
+        }
     }
 
     private <T> void doInBackground(final Consumer<Consumer<T>> task, final Consumer<List<T>> processor) {
@@ -263,12 +263,19 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
         }
     }
 
+    public boolean isBusy() {
+        return taskCount.get() > 0;
+    }
+
     public static class RootNode extends FileTreeNode {
 
-        public RootNode(final FileTreeModel model) {
+        private final List<Path> roots;
+
+        public RootNode(final FileTreeModel model, final List<Path> roots) {
             super(null, null, model);
+            this.roots = roots;
             List<FileTreeNode> nodes = new ArrayList<>();
-            FileSystems.getDefault().getRootDirectories().forEach(p -> {
+            createInitialDirectories().forEach(p -> {
                 FileTreeNode node = model.createNode(RootNode.this, p);
                 model.register(node);
                 nodes.add(node);
@@ -276,12 +283,16 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
             children.set(nodes);
         }
 
+        protected Iterable<Path> createInitialDirectories() {
+            return roots.size() > 0 ? roots : FileSystems.getDefault().getRootDirectories();
+        }
+
         @Override
         protected void reload(final int depth) {
             if (depth < 0)
                 return;
             List<FileTreeNode> nodes = children.get();
-            FileSystems.getDefault().getRootDirectories().forEach(p -> {
+            createInitialDirectories().forEach(p -> {
                 FileTreeNode node = model.createNode(this, p);
                 if (!nodes.contains(node)) {
                     model.register(node);
@@ -309,5 +320,31 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
         public boolean getAllowsChildren() {
             return true;
         }
+    }
+
+    private static class ReloadOp {
+
+        private final Type type;
+        private final FileTreeNode node;
+        private final int index;
+
+        private ReloadOp(final Type type, final FileTreeNode node, final int index) {
+            this.type = type;
+            this.node = node;
+            this.index = index;
+        }
+
+        private static ReloadOp add(final FileTreeNode n, final int index) {
+            return new ReloadOp(Type.ADD, n, index);
+        }
+
+        private static ReloadOp remove(final FileTreeNode n, final int index) {
+            return new ReloadOp(Type.REMOVE, n, index);
+        }
+
+        private enum Type {
+            ADD, REMOVE
+        }
+
     }
 }

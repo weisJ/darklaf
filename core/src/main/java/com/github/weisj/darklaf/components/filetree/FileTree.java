@@ -22,30 +22,38 @@
 package com.github.weisj.darklaf.components.filetree;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
+
 
 public class FileTree extends JTree {
 
     public FileTree() {
-        this(null);
+        this((File[]) null);
     }
 
-    public FileTree(final File rootFile) {
-        this(rootFile, false);
+    public FileTree(final File... rootFile) {
+        this(false, rootFile);
     }
 
-    public FileTree(final File rootFile, final boolean showHiddenFiles) {
+    public FileTree(final boolean showHiddenFiles, final File... rootFiles) {
         FileSystemView fileSystemView = FileSystemView.getFileSystemView();
-        setFileTreeModel(createModel(fileSystemView, rootFile, showHiddenFiles));
+        setFileTreeModel(createModel(fileSystemView, showHiddenFiles, rootFiles));
         setCellRenderer(new FileTreeCellRenderer(fileSystemView));
         setRootVisible(false);
     }
 
-    protected FileTreeModel createModel(final FileSystemView fsv, final File rootFile, final boolean showHiddenFiles) {
-        return new FileTreeModel(fsv, rootFile, showHiddenFiles);
+    protected FileTreeModel createModel(final FileSystemView fsv, final boolean showHiddenFiles,
+            final File... rootFiles) {
+        return new FileTreeModel(fsv, showHiddenFiles, rootFiles);
     }
 
     public boolean isShowHiddenFiles() {
@@ -70,5 +78,20 @@ public class FileTree extends JTree {
 
     public void reload() {
         getModel().reload();
+    }
+
+    public Path getSelectedFile() {
+        TreePath path = getSelectionPath();
+        if (path == null)
+            return null;
+        return ((FileTreeNode) path.getLastPathComponent()).getFile();
+    }
+
+    public List<Path> getSelectedFiles() {
+        TreePath[] paths = getSelectionPaths();
+        if (paths == null)
+            return Collections.emptyList();
+        return Arrays.stream(getSelectionPaths()).map(TreePath::getLastPathComponent).map(FileTreeNode.class::cast)
+                .map(FileTreeNode::getFile).collect(Collectors.toList());
     }
 }

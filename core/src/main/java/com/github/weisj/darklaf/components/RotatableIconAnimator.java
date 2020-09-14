@@ -27,6 +27,7 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.icons.RotatableIcon;
 import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class RotatableIconAnimator extends Timer {
 
@@ -43,8 +44,6 @@ public class RotatableIconAnimator extends Timer {
         super(100, null);
         if (icon == null)
             throw new IllegalArgumentException("Icon is null");
-        if (parent == null)
-            throw new IllegalArgumentException("Component is null");
         addActionListener(this::onAction);
         setRepeats(true);
         this.icon = icon;
@@ -53,16 +52,26 @@ public class RotatableIconAnimator extends Timer {
     }
 
     public void resume() {
-        start();
+        if (!isRunning())
+            start();
     }
 
     public void onAction(final ActionEvent e) {
         icon.setRotation(Math.PI * 2 * (((double) frame) / frameCount));
-        parent.repaint();
+        repaint();
         frame = (frame + 1) % frameCount;
     }
 
+    protected void repaint() {
+        DarkUIUtil.repaint(getParent());
+    }
+
+    public JComponent getParent() {
+        return parent;
+    }
+
     public void suspend() {
-        stop();
+        if (isRunning())
+            stop();
     }
 }

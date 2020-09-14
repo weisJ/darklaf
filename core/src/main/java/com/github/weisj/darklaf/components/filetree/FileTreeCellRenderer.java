@@ -39,7 +39,8 @@ public class FileTreeCellRenderer extends DefaultTreeCellRenderer {
     @Override
     public Component getTreeCellRendererComponent(final JTree tree, final Object value, final boolean selected,
             final boolean expanded, final boolean leaf, final int row, final boolean hasFocus) {
-        Path f = ((FileTreeNode) value).getFile();
+        FileTreeNode node = ((FileTreeNode) value);
+        Path f = node.getFile();
         if (f != null) {
             setIcon(fsv.getSystemIcon(f.toFile()));
             setText(fsv.getSystemDisplayName(f.toFile()));

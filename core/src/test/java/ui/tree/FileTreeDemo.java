@@ -42,7 +42,7 @@ public class FileTreeDemo implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        FileTree tree = new WatchFileTree(null, false);
+        FileTree tree = new WatchFileTree(false);
         DemoPanel panel = new DemoPanel(new OverlayScrollPane(tree), new BorderLayout(), 0);
         JPanel controlPanel = panel.addControls();
         controlPanel.add(new JCheckBox("Show hidden files") {

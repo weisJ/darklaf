@@ -29,20 +29,21 @@ import javax.swing.filechooser.FileSystemView;
 public class WatchFileTree extends FileTree {
 
     public WatchFileTree() {
-        super(null);
+        super();
     }
 
-    public WatchFileTree(final File rootFile) {
-        super(rootFile, false);
+    public WatchFileTree(final File... rootFiles) {
+        super(rootFiles);
     }
 
-    public WatchFileTree(final File rootFile, final boolean showHiddenFiles) {
-        super(rootFile, showHiddenFiles);
+    public WatchFileTree(final boolean showHiddenFiles, final File... rootFiles) {
+        super(showHiddenFiles, rootFiles);
     }
 
     @Override
-    protected FileTreeModel createModel(final FileSystemView fsv, final File rootFile, final boolean showHiddenFiles) {
-        return new WatchFileTreeModel(fsv, rootFile, showHiddenFiles);
+    protected FileTreeModel createModel(final FileSystemView fsv, final boolean showHiddenFiles,
+            final File... rootFiles) {
+        return new WatchFileTreeModel(fsv, showHiddenFiles, rootFiles);
     }
 
     @Override
