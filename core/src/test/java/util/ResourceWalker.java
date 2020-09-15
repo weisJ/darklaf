@@ -30,9 +30,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import com.github.weisj.darklaf.util.Lambdas;
+import com.github.weisj.darklaf.util.StreamUtil;
 
 public class ResourceWalker implements AutoCloseable {
 
@@ -73,7 +73,7 @@ public class ResourceWalker implements AutoCloseable {
         pack = pack.endsWith("/") ? pack : pack + "/";
         String pathName = pack;
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        Stream<URL> stream = enumerationAsStream(
+        Stream<URL> stream = StreamUtil.enumerationAsStream(
                 Lambdas.orDefault(classLoader::getResources, Collections.<URL>emptyEnumeration()).apply(pathName));
         return stream.map(Lambdas.wrap(URL::toURI)).flatMap(uri -> {
             if ("jar".equals(uri.getScheme())) {
@@ -92,18 +92,6 @@ public class ResourceWalker implements AutoCloseable {
             int index = p.indexOf(pathName);
             return index >= 0 ? p.substring(index) : null;
         }).filter(Objects::nonNull);
-    }
-
-    public static <T> Stream<T> enumerationAsStream(final Enumeration<T> e) {
-        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(new Iterator<T>() {
-            public T next() {
-                return e.nextElement();
-            }
-
-            public boolean hasNext() {
-                return e.hasMoreElements();
-            }
-        }, Spliterator.ORDERED), false);
     }
 
     private Stream<File> walkFolder(final File file) {

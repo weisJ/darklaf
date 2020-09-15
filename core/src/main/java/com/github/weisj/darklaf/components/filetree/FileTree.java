@@ -22,7 +22,6 @@
 package com.github.weisj.darklaf.components.filetree;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -80,13 +79,13 @@ public class FileTree extends JTree {
         getModel().reload();
     }
 
-    public Path getSelectedFile() {
+    public FileNode getSelectedFile() {
         TreePath path = getSelectionPath();
         if (path == null) return null;
         return ((FileTreeNode) path.getLastPathComponent()).getFile();
     }
 
-    public List<Path> getSelectedFiles() {
+    public List<FileNode> getSelectedFiles() {
         TreePath[] paths = getSelectionPaths();
         if (paths == null) return Collections.emptyList();
         return Arrays.stream(getSelectionPaths()).map(TreePath::getLastPathComponent).map(FileTreeNode.class::cast)

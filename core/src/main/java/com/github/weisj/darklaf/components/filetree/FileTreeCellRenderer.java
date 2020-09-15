@@ -22,7 +22,6 @@
 package com.github.weisj.darklaf.components.filetree;
 
 import java.awt.*;
-import java.nio.file.Path;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
@@ -31,20 +30,37 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 public class FileTreeCellRenderer extends DefaultTreeCellRenderer {
 
     private final FileSystemView fsv;
+    protected Icon fileIcon;
+    protected Icon directoryIcon;
 
     public FileTreeCellRenderer(final FileSystemView fileSystemView) {
         this.fsv = fileSystemView;
     }
 
     @Override
+    public void updateUI() {
+        super.updateUI();
+        fileIcon = UIManager.getIcon("FileView.fileIcon");
+        directoryIcon = UIManager.getIcon("FileView.directoryIcon");
+    }
+
+    @Override
     public Component getTreeCellRendererComponent(final JTree tree, final Object value, final boolean selected,
             final boolean expanded, final boolean leaf, final int row, final boolean hasFocus) {
         FileTreeNode node = ((FileTreeNode) value);
-        Path f = node.getFile();
+        FileNode f = node.getFile();
         if (f != null) {
-            setIcon(fsv.getSystemIcon(f.toFile()));
-            setText(fsv.getSystemDisplayName(f.toFile()));
+            setIcon(getFileIcon(f));
+            setText(f.getSystemDisplayName(fsv));
         }
         return this;
+    }
+
+    protected Icon getFileIcon(final FileNode f) {
+        Icon icon = f.getSystemIcon(fsv);
+        if (icon == null && f.exists()) {
+            icon = f.isDirectory() ? directoryIcon : fileIcon;
+        }
+        return icon;
     }
 }

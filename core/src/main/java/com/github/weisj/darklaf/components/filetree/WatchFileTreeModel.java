@@ -126,7 +126,7 @@ public class WatchFileTreeModel extends FileTreeModel {
 
             FileTreeNode parent = getNodeMap().get(key.watchable());
             if (parent != null) {
-                LOGGER.fine(() -> "Event for \"" + parent.file + "\"");
+                LOGGER.fine(() -> "Event for \"" + parent + "\"");
                 if (parent.parent != null) {
                     parent.parent.reload(1);
                 } else {
@@ -145,7 +145,7 @@ public class WatchFileTreeModel extends FileTreeModel {
                 LOGGER.finer("Event Type " + kind.name());
                 FileTreeNode node = getNodeMap().get(((Path) key.watchable()).resolve(path));
                 if (node != null) {
-                    LOGGER.finer(() -> "Affected node \"" + node.file + "\"");
+                    LOGGER.finer(() -> "Affected node \"" + node + "\"");
                     node.reload(0);
                 }
             }
@@ -157,13 +157,15 @@ public class WatchFileTreeModel extends FileTreeModel {
     protected void register(final FileTreeNode node) {
         synchronized (getLock()) {
             WatchService ws = getWatchService();
-            if (ws == null || !Files.isDirectory(node.file)) return;
-            if (getNodeMap().containsKey(node.file)) return;
+            if (ws == null || !node.fileNode.isDirectory()) return;
+            Path path = node.fileNode.getPath();
+            if (path == null) return;
+            if (getNodeMap().containsKey(path)) return;
             try {
-                LOGGER.finer(() -> "Register watch service for \"" + node.file + "\"");
-                node.watchKey = node.file.register(ws, StandardWatchEventKinds.ENTRY_CREATE,
+                LOGGER.finer(() -> "Register watch service for \"" + node + "\"");
+                node.watchKey = path.register(ws, StandardWatchEventKinds.ENTRY_CREATE,
                         StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
-                getNodeMap().put(node.file, node);
+                getNodeMap().put(path, node);
             } catch (IOException ignored) {
             }
         }
@@ -172,8 +174,8 @@ public class WatchFileTreeModel extends FileTreeModel {
     protected void unregister(final FileTreeNode node) {
         synchronized (getLock()) {
             if (node.watchKey == null) return;
-            LOGGER.finer(() -> "Unregister watch service for \"" + node.file + "\"");
-            getNodeMap().remove(node.file);
+            LOGGER.finer(() -> "Unregister watch service for \"" + node + "\"");
+            getNodeMap().remove(node.fileNode.getPath());
             node.watchKey.cancel();
         }
     }

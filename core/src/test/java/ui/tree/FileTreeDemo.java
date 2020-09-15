@@ -22,15 +22,16 @@
 package ui.tree;
 
 import java.awt.*;
+import java.io.File;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
 
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.components.filetree.FileTree;
-import com.github.weisj.darklaf.components.filetree.WatchFileTree;
 import com.github.weisj.darklaf.ui.button.ButtonConstants;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 
@@ -42,7 +43,9 @@ public class FileTreeDemo implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        FileTree tree = new WatchFileTree(false);
+        FileSystemView fsv = FileSystemView.getFileSystemView();
+        File[] rootFiles = fsv.getFiles(fsv.getRoots()[0], true);
+        FileTree tree = new FileTree(false, rootFiles);
         DemoPanel panel = new DemoPanel(new OverlayScrollPane(tree), new BorderLayout(), 0);
         JPanel controlPanel = panel.addControls();
         controlPanel.add(new JCheckBox("Show hidden files") {

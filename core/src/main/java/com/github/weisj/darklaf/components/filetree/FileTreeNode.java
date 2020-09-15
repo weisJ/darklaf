@@ -22,7 +22,8 @@
 package com.github.weisj.darklaf.components.filetree;
 
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.FileSystems;
+import java.nio.file.WatchKey;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -32,18 +33,21 @@ import java.util.stream.Stream;
 import javax.swing.*;
 import javax.swing.tree.TreeNode;
 
+import com.github.weisj.darklaf.util.StreamUtil;
+
 public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
 
     protected final FileTreeNode parent;
     protected final FileTreeModel model;
-    protected final Path file;
+    protected final FileNode fileNode;
     protected AtomicInteger taskCount = new AtomicInteger();
     protected AtomicReference<List<FileTreeNode>> children;
     protected WatchKey watchKey;
 
-    public FileTreeNode(final FileTreeNode parent, final Path file, final FileTreeModel model) {
+    public FileTreeNode(final FileTreeNode parent, final FileNode fileNode, final FileTreeModel model) {
+        if (fileNode == null) throw new IllegalArgumentException("File node is null");
         this.model = model;
-        this.file = file;
+        this.fileNode = fileNode;
         this.parent = parent;
         this.children = new AtomicReference<>();
     }
@@ -53,16 +57,16 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FileTreeNode that = (FileTreeNode) o;
-        return Objects.equals(file, that.file);
+        return Objects.equals(fileNode, that.fileNode);
     }
 
     @Override
     public int hashCode() {
-        return file != null ? file.hashCode() : 0;
+        return fileNode.hashCode();
     }
 
-    public Path getFile() {
-        return file;
+    public FileNode getFile() {
+        return fileNode;
     }
 
     private int addSorted(final List<FileTreeNode> nodes, final FileTreeNode node) {
@@ -92,29 +96,27 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
         List<FileTreeNode> fileList = children.get();
         this.<ReloadOp>doInBackground(pub -> {
             taskCount.getAndIncrement();
-            this.traverseChildren(s -> {
-                Stream.concat(s.map(this::toNode), fileList.stream()).map(n -> {
-                    if (Files.notExists(n.file)) {
-                        return ReloadOp.remove(n, remove(fileList, n));
+            this.traverseChildren(s -> Stream.concat(s.map(this::toNode), fileList.stream()).map(n -> {
+                if (n.fileNode.notExists()) {
+                    return ReloadOp.remove(n, remove(fileList, n));
+                } else {
+                    if (model.showHiddenFiles) {
+                        if (!fileList.contains(n)) {
+                            return ReloadOp.add(n, addSorted(fileList, n));
+                        }
                     } else {
-                        if (model.showHiddenFiles) {
-                            if (!fileList.contains(n)) {
-                                return ReloadOp.add(n, addSorted(fileList, n));
-                            }
-                        } else {
-                            if (isHidden(n.file)) {
-                                return ReloadOp.remove(n, remove(fileList, n));
-                            } else if (!fileList.contains(n)) {
-                                return ReloadOp.add(n, addSorted(fileList, n));
-                            }
+                        if (n.fileNode.isHidden()) {
+                            return ReloadOp.remove(n, remove(fileList, n));
+                        } else if (!fileList.contains(n)) {
+                            return ReloadOp.add(n, addSorted(fileList, n));
                         }
                     }
-                    return null;
-                }).forEach(pub);
-            });
+                }
+                return null;
+            }).forEach(pub));
         }, chunk -> {
             for (ReloadOp op : chunk) {
-                if (op != null) {
+                if (op != null && op.index >= 0) {
                     switch (op.type) {
                         case ADD:
                             model.nodesWereInserted(FileTreeNode.this, new int[] {op.index});
@@ -137,45 +139,46 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
                 return list;
             }
             List<FileTreeNode> fileList = Collections.synchronizedList(new ArrayList<>());
+            taskCount.getAndIncrement();
             this.<Integer>doInBackground(pub -> {
                 traverseChildren(s -> {
-                    s.filter(p -> model.showHiddenFiles || !isHidden(p)).map(this::toNode)
+                    s.filter(p -> model.showHiddenFiles || !p.isHidden()).map(this::toNode).sorted()
                             .map(n -> addSorted(fileList, n)).forEach(pub);
                 });
             }, chunks -> {
-                model.nodesWereInserted(FileTreeNode.this, chunks.stream().mapToInt(Integer::intValue).toArray());
+                int[] indices = chunks.stream().mapToInt(Integer::intValue).toArray();
+                model.nodesWereInserted(FileTreeNode.this, indices);
+            }, () -> {
+                taskCount.getAndDecrement();
             });
             return fileList;
         });
     }
 
-    private boolean isHidden(final Path p) {
-        try {
-            return Files.isHidden(p) || p.toFile().isHidden();
-        } catch (IOException e) {
-            return false;
-        }
+    @Override
+    public String toString() {
+        return fileNode.toString();
     }
 
-    private FileTreeNode toNode(final Path path) {
-        return model.createNode(FileTreeNode.this, path);
+    protected FileTreeNode toNode(final FileNode fileNode) {
+        return model.createNode(FileTreeNode.this, fileNode);
     }
 
-    private void traverseChildren(final Consumer<Stream<Path>> consumer) {
-        if (Files.isDirectory(file)) {
-            try (Stream<Path> files = Files.walk(file, 1, FileVisitOption.FOLLOW_LINKS)) {
-                consumer.accept(files.filter(p -> !file.equals(p)).filter(Files::isReadable));
+    protected void traverseChildren(final Consumer<Stream<FileNode>> consumer) {
+        if (fileNode.isDirectory()) {
+            try (Stream<FileNode> files = fileNode.list(model)) {
+                consumer.accept(files.filter(FileNode::isReadable));
             } catch (IOException ignored) {
             }
         }
     }
 
-    private <T> void doInBackground(final Consumer<Consumer<T>> task, final Consumer<List<T>> processor) {
+    protected <T> void doInBackground(final Consumer<Consumer<T>> task, final Consumer<List<T>> processor) {
         doInBackground(task, processor, () -> {
         });
     }
 
-    private <T> void doInBackground(final Consumer<Consumer<T>> task, final Consumer<List<T>> processor,
+    protected <T> void doInBackground(final Consumer<Consumer<T>> task, final Consumer<List<T>> processor,
             final Runnable doneTask) {
         SwingWorker<Void, T> worker = new SwingWorker<Void, T>() {
             @Override
@@ -225,12 +228,16 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
 
     @Override
     public boolean getAllowsChildren() {
-        return Files.isDirectory(file);
+        return fileNode.isDirectory();
     }
 
     @Override
     public boolean isLeaf() {
-        return getChildren().size() == 0;
+        if (!fileNode.isDirectory()) return true;
+        if (children.get() != null && !isBusy()) {
+            return children.get().size() == 0;
+        }
+        return fileNode.isEmpty();
     }
 
     @Override
@@ -246,10 +253,10 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
     @Override
     public int compareTo(final FileTreeNode o) {
         if (o == null) return -1;
-        boolean thisDir = Files.isDirectory(file);
-        boolean oDir = Files.isDirectory(o.file);
+        boolean thisDir = fileNode.isDirectory();
+        boolean oDir = fileNode.isDirectory();
         if (thisDir == oDir) {
-            return file.compareTo(o.file);
+            return fileNode.compareTo(o.fileNode);
         } else {
             return thisDir ? -1 : 1;
         }
@@ -261,11 +268,21 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
 
     public static class RootNode extends FileTreeNode {
 
-        private final List<Path> roots;
+        private final List<FileNode> rootPaths;
 
-        public RootNode(final FileTreeModel model, final List<Path> roots) {
-            super(null, null, model);
-            this.roots = roots;
+        public RootNode(final FileTreeModel model, final List<FileNode> rootPaths) {
+            super(null, new FileNode(null, null), model);
+            this.rootPaths = rootPaths != null ? rootPaths : Collections.emptyList();
+            init();
+        }
+
+        protected Stream<FileNode> createInitialDirectories() {
+            return rootPaths.size() > 0 ? rootPaths.stream()
+                    : StreamUtil.iterableAsStream(FileSystems.getDefault().getRootDirectories())
+                            .map(FileNode::fromPath);
+        }
+
+        protected void init() {
             List<FileTreeNode> nodes = new ArrayList<>();
             createInitialDirectories().forEach(p -> {
                 FileTreeNode node = model.createNode(RootNode.this, p);
@@ -273,10 +290,6 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
                 nodes.add(node);
             });
             children.set(nodes);
-        }
-
-        protected Iterable<Path> createInitialDirectories() {
-            return roots.size() > 0 ? roots : FileSystems.getDefault().getRootDirectories();
         }
 
         @Override
@@ -291,7 +304,7 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
                 }
             });
             nodes.removeIf(n -> {
-                if (Files.notExists(n.file)) {
+                if (n.fileNode.notExists()) {
                     model.unregister(n);
                     return true;
                 }
@@ -303,7 +316,7 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
 
         @Override
         public boolean isLeaf() {
-            return false;
+            return children.get().size() == 0;
         }
 
         @Override

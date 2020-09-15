@@ -103,6 +103,16 @@ public class Lambdas {
         };
     }
 
+    public static <E extends Throwable> Runnable wrap(final CheckedRunnable<E> wrappee) {
+        return () -> {
+            try {
+                wrappee.run();
+            } catch (final Throwable e) {
+                throw new RuntimeException(e);
+            }
+        };
+    }
+
     public interface CheckedFunction<T, K, E extends Throwable> {
 
         K apply(final T value) throws E;
@@ -121,5 +131,10 @@ public class Lambdas {
     public interface CheckedPredicate<T, E extends Throwable> {
 
         boolean test(final T value) throws E;
+    }
+
+    public interface CheckedRunnable<E extends Throwable> {
+
+        void run() throws E;
     }
 }

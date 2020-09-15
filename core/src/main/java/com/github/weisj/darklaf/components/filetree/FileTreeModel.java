@@ -24,7 +24,8 @@ package com.github.weisj.darklaf.components.filetree;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.tree.DefaultTreeModel;
@@ -39,8 +40,11 @@ public class FileTreeModel extends DefaultTreeModel {
     }
 
     public FileTreeModel(final FileSystemView fileSystemView, final boolean showHiddenFiles, final File... roots) {
-        this(fileSystemView, showHiddenFiles,
-                roots != null ? Arrays.stream(roots).map(File::toPath).toArray(Path[]::new) : null);
+        super(null);
+        init();
+        this.showHiddenFiles = showHiddenFiles;
+        this.fsv = fileSystemView;
+        this.root = createRoot(roots);
     }
 
     public FileTreeModel(final FileSystemView fileSystemView, final boolean showHiddenFiles, final Path... roots) {
@@ -54,11 +58,15 @@ public class FileTreeModel extends DefaultTreeModel {
     protected void init() {}
 
     protected FileTreeNode createRoot(final Path... roots) {
-        if (roots == null || roots.length != 1) {
-            return new FileTreeNode.RootNode(this, roots == null ? Collections.emptyList() : Arrays.asList(roots));
-        } else {
-            return createNode(null, roots[0]);
-        }
+        List<FileNode> nodes =
+                roots != null ? Arrays.stream(roots).map(FileNode::fromPath).collect(Collectors.toList()) : null;
+        return new FileTreeNode.RootNode(this, nodes);
+    }
+
+    protected FileTreeNode createRoot(final File... roots) {
+        List<FileNode> nodes =
+                roots != null ? Arrays.stream(roots).map(FileNode::fromFile).collect(Collectors.toList()) : null;
+        return new FileTreeNode.RootNode(this, nodes);
     }
 
     @Override
@@ -81,8 +89,8 @@ public class FileTreeModel extends DefaultTreeModel {
         return showHiddenFiles;
     }
 
-    protected FileTreeNode createNode(final FileTreeNode parent, final Path file) {
-        return new FileTreeNode(parent, file, this);
+    protected FileTreeNode createNode(final FileTreeNode parent, final FileNode fileNode) {
+        return new FileTreeNode(parent, fileNode, this);
     }
 
     protected void register(final FileTreeNode node) {}
