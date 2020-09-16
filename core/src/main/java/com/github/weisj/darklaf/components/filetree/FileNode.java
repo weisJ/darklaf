@@ -41,14 +41,33 @@ public class FileNode implements Comparable<FileNode> {
     private volatile File file;
     private final Path path;
     private final String pathName;
+    private boolean empty;
+    private boolean valid;
+    private Icon icon;
 
     public FileNode(final File file, final Path path) {
         this.file = file;
         this.path = path;
         this.pathName = this.file != null ? this.file.getAbsolutePath() : null;
         if (this.file == null) {
-            getFile();
+            this.file = getFile();
         }
+    }
+
+    public void invalidate() {
+        valid = false;
+        icon = null;
+    }
+
+    protected boolean validateEmptyFlag(final boolean showHiddenFiles) {
+        if (!valid && path != null) {
+            try (Stream<Path> s = Files.list(path)) {
+                empty = s.filter(Files::isReadable).noneMatch(p -> showHiddenFiles || !isHidden(p));
+                valid = true;
+            } catch (IOException ignored) {
+            }
+        }
+        return valid;
     }
 
     public static FileNode fromPath(final Path path) {
@@ -112,25 +131,27 @@ public class FileNode implements Comparable<FileNode> {
     }
 
     public boolean isHidden() {
-        boolean hidden = false;
-        if (path != null) {
-            try {
-                hidden = Files.isHidden(path);
-            } catch (IOException ignored) {
-            }
-        }
+        boolean hidden;
+        hidden = isHidden(path);
         if (file != null) {
             hidden = hidden || file.isHidden();
         }
         return hidden;
     }
 
-    public boolean isEmpty() {
+    private static boolean isHidden(final Path path) {
         if (path != null) {
-            try (Stream<Path> s = Files.list(path)) {
-                return !s.findFirst().isPresent();
+            try {
+                return Files.isHidden(path);
             } catch (IOException ignored) {
             }
+        }
+        return false;
+    }
+
+    public boolean isEmpty(final boolean showHiddenFiles) {
+        if (path != null && validateEmptyFlag(showHiddenFiles)) {
+            return empty;
         }
         return file == null || !file.isDirectory();
     }
@@ -146,8 +167,8 @@ public class FileNode implements Comparable<FileNode> {
             stream = Files.list(path).map(FileNode::fromPath);
         } else if (file != null) {
             LOCKED.set(true);
-            stream = Arrays.stream(model.fsv.getFiles(file, !model.showHiddenFiles)).map(FileNode::fromFile)
-                    .onClose(() -> LOCKED.set(false));
+            File[] files = model.fsv.getFiles(file, !model.showHiddenFiles);
+            stream = Arrays.stream(files).map(FileNode::fromFile).onClose(() -> LOCKED.set(false));
         } else {
             stream = Stream.empty();
         }
@@ -155,7 +176,10 @@ public class FileNode implements Comparable<FileNode> {
     }
 
     public Icon getSystemIcon(final FileSystemView fsv) {
-        return fsv.getSystemIcon(getFile());
+        if (icon == null) {
+            icon = fsv.getSystemIcon(getFile());
+        }
+        return icon;
     }
 
     public String getSystemDisplayName(final FileSystemView fsv) {

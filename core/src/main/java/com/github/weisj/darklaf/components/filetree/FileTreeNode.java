@@ -95,7 +95,6 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
         if (children.get() == null) return;
         List<FileTreeNode> fileList = children.get();
         this.<ReloadOp>doInBackground(pub -> {
-            taskCount.getAndIncrement();
             this.traverseChildren(s -> Stream.concat(s.map(this::toNode), fileList.stream()).map(n -> {
                 if (n.fileNode.notExists()) {
                     return ReloadOp.remove(n, remove(fileList, n));
@@ -128,8 +127,8 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
                 }
             }
         }, () -> {
+            fileNode.invalidate();
             if (depth > 0) fileList.forEach(n -> n.reload(depth - 1));
-            taskCount.getAndDecrement();
         });
     }
 
@@ -139,7 +138,6 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
                 return list;
             }
             List<FileTreeNode> fileList = Collections.synchronizedList(new ArrayList<>());
-            taskCount.getAndIncrement();
             this.<Integer>doInBackground(pub -> {
                 traverseChildren(s -> {
                     s.filter(p -> model.showHiddenFiles || !p.isHidden()).map(this::toNode).sorted()
@@ -148,9 +146,7 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
             }, chunks -> {
                 int[] indices = chunks.stream().mapToInt(Integer::intValue).toArray();
                 model.nodesWereInserted(FileTreeNode.this, indices);
-            }, () -> {
-                taskCount.getAndDecrement();
-            });
+            }, () -> model.nodeChanged(FileTreeNode.this));
             return fileList;
         });
     }
@@ -180,6 +176,7 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
 
     protected <T> void doInBackground(final Consumer<Consumer<T>> task, final Consumer<List<T>> processor,
             final Runnable doneTask) {
+        taskCount.getAndIncrement();
         SwingWorker<Void, T> worker = new SwingWorker<Void, T>() {
             @Override
             public Void doInBackground() {
@@ -195,6 +192,7 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
             @Override
             protected void done() {
                 doneTask.run();
+                taskCount.getAndDecrement();
             }
         };
         worker.execute();
@@ -237,7 +235,7 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
         if (children.get() != null && !isBusy()) {
             return children.get().size() == 0;
         }
-        return fileNode.isEmpty();
+        return fileNode.isEmpty(model.showHiddenFiles);
     }
 
     @Override
@@ -310,8 +308,8 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
                 }
                 return false;
             });
-
             if (depth > 0) children.get().forEach(n -> n.reload(depth - 1));
+            fileNode.invalidate();
         }
 
         @Override
