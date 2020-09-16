@@ -38,6 +38,7 @@ import com.github.weisj.darklaf.graphics.StringPainter;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.settings.ThemeSettingsMenuItem;
 import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.theme.event.ThemeInstalledListener;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -136,12 +137,12 @@ public interface ComponentDemo {
         for (UIManager.LookAndFeelInfo theme : LafManager.getRegisteredThemeInfos()) {
             createThemeItem(menu, bg, theme);
         }
+        Runnable updater = () -> bg.setSelected(
+                Optional.ofNullable(getSelectedThemeButton(bg)).map(AbstractButton::getModel).orElse(null), true);
         menu.addMenuListener(new MenuListener() {
             @Override
             public void menuSelected(final MenuEvent e) {
-                bg.setSelected(
-                        Optional.ofNullable(getSelectedThemeButton(bg)).map(AbstractButton::getModel).orElse(null),
-                        true);
+                updater.run();
             }
 
             @Override
@@ -150,15 +151,16 @@ public interface ComponentDemo {
             @Override
             public void menuCanceled(final MenuEvent e) {}
         });
+        LafManager.addThemeChangeListener((ThemeInstalledListener) e -> updater.run());
         return menu;
     }
 
     static AbstractButton getSelectedThemeButton(final ButtonGroup bg) {
-        String currentThemeName = LafManager.getTheme().getName();
+        String currentThemeName = LafManager.getInstalledTheme().getName();
         Enumeration<AbstractButton> enumeration = bg.getElements();
         while (enumeration.hasMoreElements()) {
             JMenuItem mi = (JMenuItem) enumeration.nextElement();
-            if (Objects.equals(currentThemeName, mi.getName())) return mi;
+            if (Objects.equals(currentThemeName, mi.getText())) return mi;
         }
         return null;
     }

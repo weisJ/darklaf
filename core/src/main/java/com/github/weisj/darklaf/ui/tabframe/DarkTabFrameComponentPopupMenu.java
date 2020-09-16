@@ -23,6 +23,7 @@ package com.github.weisj.darklaf.ui.tabframe;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ResourceBundle;
 
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
@@ -32,6 +33,7 @@ import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.ResourceUtil;
 
 public class DarkTabFrameComponentPopupMenu extends JXPopupMenu implements PropertyChangeListener, UIResource {
 
@@ -41,16 +43,17 @@ public class DarkTabFrameComponentPopupMenu extends JXPopupMenu implements Prope
 
     public DarkTabFrameComponentPopupMenu(final TabFrameTab tab) {
         this.tab = tab;
-        JMenu moveToMenu = new JMenu("Move to");
+        ResourceBundle bundle = ResourceUtil.getResourceBundle("tabFrame", this);
+        JMenu moveToMenu = new JMenu(bundle.getString("popup.moveTo"));
         Alignment[] aligns = Alignment.values();
         actions = new JMenuItem[aligns.length];
 
         Alignment a = Alignment.NORTH_WEST;
         while (a != Alignment.NORTH) {
-            createAndAdd(a, moveToMenu);
+            createAndAdd(a, moveToMenu, bundle);
             a = a.anticlockwise();
         }
-        createAndAdd(a, moveToMenu);
+        createAndAdd(a, moveToMenu, bundle);
 
         add(moveToMenu);
         if (tab.getOrientation() != null) {
@@ -60,16 +63,16 @@ public class DarkTabFrameComponentPopupMenu extends JXPopupMenu implements Prope
         tab.getComponent().addPropertyChangeListener(this);
     }
 
-    protected void createAndAdd(final Alignment a, final JMenu menu) {
-        JMenuItem menuItem = createMenuItem(a);
+    protected void createAndAdd(final Alignment a, final JMenu menu, final ResourceBundle bundle) {
+        JMenuItem menuItem = createMenuItem(a, bundle);
         actions[a.ordinal()] = menuItem;
         menu.add(menuItem);
     }
 
-    protected JMenuItem createMenuItem(final Alignment a) {
+    protected JMenuItem createMenuItem(final Alignment a, final ResourceBundle bundle) {
         JMenuItem menuItem = new JMenuItem();
         menuItem.addActionListener(e -> moveTo(a));
-        menuItem.setText(getDescription(a));
+        menuItem.setText(getDescription(a, bundle));
         menuItem.setIcon(createIcon(a, true));
         menuItem.setDisabledIcon(createIcon(a, false));
         return menuItem;
@@ -84,24 +87,17 @@ public class DarkTabFrameComponentPopupMenu extends JXPopupMenu implements Prope
         tab.getTabFrame().moveTab(tab, a);
     }
 
-    protected String getDescription(final Alignment a) {
+    protected String getDescription(final Alignment a, final ResourceBundle bundle) {
         switch (a) {
             case NORTH:
-                return "Top Left";
             case SOUTH:
-                return "Bottom Right";
             case EAST:
-                return "Right Top";
             case WEST:
-                return "Left Bottom";
             case NORTH_EAST:
-                return "Top Right";
             case NORTH_WEST:
-                return "Left Top";
             case SOUTH_EAST:
-                return "Right Bottom";
             case SOUTH_WEST:
-                return "Bottom Left";
+                return bundle.getString("popup.moveTo." + a.name().toLowerCase());
             case CENTER:
             default:
                 return "";
