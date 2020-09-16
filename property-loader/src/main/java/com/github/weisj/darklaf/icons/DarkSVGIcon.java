@@ -174,7 +174,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
                 LOGGER.severe("Icon '" + getName(uri) + "' that defines custom colors isn't loaded as themed icon.");
                 return img;
             }
-            throw e;
+            throw new RuntimeException("Exception while painting '" + uri.toASCIIString() + "'.", e);
         }
     }
 
