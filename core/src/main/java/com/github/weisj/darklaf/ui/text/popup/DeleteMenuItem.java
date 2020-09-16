@@ -28,25 +28,25 @@ import javax.swing.text.JTextComponent;
 
 import com.github.weisj.darklaf.util.ResourceUtil;
 
-public class CutMenuItem extends CopyMenuItem {
+public class DeleteMenuItem extends EditMenuItem {
 
-    public CutMenuItem(final JTextComponent editor) {
-        this(ResourceUtil.getResourceBundle("actions", editor).getString("Actions.cut"), editor);
+    public DeleteMenuItem(final JTextComponent editor) {
+        this(ResourceUtil.getResourceBundle("actions", editor).getString("Actions.paste"), editor);
     }
 
-    public CutMenuItem(final String title, final JTextComponent editor) {
+    public DeleteMenuItem(final String title, final JTextComponent editor) {
         super(title, editor);
     }
 
     @Override
     protected void setupIcons() {
-        setIcon(UIManager.getIcon("TextComponent.cut.icon"));
-        setDisabledIcon(UIManager.getIcon("TextComponent.cutDisabled.icon"));
+        setIcon(UIManager.getIcon("TextComponent.delete.icon"));
+        setDisabledIcon(UIManager.getIcon("TextComponent.deleteDisabled.icon"));
     }
 
     @Override
     public void actionPerformed(final ActionEvent e) {
-        if (editor != null) editor.cut();
+        if (editor != null) editor.replaceSelection("");
     }
 
     @Override

@@ -35,21 +35,25 @@ public class DarkTextPopupMenu extends JPopupMenu implements UIResource {
     private final JMenuItem cut;
     private final JMenuItem copy;
     private final JMenuItem paste;
+    private final JMenuItem delete;
 
     public DarkTextPopupMenu(final JTextComponent editor) {
         ResourceBundle bundle = ResourceUtil.getResourceBundle("actions", editor);
         cut = new CutMenuItem(bundle.getString("Actions.cut"), editor);
         copy = new CopyMenuItem(bundle.getString("Actions.copy"), editor);
         paste = new PasteMenuItem(bundle.getString("Actions.paste"), editor);
+        delete = new DeleteMenuItem(bundle.getString("Actions.delete"), editor);
+
         add(cut);
         add(copy);
         add(paste);
+        add(delete);
     }
 
     @Override
     public void show(final Component invoker, final int x, final int y) {
         updateMenuItems();
-        if (!(cut.isEnabled() || copy.isEnabled() || paste.isEnabled())) {
+        if (!(cut.isEnabled() || copy.isEnabled() || paste.isEnabled() || delete.isEnabled())) {
             // No action available. Don't show the popup.
             return;
         }
@@ -60,6 +64,7 @@ public class DarkTextPopupMenu extends JPopupMenu implements UIResource {
         updateMenuItem(cut);
         updateMenuItem(copy);
         updateMenuItem(paste);
+        updateMenuItem(delete);
     }
 
     protected void updateMenuItem(final JMenuItem item) {
