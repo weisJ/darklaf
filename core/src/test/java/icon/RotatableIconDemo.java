@@ -21,14 +21,20 @@
  */
 package icon;
 
+import java.awt.*;
+import java.util.concurrent.atomic.AtomicReference;
+
 import javax.swing.*;
 
 import ui.ComponentDemo;
 import ui.DemoPanel;
 import ui.DemoResources;
 
+import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.icons.DarkSVGIcon;
 import com.github.weisj.darklaf.icons.RotatableIcon;
 import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.util.Pair;
 
 public class RotatableIconDemo implements ComponentDemo {
 
@@ -38,18 +44,67 @@ public class RotatableIconDemo implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        RotatableIcon folderIcon = new RotatableIcon(DemoResources.FOLDER_ICON);
-        folderIcon.setOrientation(Alignment.NORTH);
-        JLabel label = new JLabel(folderIcon);
-        SwingUtilities.invokeLater(() -> {
-            Timer timer = new Timer(1000, e -> {
-                folderIcon.setOrientation(folderIcon.getOrientation().clockwise());
-                label.repaint();
-            });
-            timer.setRepeats(true);
-            timer.start();
+        final int size = 25;
+        RotatableIcon rotateIcon = new RotatableIcon(((DarkSVGIcon) DemoResources.FOLDER_ICON).derive(size, size));
+        rotateIcon.setOrientation(Alignment.NORTH);
+        JLabel iconLabel = new JLabel(rotateIcon);
+        DemoPanel panel = new DemoPanel(iconLabel);
+
+        JSlider slider = new JSlider(0, 360);
+        slider.setMajorTickSpacing(360 / (Alignment.values().length - 1));
+        slider.setSnapToTicks(true);
+        slider.setPaintLabels(true);
+        slider.setPaintTicks(true);
+        slider.setValue((int) Math.toDegrees(rotateIcon.getAngle()));
+        slider.addChangeListener(e -> {
+            if (!slider.isEnabled()) return;
+            rotateIcon.setRotation(Math.toRadians(slider.getValue()));
+            iconLabel.repaint();
         });
-        return new DemoPanel(label);
+
+        Timer timer = new Timer(1000, e -> {
+            rotateIcon.setOrientation(rotateIcon.getOrientation().clockwise());
+            slider.setValue((int) Math.toDegrees(rotateIcon.getAngle()));
+            iconLabel.repaint();
+        });
+        timer.setRepeats(true);
+
+        JCheckBox checkBox = new JCheckBox("Auto rotate");
+        checkBox.setSelected(false);
+        checkBox.addActionListener(e -> {
+            slider.setEnabled(!checkBox.isSelected());
+            if (checkBox.isSelected()) {
+                rotateIcon.setOrientation(Alignment.NORTH);
+                timer.start();
+            } else {
+                timer.stop();
+            }
+        });
+
+        JComponent controls = panel.addControls(new GridBagLayout());
+        controls.add(slider);
+        controls = panel.addControls(Box.createHorizontalBox());
+        controls.add(checkBox);
+        controls.add(Box.createHorizontalGlue());
+        controls = panel.addControls(new BorderLayout());
+
+        AtomicReference<Icon> nextIcon = new AtomicReference<>(rotateIcon.getIcon());
+        JList<Pair<String, ? extends Icon>> list = AllIcons.createIconList(size);
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list.addListSelectionListener(e -> nextIcon.set(list.getSelectedValue().getSecond()));
+        controls.add(new OverlayScrollPane(list));
+        Box box = Box.createHorizontalBox();
+        box.add(Box.createHorizontalGlue());
+        JButton apply = new JButton("Change Icon");
+        apply.addActionListener(e -> {
+            rotateIcon.setIcon(nextIcon.get());
+            iconLabel.repaint();
+        });
+        box.add(apply);
+        box.add(Box.createHorizontalGlue());
+        controls = panel.addControls(new BorderLayout());
+        controls.add(box);
+        return panel;
     }
 
     @Override

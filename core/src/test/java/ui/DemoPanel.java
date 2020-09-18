@@ -31,7 +31,7 @@ import com.github.weisj.darklaf.components.border.DarkBorders;
 
 public class DemoPanel extends JPanel {
 
-    private final JPanel controls;
+    private final JComponent controls;
 
     public DemoPanel(final JComponent component) {
         this(component, 10);
@@ -55,17 +55,20 @@ public class DemoPanel extends JPanel {
 
         contentHolder.add(content, BorderLayout.CENTER);
         add(contentHolder, BorderLayout.CENTER);
-        controls = new JPanel();
-        controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
+        controls = Box.createVerticalBox();
         add(controls, BorderLayout.SOUTH);
     }
 
     public JPanel addControls(final LayoutManager layoutManager) {
         JPanel control = new JPanel();
         control.setLayout(layoutManager);
-        control.setBorder(DarkBorders.createLineBorder(1, 0, 0, 0));
-        controls.add(control);
-        return control;
+        return addControls(control);
+    }
+
+    public <T extends JComponent> T addControls(final T component) {
+        component.setBorder(DarkBorders.createLineBorder(1, 0, 0, 0));
+        controls.add(component);
+        return component;
     }
 
     public JPanel addControls(final int columns) {
@@ -73,6 +76,10 @@ public class DemoPanel extends JPanel {
         if (columns > 0) {
             constraints += ", wrap" + columns;
         }
+        return addControls(constraints);
+    }
+
+    public JPanel addControls(final String constraints) {
         return addControls(new MigLayout(constraints, "[][grow]"));
     }
 

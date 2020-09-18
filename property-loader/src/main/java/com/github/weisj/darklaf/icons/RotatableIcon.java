@@ -46,6 +46,10 @@ public class RotatableIcon implements Icon {
         this.icon = icon == null ? EmptyIcon.create(0) : icon;
     }
 
+    public Icon getIcon() {
+        return icon;
+    }
+
     @Override
     public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
         if (icon instanceof RotateIcon) {

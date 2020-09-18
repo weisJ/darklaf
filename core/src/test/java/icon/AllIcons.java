@@ -61,8 +61,12 @@ public class AllIcons implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
+        return new OverlayScrollPane(createIconList(ICON_SIZE));
+    }
+
+    protected static JList<Pair<String, ? extends Icon>> createIconList(final int displaySize) {
         JList<Pair<String, ? extends Icon>> list = new JList<>(new ListModel<Pair<String, ? extends Icon>>() {
-            final List<Pair<String, ? extends Icon>> elements = loadIcons();
+            final List<Pair<String, ? extends Icon>> elements = loadIcons(displaySize);
 
             @Override
             public int getSize() {
@@ -81,15 +85,16 @@ public class AllIcons implements ComponentDemo {
             public void removeListDataListener(final ListDataListener l) {}
         });
         list.setLayoutOrientation(JList.VERTICAL);
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setCellRenderer(new IconListRenderer());
-        return new OverlayScrollPane(list);
+        return list;
     }
 
-    private List<Pair<String, ? extends Icon>> loadIcons() {
+    private static List<Pair<String, ? extends Icon>> loadIcons(final int displaySize) {
         IconLoader loader = IconLoader.get();
         try (ResourceWalker walker = ResourceWalker.walkResources("com.github.weisj")) {
             return walker.stream().filter(p -> p.endsWith("svg")).map(p -> {
-                int size = ICON_SIZE;
+                final int size = displaySize;
                 ThemedSVGIcon icon = (ThemedSVGIcon) loader.loadSVGIcon(p, size, size, true);
                 SVGIcon svgIcon = icon.getSVGIcon();
                 int autosize = svgIcon.getAutosize();
