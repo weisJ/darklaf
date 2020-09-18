@@ -255,7 +255,7 @@ public class DarkButtonBorder implements Border, UIResource {
     }
 
     public Insets getBorderInsets(final Component c) {
-        if (ButtonConstants.isBorderlessRectangular(c)) {
+        if (ButtonConstants.isBorderlessVariant(c)) {
             return new InsetsUIResource(0, 0, 0, 0);
         }
         boolean shadowVariant = ButtonConstants.isBorderless(c);

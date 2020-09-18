@@ -25,6 +25,7 @@ import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
@@ -42,7 +43,10 @@ import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.graphics.StringPainter;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonFocusNavigationActions;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
-import com.github.weisj.darklaf.util.*;
+import com.github.weisj.darklaf.util.AlignmentExt;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /** @author Jannis Weis */
 public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
@@ -241,7 +245,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     protected void paintBorderlessBackground(final AbstractButton b, final Graphics2D g, final int arc, final int width,
             final int height, final Insets m) {
         if (isRolloverBorderless(b)) {
-            Insets ins = b.getInsets();
+            Border border = b.getBorder();
+            Insets ins = border != null ? border.getBorderInsets(b) : new Insets(0, 0, 0, 0);
             Insets margin = m;
             if (margin == null) {
                 margin = new Insets(0, 0, 0, 0);
@@ -250,17 +255,10 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
                 // If the button is larger than expected adjust the margin s.t. the shadow background is
                 // only painted in the area around the viewRect specified by the margin.
                 Rectangle r = iconRect.union(textRect);
-                int prefWidth = r.width + margin.right + margin.left + ins.left + ins.right;
-                int prefHeight = r.height + margin.top + margin.bottom + ins.top + ins.bottom;
-                margin = new Insets(margin.top, margin.left, margin.bottom, margin.right);
-                if (width > prefWidth) {
-                    margin.left = r.x - margin.left;
-                    margin.right = width - (r.x + r.width + margin.right);
-                }
-                if (height > prefHeight) {
-                    margin.top = r.y - margin.top;
-                    margin.bottom = height - (r.y + r.height + margin.bottom);
-                }
+                margin.left = r.x - margin.left;
+                margin.right = width - (r.x + r.width + margin.right);
+                margin.top = r.y - margin.top;
+                margin.bottom = height - (r.y + r.height + margin.bottom);
             }
 
             int x = Math.max(ins.left, margin.left);
