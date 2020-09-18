@@ -30,7 +30,6 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 import javax.swing.FocusManager;
-import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 
@@ -130,7 +129,6 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
 
     protected HeaderButton createCloseButton() {
         HeaderButton closeButton = new HeaderButton(UIManager.getIcon("TabFramePopup.close.icon"), this);
-        closeButton.setBorder(new EmptyBorder(4, 4, 4, 4));
         closeButton.addActionListener(e -> popupComponent.close());
         String tooltip = ResourceUtil.getResourceBundle("actions", popupComponent).getString("Actions.close");
         tooltip = tooltip + " (" + UIManager.getString("TabFramePopup.closeTooltipTextHint") + ")";
@@ -374,6 +372,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
         public HeaderButton(final Icon icon, final DarkPanelPopupUI ui) {
             super(icon);
             this.ui = ui;
+            setName("headerButton");
             putClientProperty(DarkButtonUI.KEY_SQUARE, true);
             putClientProperty(DarkButtonUI.KEY_THIN, true);
             putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS);
@@ -381,6 +380,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
             setRolloverEnabled(true);
             Insets ins = UIManager.getInsets("TabFramePopup.headerButton.insets");
             setMargin(new Insets(ins.top, ins.left, ins.bottom, ins.right));
+            setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
             setFocus(false);
             setFocusable(false);
             setOpaque(false);

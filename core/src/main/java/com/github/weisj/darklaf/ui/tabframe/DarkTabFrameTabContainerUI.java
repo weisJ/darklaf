@@ -22,7 +22,6 @@
 package com.github.weisj.darklaf.ui.tabframe;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -37,8 +36,6 @@ import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTabContainer;
 import com.github.weisj.darklaf.listener.HoverListener;
 import com.github.weisj.darklaf.ui.panel.DarkPanelUI;
-import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 
 public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyChangeListener {
@@ -91,33 +88,7 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
     }
 
     protected void installAccelerator(final JTabFrame tabFrame) {
-        if (tabFrame == null) return;
-        int acc = tabContainer.getAccelerator();
-        if (acc < 0) return;
-        tabFrame.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
-                KeyStroke.getKeyStroke(UIManager.getString("TabFrame.acceleratorKeyCode") + " " + acc),
-                ACCELERATOR_PREFIX + acc);
-        tabFrame.getActionMap().put(ACCELERATOR_PREFIX + acc, createAcceleratorAction(tabFrame));
-    }
-
-    protected Action createAcceleratorAction(final JTabFrame tabFrame) {
-        return new AbstractAction() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                Alignment a = tabContainer.getOrientation();
-                int index = tabContainer.getIndex();
-                if (!tabContainer.isSelected()) {
-                    tabFrame.toggleTab(a, index, true);
-                } else {
-                    Component popup = tabFrame.getPopupComponentAt(a, index);
-                    if (!DarkUIUtil.hasFocus(popup)) {
-                        popup.requestFocusInWindow();
-                    } else {
-                        tabFrame.toggleTab(a, index, false);
-                    }
-                }
-            }
-        };
+        TabFrameUtil.installAccelerator(tabFrame, tabContainer);
     }
 
     @Override
@@ -146,10 +117,7 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
     }
 
     protected void uninstallAccelerator(final JTabFrame tabFrame) {
-        if (tabFrame == null) return;
-        int acc = tabContainer.getAccelerator();
-        String accAction = ACCELERATOR_PREFIX + acc;
-        tabFrame.getActionMap().remove(accAction);
+        TabFrameUtil.uninstallAccelerator(tabFrame, tabContainer);
     }
 
     protected void installDefaults(final JPanel p) {

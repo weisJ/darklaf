@@ -26,7 +26,6 @@ import java.util.Objects;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.ui.tabframe.DarkTabFrameTabLabelUI;
 import com.github.weisj.darklaf.util.Alignment;
 
@@ -59,7 +58,7 @@ public class TabFrameTabLabel extends JLabel implements TabFrameTab {
         this.accelerator = -1;
         this.parent = parent;
         setOrientation(orientation);
-        setIcon(icon == null ? EmptyIcon.create(0) : icon);
+        setIcon(icon);
         setTitle(title);
         setText(title);
     }
