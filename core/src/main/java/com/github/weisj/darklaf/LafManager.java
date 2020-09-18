@@ -38,7 +38,6 @@ import com.github.weisj.darklaf.task.DefaultsAdjustmentTask;
 import com.github.weisj.darklaf.task.DefaultsInitTask;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.event.*;
-import com.github.weisj.darklaf.theme.info.DefaultThemeProvider;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 import com.github.weisj.darklaf.theme.info.ThemeProvider;
 import com.github.weisj.darklaf.theme.laf.ThemedLookAndFeel;
@@ -226,7 +225,7 @@ public final class LafManager {
      * Default theme provider. Defaults to IntelliJ/Darcula Light/Dark high contrast themes.
      */
     private static ThemeProvider createDefaultThemeProvider() {
-        return new DefaultThemeProvider();
+        return ThemeProvider.createDefault();
     }
 
     /**

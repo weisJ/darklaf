@@ -27,6 +27,10 @@ public interface ThemeProvider {
 
     Theme getTheme(final PreferredThemeStyle themeStyle);
 
+    static ThemeProvider createDefault() {
+        return new DefaultThemeProvider();
+    }
+
     static ThemeProvider fromThemes(final Theme lightTheme, final Theme darkTheme) {
         return new DefaultThemeProvider(lightTheme, darkTheme);
     }
