@@ -37,6 +37,7 @@ import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.listener.UpdateDocumentListener;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
+import com.github.weisj.darklaf.ui.colorchooser.ColorPipette;
 import com.github.weisj.darklaf.ui.colorchooser.ColorPreviewComponent;
 import com.github.weisj.darklaf.ui.colorchooser.ColorTriangle;
 import com.github.weisj.darklaf.ui.colorchooser.ColorValueFormatter;
@@ -58,6 +59,7 @@ public class SmallColorChooser extends JPanel {
     protected JFormattedTextField hexField;
     protected Map<DarkColorModel, Runnable> updateMap = new HashMap<>();
     protected ColorValueFormatter hexFormatter;
+    protected ColorPipette pipette;
 
     public SmallColorChooser(final Color initial, final Consumer<Color> callback) {
         this.color = initial;
@@ -181,7 +183,7 @@ public class SmallColorChooser extends JPanel {
         Icon pipetteIcon = UIManager.getIcon("ColorChooser.pipette.icon");
         Icon pipetteHoverIcon = UIManager.getIcon("ColorChooser.pipetteRollover.icon");
         JButton pipetteButton = new JButton();
-        DefaultColorPipette pipette = new DefaultColorPipette(this, (c, o) -> setColor(pipetteButton,
+        DefaultColorPipette defaultPipette = new DefaultColorPipette(this, (c, o) -> setColor(pipetteButton,
                 DarkColorModelRGB.getInstance(), c.getRed(), c.getGreen(), c.getBlue()));
         pipetteButton.putClientProperty(DarkButtonUI.KEY_THIN, Boolean.TRUE);
         pipetteButton.putClientProperty(DarkButtonUI.KEY_SQUARE, Boolean.TRUE);
@@ -196,7 +198,8 @@ public class SmallColorChooser extends JPanel {
             pipette.setInitialColor(getColor());
             pipette.show();
         });
-        pipette.setCloseAction(() -> pipetteButton.setEnabled(true));
+        defaultPipette.setCloseAction(() -> pipetteButton.setEnabled(true));
+        pipette = defaultPipette;
         return pipetteButton;
     }
 
@@ -216,6 +219,10 @@ public class SmallColorChooser extends JPanel {
 
     public DarkColorModel getDarkColorModel() {
         return COLOR_MODELS[colorModelTabbedPane.getSelectedIndex()];
+    }
+
+    public boolean isPipetteShowing() {
+        return pipette != null && pipette.isShowing();
     }
 
     protected void addColorModels(final JTabbedPane tabbedPane, final DarkColorModel... colorModels) {

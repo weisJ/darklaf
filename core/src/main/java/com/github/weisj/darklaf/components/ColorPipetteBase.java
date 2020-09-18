@@ -87,6 +87,11 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
     }
 
     @Override
+    public boolean isShowing() {
+        return pickerWindow != null && pickerWindow.isShowing();
+    }
+
+    @Override
     public Color getColor() {
         return currentColor;
     }
@@ -182,9 +187,11 @@ public abstract class ColorPipetteBase implements ColorPipette, AWTEventListener
                 downKeyCode = ((KeyEvent) event).getKeyCode();
                 switch (downKeyCode) {
                     case KeyEvent.VK_ESCAPE:
+                        ((KeyEvent) event).consume();
                         cancelPipette();
                         break;
                     case KeyEvent.VK_ENTER:
+                        ((KeyEvent) event).consume();
                         pickAndClose();
                         break;
                     default:

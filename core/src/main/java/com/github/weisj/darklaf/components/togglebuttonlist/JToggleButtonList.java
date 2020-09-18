@@ -22,13 +22,14 @@
 package com.github.weisj.darklaf.components.togglebuttonlist;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.*;
+
+import com.github.weisj.darklaf.util.Actions;
 
 public class JToggleButtonList extends JList<JToggleButton> {
 
@@ -60,13 +61,10 @@ public class JToggleButtonList extends JList<JToggleButton> {
         InputMap map = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         map.put(KeyStroke.getKeyStroke("released SPACE"), "toggle_togglebutton");
-        getActionMap().put("toggle_togglebutton", new AbstractAction("toggle_togglebutton") {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                int leadIndex = getSelectionModel().getLeadSelectionIndex();
-                if (leadIndex >= 0) setSelected(leadIndex, !JToggleButtonList.this.isSelected(leadIndex));
-            }
-        });
+        getActionMap().put("toggle_togglebutton", Actions.create("toggle_togglebutton", e -> {
+            int leadIndex = getSelectionModel().getLeadSelectionIndex();
+            if (leadIndex >= 0) setSelected(leadIndex, !JToggleButtonList.this.isSelected(leadIndex));
+        }));
         super.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 

@@ -33,19 +33,21 @@ import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.ui.tooltip.DarkToolTipUI;
 import com.github.weisj.darklaf.ui.tooltip.DarkTooltipBorder;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
+import com.github.weisj.darklaf.util.Actions;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class PopupColorChooser extends JToolTip {
 
     protected DarkTooltipBorder border;
-    protected static SmallColorChooser chooser;
+    protected static SmallColorChooser sharedChooser;
     protected static ToolTipContext context;
+    protected final SmallColorChooser chooser;
 
     protected SmallColorChooser getChooser(final Color initial, final Consumer<Color> callback) {
-        if (chooser == null) chooser = new SmallColorChooser(initial, callback);
-        SmallColorChooser smallColorChooser = chooser;
-        if (chooser.getParent() != null) {
+        if (sharedChooser == null) sharedChooser = new SmallColorChooser(initial, callback);
+        SmallColorChooser smallColorChooser = sharedChooser;
+        if (sharedChooser.getParent() != null) {
             // Already in use. Create new one.
             smallColorChooser = new SmallColorChooser(initial, callback);
         }
@@ -62,7 +64,8 @@ public class PopupColorChooser extends JToolTip {
     public PopupColorChooser(final JComponent parent, final Color initial, final Consumer<Color> callback) {
         setComponent(parent);
         setLayout(new BorderLayout());
-        add(getChooser(initial, callback), BorderLayout.CENTER);
+        chooser = getChooser(initial, callback);
+        add(chooser, BorderLayout.CENTER);
         setBackground(UIManager.getColor("ColorChooser.background"));
     }
 
@@ -82,11 +85,16 @@ public class PopupColorChooser extends JToolTip {
 
     public static void showColorChooser(final JComponent parent, final Color initial, final Consumer<Color> callback,
             final Consumer<AWTEvent> onClose) {
-        JToolTip toolTip = new PopupColorChooser(parent, initial, callback);
+        showColorChooser(parent, initial, callback, onClose, false);
+    }
+
+    public static void showColorChooser(final JComponent parent, final Color initial, final Consumer<Color> callback,
+            final Consumer<AWTEvent> onClose, final boolean revertOnEscape) {
+        PopupColorChooser chooser = new PopupColorChooser(parent, initial, callback);
         /*
          * Position is (0,0) as the ToolTipContext figures out the correct location.
          */
-        final Popup popup = PopupFactory.getSharedInstance().getPopup(parent, toolTip, 0, 0);
+        final Popup popup = PopupFactory.getSharedInstance().getPopup(parent, chooser, 0, 0);
         popup.show();
         Window window = DarkUIUtil.getWindow(parent);
         AtomicReference<Consumer<AWTEvent>> close = new AtomicReference<>();
@@ -106,15 +114,15 @@ public class PopupColorChooser extends JToolTip {
                 int id = event.getID();
                 if (id != MouseEvent.MOUSE_CLICKED && id != MouseEvent.MOUSE_PRESSED) return;
             }
-            boolean doClose = event instanceof FocusEvent && (!(DarkUIUtil.hasFocus(toolTip, (FocusEvent) event)
-                    || DarkUIUtil.hasFocus(toolTip) || DarkUIUtil.hasFocus(parent, (FocusEvent) event)));
+            boolean doClose = event instanceof FocusEvent && (!(DarkUIUtil.hasFocus(chooser, (FocusEvent) event)
+                    || DarkUIUtil.hasFocus(chooser) || DarkUIUtil.hasFocus(parent, (FocusEvent) event)));
             if (!doClose) {
                 Point p = MouseInfo.getPointerInfo().getLocation();
                 Point p2 = new Point(p);
                 Point p3 = new Point(p);
                 SwingUtilities.convertPointFromScreen(p2, parent);
-                SwingUtilities.convertPointFromScreen(p3, toolTip);
-                doClose = !(parent.contains(p2) || toolTip.contains(p3));
+                SwingUtilities.convertPointFromScreen(p3, chooser);
+                doClose = !(parent.contains(p2) || chooser.contains(p3));
             }
             if (doClose) {
                 close.get().accept(event);
@@ -126,6 +134,17 @@ public class PopupColorChooser extends JToolTip {
             if (window != null) window.removeComponentListener(windowListener);
             if (onClose != null) onClose.accept(e);
         });
+        KeyStroke escape = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+        KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+        chooser.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(escape, "closeEscape");
+        chooser.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(enter, "closeEnter");
+        chooser.getActionMap().put("closeEscape", Actions.create(e -> {
+            if (revertOnEscape) {
+                callback.accept(initial);
+            }
+            close.get().accept(e);
+        }));
+        chooser.getActionMap().put("closeEnter", Actions.create(e -> close.get().accept(e)));
         SwingUtilities.invokeLater(() -> {
             window.addComponentListener(windowListener);
             Toolkit.getDefaultToolkit().addAWTEventListener(listener,

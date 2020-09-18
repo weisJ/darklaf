@@ -23,7 +23,6 @@ package com.github.weisj.darklaf.ui.tabframe;
 
 import java.awt.*;
 import java.awt.event.AWTEventListener;
-import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -39,6 +38,7 @@ import com.github.weisj.darklaf.components.uiresource.JLabelUIResource;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.panel.DarkPanelUI;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
+import com.github.weisj.darklaf.util.Actions;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.ResourceUtil;
@@ -46,12 +46,7 @@ import com.github.weisj.darklaf.util.ResourceUtil;
 public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListener, AWTEventListener, TabFramePopupUI {
 
     protected HeaderButton closeButton;
-    private final Action closeAction = new AbstractAction() {
-        @Override
-        public void actionPerformed(final ActionEvent e) {
-            closeButton.doClick();
-        }
-    };
+    private final Action closeAction = Actions.create(e -> closeButton.doClick());
     protected JPanel content;
     protected JLabel label;
     protected Color headerFocusBackground;

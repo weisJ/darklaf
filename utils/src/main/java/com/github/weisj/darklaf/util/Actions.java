@@ -19,29 +19,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.ui.colorchooser;
+package com.github.weisj.darklaf.util;
 
-import java.awt.*;
-import java.awt.image.ImageObserver;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import com.github.weisj.darklaf.components.Disposable;
+import javax.swing.*;
 
-/**
- * @author pegov
- * @author Konstantin Bulenkov
- */
-public interface ColorPipette extends ImageObserver, Disposable {
-    void setInitialColor(Color initialColor);
+public class Actions {
 
-    Color getColor();
+    public static Action create(final ActionListener action) {
+        return new AbstractAction() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                action.actionPerformed(e);
+            }
+        };
+    }
 
-    Window show();
-
-    boolean isShowing();
-
-    void pickAndClose();
-
-    void cancelPipette();
-
-    boolean isAvailable();
+    public static Action create(final String name, final ActionListener action) {
+        return new AbstractAction(name) {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                action.actionPerformed(e);
+            }
+        };
+    }
 }

@@ -22,12 +22,12 @@
 package com.github.weisj.darklaf.ui.tabframe;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 
 import javax.swing.*;
 
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
+import com.github.weisj.darklaf.util.Actions;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
@@ -48,23 +48,20 @@ public class TabFrameUtil {
     }
 
     public static Action createAcceleratorAction(final JTabFrame tabFrame, final TabFrameTab tab) {
-        return new AbstractAction() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                Alignment a = tab.getOrientation();
-                int index = tab.getIndex();
-                if (!tab.isSelected()) {
-                    tabFrame.toggleTab(a, index, true);
+        return Actions.create(e -> {
+            Alignment a = tab.getOrientation();
+            int index = tab.getIndex();
+            if (!tab.isSelected()) {
+                tabFrame.toggleTab(a, index, true);
+            } else {
+                Component popup = tabFrame.getPopupComponentAt(a, index);
+                if (!DarkUIUtil.hasFocus(popup)) {
+                    popup.requestFocusInWindow();
                 } else {
-                    Component popup = tabFrame.getPopupComponentAt(a, index);
-                    if (!DarkUIUtil.hasFocus(popup)) {
-                        popup.requestFocusInWindow();
-                    } else {
-                        tabFrame.toggleTab(a, index, false);
-                    }
+                    tabFrame.toggleTab(a, index, false);
                 }
             }
-        };
+        });
     }
 
     public static void uninstallAccelerator(final JTabFrame tabFrame, final TabFrameTab tab) {
