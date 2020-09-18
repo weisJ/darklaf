@@ -26,4 +26,13 @@ import com.github.weisj.darklaf.theme.Theme;
 public interface ThemeProvider {
 
     Theme getTheme(final PreferredThemeStyle themeStyle);
+
+    static ThemeProvider fromThemes(final Theme lightTheme, final Theme darkTheme) {
+        return new DefaultThemeProvider(lightTheme, darkTheme);
+    }
+
+    static ThemeProvider fromThemes(final Theme lightTheme, final Theme darkTheme, final Theme lightHighContrastTheme,
+            final Theme darkHighContrastTheme) {
+        return new DefaultThemeProvider(lightTheme, darkTheme, lightHighContrastTheme, darkHighContrastTheme);
+    }
 }

@@ -21,6 +21,8 @@
  */
 package com.github.weisj.darklaf.theme.info;
 
+import java.util.Objects;
+
 import com.github.weisj.darklaf.theme.*;
 
 public class DefaultThemeProvider implements ThemeProvider {
@@ -34,8 +36,16 @@ public class DefaultThemeProvider implements ThemeProvider {
         this(new IntelliJTheme(), new DarculaTheme(), new HighContrastLightTheme(), new HighContrastDarkTheme());
     }
 
+    public DefaultThemeProvider(final Theme lightTheme, final Theme darkTheme) {
+        this(lightTheme, darkTheme, new HighContrastLightTheme(), new HighContrastDarkTheme());
+    }
+
     public DefaultThemeProvider(final Theme lightTheme, final Theme darkTheme, final Theme lightHighContrastTheme,
             final Theme darkHighContrastTheme) {
+        Objects.requireNonNull(lightTheme, "Light theme is null");
+        Objects.requireNonNull(darkTheme, "Dark theme is null");
+        Objects.requireNonNull(lightHighContrastTheme, "Light high contrast theme is null");
+        Objects.requireNonNull(darkHighContrastTheme, "Dark high contrast theme is null");
         /*
          * Ensure the given themes actually serve the purpose they are intended for.
          */
@@ -47,11 +57,11 @@ public class DefaultThemeProvider implements ThemeProvider {
                     "Given light high-contrast theme " + lightHighContrastTheme + " is declared as dark");
         }
         if (!Theme.isDark(darkTheme)) {
-            throw new UnsupportedThemeException("Given dark theme " + darkTheme + "is not declared as dark");
+            throw new UnsupportedThemeException("Given dark theme " + darkTheme + " is not declared as dark");
         }
         if (!Theme.isDark(darkHighContrastTheme)) {
             throw new UnsupportedThemeException(
-                    "Given dark high-contrast theme " + darkTheme + "is not declared as dark");
+                    "Given dark high-contrast theme " + darkHighContrastTheme + "is not declared as dark");
         }
         /*
          * A high contrast theme may serve as a standard theme, but a standard theme should never be used
@@ -80,5 +90,20 @@ public class DefaultThemeProvider implements ThemeProvider {
                 : highContrast ? lightHighContrastTheme : lightTheme;
 
         return theme.derive(themeStyle.getFontSizeRule(), themeStyle.getAccentColorRule());
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DefaultThemeProvider)) return false;
+        DefaultThemeProvider that = (DefaultThemeProvider) o;
+        return lightTheme.appearsEqualTo(that.lightTheme) && darkTheme.appearsEqualTo(that.darkTheme)
+                && lightHighContrastTheme.appearsEqualTo(that.lightHighContrastTheme)
+                && darkHighContrastTheme.appearsEqualTo(that.darkHighContrastTheme);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(lightTheme, darkTheme, lightHighContrastTheme, darkHighContrastTheme);
     }
 }
