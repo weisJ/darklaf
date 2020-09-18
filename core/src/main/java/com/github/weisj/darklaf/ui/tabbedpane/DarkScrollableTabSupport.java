@@ -81,6 +81,7 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
         ui.scrollShiftX = 0;
         ui.scrollShiftY = 0;
         ui.scrollLayout.calculateTabRects(ui.tabPane.getTabPlacement(), ui.tabPane.getTabCount());
+        ui.scrollLayout.layoutTabComponents();
         updateRollover();
         viewport.repaint();
     }
@@ -135,19 +136,27 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
     @Override
     public void mouseWheelMoved(final MouseWheelEvent e) {
         if (!ui.tabPane.isEnabled() || ui.tabPane.getTabCount() == 0) return;
-        int tabPosition = ui.tabPane.getTabPlacement();
         int scrollAmount = -1 * e.getUnitsToScroll() * e.getScrollAmount();
         int scrolled;
-        if (tabPosition == SwingConstants.LEFT || tabPosition == SwingConstants.RIGHT) {
-            if (e.isShiftDown() || !moreTabsButton.isVisible()) return;
+        int scrollX = 0;
+        int scrollY = 0;
+        if (!ui.isHorizontalTabPlacement()) {
+            if (!moreTabsButton.isVisible()) return;
             timer.stop();
             scrolled = scroll(scrollAmount, false);
+            scrollY = scrolled;
         } else {
-            if (!e.isShiftDown() || !moreTabsButton.isVisible()) return;
+            if (!moreTabsButton.isVisible()) return;
             timer.stop();
             scrolled = scroll(scrollAmount, true);
+            scrollX = scrolled;
         }
         if (scrolled != 0) {
+            for (int i = 0; i < ui.tabPane.getTabCount(); i++) {
+                Component c = ui.tabPane.getTabComponentAt(i);
+                if (c == null) continue;
+                c.setLocation(c.getX() + scrollX, c.getY() + scrollY);
+            }
             showMoreTabsButton();
             updateRollover();
             viewport.repaint();
@@ -168,13 +177,7 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
             }
             int low = ui.rects[0].x;
             int high = ui.rects[tabCount - 1].x + ui.rects[tabCount - 1].width;
-            shift = Math.abs(amount);
-            if (amount > 0) {
-                shift = Math.min(Math.max(-1 * low, 0), shift);
-            } else {
-                shift = Math.min(Math.max(high - rightMargin, 0), shift);
-                shift *= -1;
-            }
+            shift = getShift(amount, rightMargin, low, high);
             ui.scrollLayout.commitShiftX(shift, tabCount);
             ui.scrollShiftX += shift;
         } else {
@@ -184,15 +187,21 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
             }
             int low = ui.rects[0].y;
             int high = ui.rects[tabCount - 1].y + ui.rects[tabCount - 1].height;
-            shift = Math.abs(amount);
-            if (amount > 0) {
-                shift = Math.min(Math.max(-1 * low, 0), shift);
-            } else {
-                shift = Math.min(Math.max(high - bottomMargin, 0), shift);
-                shift *= -1;
-            }
+            shift = getShift(amount, bottomMargin, low, high);
             ui.scrollLayout.commitShiftY(shift, tabCount);
             ui.scrollShiftY += shift;
+        }
+        return shift;
+    }
+
+    private int getShift(final int amount, final int margin, final int low, final int high) {
+        int shift;
+        shift = Math.abs(amount);
+        if (amount > 0) {
+            shift = Math.min(Math.max(-1 * low, 0), shift);
+        } else {
+            shift = Math.min(Math.max(high - margin, 0), shift);
+            shift *= -1;
         }
         return shift;
     }

@@ -276,6 +276,16 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
     @SuppressWarnings("SuspiciousNameCombination")
     @Override
     protected void calculateTabRects(final int tabPlacement, final int tabCount) {
+        if (ui.scrollShiftX != 0 || ui.scrollShiftY != 0) {
+            // We don't want to recalculate the tab rects because while scrolling all additional position
+            // calculates shouldn't be taken into consideration.
+            // This method will be called if there are custom tab components. If they are shifted the parent is
+            // forced
+            // to renew the layout of its component. We know that during scrolling the tab rects are already
+            // correctly
+            // calculated (with the shift applied) so there is no need to recalculate here.
+            return;
+        }
         FontMetrics metrics = ui.getFontMetrics();
         Dimension size = ui.tabPane.getSize();
         Insets insets = ui.tabPane.getInsets();
