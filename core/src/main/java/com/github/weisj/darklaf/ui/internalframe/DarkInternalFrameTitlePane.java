@@ -34,7 +34,6 @@ import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.components.uiresource.JButtonUIResource;
-import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.icons.ToggleIcon;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.tooltip.DarkToolTipUI;
@@ -62,8 +61,10 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
     private ToggleIcon iconifyIcon;
 
     private int buttonMarginPad;
+    private int minHeight;
 
     private boolean useExternalMenuBar;
+    private boolean unifiedMenuBar;
     private ResourceBundle bundle;
 
     public DarkInternalFrameTitlePane(final JInternalFrame f) {
@@ -74,13 +75,7 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
     protected void addSubComponents() {
         super.addSubComponents();
         label = createTitleLabel();
-        if (menu != null) {
-            menu = frame.getJMenuBar();
-            frame.getRootPane().setJMenuBar(null);
-        }
-        if (menu != null) {
-            add(menu);
-        }
+        addMenuBar(frame.getJMenuBar());
         add(label);
     }
 
@@ -94,6 +89,7 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
     protected void installListeners() {
         super.installListeners();
         useExternalMenuBar = UIManager.getBoolean("InternalFrame.useExternalMenuBar");
+        unifiedMenuBar = UIManager.getBoolean("TitlePane.unifiedMenuBar");
         if (!useExternalMenuBar) {
             frame.addPropertyChangeListener(JInternalFrame.MENU_BAR_PROPERTY, this);
         }
@@ -112,9 +108,12 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
         bundle = ResourceUtil.getResourceBundle("actions", frame);
 
         closeIcon = UIManager.getIcon("InternalFrameTitlePane.close.icon");
-        minimizeIcon = new ToggleIcon(UIManager.getIcon("InternalFrameTitlePane.minimize.icon"), EmptyIcon.create(16));
-        maximizeIcon = new ToggleIcon(UIManager.getIcon("InternalFrameTitlePane.maximize.icon"), EmptyIcon.create(16));
-        iconifyIcon = new ToggleIcon(UIManager.getIcon("InternalFrameTitlePane.iconify.icon"), EmptyIcon.create(16));
+        minimizeIcon = new ToggleIcon(UIManager.getIcon("InternalFrameTitlePane.minimize.icon"),
+                UIManager.getIcon("InternalFrameTitlePane.minimize.disabled.icon"));
+        maximizeIcon = new ToggleIcon(UIManager.getIcon("InternalFrameTitlePane.maximize.icon"),
+                UIManager.getIcon("InternalFrameTitlePane.maximize.disabled.icon"));
+        iconifyIcon = new ToggleIcon(UIManager.getIcon("InternalFrameTitlePane.iconify.icon"),
+                UIManager.getIcon("InternalFrameTitlePane.iconify.disabled.icon"));
         minIcon = minimizeIcon;
         maxIcon = maximizeIcon;
         iconIcon = iconifyIcon;
@@ -135,6 +134,7 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
         border = UIManager.getColor("InternalFrameTitlePane.borderColor");
 
         buttonMarginPad = UIManager.getInt("InternalFrameTitlePane.buttonPad");
+        minHeight = UIManager.getInt("InternalFrameTitlePane.minimumHeight");
     }
 
     @Override
@@ -144,12 +144,12 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
         maxButton.addActionListener(e -> {
             if (maximizeAction.isEnabled()) {
                 restoreAction.setEnabled(true);
-                maxButton.setAction(restoreAction);
                 maximizeAction.setEnabled(false);
-            } else {
-                maximizeAction.setEnabled(true);
                 maxButton.setAction(restoreAction);
+            } else {
                 restoreAction.setEnabled(false);
+                maximizeAction.setEnabled(true);
+                maxButton.setAction(maximizeAction);
             }
             maxButton.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, maxButton.getText());
             maxButton.setText(null);
@@ -174,7 +174,7 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
         mi.setIcon(maximizeIcon);
         mi.setDisabledIcon(maximizeIcon);
 
-        systemMenu.add(new JSeparator());
+        systemMenu.addSeparator();
         mi = systemMenu.add(closeAction);
         mi.setMnemonic(getButtonMnemonic("close"));
         mi.setIcon(closeIcon);
@@ -184,9 +184,17 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
     protected void createActions() {
         super.createActions();
         maximizeAction.putValue(Action.NAME, bundle.getString("Actions.maximize"));
+        maximizeAction.putValue(Action.SHORT_DESCRIPTION, bundle.getString("Actions.maximize"));
+        maximizeAction.putValue(Action.SMALL_ICON, maximizeIcon);
         closeAction.putValue(Action.NAME, bundle.getString("Actions.close"));
+        closeAction.putValue(Action.SHORT_DESCRIPTION, bundle.getString("Actions.close"));
+        closeAction.putValue(Action.SMALL_ICON, closeIcon);
         iconifyAction.putValue(Action.NAME, bundle.getString("Actions.minimize"));
+        iconifyAction.putValue(Action.SHORT_DESCRIPTION, bundle.getString("Actions.minimize"));
+        iconifyAction.putValue(Action.SMALL_ICON, minimizeIcon);
         restoreAction.putValue(Action.NAME, bundle.getString("Actions.restore"));
+        restoreAction.putValue(Action.SHORT_DESCRIPTION, bundle.getString("Actions.restore"));
+        restoreAction.putValue(Action.SMALL_ICON, iconifyIcon);
     }
 
     private static int getButtonMnemonic(final String button) {
@@ -225,12 +233,6 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
             @Override
             public boolean isRolloverEnabled() {
                 return true;
-            }
-
-            @Override
-            public String getToolTipText() {
-                Object tipText = getAction().getValue(Action.NAME);
-                return tipText != null ? tipText.toString() : null;
             }
         };
         ToolTipManager.sharedInstance().registerComponent(button);
@@ -281,8 +283,15 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
     public void propertyChange(final PropertyChangeEvent e) {
         Object menuBar = e.getNewValue();
         if (menuBar instanceof JMenuBar) {
-            frame.getRootPane().setJMenuBar(null);
-            menu = (JMenuBar) menuBar;
+            addMenuBar((JMenuBar) menuBar);
+        }
+    }
+
+    protected void addMenuBar(final JMenuBar menuBar) {
+        if (!unifiedMenuBar && !useExternalMenuBar) return;
+        menu = menuBar;
+        frame.getRootPane().setJMenuBar(null);
+        if (menu != null) {
             add(menu);
         }
     }
@@ -298,7 +307,7 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
 
         public Dimension minimumLayoutSize(final Container c) {
             int width = 2 * PAD;
-            int height = 0;
+            int height;
 
             // Calculate height.
             Icon icon = frame.getFrameIcon();
@@ -307,12 +316,13 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
             int iconHeight = 0;
             if (icon != null) {
                 // SystemMenuBar forces the icon to be 16x16 or less.
-                height = Math.min(icon.getIconHeight(), IMAGE_HEIGHT) + 2;
+                iconHeight = Math.min(icon.getIconHeight(), IMAGE_HEIGHT) + 2;
             }
             height = Math.max(fm.getHeight() + 2, iconHeight);
             if (menu != null) {
                 height = Math.max(height, menu.getPreferredSize().height);
             }
+            height = Math.max(minHeight, height);
 
             if (frame.isClosable()) {
                 Dimension pref = closeButton.getPreferredSize();

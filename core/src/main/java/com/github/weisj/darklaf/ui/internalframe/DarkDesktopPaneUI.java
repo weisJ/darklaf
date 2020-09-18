@@ -65,7 +65,7 @@ public class DarkDesktopPaneUI extends BasicDesktopPaneUI {
 
         @Override
         public Dimension preferredLayoutSize(final Container parent) {
-            return null;
+            return menuBarHolder.getPreferredSize();
         }
 
         @Override
