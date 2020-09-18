@@ -62,7 +62,6 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     public static final String KEY_TAB_PLACEMENT = "tabPlacement";
     public static final String KEY_CONTENT_BORDER_INSETS = KEY_PREFIX + "contentBorderInsets";
     public static final String KEY_TAB_AREA_INSETS = KEY_PREFIX + "tabAreaInsets";
-    public static final String KEY_MAX_POPUP_HEIGHT = KEY_PREFIX + "maxPopupHeight";
     public static final String KEY_NEW_TAB_ACTION = KEY_PREFIX + "newTabAction";
     public static final String KEY_ROTATE_TAB_RUNS = KEY_PREFIX + "rotateTabRuns";
 
@@ -82,6 +81,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     protected int currentShiftY = 0;
     protected int currentShiftYTmp = 0;
     protected int scrollShiftY = 0;
+    protected int oldTabCount = -1;
     protected int minVisibleOld = -2;
     protected int maxVisibleOld = -2;
     protected int minVisible = -1;

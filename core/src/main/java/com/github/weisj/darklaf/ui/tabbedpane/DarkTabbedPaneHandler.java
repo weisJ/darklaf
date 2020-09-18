@@ -49,12 +49,7 @@ public class DarkTabbedPaneHandler extends TabbedPaneHandler {
     public void propertyChange(final PropertyChangeEvent e) {
         super.propertyChange(e);
         String key = e.getPropertyName();
-        if (DarkTabbedPaneUI.KEY_MAX_POPUP_HEIGHT.equals(key)) {
-            Integer newVal = (Integer) e.getNewValue();
-            if (newVal != null && newVal >= 0) {
-                ui.scrollableTabSupport.scrollPopupMenu.setMaxHeight(newVal);
-            }
-        } else if (DarkTabbedPaneUI.KEY_TAB_AREA_INSETS.equals(key)) {
+        if (DarkTabbedPaneUI.KEY_TAB_AREA_INSETS.equals(key)) {
             Object ins = e.getNewValue();
             if (ins instanceof Insets) {
                 ui.tabAreaInsets = (Insets) ins;

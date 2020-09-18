@@ -22,6 +22,7 @@
 package ui.tabbedPane;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -170,9 +171,7 @@ public abstract class AbstractTabbedPaneDemo<T extends JTabbedPane> implements C
     protected void setupTabbedPane(final T tabbedPane) {
         tabbedPane.setName("DemoTabbedPane");
         for (int i = 0; i < getTabCount(); i++) {
-            JTextPane editor = new JTextPane();
-            editor.setText(StringUtil.repeat("Demo Content" + "\n", i + 1));
-            tabbedPane.addTab("Tab (" + i + ")", editor);
+            tabbedPane.addTab(getTabTitle(i), createTabContentPane(i));
         }
 
         JLabel label = new JLabel("Custom Tab");
@@ -180,6 +179,34 @@ public abstract class AbstractTabbedPaneDemo<T extends JTabbedPane> implements C
         tabbedPane.setTabComponentAt(0, label);
 
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        tabbedPane.putClientProperty(DarkTabbedPaneUI.KEY_NEW_TAB_ACTION, createNewTabAction(tabbedPane));
+    }
+
+    protected JComponent createTabContentPane(final int tab) {
+        JTextPane editor = new JTextPane();
+        editor.setText(getTabContent(tab));
+        return editor;
+    }
+
+    protected Action createNewTabAction(final T tabbedPane) {
+        return new AbstractAction() {
+
+            private int tabCounter = tabbedPane.getTabCount();
+
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                tabbedPane.addTab(getTabTitle(tabCounter), createTabContentPane(tabCounter));
+                tabCounter++;
+            }
+        };
+    }
+
+    protected String getTabContent(final int tab) {
+        return StringUtil.repeat("Demo Content" + "\n", tab + 1);
+    }
+
+    protected String getTabTitle(final int tab) {
+        return "Tab (" + tab + ")";
     }
 
     protected abstract T createTabbedPane();

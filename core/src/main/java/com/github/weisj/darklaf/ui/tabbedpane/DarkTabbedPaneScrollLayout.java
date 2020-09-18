@@ -628,7 +628,8 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         final JComponent button = ui.scrollableTabSupport.moreTabsButton;
         if (ui.minVisible > 0 || ui.maxVisible < tabCount - 1) {
             if (ui.scrollableTabSupport.moreTabsButton.isVisible()) {
-                if (ui.minVisible != ui.minVisibleOld || ui.maxVisible != ui.maxVisibleOld) {
+                if (ui.minVisible != ui.minVisibleOld || ui.maxVisible != ui.maxVisibleOld
+                        || ui.oldTabCount != tabCount) {
                     ui.scrollableTabSupport.showMoreTabsButton();
                 }
             } else {
@@ -637,6 +638,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
             // Update old values.
             ui.minVisibleOld = ui.minVisible;
             ui.maxVisibleOld = ui.maxVisible;
+            ui.oldTabCount = tabCount;
         } else if (button.isVisible()) {
             ui.scrollableTabSupport.hideMoreTabsButton();
         }

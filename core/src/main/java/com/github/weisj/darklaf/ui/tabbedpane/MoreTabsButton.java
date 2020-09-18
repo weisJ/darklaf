@@ -79,7 +79,13 @@ public class MoreTabsButton extends TabButtonContainer {
 
         @Override
         public int getIconWidth() {
-            int textWidth = button.getFontMetrics(button.getFont()).stringWidth(button.getLabelString());
+            String text = button.getLabelString();
+            FontMetrics fm = button.getFontMetrics(button.getFont());
+            int textWidth = fm.stringWidth(button.getLabelString());
+            if (text.equals(INFINITY)) {
+                // Ensure the text doesn't get smaller.
+                textWidth = Math.max(textWidth, fm.stringWidth("00"));
+            }
             return icon.getIconWidth() + textWidth + button.pad;
         }
 
