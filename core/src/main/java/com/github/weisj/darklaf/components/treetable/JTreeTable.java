@@ -24,6 +24,7 @@ package com.github.weisj.darklaf.components.treetable;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -42,6 +43,7 @@ public class JTreeTable extends JTable implements TreeSelectionListener {
     private final TreeTableTree tree;
 
     public JTreeTable(final AbstractTreeTableModel treeTableModel) {
+        Logger.getGlobal().warning("JTreeTable is unstable and an experimental component");
         DefaultTreeTableCellRenderer treeCellRenderer = new DefaultTreeTableCellRenderer(this, treeTableModel);
         tree = treeCellRenderer.getTree();
 
