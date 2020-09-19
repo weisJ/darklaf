@@ -48,7 +48,7 @@ public class DynamicColor extends ColorWrapper {
     }
 
     protected boolean isColorSet() {
-        return super.getColor() != null;
+        return super.getColor() != DEFAULT_COLOR;
     }
 
     protected Object getCurrentDynamicKey() {

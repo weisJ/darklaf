@@ -32,6 +32,7 @@ import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 public class ThemeDefaultsInitTask implements DefaultsInitTask {
@@ -154,6 +155,7 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
     }
 
     private void adjustPlatformSpecifics(final Properties uiProps) {
+        PropertyUtil.installSystemProperty(MAC_OS_MENU_BAR_KEY, "true");
         boolean useScreenMenuBar = Boolean.getBoolean(MAC_OS_MENU_BAR_KEY);
         // If user wants to use Apple menu bar, then we need to keep the default
         // component for MenuBarUI and MenuUI

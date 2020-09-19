@@ -29,6 +29,7 @@ import java.awt.image.ColorModel;
 
 public class ColorWrapper extends Color {
 
+    protected static final Color DEFAULT_COLOR = new Color(0, 0, 0);
     private Color color;
 
     public ColorWrapper(final Color color) {
@@ -42,7 +43,7 @@ public class ColorWrapper extends Color {
 
     public void setColor(final Color color) {
         if (color == null) {
-            this.color = Color.BLACK;
+            this.color = DEFAULT_COLOR;
         } else {
             this.color = color;
         }

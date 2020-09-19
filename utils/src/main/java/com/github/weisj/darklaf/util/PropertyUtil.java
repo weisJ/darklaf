@@ -33,6 +33,13 @@ import javax.swing.plaf.UIResource;
 
 public class PropertyUtil {
 
+    public static void installSystemProperty(final String key, final String value) {
+        String current = System.getProperty(key);
+        if (current == null) {
+            System.setProperty(key, value);
+        }
+    }
+
     public static void installBackground(final Component component, final Color color) {
         if (component == null || color == null) return;
         component.setBackground(chooseColor(component.getBackground(), color));
