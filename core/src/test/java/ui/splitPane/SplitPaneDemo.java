@@ -30,7 +30,9 @@ import javax.swing.*;
 import ui.ComponentDemo;
 import ui.DemoPanel;
 
+import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.graphics.ThemedColor;
+import com.github.weisj.darklaf.theme.event.ThemeInstalledListener;
 import com.github.weisj.darklaf.ui.splitpane.DividerStyle;
 import com.github.weisj.darklaf.ui.splitpane.SplitPaneConstants;
 
@@ -43,24 +45,26 @@ public final class SplitPaneDemo implements ComponentDemo {
     @Override
     public JComponent createComponent() {
         JSplitPane splitPane = new JSplitPane();
-        JPanel leftPanel = new JPanel() {
-            {
-                setBackground(new ThemedColor("glowError"));
-            }
-        };
-        JPanel rightPanel = new JPanel() {
-            {
-                setBackground(new ThemedColor("glowFocus"));
-            }
-        };
+        JPanel leftPanel = new JPanel();
+        leftPanel.setBackground(new ThemedColor("glowError"));
+        leftPanel.setPreferredSize(new Dimension(200, 200));
+
+        JPanel rightPanel = new JPanel();
+        rightPanel.setBackground(new ThemedColor("glowFocus"));
+        rightPanel.setPreferredSize(new Dimension(200, 200));
+
         splitPane.setLeftComponent(leftPanel);
         splitPane.setRightComponent(rightPanel);
+
+        SwingUtilities.invokeLater(() -> splitPane.setDividerLocation(0.5));
 
         DemoPanel panel = new DemoPanel(splitPane, new BorderLayout(), 0);
 
         JPanel controlPanel = panel.addControls();
         controlPanel.add(new JCheckBox("ContinuousLayout") {
             {
+                LafManager.addThemeChangeListener(
+                        (ThemeInstalledListener) e -> setSelected(splitPane.isContinuousLayout()));
                 setSelected(splitPane.isContinuousLayout());
                 addActionListener(e -> splitPane.setContinuousLayout(isSelected()));
             }

@@ -36,52 +36,25 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
     protected final Icon rightOneTouch;
     protected final Icon topOneTouch;
     protected final Icon bottomOneTouch;
-    protected final Icon verticalSplit;
-    protected final Icon horizontalSplit;
-    protected final Color borderColor;
-    private final DarkSplitPaneUI ui;
+    private final DarkSplitPaneDividerPainter dividerPainter;
 
     public DarkSplitPaneDivider(final DarkSplitPaneUI ui) {
         super(ui);
-        this.ui = ui;
+        this.dividerPainter = createPainter(ui);
         leftOneTouch = UIManager.getIcon("SplitPaneDivider.leftOneTouch.icon");
         rightOneTouch = UIManager.getIcon("SplitPaneDivider.rightOneTouch.icon");
         topOneTouch = UIManager.getIcon("SplitPaneDivider.topOneTouch.icon");
         bottomOneTouch = UIManager.getIcon("SplitPaneDivider.bottomOneTouch.icon");
-        verticalSplit = UIManager.getIcon("SplitPane.verticalGlue.icon");
-        horizontalSplit = UIManager.getIcon("SplitPane.horizontalGlue.icon");
-        borderColor = UIManager.getColor("SplitPane.dividerLineColor");
+    }
+
+    protected DarkSplitPaneDividerPainter createPainter(final DarkSplitPaneUI ui) {
+        return new DarkSplitPaneDividerPainter(ui);
     }
 
     @Override
     public void paint(final Graphics g) {
         super.paint(g);
-        boolean paintBorder = ui.getStyle().isPaintBorder();
-        if (splitPane.getOrientation() == JSplitPane.VERTICAL_SPLIT) {
-            Icon icon = getVerticalSplitIcon();
-            icon.paintIcon(this, g, (getWidth() - icon.getIconWidth()) / 2, (getHeight() - icon.getIconHeight()) / 2);
-            if (paintBorder) {
-                g.setColor(borderColor);
-                g.fillRect(0, 0, getWidth(), 1);
-                g.fillRect(0, getHeight() - 1, getWidth(), 1);
-            }
-        } else {
-            Icon icon = getHorizontalSplitIcon();
-            icon.paintIcon(this, g, (getWidth() - icon.getIconWidth()) / 2, (getHeight() - icon.getIconHeight()) / 2);
-            if (paintBorder) {
-                g.setColor(borderColor);
-                g.fillRect(0, 0, 1, getHeight());
-                g.fillRect(getWidth() - 1, 0, 1, getHeight());
-            }
-        }
-    }
-
-    protected Icon getVerticalSplitIcon() {
-        return verticalSplit;
-    }
-
-    protected Icon getHorizontalSplitIcon() {
-        return horizontalSplit;
+        dividerPainter.paint(this, g, 0, 0, getWidth(), getHeight());
     }
 
     @Override

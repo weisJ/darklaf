@@ -97,6 +97,36 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
     }
 
     @Override
+    protected Component createDefaultNonContinuousLayoutDivider() {
+        return new DarkNonContinuousSplitPaneDivider(this);
+    }
+
+    @Override
+    public void finishedPaintingChildren(final JSplitPane sp, final Graphics g) {
+        int lastDragLocation = getLastDragLocation();
+        if (sp == splitPane && lastDragLocation != -1 && !isContinuousLayout() && !draggingHW) {
+            Dimension size = splitPane.getSize();
+
+            Component divider = getNonContinuousLayoutDivider();
+            Rectangle dividerBounds = divider.getBounds();
+
+            int x = 0;
+            int y = 0;
+            if (getOrientation() == JSplitPane.HORIZONTAL_SPLIT) {
+                x = lastDragLocation;
+                divider.setSize(getDivider().getWidth(), size.height);
+            } else {
+                y = lastDragLocation;
+                divider.setSize(size.width, getDivider().getHeight());
+            }
+            g.translate(x, y);
+            divider.paint(g);
+            divider.setBounds(dividerBounds);
+            g.translate(-x, -y);
+        }
+    }
+
+    @Override
     protected void resetLayoutManager() {
         super.resetLayoutManager();
         splitPane.setLayout(new LayoutManagerDelegate(splitPane.getLayout()) {
