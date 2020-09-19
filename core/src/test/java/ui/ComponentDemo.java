@@ -65,7 +65,6 @@ public interface ComponentDemo {
         LafManager.enabledPreferenceChangeReporting(false);
         LafManager.setDecorationsEnabled(true);
         LafManager.setLogLevel(Level.FINE);
-        System.setProperty("apple.laf.useScreenMenuBar", "true");
         SwingUtilities.invokeLater(() -> {
             if (demo.useDarkLaf()) {
                 if (!LafManager.isInstalled()) {
