@@ -149,8 +149,8 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
             rect.y = ins.top + (height - asc) / 2;
             rect.y -= fm.getDescent() / 2;
             rect.height = fm.getHeight();
-            adjustTextRect(getComponent(), rect);
         }
+        adjustTextRect(getComponent(), rect);
         return rect;
     }
 
