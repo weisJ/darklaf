@@ -41,10 +41,7 @@ public class LogUtil {
 
     public static Logger getLogger(final Class<?> clazz) {
         Logger logger = Logger.getLogger(clazz.getName());
-        if (logger.getHandlers().length == 0) {
-            logger.setUseParentHandlers(false);
-            logger.addHandler(LOG_HANDLER);
-        }
+        logger.setUseParentHandlers(true);
         return logger;
     }
 
