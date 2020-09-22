@@ -124,6 +124,10 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
             Toolkit toolkit = Toolkit.getDefaultToolkit();
             Map<?, ?> desktopHints = (Map<?, ?>) toolkit.getDesktopProperty(GraphicsUtil.DESKTOP_HINTS_KEY);
 
+            if (desktopHints == null) {
+                desktopHints = Collections.emptyMap();
+            }
+
             Object aaHint = desktopHints.get(RenderingHints.KEY_TEXT_ANTIALIASING);
             Object lcdContrastHint = desktopHints.get(RenderingHints.KEY_TEXT_LCD_CONTRAST);
 
