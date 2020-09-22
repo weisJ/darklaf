@@ -50,6 +50,7 @@ import com.github.weisj.darklaf.ui.text.popup.DarkTextPopupMenu;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /** @author Jannis Weis */
@@ -183,6 +184,8 @@ public abstract class DarkTextUI extends BasicTextUI
             editor.repaint();
         } else if ("border".equals(key)) {
             installBorder();
+        } else if (PropertyKey.ENABLED.equals(key) || PropertyKey.EDITABLE.equals(key)) {
+            PropertyUtil.installBackground(editor, getBackground(editor));
         }
     }
 
@@ -263,7 +266,7 @@ public abstract class DarkTextUI extends BasicTextUI
 
         Border border = getBorder(editor);
 
-        g.setColor(getBackground(editor));
+        g.setColor(editor.getBackground());
         if (border instanceof DarkTextBorder) {
             paintBorderBackground((Graphics2D) g, editor, (DarkTextBorder) border);
         } else {
