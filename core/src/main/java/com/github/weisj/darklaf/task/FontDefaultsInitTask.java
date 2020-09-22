@@ -142,11 +142,17 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
                         aaHint = RenderingHints.VALUE_TEXT_ANTIALIAS_ON;
                     }
                     // The fallback value is an educated guess so issue a warning for the user.
-                    LOGGER.warning("System property 'awt.useSystemAAFontSettings' is not set. Using '" + aaHint
+                    String message = "System property 'awt.useSystemAAFontSettings' is not set. Using '" + aaHint
                             + "'\nIt's recommended to manually set the property for the JVM on your platform for optimal "
                             + "text antialiasing. Refer to the "
                             + "[documentation](https://docs.oracle.com/javase/8/docs/technotes/guides/2d/flags.html#aaFonts)"
-                            + "for more information on the possible values.");
+                            + "for more information on the possible values.";
+                    if (!SystemInfo.isJava9OrGreater) {
+                        message += "\n";
+                        message += "If you are using a Java version of 8 or earlier try switching to at least Java 9 "
+                                + "for improved scaling and font rendering support.";
+                    }
+                    LOGGER.warning(message);
                 }
             }
 
