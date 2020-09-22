@@ -143,8 +143,8 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
                     }
                     // The fallback value is an educated guess so issue a warning for the user.
                     String message = "System property 'awt.useSystemAAFontSettings' is not set. Using '" + aaHint
-                            + "'\nIt's recommended to manually set the property for the JVM on your platform for optimal "
-                            + "text antialiasing. Refer to the "
+                            + "'\nIt's recommended to manually add the property to the JVM startup parameters on your "
+                            + "platform for optimal text antialiasing. Refer to the "
                             + "[documentation](https://docs.oracle.com/javase/8/docs/technotes/guides/2d/flags.html#aaFonts)"
                             + "for more information on the possible values.";
                     if (!SystemInfo.isJava9OrGreater) {
