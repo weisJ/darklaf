@@ -23,20 +23,22 @@ package com.github.weisj.darklaf.ui.scrollpane;
 
 import java.awt.*;
 import java.awt.event.MouseWheelListener;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicScrollPaneUI;
 
 import com.github.weisj.darklaf.delegate.ScrollLayoutManagerDelegate;
+import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /** @author Jannis Weis */
 public class DarkScrollPaneUI extends BasicScrollPaneUI {
 
-    public static final String KEY_VERTICALS_SCROLL_BAR = "verticalScrollBar";
-    public static final String KEY_HORIZONTAL_SCROLL_BAR = "horizontalScrollBar";
     private final MouseWheelListener verticalMouseWheelListener = e -> {
         if (!scrollpane.isWheelScrollingEnabled() || e.getModifiersEx() == 0 || !horizontalScrollBarEnabled()) {
             return;
@@ -68,34 +70,8 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
                 scrollpane.getComponentOrientation().isLeftToRight());
         scrollbar.setValueIsAdjusting(false);
     };
-    private final PropertyChangeListener propertyChangeListener = e -> {
-        if (e.getSource() == scrollpane) {
-            String propertyName = e.getPropertyName();
-            if (KEY_VERTICALS_SCROLL_BAR.equals(propertyName)) {
-                Object old = e.getOldValue();
-                Object newVal = e.getNewValue();
-                if (old instanceof JScrollBar) {
-                    ((JScrollBar) old).removeMouseWheelListener(verticalMouseWheelListener);
-                }
-                if (newVal instanceof JScrollBar) {
-                    ((JScrollBar) newVal).addMouseWheelListener(verticalMouseWheelListener);
-                    PropertyUtil.installBackground((Component) newVal, getViewBackground());
-                }
-            } else if (KEY_HORIZONTAL_SCROLL_BAR.equals(propertyName)) {
-                Object old = e.getOldValue();
-                Object newVal = e.getNewValue();
-                if (old instanceof JScrollBar) {
-                    ((JScrollBar) old).removeMouseWheelListener(horizontalMouseWheelListener);
-                }
-                if (newVal instanceof JScrollBar) {
-                    ((JScrollBar) newVal).addMouseWheelListener(horizontalMouseWheelListener);
-                    PropertyUtil.installBackground((Component) newVal, getViewBackground());
-                }
-
-            }
-        }
-    };
     private ScrollPaneLayout oldLayout;
+    protected Component view;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkScrollPaneUI();
@@ -118,19 +94,92 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
     }
 
     protected Color getViewBackground() {
+        Component view = getViewportView();
+        return view != null ? view.getBackground() : null;
+    }
+
+    protected Component getViewportView() {
         JViewport viewport = scrollpane.getViewport();
-        if (viewport == null) return null;
-        Component view = viewport.getView();
-        if (view == null) return null;
-        return view.getBackground();
+        return viewport != null ? viewport.getView() : null;
     }
 
     @Override
     protected void installListeners(final JScrollPane c) {
         super.installListeners(c);
-        scrollpane.addPropertyChangeListener(propertyChangeListener);
+        scrollpane.addPropertyChangeListener(getPropertyChangeListener());
         scrollpane.getVerticalScrollBar().addMouseWheelListener(verticalMouseWheelListener);
         scrollpane.getHorizontalScrollBar().addMouseWheelListener(horizontalMouseWheelListener);
+    }
+
+    protected PropertyChangeListener getPropertyChangeListener() {
+        return this::scrollPanePropertyChange;
+    }
+
+    protected PropertyChangeListener getViewPropertyChangeListener() {
+        return this::viewPropertyChange;
+    }
+
+    protected ChangeListener getViewPortChangeListener() {
+        return this::viewportStateChanged;
+    }
+
+    protected void scrollPanePropertyChange(final PropertyChangeEvent e) {
+        if (e.getSource() == scrollpane) {
+            String propertyName = e.getPropertyName();
+            if ("verticalScrollBar".equals(propertyName)) {
+                Object old = e.getOldValue();
+                Object newVal = e.getNewValue();
+                if (old instanceof JScrollBar) {
+                    ((JScrollBar) old).removeMouseWheelListener(verticalMouseWheelListener);
+                }
+                if (newVal instanceof JScrollBar) {
+                    ((JScrollBar) newVal).addMouseWheelListener(verticalMouseWheelListener);
+                    PropertyUtil.installBackground((Component) newVal, getViewBackground());
+                }
+            } else if ("horizontalScrollBar".equals(propertyName)) {
+                Object old = e.getOldValue();
+                Object newVal = e.getNewValue();
+                if (old instanceof JScrollBar) {
+                    ((JScrollBar) old).removeMouseWheelListener(horizontalMouseWheelListener);
+                }
+                if (newVal instanceof JScrollBar) {
+                    ((JScrollBar) newVal).addMouseWheelListener(horizontalMouseWheelListener);
+                    PropertyUtil.installBackground((Component) newVal, getViewBackground());
+                }
+
+            } else if ("viewport".equals(propertyName)) {
+                Object old = e.getOldValue();
+                Object newVal = e.getNewValue();
+                if (old instanceof JViewport) {
+                    ((JViewport) old).removeChangeListener(getViewPortChangeListener());
+                }
+                if (newVal instanceof JViewport) {
+                    ((JViewport) newVal).removeChangeListener(getViewPortChangeListener());
+                }
+            }
+        }
+    }
+
+    public void viewportStateChanged(final ChangeEvent e) {
+        Component newView = getViewportView();
+        if (newView != view) {
+            view.removePropertyChangeListener(getViewPropertyChangeListener());
+            newView.addPropertyChangeListener(getViewPropertyChangeListener());
+            view = newView;
+        }
+    }
+
+    protected void viewPropertyChange(final PropertyChangeEvent e) {
+        String key = e.getPropertyName();
+        if (PropertyKey.BACKGROUND.equals(key)) {
+            updateScrollBarBackground();
+        }
+    }
+
+    protected void updateScrollBarBackground() {
+        Color bg = getViewBackground();
+        PropertyUtil.installBackground(scrollpane.getVerticalScrollBar(), bg);
+        PropertyUtil.installBackground(scrollpane.getHorizontalScrollBar(), bg);
     }
 
     @Override
@@ -186,17 +235,23 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
     @Override
     protected void installDefaults(final JScrollPane scrollpane) {
         super.installDefaults(scrollpane);
-        Color bg = getViewBackground();
-        PropertyUtil.installBackground(scrollpane.getHorizontalScrollBar(), bg);
-        PropertyUtil.installBackground(scrollpane.getVerticalScrollBar(), bg);
+        updateScrollBarBackground();
+        JViewport viewport = scrollpane.getViewport();
+        if (viewport != null) viewport.addChangeListener(getViewPortChangeListener());
+        view = getViewportView();
+        if (view != null) view.addPropertyChangeListener(getViewPropertyChangeListener());
     }
 
     @Override
     protected void uninstallListeners(final JComponent c) {
         super.uninstallListeners(c);
-        scrollpane.addPropertyChangeListener(propertyChangeListener);
+        scrollpane.addPropertyChangeListener(getPropertyChangeListener());
         scrollpane.getVerticalScrollBar().removeMouseWheelListener(verticalMouseWheelListener);
         scrollpane.getHorizontalScrollBar().removeMouseWheelListener(horizontalMouseWheelListener);
+        JViewport viewport = scrollpane.getViewport();
+        if (viewport != null) viewport.removeChangeListener(getViewPortChangeListener());
+        Component viewportView = getViewportView();
+        if (viewportView != null) viewportView.removePropertyChangeListener(getViewPropertyChangeListener());
     }
 
     @Override
