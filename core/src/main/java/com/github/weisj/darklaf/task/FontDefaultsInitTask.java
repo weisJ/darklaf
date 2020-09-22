@@ -47,11 +47,20 @@ import com.github.weisj.darklaf.util.SystemInfo;
 public class FontDefaultsInitTask implements DefaultsInitTask {
 
     private static final Logger LOGGER = LogUtil.getLogger(FontDefaultsInitTask.class);
+    private static final String SWING_AA_KEY = "swing.aatext";
+    private static final String SWING_AA_DEFAULT_VALUE = "true";
     private static final String FONT_PROPERTY_PATH = "properties/";
     private static final String FONT_SIZE_DEFAULTS_NAME = "font_sizes";
     private static final String FONT_DEFAULTS_NAME = "font";
     private static final String KERNING_ALLOW_LIST = "kerning.allowList";
     private static final String KERNING_BLOCK_LIST = "kerning.blockList";
+
+    /*
+     * Per https://docs.oracle.com/javase/7/docs/api/java/awt/RenderingHints.html#
+     * VALUE_TEXT_ANTIALIAS_LCD_HRGB a minimum bit depth of 15 is recommended for using lcd text
+     * antialiasing.
+     */
+    private static final int LCD_TEXT_ANTIALIASING_MIN_BIT_DEPTH = 15;
 
     private static final String ALL_FONTS = "__all__";
 
@@ -110,18 +119,45 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
 
     private void setupRenderingHints(final UIDefaults defaults) {
         if (!SystemInfo.isMacOSMojave) {
+            PropertyUtil.installSystemProperty(SWING_AA_KEY, SWING_AA_DEFAULT_VALUE);
+
             Toolkit toolkit = Toolkit.getDefaultToolkit();
             Map<?, ?> desktopHints = (Map<?, ?>) toolkit.getDesktopProperty(GraphicsUtil.DESKTOP_HINTS_KEY);
 
-            Object aaHint = (desktopHints == null) ? null : desktopHints.get(RenderingHints.KEY_TEXT_ANTIALIASING);
-            if (aaHint != null && aaHint != RenderingHints.VALUE_TEXT_ANTIALIAS_OFF
-                    && aaHint != RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT) {
+            Object aaHint = desktopHints.get(RenderingHints.KEY_TEXT_ANTIALIASING);
+            Object lcdContrastHint = desktopHints.get(RenderingHints.KEY_TEXT_LCD_CONTRAST);
+
+            if (!GraphicsEnvironment.isHeadless()) {
+                if (aaHint == null) {
+                    GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+                    DisplayMode displayMode = device.getDisplayMode();
+                    int bitDepth = displayMode.getBitDepth();
+                    boolean appropriateBitDepth =
+                            bitDepth >= LCD_TEXT_ANTIALIASING_MIN_BIT_DEPTH || bitDepth == DisplayMode.BIT_DEPTH_MULTI;
+                    // LCD Subpixel AA shouldn't be turned on for printer devices.
+                    boolean appropriateDisplayMode = device.getType() != GraphicsDevice.TYPE_PRINTER;
+                    if (appropriateBitDepth && appropriateDisplayMode) {
+                        aaHint = RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB;
+                    } else {
+                        aaHint = RenderingHints.VALUE_TEXT_ANTIALIAS_ON;
+                    }
+                    // The fallback value is an educated guess so issue a warning for the user.
+                    LOGGER.warning("System property 'awt.useSystemAAFontSettings' is not set. Using '" + aaHint
+                            + "'\nIt's recommended to manually set the property for the JVM on your platform for optimal "
+                            + "text antialiasing. Refer to the "
+                            + "[documentation](https://docs.oracle.com/javase/8/docs/technotes/guides/2d/flags.html#aaFonts)"
+                            + "for more information on the possible values.");
+                }
+            }
+
+            if (aaHint != null) {
                 LOGGER.fine(String.format("Setting '%s' = '%s'", RenderingHints.KEY_TEXT_ANTIALIASING, aaHint));
-                LOGGER.fine(String.format("Setting '%s' = '%s'", RenderingHints.KEY_TEXT_LCD_CONTRAST,
-                        RenderingHints.KEY_TEXT_LCD_CONTRAST));
                 defaults.put(RenderingHints.KEY_TEXT_ANTIALIASING, aaHint);
-                defaults.put(RenderingHints.KEY_TEXT_LCD_CONTRAST,
-                        desktopHints.get(RenderingHints.KEY_TEXT_LCD_CONTRAST));
+            }
+            if (lcdContrastHint != null) {
+                LOGGER.fine(
+                        String.format("Setting '%s' = '%s'", RenderingHints.KEY_TEXT_LCD_CONTRAST, lcdContrastHint));
+                defaults.put(RenderingHints.KEY_TEXT_LCD_CONTRAST, lcdContrastHint);
             }
         }
     }
