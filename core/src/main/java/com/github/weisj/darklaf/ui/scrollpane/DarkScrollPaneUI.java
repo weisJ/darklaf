@@ -30,6 +30,7 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicScrollPaneUI;
 
 import com.github.weisj.darklaf.delegate.ScrollLayoutManagerDelegate;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /** @author Jannis Weis */
 public class DarkScrollPaneUI extends BasicScrollPaneUI {
@@ -78,6 +79,7 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
                 }
                 if (newVal instanceof JScrollBar) {
                     ((JScrollBar) newVal).addMouseWheelListener(verticalMouseWheelListener);
+                    PropertyUtil.installBackground((Component) newVal, getViewBackground());
                 }
             } else if (KEY_HORIZONTAL_SCROLL_BAR.equals(propertyName)) {
                 Object old = e.getOldValue();
@@ -87,7 +89,9 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
                 }
                 if (newVal instanceof JScrollBar) {
                     ((JScrollBar) newVal).addMouseWheelListener(horizontalMouseWheelListener);
+                    PropertyUtil.installBackground((Component) newVal, getViewBackground());
                 }
+
             }
         }
     };
@@ -111,6 +115,14 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
             return false;
         }
         return sb.isVisible();
+    }
+
+    protected Color getViewBackground() {
+        JViewport viewport = scrollpane.getViewport();
+        if (viewport == null) return null;
+        Component view = viewport.getView();
+        if (view == null) return null;
+        return view.getBackground();
     }
 
     @Override
@@ -169,6 +181,14 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI {
                 }
             });
         }
+    }
+
+    @Override
+    protected void installDefaults(final JScrollPane scrollpane) {
+        super.installDefaults(scrollpane);
+        Color bg = getViewBackground();
+        PropertyUtil.installBackground(scrollpane.getHorizontalScrollBar(), bg);
+        PropertyUtil.installBackground(scrollpane.getVerticalScrollBar(), bg);
     }
 
     @Override
