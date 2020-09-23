@@ -327,6 +327,7 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
         }
 
         JMenu viewMenu = getViewMenu();
+        // Todo internationalization of actions and FileChooser in general.
         if (contextMenu == null) {
             contextMenu = new JPopupMenu();
             if (viewMenu != null) {
@@ -340,7 +341,7 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
             Action newFolderAction = actionMap.get(ACTION_NEW_FOLDER);
             Action renameAction = actionMap.get(ACTION_EDIT_FILE_NAME);
             if (refreshAction != null) {
-                contextMenu.add(refreshAction);
+                contextMenu.add(refreshAction).setIcon(UIManager.getIcon("FileChooser.refreshIcon"));
             }
             if (renameAction != null) {
                 JMenuItem menuItem = new JMenuItem(renameAction);
@@ -348,7 +349,7 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
                 contextMenu.add(menuItem);
             }
             if (newFolderAction != null) {
-                contextMenu.add(newFolderAction);
+                contextMenu.add(newFolderAction).setIcon(UIManager.getIcon("FileChooser.newFolderIcon"));
             }
         }
         if (viewMenu != null) {
@@ -365,6 +366,16 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
 
             for (int i = 0; i < VIEWTYPE_COUNT; i++) {
                 JRadioButtonMenuItem mi = new JRadioButtonMenuItem(new ViewTypeAction(i));
+                switch (i) {
+                    case VIEWTYPE_DETAILS:
+                        mi.setIcon(UIManager.getIcon("FileChooser.detailsViewIcon"));
+                        break;
+                    case VIEWTYPE_LIST:
+                        mi.setIcon(UIManager.getIcon("FileChooser.listViewIcon"));
+                        break;
+                    default:
+                        break;
+                }
                 viewButtonGroup.add(mi);
                 viewMenu.add(mi);
             }
