@@ -487,7 +487,10 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     protected void scrollDueToClickInTrack(final int dir) {
         Point p = MouseInfo.getPointerInfo().getLocation();
         SwingUtilities.convertPointFromScreen(p, slider);
-        Shape area = isHorizontal() ? getHorizontalTrackShape(trackShape) : getVerticalTrackShape(trackShape);
+        // Extend the track up and down to be more lenient with hit testing.
+        int size = 3 * trackSize;
+        Shape area =
+                isHorizontal() ? getHorizontalTrackShape(trackShape, size) : getVerticalTrackShape(trackShape, size);
         if (!area.getBounds().contains(p)) {
             return;
         }
@@ -618,13 +621,17 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     }
 
     private Shape getHorizontalTrackShape(final RoundRectangle2D trackShape) {
+        return getHorizontalTrackShape(trackShape, trackSize);
+    }
+
+    private Shape getHorizontalTrackShape(final RoundRectangle2D trackShape, final int size) {
         int arc = arcSize;
-        int yOff = (trackRect.height / 2) - trackSize / 2;
+        int yOff = (trackRect.height - size) / 2;
         int w = trackRect.width;
         if (slider.getComponentOrientation().isLeftToRight()) {
-            trackShape.setRoundRect(trackRect.x, trackRect.y + yOff, w, trackSize, arc, arc);
+            trackShape.setRoundRect(trackRect.x, trackRect.y + yOff, w, size, arc, arc);
         } else {
-            trackShape.setRoundRect(trackRect.x, trackRect.y + yOff, w, trackSize, arc, arc);
+            trackShape.setRoundRect(trackRect.x, trackRect.y + yOff, w, size, arc, arc);
         }
         return trackShape;
     }
@@ -639,13 +646,17 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     }
 
     private Shape getVerticalTrackShape(final RoundRectangle2D trackShape) {
+        return getVerticalTrackShape(trackShape, trackSize);
+    }
+
+    private Shape getVerticalTrackShape(final RoundRectangle2D trackShape, final int size) {
         int arc = arcSize;
-        int xOff = (trackRect.width / 2) - trackSize / 2;
+        int xOff = (trackRect.width - size) / 2;
         int h = trackRect.height;
         if (slider.getComponentOrientation().isLeftToRight()) {
-            trackShape.setRoundRect(trackRect.x + xOff, trackRect.y, trackSize, h, arc, arc);
+            trackShape.setRoundRect(trackRect.x + xOff, trackRect.y, size, h, arc, arc);
         } else {
-            trackShape.setRoundRect(trackRect.x + xOff, trackRect.y, trackSize, h, arc, arc);
+            trackShape.setRoundRect(trackRect.x + xOff, trackRect.y, size, h, arc, arc);
         }
         return trackShape;
     }
