@@ -29,6 +29,7 @@ import javax.swing.*;
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.task.ForegroundColorGenerationTask;
 import com.github.weisj.darklaf.util.Alignment;
 
 /** @author Jannis Weis */
@@ -134,6 +135,9 @@ abstract class SwatchPanel extends JPanel {
     public void paintComponent(final Graphics g) {
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
+
+        Insets ins = getInsets();
+        g.translate(ins.left, ins.top);
         for (int row = 0; row < numSwatches.height; row++) {
             int y = getYForRow(row);
             for (int column = 0; column < numSwatches.width; column++) {
@@ -144,7 +148,7 @@ abstract class SwatchPanel extends JPanel {
                 g.fillRect(x, y, swatchSize.width, swatchSize.height);
 
                 if (selRow == row && selCol == column && this.isFocusOwner() && c != null) {
-                    Color c2 = new Color(255 - c.getRed(), 255 - c.getGreen(), 255 - c.getBlue());
+                    Color c2 = ForegroundColorGenerationTask.makeForeground(c);
                     g.setColor(c2);
                     PaintUtil.drawRect(g, x, y, swatchSize.width, swatchSize.height, 1);
 
@@ -154,6 +158,7 @@ abstract class SwatchPanel extends JPanel {
                 }
             }
         }
+        g.translate(-ins.left, -ins.top);
     }
 
     private int getYForRow(final int row) {
@@ -169,9 +174,10 @@ abstract class SwatchPanel extends JPanel {
     }
 
     public Dimension getPreferredSize() {
-        int x = numSwatches.width * (swatchSize.width + gap.width) - 1;
-        int y = numSwatches.height * (swatchSize.height + gap.height) - 1;
-        return new Dimension(x, y);
+        int x = numSwatches.width * (swatchSize.width + gap.width);
+        int y = numSwatches.height * (swatchSize.height + gap.height);
+        Insets ins = getInsets();
+        return new Dimension(x + ins.left + ins.right, y + ins.top + ins.bottom);
     }
 
     public String getToolTipText(final MouseEvent e) {
