@@ -43,7 +43,6 @@ import com.github.weisj.darklaf.util.PropertyKey;
 
 public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChangeListener {
 
-    private static final String ACCELERATOR_PREFIX = "accelerator_";
     private TabFrameTabLabel tabComponent;
     private final MouseListener mouseListener = new MouseAdapter() {
         @Override
@@ -145,6 +144,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
             installAccelerator(tabComponent.getTabFrame());
         } else if (TabFrameTab.KEY_ORIENTATION.equals(key)) {
             rotatableIcon.setOrientation(mapOrientation(tabComponent.getOrientation()));
+            hoverListener.refresh();
         } else if (TabFrameTab.KEY_TAB_FRAME_PARENT.equals(key)) {
             if (e.getOldValue() instanceof JTabFrame) {
                 uninstallAccelerator((JTabFrame) e.getOldValue());

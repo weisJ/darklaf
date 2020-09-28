@@ -23,8 +23,8 @@ package com.github.weisj.darklaf.settings;
 
 import java.awt.*;
 import java.awt.event.WindowEvent;
+import java.util.Locale;
 import java.util.Objects;
-import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 import javax.swing.*;
@@ -41,14 +41,12 @@ import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyValue;
 import com.github.weisj.darklaf.util.LogUtil;
-import com.github.weisj.darklaf.util.ResourceUtil;
 
 public class ThemeSettings implements ThemePreferenceListener {
 
     private static final Logger LOGGER = LogUtil.getLogger(ThemeSettings.class);
     private static final LazyValue<ThemeSettings> instance = new LazyValue<>(ThemeSettings::new);
     private static final LazyValue<Icon> icon = new LazyValue<>(() -> UIManager.getIcon("ThemeSettings.icon"));
-    private final ResourceBundle resourceBundle = ResourceUtil.getResourceBundle("theme_settings");
 
     private final LazyValue<ThemeSettingsPanel> settingsPanel;
 
@@ -91,7 +89,7 @@ public class ThemeSettings implements ThemePreferenceListener {
         currentConfiguration = new DefaultSettingsConfiguration();
         savedConfiguration = new DefaultSettingsConfiguration();
         settingsPanel = new LazyValue<>(() -> {
-            ThemeSettingsPanel panel = new ThemeSettingsPanel(resourceBundle);
+            ThemeSettingsPanel panel = new ThemeSettingsPanel();
             panel.loadConfiguration(currentConfiguration);
             return panel;
         });
@@ -356,19 +354,20 @@ public class ThemeSettings implements ThemePreferenceListener {
     }
 
     protected Component createButtonPanel() {
-        JButton ok = new DefaultButton(resourceBundle.getString("dialog_ok"));
+        Locale l = Locale.getDefault();
+        JButton ok = new DefaultButton(UIManager.getString("dialog_ok", l));
         ok.setDefaultCapable(true);
         ok.addActionListener(e -> {
             apply();
             dialog.dispatchEvent(new WindowEvent(dialog, WindowEvent.WINDOW_CLOSING));
         });
 
-        JButton cancel = new JButton(resourceBundle.getString("dialog_cancel"));
+        JButton cancel = new JButton(UIManager.getString("dialog_cancel", l));
         cancel.addActionListener(e -> {
             revert();
             dialog.dispatchEvent(new WindowEvent(dialog, WindowEvent.WINDOW_CLOSING));
         });
-        JButton apply = new JButton(resourceBundle.getString("dialog_apply"));
+        JButton apply = new JButton(UIManager.getString("dialog_apply", l));
         apply.addActionListener(e -> {
             apply();
         });
@@ -486,7 +485,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * @return the title
      */
     public String getTitle() {
-        return resourceBundle.getString("title");
+        return UIManager.getString("title", Locale.getDefault());
     }
 
     @Override

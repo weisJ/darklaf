@@ -41,7 +41,6 @@ import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
 import com.github.weisj.darklaf.util.Actions;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.ResourceUtil;
 
 public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListener, AWTEventListener, TabFramePopupUI {
 
@@ -125,7 +124,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     protected HeaderButton createCloseButton() {
         HeaderButton closeButton = new HeaderButton(UIManager.getIcon("TabFramePopup.close.icon"), this);
         closeButton.addActionListener(e -> popupComponent.close());
-        String tooltip = ResourceUtil.getResourceBundle("actions", popupComponent).getString("Actions.close");
+        String tooltip = UIManager.getString("Actions.close", popupComponent.getLocale());
         tooltip = tooltip + " (" + UIManager.getString("TabFramePopup.closeTooltipTextHint") + ")";
         closeButton.setToolTipText(tooltip);
         return closeButton;

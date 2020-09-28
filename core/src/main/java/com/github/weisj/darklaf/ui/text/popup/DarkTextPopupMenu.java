@@ -22,13 +22,11 @@
 package com.github.weisj.darklaf.ui.text.popup;
 
 import java.awt.*;
-import java.util.ResourceBundle;
+import java.util.Locale;
 
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import javax.swing.text.JTextComponent;
-
-import com.github.weisj.darklaf.util.ResourceUtil;
 
 public class DarkTextPopupMenu extends JPopupMenu implements UIResource {
 
@@ -38,11 +36,11 @@ public class DarkTextPopupMenu extends JPopupMenu implements UIResource {
     private final JMenuItem delete;
 
     public DarkTextPopupMenu(final JTextComponent editor) {
-        ResourceBundle bundle = ResourceUtil.getResourceBundle("actions", editor);
-        cut = new CutMenuItem(bundle.getString("Actions.cut"), editor);
-        copy = new CopyMenuItem(bundle.getString("Actions.copy"), editor);
-        paste = new PasteMenuItem(bundle.getString("Actions.paste"), editor);
-        delete = new DeleteMenuItem(bundle.getString("Actions.delete"), editor);
+        Locale l = editor.getLocale();
+        cut = new CutMenuItem(UIManager.getString("Actions.cut", l), editor);
+        copy = new CopyMenuItem(UIManager.getString("Actions.copy", l), editor);
+        paste = new PasteMenuItem(UIManager.getString("Actions.paste", l), editor);
+        delete = new DeleteMenuItem(UIManager.getString("Actions.delete", l), editor);
 
         add(cut);
         add(copy);

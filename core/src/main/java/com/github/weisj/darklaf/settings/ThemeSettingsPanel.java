@@ -51,8 +51,6 @@ import com.github.weisj.darklaf.util.Alignment;
 
 public class ThemeSettingsPanel extends JPanel {
 
-    private final ResourceBundle resourceBundle;
-
     private final SettingsPanelConfiguration settingsConfiguration;
 
     private JCheckBox fontSizeFollowsSystem;
@@ -73,8 +71,7 @@ public class ThemeSettingsPanel extends JPanel {
     private ColoredRadioButton customSelection;
     private ColoredRadioButton defaultSelection;
 
-    public ThemeSettingsPanel(final ResourceBundle resourceBundle) {
-        this.resourceBundle = resourceBundle;
+    public ThemeSettingsPanel() {
         this.settingsConfiguration = new SettingsPanelConfiguration();
         init();
     }
@@ -144,7 +141,8 @@ public class ThemeSettingsPanel extends JPanel {
     }
 
     private Component createGeneralSettings() {
-        JLabel themeLabel = new JLabel(resourceBundle.getString("label_theme"));
+        Locale l = getLocale();
+        JLabel themeLabel = new JLabel(UIManager.getString("label_theme", l));
         themeComboBox = new JComboBox<>(LafManager.getThemeComboBoxModel());
         themeComboBox.setRenderer(LafManager.getThemeListCellRenderer());
         themeComboBox.setSelectedItem(LafManager.getTheme());
@@ -163,65 +161,65 @@ public class ThemeSettingsPanel extends JPanel {
         Color currentSelectionColor = LafManager.getTheme().getAccentColorRule().getSelectionColor();
 
         JComponent selectionBox = Box.createHorizontalBox();
-        JLabel selectionColorLabel = new JLabel(resourceBundle.getString("label_selection_color"));
+        JLabel selectionColorLabel = new JLabel(UIManager.getString("label_selection_color", l));
         selectionColorLabel.setLabelFor(selectionBox);
 
         bgSelection = new ButtonGroup();
         defaultSelectionColor = createDefaultColor("themeSelectionColor");
         defaultSelection = addColoredButton(bgSelection, selectionBox, defaultSelectionColor,
-                ColoredRadioButton.DEFAULT_COLOR, resourceBundle.getString("color_default"));
+                ColoredRadioButton.DEFAULT_COLOR, UIManager.getString("color_default", l));
         AbstractButton selectionBlue = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_BLUE,
-                MacOSColors.ACCENT_BLUE, resourceBundle.getString("color_blue"));
+                MacOSColors.ACCENT_BLUE, UIManager.getString("color_blue", l));
         AbstractButton selectionPurple = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_PURPLE,
-                MacOSColors.ACCENT_LILAC, resourceBundle.getString("color_purple"));
+                MacOSColors.ACCENT_LILAC, UIManager.getString("color_purple", l));
         AbstractButton selectionPink = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_PINK,
-                MacOSColors.ACCENT_ROSE, resourceBundle.getString("color_pink"));
+                MacOSColors.ACCENT_ROSE, UIManager.getString("color_pink", l));
         AbstractButton selectionRed = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_RED,
-                MacOSColors.ACCENT_RED, resourceBundle.getString("color_red"));
+                MacOSColors.ACCENT_RED, UIManager.getString("color_red", l));
         AbstractButton selectionOrange = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_ORANGE,
-                MacOSColors.ACCENT_ORANGE, resourceBundle.getString("color_orange"));
+                MacOSColors.ACCENT_ORANGE, UIManager.getString("color_orange", l));
         AbstractButton selectionYellow = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_YELLOW,
-                MacOSColors.ACCENT_YELLOW, resourceBundle.getString("color_yellow"));
+                MacOSColors.ACCENT_YELLOW, UIManager.getString("color_yellow", l));
         AbstractButton selectionGreen = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_GREEN,
-                MacOSColors.ACCENT_GREEN, resourceBundle.getString("color_green"));
+                MacOSColors.ACCENT_GREEN, UIManager.getString("color_green", l));
         AbstractButton selectionGraphite = addColoredButton(bgSelection, selectionBox, MacOSColors.SELECTION_GRAPHITE,
-                MacOSColors.ACCENT_GRAPHITE, resourceBundle.getString("color_gray"));
+                MacOSColors.ACCENT_GRAPHITE, UIManager.getString("color_gray", l));
         customSelection = addCustomButton(bgSelection, selectionBox, currentSelectionColor, defaultSelectionColor,
-                resourceBundle.getString("color_custom"));
+                UIManager.getString("color_custom", l));
 
         JComponent accentBox = Box.createHorizontalBox();
-        JLabel accentColorLabel = new JLabel(resourceBundle.getString("label_accent_color"));
+        JLabel accentColorLabel = new JLabel(UIManager.getString("label_accent_color", l));
         accentColorLabel.setLabelFor(accentBox);
 
         defaultAccentColor = createDefaultColor("themeAccentColor");
         bgAccent = new ButtonGroup();
         defaultAccent = addColoredButton(bgAccent, accentBox, ColoredRadioButton.DEFAULT_COLOR, defaultSelection,
-                resourceBundle.getString("color_default"));
+                UIManager.getString("color_default", l));
         addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_BLUE, selectionBlue,
-                resourceBundle.getString("color_blue"));
+                UIManager.getString("color_blue", l));
         addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_LILAC, selectionPurple,
-                resourceBundle.getString("color_lilac"));
+                UIManager.getString("color_lilac", l));
         addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_ROSE, selectionPink,
-                resourceBundle.getString("color_rose"));
+                UIManager.getString("color_rose", l));
         addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_RED, selectionRed,
-                resourceBundle.getString("color_red"));
+                UIManager.getString("color_red", l));
         addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_ORANGE, selectionOrange,
-                resourceBundle.getString("color_orange"));
+                UIManager.getString("color_orange", l));
         addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_YELLOW, selectionYellow,
-                resourceBundle.getString("color_yellow"));
+                UIManager.getString("color_yellow", l));
         addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_GREEN, selectionGreen,
-                resourceBundle.getString("color_green"));
+                UIManager.getString("color_green", l));
         addColoredButton(bgAccent, accentBox, MacOSColors.ACCENT_GRAPHITE, selectionGraphite,
-                resourceBundle.getString("color_gray"));
+                UIManager.getString("color_gray", l));
         customAccent = addCustomButton(bgAccent, accentBox, currentAccentColor, defaultAccentColor,
-                resourceBundle.getString("color_custom"));
+                UIManager.getString("color_custom", l));
 
         fontSlider = createFontSlider();
-        JLabel fontSizeLabel = new JLabel(resourceBundle.getString("label_font_size"));
+        JLabel fontSizeLabel = new JLabel(UIManager.getString("label_font_size", l));
         fontSizeLabel.setLabelFor(fontSlider);
 
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(BorderFactory.createTitledBorder(resourceBundle.getString("title_general")));
+        panel.setBorder(BorderFactory.createTitledBorder(UIManager.getString("title_general", l)));
         panel.add(getTwoColumnLayout(new JLabel[] {themeLabel, accentColorLabel, selectionColorLabel, fontSizeLabel},
                 new JComponent[] {themeComboBox, accentBox, selectionBox, fontSlider}));
         return panel;
@@ -261,6 +259,7 @@ public class ThemeSettingsPanel extends JPanel {
     }
 
     private JSlider createFontSlider() {
+        Locale l = getLocale();
         JSlider fontSlider = new JSlider() {
             @Override
             public String getToolTipText(final MouseEvent event) {
@@ -289,7 +288,7 @@ public class ThemeSettingsPanel extends JPanel {
         Dictionary<Integer, JComponent> dict = fontSlider.createStandardLabels(tickSpacing);
         JLabel min = ((JLabel) dict.get(fontSlider.getMinimum()));
         UIUpdater.registerComponent(min);
-        min.setText(resourceBundle.getString("label_font_smaller"));
+        min.setText(UIManager.getString("label_font_smaller", l));
         min.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         min.putClientProperty(DarkSliderUI.KEY_MANUAL_LABEL_ALIGN, true);
 
@@ -297,13 +296,13 @@ public class ThemeSettingsPanel extends JPanel {
         UIUpdater.registerComponent(mid);
         dict.remove(fontSlider.getMinimum() + tickSpacing);
         dict.put(FontSizePreset.NORMAL.getPercentage(), mid);
-        mid.setText(resourceBundle.getString("label_font_default"));
+        mid.setText(UIManager.getString("label_font_default", l));
         mid.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         mid.setHorizontalTextPosition(JLabel.RIGHT);
 
         JLabel max = ((JLabel) dict.get(fontSlider.getMaximum()));
         max.putClientProperty(DarkSliderUI.KEY_MANUAL_LABEL_ALIGN, true);
-        max.setText(resourceBundle.getString("label_font_bigger"));
+        max.setText(UIManager.getString("label_font_bigger", l));
         max.setAlignmentX(JComponent.RIGHT_ALIGNMENT);
         max.putClientProperty(DarkSliderUI.KEY_MANUAL_LABEL_ALIGN, true);
         UIUpdater.registerComponent(max);
@@ -323,7 +322,8 @@ public class ThemeSettingsPanel extends JPanel {
     }
 
     private Component createMonitorSettings() {
-        accentColorFollowsSystem = new JCheckBox(resourceBundle.getString("check_system_accent_color")) {
+        Locale l = getLocale();
+        accentColorFollowsSystem = new JCheckBox(UIManager.getString("check_system_accent_color", l)) {
             @Override
             public void setEnabled(final boolean b) {
                 boolean enabled = b && ThemePreferencesHandler.getSharedInstance().supportsNativeAccentColor();
@@ -333,7 +333,7 @@ public class ThemeSettingsPanel extends JPanel {
         accentColorFollowsSystem.setEnabled(false);
         accentColorFollowsSystem.setSelected(false);
 
-        selectionColorFollowsSystem = new JCheckBox(resourceBundle.getString("check_system_selection_color")) {
+        selectionColorFollowsSystem = new JCheckBox(UIManager.getString("check_system_selection_color", l)) {
             @Override
             public void setEnabled(final boolean b) {
                 boolean enabled = b && ThemePreferencesHandler.getSharedInstance().supportsNativeSelectionColor();
@@ -343,7 +343,7 @@ public class ThemeSettingsPanel extends JPanel {
         selectionColorFollowsSystem.setEnabled(false);
         selectionColorFollowsSystem.setSelected(false);
 
-        fontSizeFollowsSystem = new JCheckBox(resourceBundle.getString("check_system_font")) {
+        fontSizeFollowsSystem = new JCheckBox(UIManager.getString("check_system_font", l)) {
             @Override
             public void setEnabled(final boolean b) {
                 boolean enabled = b && ThemePreferencesHandler.getSharedInstance().supportsNativeFontSize();
@@ -353,7 +353,7 @@ public class ThemeSettingsPanel extends JPanel {
         fontSizeFollowsSystem.setEnabled(false);
         fontSizeFollowsSystem.setSelected(false);
 
-        themeFollowsSystem = new JCheckBox(resourceBundle.getString("check_system_theme")) {
+        themeFollowsSystem = new JCheckBox(UIManager.getString("check_system_theme", l)) {
             @Override
             public void setEnabled(final boolean b) {
                 boolean enabled = b && ThemePreferencesHandler.getSharedInstance().supportsNativeTheme();
@@ -363,7 +363,7 @@ public class ThemeSettingsPanel extends JPanel {
         themeFollowsSystem.setEnabled(false);
         themeFollowsSystem.setSelected(false);
 
-        enabledSystemPreferences = new TristateCheckBox(resourceBundle.getString("check_system_preferences"));
+        enabledSystemPreferences = new TristateCheckBox(UIManager.getString("check_system_preferences", l));
 
         enabledSystemPreferences.addChangeListener(e -> {
             if (!enabledSystemPreferences.getTristateModel().isIndeterminate()) {
@@ -385,7 +385,7 @@ public class ThemeSettingsPanel extends JPanel {
         enabledSystemPreferences.setSelected(LafManager.isPreferenceChangeReportingEnabled());
 
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(BorderFactory.createTitledBorder(resourceBundle.getString("title_monitoring")));
+        panel.setBorder(BorderFactory.createTitledBorder(UIManager.getString("title_monitoring", l)));
         panel.add(getTwoColumnLayout(
                 new JComponent[] {enabledSystemPreferences, themeFollowsSystem, accentColorFollowsSystem},
                 new JComponent[] {new JLabel(), fontSizeFollowsSystem, selectionColorFollowsSystem},
@@ -587,7 +587,7 @@ public class ThemeSettingsPanel extends JPanel {
         private FontSizeRule getFontSizeRule(final Theme theme, final PreferredThemeStyle preferredThemeStyle) {
             if (theme == null) return FontSizeRule.getDefault();
             return isFontSizeFollowsSystem() ? preferredThemeStyle.getFontSizeRule()
-                    : FontSizeRule.relativeAdjustment(fontSlider.getValue()); // Todo
+                    : FontSizeRule.relativeAdjustment(fontSlider.getValue());
         }
 
         @Override

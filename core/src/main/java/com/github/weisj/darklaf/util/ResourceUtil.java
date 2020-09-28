@@ -22,8 +22,6 @@
 package com.github.weisj.darklaf.util;
 
 import java.awt.*;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 import com.github.weisj.darklaf.DarkLaf;
 
@@ -31,15 +29,7 @@ public class ResourceUtil {
 
     private static final String BUNDLE_DIR = "bundles";
 
-    public static ResourceBundle getResourceBundle(final String name, final Component c) {
-        return getResourceBundle(name, c.getLocale());
-    }
-
-    public static ResourceBundle getResourceBundle(final String name) {
-        return getResourceBundle(name, Locale.getDefault());
-    }
-
-    public static ResourceBundle getResourceBundle(final String name, final Locale locale) {
-        return ResourceBundle.getBundle(DarkLaf.class.getPackage().getName() + "." + BUNDLE_DIR + "." + name, locale);
+    public static String getBundleName(final String name) {
+        return DarkLaf.class.getPackage().getName() + "." + BUNDLE_DIR + "." + name;
     }
 }

@@ -46,10 +46,11 @@ public class DarkLaf extends ThemedLookAndFeel {
     /*
      * All tasks for initializing the ui defaults in order of execution.
      */
-    private static final DefaultsInitTask[] INIT_TASKS = new DefaultsInitTask[] {new RemoveUnusedInitTask(),
-            new ThemeDefaultsInitTask(), new InputDefaultsInitTask(), new IdeaDefaultsInitTask(),
-            new FontDefaultsInitTask(), new StyleSheetInitTask(), new SystemDefaultsInitTask(),
-            new PlatformDefaultsInitTask(), new UserInitTask(), new UtilityDefaultsInitTask()};
+    private static final DefaultsInitTask[] INIT_TASKS =
+            new DefaultsInitTask[] {new RemoveUnusedInitTask(), new ThemeDefaultsInitTask(),
+                    new InputDefaultsInitTask(), new IdeaDefaultsInitTask(), new FontDefaultsInitTask(),
+                    new StyleSheetInitTask(), new ResourceBundleInitTask(), new SystemDefaultsInitTask(),
+                    new PlatformDefaultsInitTask(), new UserInitTask(), new UtilityDefaultsInitTask()};
     /*
      * The base look and feel. This may vary to handle different platform support.
      */

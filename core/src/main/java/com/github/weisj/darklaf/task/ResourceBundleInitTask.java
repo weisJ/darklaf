@@ -19,37 +19,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.ui.text.popup;
-
-import java.awt.event.ActionEvent;
+package com.github.weisj.darklaf.task;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 
+import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.util.ResourceUtil;
 
-public class DeleteMenuItem extends EditMenuItem {
+public class ResourceBundleInitTask implements DefaultsInitTask {
 
-    public DeleteMenuItem(final JTextComponent editor) {
-        this(UIManager.getString("Actions.delete", editor != null ? editor.getLocale() : null), editor);
-    }
-
-    public DeleteMenuItem(final String title, final JTextComponent editor) {
-        super(title, editor);
-    }
-
-    @Override
-    protected void setupIcons() {
-        setIcon(UIManager.getIcon("TextComponent.delete.icon"));
-        setDisabledIcon(UIManager.getIcon("TextComponent.deleteDisabled.icon"));
-    }
+    /*
+     * The resource bundle containing localization for FileChooser, ColorChooser etc.
+     */
+    private static final String PLAF_BUNDLE_NAME = "com.sun.swing.internal.plaf.basic.resources.basic";
+    private static final String METAL_BUNDLE_NAME = "com.sun.swing.internal.plaf.metal.resources.metal";
+    private static final String DARKLAF_BUNDLE_NAME = ResourceUtil.getBundleName("darklaf");
+    private static final String SETTING_BUNDLE_NAME = ResourceUtil.getBundleName("theme_settings");
+    private static final String TAB_FRAME_BUNDLE_NAME = ResourceUtil.getBundleName("tabFrame");
 
     @Override
-    public void actionPerformed(final ActionEvent e) {
-        if (editor != null) editor.replaceSelection("");
-    }
-
-    @Override
-    protected boolean canPerformAction() {
-        return editor.getCaret() != null && editor.getSelectionEnd() != editor.getSelectionStart();
+    public void run(final Theme currentTheme, final UIDefaults defaults) {
+        defaults.addResourceBundle(PLAF_BUNDLE_NAME);
+        defaults.addResourceBundle(METAL_BUNDLE_NAME);
+        defaults.addResourceBundle(DARKLAF_BUNDLE_NAME);
+        defaults.addResourceBundle(SETTING_BUNDLE_NAME);
+        defaults.addResourceBundle(TAB_FRAME_BUNDLE_NAME);
     }
 }

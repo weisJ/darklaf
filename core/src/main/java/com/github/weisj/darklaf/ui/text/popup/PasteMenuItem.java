@@ -26,12 +26,11 @@ import java.awt.event.ActionEvent;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 
-import com.github.weisj.darklaf.util.ResourceUtil;
 
 public class PasteMenuItem extends EditMenuItem {
 
     public PasteMenuItem(final JTextComponent editor) {
-        this(ResourceUtil.getResourceBundle("actions", editor).getString("Actions.paste"), editor);
+        this(UIManager.getString("Actions.paste", editor != null ? editor.getLocale() : null), editor);
     }
 
     public PasteMenuItem(final String title, final JTextComponent editor) {

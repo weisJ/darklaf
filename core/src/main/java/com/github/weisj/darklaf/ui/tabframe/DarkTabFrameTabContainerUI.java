@@ -40,7 +40,6 @@ import com.github.weisj.darklaf.util.PropertyKey;
 
 public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyChangeListener {
 
-    private static final String ACCELERATOR_PREFIX = "accelerator_";
     protected TabFrameTabContainer tabContainer;
     private final MouseListener mouseListener = new MouseAdapter() {
         @Override
@@ -161,6 +160,8 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
             }
         } else if (PropertyKey.PAINTING_FOR_PRINT.equals(key)) {
             printing = Boolean.TRUE.equals(evt.getNewValue());
+        } else if (TabFrameTab.KEY_ORIENTATION.equals(key)) {
+            hoverListener.refresh();
         }
     }
 

@@ -32,6 +32,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.colorchooser.ColorSelectionModel;
 
+import com.github.weisj.darklaf.util.PropertyUtil;
+
 /** @author Jannis Weis */
 public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
 
@@ -108,6 +110,11 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
 
     public String getDisplayName() {
         return UIManager.getString("ColorChooser.swatchesNameText", getLocale());
+    }
+
+    @Override
+    public int getDisplayedMnemonicIndex() {
+        return PropertyUtil.getMnemonic("ColorChooser.swatchesLabelMnemonic", getLocale());
     }
 
     @Override

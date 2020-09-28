@@ -24,6 +24,7 @@ package com.github.weisj.darklaf.util;
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -186,5 +187,23 @@ public class PropertyUtil {
     public static Color chooseColor(final Color currentColor, final Color newColor) {
         if (ColorUtil.canOverwriteColor(currentColor)) return newColor;
         return currentColor;
+    }
+
+    public static Integer getMnemonic(final UIDefaults defaults, final String key, final Locale l) {
+        return parseMnemonic(defaults.get(key, l));
+    }
+
+    public static Integer getMnemonic(final String key, final Locale l) {
+        return parseMnemonic(UIManager.get(key, l));
+    }
+
+    private static Integer parseMnemonic(final Object value) {
+        if (value instanceof Integer) {
+            return (Integer) value;
+        }
+        if (value instanceof String) {
+            return Integer.parseInt((String) value);
+        }
+        return -1;
     }
 }

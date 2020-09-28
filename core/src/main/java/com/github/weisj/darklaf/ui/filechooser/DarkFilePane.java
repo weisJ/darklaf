@@ -327,7 +327,6 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
         }
 
         JMenu viewMenu = getViewMenu();
-        // Todo internationalization of actions and FileChooser in general.
         if (contextMenu == null) {
             contextMenu = new JPopupMenu();
             if (viewMenu != null) {

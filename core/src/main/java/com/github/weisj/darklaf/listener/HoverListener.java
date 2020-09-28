@@ -21,6 +21,7 @@
  */
 package com.github.weisj.darklaf.listener;
 
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -73,6 +74,20 @@ public class HoverListener implements MouseListener {
     public void mouseExited(final MouseEvent e) {
         if (hover) {
             hover = false;
+            scheduleRepaint();
+        }
+    }
+
+    public void refresh() {
+        boolean newHover = false;
+        PointerInfo info = MouseInfo.getPointerInfo();
+        if (info != null) {
+            Point p = info.getLocation();
+            SwingUtilities.convertPointFromScreen(p, component);
+            newHover = component.contains(p);
+        }
+        if (newHover != hover) {
+            hover = newHover;
             scheduleRepaint();
         }
     }

@@ -22,7 +22,6 @@
 package com.github.weisj.darklaf.ui.colorchooser;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 
 import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
@@ -35,6 +34,7 @@ import com.github.weisj.darklaf.listener.AncestorAdapter;
 import com.github.weisj.darklaf.listener.UpdateDocumentListener;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.util.ColorUtil;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author pegov
@@ -364,12 +364,12 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
 
     @Override
     public String getDisplayName() {
-        return "Color Wheel";
+        return UIManager.getString("ColorChooser.wheelNameText", getLocale());
     }
 
     @Override
     public int getMnemonic() {
-        return KeyEvent.VK_W;
+        return PropertyUtil.getMnemonic("ColorChooser.wheelLabelMnemonic", getLocale());
     }
 
     @Override

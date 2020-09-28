@@ -24,7 +24,7 @@ package com.github.weisj.darklaf.ui.internalframe;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ResourceBundle;
+import java.util.Locale;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
@@ -37,7 +37,6 @@ import com.github.weisj.darklaf.components.uiresource.JButtonUIResource;
 import com.github.weisj.darklaf.icons.ToggleIcon;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.tooltip.DarkToolTipUI;
-import com.github.weisj.darklaf.util.ResourceUtil;
 
 /** @author Jannis Weis */
 public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane implements PropertyChangeListener {
@@ -65,7 +64,6 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
 
     private boolean useExternalMenuBar;
     private boolean unifiedMenuBar;
-    private ResourceBundle bundle;
 
     public DarkInternalFrameTitlePane(final JInternalFrame f) {
         super(f);
@@ -104,8 +102,6 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
     @Override
     protected void installDefaults() {
         super.installDefaults();
-
-        bundle = ResourceUtil.getResourceBundle("actions", frame);
 
         closeIcon = UIManager.getIcon("InternalFrameTitlePane.close.icon");
         minimizeIcon = new ToggleIcon(UIManager.getIcon("InternalFrameTitlePane.minimize.icon"),
@@ -183,17 +179,18 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
     @Override
     protected void createActions() {
         super.createActions();
-        maximizeAction.putValue(Action.NAME, bundle.getString("Actions.maximize"));
-        maximizeAction.putValue(Action.SHORT_DESCRIPTION, bundle.getString("Actions.maximize"));
+        Locale l = getLocale();
+        maximizeAction.putValue(Action.NAME, UIManager.getString("Actions.maximize", l));
+        maximizeAction.putValue(Action.SHORT_DESCRIPTION, UIManager.getString("Actions.maximize", l));
         maximizeAction.putValue(Action.SMALL_ICON, maximizeIcon);
-        closeAction.putValue(Action.NAME, bundle.getString("Actions.close"));
-        closeAction.putValue(Action.SHORT_DESCRIPTION, bundle.getString("Actions.close"));
+        closeAction.putValue(Action.NAME, UIManager.getString("Actions.close", l));
+        closeAction.putValue(Action.SHORT_DESCRIPTION, UIManager.getString("Actions.close", l));
         closeAction.putValue(Action.SMALL_ICON, closeIcon);
-        iconifyAction.putValue(Action.NAME, bundle.getString("Actions.minimize"));
-        iconifyAction.putValue(Action.SHORT_DESCRIPTION, bundle.getString("Actions.minimize"));
+        iconifyAction.putValue(Action.NAME, UIManager.getString("Actions.minimize", l));
+        iconifyAction.putValue(Action.SHORT_DESCRIPTION, UIManager.getString("Actions.minimize", l));
         iconifyAction.putValue(Action.SMALL_ICON, minimizeIcon);
-        restoreAction.putValue(Action.NAME, bundle.getString("Actions.restore"));
-        restoreAction.putValue(Action.SHORT_DESCRIPTION, bundle.getString("Actions.restore"));
+        restoreAction.putValue(Action.NAME, UIManager.getString("Actions.restore", l));
+        restoreAction.putValue(Action.SHORT_DESCRIPTION, UIManager.getString("Actions.restore", l));
         restoreAction.putValue(Action.SMALL_ICON, iconifyIcon);
     }
 

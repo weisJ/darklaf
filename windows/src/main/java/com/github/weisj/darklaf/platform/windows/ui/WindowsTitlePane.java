@@ -26,7 +26,6 @@ import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
@@ -95,14 +94,11 @@ public class WindowsTitlePane extends CustomTitlePane {
     private int right;
     private int height;
 
-    private final ResourceBundle bundle;
-
     private GraphicsConfiguration gc;
 
     public WindowsTitlePane(final JRootPane root, final int decorationStyle, final Window window) {
         this.rootPane = root;
         this.window = window;
-        bundle = ResourceBundle.getBundle("com.github.weisj.darklaf.bundles.actions", getLocale());
         this.decorationStyle = decorationStyle;
 
         state = -1;
@@ -662,7 +658,7 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     private class CloseAction extends AbstractAction {
         public CloseAction() {
-            super(bundle.getString("Actions.close"), closeIcon);
+            super(UIManager.getString("Actions.close", getLocale()), closeIcon);
         }
 
         public void actionPerformed(final ActionEvent e) {
@@ -672,7 +668,7 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     private class MinimizeAction extends AbstractAction {
         public MinimizeAction() {
-            super(bundle.getString("Actions.minimize"), minimizeIcon);
+            super(UIManager.getString("Actions.minimize", getLocale()), minimizeIcon);
         }
 
         public void actionPerformed(final ActionEvent e) {
@@ -682,7 +678,7 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     private class MaximizeAction extends AbstractAction {
         public MaximizeAction() {
-            super(bundle.getString("Actions.maximize"), maximizeIcon);
+            super(UIManager.getString("Actions.maximize", getLocale()), maximizeIcon);
         }
 
         public void actionPerformed(final ActionEvent e) {
@@ -692,7 +688,7 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     private class RestoreAction extends AbstractAction {
         public RestoreAction() {
-            super(bundle.getString("Actions.restore"), restoreIcon);
+            super(UIManager.getString("Actions.restore", getLocale()), restoreIcon);
         }
 
         public void actionPerformed(final ActionEvent e) {
@@ -751,7 +747,7 @@ public class WindowsTitlePane extends CustomTitlePane {
                 width += BUTTON_WIDTH;
             }
         }
-        if (!titleLabel.getText().isEmpty()) {
+        if (titleLabel != null && !titleLabel.getText().isEmpty()) {
             width += titleLabel.getPreferredSize().width;
             width += PAD;
         }

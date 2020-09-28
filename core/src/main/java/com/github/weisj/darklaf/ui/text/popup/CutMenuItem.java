@@ -26,12 +26,11 @@ import java.awt.event.ActionEvent;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 
-import com.github.weisj.darklaf.util.ResourceUtil;
 
 public class CutMenuItem extends CopyMenuItem {
 
     public CutMenuItem(final JTextComponent editor) {
-        this(ResourceUtil.getResourceBundle("actions", editor).getString("Actions.cut"), editor);
+        this(UIManager.getString("Actions.cut", editor != null ? editor.getLocale() : null), editor);
     }
 
     public CutMenuItem(final String title, final JTextComponent editor) {
