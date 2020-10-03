@@ -463,7 +463,7 @@ public class ThemeSettings implements ThemePreferenceListener {
 
     protected void applyTheme(final Theme theme) {
         if (theme == null) return;
-        if (LafManager.getTheme().appearsEqualTo(theme)) return;
+        if (LafManager.isInstalled() && LafManager.getTheme().appearsEqualTo(theme)) return;
         SwingUtilities.invokeLater(() -> {
             LafManager.installTheme(theme);
             refresh();
