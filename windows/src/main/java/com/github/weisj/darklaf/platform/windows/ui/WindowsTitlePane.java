@@ -56,6 +56,7 @@ public class WindowsTitlePane extends CustomTitlePane {
     private final JRootPane rootPane;
 
     private boolean unifiedMenuBar;
+    private boolean titleBarHidden;
     private ContainerListener rootPaneContainerListener;
     private ContainerListener layeredPaneContainerListener;
 
@@ -105,6 +106,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         oldResizable = true;
         installSubcomponents();
         updateMenuBar(true);
+        updateTitleBarVisibility();
         installDefaults();
         setLayout(createLayout());
     }
@@ -131,6 +133,12 @@ public class WindowsTitlePane extends CustomTitlePane {
             }
         }
         rootPane.revalidate();
+    }
+
+    private void updateTitleBarVisibility() {
+        titleBarHidden = PropertyUtil.getBooleanProperty(rootPane, "JRootPane.hideTitleBar");
+        rootPane.doLayout();
+        rootPane.repaint();
     }
 
     private ContainerListener createRootPaneContainerListener() {
@@ -247,6 +255,9 @@ public class WindowsTitlePane extends CustomTitlePane {
             determineColors();
             setActive(window.isActive());
             installListeners();
+            if (getComponentCount() == 0) {
+                addComponents();
+            }
             updateSystemIcon(getGraphicsConfiguration());
         }
     }
@@ -305,16 +316,20 @@ public class WindowsTitlePane extends CustomTitlePane {
     private void installSubcomponents() {
         titleLabel = new JLabel();
         titleLabel.setHorizontalAlignment(JLabel.LEFT);
-        add(titleLabel);
 
         createIcons();
         createActions();
         createButtons();
 
+        addComponents();
+    }
+
+    private void addComponents() {
         add(windowIconButton);
         add(minimizeButton);
         add(maximizeToggleButton);
         add(closeButton);
+        add(titleLabel);
         setComponentZOrder(closeButton, 0);
         setComponentZOrder(maximizeToggleButton, 1);
         setComponentZOrder(minimizeButton, 2);
@@ -697,14 +712,14 @@ public class WindowsTitlePane extends CustomTitlePane {
     }
 
     private boolean hideTitleBar() {
+        if (titleBarHidden) return true;
         String title = titleLabel.getText();
         if (title == null) title = "";
-        return windowHandle == 0 || (getDecorationStyle() == JRootPane.NONE && (menuBar == null || !menuBar.isVisible())
-                && title.length() == 0)
         // e.g. VCLJ achieves fullscreen by hiding the titlebar through jni and setting visibility
-        // of
-        // the menubar.
-                || (menuBar != null && !menuBar.isVisible());
+        // of the menubar.
+        boolean emptyMenuBar = !unifiedMenuBar || menuBar == null || !menuBar.isVisible();
+        boolean emptyContent = getDecorationStyle() == JRootPane.NONE && emptyMenuBar && title.length() == 0;
+        return windowHandle == 0 || emptyContent || (menuBar != null && !menuBar.isVisible());
     }
 
     @Override
@@ -905,6 +920,8 @@ public class WindowsTitlePane extends CustomTitlePane {
         public void propertyChange(final PropertyChangeEvent evt) {
             if ("JRootPane.unifiedMenuBar".equals(evt.getPropertyName())) {
                 updateMenuBar(true);
+            } else if ("JRootPane.hideTitleBar".equals(evt.getPropertyName())) {
+                updateTitleBarVisibility();
             }
         }
     }

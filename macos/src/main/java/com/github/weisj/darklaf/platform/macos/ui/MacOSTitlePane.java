@@ -33,6 +33,7 @@ import javax.swing.*;
 import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.platform.macos.JNIDecorationsMacOS;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class MacOSTitlePane extends CustomTitlePane {
 
@@ -47,12 +48,15 @@ public class MacOSTitlePane extends CustomTitlePane {
     private DecorationInformation decorationInformation;
     private JLabel titleLabel;
     private PropertyChangeHandler propertyChangeListener;
+    private PropertyChangeListener rootPanePropertyChangeListener;
+    private boolean titleBarHidden;
     private boolean hideTitleBar = false;
 
     public MacOSTitlePane(final JRootPane rootPane, final Window window) {
         this.rootPane = rootPane;
         this.window = window;
         determineColors();
+        updateTitleBarVisibility();
     }
 
     protected void determineColors() {
@@ -151,6 +155,8 @@ public class MacOSTitlePane extends CustomTitlePane {
             window.addWindowListener(windowListener);
             propertyChangeListener = new PropertyChangeHandler();
             window.addPropertyChangeListener(propertyChangeListener);
+            rootPanePropertyChangeListener = createRootPanePropertyChangeListener();
+            rootPane.addPropertyChangeListener(rootPanePropertyChangeListener);
         }
     }
 
@@ -160,6 +166,24 @@ public class MacOSTitlePane extends CustomTitlePane {
             windowListener = null;
             window.removePropertyChangeListener(propertyChangeListener);
             propertyChangeListener = null;
+        }
+        if (rootPane != null) {
+            rootPane.removePropertyChangeListener(rootPanePropertyChangeListener);
+            rootPanePropertyChangeListener = null;
+        }
+    }
+
+    private PropertyChangeListener createRootPanePropertyChangeListener() {
+        return new RootPanePropertyChangeListener();
+    }
+
+    protected class RootPanePropertyChangeListener implements PropertyChangeListener {
+
+        @Override
+        public void propertyChange(final PropertyChangeEvent evt) {
+            if ("JRootPane.hideTitleBar".equals(evt.getPropertyName())) {
+                updateTitleBarVisibility();
+            }
         }
     }
 
@@ -186,9 +210,17 @@ public class MacOSTitlePane extends CustomTitlePane {
     }
 
     private boolean hideTitleBar() {
+        if (titleBarHidden) return true;
         return (decorationInformation.windowHandle == 0)
                 || JNIDecorationsMacOS.isFullscreen(decorationInformation.windowHandle)
                 || getDecorationStyle() == JRootPane.NONE;
+    }
+
+
+    private void updateTitleBarVisibility() {
+        titleBarHidden = PropertyUtil.getBooleanProperty(rootPane, "JRootPane.hideTitleBar");
+        rootPane.doLayout();
+        rootPane.repaint();
     }
 
     private boolean useCustomTitle() {

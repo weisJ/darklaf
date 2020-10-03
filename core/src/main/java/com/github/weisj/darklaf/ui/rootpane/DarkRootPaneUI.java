@@ -41,6 +41,7 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener {
 
     protected static final String KEY_PREFIX = "JRootPane.";
+    public static final String HIDE_TITLEBAR = KEY_PREFIX + "hideTitleBar";
     public static final String KEY_NO_DECORATIONS_UPDATE = KEY_PREFIX + "noDecorationsUpdate";
     public static final String KEY_NO_DECORATIONS = KEY_PREFIX + "noDecorations";
     public static final String KEY_UNIFIED_MENUBAR = KEY_PREFIX + "unifiedMenuBar";
