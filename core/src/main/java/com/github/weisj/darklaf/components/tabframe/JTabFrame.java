@@ -564,6 +564,20 @@ public class JTabFrame extends JComponent {
     }
 
     /**
+     * Returns whether the tab at the given position is selected.
+     *
+     * @param a the alignment position.{@link TabFramePosition#getAlignment()}
+     * @param index the index.{@link TabFramePosition#getIndex()}
+     * @return true if the tab exists and is selected.
+     */
+    public boolean isTabSelected(final Alignment a, final int index) {
+        if (getTabCountAt(a) <= index) return false;
+        TabFrameTab compAtIndex = getTabComponentAt(a, index);
+        return compAtIndex != null && compAtIndex.isSelected();
+    }
+
+
+    /**
      * Enable or disable a tab. A disabled tab cannot be opened. Enabling a tab does not open it.
      * Disabling a tab closes it. After the tab has been disabled enabling it won't restore the open
      * state,
