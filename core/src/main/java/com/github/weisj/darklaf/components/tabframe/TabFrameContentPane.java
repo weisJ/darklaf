@@ -25,9 +25,7 @@ import java.awt.*;
 import java.util.function.BiConsumer;
 
 import javax.swing.*;
-import javax.swing.event.AncestorEvent;
 
-import com.github.weisj.darklaf.listener.AncestorAdapter;
 import com.github.weisj.darklaf.util.Alignment;
 
 /**
@@ -36,10 +34,23 @@ import com.github.weisj.darklaf.util.Alignment;
  * @author Jannis Weis
  */
 public class TabFrameContentPane extends JPanel implements TabFrameContent {
-    protected static final double HORIZONTAL_PROP_LEFT = 0.2;
-    protected static final double VERTICAL_PROP_TOP = 0.2;
-    protected static final double VERTICAL_PROP_BOTTOM = 0.75;
-    protected static final double HORIZONTAL_PROP_RIGHT = 0.75;
+    protected static final double TOP_SPLIT_DEFAULT_POSITION = 0.2;
+    protected static final double BOTTOM_SPLIT_DEFAULT_POSITION = calculateRelativeComplement(0.2);
+    protected static final double LEFT_SPLIT_DEFAULT_POSITION = 0.2;
+    protected static final double RIGHT_SPLIT_DEFAULT_POSITION = calculateRelativeComplement(0.2);
+    protected static final double SPLITTER_DEFAULT_POSITION = 0.5;
+
+    private static double calculateRelativeComplement(final double x) {
+        // When using two (horizontal) split panes in combination to achieve that the left and right
+        // panes have the same relative the following equation needs to be fulfilled:
+        //
+        // x := relative position of left split pane
+        // y := relative position of left split pane
+        // x == (1 - x)*(1 - y)
+        //
+        // thus y = 1 - x / (1 - x)
+        return 1 - (x / (1 - x));
+    }
 
     protected final ToggleSplitPane topSplit;
     protected final ToggleSplitPane bottomSplit;
@@ -119,14 +130,7 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         setupSplitterPanes(ToggleSplitPane::setResizable, false);
 
         add(topSplit, BorderLayout.CENTER);
-
-        addAncestorListener(new AncestorAdapter() {
-            @Override
-            public void ancestorAdded(final AncestorEvent event) {
-                removeAncestorListener(this);
-                SwingUtilities.invokeLater(() -> init());
-            }
-        });
+        init();
     }
 
     protected ToggleSplitPane createSplitPane(final String name) {
@@ -148,12 +152,12 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
     }
 
     private void init() {
+        topSplit.savePosition(TOP_SPLIT_DEFAULT_POSITION);
+        bottomSplit.savePosition(BOTTOM_SPLIT_DEFAULT_POSITION);
+        leftSplit.savePosition(LEFT_SPLIT_DEFAULT_POSITION);
+        rightSplit.savePosition(RIGHT_SPLIT_DEFAULT_POSITION);
         disableAll(true);
-        topSplit.savePosition(VERTICAL_PROP_TOP);
-        bottomSplit.savePosition(VERTICAL_PROP_BOTTOM);
-        leftSplit.savePosition(HORIZONTAL_PROP_LEFT);
-        rightSplit.savePosition(HORIZONTAL_PROP_RIGHT);
-        setupSplitterPanes(ToggleSplitPane::savePosition, 0.5d);
+        setupSplitterPanes(ToggleSplitPane::savePosition, SPLITTER_DEFAULT_POSITION);
         doLayout();
     }
 
@@ -185,38 +189,42 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         switch (a) {
             case NORTH:
                 changeStatus(enabled, Alignment.NORTH_EAST, topSplit, topSplitter,
-                        new LayoutProportions(VERTICAL_PROP_TOP, 1.0, 0.0, 0.0), new LayoutWeights(0.0, 0.0, 0.0, 1.0));
+                        new LayoutProportions(TOP_SPLIT_DEFAULT_POSITION, 1.0, 0.0, 0.0),
+                        new LayoutWeights(0.0, 0.0, 0.0, 1.0));
                 break;
             case NORTH_EAST:
                 changeStatus(enabled, Alignment.NORTH, topSplit, topSplitter,
-                        new LayoutProportions(VERTICAL_PROP_TOP, 0.0, 0.0, 1.0), new LayoutWeights(0.0, 0.0, 1.0, 0.0));
+                        new LayoutProportions(TOP_SPLIT_DEFAULT_POSITION, 0.0, 0.0, 1.0),
+                        new LayoutWeights(0.0, 0.0, 1.0, 0.0));
                 break;
             case EAST:
                 changeStatus(enabled, Alignment.SOUTH_EAST, rightSplit, rightSplitter,
-                        new LayoutProportions(HORIZONTAL_PROP_RIGHT, 1.0, 1.0, 0.0),
+                        new LayoutProportions(RIGHT_SPLIT_DEFAULT_POSITION, 1.0, 1.0, 0.0),
                         new LayoutWeights(1.0, 1.0, 0.0, 1.0));
                 break;
             case SOUTH_EAST:
                 changeStatus(enabled, Alignment.EAST, rightSplit, rightSplitter,
-                        new LayoutProportions(HORIZONTAL_PROP_RIGHT, 0.0, 1.0, 1.0),
+                        new LayoutProportions(RIGHT_SPLIT_DEFAULT_POSITION, 0.0, 1.0, 1.0),
                         new LayoutWeights(1.0, 1.0, 1.0, 0.0));
                 break;
             case NORTH_WEST:
                 changeStatus(enabled, Alignment.WEST, leftSplit, leftSplitter,
-                        new LayoutProportions(VERTICAL_PROP_TOP, 1.0, 0.0, 0.0), new LayoutWeights(0.0, 0.0, 0.0, 1.0));
+                        new LayoutProportions(TOP_SPLIT_DEFAULT_POSITION, 1.0, 0.0, 0.0),
+                        new LayoutWeights(0.0, 0.0, 0.0, 1.0));
                 break;
             case WEST:
                 changeStatus(enabled, Alignment.NORTH_WEST, leftSplit, leftSplitter,
-                        new LayoutProportions(VERTICAL_PROP_TOP, 0.0, 0.0, 1.0), new LayoutWeights(0.0, 0.0, 1.0, 0.0));
+                        new LayoutProportions(TOP_SPLIT_DEFAULT_POSITION, 0.0, 0.0, 1.0),
+                        new LayoutWeights(0.0, 0.0, 1.0, 0.0));
                 break;
             case SOUTH_WEST:
                 changeStatus(enabled, Alignment.SOUTH, bottomSplit, bottomSplitter,
-                        new LayoutProportions(VERTICAL_PROP_BOTTOM, 1.0, 1.0, 0.0),
+                        new LayoutProportions(BOTTOM_SPLIT_DEFAULT_POSITION, 1.0, 1.0, 0.0),
                         new LayoutWeights(1.0, 1.0, 0.0, 1.0));
                 break;
             case SOUTH:
                 changeStatus(enabled, Alignment.SOUTH_WEST, bottomSplit, bottomSplitter,
-                        new LayoutProportions(VERTICAL_PROP_BOTTOM, 0.0, 1.0, 1.0),
+                        new LayoutProportions(BOTTOM_SPLIT_DEFAULT_POSITION, 0.0, 1.0, 1.0),
                         new LayoutWeights(1.0, 1.0, 1.0, 0.0));
                 break;
             case CENTER:
@@ -286,8 +294,8 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         }
         splitPane.setResizeWeight(weight);
         splitPane.forceSetDividerLocation(location);
+        splitPane.setResizable(false, location);
         splitPane.setEnabled(false);
-        splitPane.setResizable(false);
     }
 
     /**

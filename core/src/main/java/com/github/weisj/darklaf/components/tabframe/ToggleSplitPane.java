@@ -31,11 +31,10 @@ import com.github.weisj.darklaf.ui.splitpane.DarkSplitPaneUI;
 
 public class ToggleSplitPane extends JSplitPane {
 
-    private int disabledPos = 0;
-    private int disabledMax = -1;
     private boolean resizable = true;
     private boolean lastEnabled = true;
     private double restorePercentage;
+    private double lockedPosition;
     private boolean isInLayout = false;
     private boolean enabled = true;
 
@@ -53,17 +52,28 @@ public class ToggleSplitPane extends JSplitPane {
     }
 
     /**
-     * Set if the split pane should be able to resize.
+     * Set if the split pane should be able to resize. Locking the position will ignore the resize
+     * weights and distribute the content according to the current relative position.
      *
      * @param resizable true if it should resize.
      */
     public void setResizable(final boolean resizable) {
+        setResizable(resizable, getRelativeDividerLocation());
+    }
+
+    /**
+     * Set if the split pane should be able to resize. Locking the position will ignore the resize
+     * weights and distribute the content according to the locked relative position.
+     *
+     * @param resizable true if it should resize.
+     * @param lockedPosition the relative position to lock the split pane in.
+     */
+    public void setResizable(final boolean resizable, final double lockedPosition) {
         this.resizable = resizable;
         if (!resizable) {
             lastEnabled = isEnabled();
+            this.lockedPosition = lockedPosition;
             setEnabled(false);
-            disabledPos = super.getDividerLocation();
-            disabledMax = getMaximumDividerLocation();
             getDivider().setEnabled(false);
             setComponentZOrder(getDivider(), getComponentCount() - 1);
         } else {
@@ -111,18 +121,30 @@ public class ToggleSplitPane extends JSplitPane {
         doLayout();
     }
 
+    public double getRestorePosition() {
+        return restorePercentage;
+    }
+
+    public double getLockedPosition() {
+        return lockedPosition;
+    }
+
     public void forceSetDividerLocation(final int location) {
         super.setDividerLocation(location);
     }
 
     public void forceSetDividerLocation(final double proportionalLocation) {
-        if (proportionalLocation < 0.0 || proportionalLocation > 1.0) {
+        super.setDividerLocation(getLocationForRelativePosition(proportionalLocation));
+    }
+
+    private int getLocationForRelativePosition(final double relativePosition) {
+        if (relativePosition < 0.0 || relativePosition > 1.0) {
             throw new IllegalArgumentException("proportional location must " + "be between 0.0 and 1.0.");
         }
         if (getOrientation() == VERTICAL_SPLIT) {
-            super.setDividerLocation((int) ((double) (getHeight()) * proportionalLocation));
+            return (int) ((double) (getHeight()) * relativePosition);
         } else {
-            super.setDividerLocation((int) ((double) (getWidth()) * proportionalLocation));
+            return (int) ((double) (getWidth()) * relativePosition);
         }
     }
 
@@ -131,7 +153,7 @@ public class ToggleSplitPane extends JSplitPane {
         if (resizable) {
             return super.getLastDividerLocation();
         } else {
-            return disabledMax == disabledPos ? getMaximumDividerLocation() : disabledPos;
+            return getLocationForRelativePosition(lockedPosition);
         }
     }
 
@@ -140,7 +162,7 @@ public class ToggleSplitPane extends JSplitPane {
         if (resizable) {
             return super.getDividerLocation();
         } else {
-            return disabledMax == disabledPos ? getMaximumDividerLocation() : disabledPos;
+            return getLocationForRelativePosition(lockedPosition);
         }
     }
 
@@ -150,11 +172,8 @@ public class ToggleSplitPane extends JSplitPane {
         isInLayout = true;
         if (resizable) {
             super.setDividerLocation(location);
-        } else if (disabledPos == disabledMax) {
-            super.setDividerLocation(getMaximumDividerLocation());
-            doLayout();
-        } else if (disabledPos == 0) {
-            super.setDividerLocation(0);
+        } else {
+            forceSetDividerLocation(restorePercentage);
             doLayout();
         }
         isInLayout = false;
