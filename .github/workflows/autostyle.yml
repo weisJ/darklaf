@@ -24,12 +24,8 @@
 #
 name: Autostyle
 on:
-  push:
-    branches:
-      - '*'
-  pull_request:
-    branches:
-      - '*'
+  push: [push, pull_request]
+
 jobs:
   autostlye:
     name: "Autostyle"
