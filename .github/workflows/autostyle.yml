@@ -23,8 +23,8 @@
 #
 #
 name: Autostyle
-on:
-  push: [push, pull_request]
+
+on: [push, pull_request]
 
 jobs:
   autostlye:
