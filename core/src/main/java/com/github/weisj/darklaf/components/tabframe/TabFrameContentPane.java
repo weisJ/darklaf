@@ -152,12 +152,12 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
     }
 
     private void init() {
+        disableAll(true);
+        setupSplitterPanes(ToggleSplitPane::savePosition, SPLITTER_DEFAULT_POSITION);
         topSplit.savePosition(TOP_SPLIT_DEFAULT_POSITION);
         bottomSplit.savePosition(BOTTOM_SPLIT_DEFAULT_POSITION);
         leftSplit.savePosition(LEFT_SPLIT_DEFAULT_POSITION);
         rightSplit.savePosition(RIGHT_SPLIT_DEFAULT_POSITION);
-        disableAll(true);
-        setupSplitterPanes(ToggleSplitPane::savePosition, SPLITTER_DEFAULT_POSITION);
         doLayout();
     }
 
@@ -289,7 +289,7 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
     }
 
     private void disable(final ToggleSplitPane splitPane, final double weight, final double location) {
-        if (splitPane.isResizable()) {
+        if (splitPane.isResizable() && splitPane.isShowing()) {
             splitPane.savePosition();
         }
         splitPane.setResizeWeight(weight);
