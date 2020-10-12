@@ -46,6 +46,7 @@ public class ViewPropertyChangeListener implements PropertyChangeListener {
             }
         }
     };
+    private JViewport currentViewport;
     private Component currentView;
 
     public ViewPropertyChangeListener(final JScrollPane scrollPane, final PropertyChangeListener listener) {
@@ -59,13 +60,15 @@ public class ViewPropertyChangeListener implements PropertyChangeListener {
         Object source = e.getSource();
         if (source == scrollPane) {
             if ("viewport".equals(key)) {
-                Object old = e.getOldValue();
-                Object newVal = e.getNewValue();
-                if (old instanceof JViewport) {
-                    ((JViewport) old).addContainerListener(containerListener);
+                if (currentViewport != null) {
+                    currentViewport.removeContainerListener(containerListener);
                 }
+                Object newVal = e.getNewValue();
                 if (newVal instanceof JViewport) {
-                    ((JViewport) newVal).removeContainerListener(containerListener);
+                    currentViewport = ((JViewport) newVal);
+                    currentViewport.addContainerListener(containerListener);
+                } else {
+                    currentViewport = null;
                 }
             }
         }
@@ -73,25 +76,23 @@ public class ViewPropertyChangeListener implements PropertyChangeListener {
 
     public void install() {
         scrollPane.addPropertyChangeListener(this);
-        JViewport viewport = scrollPane.getViewport();
-        if (viewport != null) {
-            viewport.addContainerListener(containerListener);
-            Component view = viewport.getView();
-            if (view != null) {
-                view.addPropertyChangeListener(listener);
+        currentViewport = scrollPane.getViewport();
+        if (currentViewport != null) {
+            currentViewport.addContainerListener(containerListener);
+            currentView = currentViewport.getView();
+            if (currentView != null) {
+                currentView.addPropertyChangeListener(listener);
             }
         }
     }
 
     public void uninstall() {
         scrollPane.removePropertyChangeListener(this);
-        JViewport viewport = scrollPane.getViewport();
-        if (viewport != null) {
-            viewport.removeContainerListener(containerListener);
-            Component view = viewport.getView();
-            if (view != null) {
-                view.removePropertyChangeListener(listener);
-            }
+        if (currentViewport != null) {
+            currentViewport.removeContainerListener(containerListener);
+        }
+        if (currentView != null) {
+            currentView.removePropertyChangeListener(listener);
         }
     }
 }
