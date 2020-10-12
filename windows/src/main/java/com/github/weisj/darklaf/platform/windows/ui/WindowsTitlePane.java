@@ -529,7 +529,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         g.setColor(background);
         g.fillRect(0, 0, width, height);
 
-        if (getDecorationStyle() != JRootPane.NONE && menuBar != null) {
+        if (isDrawBorder()) {
             g.setColor(border);
             g.fillRect(0, height - 1, width, 1);
         }
@@ -540,6 +540,10 @@ public class WindowsTitlePane extends CustomTitlePane {
             updateDragArea(gc);
             updateSystemIcon(gc);
         }
+    }
+
+    protected boolean isDrawBorder() {
+        return getDecorationStyle() != JRootPane.NONE && menuBar != null;
     }
 
     public JRootPane getRootPane() {
@@ -727,6 +731,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         if (hideTitleBar()) return new Dimension(0, 0);
         int height = computeHeight();
         int width = computeWidth();
+        if (isDrawBorder()) height++;
         return new Dimension(width, height + 1);
     }
 
