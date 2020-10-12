@@ -732,7 +732,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         int height = computeHeight();
         int width = computeWidth();
         if (isDrawBorder()) height++;
-        return new Dimension(width, height + 1);
+        return new Dimension(width, height);
     }
 
     private int computeHeight() {
