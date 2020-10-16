@@ -151,7 +151,7 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         consumer.accept(rightSplit, flag);
     }
 
-    private void init() {
+    protected void init() {
         disableAll(true);
         setupSplitterPanes(ToggleSplitPane::savePosition, SPLITTER_DEFAULT_POSITION);
         topSplit.savePosition(TOP_SPLIT_DEFAULT_POSITION);

@@ -72,7 +72,7 @@ public class ToggleSplitPane extends JSplitPane {
         this.resizable = resizable;
         if (!resizable) {
             lastEnabled = isEnabled();
-            this.lockedPosition = lockedPosition;
+            setLockedPosition(lockedPosition);
             setEnabled(false);
             getDivider().setEnabled(false);
             setComponentZOrder(getDivider(), getComponentCount() - 1);
@@ -81,6 +81,10 @@ public class ToggleSplitPane extends JSplitPane {
             getDivider().setEnabled(lastEnabled);
             setComponentZOrder(getDivider(), 0);
         }
+    }
+
+    protected void setLockedPosition(final double lockedPosition) {
+        this.lockedPosition = lockedPosition;
     }
 
     protected BasicSplitPaneDivider getDivider() {
@@ -97,7 +101,7 @@ public class ToggleSplitPane extends JSplitPane {
     public void updateUI() {
         super.updateUI();
         setEnabled(enabled);
-        setResizable(resizable);
+        setResizable(isResizable());
     }
 
     public void savePosition() {
@@ -150,7 +154,7 @@ public class ToggleSplitPane extends JSplitPane {
 
     @Override
     public int getLastDividerLocation() {
-        if (resizable) {
+        if (isResizable()) {
             return super.getLastDividerLocation();
         } else {
             return getLocationForRelativePosition(lockedPosition);
@@ -159,7 +163,7 @@ public class ToggleSplitPane extends JSplitPane {
 
     @Override
     public int getDividerLocation() {
-        if (resizable) {
+        if (isResizable()) {
             return super.getDividerLocation();
         } else {
             return getLocationForRelativePosition(lockedPosition);
@@ -170,7 +174,7 @@ public class ToggleSplitPane extends JSplitPane {
     public void setDividerLocation(final int location) {
         if (isInLayout) return;
         isInLayout = true;
-        if (resizable) {
+        if (isResizable()) {
             super.setDividerLocation(location);
         } else {
             forceSetDividerLocation(restorePercentage);
