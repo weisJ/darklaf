@@ -34,15 +34,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.util.LogUtil;
 import org.jdesktop.swingx.ForwardingRepaintManager;
 
-import com.github.weisj.darklaf.log.LogFormatter;
+import com.github.weisj.darklaf.util.LogUtil;
 
 /**
  * Utility class that ensures that a correct {@link RepaintManager} is set.

@@ -33,18 +33,16 @@ package org.pbjar.jxlayer.plaf.ext.transform;
 import java.awt.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.util.LogUtil;
 import org.jdesktop.jxlayer.JXLayer;
 import org.jdesktop.jxlayer.plaf.LayerUI;
 import org.pbjar.jxlayer.plaf.ext.TransformUI;
 
-import com.github.weisj.darklaf.log.LogFormatter;
+import com.github.weisj.darklaf.util.LogUtil;
 
 /**
  * To avoid duplicate code, this class implements the actual logic for {@link TransformRPMSwingX} and {@link
