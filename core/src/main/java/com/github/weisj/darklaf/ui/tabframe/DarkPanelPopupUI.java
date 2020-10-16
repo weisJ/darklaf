@@ -33,7 +33,10 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.components.border.MutableLineBorder;
-import com.github.weisj.darklaf.components.tabframe.*;
+import com.github.weisj.darklaf.components.tabframe.JTabFrame;
+import com.github.weisj.darklaf.components.tabframe.PanelPopup;
+import com.github.weisj.darklaf.components.tabframe.TabFramePopup;
+import com.github.weisj.darklaf.components.tabframe.TabFramePopupUI;
 import com.github.weisj.darklaf.components.uiresource.JLabelUIResource;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.panel.DarkPanelUI;
@@ -54,7 +57,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     protected Color headerBackground;
     protected Color headerButtonHoverBackground;
     protected Color headerButtonClickBackground;
-    protected String accelerator;
+    protected KeyStroke closeAccelerator;
     private PanelPopup popupComponent;
     private JPanel header;
     private MutableLineBorder headerBorder;
@@ -82,10 +85,9 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
         headerFocusBackground = UIManager.getColor("TabFramePopup.headerFocusBackground");
         headerButtonFocusHoverBackground = UIManager.getColor("TabFramePopup.headerButtonFocusHoverBackground");
         headerButtonFocusClickBackground = UIManager.getColor("TabFramePopup.headerButtonFocusClickBackground");
-        accelerator = UIManager.getString("TabFramePopup.closeAccelerator");
-        popupComponent.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-                .put(KeyStroke.getKeyStroke(accelerator), accelerator);
-        popupComponent.getActionMap().put(accelerator, closeAction);
+        closeAccelerator = KeyStroke.getKeyStroke(UIManager.getString("TabFramePopup.closeAccelerator"));
+        popupComponent.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(closeAccelerator, "close");
+        popupComponent.getActionMap().put("close", closeAction);
         popupComponent.setLayout(new BorderLayout());
     }
 
@@ -173,9 +175,8 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
         uninstallComponents();
         uninstallListeners();
         popupComponent.removeAll();
-        popupComponent.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-                .remove(KeyStroke.getKeyStroke(accelerator));
-        popupComponent.getActionMap().remove(accelerator);
+        popupComponent.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).remove(closeAccelerator);
+        popupComponent.getActionMap().remove("close");
         popupComponent = null;
     }
 

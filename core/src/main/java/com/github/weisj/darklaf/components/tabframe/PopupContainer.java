@@ -40,12 +40,22 @@ public class PopupContainer extends JPanel {
         super.setBorder(null);
     }
 
+
     public Component getPopup() {
         return popup;
     }
 
     public void setPopup(final Component component) {
         removeAll();
+        if (component instanceof JComponent) {
+            JComponent c = (JComponent) component;
+            setActionMap(c.getActionMap());
+            setInputMap(JComponent.WHEN_FOCUSED, c.getInputMap(JComponent.WHEN_FOCUSED));
+            setInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT,
+                    c.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT));
+            setInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW, c.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW));
+        }
+
         add(component, BorderLayout.CENTER);
         this.popup = component;
         revalidate();
