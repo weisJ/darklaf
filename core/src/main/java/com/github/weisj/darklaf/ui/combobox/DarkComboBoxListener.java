@@ -29,12 +29,15 @@ import java.beans.PropertyChangeListener;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class DarkComboBoxListener extends MouseAdapter implements PropertyChangeListener, ComboBoxConstants {
 
+    private final DarkComboBoxUI ui;
     protected final JComboBox<?> comboBox;
 
-    public DarkComboBoxListener(final JComboBox<?> comboBox) {
+    public DarkComboBoxListener(final DarkComboBoxUI ui, final JComboBox<?> comboBox) {
+        this.ui = ui;
         this.comboBox = comboBox;
     }
 
@@ -50,11 +53,14 @@ public class DarkComboBoxListener extends MouseAdapter implements PropertyChange
             comboBox.getEditor().getEditorComponent().setComponentOrientation(comboBox.getComponentOrientation());
             comboBox.doLayout();
             comboBox.repaint();
-        } else if (PropertyKey.EDITABLE.equals(key)) {
+        } else if (PropertyKey.EDITABLE.equals(key) || PropertyKey.ENABLED.equals(key)) {
+            ui.updateBackground(comboBox);
             comboBox.repaint();
         } else if (KEY_IS_TABLE_EDITOR.equals(key) || KEY_IS_TREE_EDITOR.equals(key)) {
             comboBox.revalidate();
             comboBox.repaint();
+        } else if ("editor".equals(key)) {
+            PropertyUtil.installBackground(comboBox.getEditor().getEditorComponent(), ui.editBackground);
         }
     }
 }

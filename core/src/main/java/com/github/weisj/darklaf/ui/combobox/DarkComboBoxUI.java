@@ -40,6 +40,7 @@ import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.list.DarkDefaultListCellRenderer;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Konstantin Bulenkov
@@ -98,7 +99,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
     }
 
     protected DarkComboBoxListener createComboBoxListener() {
-        return new DarkComboBoxListener(comboBox);
+        return new DarkComboBoxListener(this, comboBox);
     }
 
     @Override
@@ -199,19 +200,9 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
             g.fillRect(0, 0, c.getWidth(), c.getHeight());
             return;
         }
-
         boolean isCellEditor = ComboBoxConstants.isTreeOrTableCellEditor(c);
 
-        if (comboBox.isEditable() && comboBox.getEditor() != null) {
-            Component editorComp = comboBox.getEditor().getEditorComponent();
-            if (comboBox.isEnabled()) {
-                g.setColor(editorComp.getBackground());
-            } else {
-                g.setColor(inactiveBackground);
-            }
-        } else {
-            g.setColor(getBackground(comboBox));
-        }
+        g.setColor(getBackground(comboBox));
         if (!isCellEditor) {
             PaintUtil.fillRoundRect((Graphics2D) g, borderSize, borderSize, width - 2 * borderSize,
                     height - 2 * borderSize, arcSize);
@@ -246,10 +237,18 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         g.setClip(oldClip);
     }
 
-    protected Color getBackground(final JComboBox<?> c) {
-        if (!c.isEnabled()) return inactiveBackground;
-        if (c.isEditable()) return editBackground;
-        return background;
+    protected Color getBackground(final JComponent c) {
+        return c.getBackground();
+    }
+
+    protected void updateBackground(final JComboBox<?> c) {
+        Color color = background;
+        if (!c.isEnabled()) {
+            color = inactiveBackground;
+        } else if (c.isEditable()) {
+            color = editBackground;
+        }
+        PropertyUtil.installBackground(c, color);
     }
 
     protected Color getArrowBackground(final JComboBox<?> c) {
