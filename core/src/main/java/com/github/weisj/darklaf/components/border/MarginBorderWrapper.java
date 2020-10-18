@@ -41,7 +41,7 @@ public class MarginBorderWrapper extends CompoundBorder {
     }
 
     private static MarginBorderWrapper wrapBorder(final Border border) {
-        if (border instanceof UIResource) {
+        if (border == null || border instanceof UIResource) {
             return new MarginBorderWrapper.UIBorder(border);
         } else {
             return new MarginBorderWrapper(border);
@@ -51,7 +51,8 @@ public class MarginBorderWrapper extends CompoundBorder {
     public static void uninstallBorder(final JComponent c) {
         Border border = c.getBorder();
         if (border instanceof MarginBorderWrapper) {
-            c.setBorder(((MarginBorderWrapper) border).getOutsideBorder());
+            Border outside = ((MarginBorderWrapper) border).getOutsideBorder();
+            c.setBorder(outside);
         }
     }
 

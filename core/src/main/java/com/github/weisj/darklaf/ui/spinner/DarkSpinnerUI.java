@@ -59,7 +59,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
     protected Icon minusInactiveIcon;
     private JComponent editor;
     private JButton prevButton;
-    private Component editorComponent;
+    private JComponent editorComponent;
     private JButton nextButton;
 
     public static ComponentUI createUI(final JComponent c) {
@@ -170,13 +170,17 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
     @Override
     protected JComponent createEditor() {
         editor = super.createEditor();
+        updateEditorComponent();
+        return editor;
+    }
+
+    private void updateEditorComponent() {
         if (editor instanceof JSpinner.DefaultEditor) {
             editorComponent = ((JSpinner.DefaultEditor) editor).getTextField();
         } else {
             editorComponent = editor;
         }
         editorComponent.addFocusListener(spinnerListener);
-        return editor;
     }
 
     @Override
@@ -186,10 +190,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
         if (oldEditor != null && oldEditor.getComponents().length > 0) {
             oldEditor.getComponents()[0].removeFocusListener(spinnerListener);
         }
-        if (newEditor != null && newEditor.getComponents().length > 0) {
-            Component comp = newEditor.getComponents()[0];
-            comp.addFocusListener(spinnerListener);
-        }
+        updateEditorComponent();
     }
 
     private JButton createArrow(final int direction) {
@@ -240,6 +241,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
         JComponent editor = spinner.getEditor();
 
         if (editorComponent != null) {
+            // System.out.println(((JComponent) editorComponent).getBorder());
             editorComponent.setBackground(getBackground(c));
             g.setColor(editorComponent.getBackground());
         } else {
