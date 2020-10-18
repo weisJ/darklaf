@@ -32,8 +32,6 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.table.*;
 
-import sun.swing.SwingUtilities2;
-
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
@@ -45,6 +43,8 @@ import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellRendererDelegate;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
+
+import sun.swing.SwingUtilities2;
 
 /** @author Jannis Weis */
 public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
@@ -101,6 +101,10 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
         PropertyUtil.installBooleanProperty(table, KEY_ALTERNATE_ROW_COLOR, "Table.alternateRowColor");
         PropertyUtil.installBooleanProperty(table, "terminateEditOnFocusLost", "Table.terminateEditOnFocusLost");
         PropertyUtil.installProperty(table, KEY_BOOLEAN_RENDER_TYPE, UIManager.getString("Table.booleanRenderType"));
+
+        // Fill the viewport by default to ensure grid line are painted all the way to the bottom of the
+        // viewport.
+        table.setFillsViewportHeight(true);
 
         setupRendererComponents(table);
 
@@ -170,7 +174,7 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
         boolean scrollVisible = scrollBarVisible();
         if (table.getShowVerticalLines()) {
             TableColumnModel cm = table.getColumnModel();
-            int tableHeight = getPreferredSize(table).height;
+            int tableHeight = table.getHeight();
             int x;
             boolean ltr = table.getComponentOrientation().isLeftToRight();
             x = damagedArea.x;
@@ -268,7 +272,7 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
                 parent = par.getParent();
             }
         }
-        int tableHeight = getPreferredSize(table).height;
+        int tableHeight = table.getHeight();
         g.setColor(parent.getBackground());
         int width = vacatedColumnRect.width;
         if (draggedColumnIndex < cMax) width--;
