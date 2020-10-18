@@ -38,9 +38,15 @@ public class SpinnerDemo implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        JSpinner spinner = new JSpinner();
-        DemoPanel panel = new DemoPanel(spinner);
+        JSpinner spinner = new JSpinner() {
 
+            @Override
+            public void updateUI() {
+                super.updateUI();
+                ((JFormattedTextField) getEditor().getComponent(0)).setColumns(3);
+            }
+        };
+        DemoPanel panel = new DemoPanel(spinner);
         JPanel controlPanel = panel.addControls(1);
         controlPanel.add(new JCheckBox("enabled") {
             {

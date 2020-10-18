@@ -35,6 +35,7 @@ import com.github.weisj.darklaf.components.ArrowButton;
 import com.github.weisj.darklaf.delegate.LayoutManagerDelegate;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Konstantin Bulenkov
@@ -84,6 +85,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
         arrowUpInactiveIcon = UIManager.getIcon("Spinner.arrowUpInactive.icon");
         minusInactiveIcon = UIManager.getIcon("Spinner.minusInactive.icon");
         plusInactiveIcon = UIManager.getIcon("Spinner.plusInactive.icon");
+        updateBackground();
         LookAndFeel.installProperty(spinner, PropertyKey.OPAQUE, false);
     }
 
@@ -241,7 +243,6 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
         JComponent editor = spinner.getEditor();
 
         if (editorComponent != null) {
-            // System.out.println(((JComponent) editorComponent).getBorder());
             editorComponent.setBackground(getBackground(c));
             g.setColor(editorComponent.getBackground());
         } else {
@@ -280,6 +281,10 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
 
     protected Color getBackground(final JComponent c) {
         return c == null ? inactiveBackground : c.getBackground();
+    }
+
+    protected void updateBackground() {
+        PropertyUtil.installBackground(spinner, spinner.isEnabled() ? background : inactiveBackground);
     }
 
     protected Color getArrowBackground(final JComponent c) {
