@@ -183,12 +183,12 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
             } else if (b.getBorder() instanceof DarkButtonBorder) {
                 paintDarklafBorderBackground(b, g2, arc, width, height);
             } else {
-                paintDefaultBackgroud(b, g2, width, height);
+                paintDefaultBackground(b, g2, width, height);
             }
         }
     }
 
-    protected void paintDefaultBackgroud(final AbstractButton b, final Graphics2D g, final int width,
+    protected void paintDefaultBackground(final AbstractButton b, final Graphics2D g, final int width,
             final int height) {
         Insets ins = b.getInsets();
         g.setColor(getBackgroundColor(b));
@@ -212,7 +212,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
             g.setComposite(comp);
         }
 
-        g.setColor(getBackgroundColor(c));
+        g.setColor(c.getBackground());
         paintBackgroundRect(g, effectiveArc, bgRect);
     }
 
