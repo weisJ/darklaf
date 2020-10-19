@@ -212,7 +212,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
             g.setComposite(comp);
         }
 
-        g.setColor(c.getBackground());
+        g.setColor(getBackgroundColor(c));
         paintBackgroundRect(g, effectiveArc, bgRect);
     }
 
