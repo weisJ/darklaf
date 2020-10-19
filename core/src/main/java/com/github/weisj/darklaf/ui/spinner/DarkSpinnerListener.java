@@ -84,7 +84,8 @@ public class DarkSpinnerListener extends MouseAdapter
             spinner.repaint();
         } else if (KEY_EDITOR_ALIGNMENT.equals(key) && SpinnerConstants.isTableCellEditor(spinner)) {
             if (editorComponent instanceof JTextField && evt.getNewValue() instanceof Integer) {
-                ((JTextField) editorComponent).setHorizontalAlignment((Integer) evt.getNewValue());
+                int alignment = (Integer) evt.getNewValue();
+                ((JTextField) editorComponent).setHorizontalAlignment(alignment);
             }
             spinner.revalidate();
         } else if (KEY_VARIANT.equals(key)) {

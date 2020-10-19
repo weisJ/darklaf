@@ -58,6 +58,7 @@ public final class ArrowButton implements SwingConstants {
     public static JButton createUpDownArrow(final JComponent parent, final Icon activeIcon, final Icon inactiveIcon,
             final int orientation, final boolean center, final boolean applyInsetsOnSize, final Insets insets) {
         return new BasicArrowButton(orientation, null, null, null, null) {
+            private final Insets ins = insets != null ? insets : new Insets(0, 0, 0, 0);
             {
                 putClientProperty(DarkButtonUI.KEY_NO_BORDERLESS_OVERWRITE, true);
             }
@@ -81,8 +82,8 @@ public final class ArrowButton implements SwingConstants {
                 if (!applyInsetsOnSize) {
                     return new DimensionUIResource(getIcon().getIconWidth(), getIcon().getIconHeight());
                 } else {
-                    return new DimensionUIResource(getIcon().getIconWidth() + insets.left + insets.right,
-                            getIcon().getIconHeight() + insets.top + insets.bottom);
+                    return new DimensionUIResource(getIcon().getIconWidth() + ins.left + ins.right,
+                            getIcon().getIconHeight() + ins.top + ins.bottom);
                 }
             }
 
@@ -99,10 +100,10 @@ public final class ArrowButton implements SwingConstants {
 
             @Override
             public Insets getInsets(final Insets i) {
-                i.left = insets.left;
-                i.right = insets.right;
-                i.top = insets.top;
-                i.bottom = insets.bottom;
+                i.left = ins.left;
+                i.right = ins.right;
+                i.top = ins.top;
+                i.bottom = ins.bottom;
                 return i;
             }
 

@@ -21,6 +21,7 @@
  */
 package com.github.weisj.darklaf.ui.combobox;
 
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
@@ -50,11 +51,16 @@ public class DarkComboBoxListener extends MouseAdapter implements PropertyChange
     public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
         if (PropertyKey.COMPONENT_ORIENTATION.equals(key)) {
-            comboBox.getEditor().getEditorComponent().setComponentOrientation(comboBox.getComponentOrientation());
+            Component editorComp = ui.getEditorComponent();
+            boolean ltr = comboBox.getComponentOrientation().isLeftToRight();
+            if (editorComp instanceof JTextField) {
+                ((JTextField) editorComp).setHorizontalAlignment(ltr ? JTextField.LEFT : JTextField.RIGHT);
+            }
             comboBox.doLayout();
             comboBox.repaint();
         } else if (PropertyKey.EDITABLE.equals(key) || PropertyKey.ENABLED.equals(key)) {
             ui.updateBackground(comboBox);
+            ui.updateForeground(comboBox);
             comboBox.repaint();
         } else if (KEY_IS_TABLE_EDITOR.equals(key) || KEY_IS_TREE_EDITOR.equals(key)) {
             comboBox.revalidate();

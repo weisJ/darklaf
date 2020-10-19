@@ -32,8 +32,7 @@ import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicSpinnerUI;
 
 import com.github.weisj.darklaf.components.ArrowButton;
-import com.github.weisj.darklaf.delegate.LayoutManagerDelegate;
-import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.ui.DividedWidgetPainter;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
@@ -50,7 +49,6 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
     protected Icon arrowDownIcon;
     protected Color inactiveBackground;
     protected int arc;
-    protected int borderSize;
     protected Icon arrowUpIcon;
     protected Icon plusIcon;
     protected Icon minusIcon;
@@ -61,7 +59,6 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
     private JComponent editor;
     private JButton prevButton;
     private JComponent editorComponent;
-    private JButton nextButton;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkSpinnerUI();
@@ -71,7 +68,6 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
     protected void installDefaults() {
         super.installDefaults();
         arc = UIManager.getInt("Spinner.arc");
-        borderSize = UIManager.getInt("Spinner.borderThickness");
         background = UIManager.getColor("Spinner.activeBackground");
         inactiveBackground = UIManager.getColor("Spinner.inactiveBackground");
         arrowBackground = UIManager.getColor("Spinner.arrowBackground");
@@ -113,40 +109,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
     }
 
     protected LayoutManager createLayout() {
-        return new LayoutManagerDelegate(super.createLayout()) {
-            private Component editor = null;
-
-            @Override
-            public void addLayoutComponent(final String name, final Component comp) {
-                super.addLayoutComponent(name, comp);
-                if ("Editor".equals(name)) {
-                    editor = comp;
-                }
-            }
-
-            protected void adjustButton(final JComponent button, final int adj) {
-                Rectangle bounds = button.getBounds();
-                bounds.x += adj;
-                button.setBounds(bounds);
-            }
-
-            @Override
-            public void layoutContainer(final Container parent) {
-                super.layoutContainer(parent);
-                if (SpinnerConstants.isTreeOrTableCellEditor(spinner)) {
-                    int adj = borderSize / 2;
-                    if (!spinner.getComponentOrientation().isLeftToRight()) adj *= -1;
-                    adjustButton(prevButton, adj);
-                    adjustButton(nextButton, adj);
-                }
-                if (editor != null && !spinner.getComponentOrientation().isLeftToRight()) {
-                    Rectangle bounds = editor.getBounds();
-                    bounds.x += borderSize;
-                    bounds.width -= borderSize;
-                    editor.setBounds(bounds);
-                }
-            }
-        };
+        return new DarkSpinnerLayout();
     }
 
     @Override
@@ -161,7 +124,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
 
     @Override
     protected Component createNextButton() {
-        nextButton = createArrow(SwingConstants.NORTH);
+        JButton nextButton = createArrow(SwingConstants.NORTH);
         nextButton.setName("Spinner.nextButton");
         nextButton.setBorder(new EmptyBorder(1, 1, 1, 1));
         nextButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -196,8 +159,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
     }
 
     private JButton createArrow(final int direction) {
-        int buttonPad = UIManager.getInt("Spinner.buttonPad");
-        Insets insets = new Insets(0, buttonPad, 0, buttonPad);
+        Insets insets = UIManager.getInsets("Spinner.arrowButtonInsets");
         JButton button = ArrowButton.createUpDownArrow(spinner, getArrowIcon(direction),
                 getArrowInactiveIcon(direction), direction, false, true, insets);
         Border buttonBorder = UIManager.getBorder("Spinner.arrowButtonBorder");
@@ -237,46 +199,17 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
             return;
         }
 
-        int size = borderSize;
-        int width = c.getWidth();
-        int height = c.getHeight();
-        JComponent editor = spinner.getEditor();
+        Rectangle arrowBounds = prevButton.getBounds();
+
+        Color bg = getBackground(c);
+        Color spinBg = getArrowBackground(c);
+        boolean isCellEditor = SpinnerConstants.isTreeOrTableCellEditor(c);
 
         if (editorComponent != null) {
-            editorComponent.setBackground(getBackground(c));
-            g.setColor(editorComponent.getBackground());
-        } else {
-            g.setColor(getBackground(c));
+            editorComponent.setBackground(bg);
         }
-        if (!SpinnerConstants.isTreeOrTableCellEditor(c)) {
-            PaintUtil.fillRoundRect((Graphics2D) g, size, size, width - 2 * size, height - 2 * size, arc);
-        } else {
-            g.fillRect(0, 0, width, height);
-        }
-        if (editor != null) {
-            paintSpinBackground((Graphics2D) g, width, height, size, arc);
-        }
-    }
 
-    protected void paintSpinBackground(final Graphics2D g, final int width, final int height, final int bSize,
-            final int arc) {
-        Rectangle arrowBounds = prevButton.getBounds();
-        boolean leftToRight = spinner.getComponentOrientation().isLeftToRight();
-
-        Shape oldClip = g.getClip();
-        g.setColor(getArrowBackground(spinner));
-
-        if (leftToRight) {
-            g.clipRect(arrowBounds.x, 0, width - arrowBounds.x, height);
-        } else {
-            g.clipRect(0, 0, arrowBounds.x + arrowBounds.width, height);
-        }
-        if (SpinnerConstants.isTreeOrTableCellEditor(spinner)) {
-            g.fillRect(0, 0, width, height);
-        } else {
-            PaintUtil.fillRoundRect(g, bSize, bSize, width - 2 * bSize, height - 2 * bSize, arc);
-        }
-        g.setClip(oldClip);
+        DividedWidgetPainter.paintBackground((Graphics2D) g, c, arc, arrowBounds, bg, spinBg, isCellEditor);
     }
 
     protected Color getBackground(final JComponent c) {

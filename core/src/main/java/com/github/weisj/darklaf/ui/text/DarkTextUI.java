@@ -228,13 +228,13 @@ public abstract class DarkTextUI extends BasicTextUI
             }
         }
         if (c.getSize().width < dim.width) {
-            dim.width += getCaretWidth();
+            dim.width += getCaretWidth(editor);
         }
         return dim;
     }
 
-    protected int getCaretWidth() {
-        Caret caret = editor.getCaret();
+    public static int getCaretWidth(final JTextComponent textComponent) {
+        Caret caret = textComponent.getCaret();
         if (caret instanceof DefaultCaret) {
             return (int) ((DefaultCaret) caret).getWidth();
         }

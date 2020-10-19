@@ -29,13 +29,12 @@ import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.ui.DividedWidgetPainter;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 
 public class DarkComboBoxBorder implements Border, UIResource {
 
     protected final DarkComboBoxUI ui;
-    protected Insets boxPadding;
-    protected Insets cellPadding;
     protected final int borderSize;
     protected final int arcSize;
     protected final Color focusBorderColor;
@@ -45,14 +44,10 @@ public class DarkComboBoxBorder implements Border, UIResource {
     public DarkComboBoxBorder(final DarkComboBoxUI ui) {
         this.ui = ui;
         arcSize = UIManager.getInt("ComboBox.arc");
-        boxPadding = UIManager.getInsets("ComboBox.insets");
         borderSize = UIManager.getInt("ComboBox.borderThickness");
         focusBorderColor = UIManager.getColor("ComboBox.focusBorderColor");
         borderColor = UIManager.getColor("ComboBox.activeBorderColor");
         inactiveBorderColor = UIManager.getColor("ComboBox.inactiveBorderColor");
-        cellPadding = UIManager.getInsets("ComboBox.cellEditorInsets");
-        if (boxPadding == null) boxPadding = new Insets(0, 0, 0, 0);
-        if (cellPadding == null) cellPadding = new Insets(0, 0, 0, 0);
     }
 
     @Override
@@ -66,37 +61,27 @@ public class DarkComboBoxBorder implements Border, UIResource {
 
         final boolean isTableCellEditor = ComboBoxConstants.isTableCellEditor(comboBox);
         final boolean isTreeCellEditor = ComboBoxConstants.isTreeCellEditor(comboBox);
-        final boolean isCellEditor = isTableCellEditor || isTreeCellEditor;
-        int bSize = !isCellEditor ? borderSize : 0;
-        int editBSize = !isCellEditor ? borderSize + 1 : 0;
 
         ui.checkFocus();
         Graphics2D g = (Graphics2D) g2;
         g.translate(x, y);
 
         Color borderColor = getBorderColor(c);
-
-        if (!isCellEditor) {
-            if (ui.getHasFocus()) {
-                PaintUtil.paintFocusBorder(g, width, height, arcSize, borderSize);
-                g.setColor(focusBorderColor);
-            } else {
-                g.setColor(borderColor);
-            }
-            PaintUtil.paintLineBorder(g, bSize, bSize, width - 2 * bSize, height - 2 * bSize, arcSize);
-        } else {
-            paintCellBorder(c, width, height, isTableCellEditor, g, borderColor);
-        }
-
-        if (comboBox.isEditable()) {
-            Rectangle arrowBounds = arrowButton.getBounds();
-            boolean leftToRight = comboBox.getComponentOrientation().isLeftToRight();
-            int off = leftToRight ? arrowBounds.x : arrowBounds.x + arrowBounds.width - 1;
-            g.setColor(borderColor);
-            g.fillRect(off, editBSize, 1, height - 2 * editBSize);
-        }
+        int dividerLocation = getDividerLocation(comboBox);
+        DividedWidgetPainter.paintBorder(g, comboBox, width, height, arcSize, borderSize, dividerLocation,
+                isTableCellEditor, isTreeCellEditor, ui.getHasFocus(), borderColor, focusBorderColor);
 
         g.translate(-x, -y);
+    }
+
+    private int getDividerLocation(final JComboBox<?> comboBox) {
+        if (comboBox.isEditable()) {
+            AbstractButton arrowButton = ui.getArrowButton();
+            Rectangle arrowBounds = arrowButton.getBounds();
+            boolean leftToRight = comboBox.getComponentOrientation().isLeftToRight();
+            return leftToRight ? arrowBounds.x : arrowBounds.x + arrowBounds.width - 1;
+        }
+        return -1;
     }
 
     protected void paintCellBorder(final Component c, final int width, final int height,
@@ -118,14 +103,9 @@ public class DarkComboBoxBorder implements Border, UIResource {
     @Override
     public Insets getBorderInsets(final Component c) {
         if (ComboBoxConstants.isTreeOrTableCellEditor(c)) {
-            return CellUtil.adjustEditorInsets(
-                    new InsetsUIResource(cellPadding.top, cellPadding.left, cellPadding.bottom, cellPadding.right), c);
+            return new InsetsUIResource(0, 0, 0, 0);
         }
-        if (c.getComponentOrientation().isLeftToRight()) {
-            return new InsetsUIResource(boxPadding.top, boxPadding.left, boxPadding.bottom, borderSize);
-        } else {
-            return new InsetsUIResource(boxPadding.top, borderSize, boxPadding.bottom, boxPadding.right);
-        }
+        return new InsetsUIResource(borderSize, borderSize, borderSize, borderSize);
     }
 
     @Override

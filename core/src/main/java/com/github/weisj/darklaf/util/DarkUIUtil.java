@@ -506,12 +506,22 @@ public final class DarkUIUtil {
 
     public static Dimension getPreferredSize(final JComponent component) {
         if (component == null) return new Dimension(0, 0);
-        LayoutManager menuBarLayout = component.getLayout();
+        LayoutManager layoutManager = component.getLayout();
         Dimension size = null;
-        if (menuBarLayout != null) {
-            size = menuBarLayout.preferredLayoutSize(component);
+        if (layoutManager != null) {
+            size = layoutManager.preferredLayoutSize(component);
         }
         return (size != null) ? size : component.getPreferredSize();
+    }
+
+    public static Dimension getMinimumSize(final JComponent component) {
+        if (component == null) return new Dimension(0, 0);
+        LayoutManager layoutManager = component.getLayout();
+        Dimension size = null;
+        if (layoutManager != null) {
+            size = layoutManager.minimumLayoutSize(component);
+        }
+        return (size != null) ? size : component.getMinimumSize();
     }
 
     public static <T> T nullableCast(final Class<T> type, final Object o) {

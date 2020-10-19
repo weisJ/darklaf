@@ -193,12 +193,22 @@ public class PaintUtil {
         return stroke instanceof BasicStroke ? ((BasicStroke) stroke).getLineWidth() : 1f;
     }
 
+    public static void paintLineBorder(final Graphics2D g, final float width, final float height, final Insets ins,
+            final int arc) {
+        paintLineBorder(g, ins.left, ins.top, width - ins.left - ins.right, height - ins.top - ins.bottom, arc);
+    }
+
     public static void paintLineBorder(final Graphics2D g, final float x, final float y, final float width,
             final float height, final int arc) {
         float lw = getStrokeWidth(g);
         g.translate(x, y);
         doPaint(g, width, height, arc, lw, true);
         g.translate(-x, -y);
+    }
+
+    public static void fillRoundRect(final Graphics2D g, final float width, final float height, final Insets ins,
+            final int arc) {
+        fillRoundRect(g, ins.left, ins.top, width - ins.left - ins.right, height - ins.bottom - ins.top, arc, true);
     }
 
     public static void fillRoundRect(final Graphics2D g, final float x, final float y, final float width,

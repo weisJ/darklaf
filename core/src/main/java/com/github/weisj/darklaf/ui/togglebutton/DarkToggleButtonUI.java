@@ -105,7 +105,7 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
             g.translate(borderSize, borderSize);
         }
 
-        g.setColor(getBackgroundColor(c));
+        g.setColor(c.getBackground());
         PaintUtil.fillRoundRect(g, 0, 0, bounds.width, bounds.height, bounds.height);
         g.setColor(getToggleBorderColor(c));
         PaintUtil.paintLineBorder(g, 0, 0, bounds.width, bounds.height, bounds.height);

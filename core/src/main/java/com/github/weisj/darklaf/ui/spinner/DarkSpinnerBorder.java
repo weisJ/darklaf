@@ -29,8 +29,7 @@ import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.graphics.GraphicsContext;
-import com.github.weisj.darklaf.graphics.PaintUtil;
-import com.github.weisj.darklaf.ui.cell.CellUtil;
+import com.github.weisj.darklaf.ui.DividedWidgetPainter;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
@@ -44,8 +43,8 @@ public class DarkSpinnerBorder implements Border, UIResource {
     protected final Color inactiveBorderColor;
     protected final int arc;
     protected final int borderSize;
-    protected Insets insets;
-    protected Insets cellInsets;
+    protected final Insets editorInsets;
+    protected final Insets cellInsets;
 
     public DarkSpinnerBorder() {
         focusBorderColor = UIManager.getColor("Spinner.focusBorderColor");
@@ -53,58 +52,41 @@ public class DarkSpinnerBorder implements Border, UIResource {
         inactiveBorderColor = UIManager.getColor("Spinner.inactiveBorderColor");
         arc = UIManager.getInt("Spinner.arc");
         borderSize = UIManager.getInt("Spinner.borderThickness");
+        editorInsets = UIManager.getInsets("Spinner.editorInsets");
         cellInsets = UIManager.getInsets("Spinner.cellEditorInsets");
-        insets = UIManager.getInsets("Spinner.insets");
-        if (insets == null) insets = new Insets(0, 0, 0, 0);
-        if (cellInsets == null) cellInsets = new Insets(0, 0, 0, 0);
     }
 
     @Override
     public void paintBorder(final Component c, final Graphics g2, final int x, final int y, final int width,
             final int height) {
-        boolean tableCellEditor = SpinnerConstants.isTableCellEditor(c);
-        boolean treeCellEditor = !tableCellEditor && SpinnerConstants.isTreeCellEditor(c);
-
         Graphics2D g = (Graphics2D) g2;
         GraphicsContext config = new GraphicsContext(g);
         g.translate(x, y);
 
-        int size = tableCellEditor ? 0 : borderSize;
-
-        if (c instanceof JSpinner) {
-            JSpinner spinner = (JSpinner) c;
-            JComponent editor = spinner.getEditor();
-            if (editor != null) {
-                int off = spinner.getComponentOrientation().isLeftToRight() ? editor.getBounds().x + editor.getWidth()
-                        : editor.getBounds().x - 1 - borderSize;
-                g.setColor(getBorderColor(spinner));
-                if (!treeCellEditor) {
-                    g.fillRect(off, size, 1, height - 2 * size);
-                } else {
-                    g.fillRect(off, 0, 1, height);
-                }
-            }
-        }
-
-        if (!tableCellEditor && !treeCellEditor && DarkUIUtil.hasFocus(c)) {
-            PaintUtil.paintFocusBorder(g, width, height, arc, borderSize);
-        }
-
-        g.setColor(getBorderColor(c));
-        if (!tableCellEditor && !treeCellEditor) {
-            if (DarkUIUtil.hasFocus(c)) {
-                g.setColor(focusBorderColor);
-            }
-            PaintUtil.paintLineBorder(g, size, size, width - 2 * size, height - 2 * size, arc);
-        } else if (tableCellEditor && (c.getParent() instanceof JTable)) {
-            JTable table = (JTable) c.getParent();
-            CellUtil.paintTableEditorBorder(g, c, table, width, height);
-        } else {
-            PaintUtil.drawRect(g, 0, 0, width, height, 1);
+        if (c instanceof JComponent) {
+            boolean tableCellEditor = SpinnerConstants.isTableCellEditor(c);
+            boolean treeCellEditor = !tableCellEditor && SpinnerConstants.isTreeCellEditor(c);
+            int dividerLocation = getDividerLocation(c);
+            DividedWidgetPainter.paintBorder(g, (JComponent) c, width, height, arc, borderSize, dividerLocation,
+                    tableCellEditor, treeCellEditor, DarkUIUtil.hasFocus(c), borderColor, focusBorderColor);
         }
 
         g.translate(-x, -y);
         config.restore();
+    }
+
+    public int getDividerLocation(final Component c) {
+        int dividerLocation = -1;
+        if (c instanceof JSpinner) {
+            JSpinner spinner = (JSpinner) c;
+            JComponent editor = spinner.getEditor();
+            if (editor != null) {
+                boolean ltr = spinner.getComponentOrientation().isLeftToRight();
+                dividerLocation = ltr ? editor.getBounds().x + editor.getWidth() + editorInsets.right
+                        : editor.getBounds().x - editorInsets.left;
+            }
+        }
+        return dividerLocation;
     }
 
     protected Color getBorderColor(final Component c) {
@@ -114,10 +96,9 @@ public class DarkSpinnerBorder implements Border, UIResource {
     @Override
     public Insets getBorderInsets(final Component c) {
         if (SpinnerConstants.isTreeOrTableCellEditor(c)) {
-            return CellUtil.adjustEditorInsets(
-                    new InsetsUIResource(cellInsets.top, cellInsets.left, cellInsets.bottom, cellInsets.right), c);
+            return new InsetsUIResource(0, 0, 0, 0);
         }
-        return new InsetsUIResource(insets.top, insets.left, insets.bottom, insets.right);
+        return new InsetsUIResource(borderSize, borderSize, borderSize, borderSize);
     }
 
     @Override
