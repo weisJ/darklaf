@@ -694,17 +694,15 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
 
         protected void scrollRowToVisible(final JTree tree, final int row) {
             Rectangle bounds = tree.getRowBounds(row);
-            if (!isLeaf(tree, row)) {
-                boolean expanded = tree.isExpanded(row);
-                BasicTreeUI ui = DarkUIUtil.getUIOfType(tree.getUI(), BasicTreeUI.class);
-                if (ui != null) {
-                    Icon icon = expanded ? ui.getExpandedIcon() : ui.getCollapsedIcon();
-                    boolean ltr = tree.getComponentOrientation().isLeftToRight();
-                    int ident = ui.getRightChildIndent();
-                    int extra = ident - 1 + icon.getIconWidth() / 2;
-                    if (ltr) bounds.x -= extra;
-                    bounds.width += extra;
-                }
+            boolean expanded = tree.isExpanded(row);
+            BasicTreeUI ui = DarkUIUtil.getUIOfType(tree.getUI(), BasicTreeUI.class);
+            if (ui != null) {
+                Icon icon = expanded ? ui.getExpandedIcon() : ui.getCollapsedIcon();
+                boolean ltr = tree.getComponentOrientation().isLeftToRight();
+                int ident = ui.getRightChildIndent();
+                int extra = ident - 1 + icon.getIconWidth() / 2;
+                if (ltr) bounds.x -= extra;
+                bounds.width += extra;
             }
             tree.scrollRectToVisible(bounds);
         }
