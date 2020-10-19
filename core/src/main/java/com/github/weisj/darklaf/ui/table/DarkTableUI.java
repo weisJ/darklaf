@@ -32,6 +32,8 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.table.*;
 
+import sun.swing.SwingUtilities2;
+
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
@@ -43,8 +45,6 @@ import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellRendererDelegate;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
-
-import sun.swing.SwingUtilities2;
 
 /** @author Jannis Weis */
 public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
