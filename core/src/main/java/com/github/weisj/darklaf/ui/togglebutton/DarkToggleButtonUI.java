@@ -157,12 +157,12 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
     }
 
     @Override
-    protected boolean isRolloverBorderless(final AbstractButton b) {
+    public boolean isRolloverBorderless(final AbstractButton b) {
         return super.isRolloverBorderless(b) || b.isSelected();
     }
 
     @Override
-    protected boolean isArmedBorderless(final AbstractButton b) {
+    public boolean isArmedBorderless(final AbstractButton b) {
         return super.isArmedBorderless(b) || b.isSelected();
     }
 

@@ -159,11 +159,11 @@ public class StringPainter {
         if (v != null) {
             v.paint(drawingGraphics, textRect);
         } else {
-            textRect.y += asc;
+            int textY = textRect.y + asc;
             if (mnemIndex >= 0) {
-                SwingUtilities2.drawStringUnderlineCharAt(c, drawingGraphics, text, mnemIndex, textRect.x, textRect.y);
+                SwingUtilities2.drawStringUnderlineCharAt(c, drawingGraphics, text, mnemIndex, textRect.x, textY);
             } else {
-                SwingUtilities2.drawString(c, drawingGraphics, text, textRect.x, textRect.y);
+                SwingUtilities2.drawString(c, drawingGraphics, text, textRect.x, textY);
             }
         }
 

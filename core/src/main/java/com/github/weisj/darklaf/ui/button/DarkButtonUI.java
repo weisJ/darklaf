@@ -33,8 +33,6 @@ import javax.swing.plaf.basic.BasicButtonListener;
 import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
 
-import sun.swing.SwingUtilities2;
-
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.delegate.AbstractButtonLayoutDelegate;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
@@ -51,11 +49,16 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 /** @author Jannis Weis */
 public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
 
-    protected static final Rectangle viewRect = new Rectangle();
-    protected static final Rectangle textRect = new Rectangle();
-    protected static final Rectangle iconRect = new Rectangle();
     protected static final RoundRectangle2D hitArea = new RoundRectangle2D.Float();
     protected static final AbstractButtonLayoutDelegate layoutDelegate = new ButtonLayoutDelegate();
+
+    protected boolean isDefaultButton = false;
+
+    protected final Rectangle viewRect = new Rectangle();
+    protected final Rectangle textRect = new Rectangle();
+    protected final Rectangle iconRect = new Rectangle();
+    protected String displayText;
+
     protected int borderSize;
     protected int shadowHeight;
     protected boolean drawOutline;
@@ -98,6 +101,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     @Override
     protected void installDefaults(final AbstractButton b) {
         super.installDefaults(b);
+        b.setLayout(createLayout());
         PropertyUtil.installProperty(b, ToolTipConstants.KEY_STYLE,
                 ToolTipStyle.parse(UIManager.get("Button.toolTipStyle")));
         LookAndFeel.installProperty(b, PropertyKey.OPAQUE, false);
@@ -133,6 +137,10 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         updateMargins(b);
     }
 
+    protected LayoutManager createLayout() {
+        return new DarkButtonLayout();
+    }
+
     @Override
     protected void installListeners(final AbstractButton b) {
         super.installListeners(b);
@@ -146,25 +154,38 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     }
 
     @Override
+    protected void uninstallDefaults(final AbstractButton b) {
+        super.uninstallDefaults(b);
+        b.setLayout(null);
+    }
+
+    @Override
     protected void uninstallListeners(final AbstractButton b) {
         super.uninstallListeners(b);
         keyboardActions.uninstallActions();
         keyboardActions = null;
     }
 
+    protected void validateLayout() {
+        boolean defButton = ButtonConstants.isDefaultButton(button);
+        if (defButton != isDefaultButton) {
+            isDefaultButton = defButton;
+            button.doLayout();
+        }
+    }
+
     @Override
     public void paint(final Graphics g, final JComponent c) {
+        validateLayout();
         GraphicsContext config = new GraphicsContext(g);
+
         AbstractButton b = (AbstractButton) c;
 
-        prepareDelegate(b);
-        String text = layout(layoutDelegate, b, SwingUtilities2.getFontMetrics(b, g, layoutDelegate.getFont()),
-                b.getWidth(), b.getHeight());
         paintButtonBackground(g, c);
 
         paintIcon(g, b, c);
         config.restoreClip();
-        paintText(g, b, text);
+        paintText(g, b, displayText);
     }
 
     protected void paintButtonBackground(final Graphics g, final JComponent c) {
@@ -203,24 +224,34 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         AlignmentExt corner = DarkButtonBorder.getCornerFlag(c);
 
         Rectangle bgRect = getEffectiveRect(width, height, -(effectiveArc + 1), corner);
+
+        paintDarklafBorderBgImpl(c, g, showShadow, shadow, effectiveArc, bgRect);
+    }
+
+    protected void paintDarklafBorderBgImpl(final AbstractButton c, final Graphics2D g, final boolean showShadow,
+            final int shadow, final int effectiveArc, final Rectangle bgRect) {
         if (c.isEnabled() && showShadow && PaintUtil.getShadowComposite().getAlpha() != 0) {
-            g.setColor(shadowColor);
-            Composite comp = g.getComposite();
-            g.setComposite(PaintUtil.getShadowComposite());
-            int stroke = (int) PaintUtil.getStrokeWidth(g);
-            paintBackgroundRect(g, effectiveArc * 2, bgRect.x, bgRect.y + shadow + stroke, bgRect.width, bgRect.height);
-            g.setComposite(comp);
+            paintShadow(g, shadow, effectiveArc, bgRect);
         }
 
         g.setColor(getBackgroundColor(c));
         paintBackgroundRect(g, effectiveArc, bgRect);
     }
 
-    private void paintBackgroundRect(final Graphics2D g2, final int effectiveArc, final Rectangle bgRect) {
+    private void paintShadow(final Graphics2D g, final int shadow, final int effectiveArc, final Rectangle bgRect) {
+        g.setColor(shadowColor);
+        Composite comp = g.getComposite();
+        g.setComposite(PaintUtil.getShadowComposite());
+        int stroke = (int) PaintUtil.getStrokeWidth(g);
+        paintBackgroundRect(g, effectiveArc * 2, bgRect.x, bgRect.y + shadow + stroke, bgRect.width, bgRect.height);
+        g.setComposite(comp);
+    }
+
+    protected void paintBackgroundRect(final Graphics2D g2, final int effectiveArc, final Rectangle bgRect) {
         paintBackgroundRect(g2, effectiveArc, bgRect.x, bgRect.y, bgRect.width, bgRect.height);
     }
 
-    private void paintBackgroundRect(final Graphics2D g2, final int effectiveArc, final int x, final int y,
+    protected void paintBackgroundRect(final Graphics2D g2, final int effectiveArc, final int x, final int y,
             final int width, final int height) {
         if (effectiveArc == 0) {
             g2.fillRect(x, y, width, height);
@@ -267,29 +298,35 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
             int h = height - y - Math.max(ins.bottom, margin.bottom);
 
             GraphicsUtil.setupAAPainting(g);
-            g.setColor(getBorderlessBackground(b));
             if (ButtonConstants.isBorderlessRectangular(b)) {
-                g.fillRect(x, y, w, h);
+                paintBorderlessRectangularBackgroundIml(b, g, x, y, w, h);
             } else if (ButtonConstants.doConvertToBorderless(b)) {
                 int size = Math.min(w, h);
-                if (!drawOutline) {
-                    g.fillRoundRect((width - size) / 2, (height - size) / 2, size, size, arc, arc);
-                } else {
-                    g.setColor(getBorderlessOutline(b));
-                    PaintUtil.paintLineBorder(g, (width - size) / 2.0f, (height - size) / 2.0f, size, size, arc);
-                }
+                paintBorderlessBackgroundImpl(b, g, arc, (width - size) / 2, (height - size) / 2, size, size);
             } else {
-                if (!drawOutline) {
-                    g.fillRoundRect(x, y, w, h, arc, arc);
-                } else {
-                    g.setColor(getBorderlessOutline(b));
-                    PaintUtil.paintLineBorder(g, x, y, w, h, arc);
-                }
+                paintBorderlessBackgroundImpl(b, g, arc, x, y, w, h);
             }
         }
     }
 
-    protected boolean isRolloverBorderless(final AbstractButton b) {
+    protected void paintBorderlessRectangularBackgroundIml(final AbstractButton b, final Graphics2D g, final int x,
+            final int y, final int w, final int h) {
+        g.setColor(getBorderlessBackground(b));
+        g.fillRect(x, y, w, h);
+    }
+
+    protected void paintBorderlessBackgroundImpl(final AbstractButton b, final Graphics2D g, final int arc, final int x,
+            final int y, final int w, final int h) {
+        if (!drawOutline) {
+            g.setColor(getBorderlessBackground(b));
+            g.fillRoundRect(x, y, w, h, arc, arc);
+        } else {
+            g.setColor(getBorderlessOutline(b));
+            PaintUtil.paintLineBorder(g, x, y, w, h, arc);
+        }
+    }
+
+    public boolean isRolloverBorderless(final AbstractButton b) {
         return b.isEnabled() && b.getModel().isRollover();
     }
 
@@ -331,8 +368,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
 
     protected Color getForeground(final AbstractButton button) {
         Color fg = button.getForeground();
-        if (fg instanceof UIResource && ButtonConstants.isDefaultButton(button)
-                && !ButtonConstants.isBorderlessVariant(button)) {
+        if (fg instanceof UIResource && isDefaultButton && !ButtonConstants.isBorderlessVariant(button)) {
             fg = defaultForeground;
         }
         if (fg instanceof UIResource && !button.getModel().isEnabled()) {
@@ -342,10 +378,16 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     }
 
     protected Color getBackgroundColor(final AbstractButton b) {
-        boolean defaultButton = ButtonConstants.isDefaultButton(b);
+        boolean defaultButton = isDefaultButton;
         boolean rollOver = b.isRolloverEnabled() && b.getModel().isRollover();
         boolean clicked = b.getModel().isArmed();
-        if (b.isEnabled()) {
+        boolean enabled = b.isEnabled();
+        return getBackgroundColor(b, defaultButton, rollOver, clicked, enabled);
+    }
+
+    protected Color getBackgroundColor(final AbstractButton b, final boolean defaultButton, final boolean rollOver,
+            final boolean clicked, final boolean enabled) {
+        if (enabled) {
             if (defaultButton) {
                 if (clicked) {
                     return defaultClickBackground;
@@ -373,38 +415,16 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
                 : PropertyUtil.getColor(c, KEY_HOVER_COLOR, borderlessHover);
     }
 
-    protected boolean isArmedBorderless(final AbstractButton b) {
+    public boolean isArmedBorderless(final AbstractButton b) {
         return b.getModel().isArmed();
     }
 
-    protected Color getBorderlessOutline(final AbstractButton c) {
-        boolean armed = c.getModel().isArmed();
-        return armed ? borderlessOutlineClick : borderlessOutlineHover;
+    public Color getBorderlessOutline(final AbstractButton c) {
+        return getBorderlessOutline(isArmedBorderless(c));
     }
 
-    protected String layout(final AbstractButtonLayoutDelegate bl, final AbstractButton b, final FontMetrics fm,
-            final int width, final int height) {
-        Insets i = DarkUIUtil.addInsets(b.getInsets(), b.getMargin());
-
-        AlignmentExt corner = DarkButtonBorder.getCornerFlag(b);
-        if (corner != null) {
-            Insets insetMask = new Insets(borderSize, borderSize, borderSize, borderSize);
-            insetMask = corner.maskInsetsInverted(insetMask, 0);
-            i.left -= insetMask.left;
-            i.right -= insetMask.right;
-            i.top -= insetMask.top;
-            i.bottom -= insetMask.bottom;
-        }
-
-        viewRect.setRect(0, 0, width, height);
-        DarkUIUtil.applyInsets(viewRect, i);
-
-        textRect.x = textRect.y = textRect.width = textRect.height = 0;
-        iconRect.x = iconRect.y = iconRect.width = iconRect.height = 0;
-        // layout the text and icon
-        return SwingUtilities.layoutCompoundLabel(bl, fm, bl.getText(), bl.getIcon(), bl.getVerticalAlignment(),
-                bl.getHorizontalAlignment(), bl.getVerticalTextPosition(), bl.getHorizontalTextPosition(), viewRect,
-                iconRect, textRect, bl.getText() == null || ButtonConstants.isIconOnly(b) ? 0 : bl.getIconTextGap());
+    public Color getBorderlessOutline(final boolean armed) {
+        return armed ? borderlessOutlineClick : borderlessOutlineHover;
     }
 
     @Override
@@ -455,6 +475,10 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         return hitArea.contains(x, y);
     }
 
+    public boolean getDrawOutline(final Component c) {
+        return drawOutline && ButtonConstants.isBorderless(c);
+    }
+
     protected static class ButtonLayoutDelegate extends AbstractButtonLayoutDelegate {
         protected Font font;
 
@@ -466,6 +490,65 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         @Override
         public Font getFont() {
             return font;
+        }
+    }
+
+    public class DarkButtonLayout implements LayoutManager {
+
+        @Override
+        public void addLayoutComponent(final String name, final Component comp) {}
+
+        @Override
+        public void removeLayoutComponent(final Component comp) {}
+
+        @Override
+        public Dimension preferredLayoutSize(final Container parent) {
+            // Still managed by BasicButtonUI#getPreferredSize
+            return null;
+        }
+
+        @Override
+        public Dimension minimumLayoutSize(final Container parent) {
+            // Still managed by BasicButtonUI#getMinimumSize
+            return null;
+        }
+
+        @Override
+        public void layoutContainer(final Container parent) {
+            AbstractButton b = (AbstractButton) parent;
+            prepareDelegate(b);
+            FontMetrics fm = b.getFontMetrics(layoutDelegate.getFont());
+            displayText = layout(layoutDelegate, b, fm, b.getWidth(), b.getHeight());
+        }
+
+        protected String layout(final AbstractButtonLayoutDelegate bl, final AbstractButton b, final FontMetrics fm,
+                final int width, final int height) {
+            prepareContentRects(b, width, height);
+            // layout the text and icon
+            return SwingUtilities.layoutCompoundLabel(bl, fm, bl.getText(), bl.getIcon(), bl.getVerticalAlignment(),
+                    bl.getHorizontalAlignment(), bl.getVerticalTextPosition(), bl.getHorizontalTextPosition(), viewRect,
+                    iconRect, textRect,
+                    bl.getText() == null || ButtonConstants.isIconOnly(b) ? 0 : bl.getIconTextGap());
+        }
+
+        protected void prepareContentRects(final AbstractButton b, final int width, final int height) {
+            Insets i = DarkUIUtil.addInsets(b.getInsets(), b.getMargin());
+
+            AlignmentExt corner = DarkButtonBorder.getCornerFlag(b);
+            if (corner != null) {
+                Insets insetMask = new Insets(borderSize, borderSize, borderSize, borderSize);
+                insetMask = corner.maskInsetsInverted(insetMask, 0);
+                i.left -= insetMask.left;
+                i.right -= insetMask.right;
+                i.top -= insetMask.top;
+                i.bottom -= insetMask.bottom;
+            }
+
+            viewRect.setRect(0, 0, width, height);
+            DarkUIUtil.applyInsets(viewRect, i);
+
+            textRect.x = textRect.y = textRect.width = textRect.height = 0;
+            iconRect.x = iconRect.y = iconRect.width = iconRect.height = 0;
         }
     }
 }
