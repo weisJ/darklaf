@@ -27,7 +27,6 @@ import javax.swing.*;
 import javax.swing.plaf.DimensionUIResource;
 import javax.swing.plaf.basic.BasicArrowButton;
 
-import com.github.weisj.darklaf.icons.UIAwareIcon;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 
 /** @author Jannis Weis */
@@ -41,18 +40,18 @@ public final class ArrowButton implements SwingConstants {
 
     public static JButton createUpDownArrow(final JComponent parent, final int orientation, final boolean center,
             final boolean applyInsetsOnSize, final Insets insets) {
-        UIAwareIcon icon;
+        Icon icon;
         switch (orientation) {
             case NORTH:
-                icon = (UIAwareIcon) UIManager.getIcon("ArrowButton.up.icon");
+                icon = UIManager.getIcon("ArrowButton.up.icon");
                 break;
             case SOUTH:
-                icon = (UIAwareIcon) UIManager.getIcon("ArrowButton.down.icon");
+                icon = UIManager.getIcon("ArrowButton.down.icon");
                 break;
             default:
                 throw new IllegalStateException("Invalid button orientation: " + orientation);
         }
-        return createUpDownArrow(parent, icon, icon.getDual(), orientation, center, applyInsetsOnSize, insets);
+        return createUpDownArrow(parent, icon, icon, orientation, center, applyInsetsOnSize, insets);
     }
 
     public static JButton createUpDownArrow(final JComponent parent, final Icon activeIcon, final Icon inactiveIcon,
@@ -61,15 +60,22 @@ public final class ArrowButton implements SwingConstants {
             private final Insets ins = insets != null ? insets : new Insets(0, 0, 0, 0);
             {
                 putClientProperty(DarkButtonUI.KEY_NO_BORDERLESS_OVERWRITE, true);
+                setMargin(new Insets(0, 0, 0, 0));
             }
 
             @Override
             public void paint(final Graphics g) {
-                int x = (getWidth() - getIcon().getIconWidth()) / 2;
-                int y = direction == NORTH ? getHeight() - getIcon().getIconHeight() + 4 : -4;
+                Insets margin = getMargin();
+                int w = getWidth() - margin.left - margin.right;
+                int h = getHeight() - margin.top - margin.bottom;
+                int x = margin.left + (w - getIcon().getIconWidth()) / 2;
+                int y;
                 if (center) {
-                    y = (getHeight() - getIcon().getIconHeight()) / 2;
+                    y = (h - getIcon().getIconHeight()) / 2;
+                } else {
+                    y = direction == NORTH ? h - getIcon().getIconHeight() + 4 : -4;
                 }
+                y += margin.top;
                 paintTriangle(g, x, y, 0, direction, parent.isEnabled());
             }
 
@@ -82,8 +88,9 @@ public final class ArrowButton implements SwingConstants {
                 if (!applyInsetsOnSize) {
                     return new DimensionUIResource(getIcon().getIconWidth(), getIcon().getIconHeight());
                 } else {
-                    return new DimensionUIResource(getIcon().getIconWidth() + ins.left + ins.right,
-                            getIcon().getIconHeight() + ins.top + ins.bottom);
+                    Insets i = getInsets();
+                    return new DimensionUIResource(getIcon().getIconWidth() + i.left + i.right,
+                            getIcon().getIconHeight() + i.top + i.bottom);
                 }
             }
 
