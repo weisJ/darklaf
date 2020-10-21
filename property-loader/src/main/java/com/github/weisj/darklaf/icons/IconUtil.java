@@ -102,4 +102,16 @@ public class IconUtil {
             return image;
         }
     }
+
+    public static Icon createDerivedIcon(final Icon icon, final int w, final int h) {
+        int iconWidth = icon.getIconWidth();
+        int iconHeight = icon.getIconHeight();
+        if (iconHeight == h && iconWidth == w) return icon;
+        if (icon instanceof DerivableIcon<?>) {
+            return ((DerivableIcon<?>) icon).derive(w, h);
+        } else {
+            return new DerivableImageIcon(
+                    IconUtil.createScaledImage(icon, iconWidth / (double) w, iconHeight / (double) h));
+        }
+    }
 }

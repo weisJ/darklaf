@@ -383,6 +383,20 @@ public final class IconLoader {
         return IconUtil.createFrameIcon(icon, window);
     }
 
+    /**
+     * Create an derived version of the icon with the given width and height. This method will return
+     * the best possible result if the given icon implements {@link DerivableIcon} or
+     * {@link ImageSource}.
+     *
+     * @param icon the icon to drive.
+     * @param w the new width.
+     * @param h the new height.
+     * @return the derived icon.
+     */
+    public static Icon createDerivedIcon(final Icon icon, final int w, final int h) {
+        return IconUtil.createDerivedIcon(icon, w, h);
+    }
+
     protected URL getResource(final String name) {
         if (parentClass != null) {
             return parentClass.getResource(name);
