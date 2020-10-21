@@ -37,6 +37,14 @@ public class ToggleIcon implements Icon {
         this.inactiveIcon = inactive;
     }
 
+    public void setChooseAlternativeIcon(final boolean chooseAlternative) {
+        setActive(!chooseAlternative);
+    }
+
+    public boolean isChooseAlternativeIcon() {
+        return !isActive();
+    }
+
     public void setActive(final boolean active) {
         this.active = active;
     }
