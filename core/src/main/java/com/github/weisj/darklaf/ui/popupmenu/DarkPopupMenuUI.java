@@ -44,6 +44,7 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 public class DarkPopupMenuUI extends BasicPopupMenuUI {
 
     public static final String KEY_DO_NOT_CANCEL_POPUP = "doNotCancelPopup";
+    public static final String KEY_CONSUME_EVENT_ON_CLOSE = "consumeEventOnClose";
     public static final String KEY_DO_NOT_CANCEL_ON_SCROLL = "doNotCancelOnScroll";
     public static final String HIDE_POPUP_VALUE = "doNotCancelPopup";
     public static final String KEY_DEFAULT_LIGHTWEIGHT_POPUPS = "PopupMenu.defaultLightWeightPopups";

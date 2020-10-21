@@ -30,9 +30,9 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicComboPopup;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.ui.WidgetPopupHelper;
 import com.github.weisj.darklaf.ui.list.DarkListUI;
 import com.github.weisj.darklaf.ui.scrollpane.DarkScrollBarUI;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /** @author Jannis Weis */
 public class DarkComboPopup extends BasicComboPopup {
@@ -47,8 +47,6 @@ public class DarkComboPopup extends BasicComboPopup {
             }
         }
     };
-    private final int borderSize;
-    private double lastEvent;
     private boolean visible = false;
     private OverlayScrollPane overlayScrollPane;
 
@@ -56,11 +54,9 @@ public class DarkComboPopup extends BasicComboPopup {
      * Constructs a new instance of {@code BasicComboPopup}.
      *
      * @param combo an instance of {@code JComboBox}
-     * @param borderSize the size of the border
      */
-    public DarkComboPopup(final JComboBox<Object> combo, final int borderSize) {
+    public DarkComboPopup(final JComboBox<Object> combo) {
         super(combo);
-        this.borderSize = borderSize;
     }
 
     @Override
@@ -83,7 +79,6 @@ public class DarkComboPopup extends BasicComboPopup {
 
     @Override
     protected void firePopupMenuWillBecomeInvisible() {
-        lastEvent = System.currentTimeMillis();
         visible = false;
         overlayScrollPane.getVerticalScrollBar().removeAdjustmentListener(adjustmentListener);
         super.firePopupMenuWillBecomeInvisible();
@@ -138,15 +133,9 @@ public class DarkComboPopup extends BasicComboPopup {
     }
 
     protected Point getPopupLocation() {
-        Dimension popupSize = comboBox.getSize();
-        Insets insets = getInsets();
-
-        // reduce the width of the scrollpane by the insets so that the popup
-        // is the same width as the combo box.
-        popupSize.setSize(popupSize.width - (insets.right + insets.left),
-                getPopupHeightForRowCount(comboBox.getMaximumRowCount()));
-        Rectangle popupBounds = computePopupBounds(borderSize, comboBox.getBounds().height - borderSize,
-                popupSize.width - 2 * borderSize, popupSize.height);
+        Dimension dim = getPreferredSize();
+        dim.height = getPopupHeightForRowCount(comboBox.getMaximumRowCount());
+        Rectangle popupBounds = WidgetPopupHelper.getPopupBounds(comboBox, this, dim);
         Dimension scrollSize = popupBounds.getSize();
         Point popupLocation = popupBounds.getLocation();
 
@@ -159,39 +148,19 @@ public class DarkComboPopup extends BasicComboPopup {
         return popupLocation;
     }
 
-    protected Rectangle computePopupBounds(final int px, final int py, final int pw, final int ph) {
-        Rectangle screenBounds = DarkUIUtil.getScreenBounds(comboBox, null);
-
-        Point pos = comboBox.getLocationOnScreen();
-
-        Rectangle rect = new Rectangle(px, py, pw, ph);
-        if (pos.y + py + ph > screenBounds.y + screenBounds.height) {
-            if (pos.y - ph - borderSize >= screenBounds.y) {
-                // popup goes above
-                rect.y = -ph + borderSize;
-            } else {
-                // a full screen height popup
-                rect.y = screenBounds.y + Math.max(0, (screenBounds.height - ph) / 2) - pos.y;
-                rect.height = Math.min(screenBounds.height, ph);
-            }
-        }
-        return rect;
-    }
-
     @Override
     protected void togglePopup() {
         if (comboBox.getItemCount() == 0) return;
         if (visible) {
             visible = false;
             hide();
-        } else if (lastEvent == 0 || (System.currentTimeMillis() - lastEvent) > 250) {
+        } else {
             visible = true;
-            SwingUtilities.invokeLater(this::show);
+            show();
         }
     }
 
     protected void reset() {
-        lastEvent = 0;
         if (visible) {
             hide();
         }

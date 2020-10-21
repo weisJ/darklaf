@@ -178,7 +178,11 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
                     // popup. This made to match native apps behaviour.
                     boolean consumeEvent = UIManager.getBoolean("PopupMenu.consumeEventOnClose");
                     // Consume the event so that normal processing stops.
-                    if (consumeEvent && !(src instanceof MenuElement)) {
+                    /*
+                     * Changed here: Enable event consumption for specific sources through client property.
+                     */
+                    if ((consumeEvent && !(src instanceof MenuElement)
+                            || PropertyUtil.getBooleanProperty(src, DarkPopupMenuUI.KEY_CONSUME_EVENT_ON_CLOSE))) {
                         me.consume();
                     }
                 }

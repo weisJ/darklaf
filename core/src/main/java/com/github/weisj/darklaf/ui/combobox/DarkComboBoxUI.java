@@ -39,6 +39,7 @@ import javax.swing.text.JTextComponent;
 import com.github.weisj.darklaf.components.ArrowButton;
 import com.github.weisj.darklaf.ui.DividedWidgetPainter;
 import com.github.weisj.darklaf.ui.list.DarkDefaultListCellRenderer;
+import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
@@ -79,6 +80,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
     protected void installDefaults() {
         super.installDefaults();
         LookAndFeel.installProperty(comboBox, PropertyKey.OPAQUE, false);
+        comboBox.putClientProperty(DarkPopupMenuUI.KEY_CONSUME_EVENT_ON_CLOSE, true);
         installBorder(comboBox);
         arcSize = UIManager.getInt("ComboBox.arc");
         borderSize = UIManager.getInt("ComboBox.borderThickness");
@@ -146,7 +148,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
 
     @Override
     protected ComboPopup createPopup() {
-        return new DarkComboPopup(comboBox, borderSize);
+        return new DarkComboPopup(comboBox);
     }
 
     @Override
@@ -205,6 +207,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
                 UIManager.getIcon("ComboBox.arrowInactive.icon"), SwingConstants.SOUTH, true, false, buttonPad);
         button.setBorder(BorderFactory.createEmptyBorder());
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        button.putClientProperty(DarkPopupMenuUI.KEY_CONSUME_EVENT_ON_CLOSE, true);
         return button;
     }
 
