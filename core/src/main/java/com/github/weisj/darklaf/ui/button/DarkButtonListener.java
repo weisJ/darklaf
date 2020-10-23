@@ -21,7 +21,6 @@
  */
 package com.github.weisj.darklaf.ui.button;
 
-import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
@@ -29,11 +28,11 @@ import java.beans.PropertyChangeEvent;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonListener;
 
-public class DarkButtonListener extends BasicButtonListener {
+public class DarkButtonListener<T extends DarkButtonUI> extends BasicButtonListener {
 
-    private final DarkButtonUI ui;
+    protected final T ui;
 
-    public DarkButtonListener(final AbstractButton b, final DarkButtonUI ui) {
+    public DarkButtonListener(final AbstractButton b, final T ui) {
         super(b);
         this.ui = ui;
     }

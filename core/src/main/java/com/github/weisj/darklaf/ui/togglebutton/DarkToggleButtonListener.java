@@ -24,15 +24,27 @@ package com.github.weisj.darklaf.ui.togglebutton;
 import java.beans.PropertyChangeEvent;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
 
+import com.github.weisj.darklaf.graphics.Animator;
 import com.github.weisj.darklaf.ui.button.DarkButtonListener;
-import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.util.PropertyKey;
 
-public class DarkToggleButtonListener extends DarkButtonListener implements ToggleButtonConstants {
+public class DarkToggleButtonListener extends DarkButtonListener<DarkToggleButtonUI> implements ToggleButtonConstants {
 
-    public DarkToggleButtonListener(final AbstractButton b, final DarkButtonUI ui) {
+    private final SliderAnimator animator;
+    private final AbstractButton button;
+    private boolean selected;
+
+    public DarkToggleButtonListener(final AbstractButton b, final DarkToggleButtonUI ui) {
         super(b, ui);
+        this.selected = b.isSelected();
+        button = b;
+        animator = new SliderAnimator(b);
+    }
+
+    public float getAnimationState() {
+        return animator.getState();
     }
 
     @Override
@@ -47,9 +59,65 @@ public class DarkToggleButtonListener extends DarkButtonListener implements Togg
                 return;
             }
             b.setBorderPainted(!VARIANT_SLIDER.equals(newVal));
+            ui.updateMargins(b);
         } else if (PropertyKey.COMPONENT_ORIENTATION.equals(key)) {
             b.doLayout();
             b.repaint();
+        }
+    }
+
+    @Override
+    public void stateChanged(final ChangeEvent e) {
+        super.stateChanged(e);
+        boolean sel = button.isSelected();
+        if (sel != selected) {
+            selected = sel;
+            int startFrame = 0;
+            if (animator.isRunning()) {
+                startFrame = animator.getCurrentFrame();
+            }
+            animator.suspend();
+            animator.setForward(sel);
+            animator.setEndValue(sel ? 1 : 0);
+            animator.resume(startFrame);
+        }
+    }
+
+    protected static class SliderAnimator extends Animator {
+
+        private final JComponent c;
+        private float state;
+        private float endValue;
+
+        public SliderAnimator(final JComponent c) {
+            super(10, 100, 0);
+            this.c = c;
+        }
+
+        public float getState() {
+            return state;
+        }
+
+        @Override
+        public void paintNow(final float fraction) {
+            this.state = fraction;
+            repaint();
+        }
+
+        @Override
+        protected void paintCycleEnd() {
+            this.state = endValue;
+            repaint();
+        }
+
+        private void repaint() {
+            if (c != null) {
+                c.paintImmediately(c.getVisibleRect());
+            }
+        }
+
+        public void setEndValue(final float endValue) {
+            this.endValue = endValue;
         }
     }
 }

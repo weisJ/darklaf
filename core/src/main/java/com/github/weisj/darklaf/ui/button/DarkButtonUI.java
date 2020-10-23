@@ -150,7 +150,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
 
     @Override
     protected BasicButtonListener createButtonListener(final AbstractButton b) {
-        return new DarkButtonListener(b, this);
+        return new DarkButtonListener<>(b, this);
     }
 
     @Override
@@ -366,15 +366,19 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         return ButtonConstants.chooseArcWithBorder(c, arc, 0, altArc, borderSize);
     }
 
-    protected Color getForeground(final AbstractButton button) {
-        Color fg = button.getForeground();
-        if (fg instanceof UIResource && isDefaultButton && !ButtonConstants.isBorderlessVariant(button)) {
+    protected Color getForeground(final AbstractButton b) {
+        return getForegroundColor(b, isDefaultButton, b.getModel().isEnabled());
+    }
+
+    protected Color getForegroundColor(final AbstractButton b, final boolean defaultButton, final boolean enabled) {
+        Color fg = b.getForeground();
+        if (defaultButton && !ButtonConstants.isBorderlessVariant(b)) {
             fg = defaultForeground;
         }
-        if (fg instanceof UIResource && !button.getModel().isEnabled()) {
+        if (!enabled) {
             fg = inactiveForeground;
         }
-        return fg;
+        return PropertyUtil.chooseColor(b.getForeground(), fg);
     }
 
     protected Color getBackgroundColor(final AbstractButton b) {
@@ -450,14 +454,14 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         }
     }
 
-    protected void updateMargins(final AbstractButton b) {
+    public void updateMargins(final AbstractButton b) {
         Insets margin = b.getMargin();
         if (margin != null && !(margin instanceof UIResource)) return;
         Insets m = getMargins(b);
         b.setMargin(new InsetsUIResource(m.top, m.left, m.bottom, m.right));
     }
 
-    private Insets getMargins(final AbstractButton b) {
+    protected Insets getMargins(final AbstractButton b) {
         if (ButtonConstants.isBorderlessRectangular(b)) return borderlessRectangularInsets;
         boolean square = ButtonConstants.isSquare(b);
         return ButtonConstants.isThin(b) ? square ? squareThinInsets : thinInsets : square ? squareInsets : insets;
@@ -524,11 +528,30 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         protected String layout(final AbstractButtonLayoutDelegate bl, final AbstractButton b, final FontMetrics fm,
                 final int width, final int height) {
             prepareContentRects(b, width, height);
+            int horizontalAlignment = getHorizontalAlignment(b);
+            int verticalAlignment = getHorizontalAlignment(b);
+            int verticalTextPosition = getVerticalTextPosition(b);
+            int horizontalTextPosition = getHorizontalTextPosition(b);
             // layout the text and icon
-            return SwingUtilities.layoutCompoundLabel(bl, fm, bl.getText(), bl.getIcon(), bl.getVerticalAlignment(),
-                    bl.getHorizontalAlignment(), bl.getVerticalTextPosition(), bl.getHorizontalTextPosition(), viewRect,
-                    iconRect, textRect,
+            return SwingUtilities.layoutCompoundLabel(bl, fm, bl.getText(), bl.getIcon(), verticalAlignment,
+                    horizontalAlignment, verticalTextPosition, horizontalTextPosition, viewRect, iconRect, textRect,
                     bl.getText() == null || ButtonConstants.isIconOnly(b) ? 0 : bl.getIconTextGap());
+        }
+
+        protected int getHorizontalTextPosition(final AbstractButton b) {
+            return b.getHorizontalTextPosition();
+        }
+
+        protected int getHorizontalAlignment(final AbstractButton b) {
+            return b.getHorizontalAlignment();
+        }
+
+        protected int getVerticalTextPosition(final AbstractButton b) {
+            return b.getVerticalTextPosition();
+        }
+
+        protected int getVerticalAlignment(final AbstractButton b) {
+            return b.getVerticalAlignment();
         }
 
         protected void prepareContentRects(final AbstractButton b, final int width, final int height) {

@@ -35,9 +35,10 @@ public abstract class Animator {
 
     private final int totalFrames;
     private final int cycleDuration;
-    private final boolean forward;
     private final boolean repeatable;
     private final int delayFrames;
+
+    private boolean forward;
 
     private final Interpolator interpolator;
 
@@ -78,13 +79,16 @@ public abstract class Animator {
         reset();
     }
 
-    private void resetTime() {
+    public void setForward(final boolean forward) {
+        this.forward = forward;
+    }
+
+    public void resetTime() {
         startTime = -1;
     }
 
     public void reset() {
         currentFrame %= totalFrames;
-        if (!forward) currentFrame = totalFrames - currentFrame;
     }
 
     private static ScheduledExecutorService createScheduler() {
@@ -105,7 +109,7 @@ public abstract class Animator {
         stopTicker();
     }
 
-    private void stopTicker() {
+    public void stopTicker() {
         if (ticker != null) {
             ticker.cancel(false);
             ticker = null;
@@ -207,7 +211,7 @@ public abstract class Animator {
         return currentFrame;
     }
 
-    public float getTotalFrames() {
+    public int getTotalFrames() {
         return totalFrames;
     }
 }

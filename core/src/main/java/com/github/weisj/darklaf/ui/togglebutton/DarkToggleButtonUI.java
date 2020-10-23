@@ -28,21 +28,18 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicButtonListener;
 
-import sun.swing.SwingUtilities2;
-
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.button.ButtonConstants;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
-import com.github.weisj.darklaf.util.PropertyUtil;
 
 /** @author Jannis Weis */
 public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonConstants {
 
-    private static final Rectangle rect = new Rectangle();
+    protected boolean showSliderHints;
     protected Dimension sliderSize;
-    protected Color background;
+    protected Color selectedBackground;
     protected Color backgroundInactive;
     protected Color focusBorderColor;
     protected Color borderColor;
@@ -52,6 +49,7 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
     protected Color sliderBorderColor;
     protected Color inactiveSliderBorderColor;
     protected Color selectedForeground;
+    protected DarkToggleButtonListener toggleButtonListener;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkToggleButtonUI();
@@ -59,39 +57,62 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
 
     @Override
     protected void installDefaults(final AbstractButton b) {
-        super.installDefaults(b);
         sliderSize = UIManager.getDimension("ToggleButton.sliderSize");
-        background = UIManager.getColor("ToggleButton.activeFillColor");
+
+        selectedBackground = UIManager.getColor("ToggleButton.activeFillColor");
         backgroundInactive = UIManager.getColor("ToggleButton.inactiveFillColor");
         focusBorderColor = UIManager.getColor("ToggleButton.focusedSliderBorderColor");
         borderColor = UIManager.getColor("ToggleButton.sliderBorderColor");
         inactiveBorderColor = UIManager.getColor("ToggleButton.disabledSliderBorderColor");
+
         sliderColor = UIManager.getColor("ToggleButton.sliderKnobFillColor");
         inactiveSliderColor = UIManager.getColor("ToggleButton.disabledSliderKnobFillColor");
         sliderBorderColor = UIManager.getColor("ToggleButton.sliderKnobBorderColor");
         inactiveSliderBorderColor = UIManager.getColor("ToggleButton.disabledSliderKnobBorderColor");
         selectedForeground = UIManager.getColor("ToggleButton.selectedForeground");
+        showSliderHints = UIManager.getBoolean("ToggleButton.showSliderHints");
+
+        super.installDefaults(b);
+    }
+
+    @Override
+    protected LayoutManager createLayout() {
+        return new DarkToggleButtonLayout();
     }
 
     @Override
     protected BasicButtonListener createButtonListener(final AbstractButton b) {
-        return new DarkToggleButtonListener(b, this);
+        if (toggleButtonListener == null) {
+            toggleButtonListener = new DarkToggleButtonListener(b, this);
+        }
+        return toggleButtonListener;
     }
 
     @Override
     public void paint(final Graphics g, final JComponent c) {
         if (ToggleButtonConstants.isSlider(c)) {
             GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
-            AbstractButton b = (AbstractButton) c;
-            String text = layoutSlider(b, SwingUtilities2.getFontMetrics(b, g), b.getWidth(), b.getHeight());
-            paintSlider((Graphics2D) g, b);
-            paintIcon(g, b, c);
+            paintSlider((Graphics2D) g, (AbstractButton) c);
             config.restoreClip();
-            paintText(g, b, text);
-            config.restore();
-        } else {
-            super.paint(g, c);
         }
+        super.paint(g, c);
+    }
+
+    @Override
+    protected boolean shouldDrawBackground(final AbstractButton c) {
+        return super.shouldDrawBackground(c) && !ToggleButtonConstants.isSlider(c);
+    }
+
+    @Override
+    protected Insets getMargins(final AbstractButton b) {
+        if (ToggleButtonConstants.isSlider(b)) {
+            boolean ltr = b.getComponentOrientation().isLeftToRight();
+            int extra = 2 * borderSize + getSliderBounds(b).width;
+            int left = ltr ? extra : 0;
+            int right = !ltr ? extra : 0;
+            return new Insets(0, left, 0, right);
+        }
+        return super.getMargins(b);
     }
 
     private void paintSlider(final Graphics2D g, final AbstractButton c) {
@@ -105,55 +126,92 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
             g.translate(borderSize, borderSize);
         }
 
-        g.setColor(c.getBackground());
-        PaintUtil.fillRoundRect(g, 0, 0, bounds.width, bounds.height, bounds.height);
-        g.setColor(getToggleBorderColor(c));
-        PaintUtil.paintLineBorder(g, 0, 0, bounds.width, bounds.height, bounds.height);
+        int bw = 1;
+        int knobSize = bounds.height;
+        int arc = Math.min(bounds.width, bounds.height);
 
-        int size = bounds.height - 2;
-        if (c.isSelected()) {
-            g.setColor(getSliderColor(c));
-            PaintUtil.fillRoundRect(g, bounds.width - size - 1, 1, size, size, size);
-            g.setColor(getSliderBorderColor(c));
-            PaintUtil.paintLineBorder(g, bounds.width - size - 1, 1, size, size, size);
-        } else {
-            g.setColor(getSliderColor(c));
-            PaintUtil.fillRoundRect(g, 1, 1, size, size, size);
-            g.setColor(getSliderBorderColor(c));
-            PaintUtil.paintLineBorder(g, 1, 1, size, size, size);
+        Rectangle knobBounds = new Rectangle(0, 0, knobSize, knobSize);
+        knobBounds.x = (int) ((bounds.width - knobBounds.width) * toggleButtonListener.getAnimationState());
+
+        boolean rollOver = c.isRolloverEnabled() && c.getModel().isRollover();
+        boolean clicked = c.getModel().isArmed();
+        boolean enabled = c.isEnabled();
+        Color selectedBg = getBackgroundColor(c, false, rollOver, clicked, enabled, true);
+        Color deselectedBg = getBackgroundColor(c, false, rollOver, clicked, enabled, false);
+
+        Shape clip = g.getClip();
+        g.clipRect(0, 0, knobBounds.x + knobBounds.width / 2, bounds.height);
+        g.setColor(selectedBg);
+        PaintUtil.fillRoundRect(g, 0, 0, bounds.width, bounds.height, arc);
+        g.setClip(clip);
+
+        g.clipRect(knobBounds.x + knobBounds.width / 2, 0, bounds.width - knobBounds.width / 2, bounds.height);
+        g.setColor(deselectedBg);
+        PaintUtil.fillRoundRect(g, 0, 0, bounds.width, bounds.height, arc);
+        g.setClip(clip);
+
+        g.setColor(getToggleBorderColor(c));
+        PaintUtil.paintLineBorder(g, 0, 0, bounds.width, bounds.height, arc);
+
+        knobBounds.x += bw;
+        knobBounds.y += bw;
+        knobBounds.width -= 2 * bw;
+        knobBounds.height -= 2 * bw;
+        knobSize -= 2 * bw;
+
+        if (showSliderHints) {
+            paintSliderHints(g, c, bounds, bw, knobSize);
         }
+
+        paintSliderKnob(g, c, knobBounds);
+
         g.translate(-bounds.x, -bounds.y);
     }
 
-    @Override
-    protected Color getForeground(final AbstractButton button) {
-        if (button.isSelected() && button.isEnabled() && button.getForeground() instanceof UIResource
-                && !ToggleButtonConstants.isSlider(button) && !ButtonConstants.isBorderlessVariant(button)) {
-            return selectedForeground;
+    protected void paintSliderHints(final Graphics2D g, final AbstractButton c, final Rectangle bounds, final int bw,
+            final int knobSize) {
+        int pad = 5;
+        int w = bounds.width - knobSize - 2 * bw - 2 * pad;
+        int y = (bounds.height - w) / 2;
+        if (c.isSelected()) {
+            int x = bw + pad;
+            g.setColor(selectedForeground);
+            g.fillRect(x + (w - 1) / 2, y, 1, w);
+        } else {
+            int x = bw + knobSize + pad;
+            g.setColor(getForegroundColor(c, false, false));
+            PaintUtil.paintLineBorder(g, x, y, w, w, w);
         }
-        return super.getForeground(button);
     }
 
-    protected Color getBackgroundColor(final AbstractButton b) {
-        boolean rollOver = b.isRolloverEnabled() && b.getModel().isRollover();
-        boolean clicked = b.getModel().isArmed();
-        boolean isSelected = b.isSelected();
-        if (b.isEnabled()) {
-            if (isSelected) return PropertyUtil.chooseColor(b.getBackground(), background);
-            if (clicked) {
-                return clickBackground;
-            } else if (rollOver) {
-                return hoverBackground;
-            } else {
-                if (b instanceof JToggleButton) {
-                    return backgroundInactive;
-                } else {
-                    return super.getBackgroundColor(b);
-                }
-            }
-        } else {
-            return inactiveBackground;
+    protected void paintSliderKnob(final Graphics2D g, final AbstractButton c, final Rectangle bound) {
+        g.setColor(getSliderColor(c));
+        PaintUtil.fillRoundRect(g, bound.x, bound.y, bound.width, bound.height, bound.height);
+        g.setColor(getSliderBorderColor(c));
+        PaintUtil.paintLineBorder(g, bound.x, bound.y, bound.width, bound.height, bound.height);
+    }
+
+
+    @Override
+    protected Color getForegroundColor(final AbstractButton b, final boolean defaultButton, final boolean enabled) {
+        if (b.isSelected() && enabled && b.getForeground() instanceof UIResource && !ToggleButtonConstants.isSlider(b)
+                && !ButtonConstants.isBorderlessVariant(b)) {
+            return selectedForeground;
         }
+        return super.getForegroundColor(b, defaultButton, enabled);
+    }
+
+    @Override
+    protected Color getBackgroundColor(final AbstractButton b, final boolean defaultButton, final boolean rollOver,
+            final boolean clicked, final boolean enabled) {
+        return getBackgroundColor(b, defaultButton, rollOver, clicked, enabled, b.getModel().isSelected());
+    }
+
+    protected Color getBackgroundColor(final AbstractButton b, final boolean defaultButton, final boolean rollOver,
+            final boolean clicked, final boolean enabled, final boolean selected) {
+        if (!enabled) return backgroundInactive;
+        if (selected) return selectedBackground;
+        return super.getBackgroundColor(b, defaultButton, rollOver, clicked, true);
     }
 
     @Override
@@ -182,63 +240,44 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
     }
 
     protected Rectangle getSliderBounds(final JComponent c) {
+        Rectangle r = new Rectangle();
         Insets ins = c.getInsets();
         int x = ins.left;
         int height = c.getHeight() - ins.bottom - ins.top;
         int y = ins.top + (height - sliderSize.height) / 2;
-        rect.x = x;
-        rect.y = y;
-        rect.width = sliderSize.width;
-        rect.height = sliderSize.height;
+        r.x = x;
+        r.y = y;
+        r.width = sliderSize.width;
+        r.height = sliderSize.height;
         if (!c.getComponentOrientation().isLeftToRight()) {
-            rect.x = c.getWidth() - ins.right - rect.x - rect.width;
+            r.x = c.getWidth() - ins.right - r.x - r.width;
         }
-        return rect;
-    }
-
-    private String layoutSlider(final AbstractButton b, final FontMetrics fm, final int width, final int height) {
-        Insets i = b.getInsets();
-        Rectangle bounds = getSliderBounds(b);
-
-        int arc = Math.min(bounds.width, bounds.height);
-        hitArea.setRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, arc, arc);
-
-        viewRect.x = bounds.x + bounds.width + 2 * borderSize;
-        viewRect.width = width - (i.right + viewRect.x);
-        viewRect.y = i.top;
-        viewRect.height = height - (i.bottom + viewRect.y);
-
-        int horizontalPos = SwingConstants.LEFT;
-
-        if (!b.getComponentOrientation().isLeftToRight()) {
-            viewRect.x = bounds.x - viewRect.width - borderSize;
-            horizontalPos = SwingConstants.RIGHT;
-        }
-
-        textRect.x = textRect.y = textRect.width = textRect.height = 0;
-        iconRect.x = iconRect.y = iconRect.width = iconRect.height = 0;
-
-        // layout the text and icon
-        return SwingUtilities.layoutCompoundLabel(b, fm, b.getText(), b.getIcon(), b.getVerticalAlignment(),
-                horizontalPos, b.getVerticalTextPosition(), b.getHorizontalTextPosition(), viewRect, iconRect, textRect,
-                b.getText() == null ? 0 : b.getIconTextGap());
-    }
-
-    public Dimension getPreferredSize(final JComponent c) {
-        Dimension d = super.getPreferredSize(c);
-        if (ToggleButtonConstants.isSlider(c)) {
-            d.width += sliderSize.width + 2 * borderSize;
-        }
-        return d;
+        return r;
     }
 
     @Override
     public boolean contains(final JComponent c, final int x, final int y) {
         if (!ToggleButtonConstants.isSlider(c)) return super.contains(c, x, y);
-        if ((hitArea.isEmpty()) && c instanceof JToggleButton) {
-            JToggleButton b = (JToggleButton) c;
-            layoutSlider(b, b.getFontMetrics(layoutDelegate.getFont()), b.getWidth(), b.getHeight());
+        if (c instanceof JToggleButton) {
+            Rectangle bounds = getSliderBounds(c);
+            int arc = Math.min(bounds.width, bounds.height);
+            hitArea.setRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, arc, arc);
         }
         return hitArea.contains(x, y);
+    }
+
+    protected class DarkToggleButtonLayout extends DarkButtonLayout {
+
+        @Override
+        protected int getHorizontalAlignment(final AbstractButton b) {
+            if (ToggleButtonConstants.isSlider(b)) {
+                int horizontalPos = SwingConstants.LEFT;
+                if (!b.getComponentOrientation().isLeftToRight()) {
+                    horizontalPos = SwingConstants.RIGHT;
+                }
+                return horizontalPos;
+            }
+            return super.getHorizontalAlignment(b);
+        }
     }
 }
