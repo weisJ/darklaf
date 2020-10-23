@@ -31,24 +31,13 @@ import javax.swing.table.TableCellEditor;
 
 import com.github.weisj.darklaf.delegate.TableCellEditorDelegate;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
-import com.github.weisj.darklaf.ui.cell.DarkCellRendererToggleButton;
 import com.github.weisj.darklaf.ui.spinner.DarkSpinnerUI;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.table.TableConstants;
-import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
 
     private static final IconWrapper iconWrapper = new IconWrapper();
-
-    private final JToggleButton editorCheckBox = new DarkCellRendererToggleButton.CellCheckBox(true);
-    private final DarkTableCellEditorToggleButton checkBoxEditor = new DarkTableCellEditorToggleButton(editorCheckBox);
-    private final JToggleButton editorRadioButton = new DarkCellRendererToggleButton.CellRadioButton(true);
-    private final DarkTableCellEditorToggleButton radioButtonEditor =
-            new DarkTableCellEditorToggleButton(editorRadioButton);
-
-    private boolean isBooleanEditor;
-    private TableCellEditor currentEditor;
 
     public DarkTableCellEditorDelegate() {
         super(new DarkMultiCellEditor());
@@ -59,14 +48,6 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
     }
 
     @Override
-    public Object getCellEditorValue() {
-        if (isBooleanEditor && currentEditor != null) {
-            return currentEditor.getCellEditorValue();
-        }
-        return super.getCellEditorValue();
-    }
-
-    @Override
     public boolean isCellEditable(final EventObject anEvent) {
         if (anEvent == null) return super.isCellEditable(null);
         JTable table = ((JTable) anEvent.getSource());
@@ -74,39 +55,45 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
             if (DarkTableUI.ignoreKeyCodeOnEdit((KeyEvent) anEvent, table)) return false;
         }
         if (TableConstants.isBooleanRenderingEnabled(table)) {
-            if (anEvent instanceof MouseEvent && isMouseOverBooleanRenderer((MouseEvent) anEvent, table)) {
-                return true;
+            if (anEvent instanceof MouseEvent) {
+                Point p = ((MouseEvent) anEvent).getPoint();
+                int row = table.rowAtPoint(p);
+                int col = table.columnAtPoint(p);
+                if (isValidIndex(table, row, col)) {
+                    Object value = table.getValueAt(row, col);
+                    if (TableConstants.useBooleanEditorForValue(value, table, col, false)) {
+                        return insideBooleanRenderer(table, row, col, p);
+                    }
+                }
             }
         }
         return super.isCellEditable(anEvent);
     }
 
-    private boolean isMouseOverBooleanRenderer(final MouseEvent anEvent, final JTable table) {
-        Point p = anEvent.getPoint();
-        int row = table.rowAtPoint(p);
-        int col = table.columnAtPoint(p);
-        if (row >= 0 && row < table.getRowCount() && col >= 0 && col < table.getColumnCount()) {
-            Object value = table.getValueAt(row, col);
-            if (TableConstants.useBooleanEditorForValue(value, table, col)) {
-                Rectangle rect = table.getCellRect(row, col, false);
-                p.x -= rect.x;
-                p.y -= rect.y;
-                JToggleButton editor =
-                        getBooleanEditor(table).getTableCellEditorComponent(table, true, false, row, col);
-                editor.setBounds(rect);
-                return editor.contains(p);
-            }
-        }
-        return false;
+    private boolean isValidIndex(final JTable table, final int row, final int col) {
+        return row >= 0 && row < table.getRowCount() && col >= 0 && col < table.getColumnCount();
+    }
+
+    private boolean insideBooleanRenderer(final JTable table, final int row, final int col, final Point p) {
+        Rectangle rect = table.getCellRect(row, col, false);
+        p.x -= rect.x;
+        p.y -= rect.y;
+        Component editor =
+                table.getCellRenderer(row, col).getTableCellRendererComponent(table, true, false, false, row, col);
+        editor.setBounds(rect);
+        return editor.contains(p);
     }
 
     @Override
     public Component getTableCellEditorComponent(final JTable table, final Object value, final boolean isSelected,
             final int row, final int column) {
-        isBooleanEditor = TableConstants.useBooleanEditorForValue(value, table, column);
-        currentEditor = isBooleanEditor ? getBooleanEditor(table) : getDelegate();
-
-        Component editor = currentEditor.getTableCellEditorComponent(table, value, isSelected, row, column);
+        if (TableConstants.useBooleanEditorForValue(value, table, column)) {
+            table.setValueAt(!(boolean) value, row, column);
+            table.repaint();
+            // returning null will stop cell editing immediately.
+            return null;
+        }
+        Component editor = getDelegate().getTableCellEditorComponent(table, value, isSelected, row, column);
         editor = prepareEditorComponent(editor, table, value, isSelected, row, column);
         return editor;
     }
@@ -160,23 +147,5 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
             }
         }
         return comp;
-    }
-
-    protected DarkTableCellEditorToggleButton getBooleanEditor(final JTable table) {
-        if (PropertyUtil.isPropertyEqual(table, DarkTableUI.KEY_BOOLEAN_RENDER_TYPE,
-                DarkTableUI.RENDER_TYPE_RADIOBUTTON)) {
-            return radioButtonEditor;
-        }
-        return checkBoxEditor;
-    }
-
-    @Override
-    public boolean stopCellEditing() {
-        return super.stopCellEditing();
-    }
-
-    @Override
-    public void cancelCellEditing() {
-        super.cancelCellEditing();
     }
 }
