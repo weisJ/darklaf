@@ -45,13 +45,15 @@ import com.github.weisj.darklaf.util.PropertyKey;
 /** @author Jannis Weis */
 public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyChangeListener, ToggleButtonConstants {
 
-    protected static final Rectangle viewRect = new Rectangle();
-    protected static final Rectangle iconRect = new Rectangle();
-    protected static final Rectangle textRect = new Rectangle();
-    protected static Dimension size = new Dimension();
+    protected final Rectangle viewRect = new Rectangle();
+    protected final Rectangle iconRect = new Rectangle();
+    protected final Rectangle textRect = new Rectangle();
+    protected Dimension size = new Dimension();
     protected RectangularShape hitArea;
     protected JToggleButton radioButton;
     protected int iconBaselineOffset;
+
+    protected String displayString;
 
     private Icon stateIcon;
     protected BasicButtonListener buttonListener;
@@ -74,6 +76,11 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
         iconBaselineOffset = UIManager.getInt(getPropertyPrefix() + "iconBaselineOffset");
         hitArea = new Rectangle();
         installIcons();
+        radioButton.setLayout(createLayout());
+    }
+
+    protected LayoutManager createLayout() {
+        return new DarkRadioButtonLayout();
     }
 
     protected void installIcons() {
@@ -100,6 +107,12 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
     }
 
     @Override
+    protected void uninstallDefaults(final AbstractButton b) {
+        super.uninstallDefaults(b);
+        radioButton.setLayout(null);
+    }
+
+    @Override
     protected void uninstallListeners(final AbstractButton button) {
         button.removeMouseListener(buttonListener);
         button.removeMouseMotionListener(buttonListener);
@@ -120,11 +133,9 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
         g.setFont(f);
         FontMetrics fm = SwingUtilities2.getFontMetrics(c, g, f);
 
-        String text = layout(b, fm);
-
         paintBackground(c, g);
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
-        Icon icon = getIconBullet(c, g, b);
+        Icon icon = getIconBullet(b);
         if (icon != null) {
             icon.paintIcon(c, g, iconRect.x, iconRect.y);
         } else {
@@ -134,8 +145,8 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
             }
         }
         config.restore();
-        if (text != null) {
-            paintText(g, b, textRect, text, fm, getDisabledTextColor());
+        if (displayString != null) {
+            paintText(g, b, textRect, displayString, fm, getDisabledTextColor());
         }
     }
 
@@ -157,7 +168,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
         return stateIcon;
     }
 
-    public static Icon getIconBullet(final JComponent c, final Graphics2D g, final AbstractButton b) {
+    public static Icon getIconBullet(final AbstractButton b) {
         ButtonModel model = b.getModel();
         Icon icon = b.getIcon();
         if (!model.isEnabled()) {
@@ -196,32 +207,6 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
         return getStateIcon(radioButton);
     }
 
-    protected String layout(final AbstractButton b, final FontMetrics fm) {
-        Insets i = b.getInsets();
-        size = b.getSize(size);
-        viewRect.x = i.left;
-        viewRect.y = i.top;
-        viewRect.width = size.width - (i.right + viewRect.x);
-        viewRect.height = size.height - (i.bottom + viewRect.y);
-        iconRect.x = iconRect.y = iconRect.width = iconRect.height = 0;
-        textRect.x = textRect.y = textRect.width = textRect.height = 0;
-
-        String text = SwingUtilities.layoutCompoundLabel(b, fm, b.getText(), getDefaultIcon(), b.getVerticalAlignment(),
-                b.getHorizontalAlignment(), b.getVerticalTextPosition(), b.getHorizontalTextPosition(), viewRect,
-                iconRect, textRect, b.getIconTextGap());
-        iconRect.y += iconBaselineOffset;
-        if (ToggleButtonConstants.isInCell(b)) {
-            hitArea = calculateHitArea();
-        } else {
-            int x = Math.min(iconRect.x, textRect.x);
-            int y = Math.min(iconRect.y, textRect.y);
-            int xEnd = Math.max(iconRect.x + iconRect.width, textRect.x + textRect.width);
-            int yEnd = Math.max(iconRect.y + iconRect.height, textRect.y + textRect.y);
-            hitArea = new Rectangle(x, y, xEnd - x, yEnd - y);
-        }
-        return text;
-    }
-
     protected RectangularShape calculateHitArea() {
         return new Ellipse2D.Float(Math.max(iconRect.x, 0), Math.max(iconRect.y, 0), iconRect.width, iconRect.height);
     }
@@ -229,7 +214,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
     @Override
     public boolean contains(final JComponent c, final int x, final int y) {
         if (hitArea == null || (hitArea.isEmpty()) && c instanceof JToggleButton) {
-            layout((JToggleButton) c, c.getFontMetrics(c.getFont()));
+            c.doLayout();
         }
         return hitArea.contains(x, y);
     }
@@ -255,6 +240,58 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
             }
         } else if (PropertyKey.BORDER.equals(key)) {
             hitArea.setFrame(0, 0, 0, 0);
+        }
+    }
+
+    protected class DarkRadioButtonLayout implements LayoutManager {
+
+        @Override
+        public void addLayoutComponent(final String name, final Component comp) {}
+
+        @Override
+        public void removeLayoutComponent(final Component comp) {}
+
+        @Override
+        public Dimension preferredLayoutSize(final Container parent) {
+            return null;
+        }
+
+        @Override
+        public Dimension minimumLayoutSize(final Container parent) {
+            return null;
+        }
+
+        @Override
+        public void layoutContainer(final Container parent) {
+            displayString = layout(radioButton, radioButton.getFontMetrics(radioButton.getFont()));
+        }
+
+        protected String layout(final AbstractButton b, final FontMetrics fm) {
+            Insets i = b.getInsets();
+            size = b.getSize(size);
+            viewRect.x = i.left;
+            viewRect.y = i.top;
+            viewRect.width = size.width - (i.right + viewRect.x);
+            viewRect.height = size.height - (i.bottom + viewRect.y);
+            iconRect.x = iconRect.y = iconRect.width = iconRect.height = 0;
+            textRect.x = textRect.y = textRect.width = textRect.height = 0;
+
+            Icon icon = getIconBullet(b);
+            if (icon == null) icon = getDefaultIcon();
+            String text = SwingUtilities.layoutCompoundLabel(b, fm, b.getText(), icon, b.getVerticalAlignment(),
+                    b.getHorizontalAlignment(), b.getVerticalTextPosition(), b.getHorizontalTextPosition(), viewRect,
+                    iconRect, textRect, b.getIconTextGap());
+            iconRect.y += iconBaselineOffset;
+            if (ToggleButtonConstants.isInCell(b)) {
+                hitArea = calculateHitArea();
+            } else {
+                int x = Math.min(iconRect.x, textRect.x);
+                int y = Math.min(iconRect.y, textRect.y);
+                int xEnd = Math.max(iconRect.x + iconRect.width, textRect.x + textRect.width);
+                int yEnd = Math.max(iconRect.y + iconRect.height, textRect.y + textRect.y);
+                hitArea = new Rectangle(x, y, xEnd - x, yEnd - y);
+            }
+            return text;
         }
     }
 }

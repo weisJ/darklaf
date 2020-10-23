@@ -63,6 +63,7 @@ public class TreeRendererComponent extends Container {
             } else {
                 renderComponent.setBounds(getWidth() - width - offset, 0, width, height);
             }
+            renderComponent.doLayout();
         }
     }
 
@@ -76,6 +77,7 @@ public class TreeRendererComponent extends Container {
     public Dimension getPreferredSize() {
         if (defaultRenderer != null) {
             Dimension pSize = renderComponent.getPreferredSize();
+
             pSize.width += getOffset() + PAD;
 
             Dimension rSize = defaultRenderer.getPreferredSize();
@@ -110,7 +112,12 @@ public class TreeRendererComponent extends Container {
                 icon.paintIcon(this, g, width - icon.getIconWidth(), yLoc);
             }
         }
-        if (renderComponent != null) renderComponent.paint(g);
+        if (renderComponent != null) {
+            Graphics gg = g.create();
+            gg.translate(getOffset(), 0);
+            renderComponent.paint(gg);
+            gg.dispose();
+        }
     }
 
     /** Calculate the y location for the icon. */

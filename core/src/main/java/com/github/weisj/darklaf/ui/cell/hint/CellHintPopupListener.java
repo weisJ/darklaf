@@ -231,8 +231,10 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
                     // Ensure heavy weight popup is at desired location.
                     SwingUtilities.invokeLater(() -> {
                         Window w = DarkUIUtil.getWindow(popupComponent);
-                        w.setBounds(bounds);
-                        WindowUtil.moveWindow(w, popupComponent, bounds.x, bounds.y);
+                        if (w != null) {
+                            w.setBounds(bounds);
+                            WindowUtil.moveWindow(w, popupComponent, bounds.x, bounds.y);
+                        }
                     });
                 }
             }

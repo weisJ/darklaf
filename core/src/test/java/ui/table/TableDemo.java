@@ -84,16 +84,16 @@ public class TableDemo implements ComponentDemo {
             public String getColumnName(final int column) {
                 return columns[column];
             }
+
+            @Override
+            public boolean isCellEditable(final int row, final int column) {
+                return editable.get();
+            }
         };
 
         JTable table = new JTable(model) {
             final TableCellEditor comboEditor = new DarkTableCellEditor(new JComboBox<>());
             final TableCellEditor spinnerEditor = new DarkTableCellEditor(new JSpinner());
-
-            @Override
-            public boolean isCellEditable(final int row, final int column) {
-                return editable.get() && super.isCellEditable(row, column);
-            }
 
             @Override
             public TableCellEditor getCellEditor(final int row, final int column) {
@@ -121,7 +121,10 @@ public class TableDemo implements ComponentDemo {
         controlPanel.add(new JCheckBox(PropertyKey.EDITABLE) {
             {
                 setSelected(editable.get());
-                addActionListener(e -> editable.set(isSelected()));
+                addActionListener(e -> {
+                    editable.set(isSelected());
+                    table.repaint();
+                });
             }
         });
         controlPanel.add(new JCheckBox("horizontal lines") {

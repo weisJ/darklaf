@@ -60,15 +60,32 @@ public class DarkTreeCellRendererDelegate extends TreeCellRendererDelegate imple
                     leaf, row, isFocused);
             renderer = prepareRendererComponent(tree, comp);
         } else {
-            if (getDelegate() instanceof DefaultTreeCellRenderer) {
-                ((DefaultTreeCellRenderer) getDelegate()).setIcon(null);
-                ((DefaultTreeCellRenderer) getDelegate()).setDisabledIcon(null);
-            }
             renderer = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, isFocused);
+            if (renderer instanceof DefaultTreeCellRenderer) {
+                patchIcon(tree, (DefaultTreeCellRenderer) renderer, leaf, expanded);
+            }
         }
         CellUtil.setupTreeForeground(renderer, tree, selected);
         CellUtil.setupTreeBackground(renderer, tree, selected, row);
         return renderer;
+    }
+
+    protected void patchIcon(final JTree tree, final DefaultTreeCellRenderer renderer, final boolean leaf,
+            final boolean expanded) {
+        Icon icon;
+        if (leaf) {
+            icon = renderer.getLeafIcon();
+        } else if (expanded) {
+            icon = renderer.getOpenIcon();
+        } else {
+            icon = renderer.getClosedIcon();
+        }
+        renderer.setIcon(icon);
+
+        LookAndFeel laf = UIManager.getLookAndFeel();
+        Icon disabledIcon = laf.getDisabledIcon(tree, icon);
+        if (disabledIcon != null) icon = disabledIcon;
+        renderer.setDisabledIcon(icon);
     }
 
     protected Component prepareRendererComponent(final JTree tree, final Component comp) {

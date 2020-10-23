@@ -62,7 +62,10 @@ public class TreeDemo implements ComponentDemo {
         controlPanel.add(new JCheckBox(PropertyKey.EDITABLE) {
             {
                 setSelected(tree.isEditable());
-                addActionListener(e -> tree.setEditable(isSelected()));
+                addActionListener(e -> {
+                    tree.setEditable(isSelected());
+                    tree.repaint();
+                });
             }
         });
         controlPanel.add(new JCheckBox("LeftToRight") {

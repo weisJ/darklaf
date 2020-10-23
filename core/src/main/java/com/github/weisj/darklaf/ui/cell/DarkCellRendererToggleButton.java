@@ -38,10 +38,18 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellToggleBu
         implements TableCellRenderer, TreeCellRenderer, SwingConstants {
 
     private final T toggleButton;
+    private final Icon checkIcon;
+    private final Icon checkDisabledIcon;
+    private final Icon checkSelectedIcon;
+    private final Icon noCheck;
     private final Border border = new DarkCellBorderUIResource();
 
     public DarkCellRendererToggleButton(final T toggleButton) {
         this.toggleButton = toggleButton;
+        checkIcon = UIManager.getIcon("Check.icon");
+        checkDisabledIcon = UIManager.getIcon("Check.disabled.icon");
+        checkSelectedIcon = UIManager.getIcon("Check.selected.icon");
+        noCheck = UIManager.getIcon("Check.deselected.icon");
     }
 
     @Override
@@ -52,7 +60,22 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellToggleBu
         }
         toggleButton.setHasFocus(focus);
         toggleButton.setBorder(border);
+
+        updateIcon(table.isCellEditable(row, column), toggleButton.isSelected());
+
         return toggleButton;
+    }
+
+    public void updateIcon(final boolean editable, final boolean cellSelected) {
+        if (!editable) {
+            toggleButton.setSelectedIcon(cellSelected ? checkSelectedIcon : checkIcon);
+            toggleButton.setDisabledSelectedIcon(checkDisabledIcon);
+            toggleButton.setIcon(noCheck);
+        } else {
+            toggleButton.setIcon(null);
+            toggleButton.setDisabledSelectedIcon(null);
+            toggleButton.setSelectedIcon(null);
+        }
     }
 
     @Override
@@ -66,10 +89,15 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellToggleBu
                 toggleButton.setText(((LabeledTreeNode) value).getLabel());
             }
         }
+
+        updateIcon(tree.isEditable() && tree.isPathEditable(tree.getPathForRow(row)), toggleButton.isSelected());
+
         toggleButton.setHasFocus(false);
         toggleButton.setHorizontalAlignment(tree.getComponentOrientation().isLeftToRight() ? LEFT : RIGHT);
         return toggleButton;
     }
+
+
 
     protected void setValue(final Object value) {
         toggleButton.setSelected(Boolean.TRUE.equals(DarkTreeCellRendererDelegate.unwrapValue(value)));
