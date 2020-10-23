@@ -32,10 +32,15 @@ import javax.swing.*;
 /** @author Konstantin Bulenkov */
 public abstract class Animator {
     private static final ScheduledExecutorService scheduler = createScheduler();
+
     private final int totalFrames;
     private final int cycleDuration;
     private final boolean forward;
     private final boolean repeatable;
+    private final int delayFrames;
+
+    private final Interpolator interpolator;
+
     private ScheduledFuture<?> ticker;
     private int startFrame;
     private int currentFrame;
@@ -43,17 +48,31 @@ public abstract class Animator {
     private long stopTime;
     private volatile boolean disposed = false;
 
-    public Animator(final String name, final int totalFrames, final int cycleDuration, final boolean repeatable) {
-
-        this(name, totalFrames, cycleDuration, repeatable, true);
+    public Animator(final int totalFrames, final int cycleDuration, final int delayFrames) {
+        this(totalFrames, cycleDuration, delayFrames, false);
     }
 
-    public Animator(final String name, final int totalFrames, final int cycleDuration, final boolean repeatable,
-            final boolean forward) {
+    public Animator(final int totalFrames, final int cycleDuration, final int delayFrames, final boolean repeatable) {
+        this(totalFrames, cycleDuration, delayFrames, repeatable, true, DefaultInterpolator.LINEAR);
+    }
+
+    public Animator(final int totalFrames, final int cycleDuration, final boolean repeatable) {
+        this(totalFrames, cycleDuration, 0, repeatable, true, DefaultInterpolator.LINEAR);
+    }
+
+    public Animator(final int totalFrames, final int cycleDuration, final boolean repeatable,
+            final Interpolator interpolator) {
+        this(totalFrames, cycleDuration, 0, repeatable, true, interpolator);
+    }
+
+    public Animator(final int totalFrames, final int cycleDuration, final int delayFrames, final boolean repeatable,
+            final boolean forward, final Interpolator interpolator) {
         this.totalFrames = totalFrames;
         this.cycleDuration = cycleDuration;
+        this.delayFrames = delayFrames;
         this.repeatable = repeatable;
         this.forward = forward;
+        this.interpolator = interpolator;
         currentFrame = forward ? 0 : totalFrames;
         resetTime();
         reset();
@@ -125,7 +144,10 @@ public abstract class Animator {
     }
 
     private void paint() {
-        paintNow(forward ? currentFrame : totalFrames - currentFrame - 1, totalFrames, cycleDuration);
+        int frame = forward ? currentFrame : totalFrames - currentFrame - 1;
+        if (frame > delayFrames) {
+            paintNow(interpolator.interpolate(((float) frame) / totalFrames));
+        }
     }
 
     private void animationDone() {
@@ -164,7 +186,7 @@ public abstract class Animator {
         paint();
     }
 
-    public abstract void paintNow(int frame, int totalFrames, int cycle);
+    public abstract void paintNow(float fraction);
 
     protected void paintCycleEnd() {}
 

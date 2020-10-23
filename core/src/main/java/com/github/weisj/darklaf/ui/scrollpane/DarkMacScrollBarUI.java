@@ -27,6 +27,7 @@ import java.awt.geom.RoundRectangle2D;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 
+import com.github.weisj.darklaf.graphics.Animator;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 
@@ -53,5 +54,28 @@ public class DarkMacScrollBarUI extends DarkScrollBarUI {
         g.setColor(getThumbBorderColor());
         g.draw(roundRect);
         context.restore();
+    }
+
+    @Override
+    protected DarkScrollBarListener createScrollBarListener() {
+        return new MacScrollBarListener(scrollbar, this);
+    }
+
+    private static class MacScrollBarListener extends DarkScrollBarListener {
+
+
+        public MacScrollBarListener(final JScrollBar scrollbar, final DarkScrollBarUI ui) {
+            super(scrollbar, ui);
+        }
+
+        @Override
+        protected Animator createTrackFadeinAnimator() {
+            return null;
+        }
+
+        @Override
+        protected Animator createTrackFadeoutAnimator() {
+            return null;
+        }
     }
 }

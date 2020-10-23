@@ -27,12 +27,13 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.graphics.Animator;
+import com.github.weisj.darklaf.graphics.DefaultInterpolator;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class DarkScrollBarListener extends MouseAdapter implements AdjustmentListener, ScrollBarConstants {
 
     private static final float MAX_TRACK_ALPHA = 0.3f;
-    private static final float MAX_THUMB_ALPHA = 1;
+    private static final float MAX_THUMB_ALPHA = 0.7f;
     private static final int DELAY_FRAMES = 6;
     private static final int FADEOUT_FRAMES_COUNT = 10 + DELAY_FRAMES;
     private static final int FADEIN_FRAMES_COUNT = FADEOUT_FRAMES_COUNT / 2;
@@ -62,10 +63,14 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
     }
 
     public void uninstall() {
-        trackFadeoutAnimator.dispose();
-        thumbFadeoutAnimator.dispose();
-        trackFadeinAnimator.dispose();
-        thumbFadeinAnimator.dispose();
+        dispose(trackFadeoutAnimator);
+        dispose(thumbFadeoutAnimator);
+        dispose(trackFadeinAnimator);
+        dispose(trackFadeoutAnimator);
+    }
+
+    private void dispose(final Animator animator) {
+        if (animator != null) animator.dispose();
     }
 
     public float getTrackAlpha() {
@@ -174,10 +179,12 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
     }
 
     protected void resetThumbAnimator() {
+        if (thumbFadeinAnimator == null || thumbFadeoutAnimator == null) return;
         resetAnimators(thumbFadeinAnimator, thumbFadeoutAnimator, mouseOverThumb, thumbAlpha, MAX_THUMB_ALPHA);
     }
 
     protected void resetTrackAnimator() {
+        if (trackFadeinAnimator == null || trackFadeoutAnimator == null) return;
         resetAnimators(trackFadeinAnimator, trackFadeoutAnimator, mouseOverTrack, trackAlpha, MAX_TRACK_ALPHA);
     }
 
@@ -215,107 +222,118 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
         return new ThumbFadeInAnimator();
     }
 
-    protected class TrackFadeOutAnimator extends Animator {
-        public TrackFadeOutAnimator() {
-            super("Track fadeout", DarkScrollBarListener.FADEOUT_FRAMES_COUNT,
-                    DarkScrollBarListener.FADEOUT_FRAMES_COUNT * DarkScrollBarListener.FADEOUT_FRAME_COUNT_FACTOR,
-                    false);
-        }
+    protected class TrackFadeInAnimator extends FadeInAnimator {
 
-        public void paintNow(final int frame, final int totalFrames, final int cycle) {
-            trackAlpha = MAX_TRACK_ALPHA;
-            if (frame > DELAY_FRAMES) {
-                trackAlpha *= (float) (1 - (double) frame / totalFrames);
-            }
-            if (scrollbar != null) {
-                ((JComponent) scrollbar.getParent()).paintImmediately(scrollbar.getBounds());
-            }
-        }
-
-        @Override
-        protected void paintCycleEnd() {
-            trackAlpha = 0;
-            if (scrollbar != null) {
-                ((JComponent) scrollbar.getParent()).paintImmediately(scrollbar.getBounds());
-            }
-        }
-    }
-
-    protected class ThumbFadeInAnimator extends Animator {
-        public ThumbFadeInAnimator() {
-            super("Thumb fadein", DarkScrollBarListener.FADEIN_FRAMES_COUNT / 2,
-                    DarkScrollBarListener.FADEIN_FRAMES_COUNT * DarkScrollBarListener.FADEIN_FRAME_COUNT_FACTOR, false);
-        }
-
-        @Override
-        public void paintNow(final int frame, final int totalFrames, final int cycle) {
-            thumbAlpha = ((float) frame * MAX_THUMB_ALPHA) / totalFrames;
-            if (scrollbar != null) {
-                ((JComponent) scrollbar.getParent()).paintImmediately(scrollbar.getBounds());
-            }
-        }
-
-        @Override
-        protected void paintCycleEnd() {
-            thumbAlpha = MAX_THUMB_ALPHA;
-            if (scrollbar != null) {
-                ((JComponent) scrollbar.getParent()).paintImmediately(scrollbar.getBounds());
-                Point p = MouseInfo.getPointerInfo().getLocation();
-                SwingUtilities.convertPointFromScreen(p, scrollbar);
-                if (!ui.getThumbBounds().contains(p) && !scrollbar.getValueIsAdjusting()) {
-                    mouseOverThumb = false;
-                    resetThumbAnimator();
-                }
-            }
-        }
-    }
-
-    protected class TrackFadeInAnimator extends Animator {
         public TrackFadeInAnimator() {
-            super("Track fadein", DarkScrollBarListener.FADEIN_FRAMES_COUNT,
-                    DarkScrollBarListener.FADEIN_FRAMES_COUNT * DarkScrollBarListener.FADEIN_FRAME_COUNT_FACTOR, false);
+            super(scrollbar, 0, MAX_TRACK_ALPHA);
         }
 
-        public void paintNow(final int frame, final int totalFrames, final int cycle) {
-            trackAlpha = ((float) frame * MAX_TRACK_ALPHA) / totalFrames;
-            if (scrollbar != null) {
-                ((JComponent) scrollbar.getParent()).paintImmediately(scrollbar.getBounds());
-            }
+        @Override
+        protected void updateValue(final float value) {
+            trackAlpha = value;
+        }
+    }
+
+    protected class TrackFadeOutAnimator extends FadeOutAnimator {
+
+        public TrackFadeOutAnimator() {
+            super(scrollbar, 0, MAX_TRACK_ALPHA);
+        }
+
+        @Override
+        protected void updateValue(final float value) {
+            trackAlpha = value;
+        }
+    }
+
+    protected class ThumbFadeInAnimator extends FadeInAnimator {
+
+        public ThumbFadeInAnimator() {
+            super(scrollbar, 0, MAX_THUMB_ALPHA);
+        }
+
+        @Override
+        protected void updateValue(final float value) {
+            thumbAlpha = value;
         }
 
         @Override
         protected void paintCycleEnd() {
-            trackAlpha = MAX_TRACK_ALPHA;
-            if (scrollbar != null) {
-                ((JComponent) scrollbar.getParent()).paintImmediately(scrollbar.getBounds());
+            super.paintCycleEnd();
+            if (scrollbar == null) return;
+            Point p = MouseInfo.getPointerInfo().getLocation();
+            SwingUtilities.convertPointFromScreen(p, scrollbar);
+            if (!ui.getThumbBounds().contains(p) && !scrollbar.getValueIsAdjusting()) {
+                mouseOverThumb = false;
+                resetThumbAnimator();
             }
         }
     }
 
-    protected class ThumbFadeOutAnimator extends Animator {
+    protected class ThumbFadeOutAnimator extends FadeOutAnimator {
+
         public ThumbFadeOutAnimator() {
-            super("Adjustment fadeout", DarkScrollBarListener.FADEOUT_FRAMES_COUNT,
-                    DarkScrollBarListener.FADEOUT_FRAMES_COUNT * DarkScrollBarListener.FADEOUT_FRAME_COUNT_FACTOR,
-                    false);
+            super(scrollbar, 0, MAX_THUMB_ALPHA);
         }
 
         @Override
-        public void paintNow(final int frame, final int totalFrames, final int cycle) {
-            thumbAlpha = MAX_THUMB_ALPHA;
-            if (frame > DELAY_FRAMES) {
-                thumbAlpha *= (float) (1 - (double) frame / totalFrames);
-            }
-            if (scrollbar != null) {
-                ((JComponent) scrollbar.getParent()).paintImmediately(scrollbar.getBounds());
-            }
+        protected void updateValue(final float value) {
+            thumbAlpha = value;
+        }
+    }
+
+    protected abstract static class SBAnimator extends Animator {
+
+        private final Component component;
+        private final float minValue;
+        private final float maxValue;
+        private final boolean fadeIn;
+
+        public SBAnimator(final int totaleFrames, final int cycleDuration, final int delayFrames,
+                final Component component, final float minValue, final float maxValue, final boolean fadeIn) {
+            super(totaleFrames, cycleDuration, delayFrames, false, true,
+                    fadeIn ? DefaultInterpolator.LINEAR : DefaultInterpolator.LINEAR_REVERSE);
+            this.component = component;
+            this.minValue = minValue;
+            this.maxValue = maxValue;
+            this.fadeIn = fadeIn;
+        }
+
+        protected abstract void updateValue(final float value);
+
+        @Override
+        public void paintNow(final float fraction) {
+            updateValue(minValue + maxValue * fraction);
+            repaint();
         }
 
         @Override
         protected void paintCycleEnd() {
-            thumbAlpha = 0;
-            if (scrollbar != null) {
-                ((JComponent) scrollbar.getParent()).paintImmediately(scrollbar.getBounds());
+            updateValue(fadeIn ? maxValue : minValue);
+            repaint();
+        }
+
+        private void repaint() {
+            if (component != null) {
+                ((JComponent) component.getParent()).paintImmediately(component.getBounds());
             }
+        }
+
+    }
+
+    protected abstract static class FadeOutAnimator extends SBAnimator {
+
+        public FadeOutAnimator(final Component component, final float minValue, final float maxValue) {
+            super(FADEOUT_FRAMES_COUNT, FADEOUT_FRAMES_COUNT * FADEOUT_FRAME_COUNT_FACTOR, DELAY_FRAMES, component,
+                    minValue, maxValue, false);
+        }
+    }
+
+    protected abstract static class FadeInAnimator extends SBAnimator {
+
+        public FadeInAnimator(final Component component, final float minValue, final float maxValue) {
+            super(FADEIN_FRAMES_COUNT, FADEIN_FRAMES_COUNT * FADEIN_FRAME_COUNT_FACTOR, 0, component, minValue,
+                    maxValue, true);
         }
     }
 }

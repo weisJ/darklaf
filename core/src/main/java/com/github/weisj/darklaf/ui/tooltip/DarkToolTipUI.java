@@ -390,16 +390,15 @@ public class DarkToolTipUI extends BasicToolTipUI
     }
 
     protected class FadeInAnimator extends Animator {
-        private static final int DELAY_FRAMES = 6;
-        private static final int FADEIN_FRAMES_COUNT = DELAY_FRAMES + 10;
+        private static final int FADEIN_FRAMES_COUNT = 15;
 
         public FadeInAnimator() {
-            super("Tooltip fadein", FADEIN_FRAMES_COUNT, FADEIN_FRAMES_COUNT * 15, false);
+            super(FADEIN_FRAMES_COUNT, FADEIN_FRAMES_COUNT * 15, false);
         }
 
         @Override
-        public void paintNow(final int frame, final int totalFrames, final int cycle) {
-            alpha = ((float) frame * MAX_ALPHA) / totalFrames;
+        public void paintNow(final float fraction) {
+            alpha = fraction * MAX_ALPHA;
             Window window = SwingUtilities.getWindowAncestor(toolTip);
             if (window != null) window.setOpacity(alpha);
             Border border = toolTip.getBorder();
