@@ -21,20 +21,36 @@
  */
 package com.github.weisj.darklaf.icons;
 
-/**
- * Icon which dynamically adapts to whether the UI is currently {@link AwareIconStyle#LIGHT light}
- * or {@link AwareIconStyle#DARK dark}.
- */
-public interface UIAwareIcon extends DynamicIcon {
+import javax.swing.*;
 
-    /**
-     * Return the dual version of the icon. i.e. if the current icon is light then the dual version will
-     * be dark and vice versa.
-     *
-     * Implementations of this method should respect that the appearance of the icon after invoking this
-     * method twice should be the same.
-     *
-     * @return the dual icon.
-     */
-    UIAwareIcon getDual();
+/**
+ * Implementation of {@link UIAwareIcon} which delegates to preloaded icons.
+ */
+public class SimpleUIAwareIcon extends DefaultUIAwareIcon {
+
+    public SimpleUIAwareIcon(final Icon light, final Icon dark) {
+        this.light = light;
+        this.dark = dark;
+    }
+
+    protected SimpleUIAwareIcon(final SimpleUIAwareIcon dual) {
+        super(dual);
+        this.light = dual.dark;
+        this.dark = dual.light;
+    }
+
+    @Override
+    protected UIAwareIcon createDual() {
+        return new SimpleUIAwareIcon(this);
+    }
+
+    @Override
+    protected Icon loadLightIcon() {
+        return null;
+    }
+
+    @Override
+    protected Icon loadDarkIcon() {
+        return null;
+    }
 }

@@ -159,6 +159,29 @@ public final class IconLoader {
     }
 
     /**
+     * Creates a new {@link UIAwareIcon} which is loaded lazily through the given supplier.
+     *
+     * @param lightIconSupplier the supplier for the light icon.
+     * @param darkIconSupplier the supplier for the dark icon.
+     * @return the {@link UIAwareIcon}
+     */
+    public UIAwareIcon createUIAwareIcon(final IconSupplier<Icon> lightIconSupplier,
+            final IconSupplier<Icon> darkIconSupplier) {
+        return new LazyUIAwareIcon(lightIconSupplier, darkIconSupplier);
+    }
+
+    /**
+     * Creates a new {@link UIAwareIcon} from the given icon.
+     *
+     * @param light the light version of the icon.
+     * @param dark the dark version of the icon.
+     * @return the {@link UIAwareIcon}.
+     */
+    public UIAwareIcon createUIAwareIcon(final Icon light, final Icon dark) {
+        return new SimpleUIAwareIcon(light, dark);
+    }
+
+    /**
      * Get an aware icon. If [path] is the search root of the current icon loader then the icon resource
      * will be resolved to [path]/dark/[icon_path] and [path]/light/[icon_path]
      *
