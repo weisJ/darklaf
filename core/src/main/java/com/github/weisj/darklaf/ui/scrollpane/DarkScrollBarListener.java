@@ -289,10 +289,10 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
         private final float maxValue;
         private final boolean fadeIn;
 
-        public SBAnimator(final int totaleFrames, final int cycleDuration, final int delayFrames,
+        public SBAnimator(final int totalFrames, final int cycleDuration, final int delayFrames,
                 final Component component, final float minValue, final float maxValue, final boolean fadeIn) {
-            super(totaleFrames, cycleDuration, delayFrames, false, true,
-                    fadeIn ? DefaultInterpolator.LINEAR : DefaultInterpolator.LINEAR_REVERSE);
+            super(totalFrames, cycleDuration, delayFrames, false, true,
+                    fadeIn ? DefaultInterpolator.EASE_OUT_CUBIC : DefaultInterpolator.EASE_IN_CUBIC);
             this.component = component;
             this.minValue = minValue;
             this.maxValue = maxValue;
@@ -303,7 +303,8 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
 
         @Override
         public void paintNow(final float fraction) {
-            updateValue(minValue + maxValue * fraction);
+            float fr = fadeIn ? fraction : (1 - fraction);
+            updateValue(minValue + maxValue * fr);
             repaint();
         }
 

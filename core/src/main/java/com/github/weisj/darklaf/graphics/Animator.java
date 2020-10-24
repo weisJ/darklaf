@@ -40,7 +40,7 @@ public abstract class Animator {
 
     private boolean forward;
 
-    private final Interpolator interpolator;
+    private Interpolator interpolator;
 
     private ScheduledFuture<?> ticker;
     private int startFrame;
@@ -83,7 +83,7 @@ public abstract class Animator {
         this.forward = forward;
     }
 
-    public void resetTime() {
+    private void resetTime() {
         startTime = -1;
     }
 
@@ -213,5 +213,13 @@ public abstract class Animator {
 
     public int getTotalFrames() {
         return totalFrames;
+    }
+
+    public Interpolator getInterpolator() {
+        return interpolator;
+    }
+
+    public void setInterpolator(final Interpolator interpolator) {
+        this.interpolator = interpolator;
     }
 }
