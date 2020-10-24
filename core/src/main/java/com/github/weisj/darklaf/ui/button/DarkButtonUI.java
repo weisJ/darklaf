@@ -180,6 +180,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         GraphicsContext config = new GraphicsContext(g);
 
         AbstractButton b = (AbstractButton) c;
+        prepareDelegate(b);
 
         paintButtonBackground(g, c);
 
