@@ -187,7 +187,10 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     }
 
     public enum CaretStyle {
-        VERTICAL_LINE_STYLE(1, false), UNDERLINE_STYLE(1, true), BLOCK_STYLE(1, true), BLOCK_BORDER_STYLE(1, true),
+        VERTICAL_LINE_STYLE(1, false),
+        UNDERLINE_STYLE(1, true),
+        BLOCK_STYLE(1, true),
+        BLOCK_BORDER_STYLE(1, true),
         THICK_VERTICAL_LINE_STYLE(2, false);
 
         private final int size;

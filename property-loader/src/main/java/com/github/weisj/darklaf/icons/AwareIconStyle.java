@@ -22,7 +22,8 @@
 package com.github.weisj.darklaf.icons;
 
 public enum AwareIconStyle {
-    DARK, LIGHT;
+    DARK,
+    LIGHT;
 
     public AwareIconStyle toggle() {
         switch (this) {

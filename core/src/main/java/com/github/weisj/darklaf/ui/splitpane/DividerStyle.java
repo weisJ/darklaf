@@ -24,7 +24,8 @@ package com.github.weisj.darklaf.ui.splitpane;
 public enum DividerStyle {
     GRIP(SplitPaneConstants.STYLE_GRIP, false, true),
     GRIP_BORDERLESS(SplitPaneConstants.STYLE_GRIP_BORDERLESS, false, false),
-    LINE(SplitPaneConstants.STYLE_LINE, true, true), INVISIBLE(SplitPaneConstants.STYLE_INVISIBLE, true, false);
+    LINE(SplitPaneConstants.STYLE_LINE, true, true),
+    INVISIBLE(SplitPaneConstants.STYLE_INVISIBLE, true, false);
 
     private final String name;
     private final boolean isThin;

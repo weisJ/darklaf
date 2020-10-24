@@ -106,7 +106,9 @@ public class ForegroundColorGenerationTask extends ColorAdjustmentTask {
     }
 
     public enum Bias {
-        BACKGROUND, WHITE, BLACK;
+        BACKGROUND,
+        WHITE,
+        BLACK;
 
         public static Bias getBackground() {
             return getBackground(0.5);

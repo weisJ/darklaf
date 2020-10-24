@@ -344,7 +344,8 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
         }
 
         private enum Type {
-            ADD, REMOVE
+            ADD,
+            REMOVE
         }
 
     }

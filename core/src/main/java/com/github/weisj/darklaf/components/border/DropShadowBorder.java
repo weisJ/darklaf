@@ -399,7 +399,14 @@ public class DropShadowBorder implements Border, Serializable {
     }
 
     private enum Position {
-        TOP, TOP_LEFT, LEFT, BOTTOM_LEFT, BOTTOM, BOTTOM_RIGHT, RIGHT, TOP_RIGHT;
+        TOP,
+        TOP_LEFT,
+        LEFT,
+        BOTTOM_LEFT,
+        BOTTOM,
+        BOTTOM_RIGHT,
+        RIGHT,
+        TOP_RIGHT;
 
         static int count() {
             return 8;

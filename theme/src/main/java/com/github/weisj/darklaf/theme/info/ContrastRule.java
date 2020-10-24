@@ -22,5 +22,6 @@
 package com.github.weisj.darklaf.theme.info;
 
 public enum ContrastRule {
-    HIGH_CONTRAST, STANDARD
+    HIGH_CONTRAST,
+    STANDARD
 }

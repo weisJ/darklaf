@@ -676,7 +676,9 @@ public class ColorTriangle extends JComponent {
     }
 
     protected enum PickArea {
-        OUTSIDE, WHEEL, TRIANGLE
+        OUTSIDE,
+        WHEEL,
+        TRIANGLE
     }
 
     protected static class CircleInfo {

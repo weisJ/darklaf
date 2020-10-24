@@ -22,5 +22,7 @@
 package com.github.weisj.darklaf.theme.info;
 
 public enum PresetIconRule {
-    NONE, DARK, LIGHT
+    NONE,
+    DARK,
+    LIGHT
 }

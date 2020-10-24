@@ -63,7 +63,9 @@ public class TabEvent extends ActionEvent {
     }
 
     public enum Type {
-        TAB_OPENED("tabOpened"), TAB_CLOSED("tabClosed"), TAB_CLOSING("tabClosing");
+        TAB_OPENED("tabOpened"),
+        TAB_CLOSED("tabClosed"),
+        TAB_CLOSING("tabClosing");
 
         private final String command;
 

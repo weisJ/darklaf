@@ -219,6 +219,8 @@ public class DarkPopupFactory extends PopupFactory {
     }
 
     public enum PopupType {
-        LIGHT_WEIGHT, MEDIUM_WEIGHT, HEAVY_WEIGHT
+        LIGHT_WEIGHT,
+        MEDIUM_WEIGHT,
+        HEAVY_WEIGHT
     }
 }

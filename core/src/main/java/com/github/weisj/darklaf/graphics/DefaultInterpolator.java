@@ -22,11 +22,16 @@
 package com.github.weisj.darklaf.graphics;
 
 public enum DefaultInterpolator implements Interpolator {
-    LINEAR(x -> x), EASE_IN_SINE(x -> (float) (1 - Math.cos((x * Math.PI) / 2))),
-    EASE_OUT_SINE(x -> (float) Math.sin((x * Math.PI) / 2)), EASE_IN_QUAD(x -> x * x), EASE_OUT_QUAD(x -> {
+    LINEAR(x -> x),
+    EASE_IN_SINE(x -> (float) (1 - Math.cos((x * Math.PI) / 2))),
+    EASE_OUT_SINE(x -> (float) Math.sin((x * Math.PI) / 2)),
+    EASE_IN_QUAD(x -> x * x),
+    EASE_OUT_QUAD(x -> {
         float tmp = 1 - x;
         return 1 - tmp * tmp;
-    }), EASE_IN_CUBIC(x -> x * x * x), EASE_OUT_CUBIC(x -> {
+    }),
+    EASE_IN_CUBIC(x -> x * x * x),
+    EASE_OUT_CUBIC(x -> {
         float tmp = 1 - x;
         return 1 - tmp * tmp * tmp;
     });

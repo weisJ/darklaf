@@ -366,6 +366,8 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     }
 
     protected enum ClickAction {
-        RIGHT_ACTION, LEFT_ACTION, NONE
+        RIGHT_ACTION,
+        LEFT_ACTION,
+        NONE
     }
 }

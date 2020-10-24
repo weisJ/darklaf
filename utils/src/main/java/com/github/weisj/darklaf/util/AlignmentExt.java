@@ -24,10 +24,21 @@ package com.github.weisj.darklaf.util;
 import java.awt.*;
 
 public enum AlignmentExt {
-    NORTH(Alignment.NORTH), SOUTH(Alignment.SOUTH), EAST(Alignment.EAST), WEST(Alignment.WEST),
-    NORTH_EAST(Alignment.NORTH_EAST), NORTH_WEST(Alignment.NORTH_WEST), SOUTH_EAST(Alignment.SOUTH_EAST),
-    SOUTH_WEST(Alignment.SOUTH_WEST), CENTER(Alignment.CENTER), LEFT(null), MIDDLE_HORIZONTAL(null), RIGHT(null),
-    TOP(null), MIDDLE_VERTICAL(null), BOTTOM(null);
+    NORTH(Alignment.NORTH),
+    SOUTH(Alignment.SOUTH),
+    EAST(Alignment.EAST),
+    WEST(Alignment.WEST),
+    NORTH_EAST(Alignment.NORTH_EAST),
+    NORTH_WEST(Alignment.NORTH_WEST),
+    SOUTH_EAST(Alignment.SOUTH_EAST),
+    SOUTH_WEST(Alignment.SOUTH_WEST),
+    CENTER(Alignment.CENTER),
+    LEFT(null),
+    MIDDLE_HORIZONTAL(null),
+    RIGHT(null),
+    TOP(null),
+    MIDDLE_VERTICAL(null),
+    BOTTOM(null);
 
     private final Alignment parent;
 

@@ -22,5 +22,6 @@
 package com.github.weisj.darklaf.theme.info;
 
 public enum ColorToneRule {
-    DARK, LIGHT
+    DARK,
+    LIGHT
 }

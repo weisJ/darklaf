@@ -24,7 +24,9 @@ package com.github.weisj.darklaf.components.tooltip;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
 
 public enum ToolTipStyle implements ToolTipConstants {
-    BALLOON(true, false), PLAIN_BALLOON(false, false), PLAIN(false, true);
+    BALLOON(true, false),
+    PLAIN_BALLOON(false, false),
+    PLAIN(false, true);
 
     protected final boolean supportsPointer;
     protected final boolean opqaue;

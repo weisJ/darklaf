@@ -22,7 +22,14 @@
 package com.github.weisj.darklaf.theme.info;
 
 public enum FontSizePreset {
-    TINY(25), Small(50), SMALL(75), NORMAL(100), Large(125), LARGE(150), Huge(175), HUGE(200);
+    TINY(25),
+    Small(50),
+    SMALL(75),
+    NORMAL(100),
+    Large(125),
+    LARGE(150),
+    Huge(175),
+    HUGE(200);
 
     private final int percentage;
 
