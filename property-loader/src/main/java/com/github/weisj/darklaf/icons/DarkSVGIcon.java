@@ -46,11 +46,11 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
     /*
      * Render the icon a bit larger than needed to ensure it is painted good enough when rotated. This
      * accounts for diagonal lines (i.e. when the rotation is pi/4). Ideally this value would only need
-     * to be sqrt(2) but 1.5 behaves a lot better w.r.t. floating point calculations.
+     * to be sqrt(2) but 2.0 behaves a lot better w.r.t. floating point calculations.
      *
      * The scale factor is only used if the icon is painted with a non trivial rotation.
      */
-    private static final double extraScale = 1.5;
+    private static final double extraScale = 2.0;
 
     private final AtomicBoolean loaded;
     private final Dimension size;
@@ -185,12 +185,8 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
     }
 
     protected void ensureImageLoaded(final Component c, final double rotation) {
-        boolean rotationChanged = false;
-        if (!loadedWithExtraScale) {
-            loadedWithExtraScale = !isExactRotation(rotation);
-            rotationChanged = loadedWithExtraScale;
-        }
-        updateCache(ensureLoaded(true) || rotationChanged, c);
+        loadedWithExtraScale = !isExactRotation(rotation);
+        updateCache(ensureLoaded(true) || loadedWithExtraScale, c);
     }
 
     private boolean isExactRotation(final double rotation) {
