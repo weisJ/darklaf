@@ -23,10 +23,7 @@ package com.github.weisj.darklaf.ui.slider;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.geom.RoundRectangle2D;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Dictionary;
 import java.util.Enumeration;
 
@@ -38,14 +35,13 @@ import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.icons.RotatableIcon;
-import com.github.weisj.darklaf.listener.MouseClickListener;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /** @author Jannis Weis */
-public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListener {
+public class DarkSliderUI extends BasicSliderUI {
 
     protected static final String KEY_PREFIX = "JSlider.";
     public static final String KEY_THUMB_ARROW_SHAPE = KEY_PREFIX + "paintThumbArrowShape";
@@ -55,25 +51,9 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     public static final String KEY_MANUAL_LABEL_ALIGN = KEY_PREFIX + "manualLabelAlign";
     public static final String VARIANT_VOLUME = "volume";
 
-    private final Rectangle iconRect = new Rectangle(0, 0, 0, 0);
-    private final MouseListener mouseListener = new MouseClickListener() {
-        private boolean muted = false;
-        private int oldValue;
+    protected final Rectangle iconRect = new Rectangle(0, 0, 0, 0);
+    private DarkSliderListener sliderListener;
 
-        @Override
-        public void mouseClicked(final MouseEvent e) {
-            if (slider.isEnabled() && showVolumeIcon(slider) && iconRect.contains(e.getPoint())) {
-                if (muted && slider.getValue() == slider.getMinimum()) {
-                    setValue(oldValue);
-                    muted = false;
-                } else {
-                    oldValue = slider.getValue();
-                    setValue(slider.getMinimum());
-                    muted = true;
-                }
-            }
-        }
-    };
     protected int plainThumbRadius;
     protected int arcSize;
     protected int trackSize;
@@ -126,11 +106,11 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
         return new DarkSliderUI((JSlider) c);
     }
 
-    private static boolean showVolumeIcon(final JComponent c) {
+    protected boolean showVolumeIcon(final JComponent c) {
         return PropertyUtil.getBooleanProperty(c, KEY_SHOW_VOLUME_ICON);
     }
 
-    private static boolean isVolumeSlider(final JComponent c) {
+    protected boolean isVolumeSlider(final JComponent c) {
         return PropertyUtil.isPropertyEqual(c, KEY_VARIANT, VARIANT_VOLUME);
     }
 
@@ -142,15 +122,25 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
     @Override
     protected void installListeners(final JSlider slider) {
         super.installListeners(slider);
-        slider.addMouseListener(mouseListener);
-        slider.addPropertyChangeListener(this);
+        if (sliderListener == null) {
+            sliderListener = createSliderListener();
+        }
+        slider.addMouseListener(sliderListener);
+        slider.addMouseWheelListener(sliderListener);
+        slider.addPropertyChangeListener(sliderListener);
+    }
+
+    protected DarkSliderListener createSliderListener() {
+        return new DarkSliderListener(this, slider);
     }
 
     @Override
     protected void uninstallListeners(final JSlider slider) {
         super.uninstallListeners(slider);
-        slider.removeMouseListener(mouseListener);
-        slider.removePropertyChangeListener(this);
+        slider.removeMouseListener(sliderListener);
+        slider.removeMouseWheelListener(sliderListener);
+        slider.removePropertyChangeListener(sliderListener);
+        sliderListener = null;
     }
 
     @Override
@@ -758,17 +748,6 @@ public class DarkSliderUI extends BasicSliderUI implements PropertyChangeListene
 
     public Rectangle getThumbRect() {
         return new Rectangle(thumbRect);
-    }
-
-    @Override
-    public void propertyChange(final PropertyChangeEvent evt) {
-        String key = evt.getPropertyName();
-        if (KEY_VARIANT.equals(key)) {
-            slider.repaint();
-        } else if (DarkSliderUI.KEY_SHOW_VOLUME_ICON.equals(key)) {
-            calculateGeometry();
-            slider.repaint();
-        }
     }
 
     private int getSnappedValue(final int value) {
