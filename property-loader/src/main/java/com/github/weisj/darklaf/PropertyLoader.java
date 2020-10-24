@@ -189,7 +189,7 @@ public final class PropertyLoader {
         }
 
         Object returnVal = new LoadError();
-        if (key.endsWith("Insets") || key.endsWith(".insets")) {
+        if (key.endsWith("Insets") || key.endsWith(".insets") || key.endsWith(".margins")) {
             returnVal = parseInsets(value, accumulator, currentDefaults, iconLoader);
         } else if (!skipObjects && (key.endsWith("Border") || key.endsWith(".border") || key.endsWith("Renderer"))) {
             return maybeWrap((UIDefaults.LazyValue) def -> parseObject(value), isFallback);

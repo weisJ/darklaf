@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 
 import com.github.weisj.darklaf.color.DarkColorModel;
 import com.github.weisj.darklaf.color.DarkColorModelHSB;
@@ -34,6 +35,7 @@ import com.github.weisj.darklaf.color.DarkColorModelHSL;
 import com.github.weisj.darklaf.color.DarkColorModelRGB;
 import com.github.weisj.darklaf.components.DefaultColorPipette;
 import com.github.weisj.darklaf.components.border.DarkBorders;
+import com.github.weisj.darklaf.components.border.MarginBorderWrapper;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.listener.UpdateDocumentListener;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
@@ -167,7 +169,8 @@ public class SmallColorChooser extends JPanel {
         JPanel hexFieldHolder = new JPanel(new GridBagLayout());
         hexFieldHolder.setOpaque(false);
         Box hexBox = Box.createHorizontalBox();
-        hexBox.add(new JLabel("#"));
+        JLabel label = new JLabel("#");
+        hexBox.add(label);
         hexBox.add(createHexField());
         hexFieldHolder.add(hexBox);
 
@@ -206,6 +209,7 @@ public class SmallColorChooser extends JPanel {
     protected JComponent createHexField() {
         hexField = new JFormattedTextField();
         hexField.setColumns(6);
+        hexField.setMargin(new Insets(2, 2, 2, 2));
         hexField.setFocusLostBehavior(JFormattedTextField.COMMIT_OR_REVERT);
         hexFormatter = ColorValueFormatter.init(null, 0, true, hexField);
         hexFormatter.setModel(getDarkColorModel());
@@ -296,13 +300,16 @@ public class SmallColorChooser extends JPanel {
                 return getPreferredSize();
             }
 
-            @SuppressWarnings("SuspiciousNameCombination")
             @Override
             public Dimension getPreferredSize() {
-                Dimension size = hexField.getPreferredSize();
-                size.width = size.height - 2 * UIManager.getInt("TextField.borderThickness");
-                size.height = size.width;
-                return size;
+                Dimension dim = hexField.getPreferredSize();
+                Border border = MarginBorderWrapper.getBorder(hexField);
+                Insets ins = border != null ? border.getBorderInsets(hexField) : null;
+                int size = dim.height;
+                if (ins != null) size -= ins.top + ins.bottom;
+                dim.width = size;
+                dim.height = size;
+                return dim;
             }
         };
     }

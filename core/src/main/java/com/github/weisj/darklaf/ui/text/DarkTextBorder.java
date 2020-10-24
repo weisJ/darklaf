@@ -25,6 +25,7 @@ import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 import javax.swing.text.JTextComponent;
 
@@ -47,8 +48,6 @@ public class DarkTextBorder implements Border, UIResource {
     protected final Color inactiveBorderColor;
     protected final Color inactiveFocusBorderColor;
 
-    protected Insets padding;
-
     protected final int borderSize;
     protected final int arc;
     protected final int searchArc;
@@ -69,8 +68,6 @@ public class DarkTextBorder implements Border, UIResource {
         focusArc = UIManager.getInt("TextField.focusArc");
         searchArc = UIManager.getInt("TextField.searchArc");
         searchFocusArc = UIManager.getInt("TextField.searchFocusArc");
-        padding = UIManager.getInsets("TextField.insets");
-        if (padding == null) padding = new Insets(0, 0, 0, 0);
     }
 
     protected static boolean hasError(final Component c) {
@@ -147,7 +144,7 @@ public class DarkTextBorder implements Border, UIResource {
 
     @Override
     public Insets getBorderInsets(final Component c) {
-        return DarkUIUtil.addInsets(new Insets(borderSize, borderSize, borderSize, borderSize), padding);
+        return new InsetsUIResource(borderSize, borderSize, borderSize, borderSize);
     }
 
     @Override

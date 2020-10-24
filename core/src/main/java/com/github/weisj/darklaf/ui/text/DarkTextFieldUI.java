@@ -63,7 +63,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     protected Color inactiveBackground;
     private long lastSearchEvent;
 
-    protected Insets padding;
+    private int buttonPad;
 
     private final PopupMenuListener searchPopupListener = new PopupMenuAdapter() {
         @Override
@@ -118,9 +118,8 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
 
     protected Dimension addIconSizes(final Dimension dim) {
         JTextComponent comp = getComponent();
-        boolean ltr = comp.getComponentOrientation().isLeftToRight();
-        int leftPad = ltr ? padding.left : padding.right;
-        int rightPad = ltr ? padding.right : padding.left;
+        int leftPad = buttonPad;
+        int rightPad = buttonPad;
         if (doPaintLeftIcon(comp)) {
             Icon left = getLeftIcon(comp);
             dim.width += left.getIconWidth() + leftPad;
@@ -157,12 +156,12 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     protected void adjustTextRect(final JTextComponent c, final Rectangle r) {
         boolean ltr = c.getComponentOrientation().isLeftToRight();
         if (doPaintLeftIcon(c)) {
-            int w = getLeftIcon(c).getIconWidth() + padding.left;
+            int w = getLeftIcon(c).getIconWidth() + buttonPad;
             if (ltr) r.x += w;
             r.width -= w;
         }
         if (doPaintRightIcon(c)) {
-            int w = getRightIcon(c).getIconWidth() + padding.right;
+            int w = getRightIcon(c).getIconWidth() + buttonPad;
             if (!ltr) r.x += w;
             r.width -= w;
         }
@@ -192,10 +191,10 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     protected ClickAction getActionUnder(final Point p) {
         JTextComponent c = getComponent();
         if (!c.isEnabled()) return ClickAction.NONE;
-        if (isOver(getRightIconCoord(), getRightIcon(c), p) && doPaintRightIcon(c)) {
+        if (isOver(getRightIconPos(), getRightIcon(c), p) && doPaintRightIcon(c)) {
             return ClickAction.RIGHT_ACTION;
         }
-        if (isOver(getLeftIconCoord(), getLeftIcon(c), p) && doPaintLeftIcon(c)) {
+        if (isOver(getLeftIconPos(), getLeftIcon(c), p) && doPaintLeftIcon(c)) {
             return ClickAction.LEFT_ACTION;
         }
         return ClickAction.NONE;
@@ -240,35 +239,43 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     }
 
     protected void paintRightIcon(final Graphics g) {
-        Point p = getRightIconCoord();
+        Point p = getRightIconPos();
         getRightIcon(editor).paintIcon(null, g, p.x, p.y);
     }
 
     protected void paintLeftIcon(final Graphics g) {
-        Point p = getLeftIconCoord();
+        Point p = getLeftIconPos();
         getLeftIcon(editor).paintIcon(null, g, p.x, p.y);
     }
 
-    protected Point getLeftIconCoord() {
+    protected Point getLeftIconPos() {
         Rectangle r = getDrawingRect(getComponent());
-        int w = getLeftIcon(getComponent()).getIconWidth();
-        int left = getBorderInsets(getComponent()).left + padding.left;
-        return DarkUIUtil.adjustForOrientation(new Point(r.x + left, r.y + (r.height - w) / 2), w, editor);
+        int iconSize = getLeftIcon(getComponent()).getIconWidth();
+        int y = getIconY(r, iconSize);
+        return DarkUIUtil.adjustForOrientation(new Point(r.x + buttonPad, y), iconSize, editor);
     }
 
-    protected Point getRightIconCoord() {
+    private int getIconY(final Rectangle r, final int iconSize) {
+        int contentHeight = r.height;
+        Insets margin = editor.getMargin();
+        if (margin != null) contentHeight -= margin.top + margin.bottom;
+        int y = r.y + (contentHeight - iconSize) / 2;
+        if (margin != null) y += margin.top;
+        return y;
+    }
+
+    protected Point getRightIconPos() {
         Rectangle r = getDrawingRect(getComponent());
-        int w = getRightIcon(getComponent()).getIconWidth();
-        int right = getBorderInsets(getComponent()).right + padding.right;
-        return DarkUIUtil.adjustForOrientation(new Point(r.x + r.width - w - right, r.y + (r.height - w) / 2), w,
-                editor);
+        int iconSize = getRightIcon(getComponent()).getIconWidth();
+        int y = getIconY(r, iconSize);
+        return DarkUIUtil.adjustForOrientation(new Point(r.x + r.width - iconSize - buttonPad, y), iconSize, editor);
     }
 
     protected void showSearchPopup() {
         if (lastSearchEvent == 0 || (System.currentTimeMillis() - lastSearchEvent) > 250) {
             JPopupMenu menu = getSearchPopup(getComponent());
             if (menu != null) {
-                menu.show(getComponent(), getLeftIconCoord().x, getComponent().getHeight());
+                menu.show(getComponent(), getLeftIconPos().x, getComponent().getHeight());
             }
         }
     }
@@ -291,8 +298,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         searchWithHistoryDisabled = UIManager.getIcon("TextField.search.searchWithHistory.disabled.icon");
         search = UIManager.getIcon("TextField.search.search.icon");
         searchDisabled = UIManager.getIcon("TextField.search.search.disabled.icon");
-        padding = UIManager.getInsets("TextField.insets");
-        if (padding == null) padding = new Insets(0, 0, 0, 0);
+        buttonPad = UIManager.getInt("TextField.iconPad");
     }
 
     @Override

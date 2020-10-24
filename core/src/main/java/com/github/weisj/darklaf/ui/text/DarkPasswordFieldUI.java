@@ -90,7 +90,7 @@ public class DarkPasswordFieldUI extends DarkPasswordFieldUIBridge {
     }
 
     private boolean isOverEye(final Point p) {
-        return !passwordEmpty() && DarkTextFieldUI.isOver(getRightIconCoord(), getShowIcon(editor), p);
+        return !passwordEmpty() && DarkTextFieldUI.isOver(getRightIconPos(), getShowIcon(editor), p);
     }
 
     protected boolean passwordEmpty() {

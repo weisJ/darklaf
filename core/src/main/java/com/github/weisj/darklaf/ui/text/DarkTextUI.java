@@ -112,8 +112,16 @@ public abstract class DarkTextUI extends BasicTextUI
         disabledColor = UIManager.getColor(getPropertyPrefix() + ".disabledBackground");
         inactiveColor = UIManager.getColor(getPropertyPrefix() + ".inactiveBackground");
 
+        installMargins();
         installBorder();
         installPopupMenu();
+    }
+
+    protected void installMargins() {
+        Insets margin = editor.getMargin();
+        if (margin == null || margin instanceof UIResource) {
+            editor.setMargin(UIManager.getInsets(getPropertyPrefix() + ".margins"));
+        }
     }
 
     public static boolean isBorderlessTextField(final JTextComponent textComponent) {
@@ -365,15 +373,11 @@ public abstract class DarkTextUI extends BasicTextUI
         if (b == null) {
             return new Insets(0, 0, 0, 0);
         }
-        if (b instanceof DarkTextBorder) {
-            int bs = ((DarkTextBorder) b).getBorderSize();
-            return new Insets(bs, bs, bs, bs);
-        }
         return b.getBorderInsets(c);
     }
 
     public Rectangle getDrawingRect(final JTextComponent c) {
-        return DarkUIUtil.applyInsets(new Rectangle(0, 0, c.getWidth(), c.getHeight()), getBorderInsets(c));
+        return DarkUIUtil.applyInsets(new Rectangle(c.getWidth(), c.getHeight()), getBorderInsets(c));
     }
 
     protected void installDarkKeyBoardActions() {
