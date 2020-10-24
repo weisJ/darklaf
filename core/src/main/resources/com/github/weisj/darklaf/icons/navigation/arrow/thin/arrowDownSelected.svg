@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
     <defs id="colors">
-        <linearGradient id="Icons.arrowDownSelected.color">
+        <linearGradient id="menuIconSelected">
             <stop offset="0" stop-color="#AFB1B3"/>
             <stop offset="1" stop-color="#AFB1B3"/>
         </linearGradient>
     </defs>
-    <polygon fill="url(#Icons.arrowDownSelected.color)" fill-rule="evenodd"
+    <polygon fill="url(#menuIconSelected)" fill-rule="evenodd"
              points="0 0 1.5 0 4.5 3 7.5 0 9 0 9 1.5 4.5 6 0 1.5"
              transform="translate(3.5,5)"/>
 </svg>

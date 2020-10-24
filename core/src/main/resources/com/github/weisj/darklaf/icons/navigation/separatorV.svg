@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="4" height="16" viewBox="6 0 4 16">
     <defs id="colors">
-        <linearGradient id="Icons.separatorV.color">
+        <linearGradient id="menuIconEnabled">
             <stop offset="0" stop-color="#AFB1B3"/>
             <stop offset="1" stop-color="#AFB1B3"/>
         </linearGradient>
     </defs>
     <g fill="none" fill-rule="evenodd">
-        <rect width="2" height="4" y="1" x="7" fill="url(#Icons.separatorV.color)"/>
-        <rect width="2" height="4" y="6" x="7" fill="url(#Icons.separatorV.color)"/>
-        <rect width="2" height="4" y="11" x="7" fill="url(#Icons.separatorV.color)"/>
+        <rect width="2" height="4" y="1" x="7" fill="url(#menuIconEnabled)"/>
+        <rect width="2" height="4" y="6" x="7" fill="url(#menuIconEnabled)"/>
+        <rect width="2" height="4" y="11" x="7" fill="url(#menuIconEnabled)"/>
     </g>
 </svg>

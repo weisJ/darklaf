@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
     <defs id="colors">
-        <linearGradient id="Icons.moveToLeftBottomDisabled.color">
+        <linearGradient id="menuIconDisabled">
             <stop offset="0" stop-color="#6E6E6E"/>
             <stop offset="1" stop-color="#6E6E6E"/>
         </linearGradient>
     </defs>
-    <path fill="url(#Icons.moveToLeftBottomDisabled.color)" fill-rule="evenodd"
+    <path fill="url(#menuIconDisabled)" fill-rule="evenodd"
           d="M3,10 L3,13 L13,13 L13,3 L3,3 L3,10 L3,13 L6,13 L6,7 L3,7 L3,10 Z M2,2 L14,2 L14,14 L2,14 L2,2 Z"/>
 </svg>

@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
     <defs id="colors">
-        <linearGradient id="Icons.dropdown.color">
+        <linearGradient id="menuIconEnabled">
             <stop offset="0" stop-color="#AFB1B3"/>
             <stop offset="1" stop-color="#AFB1B3"/>
         </linearGradient>
     </defs>
-    <path fill="url(#Icons.dropdown.color)" fill-rule="evenodd" d="M13 16l3-3h-6z"/>
+    <path fill="url(#menuIconEnabled)" fill-rule="evenodd" d="M13 16l3-3h-6z"/>
 </svg>

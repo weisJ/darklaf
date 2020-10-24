@@ -1,6 +1,6 @@
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 16 16">
     <defs id="colors">
-        <linearGradient id="Icons.image.missing.color" opacity="Icons.image.missing.opacity">
+        <linearGradient id="fileIconBackground" opacity="fileIconOpacity">
             <stop offset="0" stop-color="#9AA7B0" stop-opacity=".8"/>
             <stop offset="1" stop-color="#9AA7B0" stop-opacity=".8"/>
         </linearGradient>
@@ -12,17 +12,17 @@
             <stop offset="0" stop-color="#62B543"/>
             <stop offset="1" stop-color="#62B543"/>
         </linearGradient>
-        <linearGradient id="Icons.image.missing.indicatorColor">
+        <linearGradient id="errorIconColor">
             <stop offset="0" stop-color="#DB5860"/>
             <stop offset="1" stop-color="#DB5860"/>
         </linearGradient>
-        <linearGradient id="Icons.image.missing.indicator.foregroundColor"
-                        opacity="Icons.image.missing.indicator.foregroundOpacity">
+        <linearGradient id="fileIconForeground"
+                        opacity="fileIconOpacity">
             <stop offset="0" stop-color="#231F20" stop-opacity=".8"/>
             <stop offset="1" stop-color="#231F20" stop-opacity=".8"/>
         </linearGradient>
     </defs>
-    <g fill="url(#Icons.image.missing.color)">
+    <g fill="url(#fileIconBackground)">
         <rect x="1" y="1" class="st0" width="1" height="11.3"/>
         <rect x="2" y="1" class="st0" width="12" height="1"/>
         <path class="st0" d="M7,12.5c0-0.1,0-0.1,0-0.2H1v1h6.1C7,13,7,12.8,7,12.5z"/>
@@ -33,9 +33,9 @@
     <path fill="url(#Icons.image.missing.grass.color)"
           d="M9.3,8.6c-0.7-0.4-1.4-0.9-2-1.4C6,5.9,3,8.6,3,8.6v2.8h4.1C7.5,10.2,8.2,9.2,9.3,8.6z"/>
 
-    <path fill="url(#Icons.image.missing.indicatorColor)"
+    <path fill="url(#errorIconColor)"
           d="M15,12.5c0,1.9-1.6,3.5-3.5,3.5S8,14.4,8,12.5S9.6,9,11.5,9S15,10.6,15,12.5"/>
-    <g fill="url(#Icons.image.missing.indicator.foregroundColor)">
+    <g fill="url(#fileIconForeground)">
         <polygon points="13.6,11.1 12.9,10.4 11.5,11.8 10.1,10.4 9.4,11.1 10.8,12.5 9.4,13.9 10.1,14.6 11.5,13.2 12.9,14.6
 	    13.6,13.9 12.2,12.5 "/>
     </g>

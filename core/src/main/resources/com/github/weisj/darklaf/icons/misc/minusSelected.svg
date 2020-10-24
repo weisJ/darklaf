@@ -1,9 +1,9 @@
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
     <defs id="colors">
-        <linearGradient id="Icons.minusSelected.color">
+        <linearGradient id="menuIconSelected">
             <stop offset="0" stop-color="#AFB1B3"/>
             <stop offset="1" stop-color="#AFB1B3"/>
         </linearGradient>
     </defs>
-    <rect x="4.5" y="7" fill="url(#Icons.minusSelected.color)" width="7" height="2"/>
+    <rect x="4.5" y="7" fill="url(#menuIconSelected)" width="7" height="2"/>
 </svg>

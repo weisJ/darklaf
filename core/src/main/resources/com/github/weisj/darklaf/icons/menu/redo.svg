@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
     <defs id="colors">
-        <linearGradient id="Icons.redo.color">
+        <linearGradient id="menuIconEnabled">
             <stop offset="0" stop-color="#AFB1B3"/>
             <stop offset="1" stop-color="#AFB1B3"/>
         </linearGradient>
     </defs>
-    <path fill="url(#Icons.redo.color)"
+    <path fill="url(#menuIconEnabled)"
           d="M7.998 4.667c1.767 0 3.368.66 4.601 1.733L15 4v6H8.999l2.413-2.413a5.304 5.304 0 0 0-3.414-1.254A5.342 5.342 0 0 0 2.93 10l-1.58-.52c.927-2.793 3.548-4.813 6.648-4.813z"/>
 </svg>

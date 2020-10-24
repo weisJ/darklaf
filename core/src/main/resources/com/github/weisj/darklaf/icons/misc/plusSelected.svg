@@ -1,10 +1,10 @@
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 16 16" width="16" height="16">
     <defs id="colors">
-        <linearGradient id="Icons.plusSelected.color">
+        <linearGradient id="menuIconSelected">
             <stop offset="0" stop-color="#AFB1B3"/>
             <stop offset="1" stop-color="#AFB1B3"/>
         </linearGradient>
     </defs>
-    <rect x="4.5" y="7" fill="url(#Icons.plusSelected.color)" width="7" height="2"/>
-    <rect x="7" y="4.5" fill="url(#Icons.plusSelected.color)" width="2" height="7"/>
+    <rect x="4.5" y="7" fill="url(#menuIconSelected)" width="7" height="2"/>
+    <rect x="7" y="4.5" fill="url(#menuIconSelected)" width="2" height="7"/>
 </svg>
