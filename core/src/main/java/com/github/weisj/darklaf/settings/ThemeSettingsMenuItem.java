@@ -21,15 +21,13 @@
  */
 package com.github.weisj.darklaf.settings;
 
-import java.awt.*;
-
 import javax.swing.*;
 
 public class ThemeSettingsMenuItem extends JMenuItem {
 
     public ThemeSettingsMenuItem(final String text) {
         super(text);
-        setIcon(ThemeSettings.getInstance().getIcon());
+        setIcon(ThemeSettings.getIcon());
         addActionListener(e -> ThemeSettings.showSettingsDialog(this));
     }
 }
