@@ -10,9 +10,9 @@
         </linearGradient>
     </defs>
     <g transform="translate(2,2)">
+        <polyline fill="url(#Icons.VolumeSliderDisabled.inactiveFillColor)"
+                  points="15.5,0.5 15.5,11 8,18 0.5,11 0.5,0.5"/>
         <path fill="url(#Icons.VolumeSliderDisabled.inactiveBorderColor)"
               d="M15,1v9.6l-7,7l-7-7V1H15 M16,0H0v11l8,8l8-8V0L16,0z"/>
-        <polyline fill="url(#Icons.VolumeSliderDisabled.inactiveFillColor)"
-                  points="15,1 15,10.6 8,17.6 1,10.6 1,1 15,1 "/>
     </g>
 </svg>
