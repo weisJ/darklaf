@@ -32,12 +32,10 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicTreeUI;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.TreeCellEditor;
-import javax.swing.tree.TreeCellRenderer;
-import javax.swing.tree.TreePath;
+import javax.swing.tree.*;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.icons.RotatableIcon;
 import com.github.weisj.darklaf.ui.cell.CellConstants;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererPane;
@@ -66,6 +64,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     public static final String KEY_IS_TABLE_TREE = "JComponent.isTableTree";
 
     protected static final Rectangle boundsBuffer = new Rectangle();
+    protected static final RotatableIcon paintingIcon = new RotatableIcon();
 
     protected MouseListener selectionListener;
     protected Color lineColor;
@@ -92,6 +91,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
 
     private int dashLength;
     private int dashGapLength;
+    private DarkTreeExpansionAnimationListener treeExpansionAnimationListener;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTreeUI();
@@ -162,6 +162,12 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         tree.addPropertyChangeListener(this);
         selectionListener = createMouseSelectionListener();
         tree.addMouseListener(selectionListener);
+        this.treeExpansionAnimationListener = createExpansionAnimationListener();
+        tree.addTreeExpansionListener(treeExpansionAnimationListener);
+    }
+
+    protected DarkTreeExpansionAnimationListener createExpansionAnimationListener() {
+        return new DarkTreeExpansionAnimationListener(tree);
     }
 
     protected MouseListener createMouseSelectionListener() {
@@ -247,6 +253,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         tree.removeMouseListener(selectionListener);
         selectionListener = null;
         tree.removePropertyChangeListener(this);
+        tree.removeTreeExpansionListener(treeExpansionAnimationListener);
+        treeExpansionAnimationListener = null;
     }
 
     @Override
@@ -254,6 +262,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         if (tree != c) {
             throw new InternalError("incorrect component");
         }
+
         // Should never happen if installed for a UI
         if (treeState == null) {
             return;
@@ -270,7 +279,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
             boolean done = false;
             while (!done && paintingEnumerator.hasMoreElements()) {
                 TreePath path = (TreePath) paintingEnumerator.nextElement();
-                if (!paintSingleRow(g, paintBounds, insets, path, row)) {
+                Rectangle cellBounds = paintSingleRow(g, paintBounds, insets, path, row);
+                if (cellBounds == null || (cellBounds.y + cellBounds.height) >= paintBounds.y + paintBounds.height) {
                     done = true;
                 }
                 row++;
@@ -293,15 +303,15 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         g.translate(0, rowBounds.y);
     }
 
-    protected boolean paintSingleRow(final Graphics g, final Rectangle paintBounds, final Insets insets,
+    protected Rectangle paintSingleRow(final Graphics g, final Rectangle paintBounds, final Insets insets,
             final TreePath path, final int row) {
-        if (path == null) return false;
+        if (path == null) return null;
         final int xOffset =
                 tree.getParent() instanceof JViewport ? ((JViewport) tree.getParent()).getViewPosition().x : 0;
         final int containerWidth =
                 tree.getParent() instanceof JViewport ? tree.getParent().getWidth() : tree.getWidth();
         final Rectangle cellBounds = getPathBounds(path, insets, boundsBuffer);
-        if (cellBounds == null) return false;
+        if (cellBounds == null) return null;
         final int boundsX = cellBounds.x;
         final int boundsWidth = cellBounds.width;
 
@@ -333,7 +343,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
             PaintUtil.drawRect(g, cellBounds, leadSelectionBorderInsets);
         }
 
-        return (cellBounds.y + cellBounds.height) < paintBounds.y + paintBounds.height;
+        return cellBounds;
     }
 
     protected void paintRowBackground(final Graphics g, final Rectangle bounds, final TreePath path, final int row,
@@ -519,11 +529,27 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
             int iconCenterY = bounds.y + (bounds.height / 2);
 
             if (isExpanded) {
-                Icon expandedIcon = getExpandedIcon();
-                if (expandedIcon != null) drawCentered(tree, g, expandedIcon, iconCenterX, iconCenterY);
+                Icon expIcon = getExpandedIcon();
+                if (expIcon != null) {
+                    if (Objects.equals(treeExpansionAnimationListener.getAnimationPath(), path)) {
+                        paintingIcon.setIcon(expIcon);
+                        paintingIcon
+                                .setRotation((treeExpansionAnimationListener.getAnimationState() - 1) * Math.PI / 2.0);
+                        expIcon = paintingIcon;
+                    }
+                    drawCentered(tree, g, expIcon, iconCenterX, iconCenterY);
+                }
             } else {
-                Icon collapsedIcon = getCollapsedIcon();
-                if (collapsedIcon != null) drawCentered(tree, g, collapsedIcon, iconCenterX, iconCenterY);
+                Icon collIcon = getCollapsedIcon();
+                if (collIcon != null) {
+                    if (Objects.equals(treeExpansionAnimationListener.getAnimationPath(), path)) {
+                        paintingIcon.setIcon(collIcon);
+                        paintingIcon
+                                .setRotation((1 - treeExpansionAnimationListener.getAnimationState()) * Math.PI / 2.0);
+                        collIcon = paintingIcon;
+                    }
+                    drawCentered(tree, g, collIcon, iconCenterX, iconCenterY);
+                }
             }
         }
     }
