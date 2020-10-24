@@ -56,10 +56,15 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
     public DarkScrollBarListener(final JScrollBar scrollbar, final DarkScrollBarUI ui) {
         this.scrollbar = scrollbar;
         this.ui = ui;
+        boolean animationsEnabled = UIManager.getBoolean("ScrollBar.animated");
         trackFadeoutAnimator = createTrackFadeoutAnimator();
         trackFadeinAnimator = createTrackFadeinAnimator();
         thumbFadeoutAnimator = createThumbFadeoutAnimator();
         thumbFadeinAnimator = createThumbFadeinAnimator();
+        trackFadeoutAnimator.setEnabled(animationsEnabled);
+        trackFadeinAnimator.setEnabled(animationsEnabled);
+        thumbFadeoutAnimator.setEnabled(animationsEnabled);
+        thumbFadeinAnimator.setEnabled(animationsEnabled);
     }
 
     public void uninstall() {

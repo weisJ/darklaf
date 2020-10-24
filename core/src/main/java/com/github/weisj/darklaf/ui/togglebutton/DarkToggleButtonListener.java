@@ -40,7 +40,12 @@ public class DarkToggleButtonListener extends DarkButtonListener<DarkToggleButto
         super(b, ui);
         this.selected = b.isSelected();
         button = b;
-        animator = new SliderAnimator(b);
+        animator = createAnimator();
+        animator.setEnabled(UIManager.getBoolean("ToggleButton.animated"));
+    }
+
+    protected SliderAnimator createAnimator() {
+        return new SliderAnimator(button);
     }
 
     public float getAnimationState() {
@@ -72,13 +77,14 @@ public class DarkToggleButtonListener extends DarkButtonListener<DarkToggleButto
         boolean sel = button.isSelected();
         if (sel != selected) {
             selected = sel;
+            float endState = sel ? 1 : 0;
             int startFrame = 0;
             if (animator.isRunning()) {
                 startFrame = animator.getCurrentFrame();
             }
             animator.suspend();
             animator.setForward(sel);
-            animator.setEndValue(sel ? 1 : 0);
+            animator.setEndValue(endState);
             animator.resume(startFrame);
         }
     }

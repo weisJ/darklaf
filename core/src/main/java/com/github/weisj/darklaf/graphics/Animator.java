@@ -29,8 +29,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.DarkLaf;
+import com.github.weisj.darklaf.util.PropertyValue;
+
 /** @author Konstantin Bulenkov */
 public abstract class Animator {
+
+    public static final String ANIMATIONS_FLAG = DarkLaf.SYSTEM_PROPERTY_PREFIX + "animations";
     private static final ScheduledExecutorService scheduler = createScheduler();
 
     private final int totalFrames;
@@ -47,6 +52,7 @@ public abstract class Animator {
     private int currentFrame;
     private long startTime;
     private long stopTime;
+    private boolean enabled = true;
     private volatile boolean disposed = false;
 
     public Animator(final int totalFrames, final int cycleDuration, final int delayFrames) {
@@ -120,11 +126,23 @@ public abstract class Animator {
         resume(0);
     }
 
+    private boolean animationsEnabled() {
+        return enabled && !PropertyValue.FALSE.equals(System.getProperty(ANIMATIONS_FLAG));
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(final boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public void resume(final int startFrame) {
         if (startFrame < 0) {
             throw new IllegalArgumentException("Starting frame must be non negative.");
         }
-        if (cycleDuration == 0 || startFrame >= totalFrames) {
+        if (cycleDuration == 0 || startFrame >= totalFrames || !animationsEnabled()) {
             currentFrame = totalFrames - 1;
             paint();
             animationDone();
