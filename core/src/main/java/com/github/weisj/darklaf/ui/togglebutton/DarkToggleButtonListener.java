@@ -27,6 +27,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 
 import com.github.weisj.darklaf.graphics.Animator;
+import com.github.weisj.darklaf.graphics.DefaultInterpolator;
 import com.github.weisj.darklaf.ui.button.DarkButtonListener;
 import com.github.weisj.darklaf.util.PropertyKey;
 
@@ -83,7 +84,7 @@ public class DarkToggleButtonListener extends DarkButtonListener<DarkToggleButto
                 startFrame = animator.getCurrentFrame();
             }
             animator.suspend();
-            animator.setForward(sel);
+            animator.reverse = !sel;
             animator.setEndValue(endState);
             animator.resume(startFrame, button);
         }
@@ -94,9 +95,11 @@ public class DarkToggleButtonListener extends DarkButtonListener<DarkToggleButto
         private final JComponent c;
         private float state;
         private float endValue;
+        private boolean reverse;
 
         public SliderAnimator(final JComponent c) {
             super(10, 100, 0);
+            setInterpolator(DefaultInterpolator.EASE_OUT_QUAD);
             this.c = c;
         }
 
@@ -106,7 +109,7 @@ public class DarkToggleButtonListener extends DarkButtonListener<DarkToggleButto
 
         @Override
         public void paintNow(final float fraction) {
-            this.state = fraction;
+            this.state = reverse ? 1 - fraction : fraction;
             repaint();
         }
 
