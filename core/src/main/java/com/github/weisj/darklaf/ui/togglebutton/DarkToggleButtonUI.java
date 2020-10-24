@@ -133,11 +133,9 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
         Rectangle knobBounds = new Rectangle(0, 0, knobSize, knobSize);
         knobBounds.x = (int) ((bounds.width - knobBounds.width) * toggleButtonListener.getAnimationState());
 
-        boolean rollOver = c.isRolloverEnabled() && c.getModel().isRollover();
-        boolean clicked = c.getModel().isArmed();
         boolean enabled = c.isEnabled();
-        Color selectedBg = getBackgroundColor(c, false, rollOver, clicked, enabled, true);
-        Color deselectedBg = getBackgroundColor(c, false, rollOver, clicked, enabled, false);
+        Color selectedBg = getBackgroundColor(c, false, false, false, enabled, true);
+        Color deselectedBg = getBackgroundColor(c, false, false, false, enabled, false);
 
         Shape clip = g.getClip();
         g.clipRect(0, 0, knobBounds.x + knobBounds.width / 2, bounds.height);
@@ -204,7 +202,15 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
     @Override
     protected Color getBackgroundColor(final AbstractButton b, final boolean defaultButton, final boolean rollOver,
             final boolean clicked, final boolean enabled) {
-        return getBackgroundColor(b, defaultButton, rollOver, clicked, enabled, b.getModel().isSelected());
+        boolean effectiveRollover = rollOver;
+        boolean effectiveArmed = clicked;
+        if (effectiveRollover || effectiveArmed) {
+            boolean slider = !ToggleButtonConstants.isSlider(b);
+            effectiveArmed &= slider;
+            effectiveRollover &= slider;
+        }
+        return getBackgroundColor(b, defaultButton, effectiveRollover, effectiveArmed, enabled,
+                b.getModel().isSelected());
     }
 
     protected Color getBackgroundColor(final AbstractButton b, final boolean defaultButton, final boolean rollOver,
