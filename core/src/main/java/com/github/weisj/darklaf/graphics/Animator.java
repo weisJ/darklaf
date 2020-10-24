@@ -138,6 +138,11 @@ public abstract class Animator {
         this.enabled = enabled;
     }
 
+    public void resume(final int startFrame, final JComponent target) {
+        if (!target.isVisible() || !target.isShowing()) return;
+        resume(startFrame);
+    }
+
     public void resume(final int startFrame) {
         if (startFrame < 0) {
             throw new IllegalArgumentException("Starting frame must be non negative.");

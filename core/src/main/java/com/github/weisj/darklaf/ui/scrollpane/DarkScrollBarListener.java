@@ -200,14 +200,14 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
         if (scrollbar != null && (scrollbar.getValueIsAdjusting() || overAnimatedComponent)) {
             fadeOutAnimator.suspend();
             int startFrame = (int) ((currentAlpha / maxAlpha) * fadeInAnimator.getTotalFrames());
-            fadeInAnimator.resume(startFrame);
+            fadeInAnimator.resume(startFrame, scrollbar);
         } else {
             fadeInAnimator.suspend();
             int startFrame = 0;
             if (currentAlpha < maxAlpha) {
                 startFrame = (int) ((1.0 - currentAlpha / maxAlpha) * (fadeOutAnimator.getTotalFrames()));
             }
-            fadeOutAnimator.resume(startFrame);
+            fadeOutAnimator.resume(startFrame, scrollbar);
         }
     }
 
