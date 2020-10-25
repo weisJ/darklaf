@@ -27,7 +27,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.processing.*;
+import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
@@ -37,8 +39,7 @@ import javax.tools.JavaFileObject;
 import com.github.weisj.darklaf.annotations.SynthesiseLaf;
 
 @SupportedAnnotationTypes("com.github.weisj.darklaf.annotations.SynthesiseLaf")
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class SynthesisesLafProcessor extends AbstractProcessor {
+public class SynthesiseLafProcessor extends AbstractProcessor {
 
     private static final String IDENT = "    ";
 
@@ -63,7 +64,7 @@ public class SynthesisesLafProcessor extends AbstractProcessor {
                     .append("());\n").append(IDENT).append("}\n").append("}");
 
             try {
-                JavaFileObject javaFileObject = processingEnv.getFiler().createSourceFile(synthesisedName);
+                JavaFileObject javaFileObject = processingEnv.getFiler().createSourceFile(synthesisedName, typeElement);
                 Writer writer = javaFileObject.openWriter();
                 writer.write(builder.toString());
                 writer.close();
@@ -72,5 +73,10 @@ public class SynthesisesLafProcessor extends AbstractProcessor {
             }
         }
         return false;
+    }
+
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+        return SourceVersion.latestSupported();
     }
 }
