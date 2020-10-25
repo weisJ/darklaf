@@ -39,6 +39,7 @@ public class MacOSTitlePane extends CustomTitlePane {
 
     private final JRootPane rootPane;
     private final Window window;
+    private final boolean useColoredTitleBar;
     private WindowListener windowListener;
     private Color inactiveBackground;
     private Color activeBackground;
@@ -55,6 +56,7 @@ public class MacOSTitlePane extends CustomTitlePane {
     public MacOSTitlePane(final JRootPane rootPane, final Window window) {
         this.rootPane = rootPane;
         this.window = window;
+        this.useColoredTitleBar = UIManager.getBoolean("macos.coloredTitleBar");
         determineColors();
         updateTitleBarVisibility();
     }
@@ -118,7 +120,7 @@ public class MacOSTitlePane extends CustomTitlePane {
     public void install() {
         determineColors();
         JRootPane rootPane = getRootPane();
-        decorationInformation = MacOSDecorationsUtil.installDecorations(rootPane);
+        decorationInformation = MacOSDecorationsUtil.installDecorations(rootPane, useColoredTitleBar);
         installListeners();
         if (!decorationInformation.titleVisible) {
             titleLabel = new JLabel();
@@ -210,6 +212,7 @@ public class MacOSTitlePane extends CustomTitlePane {
     }
 
     private boolean hideTitleBar() {
+        if (!useColoredTitleBar) return true;
         if (titleBarHidden) return true;
         return (decorationInformation.windowHandle == 0)
                 || JNIDecorationsMacOS.isFullscreen(decorationInformation.windowHandle)

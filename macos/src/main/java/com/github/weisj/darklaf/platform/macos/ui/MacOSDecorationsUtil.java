@@ -34,12 +34,13 @@ public class MacOSDecorationsUtil {
     private static final String FULL_WINDOW_CONTENT_KEY = "apple.awt.fullWindowContent";
     private static final String TRANSPARENT_TITLE_BAR_KEY = "apple.awt.transparentTitleBar";
 
-    protected static DecorationInformation installDecorations(final JRootPane rootPane) {
+    protected static DecorationInformation installDecorations(final JRootPane rootPane,
+            final boolean useColoredTitleBar) {
         if (rootPane == null) return null;
         Window window = SwingUtilities.getWindowAncestor(rootPane);
         long windowHandle = JNIDecorationsMacOS.getComponentPointer(window);
         if (windowHandle == 0) {
-            return new DecorationInformation(0, false, false, false, rootPane, false, 0, 0);
+            return new DecorationInformation(0, false, false, false, false, rootPane, false, 0, 0);
         }
         JNIDecorationsMacOS.retainWindow(windowHandle);
         boolean fullWindowContent = isFullWindowContentEnabled(rootPane);
@@ -48,29 +49,41 @@ public class MacOSDecorationsUtil {
         int titleBarHeight = (int) JNIDecorationsMacOS.getTitleBarHeight(windowHandle);
 
         boolean jniInstall = !SystemInfo.isJavaVersionAtLeast("12");
-        if (!jniInstall) {
-            setTransparentTitleBarEnabled(rootPane, true);
-            setFullWindowContentEnabled(rootPane, true);
-        } else {
-            JNIDecorationsMacOS.installDecorations(windowHandle);
+
+        if (useColoredTitleBar) {
+            enableFullSizeContent(rootPane, windowHandle, jniInstall);
         }
+
         boolean titleVisible = SystemInfo.isMacOSMojave;
         JNIDecorationsMacOS.setTitleEnabled(windowHandle, titleVisible);
         if (titleVisible) {
             boolean isDarkTheme = UIManager.getBoolean("Theme.dark");
             JNIDecorationsMacOS.setDarkTheme(windowHandle, isDarkTheme);
         }
-        return new DecorationInformation(windowHandle, fullWindowContent, transparentTitleBar, jniInstall, rootPane,
+        return new DecorationInformation(windowHandle, fullWindowContent, transparentTitleBar, useColoredTitleBar,
+                jniInstall, rootPane,
                 titleVisible, titleBarHeight, titleFontSize);
+    }
+
+    private static void enableFullSizeContent(final JRootPane rootPane, final long windowHandle,
+            final boolean jniInstall) {
+        if (!jniInstall) {
+            setTransparentTitleBarEnabled(rootPane, true);
+            setFullWindowContentEnabled(rootPane, true);
+        } else {
+            JNIDecorationsMacOS.installDecorations(windowHandle);
+        }
     }
 
     protected static void uninstallDecorations(final DecorationInformation information) {
         if (information == null || information.windowHandle == 0) return;
-        if (information.jniInstalled) {
-            JNIDecorationsMacOS.uninstallDecorations(information.windowHandle);
-        } else {
-            setFullWindowContentEnabled(information.rootPane, information.fullWindowContentEnabled);
-            setTransparentTitleBarEnabled(information.rootPane, information.transparentTitleBarEnabled);
+        if (information.useColoredTitleBar) {
+            if (information.jniInstalled) {
+                JNIDecorationsMacOS.uninstallDecorations(information.windowHandle);
+            } else {
+                setFullWindowContentEnabled(information.rootPane, information.fullWindowContentEnabled);
+                setTransparentTitleBarEnabled(information.rootPane, information.transparentTitleBarEnabled);
+            }
         }
         JNIDecorationsMacOS.setTitleEnabled(information.windowHandle, true);
         JNIDecorationsMacOS.releaseWindow(information.windowHandle);
