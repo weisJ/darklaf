@@ -22,15 +22,13 @@
 package com.github.weisj.darklaf.ui.spinner;
 
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 
 public class DarkSpinnerListener extends MouseAdapter
@@ -95,6 +93,18 @@ public class DarkSpinnerListener extends MouseAdapter
             spinner.repaint();
         } else if (PropertyKey.ENABLED.equals(key)) {
             ui.updateBackground();
+        }
+    }
+
+    @Override
+    public void mouseWheelMoved(final MouseWheelEvent e) {
+        super.mouseWheelMoved(e);
+        if (!DarkUIUtil.hasFocus(spinner)) return;
+        int rotation = e.getWheelRotation();
+        if (rotation > 0) {
+            spinner.setValue(spinner.getPreviousValue());
+        } else if (rotation < 0) {
+            spinner.setValue(spinner.getNextValue());
         }
     }
 }

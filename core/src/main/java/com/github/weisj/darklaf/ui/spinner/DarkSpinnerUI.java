@@ -91,6 +91,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
         super.installListeners();
         spinnerListener = createSpinnerListener();
         spinner.addMouseListener(spinnerListener);
+        spinner.addMouseWheelListener(spinnerListener);
         spinner.addPropertyChangeListener(spinnerListener);
     }
 
@@ -105,6 +106,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
             editor.getComponents()[0].removeFocusListener(spinnerListener);
         }
         spinner.removeMouseListener(spinnerListener);
+        spinner.removeMouseWheelListener(spinnerListener);
         spinner.removePropertyChangeListener(spinnerListener);
         spinnerListener = null;
     }
