@@ -8,12 +8,12 @@ plugins {
 
 dependencies {
     api(project(":darklaf-theme"))
+    api(project(":darklaf-property-loader"))
     api(project(":darklaf-utils"))
     implementation(project(":darklaf-native-utils"))
     implementation(project(":darklaf-platform-base"))
     implementation(project(":darklaf-windows"))
     implementation(project(":darklaf-macos"))
-    implementation(project(":darklaf-property-loader"))
     implementation("org.swinglabs:jxlayer")
     compileOnly("org.swinglabs:swingx")
 
