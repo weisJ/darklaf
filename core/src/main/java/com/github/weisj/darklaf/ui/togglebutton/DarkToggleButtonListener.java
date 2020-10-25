@@ -21,6 +21,7 @@
  */
 package com.github.weisj.darklaf.ui.togglebutton;
 
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 
 import javax.swing.*;
@@ -75,6 +76,7 @@ public class DarkToggleButtonListener extends DarkButtonListener<DarkToggleButto
     @Override
     public void stateChanged(final ChangeEvent e) {
         super.stateChanged(e);
+        if (!ToggleButtonConstants.isSlider(button)) return;
         boolean sel = button.isSelected();
         if (sel != selected) {
             selected = sel;
@@ -83,6 +85,7 @@ public class DarkToggleButtonListener extends DarkButtonListener<DarkToggleButto
             if (animator.isRunning()) {
                 startFrame = animator.getCurrentFrame();
             }
+            animator.animationBounds = ui.getSliderBounds(button);
             animator.suspend();
             animator.reverse = !sel;
             animator.setEndValue(endState);
@@ -96,6 +99,7 @@ public class DarkToggleButtonListener extends DarkButtonListener<DarkToggleButto
         private float state;
         private float endValue;
         private boolean reverse;
+        private Rectangle animationBounds;
 
         public SliderAnimator(final JComponent c) {
             super(10, 100, 0);
@@ -117,11 +121,12 @@ public class DarkToggleButtonListener extends DarkButtonListener<DarkToggleButto
         protected void paintCycleEnd() {
             this.state = endValue;
             repaint();
+            animationBounds = null;
         }
 
         private void repaint() {
             if (c != null) {
-                c.paintImmediately(c.getVisibleRect());
+                c.paintImmediately(animationBounds != null ? animationBounds : c.getVisibleRect());
             }
         }
 
