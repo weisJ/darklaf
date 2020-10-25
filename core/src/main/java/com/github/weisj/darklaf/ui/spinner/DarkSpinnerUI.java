@@ -30,6 +30,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicSpinnerUI;
+import javax.swing.text.JTextComponent;
 
 import com.github.weisj.darklaf.components.ArrowButton;
 import com.github.weisj.darklaf.ui.DividedWidgetPainter;
@@ -144,6 +145,9 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
             editorComponent = ((JSpinner.DefaultEditor) editor).getTextField();
         } else {
             editorComponent = editor;
+        }
+        if (editorComponent instanceof JTextComponent) {
+            ((JTextComponent) editorComponent).setMargin(new Insets(0, 0, 0, 0));
         }
         editorComponent.addFocusListener(spinnerListener);
     }
