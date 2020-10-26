@@ -29,11 +29,11 @@ import org.junit.jupiter.api.condition.OS;
 import com.github.weisj.darklaf.platform.macos.MacOSLibrary;
 import com.github.weisj.darklaf.platform.windows.WindowsLibrary;
 
-public class NativeLibraryTest {
+class NativeLibraryTest {
 
     @Test
     @EnabledOnOs(OS.MAC)
-    public void testMacOSLibraryLoading() {
+    void testMacOSLibraryLoading() {
         MacOSLibrary library = new TestMacOsLibrary();
         Assertions.assertNotNull(getClass().getResource(library.getLibraryPath()), "macOS library doesn't exist");
         Assertions.assertDoesNotThrow(library::updateLibrary);
@@ -42,7 +42,7 @@ public class NativeLibraryTest {
 
     @Test
     @EnabledOnOs(OS.WINDOWS)
-    public void testWindowsLibraryLoading() {
+    void testWindowsLibraryLoading() {
         WindowsLibrary library = new TestWindowsLibrary();
         Assertions.assertNotNull(getClass().getResource(library.getX64Path() + library.getLibraryName()),
                 "x64 library doesn't exist");

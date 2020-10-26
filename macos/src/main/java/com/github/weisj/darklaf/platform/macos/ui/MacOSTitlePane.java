@@ -157,9 +157,9 @@ public class MacOSTitlePane extends CustomTitlePane {
             window.addWindowListener(windowListener);
             propertyChangeListener = new PropertyChangeHandler();
             window.addPropertyChangeListener(propertyChangeListener);
-            rootPanePropertyChangeListener = createRootPanePropertyChangeListener();
-            rootPane.addPropertyChangeListener(rootPanePropertyChangeListener);
         }
+        rootPanePropertyChangeListener = createRootPanePropertyChangeListener();
+        rootPane.addPropertyChangeListener(rootPanePropertyChangeListener);
     }
 
     private void uninstallListeners() {

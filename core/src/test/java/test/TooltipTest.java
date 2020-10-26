@@ -23,7 +23,6 @@ package test;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.*;
 
@@ -40,7 +39,7 @@ import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
-public class TooltipTest extends AbstractImageTest {
+class TooltipTest extends AbstractImageTest {
 
     public TooltipTest() {
         super("tooltip");
@@ -63,7 +62,7 @@ public class TooltipTest extends AbstractImageTest {
 
     @Test
     @EnabledOnOs({OS.MAC, OS.WINDOWS})
-    public void testTooltipTransparency() throws Exception {
+    void testTooltipTransparency() throws Exception {
         JToolTip toolTip = createTooltip();
 
         SwingUtilities.invokeAndWait(() -> {
@@ -74,37 +73,28 @@ public class TooltipTest extends AbstractImageTest {
         Window window = DarkUIUtil.getWindow(toolTip);
         SwingUtilities.invokeAndWait(() -> window.setOpacity(1));
 
-        AtomicReference<Exception> exception = new AtomicReference<>();
-
-        SwingUtilities.invokeAndWait(() -> {
-            try {
-                Component c;
-                for (c = toolTip.getParent(); c != null; c = c.getParent()) {
-                    Color bg = c.getBackground();
-                    Assertions.assertNotNull(bg, "Background is null for " + c);
-                    Assertions.assertEquals(0, bg.getAlpha(), "Background " + bg + " is opaque " + c);
-                    if (c instanceof Window) break;
-                }
-                Assertions.assertEquals(c, window, "Did not traverse full hierarchy");
-
-                JRootPane rootPane = SwingUtilities.getRootPane(window);
-                Assertions.assertNotNull(rootPane, "RootPane is null");
-                Assertions.assertFalse(rootPane.isOpaque(), "RootPane is opaque");
-
-                Color backgroundColor = window.getBackground();
-                Assertions.assertNotNull(backgroundColor, "Background is null");
-
-                BufferedImage img = saveScreenShot(getPath("tooltip_" + SystemInfo.getOsName()), window);
-                Assertions.assertNotNull(img, "Tooltip Image is null");
-                int alpha = getAlpha(img.getRGB(img.getMinX(), img.getMinY() + img.getHeight() - 1));
-                Assertions.assertEquals(0, alpha, "Tooltip is opaque");
-            } catch (Exception e) {
-                exception.set(e);
+        TestUtils.runOnSwingThreadNotThrowing(() -> {
+            Component c;
+            for (c = toolTip.getParent(); c != null; c = c.getParent()) {
+                Color bg = c.getBackground();
+                Assertions.assertNotNull(bg, "Background is null for " + c);
+                Assertions.assertEquals(0, bg.getAlpha(), "Background " + bg + " is opaque " + c);
+                if (c instanceof Window) break;
             }
-        });
+            Assertions.assertEquals(c, window, "Did not traverse full hierarchy");
 
-        Exception e = exception.get();
-        if (e != null) Assertions.fail(e.getMessage());
+            JRootPane rootPane = SwingUtilities.getRootPane(window);
+            Assertions.assertNotNull(rootPane, "RootPane is null");
+            Assertions.assertFalse(rootPane.isOpaque(), "RootPane is opaque");
+
+            Color backgroundColor = window.getBackground();
+            Assertions.assertNotNull(backgroundColor, "Background is null");
+
+            BufferedImage img = saveScreenShot(getPath("tooltip_" + SystemInfo.getOsName()), window);
+            Assertions.assertNotNull(img, "Tooltip Image is null");
+            int alpha = getAlpha(img.getRGB(img.getMinX(), img.getMinY() + img.getHeight() - 1));
+            Assertions.assertEquals(0, alpha, "Tooltip is opaque");
+        });
     }
 
     private int getAlpha(final int rgb) {

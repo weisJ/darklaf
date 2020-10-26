@@ -46,7 +46,12 @@ jobs:
         with:
           java-version: 11
       - name: Build documentation
-        run: ./gradlew :darklaf-core:makeDocumentation -PskipAutostyle -x test
+        uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: :darklaf-core:makeDocumentation -PskipAutostyle -x test
+          wrapper-cache-enabled: true
+          dependencies-cache-enabled: true
+          configuration-cache-enabled: true
       - name: Upload documentation
         uses: actions/upload-artifact@v1
         with:

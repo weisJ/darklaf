@@ -28,9 +28,13 @@ import ui.ComponentDemo;
 import ui.DemoPanel;
 import util.ClassFinder;
 
+import com.github.weisj.darklaf.util.ColorUtil;
+
 public class DemoLauncher implements ComponentDemo {
 
     public static void main(final String[] args) {
+        System.out.println(ColorUtil.getPerceivedBrightness(ColorUtil.fromHex("2D2D2D")));
+        if (true) return;
         ComponentDemo.showDemo(new DemoLauncher());
     }
 
