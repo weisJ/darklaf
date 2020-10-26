@@ -84,8 +84,13 @@ jobs:
     # ✏️ If the Autobuild fails above, remove it and uncomment the following three lines
     #    and modify them (or add more) to build your code if your project
     #    uses a compiled language
-    - run: |
-       ./gradlew build -PskipAutostyle
+    - name: Build
+      uses: eskatos/gradle-command-action@v1
+      with:
+        arguments: build -PskipAutostyle --info -x test
+        wrapper-cache-enabled: true
+        dependencies-cache-enabled: true
+        configuration-cache-enabled: true
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1

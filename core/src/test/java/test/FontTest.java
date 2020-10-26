@@ -42,7 +42,7 @@ import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.IntelliJTheme;
 import com.github.weisj.darklaf.util.SystemInfo;
 
-public class FontTest extends AbstractImageTest {
+class FontTest extends AbstractImageTest {
 
     private static final Map<AttributedCharacterIterator.Attribute, Integer> kerning;
 
@@ -56,7 +56,7 @@ public class FontTest extends AbstractImageTest {
 
     @Test
     @EnabledOnOs({OS.MAC, OS.WINDOWS, OS.LINUX})
-    public void testFontChoices() {
+    void testFontChoices() {
         LafManager.install(new IntelliJTheme());
         JTextArea textArea = new JTextArea();
         textArea.setText(DemoResources.KERNING_TEST);
