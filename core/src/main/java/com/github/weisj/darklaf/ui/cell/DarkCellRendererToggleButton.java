@@ -62,6 +62,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellToggleBu
         toggleButton.setBorder(border);
 
         updateIcon(table.isCellEditable(row, column), toggleButton.isSelected());
+        toggleButton.setEnabled(table.isEnabled());
 
         return toggleButton;
     }
@@ -92,6 +93,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellToggleBu
 
         updateIcon(tree.isEditable() && tree.isPathEditable(tree.getPathForRow(row)), toggleButton.isSelected());
 
+        toggleButton.setEnabled(tree.isEnabled());
         toggleButton.setHasFocus(false);
         toggleButton.setHorizontalAlignment(tree.getComponentOrientation().isLeftToRight() ? LEFT : RIGHT);
         return toggleButton;
