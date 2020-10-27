@@ -280,6 +280,7 @@ public class CreateUITable {
             for (Object child : children) {
                 if (child instanceof LinearGradient) {
                     float opacity = IconColorMapper.getOpacity((LinearGradient) child, currentDefaults);
+                    if (opacity < 0) opacity = 1;
                     Color color = IconColorMapper.getColor((LinearGradient) child, currentDefaults);
                     String id = ((LinearGradient) child).getId();
                     String match = "=\"url\\(#" + id + "\\)\"";
