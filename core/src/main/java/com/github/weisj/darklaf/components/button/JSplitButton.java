@@ -78,6 +78,11 @@ public class JSplitButton extends JButton {
         super(text, icon);
     }
 
+    /**
+     * Get the number of currently installed action listened.
+     *
+     * @return the number of action listeners installed.
+     */
     public int getActionCount() {
         return listenerList.getListenerCount(ActionListener.class);
     }
@@ -99,11 +104,25 @@ public class JSplitButton extends JButton {
         firePropertyChange(KEY_ACTION_REMOVED, l, null);
     }
 
+    /**
+     * Get the current action menu. If no menu is currently installed an empty one will be created.
+     *
+     * @return the action menu.
+     */
     public JPopupMenu getActionMenu() {
         if (actionMenu == null) {
             actionMenu = new JPopupMenu();
         }
         return actionMenu;
+    }
+
+    /**
+     * Set the action menu.
+     *
+     * @param actionMenu the new action menu.
+     */
+    public void setActionMenu(final JPopupMenu actionMenu) {
+        this.actionMenu = actionMenu;
     }
 
     @Override
@@ -112,9 +131,5 @@ public class JSplitButton extends JButton {
         if (actionMenu != null) {
             SwingUtilities.updateComponentTreeUI(actionMenu);
         }
-    }
-
-    public void setActionMenu(final JPopupMenu actionMenu) {
-        this.actionMenu = actionMenu;
     }
 }
