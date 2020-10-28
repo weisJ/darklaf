@@ -32,6 +32,7 @@ import com.github.weisj.darklaf.components.tree.LabeledTreeNode;
 import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 import com.github.weisj.darklaf.ui.tree.DarkTreeCellRendererDelegate;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /** @author Jannis Weis */
 public class DarkCellRendererToggleButton<T extends JToggleButton & CellToggleButton>
@@ -61,7 +62,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellToggleBu
         toggleButton.setHasFocus(focus);
         toggleButton.setBorder(border);
 
-        updateIcon(table.isCellEditable(row, column), toggleButton.isSelected());
+        updateIcon(table.isCellEditable(row, column), isSelected && DarkUIUtil.hasFocus(table));
         toggleButton.setEnabled(table.isEnabled());
 
         return toggleButton;
@@ -91,7 +92,8 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellToggleBu
             }
         }
 
-        updateIcon(tree.isEditable() && tree.isPathEditable(tree.getPathForRow(row)), toggleButton.isSelected());
+        updateIcon(tree.isEditable() && tree.isPathEditable(tree.getPathForRow(row)),
+                selected && DarkUIUtil.hasFocus(tree));
 
         toggleButton.setEnabled(tree.isEnabled());
         toggleButton.setHasFocus(false);
