@@ -126,7 +126,6 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
             g.translate(borderSize, borderSize);
         }
 
-        int bw = 1;
         int knobSize = bounds.height;
         int arc = Math.min(bounds.width, bounds.height);
 
@@ -151,14 +150,8 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
         g.setColor(getToggleBorderColor(c));
         PaintUtil.paintLineBorder(g, 0, 0, bounds.width, bounds.height, arc);
 
-        knobBounds.x += bw;
-        knobBounds.y += bw;
-        knobBounds.width -= 2 * bw;
-        knobBounds.height -= 2 * bw;
-        knobSize -= 2 * bw;
-
         if (showSliderHints) {
-            paintSliderHints(g, c, bounds, bw, knobSize);
+            paintSliderHints(g, c, bounds, knobSize);
         }
 
         paintSliderKnob(g, c, knobBounds);
@@ -166,17 +159,17 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
         g.translate(-bounds.x, -bounds.y);
     }
 
-    protected void paintSliderHints(final Graphics2D g, final AbstractButton c, final Rectangle bounds, final int bw,
+    protected void paintSliderHints(final Graphics2D g, final AbstractButton c, final Rectangle bounds,
             final int knobSize) {
         int pad = 5;
-        int w = bounds.width - knobSize - 2 * bw - 2 * pad;
+        int w = bounds.width - knobSize - 2 * pad;
         int y = (bounds.height - w) / 2;
         if (c.isSelected()) {
-            int x = bw + pad;
+            int x = pad;
             g.setColor(selectedForeground);
             g.fillRect(x + (w - 1) / 2, y, 1, w);
         } else {
-            int x = bw + knobSize + pad;
+            int x = knobSize + pad;
             g.setColor(getForegroundColor(c, false, false));
             PaintUtil.paintLineBorder(g, x, y, w, w, w);
         }
