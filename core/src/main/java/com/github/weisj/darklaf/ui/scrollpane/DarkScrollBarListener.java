@@ -61,10 +61,10 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
         trackFadeinAnimator = createTrackFadeinAnimator();
         thumbFadeoutAnimator = createThumbFadeoutAnimator();
         thumbFadeinAnimator = createThumbFadeinAnimator();
-        trackFadeoutAnimator.setEnabled(animationsEnabled);
-        trackFadeinAnimator.setEnabled(animationsEnabled);
-        thumbFadeoutAnimator.setEnabled(animationsEnabled);
-        thumbFadeinAnimator.setEnabled(animationsEnabled);
+        if (trackFadeoutAnimator != null) trackFadeoutAnimator.setEnabled(animationsEnabled);
+        if (trackFadeinAnimator != null) trackFadeinAnimator.setEnabled(animationsEnabled);
+        if (thumbFadeoutAnimator != null) thumbFadeoutAnimator.setEnabled(animationsEnabled);
+        if (thumbFadeinAnimator != null) thumbFadeinAnimator.setEnabled(animationsEnabled);
     }
 
     public void uninstall() {
