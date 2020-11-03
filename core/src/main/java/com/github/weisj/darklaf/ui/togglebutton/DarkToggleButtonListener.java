@@ -120,7 +120,6 @@ public class DarkToggleButtonListener extends DarkButtonListener<DarkToggleButto
 
         @Override
         protected void paintCycleEnd() {
-            System.out.println("here");
             this.state = endValue;
             repaint();
             animationBounds = null;
