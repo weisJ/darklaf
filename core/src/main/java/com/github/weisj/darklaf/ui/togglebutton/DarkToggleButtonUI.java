@@ -165,9 +165,8 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
         int w = bounds.width - knobSize - 2 * pad;
         int y = (bounds.height - w) / 2;
         if (c.isSelected()) {
-            int x = pad;
             g.setColor(selectedForeground);
-            g.fillRect(x + (w - 1) / 2, y, 1, w);
+            g.fillRect(pad + (w - 1) / 2, y, 1, w);
         } else {
             int x = knobSize + pad;
             g.setColor(getForegroundColor(c, false, false));
@@ -252,6 +251,16 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
             r.x = c.getWidth() - ins.right - r.x - r.width;
         }
         return r;
+    }
+
+    @Override
+    public Dimension getPreferredSize(final JComponent c) {
+        Dimension dim = super.getPreferredSize(c);
+        if (ToggleButtonConstants.isSlider(c)) {
+            Insets ins = c.getInsets();
+            dim.height = Math.max(dim.height, sliderSize.height + ins.top + ins.bottom);
+        }
+        return dim;
     }
 
     @Override
