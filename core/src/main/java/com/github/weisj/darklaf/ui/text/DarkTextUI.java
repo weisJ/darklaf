@@ -22,14 +22,11 @@
 package com.github.weisj.darklaf.ui.text;
 
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicTextUI;
 import javax.swing.text.*;
@@ -50,12 +47,10 @@ import com.github.weisj.darklaf.ui.text.popup.DarkTextPopupMenu;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /** @author Jannis Weis */
-public abstract class DarkTextUI extends BasicTextUI
-        implements PropertyChangeListener, FocusListener, OpacityBufferedUI {
+public abstract class DarkTextUI extends BasicTextUI implements OpacityBufferedUI {
 
     protected static final String KEY_PREFIX = "JTextComponent.";
     public static final String KEY_ROUNDED_SELECTION = KEY_PREFIX + "roundedSelection";
@@ -69,9 +64,12 @@ public abstract class DarkTextUI extends BasicTextUI
 
     protected static final String TOGGLE_INSERT = "toggle_insert";
 
+    protected DarkTextListener textListener;
+
     protected JTextComponent editor;
     protected DefaultTextRenderer defaultTextRenderer;
     protected DarkCaret darkCaret;
+    protected Insets margins;
 
     @Override
     protected Caret createCaret() {
@@ -112,15 +110,18 @@ public abstract class DarkTextUI extends BasicTextUI
         disabledColor = UIManager.getColor(getPropertyPrefix() + ".disabledBackground");
         inactiveColor = UIManager.getColor(getPropertyPrefix() + ".inactiveBackground");
 
-        installMargins();
+        margins = UIManager.getInsets(getPropertyPrefix() + ".margins");
+
+        updateMargins();
         installBorder();
         installPopupMenu();
     }
 
-    protected void installMargins() {
+
+    protected void updateMargins() {
         Insets margin = editor.getMargin();
         if (margin == null || margin instanceof UIResource) {
-            editor.setMargin(UIManager.getInsets(getPropertyPrefix() + ".margins"));
+            editor.setMargin(isInCell(editor) ? new InsetsUIResource(0, 0, 0, 0) : margins);
         }
     }
 
@@ -177,36 +178,23 @@ public abstract class DarkTextUI extends BasicTextUI
     }
 
     @Override
-    public void propertyChange(final PropertyChangeEvent evt) {
-        super.propertyChange(evt);
-        String key = evt.getPropertyName();
-        if (KEY_ROUNDED_SELECTION.equals(key)) {
-            boolean rounded = PropertyUtil.getBooleanProperty(editor, DarkTextUI.KEY_ROUNDED_SELECTION);
-            getDarkCaret().setRoundedSelectionEdges(rounded);
-            editor.repaint();
-        } else if (KEY_HAS_ERROR.equals(key)) {
-            editor.repaint();
-        } else if (KEY_EXTEND_LINE_SELECTION.equals(key)) {
-            boolean extendLines = PropertyUtil.getBooleanProperty(editor, DarkTextUI.KEY_EXTEND_LINE_SELECTION);
-            getDarkCaret().setLineExtendingEnabled(extendLines);
-            editor.repaint();
-        } else if ("border".equals(key)) {
-            installBorder();
-        } else if (PropertyKey.ENABLED.equals(key) || PropertyKey.EDITABLE.equals(key)) {
-            PropertyUtil.installBackground(editor, getBackground(editor));
-        }
-    }
-
-    @Override
     protected void installListeners() {
         super.installListeners();
-        editor.addFocusListener(this);
+        textListener = createTextListener();
+        editor.addFocusListener(textListener);
+        editor.addPropertyChangeListener(textListener);
+    }
+
+    protected DarkTextListener createTextListener() {
+        return new DarkTextListener(editor, this);
     }
 
     @Override
     protected void uninstallListeners() {
         super.uninstallListeners();
-        editor.removeFocusListener(this);
+        editor.removeFocusListener(textListener);
+        editor.removePropertyChangeListener(textListener);
+        textListener = null;
     }
 
     protected Color getBackground(final JTextComponent c) {
@@ -408,27 +396,4 @@ public abstract class DarkTextUI extends BasicTextUI
         return km;
     }
 
-    @Override
-    public void focusGained(final FocusEvent e) {
-        Caret caret = editor.getCaret();
-        if (caret instanceof DarkCaret) {
-            ((DarkCaret) caret).setPaintSelectionHighlight(true);
-        }
-        editor.repaint();
-    }
-
-    @Override
-    public void focusLost(final FocusEvent e) {
-        Caret caret = editor.getCaret();
-        JPopupMenu popupMenu = editor.getComponentPopupMenu();
-        Component other = e.getOppositeComponent();
-        MenuElement[] path = MenuSelectionManager.defaultManager().getSelectedPath();
-        if (popupMenu != null && other != null && SwingUtilities.isDescendingFrom(popupMenu, other)
-                || path != null && path.length > 0 && path[0] == popupMenu)
-            return;
-        if (caret instanceof DarkCaret) {
-            ((DarkCaret) caret).setPaintSelectionHighlight(false);
-        }
-        editor.repaint();
-    }
 }
