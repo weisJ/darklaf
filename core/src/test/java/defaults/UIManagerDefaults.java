@@ -112,7 +112,12 @@ public class UIManagerDefaults implements ItemListener, ComponentDemo {
 
     private JComponent createPreviewPanel() {
         final DefaultTableModel model = new DefaultTableModel(COLUMN_NAMES, 0);
-        table = new JTable(model);
+        table = new JTable(model) {
+            @Override
+            public boolean isCellEditable(final int row, final int column) {
+                return false;
+            }
+        };
         table.setAutoCreateColumnsFromModel(false);
         table.setShowHorizontalLines(false);
         table.getColumnModel().getColumn(0).setPreferredWidth(250);
