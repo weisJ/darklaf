@@ -55,7 +55,8 @@ public class DarkSplitButtonListener implements ActionListener, PropertyChangeLi
             actionMenu.setPreferredSize(null);
             Dimension size = actionMenu.getPreferredSize();
             Rectangle popupBounds =
-                    WidgetPopupHelper.getPopupBounds(ui.splitButton, actionMenu, size, splitButton, !splitButton);
+                    WidgetPopupHelper.getPopupBounds(ui.splitButton, size, ui.splitButton.getSize(), splitButton,
+                            !splitButton);
             if (splitButton) {
                 actionMenu.setPreferredSize(popupBounds.getSize());
             }

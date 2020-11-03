@@ -29,28 +29,29 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class WidgetPopupHelper {
 
-    public static Rectangle getPopupBounds(final JComponent parent, final JComponent popup, final Dimension popupSize) {
-        return getPopupBounds(parent, popup, popupSize, true, false);
+    public static Rectangle getPopupBounds(final JComponent parent, final Dimension popupSize,
+            final Dimension parentSize) {
+        return getPopupBounds(parent, popupSize, parentSize, true, false);
     }
 
-    public static Rectangle getPopupBounds(final JComponent parent, final JComponent popup, final Dimension popupSize,
+    public static Rectangle getPopupBounds(final JComponent parent, final Dimension popupSize,
+            final Dimension parentSize,
             final boolean useParentSizeAsMinimum, final boolean alignOpposite) {
         Insets parentIns = parent.getInsets();
-        Insets popupIns = popup.getInsets();
 
         // reduce the width of the popup by the insets so that the popup
         // is the same width as the parent.
         if (useParentSizeAsMinimum) {
-            popupSize.width = Math.max(popupSize.width, parent.getWidth() - parentIns.left - parentIns.right);
+            popupSize.width = Math.max(popupSize.width, parentSize.width - parentIns.left - parentIns.right);
         }
         // popupSize.width -= popupIns.left + popupIns.right;
 
         boolean ltr = parent.getComponentOrientation().isLeftToRight();
         if (alignOpposite) ltr = !ltr;
 
-        int x = ltr ? parentIns.left : parent.getWidth() - parentIns.right - popupSize.width;
+        int x = ltr ? parentIns.left : parentSize.width - parentIns.right - popupSize.width;
 
-        return computePopupBounds(parent, x, parent.getHeight() - parentIns.bottom, popupSize.width, popupSize.height);
+        return computePopupBounds(parent, x, parentSize.height - parentIns.bottom, popupSize.width, popupSize.height);
     }
 
     protected static Rectangle computePopupBounds(final JComponent parent, final int px, final int py, final int pw,
