@@ -26,13 +26,24 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.github.weisj.darklaf.util.ColorUtil;
+
 /** @author Jannis Weis */
 public class DarkTableCellRenderer extends DefaultTableCellRenderer {
 
     @Override
     public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
             final boolean hasFocus, final int row, final int column) {
-        Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        setBackground(null);
+        Object effectiveValue = value;
+        if (value instanceof Color) {
+            effectiveValue = "";
+        }
+        Component component =
+                super.getTableCellRendererComponent(table, effectiveValue, isSelected, hasFocus, row, column);
+        if (value instanceof Color) {
+            component.setBackground(ColorUtil.stripUIResource((Color) value, false));
+        }
         int horizontalAlignment =
                 table.getComponentOrientation().isLeftToRight() ? SwingConstants.LEFT : SwingConstants.RIGHT;
 

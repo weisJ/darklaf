@@ -89,11 +89,19 @@ public final class ColorUtil {
     }
 
     public static boolean canOverwriteColor(final Color c) {
-        return c == null || c instanceof UIResource || c instanceof NonUIResourceColorWrapper;
+        return c == null || c instanceof UIResource || c instanceof NonUIResourceOverwritableColorWrapper;
     }
 
-    public static Color stripUIResource(final Color c) {
-        return c instanceof UIResource ? new NonUIResourceColorWrapper(c) : c;
+    public static Color stripUIResource(final Color c, final boolean canOverwrite) {
+        if (c instanceof UIResource) {
+            if (canOverwrite) {
+                return new NonUIResourceOverwritableColorWrapper(c);
+            } else {
+                return new NonUIResourceColorWrapper(c);
+            }
+        } else {
+            return c;
+        }
     }
 
     public static Color removeAlpha(final Color color) {
@@ -128,6 +136,13 @@ public final class ColorUtil {
     public static class NonUIResourceColorWrapper extends ColorWrapper {
 
         public NonUIResourceColorWrapper(final Color color) {
+            super(color);
+        }
+    }
+
+    public static class NonUIResourceOverwritableColorWrapper extends NonUIResourceColorWrapper {
+
+        public NonUIResourceOverwritableColorWrapper(final Color color) {
             super(color);
         }
     }

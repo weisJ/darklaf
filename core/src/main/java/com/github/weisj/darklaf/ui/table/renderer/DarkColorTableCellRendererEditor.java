@@ -29,15 +29,17 @@ import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
+import com.github.weisj.darklaf.util.ColorUtil;
+
 /** @author Jannis Weis */
 public class DarkColorTableCellRendererEditor extends AbstractCellEditor implements TableCellRenderer, TableCellEditor {
 
-    private final JLabel label;
+    private final JComponent colorComp;
     private Color savedColor;
 
     public DarkColorTableCellRendererEditor() {
-        label = new JLabel();
-        label.setOpaque(true);
+        colorComp = new JPanel();
+        colorComp.setOpaque(true);
     }
 
     @Override
@@ -57,14 +59,14 @@ public class DarkColorTableCellRendererEditor extends AbstractCellEditor impleme
                     changeColor(color);
                 }
             });
-            return label;
+            return colorComp;
         }
     }
 
     private void changeColor(final Color color) {
         if (color != null) {
             savedColor = color;
-            label.setBackground(color);
+            colorComp.setBackground(ColorUtil.stripUIResource(color, false));
         }
     }
 
@@ -85,6 +87,6 @@ public class DarkColorTableCellRendererEditor extends AbstractCellEditor impleme
     public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
             final boolean hasFocus, final int row, final int column) {
         changeColor((Color) value);
-        return label;
+        return colorComp;
     }
 }

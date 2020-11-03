@@ -326,7 +326,7 @@ public class CellUtil {
         if (comp instanceof DefaultTreeCellRenderer) {
             Color c = comp.getBackground();
             if (ColorUtil.canOverwriteColor(c)) {
-                comp.setBackground(ColorUtil.stripUIResource(bg));
+                comp.setBackground(ColorUtil.stripUIResource(bg, true));
             }
         }
     }

@@ -28,14 +28,18 @@ import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 
 import com.github.weisj.darklaf.delegate.TableCellEditorDelegate;
+import com.github.weisj.darklaf.ui.table.TableConstants;
 import com.github.weisj.darklaf.util.LazyValue;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class DarkMultiCellEditor extends TableCellEditorDelegate {
 
-    private final LazyValue<DarkTableCellEditor> numberEditor =
+    private final LazyValue<TableCellEditor> numberEditor =
             new LazyValue<>(() -> new DarkTableCellEditor(new JSpinner()));
-    private final LazyValue<DarkTableCellEditor> dateEditor =
+    private final LazyValue<TableCellEditor> dateEditor =
             new LazyValue<>(() -> new DarkTableCellEditor(new JSpinner(new SpinnerDateModel())));
+    private final LazyValue<TableCellEditor> colorEditor =
+            new LazyValue<>(DarkColorTableCellRendererEditor::new);
     private TableCellEditor currentEditor;
 
     public DarkMultiCellEditor() {
@@ -51,11 +55,17 @@ public class DarkMultiCellEditor extends TableCellEditorDelegate {
 
     private TableCellEditor getEditor(final JTable table, final Object value, final int column) {
         Class<?> columnClass = table.getColumnClass(column);
+        if (value != null
+                && PropertyUtil.getBooleanProperty(table, TableConstants.KEY_CELL_VALUE_DETERMINES_EDITOR_CLASS)) {
+            columnClass = value.getClass();
+        }
         if (columnClass != null && columnClass.isInstance(value)) {
             if (Number.class.isAssignableFrom(columnClass)) {
                 return numberEditor.get();
             } else if (Date.class.isAssignableFrom(columnClass)) {
                 return dateEditor.get();
+            } else if (Color.class.isAssignableFrom(columnClass)) {
+                return colorEditor.get();
             }
         }
         return null;
