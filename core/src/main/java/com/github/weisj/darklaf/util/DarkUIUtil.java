@@ -528,4 +528,10 @@ public final class DarkUIUtil {
         if (type != null && type.isInstance(o)) return type.cast(o);
         return null;
     }
+
+    public static boolean isDecorated(final Window window) {
+        if (window instanceof Frame) return ((Frame) window).isUndecorated();
+        if (window instanceof Dialog) return ((Dialog) window).isUndecorated();
+        return false;
+    }
 }

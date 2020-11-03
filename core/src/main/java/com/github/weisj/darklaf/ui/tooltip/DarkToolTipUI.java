@@ -398,9 +398,15 @@ public class DarkToolTipUI extends BasicToolTipUI
         }
 
         @Override
+        public boolean isEnabled() {
+            return toolTip.getComponent() != null && super.isEnabled();
+        }
+
+        @Override
         public void paintNow(final float fraction) {
             alpha = fraction * MAX_ALPHA;
             Window window = SwingUtilities.getWindowAncestor(toolTip);
+            if (DarkUIUtil.isDecorated(window)) return;
             if (window != null) window.setOpacity(alpha);
             Border border = toolTip.getBorder();
             if (border instanceof DarkTooltipBorder) {
@@ -412,7 +418,7 @@ public class DarkToolTipUI extends BasicToolTipUI
         protected void paintCycleEnd() {
             alpha = MAX_ALPHA;
             Window window = SwingUtilities.getWindowAncestor(toolTip);
-            if (window != null) {
+            if (window != null && !DarkUIUtil.isDecorated(window)) {
                 window.setOpacity(alpha);
                 Border border = toolTip.getBorder();
                 if (window.getFocusableWindowState() && border instanceof DarkTooltipBorder) {
