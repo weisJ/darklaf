@@ -272,21 +272,22 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
     }
 
     @Override
-    public Dimension getPreferredSize(final JComponent c) {
+    public Dimension getMinimumSize(final JComponent c) {
         Dimension size = super.getMinimumSize(c);
         Dimension editorSize = DarkUIUtil.getMinimumSize((JComponent) getEditorComponent());
 
-        Insets i = getInsets();
-        Insets pad = getEditorInsets(comboBox);
+        Insets ins = getInsets();
+        DarkUIUtil.addInsets(size, ins);
+
+        DarkUIUtil.addInsets(editorSize, ins);
+        DarkUIUtil.addInsets(editorSize, getEditorInsets(comboBox));
+
         Insets bPad = buttonPad;
-
-        DarkUIUtil.addInsets(editorSize, i);
-        DarkUIUtil.addInsets(editorSize, pad);
-
         Dimension abSize = arrowButton.getPreferredSize();
-        size.width += bPad.left + bPad.left;
+        size.width += bPad.left + bPad.right;
+        editorSize.width += abSize.width;
 
-        int width = Math.max(editorSize.width + abSize.width, size.width);
+        int width = Math.max(editorSize.width, size.width);
         int height = Math.max(editorSize.height, Math.max(abSize.height, size.height));
 
         return new Dimension(width, height);
@@ -327,7 +328,8 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
     @SuppressWarnings("unchecked")
     public void paintCurrentValue(final Graphics g, final Rectangle bounds, final boolean hasFocus) {
         ListCellRenderer<Object> renderer = comboBox.getRenderer();
-        Component c = renderer.getListCellRendererComponent(listBox, comboBox.getSelectedItem(), -1, false, false);
+        Component c = renderer.getListCellRendererComponent(listBox, comboBox.getSelectedItem(),
+                comboBox.getSelectedIndex(), false, false);
         c.setFont(comboBox.getFont());
         if (hasFocus && !isPopupVisible(comboBox)) {
             c.setForeground(listBox.getForeground());
