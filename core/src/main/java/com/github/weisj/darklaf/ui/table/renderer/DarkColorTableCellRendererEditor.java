@@ -29,6 +29,7 @@ import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
+import com.github.weisj.darklaf.components.color.PopupColorChooser;
 import com.github.weisj.darklaf.util.ColorUtil;
 
 /** @author Jannis Weis */
@@ -52,12 +53,8 @@ public class DarkColorTableCellRendererEditor extends AbstractCellEditor impleme
         } else {
             changeColor((Color) value);
             SwingUtilities.invokeLater(() -> {
-                Color color = JColorChooser.showDialog(table, "Color Chooser", savedColor);
-                if (color == null) {
-                    cancelCellEditing();
-                } else {
-                    changeColor(color);
-                }
+                PopupColorChooser.showColorChooser(colorComp, savedColor, this::changeColor, e -> {
+                }, true);
             });
             return colorComp;
         }
