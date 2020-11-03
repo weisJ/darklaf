@@ -446,6 +446,20 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
         return getClass();
     }
 
+    @Override
+    public boolean equals(final Object o) {
+        if (!(o instanceof Theme)) return false;
+        return appearsEqualTo((Theme) o);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = fontSizeRule != null ? fontSizeRule.hashCode() : 0;
+        result = 31 * result + (accentColorRule != null ? accentColorRule.hashCode() : 0);
+        result = 31 * result + (getThemeClass().hashCode());
+        return result;
+    }
+
     /**
      * Returns whether the appearance of the given theme is equal to the appearance if [this].
      *
