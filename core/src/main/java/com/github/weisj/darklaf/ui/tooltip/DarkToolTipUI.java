@@ -251,6 +251,7 @@ public class DarkToolTipUI extends BasicToolTipUI
     }
 
     protected boolean isInside(final MouseEvent e) {
+        if (toolTip.getComponent() == null) return true;
         Point screenPos = e.getPoint();
         SwingUtilities.convertPointToScreen(screenPos, e.getComponent());
         Point toolTipPoint = new Point(screenPos.x, screenPos.y);
