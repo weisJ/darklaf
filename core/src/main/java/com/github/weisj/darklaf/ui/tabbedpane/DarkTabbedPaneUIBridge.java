@@ -220,6 +220,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         calculatedBaseline = false;
         rolloverTabIndex = -1;
         focusIndex = -1;
+
         c.setLayout(createLayoutManager());
         installComponents();
         installDefaults();

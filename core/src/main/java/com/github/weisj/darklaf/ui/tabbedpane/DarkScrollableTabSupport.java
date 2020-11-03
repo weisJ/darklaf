@@ -28,11 +28,9 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
 import javax.swing.*;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 
 import com.github.weisj.darklaf.components.ScrollPopupMenu;
-import com.github.weisj.darklaf.listener.PopupMenuAdapter;
+import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class DarkScrollableTabSupport extends ScrollableTabSupport implements MouseWheelListener, ActionListener {
@@ -42,7 +40,6 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
     protected final TabButtonContainer moreTabsButton;
     protected final TabButtonContainer newTabButton;
     protected final Timer timer;
-    protected long lastClickEvent;
     private final DarkTabbedPaneUI ui;
 
     public DarkScrollableTabSupport(final DarkTabbedPaneUI ui, final int tabPlacement) {
@@ -55,6 +52,7 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
         viewport.addMouseWheelListener(this);
 
         moreTabsButton = ui.createMoreTabsButton();
+        moreTabsButton.button.putClientProperty(DarkPopupMenuUI.KEY_CONSUME_EVENT_ON_CLOSE, true);
         moreTabsButton.button.addActionListener(this);
         moreTabsButton.setVisible(false);
 
@@ -62,13 +60,6 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
         newTabButton.setVisible(PropertyUtil.getBooleanProperty(ui.tabPane, DarkTabbedPaneUI.KEY_SHOW_NEW_TAB_BUTTON));
 
         scrollPopupMenu = new ScrollPopupMenu(UIManager.getInt("TabbedPane.maxPopupHeight"));
-        PopupMenuListener popupMenuListener = new PopupMenuAdapter() {
-            @Override
-            public void popupMenuWillBecomeInvisible(final PopupMenuEvent e) {
-                lastClickEvent = System.currentTimeMillis();
-            }
-        };
-        scrollPopupMenu.addPopupMenuListener(popupMenuListener);
 
         ui.tabPane.add(moreTabsButton);
         timer = new Timer(SCROLL_REWIND_DELAY, e -> endScroll());
@@ -98,33 +89,31 @@ public class DarkScrollableTabSupport extends ScrollableTabSupport implements Mo
             scrollPopupMenu.setVisible(false);
         } else {
             if (!ui.tabPane.isEnabled()) return;
-            if (lastClickEvent == 0 || (System.currentTimeMillis() - lastClickEvent) > 250) {
-                Dimension pref = scrollPopupMenu.getPreferredSize();
-                boolean leftToRight = ui.tabPane.getComponentOrientation().isLeftToRight();
-                switch (ui.tabPane.getTabPlacement()) {
-                    case SwingConstants.LEFT:
-                        scrollPopupMenu.show(moreTabsButton, moreTabsButton.getWidth(),
-                                moreTabsButton.getHeight() - pref.height);
-                        break;
-                    case SwingConstants.RIGHT:
-                        scrollPopupMenu.show(moreTabsButton, -pref.width, moreTabsButton.getHeight() - pref.height);
-                        break;
-                    case SwingConstants.TOP:
-                        if (leftToRight) {
-                            scrollPopupMenu.show(moreTabsButton, moreTabsButton.getWidth() - pref.width,
-                                    moreTabsButton.getHeight());
-                        } else {
-                            scrollPopupMenu.show(moreTabsButton, 0, moreTabsButton.getHeight());
-                        }
-                        break;
-                    case SwingConstants.BOTTOM:
-                        if (leftToRight) {
-                            scrollPopupMenu.show(moreTabsButton, moreTabsButton.getWidth() - pref.width, -pref.height);
-                        } else {
-                            scrollPopupMenu.show(moreTabsButton, 0, -pref.height);
-                        }
-                        break;
-                }
+            Dimension pref = scrollPopupMenu.getPreferredSize();
+            boolean leftToRight = ui.tabPane.getComponentOrientation().isLeftToRight();
+            switch (ui.tabPane.getTabPlacement()) {
+                case SwingConstants.LEFT:
+                    scrollPopupMenu.show(moreTabsButton, moreTabsButton.getWidth(),
+                            moreTabsButton.getHeight() - pref.height);
+                    break;
+                case SwingConstants.RIGHT:
+                    scrollPopupMenu.show(moreTabsButton, -pref.width, moreTabsButton.getHeight() - pref.height);
+                    break;
+                case SwingConstants.TOP:
+                    if (leftToRight) {
+                        scrollPopupMenu.show(moreTabsButton, moreTabsButton.getWidth() - pref.width,
+                                moreTabsButton.getHeight());
+                    } else {
+                        scrollPopupMenu.show(moreTabsButton, 0, moreTabsButton.getHeight());
+                    }
+                    break;
+                case SwingConstants.BOTTOM:
+                    if (leftToRight) {
+                        scrollPopupMenu.show(moreTabsButton, moreTabsButton.getWidth() - pref.width, -pref.height);
+                    } else {
+                        scrollPopupMenu.show(moreTabsButton, 0, -pref.height);
+                    }
+                    break;
             }
         }
     }
