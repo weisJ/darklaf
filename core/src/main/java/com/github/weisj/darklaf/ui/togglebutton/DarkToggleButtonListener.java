@@ -44,6 +44,7 @@ public class DarkToggleButtonListener extends DarkButtonListener<DarkToggleButto
         button = b;
         animator = createAnimator();
         animator.setEnabled(UIManager.getBoolean("ToggleButton.animated"));
+        animator.state = selected ? 1 : 0;
     }
 
     protected SliderAnimator createAnimator() {
@@ -119,6 +120,7 @@ public class DarkToggleButtonListener extends DarkButtonListener<DarkToggleButto
 
         @Override
         protected void paintCycleEnd() {
+            System.out.println("here");
             this.state = endValue;
             repaint();
             animationBounds = null;
