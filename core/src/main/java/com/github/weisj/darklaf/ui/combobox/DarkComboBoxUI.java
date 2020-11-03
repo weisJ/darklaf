@@ -213,13 +213,16 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
 
     @Override
     public void paint(final Graphics g, final JComponent c) {
-        paintBackground(g, c);
         if (!comboBox.isEditable()) {
-            paintCurrentValue(g, rectangleForCurrentValue(), hasFocus);
+            Component currentValueRenderer = getRendererForCurrentValue();
+            paintBackground(g, c, currentValueRenderer);
+            paintCurrentValue(g, rectangleForCurrentValue(), hasFocus, currentValueRenderer);
+        } else {
+            paintBackground(g, c, getEditorComponent());
         }
     }
 
-    private void paintBackground(final Graphics g, final JComponent c) {
+    private void paintBackground(final Graphics g, final JComponent c, final Component currentValueRenderer) {
         final Container parent = c.getParent();
         if (parent != null && parent.isOpaque() && !c.isEnabled()) {
             g.setColor(parent.getBackground());
@@ -227,7 +230,9 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
             return;
         }
         boolean isCellEditor = ComboBoxConstants.isTreeOrTableCellEditor(c);
-        Color bg = getBackground(comboBox);
+        Color rendererBg = currentValueRenderer != null ? currentValueRenderer.getBackground() : null;
+        Color bg = PropertyUtil.chooseColor(rendererBg, getBackground(comboBox));
+
         Color splitBg = getArrowBackground(comboBox);
         Rectangle arrowRect = comboBox.isEditable() ? arrowButton.getBounds() : null;
         DividedWidgetPainter.paintBackground((Graphics2D) g, c, arcSize, arrowRect, bg, splitBg, isCellEditor);
@@ -326,17 +331,20 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
     }
 
     @SuppressWarnings("unchecked")
-    public void paintCurrentValue(final Graphics g, final Rectangle bounds, final boolean hasFocus) {
-        ListCellRenderer<Object> renderer = comboBox.getRenderer();
-        Component c = renderer.getListCellRendererComponent(listBox, comboBox.getSelectedItem(),
+    protected Component getRendererForCurrentValue() {
+        return comboBox.getRenderer().getListCellRendererComponent(listBox, comboBox.getSelectedItem(),
                 comboBox.getSelectedIndex(), false, false);
+    }
+
+    public void paintCurrentValue(final Graphics g, final Rectangle bounds, final boolean hasFocus, final Component c) {
+        PropertyUtil.installFont(c, comboBox.getFont());
         c.setFont(comboBox.getFont());
         if (hasFocus && !isPopupVisible(comboBox)) {
-            c.setForeground(listBox.getForeground());
-            c.setBackground(listBox.getBackground());
+            PropertyUtil.installForeground(c, listBox.getForeground());
+            PropertyUtil.installBackground(c, listBox.getBackground());
         } else {
-            c.setForeground(getForeground(comboBox));
-            c.setBackground(getBackground(comboBox));
+            PropertyUtil.installForeground(c, getForeground(comboBox));
+            PropertyUtil.installBackground(c, getBackground(comboBox));
         }
         if (c instanceof JComponent) {
             PropertyUtil.installBorder((JComponent) c, null);

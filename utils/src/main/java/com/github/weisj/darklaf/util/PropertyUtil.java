@@ -59,6 +59,14 @@ public class PropertyUtil {
         }
     }
 
+    public static void installFont(final Component component, final Font font) {
+        if (component == null) return;
+        Font f = component.getFont();
+        if (f == null || f instanceof UIResource) {
+            component.setFont(font);
+        }
+    }
+
     public static void installProperty(final JComponent c, final String key, final Object value) {
         if (c.getClientProperty(key) == null) {
             c.putClientProperty(key, value);
