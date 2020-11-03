@@ -21,6 +21,7 @@
  */
 package com.github.weisj.darklaf.synthesised;
 
+import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.theme.laf.SynthesisedThemedLaf;
 import com.github.weisj.darklaf.theme.laf.ThemedLookAndFeel;
 import com.google.auto.service.AutoService;
@@ -29,6 +30,6 @@ import com.google.auto.service.AutoService;
 public class ThemedDarkLafProvider implements SynthesisedThemedLaf.ThemedLafProvider {
     @Override
     public ThemedLookAndFeel create() {
-        return new ThemedDarkLaf();
+        return new DarkLaf();
     }
 }
