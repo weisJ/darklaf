@@ -138,8 +138,17 @@ public abstract class Animator {
         this.enabled = enabled;
     }
 
+    private void stopAnimation() {
+        currentFrame = totalFrames - 1;
+        paint();
+        animationDone();
+    }
+
     public void resume(final int startFrame, final JComponent target) {
-        if (!target.isVisible() || !target.isShowing()) return;
+        if (!target.isVisible() || !target.isShowing()) {
+            stopAnimation();
+            return;
+        }
         resume(startFrame);
     }
 
@@ -148,9 +157,7 @@ public abstract class Animator {
             throw new IllegalArgumentException("Starting frame must be non negative.");
         }
         if (cycleDuration == 0 || startFrame >= totalFrames || !animationsEnabled()) {
-            currentFrame = totalFrames - 1;
-            paint();
-            animationDone();
+            stopAnimation();
         } else if (ticker == null) {
             this.startFrame = startFrame;
             ticker = scheduler.scheduleWithFixedDelay(new Runnable() {
