@@ -52,10 +52,9 @@ public class DarkColorTableCellRendererEditor extends AbstractCellEditor impleme
                     column);
         } else {
             changeColor((Color) value);
-            SwingUtilities.invokeLater(() -> {
-                PopupColorChooser.showColorChooser(colorComp, savedColor, this::changeColor, e -> {
-                }, true);
-            });
+            SwingUtilities.invokeLater(() -> PopupColorChooser.showColorChooser(colorComp, savedColor,
+                    this::changeColor, e -> stopCellEditing(),
+                    true));
             return colorComp;
         }
     }
