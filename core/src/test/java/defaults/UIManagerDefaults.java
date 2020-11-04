@@ -40,6 +40,7 @@ import javax.swing.table.DefaultTableModel;
 import ui.ComponentDemo;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.ui.table.renderer.DarkColorTableCellRendererEditor;
 
 public class UIManagerDefaults implements ItemListener, ComponentDemo {
@@ -298,9 +299,11 @@ public class UIManagerDefaults implements ItemListener, ComponentDemo {
             final Vector<Object> row = new Vector<>(3);
             row.add(attribute);
             if (value != null) {
-                row.add(value instanceof Boolean ? value : value.toString());
+                row.add(value.toString());
                 if (value instanceof Icon) {
                     value = new SafeIcon((Icon) value);
+                } else if (value instanceof String && value.toString().endsWith(".wav")) {
+                    value = IconLoader.get().getIcon("icon/sound.svg", 24, 24);
                 }
                 row.add(value);
             } else {

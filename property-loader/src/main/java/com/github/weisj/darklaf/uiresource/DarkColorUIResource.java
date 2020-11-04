@@ -52,4 +52,18 @@ public class DarkColorUIResource extends ColorUIResource {
     public Color brighter() {
         return new DarkColorUIResource(super.brighter());
     }
+
+    @Override
+    public String toString() {
+        String s = "UIColor[r=" + format(getRed()) + ", g=" + format(getGreen()) + ",b=" + format(getBlue());
+        if (getAlpha() != 255) {
+            s += ",a=" + format(getAlpha());
+        }
+        s += "]";
+        return s;
+    }
+
+    private String format(final int value) {
+        return String.format("%03d", value);
+    }
 }
