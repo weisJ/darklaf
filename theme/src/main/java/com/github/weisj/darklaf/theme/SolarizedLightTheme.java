@@ -65,6 +65,11 @@ public class SolarizedLightTheme extends Theme {
     }
 
     @Override
+    public boolean supportsCustomAccentColor() {
+        return true;
+    }
+
+    @Override
     public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults) {
         super.customizeUIProperties(properties, currentDefaults);
         loadCustomProperties("ui", properties, currentDefaults);
