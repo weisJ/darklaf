@@ -31,7 +31,6 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.plaf.basic.ComboPopup;
 import javax.swing.text.JTextComponent;
@@ -81,7 +80,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         super.installDefaults();
         LookAndFeel.installProperty(comboBox, PropertyKey.OPAQUE, false);
         comboBox.putClientProperty(DarkPopupMenuUI.KEY_CONSUME_EVENT_ON_CLOSE, true);
-        installBorder(comboBox);
+        PropertyUtil.installBorder(comboBox, createBorder());
         arcSize = UIManager.getInt("ComboBox.arc");
         borderSize = UIManager.getInt("ComboBox.borderThickness");
         background = UIManager.getColor("ComboBox.activeBackground");
@@ -93,13 +92,6 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         buttonPad = UIManager.getInsets("ComboBox.buttonInsets");
         valueInsets = UIManager.getInsets("ComboBox.valueInsets");
         editorCellInsets = UIManager.getInsets("ComboBox.cellEditorInsets");
-    }
-
-    protected void installBorder(final JComponent c) {
-        Border b = c.getBorder();
-        if (b == null || b instanceof UIResource) {
-            c.setBorder(createBorder());
-        }
     }
 
     protected Border createBorder() {
@@ -305,6 +297,23 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         DarkUIUtil.applyInsets(rect, i);
         Insets pad = getEditorInsets(comboBox);
         DarkUIUtil.applyInsets(rect, pad);
+
+        Dimension rendererSize = !comboBox.isEditable()
+                ? getDisplaySize()
+                : getEditorComponent().getPreferredSize();
+
+        if (rendererSize.height > rect.height) {
+            if (comboBox.isEditable()) {
+                i.top++;
+                i.bottom++;
+            }
+            int extraInsets = pad.top + pad.bottom;
+            int newHeight = Math.min(rect.height + extraInsets, rendererSize.height);
+            rect.y -= (newHeight - rect.height) * (pad.top / (float) extraInsets);
+            rect.y = Math.max(rect.y, i.top);
+            rect.height = newHeight;
+            rect.height = Math.min(rect.height, comboBox.getHeight() - i.top - i.bottom);
+        }
 
         boolean ltr = comboBox.getComponentOrientation().isLeftToRight();
         int extra = ltr ? pad.right : pad.left;
