@@ -69,7 +69,7 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
         Insets ins = shadowBorder.getBorderInsets(null);
         adjustInsets(ins);
         return bubbleBorder.getBubbleArea(ins.left, ins.top, width - ins.left - ins.right,
-                height - ins.top - ins.bottom, bubbleBorder.getThickness() / 2f);
+                height - ins.top - ins.bottom, bubbleBorder.getThickness() / 3f);
     }
 
     @Override
