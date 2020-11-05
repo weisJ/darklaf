@@ -239,7 +239,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         paintBackgroundRect(g, effectiveArc, bgRect);
     }
 
-    private void paintShadow(final Graphics2D g, final int shadow, final int effectiveArc, final Rectangle bgRect) {
+    protected void paintShadow(final Graphics2D g, final int shadow, final int effectiveArc, final Rectangle bgRect) {
         g.setColor(shadowColor);
         Composite comp = g.getComposite();
         g.setComposite(PaintUtil.getShadowComposite());
@@ -301,11 +301,11 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
             GraphicsUtil.setupAAPainting(g);
             if (ButtonConstants.isBorderlessRectangular(b)) {
                 paintBorderlessRectangularBackgroundIml(b, g, x, y, w, h);
-            } else if (ButtonConstants.doConvertToBorderless(b)) {
+            } else if (ButtonConstants.isBorderless(b)) {
+                paintBorderlessBackgroundImpl(b, g, arc, x, y, w, h);
+            } else {
                 int size = Math.min(w, h);
                 paintBorderlessBackgroundImpl(b, g, arc, (width - size) / 2, (height - size) / 2, size, size);
-            } else {
-                paintBorderlessBackgroundImpl(b, g, arc, x, y, w, h);
             }
         }
     }
