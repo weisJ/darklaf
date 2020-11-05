@@ -61,6 +61,7 @@ public final class ArrowButton implements SwingConstants {
             {
                 putClientProperty(DarkButtonUI.KEY_NO_BORDERLESS_OVERWRITE, true);
                 setMargin(new Insets(0, 0, 0, 0));
+                setBorder(BorderFactory.createEmptyBorder());
             }
 
             @Override
