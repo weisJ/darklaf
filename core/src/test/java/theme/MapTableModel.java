@@ -22,15 +22,19 @@
 package theme;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Vector;
 
 import javax.swing.table.DefaultTableModel;
 
 class MapTableModel extends DefaultTableModel {
 
     private final LinkedHashMap<Object, Object> values;
+    private final boolean keyEditable;
 
-    MapTableModel(final LinkedHashMap<Object, Object> values) {
+    MapTableModel(final LinkedHashMap<Object, Object> values, final boolean keyEditable) {
         this.values = values;
+        this.keyEditable = keyEditable;
     }
 
     @Override
@@ -55,7 +59,7 @@ class MapTableModel extends DefaultTableModel {
 
     @Override
     public boolean isCellEditable(final int rowIndex, final int columnIndex) {
-        return columnIndex == 1;
+        return columnIndex == 1 || keyEditable;
     }
 
     @Override
@@ -68,12 +72,44 @@ class MapTableModel extends DefaultTableModel {
     }
 
     @Override
+    public void insertRow(final int row, final Vector rowData) {
+        values.put(rowData.get(0), rowData.get(1));
+        fireTableRowsInserted(getRowCount() - 1, getRowCount() - 1);
+    }
+
+    @Override
+    public void removeRow(final int row) {
+        values.remove(getKeyByIndex(row));
+        fireTableRowsDeleted(row, row);
+    }
+
+    @Override
+    public void addColumn(final Object columnName, final Vector columnData) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public void setValueAt(final Object aValue, final int rowIndex, final int columnIndex) {
-        if (columnIndex == 0) return;
-        values.put(getKeyByIndex(rowIndex), aValue);
+        if (columnIndex == 0) {
+            if (!keyEditable) return;
+            @SuppressWarnings("unchecked")
+            Map.Entry<Object, Object>[] entries =
+                    (Map.Entry<Object, Object>[]) values.entrySet().toArray(new Map.Entry[0]);
+            for (int i = rowIndex; i < entries.length; i++) {
+                values.remove(entries[i].getKey());
+            }
+            values.put(aValue, entries[rowIndex].getValue());
+            for (int i = rowIndex + 1; i < entries.length; i++) {
+                values.remove(entries[i].getKey());
+            }
+            fireTableCellUpdated(rowIndex, columnIndex);
+        } else {
+            values.put(getKeyByIndex(rowIndex), aValue);
+            fireTableCellUpdated(rowIndex, columnIndex);
+        }
     }
 
     public String getKeyByIndex(final int index) {
-        return values.keySet().toArray(new String[0])[index];
+        return values.keySet().toArray(new Object[0])[index].toString();
     }
 }

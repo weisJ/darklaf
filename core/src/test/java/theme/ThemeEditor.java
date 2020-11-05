@@ -27,8 +27,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 import ui.ComponentDemo;
 
@@ -37,15 +39,28 @@ import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.DefaultButton;
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.components.border.DarkBorders;
+import com.github.weisj.darklaf.components.button.JSplitButton;
+import com.github.weisj.darklaf.graphics.GraphicsContext;
+import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.graphics.ThemedColor;
+import com.github.weisj.darklaf.icons.DerivableIcon;
+import com.github.weisj.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.icons.OverlayIcon;
+import com.github.weisj.darklaf.icons.TextIcon;
+import com.github.weisj.darklaf.layout.LayoutManagerAdapter;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.ThemeDelegate;
 import com.github.weisj.darklaf.theme.info.AccentColorRule;
 import com.github.weisj.darklaf.theme.info.ColorToneRule;
 import com.github.weisj.darklaf.theme.info.ContrastRule;
 import com.github.weisj.darklaf.theme.info.FontSizeRule;
+import com.github.weisj.darklaf.ui.button.ButtonConstants;
 import com.github.weisj.darklaf.ui.table.TableConstants;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
+import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.FontUtil;
 import defaults.UIManagerDefaults;
 
 public class ThemeEditor extends JPanel {
@@ -113,11 +128,11 @@ public class ThemeEditor extends JPanel {
 
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-        tabbedPane.addTab("Theme defaults", createTable(themeDefaults));
-        tabbedPane.addTab("Icon defaults", createTable(iconDefaults));
-        tabbedPane.addTab("UI customs", createTable(uiDefaults));
-        tabbedPane.addTab("Global customs", createTable(globalDefaults));
-        tabbedPane.addTab("Platform customs", createTable(platformDefaults));
+        tabbedPane.addTab("Theme defaults", createTable(themeDefaults, false));
+        tabbedPane.addTab("Icon defaults", createTable(iconDefaults, false));
+        tabbedPane.addTab("UI customs", createTable(uiDefaults, true));
+        tabbedPane.addTab("Global customs", createTable(globalDefaults, true));
+        tabbedPane.addTab("Platform customs", createTable(platformDefaults, true));
         tabbedPane.addTab("All Defaults (Read only)", new UIManagerDefaults().createComponent());
 
         content.add(tabbedPane, BorderLayout.CENTER);
@@ -233,13 +248,170 @@ public class ThemeEditor extends JPanel {
         });
     }
 
-    private JComponent createTable(final LinkedHashMap<Object, Object> valueMap) {
+    enum EntryType {
+        COLOR("Add Color", Color.BLACK, DarkUIUtil.ICON_LOADER.getIcon("menu/colorChooser.svg")),
+        INTEGER("Add Integer", 0, ((Supplier<Icon>) () -> {
+            Font font = FontUtil.createFont(Font.MONOSPACED, Font.BOLD, 13);
+            return new TextIcon("42", new ThemedColor("menuIconEnabled"), font, 16, 16);
+        }).get()),
+        BOOLEAN("Add Boolean", false, DarkUIUtil.ICON_LOADER.getIcon("control/checkboxSelectedFocused.svg", true)),
+        STRING("Add String", "", IconLoader.get().getIcon("icon/word.svg", true));
+
+        private final String s;
+        private final Object defaultValue;
+        private final Icon icon;
+        private int entryCount;
+
+        EntryType(final String s, final Object defaultValue, final Icon icon) {
+            this.s = s;
+            this.defaultValue = defaultValue;
+            this.icon = icon;
+        }
+
+        public String getText() {
+            return s;
+        }
+
+        @SuppressWarnings("unchecked")
+        public DerivableIcon<Icon> getIcon() {
+            return (DerivableIcon<Icon>) icon;
+        }
+
+        public void addElement(final JTable table) {
+            DefaultTableModel model = (DefaultTableModel) table.getModel();
+            model.addRow(new Object[] {"<" + name() + "_" + (entryCount++) + ">", defaultValue});
+        }
+    }
+
+    private JComponent createTable(final LinkedHashMap<Object, Object> valueMap, final boolean keyEditable) {
         JTable table = new JTable();
-        table.setModel(new MapTableModel(valueMap));
+        table.getTableHeader().setReorderingAllowed(false);
+        table.setShowHorizontalLines(false);
+        table.setModel(new MapTableModel(valueMap, keyEditable));
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.putClientProperty(TableConstants.KEY_CELL_VALUE_DETERMINES_EDITOR_CLASS, true);
-        OverlayScrollPane sp = new OverlayScrollPane(table);
+
+        JPanel buttonPanel = keyEditable ? createButtonPanel(table) : null;
+
+        OverlayScrollPane sp = new OverlayScrollPane(table) {
+            @Override
+            public void doLayout() {
+                super.doLayout();
+                if (!keyEditable) return;
+                Dimension prefSize = buttonPanel.getPreferredSize();
+                int pad = 10;
+                Component viewport = getScrollPane().getViewport();
+                Rectangle viewBounds = new Rectangle(0, 0, viewport.getWidth(), viewport.getHeight());
+                viewBounds = SwingUtilities.convertRectangle(viewport, viewBounds, this);
+                int x = viewBounds.x - pad - prefSize.width;
+                int columnEnd = table.getColumnModel().getColumn(0).getWidth();
+                if (getVerticalScrollBar() != null && getVerticalScrollBar().isVisible()) {
+                    columnEnd = Math.min(columnEnd, viewBounds.width - getVerticalScrollBar().getWidth());
+                }
+                x += columnEnd;
+                buttonPanel.setBounds(x, viewBounds.y + pad, prefSize.width, prefSize.height);
+                buttonPanel.doLayout();
+            }
+        };
+        if (keyEditable) {
+            sp.add(buttonPanel, Integer.valueOf(JLayeredPane.MODAL_LAYER - 1));
+        }
+        sp.doLayout();
         sp.getScrollPane().setBorder(DarkBorders.createLineBorder(0, 0, 1, 0));
+
         return sp;
+    }
+
+    private JPanel createButtonPanel(final JTable table) {
+        AtomicReference<EntryType> lastSelection = new AtomicReference<>(EntryType.COLOR);
+
+        OverlayIcon overlayIcon =
+                new OverlayIcon(
+                        DarkUIUtil.ICON_LOADER.getIcon("navigation/add.svg", true),
+                        lastSelection.get().getIcon().derive(8, 8),
+                        Alignment.SOUTH_EAST);
+        JSplitButton addButton = new JSplitButton(overlayIcon);
+        addButton.setFocusable(false);
+        addButton.setToolTipText(lastSelection.get().getText());
+
+        JPopupMenu menu = addButton.getActionMenu();
+        for (EntryType type : EntryType.values()) {
+            menu.add(new JMenuItem(type.getText(), type.getIcon())).addActionListener(e -> {
+                lastSelection.set(type);
+                addButton.setToolTipText(type.getText());
+                overlayIcon.setOverlay(type.getIcon().derive(8, 8));
+                addButton.repaint();
+            });
+        }
+        addButton.addActionListener(e -> lastSelection.get().addElement(table));
+        addButton.putClientProperty(ButtonConstants.KEY_VARIANT, ButtonConstants.VARIANT_BORDERLESS);
+        addButton.putClientProperty(ButtonConstants.KEY_SQUARE, true);
+        addButton.putClientProperty(ButtonConstants.KEY_THIN, true);
+
+        JButton deleteButton = new JButton();
+        deleteButton.setToolTipText("Remove selected entry");
+        deleteButton.setIcon(DarkUIUtil.ICON_LOADER.getIcon("menu/delete.svg"));
+        deleteButton.setDisabledIcon(DarkUIUtil.ICON_LOADER.getIcon("menu/deleteDisabled.svg"));
+        deleteButton.putClientProperty(ButtonConstants.KEY_VARIANT, ButtonConstants.VARIANT_BORDERLESS);
+        deleteButton.putClientProperty(ButtonConstants.KEY_SQUARE, true);
+        deleteButton.putClientProperty(ButtonConstants.KEY_THIN, true);
+        deleteButton.setEnabled(table.getSelectedRow() >= 0);
+        deleteButton.setFocusable(false);
+
+        deleteButton.addActionListener(e -> {
+            int row = table.getSelectedRow();
+            ((DefaultTableModel) table.getModel()).removeRow(row);
+            table.clearSelection();
+            int newRow = row > 0 ? row - 1 : row;
+            if (newRow < table.getModel().getRowCount()) {
+                table.addRowSelectionInterval(newRow, newRow);
+            }
+        });
+        table.getSelectionModel().addListSelectionListener(e -> deleteButton.setEnabled(table.getSelectedRow() >= 0));
+
+        JPanel buttonPanel = new JPanel() {
+            @Override
+            protected void paintComponent(final Graphics g) {
+                super.paintComponent(g);
+                GraphicsContext context = new GraphicsContext(g);
+                ((Graphics2D) g).setComposite(PaintUtil.getGlowComposite());
+                g.setColor(UIManager.getColor("hoverHighlight"));
+                PaintUtil.fillRoundRect((Graphics2D) g, 0, 0, getWidth(), getHeight(), 10, false);
+                context.restore();
+            }
+        };
+        buttonPanel.setLayout(new LayoutManagerAdapter() {
+
+            private final int pad = 3;
+
+            @Override
+            public void layoutContainer(final Container parent) {
+                Dimension addPref = addButton.getPreferredSize();
+                Dimension delPref = deleteButton.getPreferredSize();
+                addButton.setBounds(pad, pad, addPref.width, addPref.height);
+                deleteButton.setBounds(2 * pad + addPref.width, pad, delPref.width, delPref.height);
+            }
+
+            @Override
+            public Dimension preferredLayoutSize(final Container parent) {
+                Dimension dim = addButton.getPreferredSize();
+                Dimension deleteSize = deleteButton.getPreferredSize();
+                dim.width += deleteSize.width + pad;
+                dim.height = Math.max(deleteSize.height, dim.height);
+                dim.width += 2 * pad;
+                dim.height += 2 * pad;
+                return dim;
+            }
+
+            @Override
+            public Dimension minimumLayoutSize(final Container parent) {
+                return preferredLayoutSize(parent);
+            }
+        });
+        buttonPanel.add(addButton);
+        buttonPanel.add(deleteButton);
+        buttonPanel.setOpaque(false);
+        return buttonPanel;
     }
 
     private static class MutableThemedLaf extends DarkLaf {

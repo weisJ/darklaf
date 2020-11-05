@@ -1,0 +1,15 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 16 16" width="16" height="16">
+    <defs id="colors">
+        <linearGradient id="menuIconEnabled">
+            <stop offset="0" stop-color="#AFB1B3"/>
+            <stop offset="1" stop-color="#AFB1B3"/>
+        </linearGradient>
+        <linearGradient id="informationIconColor">
+            <stop offset="0" stop-color="#3592C4"/>
+            <stop offset="1" stop-color="#3592C4"/>
+        </linearGradient>
+    </defs>
+    <circle fill="url(#informationIconColor)" cx="11.5" cy="11.5" r="4.5"/>
+    <rect x="8" y="10.5" fill="url(#menuIconEnabled)" width="7" height="2"/>
+    <rect x="10.5" y="8" fill="url(#menuIconEnabled)" width="2" height="7"/>
+</svg>
