@@ -341,8 +341,8 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
 
     @SuppressWarnings("unchecked")
     protected Component getRendererForCurrentValue() {
-        return comboBox.getRenderer().getListCellRendererComponent(listBox, comboBox.getSelectedItem(),
-                comboBox.getSelectedIndex(), false, false);
+        return comboBox.getRenderer().getListCellRendererComponent(listBox, comboBox.getSelectedItem(), -1, false,
+                false);
     }
 
     public void paintCurrentValue(final Graphics g, final Rectangle bounds, final boolean hasFocus, final Component c) {
