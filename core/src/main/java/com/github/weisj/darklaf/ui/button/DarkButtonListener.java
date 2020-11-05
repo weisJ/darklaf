@@ -68,6 +68,16 @@ public class DarkButtonListener<T extends DarkButtonUI> extends BasicButtonListe
     }
 
     @Override
+    public void mouseReleased(final MouseEvent e) {
+        super.mouseReleased(e);
+        AbstractButton b = (AbstractButton) e.getSource();
+        ButtonModel model = b.getModel();
+        if (b.contains(e.getPoint())) {
+            model.setRollover(true);
+        }
+    }
+
+    @Override
     public void propertyChange(final PropertyChangeEvent e) {
         super.propertyChange(e);
         AbstractButton b = (AbstractButton) e.getSource();
