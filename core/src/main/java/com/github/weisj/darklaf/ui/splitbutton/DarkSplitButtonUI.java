@@ -58,6 +58,7 @@ public class DarkSplitButtonUI extends DarkButtonUI {
     public void installUI(final JComponent c) {
         splitButton = (JSplitButton) c;
         super.installUI(c);
+        updateDefaultAction();
     }
 
     @Override
@@ -86,7 +87,6 @@ public class DarkSplitButtonUI extends DarkButtonUI {
         configureArrowButton(arrowButton);
         splitButton.add(arrowButton);
         updateArrowMargin();
-        updateDefaultAction();
     }
 
     protected void configureArrowButton(final AbstractButton button) {
@@ -165,6 +165,13 @@ public class DarkSplitButtonUI extends DarkButtonUI {
 
     protected boolean useArrowButton() {
         return arrowButton != null && splitButton.getActionCount() > 1;
+    }
+
+    @Override
+    public void paint(final Graphics g, final JComponent c) {
+        super.paint(g, c);
+        g.setColor(Color.RED);
+
     }
 
     @Override
