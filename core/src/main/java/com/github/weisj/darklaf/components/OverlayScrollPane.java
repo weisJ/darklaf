@@ -79,7 +79,6 @@ public class OverlayScrollPane extends JLayeredPane implements PropertyChangeLis
     public OverlayScrollPane(final JComponent view, final int vsbPolicy, final int hsbPolicy) {
         this.scrollPane = createScrollPane(view, vsbPolicy, hsbPolicy);
         setupScrollPane(scrollPane);
-        setViewportView(view);
         add(scrollPane, JLayeredPane.DEFAULT_LAYER);
 
         controlPanel = new ControlPanel(scrollPane);
@@ -178,7 +177,8 @@ public class OverlayScrollPane extends JLayeredPane implements PropertyChangeLis
 
     protected void updateScrollPaneUI() {
         if (scrollPane == null) return;
-        scrollPane.setLayout(new ScrollLayoutManagerDelegate((ScrollPaneLayout) scrollPane.getLayout()) {
+        ScrollPaneLayout oldLayout = (ScrollPaneLayout) scrollPane.getLayout();
+        scrollPane.setLayout(new ScrollLayoutManagerDelegate(oldLayout) {
 
             @Override
             public void removeLayoutComponent(final Component comp) {

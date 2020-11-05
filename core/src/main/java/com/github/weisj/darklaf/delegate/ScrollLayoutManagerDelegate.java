@@ -42,87 +42,87 @@ public class ScrollLayoutManagerDelegate extends ScrollPaneLayout {
 
     @Override
     public void addLayoutComponent(final String name, final Component comp) {
-        delegate.addLayoutComponent(name, comp);
+        getDelegate().addLayoutComponent(name, comp);
     }
 
     @Override
     public void syncWithScrollPane(final JScrollPane sp) {
-        delegate.syncWithScrollPane(sp);
+        getDelegate().syncWithScrollPane(sp);
     }
 
     @Override
     public void removeLayoutComponent(final Component comp) {
-        delegate.removeLayoutComponent(comp);
+        getDelegate().removeLayoutComponent(comp);
     }
 
     @Override
     public int getVerticalScrollBarPolicy() {
-        return delegate.getVerticalScrollBarPolicy();
+        return getDelegate().getVerticalScrollBarPolicy();
     }
 
     @Override
     public void setVerticalScrollBarPolicy(final int x) {
-        delegate.setVerticalScrollBarPolicy(x);
+        getDelegate().setVerticalScrollBarPolicy(x);
     }
 
     @Override
     public int getHorizontalScrollBarPolicy() {
-        return delegate.getHorizontalScrollBarPolicy();
+        return getDelegate().getHorizontalScrollBarPolicy();
     }
 
     @Override
     public void setHorizontalScrollBarPolicy(final int x) {
-        delegate.setHorizontalScrollBarPolicy(x);
+        getDelegate().setHorizontalScrollBarPolicy(x);
     }
 
     @Override
     public JViewport getViewport() {
-        return delegate.getViewport();
+        return getDelegate().getViewport();
     }
 
     @Override
     public JScrollBar getHorizontalScrollBar() {
-        return delegate.getHorizontalScrollBar();
+        return getDelegate().getHorizontalScrollBar();
     }
 
     @Override
     public JScrollBar getVerticalScrollBar() {
-        return delegate.getVerticalScrollBar();
+        return getDelegate().getVerticalScrollBar();
     }
 
     @Override
     public JViewport getRowHeader() {
-        return delegate.getRowHeader();
+        return getDelegate().getRowHeader();
     }
 
     @Override
     public JViewport getColumnHeader() {
-        return delegate.getColumnHeader();
+        return getDelegate().getColumnHeader();
     }
 
     @Override
     public Component getCorner(final String key) {
-        return delegate.getCorner(key);
+        return getDelegate().getCorner(key);
     }
 
     @Override
     public Dimension preferredLayoutSize(final Container parent) {
-        return delegate.preferredLayoutSize(parent);
+        return getDelegate().preferredLayoutSize(parent);
     }
 
     @Override
     public Dimension minimumLayoutSize(final Container parent) {
-        return delegate.minimumLayoutSize(parent);
+        return getDelegate().minimumLayoutSize(parent);
     }
 
     @Override
     public void layoutContainer(final Container parent) {
-        delegate.layoutContainer(parent);
+        getDelegate().layoutContainer(parent);
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public Rectangle getViewportBorderBounds(final JScrollPane scrollpane) {
-        return delegate.getViewportBorderBounds(scrollpane);
+        return getDelegate().getViewportBorderBounds(scrollpane);
     }
 }
