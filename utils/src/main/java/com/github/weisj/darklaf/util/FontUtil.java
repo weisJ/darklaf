@@ -23,7 +23,9 @@ package com.github.weisj.darklaf.util;
 
 import java.awt.*;
 
+import javax.swing.*;
 import javax.swing.text.StyleContext;
+
 
 public class FontUtil {
 
@@ -31,6 +33,13 @@ public class FontUtil {
         // This method calls FontUtilities.getCompositeFontUIResource(Font) internally which
         // creates a composite font with fallback support.
         return new NonUIResourceFont(StyleContext.getDefaultStyleContext().getFont(family, style, size));
+    }
+
+    public static int getCenteredFontPosition(final int height, final FontMetrics fm) {
+        int asc = fm.getMaxAscent();
+        int y = (height - asc) / 2;
+        y -= fm.getDescent() / 2;
+        return y;
     }
 
     public static class NonUIResourceFont extends Font {
