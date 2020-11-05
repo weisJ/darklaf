@@ -57,6 +57,7 @@ public class ToolTipContext {
 
     private final Insets calcInsets = new Insets(0, 0, 0, 0);
     private JComponent target;
+    private JComponent layoutTarget;
     private final MouseListener mouseListener = new MouseAdapter() {
         @Override
         public void mouseExited(final MouseEvent e) {
@@ -76,7 +77,15 @@ public class ToolTipContext {
                     ToolTipManager.sharedInstance().mousePressed(null);
                 }
             } else {
-                if (target != null && !target.contains(e.getPoint())) {
+                JComponent targetComp = getTarget();
+                if (targetComp != null && !targetComp.contains(e.getPoint())) {
+                    JComponent layoutComp = getLayoutTarget();
+                    if (layoutComp != null) {
+                        if (layoutComp.contains(SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),
+                                layoutComp))) {
+                            return;
+                        }
+                    }
                     ToolTipManager.sharedInstance().mousePressed(null);
                 }
             }
@@ -123,7 +132,7 @@ public class ToolTipContext {
     public ToolTipContext(final JComponent target, final Alignment alignment, final Alignment centerAlignment,
             final AlignmentStrategy alignmentStrategy, final boolean alignInside,
             final Function<MouseEvent, Rectangle> toolTipRectSupplier) {
-        this.target = target;
+        setTarget(target);
         setUpdatePosition(false);
         setHideOnExit(false);
         setFallBackPositionProvider(null);
@@ -322,11 +331,12 @@ public class ToolTipContext {
      */
     public ToolTipContext setHideOnExit(final boolean hideOnExit) {
         this.hideOnExit = hideOnExit;
-        if (target != null) {
+        JComponent targetComp = getTarget();
+        if (targetComp != null) {
             if (hideOnExit) {
-                target.addMouseListener(mouseListener);
+                targetComp.addMouseListener(mouseListener);
             } else {
-                target.removeMouseListener(mouseListener);
+                targetComp.removeMouseListener(mouseListener);
             }
         }
         return this;
@@ -345,7 +355,10 @@ public class ToolTipContext {
     public ToolTipContext setToolTipRectSupplier(final Function<MouseEvent, Rectangle> toolTipRectSupplier) {
         this.toolTipRectSupplier = toolTipRectSupplier;
         if (toolTipRectSupplier == null) {
-            this.toolTipRectSupplier = e -> new Rectangle(0, 0, target.getWidth(), target.getHeight());
+            this.toolTipRectSupplier = e -> {
+                JComponent targetComp = getLayoutTarget();
+                return new Rectangle(0, 0, targetComp.getWidth(), targetComp.getHeight());
+            };
         }
         return this;
     }
@@ -411,7 +424,7 @@ public class ToolTipContext {
     }
 
     public Point getToolTipLocation(final MouseEvent event) {
-        Point mp = SwingUtilities.convertPoint((Component) event.getSource(), event.getPoint(), target);
+        Point mp = SwingUtilities.convertPoint((Component) event.getSource(), event.getPoint(), getTarget());
         return getToolTipLocation(mp, event);
     }
 
@@ -463,14 +476,16 @@ public class ToolTipContext {
      */
     public Point getToolTipLocation(final Point mp, final MouseEvent mouseEvent, final boolean centerHorizontally,
             final boolean centerVertically) {
-        if (target == null) return null;
+        JComponent targetComp = getTarget();
+        JComponent layoutTarget = getLayoutTarget();
+        if (targetComp == null || layoutTarget == null) return null;
         updateToolTip();
         MouseEvent event = processEvent(mouseEvent, mp);
         Rectangle rect = getTargetRect(event, centerHorizontally, centerVertically);
         if (applyInsetsToRect) {
-            DarkUIUtil.applyInsets(rect, target.getInsets(calcInsets));
+            DarkUIUtil.applyInsets(rect, getLayoutTarget().getInsets(calcInsets));
         }
-        getToolTip().setTipText(target.getToolTipText(event));
+        getToolTip().setTipText(targetComp.getToolTipText(event));
         Dimension dim = getContentSize();
         Rectangle mRect = new Rectangle(mp.x, mp.y, 1, 1);
         Point compPoint;
@@ -489,10 +504,11 @@ public class ToolTipContext {
     private Rectangle getTargetRect(final MouseEvent event, final boolean centerHorizontally,
             final boolean centerVertically) {
         Rectangle rect = toolTipRectSupplier.apply(event);
+        JComponent layoutTarget = getLayoutTarget();
         if (ignoreBorder) {
-            Border border = target.getBorder();
+            Border border = layoutTarget.getBorder();
             if (border != null) {
-                Insets ins = border.getBorderInsets(target);
+                Insets ins = border.getBorderInsets(layoutTarget);
                 rect.x += ins.left;
                 rect.y += ins.top;
                 rect.width -= ins.left + ins.right;
@@ -507,20 +523,31 @@ public class ToolTipContext {
             rect.y += rect.height / 2;
             rect.height = 0;
         }
-        return rect;
+        return SwingUtilities.convertRectangle(layoutTarget, rect, getTarget());
     }
 
     private MouseEvent processEvent(final MouseEvent mouseEvent, final Point mp) {
         if (mouseEvent != null) return mouseEvent;
-        return new MouseEvent(target, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), 0, mp.x, mp.y, 0, false, 0);
+        return new MouseEvent(getTarget(), MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), 0, mp.x, mp.y, 0, false,
+                0);
     }
 
     public JComponent getTarget() {
         return target;
     }
 
-    public void setTarget(final JComponent target) {
+    public JComponent getLayoutTarget() {
+        return layoutTarget != null ? layoutTarget : getTarget();
+    }
+
+    public ToolTipContext setTarget(final JComponent target) {
         this.target = target;
+        return this;
+    }
+
+    public ToolTipContext setLayoutTarget(final JComponent layoutTarget) {
+        this.layoutTarget = layoutTarget;
+        return this;
     }
 
     /**
@@ -611,8 +638,9 @@ public class ToolTipContext {
     public void setToolTip(final JToolTip toolTip) {
         if (toolTip == null) return;
         this.toolTip = toolTip;
-        if (this.target != toolTip.getComponent()) {
-            this.toolTip.setComponent(this.target);
+        JComponent targetComp = getTarget();
+        if (targetComp != toolTip.getComponent()) {
+            this.toolTip.setComponent(targetComp);
         }
     }
 
