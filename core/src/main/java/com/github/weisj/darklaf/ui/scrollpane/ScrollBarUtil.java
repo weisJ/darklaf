@@ -30,6 +30,12 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class ScrollBarUtil implements ScrollBarConstants {
 
+    public static JScrollPane getScrollPane(final JScrollBar scrollBar) {
+        Component parent = scrollBar.getParent();
+        if (parent instanceof JScrollPane) return (JScrollPane) parent;
+        return PropertyUtil.getObject(scrollBar, KEY_SCROLL_PANE_PARENT, JScrollPane.class);
+    }
+
     @SuppressWarnings("MagicConstant")
     public static void doScroll(final JScrollBar toScroll, final JViewport vp, final MouseWheelEvent e,
             final boolean leftToRight) {

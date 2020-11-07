@@ -50,6 +50,8 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
 
     protected boolean mouseOverThumb = false;
     protected boolean mouseOverTrack = false;
+    protected float trackState;
+    protected float thumbState;
     protected float trackAlpha;
     protected float thumbAlpha;
 
@@ -80,6 +82,14 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
 
     public float getTrackAlpha() {
         return trackAlpha;
+    }
+
+    public float getTrackState() {
+        return trackState;
+    }
+
+    public float getThumbState() {
+        return thumbState;
     }
 
     public float getThumbAlpha() {
@@ -164,16 +174,19 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
         if (!e.getValueIsAdjusting()) return;
 
         JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
-        int extent = scrollBar.getModel().getExtent();
-        int value = scrollBar.getValue() + extent;
-        if (value == extent || value == scrollBar.getMaximum()) return;
 
-        Point p = MouseInfo.getPointerInfo().getLocation();
-        SwingUtilities.convertPointFromScreen(p, scrollbar);
-        if (!ui.getThumbBounds().contains(p) && !e.getValueIsAdjusting()) {
-            if (!thumbFadeinAnimator.isRunning()) {
-                mouseOverThumb = true;
-                resetThumbAnimator();
+        if (PropertyUtil.getBooleanProperty(scrollBar, KEY_HIGHLIGHT_ON_SCROLL)) {
+            int extent = scrollBar.getModel().getExtent();
+            int value = scrollBar.getValue() + extent;
+            if (value == extent || value == scrollBar.getMaximum()) return;
+
+            Point p = MouseInfo.getPointerInfo().getLocation();
+            SwingUtilities.convertPointFromScreen(p, scrollbar);
+            if (!ui.getThumbBounds().contains(p)) {
+                if (!thumbFadeinAnimator.isRunning()) {
+                    mouseOverThumb = true;
+                    resetThumbAnimator();
+                }
             }
         }
     }
@@ -234,8 +247,9 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
         }
 
         @Override
-        protected void updateValue(final float value) {
+        protected void updateValue(final float state, final float value) {
             trackAlpha = value;
+            trackState = state;
         }
     }
 
@@ -246,8 +260,9 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
         }
 
         @Override
-        protected void updateValue(final float value) {
+        protected void updateValue(final float state, final float value) {
             trackAlpha = value;
+            trackState = state;
         }
     }
 
@@ -258,8 +273,9 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
         }
 
         @Override
-        protected void updateValue(final float value) {
+        protected void updateValue(final float state, final float value) {
             thumbAlpha = value;
+            thumbState = state;
         }
 
         @Override
@@ -282,8 +298,9 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
         }
 
         @Override
-        protected void updateValue(final float value) {
+        protected void updateValue(final float state, final float value) {
             thumbAlpha = value;
+            thumbState = state;
         }
     }
 
@@ -304,18 +321,18 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
             this.fadeIn = fadeIn;
         }
 
-        protected abstract void updateValue(final float value);
+        protected abstract void updateValue(final float state, final float value);
 
         @Override
         public void paintNow(final float fraction) {
             float fr = fadeIn ? fraction : (1 - fraction);
-            updateValue(minValue + maxValue * fr);
+            updateValue(fr, minValue + maxValue * fr);
             repaint();
         }
 
         @Override
         protected void paintCycleEnd() {
-            updateValue(fadeIn ? maxValue : minValue);
+            updateValue(fadeIn ? 1 : 0, fadeIn ? maxValue : minValue);
             repaint();
         }
 

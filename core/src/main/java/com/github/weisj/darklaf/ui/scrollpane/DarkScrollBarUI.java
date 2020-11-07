@@ -30,6 +30,7 @@ import javax.swing.plaf.basic.BasicScrollBarUI;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.util.ColorUtil;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /** @author Jannis Weis */
 public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConstants {
@@ -66,6 +67,8 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
             UIManager.put("ScrollBar.incrementButtonGap", incGap);
             UIManager.put("ScrollBar.decrementButtonGap", decGap);
         }
+        PropertyUtil.installProperty(scrollbar, KEY_HIGHLIGHT_ON_SCROLL,
+                UIManager.getBoolean("ScrollBar.highlightOnScroll"));
         thumbBorderColor = UIManager.getColor("ScrollBar.thumbBorderColor");
         thumbFadeStartColor = UIManager.getColor("ScrollBar.fadeStartColor");
         thumbFadeEndColor = UIManager.getColor("ScrollBar.fadeEndColor");

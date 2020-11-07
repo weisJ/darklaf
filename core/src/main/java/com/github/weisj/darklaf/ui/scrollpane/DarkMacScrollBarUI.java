@@ -27,14 +27,21 @@ import java.awt.geom.RoundRectangle2D;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 
-import com.github.weisj.darklaf.graphics.Animator;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 
 public class DarkMacScrollBarUI extends DarkScrollBarUI {
 
+    private boolean hideScrollBar;
+
     public static ComponentUI createUI(final JComponent c) {
         return new DarkMacScrollBarUI();
+    }
+
+    @Override
+    protected void installDefaults() {
+        super.installDefaults();
+        hideScrollBar = UIManager.getBoolean("ScrollBar.macos.hideScrollBar");
     }
 
     @Override
@@ -46,9 +53,26 @@ public class DarkMacScrollBarUI extends DarkScrollBarUI {
         g.setComposite(COMPOSITE.derive(thumbAlpha));
         boolean horizontal = scrollbar.getOrientation() == JScrollBar.HORIZONTAL;
         int ins = 2;
-        int arc = horizontal ? (rect.height - 2 * ins) : (rect.width - 2 * ins);
         RoundRectangle2D roundRect = new RoundRectangle2D.Float();
-        roundRect.setRoundRect(rect.x + ins, rect.y + ins, rect.width - 2 * ins, rect.height - 2 * ins, arc, arc);
+        int width = rect.width - 2 * ins;
+        int height = rect.height - 2 * ins;
+        int x = rect.x + ins;
+        int y = rect.y + ins;
+        if (hideScrollBar) {
+            if (horizontal) {
+                int newHeight = (int) (height * scrollBarListener.getTrackState());
+                y += (height - newHeight);
+                height = newHeight;
+            } else {
+                int newWidth = (int) (width * scrollBarListener.getTrackState());
+                if (scrollbar.getComponentOrientation().isLeftToRight()) {
+                    x += (width - newWidth);
+                }
+                width = newWidth;
+            }
+        }
+        int arc = horizontal ? height : width;
+        roundRect.setRoundRect(x, y, width, height, arc, arc);
         g.setColor(getThumbColor());
         g.fill(roundRect);
         g.setColor(getThumbBorderColor());
@@ -68,14 +92,14 @@ public class DarkMacScrollBarUI extends DarkScrollBarUI {
             super(scrollbar, ui);
         }
 
-        @Override
-        protected Animator createTrackFadeinAnimator() {
-            return null;
-        }
-
-        @Override
-        protected Animator createTrackFadeoutAnimator() {
-            return null;
-        }
+        // @Override
+        // protected Animator createTrackFadeinAnimator() {
+        // return null;
+        // }
+        //
+        // @Override
+        // protected Animator createTrackFadeoutAnimator() {
+        // return null;
+        // }
     }
 }

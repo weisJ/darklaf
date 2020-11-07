@@ -145,7 +145,7 @@ public abstract class Animator {
     }
 
     public void resume(final int startFrame, final JComponent target) {
-        if (!target.isVisible() || !target.isShowing()) {
+        if (target != null && (!target.isVisible() || !target.isShowing())) {
             stopAnimation();
             return;
         }
