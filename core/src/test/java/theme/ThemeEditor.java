@@ -374,7 +374,7 @@ public class ThemeEditor extends JPanel {
             protected void paintComponent(final Graphics g) {
                 super.paintComponent(g);
                 GraphicsContext context = new GraphicsContext(g);
-                ((Graphics2D) g).setComposite(PaintUtil.getGlowComposite());
+                ((Graphics2D) g).setComposite(PaintUtil.getShadowComposite().derive(0.7f));
                 g.setColor(UIManager.getColor("hoverHighlight"));
                 PaintUtil.fillRoundRect((Graphics2D) g, 0, 0, getWidth(), getHeight(), 10, false);
                 context.restore();
