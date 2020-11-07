@@ -303,34 +303,39 @@ public enum Alignment {
     }
 
     public double getAngle() {
-        double angle = 0.0;
+        return Math.toRadians(getDegreeAngle());
+    }
+
+    public int getDegreeAngle() {
+        int angle;
         switch (this) {
-            case NORTH:
-            case CENTER:
-                angle = 0.0;
-                break;
             case SOUTH:
-                angle = 180.0;
+                angle = 180;
                 break;
             case EAST:
-                angle = 90.0;
+                angle = 90;
                 break;
             case WEST:
-                angle = 270.0;
+                angle = 270;
                 break;
             case NORTH_EAST:
-                angle = 45.0;
+                angle = 45;
                 break;
             case NORTH_WEST:
-                angle = 315.0;
+                angle = 315;
                 break;
             case SOUTH_EAST:
-                angle = 135.0;
+                angle = 135;
                 break;
             case SOUTH_WEST:
-                angle = 225.0;
+                angle = 225;
+                break;
+            case NORTH:
+            case CENTER:
+            default:
+                angle = 0;
                 break;
         }
-        return Math.toRadians(angle);
+        return angle;
     }
 }

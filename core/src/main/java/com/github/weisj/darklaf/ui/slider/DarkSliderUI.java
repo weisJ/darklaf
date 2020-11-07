@@ -277,15 +277,29 @@ public class DarkSliderUI extends BasicSliderUI {
     }
 
     protected void applyDelta(final int delta) {
-        setValue(slider.getValue() + delta);
+        setValue(slider.getValue() + delta, true);
     }
 
-    protected void setValue(final int value) {
+    protected void setValue(final int value, final boolean snapIfNeeded) {
+        slider.setValue(snapIfNeeded ? maybeSnapValue(value) : value);
+    }
+
+    protected int maybeSnapValue(final int value) {
         if (slider.getSnapToTicks()) {
-            slider.setValue(getSnappedValue(value));
+            return getSnappedValue(value);
         } else {
-            slider.setValue(value);
+            return value;
         }
+    }
+
+    @Override
+    public int valueForXPosition(final int xPos) {
+        return maybeSnapValue(super.valueForXPosition(xPos));
+    }
+
+    @Override
+    public int valueForYPosition(final int yPos) {
+        return maybeSnapValue(super.valueForYPosition(yPos));
     }
 
     protected int getTickSpacing() {
@@ -319,8 +333,7 @@ public class DarkSliderUI extends BasicSliderUI {
     }
 
     protected int getLowerHorizontalExtend() {
-        boolean ltr = (slider.getComponentOrientation().isLeftToRight() && !slider.getInverted())
-                || (!slider.getComponentOrientation().isLeftToRight() && slider.getInverted());
+        boolean ltr = !drawInverted();
         Component minLabel = ltr ? getLowestValueLabel() : getHighestValueLabel();
         boolean adjustMin = PropertyUtil.getBooleanProperty(minLabel, KEY_MANUAL_LABEL_ALIGN);
         int minPrefWidth = minLabel.getPreferredSize().width;
@@ -329,8 +342,7 @@ public class DarkSliderUI extends BasicSliderUI {
     }
 
     protected int getUpperHorizontalExtend() {
-        boolean ltr = (slider.getComponentOrientation().isLeftToRight() && !slider.getInverted())
-                || (!slider.getComponentOrientation().isLeftToRight() && slider.getInverted());
+        boolean ltr = !drawInverted();
         Component maxLabel = ltr ? getHighestValueLabel() : getLowestValueLabel();
         boolean adjustMax = PropertyUtil.getBooleanProperty(maxLabel, KEY_MANUAL_LABEL_ALIGN);
         int maxPrefWidth = maxLabel.getPreferredSize().width;
@@ -479,14 +491,15 @@ public class DarkSliderUI extends BasicSliderUI {
         SwingUtilities.convertPointFromScreen(p, slider);
         // Extend the track up and down to be more lenient with hit testing.
         int size = 3 * trackSize;
-        Shape area =
-                isHorizontal() ? getHorizontalTrackShape(trackShape, size) : getVerticalTrackShape(trackShape, size);
+        Shape area = isHorizontal()
+                ? getHorizontalTrackShape(trackShape, size)
+                : getVerticalTrackShape(trackShape, size);
         if (!area.getBounds().contains(p)) {
             return;
         }
         if (instantScrollEnabled(slider)) {
             int value = isHorizontal() ? valueForXPosition(p.x) : valueForYPosition(p.y);
-            setValue(value);
+            setValue(value, false);
         } else {
             super.scrollDueToClickInTrack(dir);
         }
@@ -560,11 +573,10 @@ public class DarkSliderUI extends BasicSliderUI {
             int extraSpace = iconPad + getThumbWidth() / 2;
             if (slider.getComponentOrientation().isLeftToRight()) {
                 iconRect.x = trackRect.x + trackRect.width + extraSpace;
-                iconRect.y = trackRect.y + (trackRect.height - iconRect.height) / 2;
             } else {
                 iconRect.x = trackRect.x - iconRect.width - extraSpace;
-                iconRect.y = trackRect.y + (trackRect.height - iconRect.height) / 2;
             }
+            iconRect.y = trackRect.y + (trackRect.height - iconRect.height) / 2;
         } else {
             int extraSpace = iconPad + getThumbHeight() / 2;
             if (slider.getComponentOrientation().isLeftToRight()) {
@@ -579,9 +591,7 @@ public class DarkSliderUI extends BasicSliderUI {
 
     private void setHorizontalTrackClip(final Graphics g) {
         int x = thumbRect.x + thumbRect.width / 2;
-        boolean ltr = slider.getComponentOrientation().isLeftToRight();
-        boolean inverted = slider.getInverted();
-        if ((ltr && !inverted) || (!ltr && inverted)) {
+        if (!drawInverted()) {
             g.clipRect(0, 0, x, slider.getHeight());
         } else {
             g.clipRect(x, 0, slider.getWidth() - x, slider.getHeight());
@@ -618,11 +628,7 @@ public class DarkSliderUI extends BasicSliderUI {
         int arc = arcSize;
         int yOff = (trackRect.height - size) / 2;
         int w = trackRect.width;
-        if (slider.getComponentOrientation().isLeftToRight()) {
-            trackShape.setRoundRect(trackRect.x, trackRect.y + yOff, w, size, arc, arc);
-        } else {
-            trackShape.setRoundRect(trackRect.x, trackRect.y + yOff, w, size, arc, arc);
-        }
+        trackShape.setRoundRect(trackRect.x, trackRect.y + yOff, w, size, arc, arc);
         return trackShape;
     }
 
@@ -643,11 +649,7 @@ public class DarkSliderUI extends BasicSliderUI {
         int arc = arcSize;
         int xOff = (trackRect.width - size) / 2;
         int h = trackRect.height;
-        if (slider.getComponentOrientation().isLeftToRight()) {
-            trackShape.setRoundRect(trackRect.x + xOff, trackRect.y, size, h, arc, arc);
-        } else {
-            trackShape.setRoundRect(trackRect.x + xOff, trackRect.y, size, h, arc, arc);
-        }
+        trackShape.setRoundRect(trackRect.x + xOff, trackRect.y, size, h, arc, arc);
         return trackShape;
     }
 

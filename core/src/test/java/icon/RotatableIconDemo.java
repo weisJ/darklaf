@@ -46,25 +46,33 @@ public class RotatableIconDemo implements ComponentDemo {
     public JComponent createComponent() {
         final int size = 25;
         RotatableIcon rotateIcon = new RotatableIcon(((DarkSVGIcon) DemoResources.FOLDER_ICON).derive(size, size));
-        rotateIcon.setOrientation(Alignment.NORTH);
+        rotateIcon.setOrientation(Alignment.EAST);
         JLabel iconLabel = new JLabel(rotateIcon);
         DemoPanel panel = new DemoPanel(iconLabel);
 
-        JSlider slider = new JSlider(0, 360);
-        slider.setMajorTickSpacing(360 / (Alignment.values().length - 1));
+        Alignment[] orientations = new Alignment[8];
+        orientations[0] = Alignment.NORTH;
+        for (int i = 1; i <= 7; i++) {
+            orientations[i] = orientations[i - 1].clockwise();
+        }
+
+        int spacing = 360 / orientations.length;
+        JSlider slider = new JSlider(0, (orientations.length - 1) * spacing);
+        slider.setMajorTickSpacing(spacing);
         slider.setSnapToTicks(true);
         slider.setPaintLabels(true);
         slider.setPaintTicks(true);
-        slider.setValue((int) Math.toDegrees(rotateIcon.getAngle()));
+        slider.setValue(rotateIcon.getOrientation().getIndex() * spacing);
         slider.addChangeListener(e -> {
             if (!slider.isEnabled()) return;
-            rotateIcon.setRotation(Math.toRadians(slider.getValue()));
+            rotateIcon.setOrientation(orientations[slider.getValue() / spacing]);
             iconLabel.repaint();
         });
 
         Timer timer = new Timer(1000, e -> {
-            rotateIcon.setOrientation(rotateIcon.getOrientation().clockwise());
-            slider.setValue((int) Math.toDegrees(rotateIcon.getAngle()));
+            Alignment orientation = rotateIcon.getOrientation().clockwise();
+            rotateIcon.setOrientation(orientation);
+            slider.setValue(orientation.getDegreeAngle());
             iconLabel.repaint();
         });
         timer.setRepeats(true);

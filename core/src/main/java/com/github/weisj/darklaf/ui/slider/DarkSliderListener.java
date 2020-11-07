@@ -53,18 +53,18 @@ public class DarkSliderListener extends MouseAdapter implements PropertyChangeLi
             int spacing = slider.getMinorTickSpacing();
             amount *= spacing;
         }
-        ui.setValue(slider.getValue() + amount);
+        ui.setValue(slider.getValue() + amount, true);
     }
 
     @Override
     public void mouseClicked(final MouseEvent e) {
         if (slider.isEnabled() && ui.showVolumeIcon(slider) && ui.iconRect.contains(e.getPoint())) {
             if (muted && slider.getValue() == slider.getMinimum()) {
-                ui.setValue(oldValue);
+                ui.setValue(oldValue, true);
                 muted = false;
             } else {
                 oldValue = slider.getValue();
-                ui.setValue(slider.getMinimum());
+                ui.setValue(slider.getMinimum(), true);
                 muted = true;
             }
         }
