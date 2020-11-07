@@ -60,10 +60,11 @@ public class DarkTreeCellRendererDelegate extends TreeCellRendererDelegate imple
                     leaf, row, isFocused);
             renderer = prepareRendererComponent(tree, comp);
         } else {
-            renderer = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, isFocused);
-            if (renderer instanceof DefaultTreeCellRenderer) {
-                patchIcon(tree, (DefaultTreeCellRenderer) renderer, leaf, expanded);
+            TreeCellRenderer delegate = getDelegate();
+            if (delegate instanceof DefaultTreeCellRenderer) {
+                patchIcon(tree, (DefaultTreeCellRenderer) delegate, leaf, expanded);
             }
+            renderer = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, isFocused);
         }
         CellUtil.setupTreeForeground(renderer, tree, selected);
         CellUtil.setupTreeBackground(renderer, tree, selected, row);
