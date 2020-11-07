@@ -206,9 +206,10 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
     @Override
     public void paint(final Graphics g, final JComponent c) {
         if (!comboBox.isEditable()) {
+            Rectangle rect = rectangleForCurrentValue();
             Component currentValueRenderer = getRendererForCurrentValue();
             paintBackground(g, c, currentValueRenderer);
-            paintCurrentValue(g, rectangleForCurrentValue(), hasFocus, currentValueRenderer);
+            paintCurrentValue(g, rect, hasFocus, currentValueRenderer);
         } else {
             paintBackground(g, c, getEditorComponent());
         }
@@ -366,9 +367,8 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
             ((JComponent) c).setOpaque(false);
         }
 
-        boolean shouldValidate = c instanceof JPanel;
         Rectangle r = new Rectangle(bounds);
-        currentValuePane.paintComponent(g, c, comboBox, r.x, r.y, r.width, r.height, shouldValidate);
+        currentValuePane.paintComponent(g, c, comboBox, r.x, r.y, r.width, r.height, c instanceof JPanel);
         // return opaque for combobox popup items painting
         if (changeOpaque) {
             ((JComponent) c).setOpaque(true);
