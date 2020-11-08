@@ -37,7 +37,7 @@ public class HelpButtonDemo implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        JButton button = new HelpButton();
+        HelpButton button = new HelpButton();
 
         DemoPanel panel = new DemoPanel(button);
         JPanel controlPanel = panel.addControls();
@@ -57,6 +57,12 @@ public class HelpButtonDemo implements ComponentDemo {
             {
                 setSelected(button.isRolloverEnabled());
                 addActionListener(e -> button.setRolloverEnabled(isSelected()));
+            }
+        });
+        controlPanel.add(new JCheckBox("Colored Icon") {
+            {
+                setSelected(button.isUseColoredIcon());
+                addActionListener(e -> button.setUseColoredIcon(isSelected()));
             }
         });
         return panel;

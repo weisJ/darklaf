@@ -27,6 +27,8 @@ import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 
 public class HelpButton extends JButton {
 
+    private boolean useColoredIcon;
+
     public HelpButton() {
         this(null);
     }
@@ -40,7 +42,29 @@ public class HelpButton extends JButton {
         putClientProperty(DarkButtonUI.KEY_SQUARE, true);
         putClientProperty(DarkButtonUI.KEY_ROUND, true);
         putClientProperty(DarkButtonUI.KEY_NO_BORDERLESS_OVERWRITE, true);
+        setUseColoredIcon(true);
         setIcon(UIManager.getIcon("HelpButton.helpHighlightIcon"));
         setDisabledIcon(UIManager.getIcon("HelpButton.helpDisabledIcon"));
+    }
+
+    /**
+     * Sets whether the button uses a colored help icon.
+     *
+     * @param colored true if colored.
+     */
+    public void setUseColoredIcon(final boolean colored) {
+        useColoredIcon = colored;
+        setIcon(colored
+                ? UIManager.getIcon("HelpButton.helpHighlightIcon")
+                : UIManager.getIcon("HelpButton.helpIcon"));
+    }
+
+    /**
+     * Returns whether the button uses a colored icon.
+     *
+     * @return true if colored.
+     */
+    public boolean isUseColoredIcon() {
+        return useColoredIcon;
     }
 }
