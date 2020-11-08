@@ -53,7 +53,7 @@ public class UtilityDefaultsInitTask implements DefaultsInitTask {
         CellUtil.updateColors(defaults);
 
         IconLoader.updateAwareStyle(Theme.isDark(currentTheme) ? AwareIconStyle.DARK : AwareIconStyle.LIGHT);
-        IconLoader.updateThemeStatus(currentTheme);
+        IconLoader.updateThemeStatus(new Object());
         IconLoader.reloadFrameIcons();
     }
 
