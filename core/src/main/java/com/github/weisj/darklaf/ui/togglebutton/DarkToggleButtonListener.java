@@ -90,7 +90,7 @@ public class DarkToggleButtonListener extends DarkButtonListener<DarkToggleButto
             animator.suspend();
             animator.reverse = !sel;
             animator.setEndValue(endState);
-            animator.resume(startFrame, button);
+            animator.resume(startFrame, false, button);
         }
     }
 

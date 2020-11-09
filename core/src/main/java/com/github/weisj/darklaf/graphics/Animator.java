@@ -41,7 +41,7 @@ public abstract class Animator {
     private final int totalFrames;
     private final int cycleDuration;
     private final boolean repeatable;
-    private final int delayFrames;
+    private final int delay;
 
     private boolean forward;
 
@@ -55,12 +55,12 @@ public abstract class Animator {
     private boolean enabled = true;
     private volatile boolean disposed = false;
 
-    public Animator(final int totalFrames, final int cycleDuration, final int delayFrames) {
-        this(totalFrames, cycleDuration, delayFrames, false);
+    public Animator(final int totalFrames, final int cycleDuration, final int delay) {
+        this(totalFrames, cycleDuration, delay, false);
     }
 
-    public Animator(final int totalFrames, final int cycleDuration, final int delayFrames, final boolean repeatable) {
-        this(totalFrames, cycleDuration, delayFrames, repeatable, true, DefaultInterpolator.LINEAR);
+    public Animator(final int totalFrames, final int cycleDuration, final int delay, final boolean repeatable) {
+        this(totalFrames, cycleDuration, delay, repeatable, true, DefaultInterpolator.LINEAR);
     }
 
     public Animator(final int totalFrames, final int cycleDuration, final boolean repeatable) {
@@ -72,11 +72,11 @@ public abstract class Animator {
         this(totalFrames, cycleDuration, 0, repeatable, true, interpolator);
     }
 
-    public Animator(final int totalFrames, final int cycleDuration, final int delayFrames, final boolean repeatable,
+    public Animator(final int totalFrames, final int cycleDuration, final int delay, final boolean repeatable,
             final boolean forward, final Interpolator interpolator) {
         this.totalFrames = totalFrames;
         this.cycleDuration = cycleDuration;
-        this.delayFrames = delayFrames;
+        this.delay = delay;
         this.repeatable = repeatable;
         this.forward = forward;
         this.interpolator = interpolator;
@@ -123,7 +123,7 @@ public abstract class Animator {
     }
 
     public void resume() {
-        resume(0);
+        resume(0, false);
     }
 
     private boolean animationsEnabled() {
@@ -144,15 +144,15 @@ public abstract class Animator {
         animationDone();
     }
 
-    public void resume(final int startFrame, final JComponent target) {
+    public void resume(final int startFrame, final boolean skipDelay, final JComponent target) {
         if (target != null && (!target.isVisible() || !target.isShowing())) {
             stopAnimation();
             return;
         }
-        resume(startFrame);
+        resume(startFrame, skipDelay);
     }
 
-    public void resume(final int startFrame) {
+    public void resume(final int startFrame, final boolean skipDelay) {
         if (startFrame < 0) {
             throw new IllegalArgumentException("Starting frame must be non negative.");
         }
@@ -160,6 +160,7 @@ public abstract class Animator {
             stopAnimation();
         } else if (ticker == null) {
             this.startFrame = startFrame;
+            long initialDelay = skipDelay ? 0 : delay * 1000L;
             ticker = scheduler.scheduleWithFixedDelay(new Runnable() {
                 final AtomicBoolean isScheduled = new AtomicBoolean(false);
 
@@ -173,15 +174,13 @@ public abstract class Animator {
                         });
                     }
                 }
-            }, 0, cycleDuration * 1000L / totalFrames, TimeUnit.MICROSECONDS);
+            }, initialDelay, cycleDuration * 1000L / totalFrames, TimeUnit.MICROSECONDS);
         }
     }
 
     private void paint() {
         int frame = forward ? currentFrame : totalFrames - currentFrame - 1;
-        if (frame > delayFrames) {
-            paintNow(interpolator.interpolate(((float) frame) / totalFrames));
-        }
+        paintNow(interpolator.interpolate(((float) frame) / totalFrames));
     }
 
     private void animationDone() {

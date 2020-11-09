@@ -30,18 +30,27 @@ import com.github.weisj.darklaf.graphics.Animator;
 import com.github.weisj.darklaf.graphics.DefaultInterpolator;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-public class DarkScrollBarListener extends MouseAdapter implements AdjustmentListener, ScrollBarConstants {
+public class DarkScrollBarListener<T extends DarkScrollBarUI> extends MouseAdapter
+        implements AdjustmentListener, ScrollBarConstants {
 
     private static final float MAX_TRACK_ALPHA = 0.3f;
     private static final float MAX_THUMB_ALPHA = 0.7f;
-    private static final int DELAY_FRAMES = 6;
-    private static final int FADEOUT_FRAMES_COUNT = 10 + DELAY_FRAMES;
-    private static final int FADEIN_FRAMES_COUNT = FADEOUT_FRAMES_COUNT / 2;
-    private static final int FADEOUT_FRAME_COUNT_FACTOR = 25;
-    private static final int FADEIN_FRAME_COUNT_FACTOR = 25;
+
+    protected static final int FADE_RESOLUTION = 10;
+
+    protected static final int TRACK_FADE_OUT_DURATION = 400;
+    protected static final int TRACK_FADE_OUT_DELAY = 100;
+    protected static final int TRACK_FADE_IN_DURATION = 200;
+    protected static final int TRACK_FADE_IN_DELAY = 0;
+
+    protected static final int THUMB_FADE_OUT_DURATION = 400;
+    protected static final int THUMB_FADE_OUT_DELAY = 100;
+    protected static final int THUMB_FADE_IN_DURATION = 200;
+    protected static final int THUMB_FADE_IN_DELAY = 0;
+
 
     protected final JScrollBar scrollbar;
-    private final DarkScrollBarUI ui;
+    protected final T ui;
 
     private final Animator trackFadeoutAnimator;
     private final Animator trackFadeinAnimator;
@@ -55,7 +64,7 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
     protected float trackAlpha;
     protected float thumbAlpha;
 
-    public DarkScrollBarListener(final JScrollBar scrollbar, final DarkScrollBarUI ui) {
+    public DarkScrollBarListener(final JScrollBar scrollbar, final T ui) {
         this.scrollbar = scrollbar;
         this.ui = ui;
         boolean animationsEnabled = UIManager.getBoolean("ScrollBar.animated");
@@ -175,19 +184,36 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
 
         JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
 
-        if (PropertyUtil.getBooleanProperty(scrollBar, KEY_HIGHLIGHT_ON_SCROLL)) {
+        boolean animateTrack = animateTrackOnScroll(scrollBar);
+        boolean animateThumb = animateThumbOnScroll(scrollBar);
+
+        if (animateTrack || animateThumb) {
             int extent = scrollBar.getModel().getExtent();
             int value = scrollBar.getValue() + extent;
             if (value == extent || value == scrollBar.getMaximum()) return;
 
             Point p = MouseInfo.getPointerInfo().getLocation();
             SwingUtilities.convertPointFromScreen(p, scrollbar);
-            if (!ui.getThumbBounds().contains(p)) {
-                if (!thumbFadeinAnimator.isRunning()) {
-                    mouseOverThumb = true;
-                    resetThumbAnimator();
-                }
+            if (animateTrack && !scrollBar.contains(p)) {
+                runOnScrollTrackAnimation();
             }
+            if (animateThumb && !ui.getThumbBounds().contains(p)) {
+                runOnScrollThumbAnimation();
+            }
+        }
+    }
+
+    protected void runOnScrollTrackAnimation() {
+        if (!trackFadeinAnimator.isRunning()) {
+            mouseOverTrack = true;
+            resetTrackAnimator();
+        }
+    }
+
+    protected void runOnScrollThumbAnimation() {
+        if (!thumbFadeinAnimator.isRunning()) {
+            mouseOverThumb = true;
+            resetThumbAnimator();
         }
     }
 
@@ -208,20 +234,67 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
 
     protected void resetAnimators(final Animator fadeInAnimator, final Animator fadeOutAnimator,
             final boolean overAnimatedComponent, final float currentAlpha, final float maxAlpha) {
+        boolean fadeInRunning = fadeInAnimator.isRunning();
+        boolean fadeOutRunning = fadeInAnimator.isRunning();
         fadeInAnimator.reset();
         fadeOutAnimator.reset();
         if (scrollbar != null && (scrollbar.getValueIsAdjusting() || overAnimatedComponent)) {
             fadeOutAnimator.suspend();
             int startFrame = (int) ((currentAlpha / maxAlpha) * fadeInAnimator.getTotalFrames());
-            fadeInAnimator.resume(startFrame, scrollbar);
+
+            fadeInAnimator.resume(startFrame, fadeOutRunning, scrollbar);
         } else {
             fadeInAnimator.suspend();
             int startFrame = 0;
             if (currentAlpha < maxAlpha) {
                 startFrame = (int) ((1.0 - currentAlpha / maxAlpha) * (fadeOutAnimator.getTotalFrames()));
             }
-            fadeOutAnimator.resume(startFrame, scrollbar);
+            fadeOutAnimator.resume(startFrame, fadeInRunning, scrollbar);
         }
+    }
+
+    protected boolean animateTrackOnScroll(final JScrollBar scrollBar) {
+        return false;
+    }
+
+    protected boolean animateThumbOnScroll(final JScrollBar scrollBar) {
+        return PropertyUtil.getBooleanProperty(scrollBar, KEY_HIGHLIGHT_ON_SCROLL);
+    }
+
+    protected int getFadeResolution() {
+        return FADE_RESOLUTION;
+    }
+
+    protected int getTrackFadeOutDuration() {
+        return TRACK_FADE_OUT_DURATION;
+    }
+
+    protected int getTrackFadeOutDelay() {
+        return TRACK_FADE_OUT_DELAY;
+    }
+
+    protected int getTrackFadeInDuration() {
+        return TRACK_FADE_IN_DURATION;
+    }
+
+    protected int getTrackFadeInDelay() {
+        return TRACK_FADE_IN_DELAY;
+    }
+
+    protected int getThumbFadeOutDuration() {
+        return THUMB_FADE_OUT_DURATION;
+    }
+
+    protected int getThumbFadeOutDelay() {
+        return THUMB_FADE_OUT_DELAY;
+    }
+
+    protected int getThumbFadeInDuration() {
+        return THUMB_FADE_IN_DURATION;
+    }
+
+    protected int getThumbFadeInDelay() {
+        return THUMB_FADE_IN_DELAY;
     }
 
     protected Animator createTrackFadeoutAnimator() {
@@ -240,10 +313,11 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
         return new ThumbFadeInAnimator();
     }
 
-    protected class TrackFadeInAnimator extends FadeInAnimator {
+    protected class TrackFadeInAnimator extends SBAnimator {
 
         public TrackFadeInAnimator() {
-            super(scrollbar, 0, MAX_TRACK_ALPHA);
+            super(getTrackFadeInDuration(), getFadeResolution(), getTrackFadeInDelay(), scrollbar, 0, MAX_TRACK_ALPHA,
+                    true);
         }
 
         @Override
@@ -253,10 +327,11 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
         }
     }
 
-    protected class TrackFadeOutAnimator extends FadeOutAnimator {
+    protected class TrackFadeOutAnimator extends SBAnimator {
 
         public TrackFadeOutAnimator() {
-            super(scrollbar, 0, MAX_TRACK_ALPHA);
+            super(getTrackFadeOutDuration(), getFadeResolution(), getTrackFadeOutDelay(), scrollbar, 0, MAX_TRACK_ALPHA,
+                    false);
         }
 
         @Override
@@ -266,10 +341,11 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
         }
     }
 
-    protected class ThumbFadeInAnimator extends FadeInAnimator {
+    protected class ThumbFadeInAnimator extends SBAnimator {
 
         public ThumbFadeInAnimator() {
-            super(scrollbar, 0, MAX_THUMB_ALPHA);
+            super(getThumbFadeInDuration(), getFadeResolution(), getThumbFadeInDelay(), scrollbar, 0, MAX_THUMB_ALPHA,
+                    true);
         }
 
         @Override
@@ -291,10 +367,11 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
         }
     }
 
-    protected class ThumbFadeOutAnimator extends FadeOutAnimator {
+    protected class ThumbFadeOutAnimator extends SBAnimator {
 
         public ThumbFadeOutAnimator() {
-            super(scrollbar, 0, MAX_THUMB_ALPHA);
+            super(getThumbFadeOutDuration(), getFadeResolution(), getThumbFadeOutDelay(), scrollbar, 0, MAX_THUMB_ALPHA,
+                    false);
         }
 
         @Override
@@ -311,9 +388,9 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
         private final float maxValue;
         private final boolean fadeIn;
 
-        public SBAnimator(final int totalFrames, final int cycleDuration, final int delayFrames,
+        public SBAnimator(final int duration, final int resolution, final int delay,
                 final Component component, final float minValue, final float maxValue, final boolean fadeIn) {
-            super(totalFrames, cycleDuration, delayFrames, false, true,
+            super(duration / resolution, duration, delay, false, true,
                     fadeIn ? DefaultInterpolator.EASE_OUT_CUBIC : DefaultInterpolator.EASE_IN_CUBIC);
             this.component = component;
             this.minValue = minValue;
@@ -342,21 +419,5 @@ public class DarkScrollBarListener extends MouseAdapter implements AdjustmentLis
             }
         }
 
-    }
-
-    protected abstract static class FadeOutAnimator extends SBAnimator {
-
-        public FadeOutAnimator(final Component component, final float minValue, final float maxValue) {
-            super(FADEOUT_FRAMES_COUNT, FADEOUT_FRAMES_COUNT * FADEOUT_FRAME_COUNT_FACTOR, DELAY_FRAMES, component,
-                    minValue, maxValue, false);
-        }
-    }
-
-    protected abstract static class FadeInAnimator extends SBAnimator {
-
-        public FadeInAnimator(final Component component, final float minValue, final float maxValue) {
-            super(FADEIN_FRAMES_COUNT, FADEIN_FRAMES_COUNT * FADEIN_FRAME_COUNT_FACTOR, 0, component, minValue,
-                    maxValue, true);
-        }
     }
 }

@@ -27,6 +27,7 @@ import java.awt.geom.RoundRectangle2D;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 
+import com.github.weisj.darklaf.graphics.Animator;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 
@@ -59,12 +60,13 @@ public class DarkMacScrollBarUI extends DarkScrollBarUI {
         int x = rect.x + ins;
         int y = rect.y + ins;
         if (hideScrollBar) {
+            float animationState = scrollBarListener.getTrackState();
             if (horizontal) {
-                int newHeight = (int) (height * scrollBarListener.getTrackState());
+                int newHeight = Math.round(height * animationState);
                 y += (height - newHeight);
                 height = newHeight;
             } else {
-                int newWidth = (int) (width * scrollBarListener.getTrackState());
+                int newWidth = Math.round(width * animationState);
                 if (scrollbar.getComponentOrientation().isLeftToRight()) {
                     x += (width - newWidth);
                 }
@@ -81,25 +83,58 @@ public class DarkMacScrollBarUI extends DarkScrollBarUI {
     }
 
     @Override
-    protected DarkScrollBarListener createScrollBarListener() {
+    protected DarkScrollBarListener<DarkMacScrollBarUI> createScrollBarListener() {
         return new MacScrollBarListener(scrollbar, this);
     }
 
-    private static class MacScrollBarListener extends DarkScrollBarListener {
+    private static class MacScrollBarListener extends DarkScrollBarListener<DarkMacScrollBarUI> {
 
+        private final int hideDelay;
+        private final Timer hideTimer;
 
-        public MacScrollBarListener(final JScrollBar scrollbar, final DarkScrollBarUI ui) {
+        public MacScrollBarListener(final JScrollBar scrollbar, final DarkMacScrollBarUI ui) {
             super(scrollbar, ui);
+            hideDelay = getTrackFadeOutDelay();
+            hideTimer = new Timer(hideDelay, e -> {
+                Point p = MouseInfo.getPointerInfo().getLocation();
+                SwingUtilities.convertPointFromScreen(p, scrollbar);
+                mouseOverTrack = scrollbar.contains(p);
+                resetTrackAnimator();
+            });
+            hideTimer.setRepeats(false);
         }
 
-        // @Override
-        // protected Animator createTrackFadeinAnimator() {
-        // return null;
-        // }
-        //
-        // @Override
-        // protected Animator createTrackFadeoutAnimator() {
-        // return null;
-        // }
+        @Override
+        protected boolean animateTrackOnScroll(final JScrollBar scrollBar) {
+            return ui.hideScrollBar;
+        }
+
+        @Override
+        protected Animator createTrackFadeinAnimator() {
+            return ui.hideScrollBar ? super.createTrackFadeinAnimator() : null;
+        }
+
+        @Override
+        protected Animator createTrackFadeoutAnimator() {
+            return ui.hideScrollBar ? super.createTrackFadeoutAnimator() : null;
+        }
+
+        @Override
+        protected int getTrackFadeOutDelay() {
+            return UIManager.getInt("ScrollBar.macos.hideDelay");
+        }
+
+        @Override
+        protected void runOnScrollTrackAnimation() {
+            super.runOnScrollTrackAnimation();
+            hideTimer.stop();
+            hideTimer.start();
+        }
+
+        @Override
+        protected void resetTrackAnimator() {
+            hideTimer.stop();
+            super.resetTrackAnimator();
+        }
     }
 }

@@ -32,9 +32,9 @@ public final class ColorUtil {
         if (percent == 1) return color1;
         if (percent == 0) return color2;
         double inverse_percent = 1.0 - percent;
-        int redPart = (int) (color1.getRed() * percent + color2.getRed() * inverse_percent);
-        int greenPart = (int) (color1.getGreen() * percent + color2.getGreen() * inverse_percent);
-        int bluePart = (int) (color1.getBlue() * percent + color2.getBlue() * inverse_percent);
+        int redPart = (int) Math.round(color1.getRed() * percent + color2.getRed() * inverse_percent);
+        int greenPart = (int) Math.round(color1.getGreen() * percent + color2.getGreen() * inverse_percent);
+        int bluePart = (int) Math.round(color1.getBlue() * percent + color2.getBlue() * inverse_percent);
         return new Color(redPart, greenPart, bluePart);
     }
 
@@ -43,12 +43,12 @@ public final class ColorUtil {
     }
 
     private static int shift(final int colorComponent, final double d) {
-        int n = (int) ((double) colorComponent * d);
+        int n = (int) Math.round((double) colorComponent * d);
         return n > 255 ? 255 : (Math.max(n, 0));
     }
 
     public static Color toAlpha(final Color color, final double alpha) {
-        return toAlpha(color, (int) (alpha * 255));
+        return toAlpha(color, (int) Math.round(alpha * 255));
     }
 
     public static Color toAlpha(final Color color, final int a) {

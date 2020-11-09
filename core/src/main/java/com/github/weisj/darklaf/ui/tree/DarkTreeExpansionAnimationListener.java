@@ -61,9 +61,9 @@ public class DarkTreeExpansionAnimationListener implements TreeExpansionListener
         animator.suspend();
         if (running) {
             // Forces paintCycleEnd to be called.
-            animator.resume(animator.getTotalFrames());
+            animator.resume(animator.getTotalFrames(), false);
         }
-        animator.resume(0, tree);
+        animator.resume(0, false, tree);
     }
 
     public TreePath getAnimationPath() {
