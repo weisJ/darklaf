@@ -63,6 +63,9 @@ public class CreateUITable {
     private static final String FOLDER = "documentation/";
     private static final String IDENT = "    ";
 
+    private static final String MISC_GROUP = "__Misc__";
+    private static final String THEME_GROUP = "%";
+
     private static String workingFolder;
     private UIDefaults currentDefaults;
 
@@ -95,22 +98,22 @@ public class CreateUITable {
     private String createTables(final Theme theme, final int ident) {
         UIDefaults defaults = setupThemeDefaults(theme);
 
-        String misc = "__Misc__";
-
         Set<String> groups = defaults.keySet().stream().map(key -> {
             String s = key.toString();
-            if (s.startsWith("%")) return "%";
+            if (s.startsWith(THEME_GROUP)) return THEME_GROUP;
             if (s.contains(".")) return s.split("\\.")[0];
             if (s.endsWith("UI")) return s.substring(0, s.length() - 2);
-            return misc + s;
+            return MISC_GROUP + s;
         }).collect(Collectors.toSet());
 
-        Set<String> miscKeys = groups.stream().filter(s -> s.startsWith(misc)).map(s -> s.substring(misc.length()))
+        Set<String> miscKeys = groups.stream()
+                .filter(s -> s.startsWith(MISC_GROUP))
+                .map(s -> s.substring(MISC_GROUP.length()))
                 .collect(Collectors.toSet());
 
         StringBuilder builder = new StringBuilder();
-        appendGroup(ident, defaults, builder, "%", "Theme Defaults");
-        groups.stream().sorted().filter(s -> !s.startsWith(misc) && !s.equals("%"))
+        appendGroup(ident, defaults, builder, THEME_GROUP, "Theme Defaults");
+        groups.stream().sorted().filter(s -> !s.startsWith(MISC_GROUP) && !s.equals(THEME_GROUP))
                 .forEach(group -> appendGroup(ident, defaults, builder, group, group));
         builder.append(StringUtil.repeat(IDENT, ident)).append("<h3>").append("Miscellaneous").append("</h3>\n");
         appendTable(builder, defaults.entrySet().stream().filter(entry -> miscKeys.contains(entry.getKey().toString()))
@@ -121,7 +124,13 @@ public class CreateUITable {
 
     private UIDefaults setupThemeDefaults(final Theme theme) {
         PropertyLoader.setDebugMode(true);
-        UIDefaults defaults = new DarkLaf().getDefaults();
+        LafManager.setTheme(theme);
+        UIDefaults defaults = new DarkLaf() {
+            @Override
+            public Theme getTheme() {
+                return theme;
+            }
+        }.getDefaults();
         PropertyLoader.setDebugMode(false);
         LafManager.installTheme(theme);
         currentDefaults = UIManager.getLookAndFeelDefaults();
@@ -177,6 +186,9 @@ public class CreateUITable {
     private void appendRow(final StringBuilder builder, final Map.Entry<Object, Object> entry, final int ident) {
         builder.append(StringUtil.repeat(IDENT, ident)).append("<tr>\n");
         String key = entry.getKey().toString();
+        if (key.startsWith(THEME_GROUP)) {
+            key = key.substring(THEME_GROUP.length());
+        }
         appendData(builder, key, ident + 1);
         Object value = entry.getValue();
         if (value instanceof PropertyLoader.ReferenceInfo) {
@@ -238,7 +250,7 @@ public class CreateUITable {
 
     private String createImage(final Object value, final String name, final Dimension size) throws IOException {
         new File(workingFolder + "img/").mkdirs();
-        String fileName = "img/" + name + ".png";
+        String fileName = "img/" + name + "_" + SystemInfo.getOsName() + ".png";
         File imageFile = new File(workingFolder + fileName);
         if (!imageFile.createNewFile()) return fileName;
         if (value instanceof Icon) {
