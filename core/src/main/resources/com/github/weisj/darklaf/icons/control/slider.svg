@@ -10,7 +10,8 @@
         </linearGradient>
     </defs>
     <g transform="translate(2,2)">
-        <polyline fill="url(#Icons.Slider.activeFillColor)" points="15.5,0.5 15.5,11 8,18 0.5,11 0.5,0.5"/>
+        <polyline fill="url(#Icons.Slider.activeFillColor)"
+                  points="15.5,0.5 15.5,11 8,18.3 0.5,11 0.5,0.5"/>
         <path fill="url(#Icons.Slider.borderColor)"
               d="M15,1v9.6l-7,7l-7-7V1H15 M16,0H0v11l8,8l8-8V0L16,0z"/>
     </g>
