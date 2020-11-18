@@ -22,6 +22,8 @@
 package com.github.weisj.darklaf.components.color;
 
 import java.awt.*;
+import java.awt.dnd.DropTarget;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -29,9 +31,12 @@ import java.util.function.Supplier;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.icons.SolidColorIcon;
-import com.github.weisj.darklaf.listener.MouseClickListener;
+import com.github.weisj.darklaf.transfer.TransferUtil;
+import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
+import com.github.weisj.darklaf.util.Pair;
 
 public class QuickColorChooser extends JPanel {
 
@@ -39,6 +44,7 @@ public class QuickColorChooser extends JPanel {
     private final JCheckBox checkBox;
     private final JLabel colorLabel;
     private final BiConsumer<Boolean, Color> onStatusChange;
+    private Pair<DropTarget, AtomicBoolean> dndSupport;
 
     public QuickColorChooser(final String title, final Color color, final Consumer<Color> onColorChange) {
         this(title, color, (b, c) -> onColorChange.accept(c), false);
@@ -46,6 +52,11 @@ public class QuickColorChooser extends JPanel {
 
     public QuickColorChooser(final String title, final Color color, final BiConsumer<Boolean, Color> onStatusChange,
             final boolean showCheckBox) {
+        this(title, color, onStatusChange, showCheckBox, null);
+    }
+
+    public QuickColorChooser(final String title, final Color color, final BiConsumer<Boolean, Color> onStatusChange,
+            final boolean showCheckBox, final Dimension pickerSize) {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         if (showCheckBox) {
             checkBox = new JCheckBox();
@@ -55,17 +66,42 @@ public class QuickColorChooser extends JPanel {
             checkBox = null;
         }
 
-        icon = new SolidColorIcon(color);
+        icon = pickerSize == null
+                ? new SolidColorIcon(color)
+                : new SolidColorIcon(color, pickerSize.width, pickerSize.height);
         colorLabel = new JLabel(icon, JLabel.LEFT);
+        colorLabel.putClientProperty(ToolTipConstants.KEY_STYLE, ToolTipStyle.BALLOON);
         this.onStatusChange = onStatusChange;
         attachToComponent(colorLabel, this::onColorChange, icon::getColor);
 
         add(colorLabel);
-        add(new JLabel(title, EmptyIcon.create(2, 2), JLabel.LEFT));
+        if (title != null) {
+            add(new JLabel(title, EmptyIcon.create(0), JLabel.LEFT));
+        }
+    }
+
+    public void setDragEnabled(final boolean dragEnabled) {
+        if (GraphicsEnvironment.isHeadless()) return;
+        if (dragEnabled && dndSupport == null) {
+            dndSupport = TransferUtil.setupDnD(colorLabel, TransferHandler.COPY, Color.class, this::getColor,
+                    this::setColor, SolidColorIcon::new);
+        }
+        if (dndSupport != null) {
+            dndSupport.getFirst().setActive(dragEnabled);
+            dndSupport.getSecond().set(dragEnabled);
+        }
     }
 
     private void onColorChange(final Color c) {
-        onStatusChange.accept(isSelected(), c);
+        onColorChange(c, true);
+    }
+
+    private void onColorChange(final Color c, final boolean notifyCallback) {
+        boolean notify = notifyCallback;
+        if (notify) {
+            notify = !Objects.equals(c, icon.getColor());
+        }
+        if (notify) onStatusChange.accept(isSelected(), c);
         icon.setColor(c);
         colorLabel.repaint();
     }
@@ -81,16 +117,12 @@ public class QuickColorChooser extends JPanel {
 
     public static void attachToComponent(final JComponent component, final Consumer<Color> onStatusChange,
             final Supplier<Color> supplier, final Supplier<Boolean> activationCheck) {
-        AtomicBoolean isShowing = new AtomicBoolean(false);
-        component.addMouseListener((MouseClickListener) e -> {
-            if (!component.isEnabled() || isShowing.get() || !activationCheck.get()) return;
-            isShowing.set(true);
-            PopupColorChooser.showColorChooser(component, supplier.get(), c -> {
-                if (c != null) {
-                    onStatusChange.accept(c);
-                }
-            }, event -> SwingUtilities.invokeLater(() -> isShowing.set(false)));
-        });
+        PopupColorChooser.attackToComponent(component, onStatusChange, supplier, activationCheck, true);
+    }
+
+    @Override
+    public void setToolTipText(final String text) {
+        colorLabel.setToolTipText(text);
     }
 
     public boolean isSelected() {
@@ -106,6 +138,10 @@ public class QuickColorChooser extends JPanel {
     }
 
     public void setColor(final Color color) {
-        onColorChange(color);
+        setColor(color, true);
+    }
+
+    public void setColor(final Color color, final boolean notifyCallback) {
+        onColorChange(color, notifyCallback);
     }
 }

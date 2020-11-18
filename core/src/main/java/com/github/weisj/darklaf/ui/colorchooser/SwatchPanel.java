@@ -33,7 +33,7 @@ import com.github.weisj.darklaf.task.ForegroundColorGenerationTask;
 import com.github.weisj.darklaf.util.Alignment;
 
 /** @author Jannis Weis */
-abstract class SwatchPanel extends JPanel {
+public abstract class SwatchPanel extends JPanel {
 
     protected Color[] colors;
     protected Dimension swatchSize;
@@ -63,53 +63,70 @@ abstract class SwatchPanel extends JPanel {
         });
         addKeyListener(new KeyAdapter() {
             public void keyPressed(final KeyEvent e) {
+                if (selRow < 0 || selCol < 0) return;
                 int typed = e.getKeyCode();
                 switch (typed) {
                     case KeyEvent.VK_UP:
                         if (selRow > 0) {
-                            selRow--;
-                            repaint();
+                            setSelection(selRow - 1, selCol);
                         }
                         break;
                     case KeyEvent.VK_DOWN:
-                        if (selRow < numSwatches.height - 1) {
-                            selRow++;
-                            repaint();
+                        if (getIndex(selRow + 1, selCol) < colors.length) {
+                            setSelection(selRow + 1, selCol);
                         }
                         break;
                     case KeyEvent.VK_LEFT:
                         if (selCol > 0 && SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
-                            selCol--;
+                            setSelection(selRow, selCol - 1);
                             repaint();
                         } else if (selCol < numSwatches.width - 1
+                                && getSelectionIndex() < colors.length - 1
                                 && !SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
-                            selCol++;
+                            setSelection(selRow, selCol + 1);
                             repaint();
                         }
                         break;
                     case KeyEvent.VK_RIGHT:
                         if (selCol < numSwatches.width - 1
+                                && getSelectionIndex() < colors.length - 1
                                 && SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
-                            selCol++;
+                            setSelection(selRow, selCol + 1);
                             repaint();
                         } else if (selCol > 0 && !SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
-                            selCol--;
+                            setSelection(selRow, selCol - 1);
                             repaint();
                         }
                         break;
                     case KeyEvent.VK_HOME:
-                        selCol = 0;
-                        selRow = 0;
-                        repaint();
+                        setSelection(0, 0);
                         break;
                     case KeyEvent.VK_END:
-                        selCol = numSwatches.width - 1;
-                        selRow = numSwatches.height - 1;
-                        repaint();
+                        setSelection(colors.length - 1);
                         break;
                 }
             }
         });
+    }
+
+    protected int getSelectionIndex() {
+        return getIndex(selRow, selCol);
+    }
+
+    protected int getIndex(final int row, final int col) {
+        return (row * numSwatches.width) + col;
+    }
+
+    protected void setSelection(final int index) {
+        int col = index % numSwatches.width;
+        int row = (index - col) / numSwatches.width;
+        setSelection(row, col);
+    }
+
+    protected void setSelection(final int row, final int col) {
+        selCol = col;
+        selRow = row;
+        repaint();
     }
 
     @Override
@@ -127,27 +144,30 @@ abstract class SwatchPanel extends JPanel {
     }
 
     private Color getColorForCell(final int column, final int row) {
-        int index = (row * numSwatches.width) + column;
-        if (index >= colors.length) return null;
-        return colors[(row * numSwatches.width) + column];
+        int index = getIndex(row, column);
+        if (index >= colors.length || index < 0) return null;
+        return colors[index];
     }
 
     public void paintComponent(final Graphics g) {
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-
         Insets ins = getInsets();
+
+        g.setColor(getBackground());
+        g.fillRect(ins.left, ins.top, getWidth() - ins.left - ins.right, getHeight() - ins.top - ins.bottom);
+
         g.translate(ins.left, ins.top);
         for (int row = 0; row < numSwatches.height; row++) {
             int y = getYForRow(row);
             for (int column = 0; column < numSwatches.width; column++) {
                 Color c = getColorForCell(column, row);
 
+                if (c == null) continue;
+
                 g.setColor(c);
                 int x = getXForColumn(column);
                 g.fillRect(x, y, swatchSize.width, swatchSize.height);
 
-                if (selRow == row && selCol == column && this.isFocusOwner() && c != null) {
+                if (selRow == row && selCol == column && this.isFocusOwner()) {
                     Color c2 = ForegroundColorGenerationTask.makeForeground(c);
                     g.setColor(c2);
                     PaintUtil.drawRect(g, x, y, swatchSize.width, swatchSize.height, 1);
@@ -220,12 +240,7 @@ abstract class SwatchPanel extends JPanel {
     }
 
     public void setSelectedColorFromLocation(final int x, final int y) {
-        if (!this.getComponentOrientation().isLeftToRight()) {
-            selCol = numSwatches.width - x / (swatchSize.width + gap.width) - 1;
-        } else {
-            selCol = x / (swatchSize.width + gap.width);
-        }
-        selRow = y / (swatchSize.height + gap.height);
-        repaint();
+        Point p = getCoordinatesForLocation(x, y);
+        setSelection(p.y, p.x);
     }
 }

@@ -36,6 +36,7 @@ import com.github.weisj.darklaf.color.DarkColorModelRGB;
 import com.github.weisj.darklaf.components.DefaultColorPipette;
 import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.components.border.MarginBorderWrapper;
+import com.github.weisj.darklaf.components.chooser.ChooserComponent;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.listener.UpdateDocumentListener;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
@@ -47,15 +48,16 @@ import com.github.weisj.darklaf.ui.slider.DarkSliderUI;
 import com.github.weisj.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
 import com.github.weisj.darklaf.util.ColorUtil;
 
-public class SmallColorChooser extends JPanel {
+public class SmallColorChooser extends JPanel implements ChooserComponent<Color> {
 
     private static final DarkColorModel[] COLOR_MODELS = new DarkColorModel[] {DarkColorModelRGB.getInstance(),
             DarkColorModelHSB.getInstance(), DarkColorModelHSL.getInstance()};
 
     protected ColorTriangle colorTriangle;
     protected ColorPreviewComponent previewComponent;
-    protected Color color;
     private Consumer<Color> callback;
+    private Color initial;
+
     protected boolean valueChanging;
     protected JTabbedPane colorModelTabbedPane;
     protected JFormattedTextField hexField;
@@ -63,8 +65,12 @@ public class SmallColorChooser extends JPanel {
     protected ColorValueFormatter hexFormatter;
     protected ColorPipette pipette;
 
+    public SmallColorChooser() {
+        this(Color.BLACK, c -> {
+        });
+    }
+
     public SmallColorChooser(final Color initial, final Consumer<Color> callback) {
-        this.color = initial;
         setValueChanging(true);
         setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
@@ -80,14 +86,27 @@ public class SmallColorChooser extends JPanel {
         constraints.gridy = 2;
         add(createBottomComponent(), constraints);
 
+        setOpaque(false);
         setValueChanging(false);
         initListeners();
         reset(initial, callback);
     }
 
+    @Override
     public void reset(final Color initial, final Consumer<Color> callback) {
         this.callback = callback;
+        this.initial = initial;
         colorTriangle.setColor(this, initial);
+    }
+
+    @Override
+    public Color getInitial() {
+        return initial;
+    }
+
+    @Override
+    public Color getSelected() {
+        return getColor();
     }
 
     protected void initListeners() {
@@ -125,7 +144,7 @@ public class SmallColorChooser extends JPanel {
         if (model != null) {
             colorTriangle.setColorFromModel(source, model, values);
         }
-        if (callback != null) callback.accept(colorTriangle.getColor());
+        if (callback != null && isShowing()) callback.accept(colorTriangle.getColor());
         setValueChanging(false);
     }
 
@@ -218,7 +237,7 @@ public class SmallColorChooser extends JPanel {
     }
 
     public Color getColor() {
-        return color;
+        return colorTriangle.getColor();
     }
 
     public DarkColorModel getDarkColorModel() {

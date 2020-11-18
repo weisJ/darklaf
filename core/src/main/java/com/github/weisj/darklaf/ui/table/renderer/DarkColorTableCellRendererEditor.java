@@ -53,7 +53,8 @@ public class DarkColorTableCellRendererEditor extends AbstractCellEditor impleme
         } else {
             changeColor((Color) value);
             SwingUtilities.invokeLater(() -> PopupColorChooser.showColorChooser(colorComp, savedColor,
-                    this::changeColor, e -> stopCellEditing(),
+                    this::changeColor,
+                    this::stopCellEditing,
                     true));
             return colorComp;
         }

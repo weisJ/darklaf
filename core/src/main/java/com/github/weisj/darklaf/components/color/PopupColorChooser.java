@@ -22,47 +22,30 @@
 package com.github.weisj.darklaf.components.color;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
-import com.github.weisj.darklaf.ui.DarkPopupFactory;
-import com.github.weisj.darklaf.ui.tooltip.DarkToolTipUI;
-import com.github.weisj.darklaf.ui.tooltip.DarkTooltipBorder;
-import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
-import com.github.weisj.darklaf.util.Actions;
-import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.components.chooser.ChooserComponent;
+import com.github.weisj.darklaf.components.popup.AttachedPopupComponent;
+import com.github.weisj.darklaf.components.popup.SharedComponent;
+import com.github.weisj.darklaf.util.Lambdas;
 
-public class PopupColorChooser extends JToolTip {
+public class PopupColorChooser extends JPanel implements ChooserComponent<Color> {
 
-    protected DarkTooltipBorder border;
-    protected static SmallColorChooser sharedChooser;
-    protected static ToolTipContext context;
-    protected final SmallColorChooser chooser;
+    private static final SharedComponent<SmallColorChooser> sharedChooser =
+            new SharedComponent<>(SmallColorChooser::new);
+    private final SmallColorChooser chooser;
+
 
     protected SmallColorChooser getChooser(final Color initial, final Consumer<Color> callback) {
-        if (sharedChooser == null) sharedChooser = new SmallColorChooser(initial, callback);
-        SmallColorChooser smallColorChooser = sharedChooser;
-        if (sharedChooser.getParent() != null) {
-            // Already in use. Create new one.
-            smallColorChooser = new SmallColorChooser(initial, callback);
-        }
+        SmallColorChooser smallColorChooser = sharedChooser.get();
         smallColorChooser.reset(initial, callback);
-        smallColorChooser.setOpaque(false);
         return smallColorChooser;
     }
 
-    protected ToolTipContext getContext() {
-        if (context == null) context = createToolTipContext();
-        return context;
-    }
-
-    public PopupColorChooser(final JComponent parent, final Color initial, final Consumer<Color> callback) {
-        setComponent(parent);
+    public PopupColorChooser(final Color initial, final Consumer<Color> callback) {
         setLayout(new BorderLayout());
         chooser = getChooser(initial, callback);
         add(chooser, BorderLayout.CENTER);
@@ -70,112 +53,48 @@ public class PopupColorChooser extends JToolTip {
     }
 
     @Override
+    public void reset(final Color initial, final Consumer<Color> callback) {
+        chooser.reset(initial, callback);
+    }
+
+    @Override
+    public Color getInitial() {
+        return chooser.getInitial();
+    }
+
+    @Override
+    public Color getSelected() {
+        return chooser.getSelected();
+    }
+
+    @Override
     public void updateUI() {
-        putClientProperty(DarkPopupFactory.KEY_FOCUSABLE_POPUP, true);
-        putClientProperty(DarkToolTipUI.KEY_STYLE, ToolTipConstants.VARIANT_BALLOON);
-        putClientProperty(DarkToolTipUI.KEY_CONTEXT, getContext());
         super.updateUI();
         setBackground(UIManager.getColor("ColorChooser.background"));
     }
 
-    @Override
-    public void setBackground(final Color bg) {
-        super.setBackground(bg);
+    public static void attackToComponent(final JComponent component, final Consumer<Color> callback,
+            final Supplier<Color> supplier, final Supplier<Boolean> activationCheck,
+            final boolean revertOnAbort) {
+        AttachedPopupComponent.attachChooser(component, () -> {
+            if (!activationCheck.get()) return null;
+            return new PopupColorChooser(supplier.get(), callback);
+        }, callback, supplier, revertOnAbort);
     }
 
     public static void showColorChooser(final JComponent parent, final Color initial, final Consumer<Color> callback,
-            final Consumer<AWTEvent> onClose) {
+            final Runnable onClose) {
         showColorChooser(parent, initial, callback, onClose, false);
     }
 
     public static void showColorChooser(final JComponent parent, final Color initial, final Consumer<Color> callback,
-            final Consumer<AWTEvent> onClose, final boolean revertOnEscape) {
-        PopupColorChooser chooser = new PopupColorChooser(parent, initial, callback);
-        /*
-         * Position is (0,0) as the ToolTipContext figures out the correct location.
-         */
-        final Popup popup = PopupFactory.getSharedInstance().getPopup(parent, chooser, 0, 0);
-        popup.show();
-        Window window = DarkUIUtil.getWindow(parent);
-        AtomicReference<Consumer<AWTEvent>> close = new AtomicReference<>();
-        ComponentListener windowListener = new ComponentAdapter() {
-            @Override
-            public void componentMoved(final ComponentEvent e) {
-                close.get().accept(e);
-            }
-
-            @Override
-            public void componentResized(final ComponentEvent e) {
-                close.get().accept(e);
-            }
-        };
-        AWTEventListener listener = event -> {
-            if (event instanceof MouseEvent) {
-                int id = event.getID();
-                if (id != MouseEvent.MOUSE_CLICKED && id != MouseEvent.MOUSE_PRESSED) return;
-            }
-            boolean doClose = event instanceof FocusEvent && (!(DarkUIUtil.hasFocus(chooser, (FocusEvent) event)
-                    || DarkUIUtil.hasFocus(chooser) || DarkUIUtil.hasFocus(parent, (FocusEvent) event)));
-            if (!doClose) {
-                Point p = MouseInfo.getPointerInfo().getLocation();
-                Point p2 = new Point(p);
-                Point p3 = new Point(p);
-                SwingUtilities.convertPointFromScreen(p2, parent);
-                SwingUtilities.convertPointFromScreen(p3, chooser);
-                doClose = !(parent.contains(p2) || chooser.contains(p3));
-            }
-            if (doClose) {
-                close.get().accept(event);
-            }
-        };
-        close.set(e -> {
-            popup.hide();
-            Toolkit.getDefaultToolkit().removeAWTEventListener(listener);
-            if (window != null) window.removeComponentListener(windowListener);
-            if (onClose != null) onClose.accept(e);
-        });
-        KeyStroke escape = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
-        KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
-        chooser.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(escape, "closeEscape");
-        chooser.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(enter, "closeEnter");
-        chooser.getActionMap().put("closeEscape", Actions.create(e -> {
+            final Runnable onClose, final boolean revertOnEscape) {
+        PopupColorChooser chooser = new PopupColorChooser(initial, callback);
+        AttachedPopupComponent.showComponent(parent, chooser, onClose, () -> {
             if (revertOnEscape) {
                 callback.accept(initial);
             }
-            close.get().accept(e);
-        }));
-        chooser.getActionMap().put("closeEnter", Actions.create(e -> close.get().accept(e)));
-        SwingUtilities.invokeLater(() -> {
-            window.addComponentListener(windowListener);
-            Toolkit.getDefaultToolkit().addAWTEventListener(listener,
-                    AWTEvent.FOCUS_EVENT_MASK | AWTEvent.MOUSE_EVENT_MASK);
-        });
-    }
-
-    protected ToolTipContext createToolTipContext() {
-        return new ToolTipContext().setAlignment(Alignment.CENTER).setCenterAlignment(Alignment.SOUTH)
-                .setUseBestFit(true).setToolTipInsets(new Insets(2, 2, 2, 2)).setFallBackPositionProvider(c -> {
-                    Window window = DarkUIUtil.getWindow(c.getTarget());
-                    Dimension size = c.getToolTip().getPreferredSize();
-                    Rectangle bounds = window.getBounds();
-                    return new Point(bounds.x + (bounds.width - size.width) / 2,
-                            bounds.y + (bounds.height - size.height) / 2);
-                });
-    }
-
-    @Override
-    public String getTipText() {
-        return ToolTipConstants.NO_TEXT;
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        if (isPreferredSizeSet()) {
-            return super.getPreferredSize();
-        }
-        if (getLayout() != null) {
-            return getLayout().preferredLayoutSize(this);
-        }
-        return super.getPreferredSize();
+            onClose.run();
+        }, Lambdas.DO_NOTHING);
     }
 }
