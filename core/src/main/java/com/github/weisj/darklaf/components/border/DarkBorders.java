@@ -23,7 +23,10 @@ package com.github.weisj.darklaf.components.border;
 
 import java.awt.*;
 
+import javax.swing.*;
 import javax.swing.border.Border;
+
+import com.github.weisj.darklaf.layout.LayoutHelper;
 
 public final class DarkBorders {
 
@@ -33,6 +36,38 @@ public final class DarkBorders {
     private static DarkLineBorder sharedBorderB;
     private static DarkLineBorder sharedBorderR;
     private static DarkLineBorder sharedBorderTLBR;
+
+    public static Border createTopBorder() {
+        return createLineBorder(1, 0, 0, 0);
+    }
+
+    public static Border createLeftBorder() {
+        return createLineBorder(0, 1, 0, 0);
+    }
+
+    public static Border createRightBorder() {
+        return createLineBorder(0, 0, 0, 1);
+    }
+
+    public static Border createBottomBorder() {
+        return createLineBorder(0, 0, 1, 0);
+    }
+
+    public static Border createTopBorderWithSpacing() {
+        return BorderFactory.createCompoundBorder(createTopBorder(), LayoutHelper.createEmptyContainerBorder());
+    }
+
+    public static Border createLeftBorderWithSpacing() {
+        return BorderFactory.createCompoundBorder(createLeftBorder(), LayoutHelper.createEmptyContainerBorder());
+    }
+
+    public static Border createRightBorderWithSpacing() {
+        return BorderFactory.createCompoundBorder(createRightBorder(), LayoutHelper.createEmptyContainerBorder());
+    }
+
+    public static Border createBottomBorderWithSpacing() {
+        return BorderFactory.createCompoundBorder(createBottomBorder(), LayoutHelper.createEmptyContainerBorder());
+    }
 
     public static Border createLineBorder(final int top, final int left, final int bottom, final int right) {
         if (top == 0 && left == 0 && bottom == 0 && right == 0) {
