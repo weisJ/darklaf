@@ -25,12 +25,13 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 
-class CloseButton extends JButton {
+public class CloseButton extends JButton {
 
-    protected CloseButton() {
+    public CloseButton() {
         putClientProperty(DarkButtonUI.KEY_NO_BORDERLESS_OVERWRITE, true);
         putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS_RECTANGULAR);
         putClientProperty(DarkButtonUI.KEY_THIN, true);
+        putClientProperty(DarkButtonUI.KEY_SQUARE, true);
         setOpaque(false);
         setRolloverEnabled(true);
         setBorderPainted(false);
