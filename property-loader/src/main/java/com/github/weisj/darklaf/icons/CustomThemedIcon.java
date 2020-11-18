@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import com.github.weisj.darklaf.PropertyLoader;
 import com.kitfox.svg.SVGUniverse;
 import com.kitfox.svg.app.beans.SVGIcon;
 
@@ -53,9 +54,44 @@ public class CustomThemedIcon extends ThemedSVGIcon implements MutableThemedIcon
     }
 
     public CustomThemedIcon(final DarkSVGIcon icon) {
-        super(icon.getSVGIcon().getSvgURI(), icon.getIconWidth(), icon.getIconHeight());
+        this(icon, LAF_CONTEXT, MergeMode.KEEP_REFERENCES);
+    }
+
+    public CustomThemedIcon(final DarkSVGIcon icon, final Map<Object, Object> contextDefaults,
+            final MergeMode mergeMode) {
+        super(icon.getUri(), icon.getIconWidth(), icon.getIconHeight());
+        setContextProperties(contextDefaults);
         ensureLoaded(false);
         defaults = IconColorMapper.getProperties(getSVGIcon());
+        mergeProperties(mergeMode, icon);
+    }
+
+    public void mergeProperties(final MergeMode mergeMode, final DarkSVGIcon originalIcon) {
+        if (mergeMode != MergeMode.KEEP_REFERENCES && contextDefaults != null) {
+            // Any property that isn't explicitly defined needs to be converted to an implicit property
+            // for proper inter-theme behaviour.
+            String referencePrefix = PropertyLoader.getReferencePrefix();
+            if (!(originalIcon instanceof CustomThemedIcon)) {
+                if (mergeMode == MergeMode.REMOVE_REFERENCES) {
+                    defaults.clear();
+                } else {
+                    defaults.entrySet().forEach(e -> e.setValue(referencePrefix + e.getKey()));
+                }
+            } else {
+                Map<Object, Object> originalProperties = ((CustomThemedIcon) originalIcon).getProperties();
+                defaults.keySet().forEach(k -> {
+                    if (!originalProperties.containsKey(k)
+                            && contextDefaults.containsKey(k)) {
+                        if (mergeMode == MergeMode.REMOVE_REFERENCES) {
+                            defaults.remove(k);
+                        } else {
+                            defaults.put(referencePrefix + k, defaults.remove(k));
+                        }
+                    }
+                });
+            }
+            invalidate();
+        }
     }
 
     protected CustomThemedIcon(final int width, final int height, final CustomThemedIcon icon) {
@@ -103,10 +139,17 @@ public class CustomThemedIcon extends ThemedSVGIcon implements MutableThemedIcon
     @Override
     public void setContextProperties(final Map<Object, Object> props) {
         this.contextDefaults = props;
+        invalidate();
     }
 
     @Override
     protected void patchColors() {
         IconColorMapper.patchColors(getSVGIcon(), getProperties(), getContextProperties());
+    }
+
+    public enum MergeMode {
+        REMOVE_REFERENCES,
+        REPLACE_REFERENCES,
+        KEEP_REFERENCES
     }
 }
