@@ -15,6 +15,7 @@ dependencies {
     implementation(project(":darklaf-windows"))
     implementation(project(":darklaf-macos"))
     implementation("org.swinglabs:jxlayer")
+    implementation("com.formdev:svgSalamander")
     compileOnly("org.swinglabs:swingx")
 
     testImplementation("com.formdev:svgSalamander")
