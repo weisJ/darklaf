@@ -52,6 +52,10 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
         this.accentColorRule = accentColorRule != null ? accentColorRule : AccentColorRule.getDefault();
     }
 
+    public static Theme baseThemeOf(final Theme theme) {
+        return theme.derive(FontSizeRule.getDefault(), AccentColorRule.getDefault());
+    }
+
     /**
      * Create a derived theme with the given display name.
      *
