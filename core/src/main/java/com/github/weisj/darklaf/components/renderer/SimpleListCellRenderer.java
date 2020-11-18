@@ -22,6 +22,7 @@
 package com.github.weisj.darklaf.components.renderer;
 
 import java.awt.*;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import javax.swing.*;
@@ -34,6 +35,15 @@ public class SimpleListCellRenderer<T> extends JLabel implements ListCellRendere
             @Override
             protected void customize(final T value) {
                 setText(toText.apply(value));
+            }
+        };
+    }
+
+    public static <T> SimpleListCellRenderer<T> create(final BiConsumer<JLabel, T> customize) {
+        return new SimpleListCellRenderer<T>() {
+            @Override
+            protected void customize(final T value) {
+                customize.accept(this, value);
             }
         };
     }
