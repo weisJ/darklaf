@@ -22,14 +22,14 @@
 package com.github.weisj.darklaf.icons;
 
 import java.awt.*;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.Pair;
@@ -47,18 +47,24 @@ public final class IconColorMapper {
         patchColors(svgIcon, UIManager.getDefaults());
     }
 
-    public static void patchColors(final SVGIcon svgIcon, final Map<Object, Object> defaults) {
+    public static void patchColors(final SVGIcon svgIcon, final Map<Object, Object> contextDefaults) {
+        patchColors(svgIcon, contextDefaults, null);
+    }
+
+    public static void patchColors(final SVGIcon svgIcon, final Map<Object, Object> defaults,
+            final Map<Object, Object> contextDefaults) {
         SVGUniverse universe = svgIcon.getSvgUniverse();
         SVGDiagram diagram = universe.getDiagram(svgIcon.getSvgURI());
         LOGGER.finer(() -> "Patching colors of icon " + svgIcon.getSvgURI());
         try {
-            loadColors(diagram, defaults);
+            loadColors(diagram, defaults, contextDefaults);
         } catch (SVGElementException e) {
             LOGGER.log(Level.SEVERE, "Failed patching colors. " + e.getMessage(), e.getStackTrace());
         }
     }
 
-    private static void loadColors(final SVGDiagram diagram, final Map<Object, Object> defaults)
+    private static void loadColors(final SVGDiagram diagram, final Map<Object, Object> defaults,
+            final Map<Object, Object> contextDefaults)
             throws SVGElementException {
         SVGRoot root = diagram.getRoot();
         SVGElement defs = diagram.getElement("colors");
@@ -71,14 +77,14 @@ public final class IconColorMapper {
             });
             return;
         }
-        List<?> children = defs.getChildren(null);
+        List<SVGElement> children = defs.getChildren(null);
         root.removeChild(defs);
 
         Defs themedDefs = new Defs();
         themedDefs.addAttribute("id", AnimationElement.AT_XML, "colors");
         root.loaderAddChild(null, themedDefs);
 
-        for (Object child : children) {
+        for (SVGElement child : children) {
             if (child instanceof LinearGradient) {
                 LinearGradient grad = (LinearGradient) child;
                 String id = grad.getId();
@@ -86,7 +92,7 @@ public final class IconColorMapper {
                 StyleAttribute opacityFallbacks = getAttribute("opacity-fallback", grad);
                 String opacityKey = getOpacityKey(grad);
 
-                float opacity = getOpacity(opacityKey, getFallbacks(opacityFallbacks), defaults);
+                float opacity = getOpacity(opacityKey, getFallbacks(opacityFallbacks), defaults, contextDefaults);
                 float opacity1 = opacity;
                 float opacity2 = opacity;
                 if (opacity < 0) {
@@ -109,7 +115,7 @@ public final class IconColorMapper {
                     if (opacity2 < 0) opacity2 = opacity;
                 }
 
-                Color c = resolveColor(id, getFallbacks(colorFallbacks), FALLBACK_COLOR, defaults);
+                Color c = resolveColor(id, getFallbacks(colorFallbacks), FALLBACK_COLOR, defaults, contextDefaults);
                 Pair<LinearGradient, Runnable> result =
                         createColor(c, id, opacityKey, colorFallbacks, opacity1, opacity2);
                 LinearGradient gradient = result.getFirst();
@@ -120,20 +126,22 @@ public final class IconColorMapper {
         }
     }
 
-    public static float getOpacity(final LinearGradient gradient, final Map<Object, Object> propertyMap) {
+    public static float getOpacity(final LinearGradient gradient, final Map<Object, Object> propertyMap,
+            final Map<Object, Object> contextDefaults) {
         String opacityKey = getOpacityKey(gradient);
-        return getOpacity(opacityKey, null, propertyMap);
+        return getOpacity(opacityKey, null, propertyMap, contextDefaults);
     }
 
-    public static Color getColor(final LinearGradient gradient, final Map<Object, Object> propertyMap) {
+    public static Color getColor(final LinearGradient gradient, final Map<Object, Object> propertyMap,
+            final Map<Object, Object> contextDefaults) {
         String id = (gradient).getId();
         StyleAttribute fallbacks = getAttribute("fallback", gradient);
-        return resolveColor(id, getFallbacks(fallbacks), FALLBACK_COLOR, propertyMap);
+        return resolveColor(id, getFallbacks(fallbacks), FALLBACK_COLOR, propertyMap, contextDefaults);
     }
 
     private static Color resolveColor(final String key, final String[] fallbacks, final Color fallbackColor,
-            final Map<Object, Object> propertyMap) {
-        Color color = get(propertyMap, key, fallbacks, Color.class);
+            final Map<Object, Object> propertyMap, final Map<Object, Object> contextDefaults) {
+        Color color = get(propertyMap, contextDefaults, key, fallbacks, Color.class);
 
         if (color == null) {
             color = fallbackColor;
@@ -143,7 +151,7 @@ public final class IconColorMapper {
         return color;
     }
 
-    private static StyleAttribute getAttribute(final String key, final LinearGradient child) {
+    private static StyleAttribute getAttribute(final String key, final SVGElement child) {
         StyleAttribute attribute = new StyleAttribute();
         attribute.setName(key);
         try {
@@ -170,10 +178,11 @@ public final class IconColorMapper {
         return fallbacks.getStringList();
     }
 
-    private static float getOpacity(final String key, final String[] fallbacks, final Map<Object, Object> propertyMap) {
+    private static float getOpacity(final String key, final String[] fallbacks, final Map<Object, Object> propertyMap,
+            final Map<Object, Object> contextDefaults) {
         if ((key == null || key.isEmpty()) && (fallbacks == null || fallbacks.length == 0)) return -1;
         // UIManager defaults to 0, if the value isn't an integer (or null).
-        Number obj = get(propertyMap, key, fallbacks, Number.class);
+        Number obj = get(propertyMap, contextDefaults, key, fallbacks, Number.class);
         if (obj instanceof Integer) {
             return obj.intValue() / 100.0f;
         } else if (obj instanceof Long) {
@@ -233,27 +242,70 @@ public final class IconColorMapper {
         });
     }
 
-    private static <T> T get(final Map<Object, Object> map, final Object key, final Class<T> type) {
-        return getFromMap(map, key, null, type);
-    }
+    public static Map<Object, Object> getProperties(final SVGIcon svgIcon) {
+        SVGUniverse universe = svgIcon.getSvgUniverse();
+        SVGDiagram diagram = universe.getDiagram(svgIcon.getSvgURI());
+        SVGElement defs = diagram.getElement("colors");
+        Map<Object, Object> values = new HashMap<>();
+        if (defs != null) {
+            List<SVGElement> children = defs.getChildren(null);
+            for (SVGElement child : children) {
+                if (child instanceof LinearGradient) {
+                    LinearGradient grad = (LinearGradient) child;
+                    String colorKey = grad.getId();
+                    String opacityKey = getOpacityKey(grad);
+                    SVGElement c = grad.getChild(0);
+                    if (c instanceof Stop) {
+                        Stop stop = (Stop) c;
+                        StyleAttribute colorAttr = getAttribute("stop-color", stop);
+                        Color color = colorAttr != null ? colorAttr.getColorValue() : null;
+                        values.put(colorKey, color != null ? color : Color.BLACK);
 
-    private static <T> T get(final Map<Object, Object> map, final Object key, final Object[] fallbacks,
-            final Class<T> type) {
-        T obj = getFromMap(map, key, fallbacks, type);
-        if (obj == null) return getFromMap(UIManager.getDefaults(), key, fallbacks, type);
-        return obj;
-    }
-
-    private static <T> T getFromMap(final Map<Object, Object> map, final Object key, final Object[] fallbacks,
-            final Class<T> type) {
-        Object obj = map.get(key);
-        if (fallbacks != null) {
-            for (int i = 0; i < fallbacks.length && !type.isInstance(obj); i++) {
-                obj = map.get(fallbacks[i]);
+                        if (opacityKey != null && !opacityKey.isEmpty()) {
+                            StyleAttribute opacityAttr = getAttribute("stop-opacity", stop);
+                            int opacity = opacityAttr != null ? (int) (100 * opacityAttr.getFloatValue()) : 100;
+                            values.put(opacityKey, opacity);
+                        }
+                    }
+                }
             }
         }
-        if (type.isInstance(obj)) return type.cast(obj);
-        return null;
+        return values;
+    }
+
+    public static <T> Pair<Object, T> getEntry(final Map<Object, Object> map, final Map<Object, Object> contextDefaults,
+            final Object key, final Object[] fallbacks, final Class<T> type) {
+        Object obj = null;
+        String refPrefix = PropertyLoader.getReferencePrefix();
+        Set<Object> seen = new HashSet<>();
+        Object currentKey = key;
+        int max = fallbacks != null ? fallbacks.length : 0;
+        for (int i = -1; i < max; i++) {
+            currentKey = i < 0 ? key : fallbacks[i];
+            int retryCount = 5;
+            do {
+                obj = map.get(currentKey);
+                if (contextDefaults != null && (obj == null || seen.contains(obj))) {
+                    obj = contextDefaults.get(currentKey);
+                }
+                seen.add(obj);
+                if (obj instanceof String && obj.toString().startsWith(refPrefix)) {
+                    currentKey = obj.toString().substring(refPrefix.length());
+                    obj = null;
+                }
+                retryCount--;
+            } while (!(type.isInstance(obj)) && retryCount > 0);
+            if (retryCount == 0) {
+                LOGGER.warning(
+                        "Could not find value for key '" + key + "'. References are only searched up to 5 levels");
+            }
+        }
+        return new Pair<>(currentKey, type.cast(obj));
+    }
+
+    public static <T> T get(final Map<Object, Object> map, final Map<Object, Object> contextDefaults, final Object key,
+            final Object[] fallbacks, final Class<T> type) {
+        return getEntry(map, contextDefaults, key, fallbacks, type).getSecond();
     }
 
     private static String toHexString(final Color color) {

@@ -59,6 +59,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
     private Supplier<URI> uriSupplier;
     private URI uri;
 
+    private boolean directRendering;
     private boolean loadedWithExtraScale;
     private double scaleX;
     private double scaleY;
@@ -203,22 +204,44 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
 
     @Override
     public void paintIcon(final Component c, final Graphics g, final int x, final int y, final double rotation) {
-        ensureImageLoaded(c, rotation);
+        boolean dr = isDirectRenderingMode();
+        if (dr) {
+            ensureLoaded(true);
+            icon.setPreferredSize(size);
+        } else {
+            ensureImageLoaded(c, rotation);
+        }
+
         Graphics2D g2 = (Graphics2D) g;
         AffineTransform transform = g2.getTransform();
         g2.translate(x, y);
-        double imageWidth = image.getWidth(null);
-        double imageHeight = image.getHeight(null);
+
+
+        double imageWidth = dr ? size.width : image.getWidth(null);
+        double imageHeight = dr ? size.height : image.getHeight(null);
         double sx = size.width / imageWidth;
         double sy = size.height / imageHeight;
         g2.scale(sx, sy);
         if (rotation != 0) {
             g2.rotate(rotation, imageWidth / 2.0, imageHeight / 2.0);
         }
-        g2.drawImage(image, 0, 0, null);
+
+        if (dr) {
+            getSVGIcon().paintIcon(c, g, 0, 0);
+        } else {
+            g2.drawImage(image, 0, 0, null);
+        }
         g2.scale(1 / sx, 1 / sy);
         g2.translate(-x, -y);
         g2.setTransform(transform);
+    }
+
+    public boolean isDirectRenderingMode() {
+        return directRendering;
+    }
+
+    public void setDirectRenderingMode(final boolean directRendering) {
+        this.directRendering = directRendering;
     }
 
     @Override

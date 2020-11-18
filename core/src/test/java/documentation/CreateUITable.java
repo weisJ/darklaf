@@ -291,9 +291,9 @@ public class CreateUITable {
             List<?> children = defs.getChildren(null);
             for (Object child : children) {
                 if (child instanceof LinearGradient) {
-                    float opacity = IconColorMapper.getOpacity((LinearGradient) child, currentDefaults);
+                    float opacity = IconColorMapper.getOpacity((LinearGradient) child, currentDefaults, null);
                     if (opacity < 0) opacity = 1;
-                    Color color = IconColorMapper.getColor((LinearGradient) child, currentDefaults);
+                    Color color = IconColorMapper.getColor((LinearGradient) child, currentDefaults, null);
                     String id = ((LinearGradient) child).getId();
                     String match = "=\"url\\(#" + id + "\\)\"";
                     String fillReplacement = "fill=\"#" + ColorUtil.toHex(color) + "\"";

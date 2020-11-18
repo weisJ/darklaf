@@ -24,6 +24,9 @@ package com.github.weisj.darklaf.icons;
 import java.net.URI;
 import java.util.function.Supplier;
 
+import javax.swing.*;
+
+
 /** @author Jannis Weis */
 public class ThemedSVGIcon extends DarkSVGIcon implements ThemedIcon {
 
@@ -76,7 +79,15 @@ public class ThemedSVGIcon extends DarkSVGIcon implements ThemedIcon {
         return false;
     }
 
+    protected void invalidate() {
+        currentTheme = new Object();
+    }
+
+    protected UIDefaults getContextDefaults() {
+        return UIManager.getDefaults();
+    }
+
     protected void patchColors() {
-        IconColorMapper.patchColors(getSVGIcon());
+        IconColorMapper.patchColors(getSVGIcon(), getContextDefaults());
     }
 }

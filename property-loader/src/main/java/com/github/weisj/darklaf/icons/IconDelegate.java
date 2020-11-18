@@ -21,20 +21,30 @@
  */
 package com.github.weisj.darklaf.icons;
 
+import java.awt.*;
+
 import javax.swing.*;
 
-public interface DerivableIcon<T extends Icon> extends Icon {
+public class IconDelegate implements Icon {
 
-    /**
-     * Derive a new icon with the specified size.
-     *
-     * @param width the new width
-     * @param height the new height.
-     * @return the derived icon.
-     */
-    T derive(final int width, final int height);
+    private final Icon icon;
 
-    default T copy() {
-        return derive(getIconWidth(), getIconHeight());
+    public IconDelegate(final Icon icon) {
+        this.icon = icon;
+    }
+
+    @Override
+    public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
+        icon.paintIcon(c, g, x, y);
+    }
+
+    @Override
+    public int getIconWidth() {
+        return icon.getIconWidth();
+    }
+
+    @Override
+    public int getIconHeight() {
+        return icon.getIconHeight();
     }
 }
