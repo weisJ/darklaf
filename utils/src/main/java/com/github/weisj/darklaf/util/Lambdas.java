@@ -30,6 +30,9 @@ public class Lambdas {
 
     private Lambdas() {}
 
+    public static final Runnable DO_NOTHING = () -> {
+    };
+
     public static <T, K, E extends Throwable> Function<T, K> orDefault(final CheckedFunction<T, K, E> wrappee,
             final K fallback) {
         return t -> {

@@ -33,6 +33,7 @@ import java.util.stream.Stream;
 import javax.swing.*;
 import javax.swing.tree.TreeNode;
 
+import com.github.weisj.darklaf.util.Lambdas;
 import com.github.weisj.darklaf.util.StreamUtil;
 
 public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
@@ -170,8 +171,7 @@ public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
     }
 
     protected <T> void doInBackground(final Consumer<Consumer<T>> task, final Consumer<List<T>> processor) {
-        doInBackground(task, processor, () -> {
-        });
+        doInBackground(task, processor, Lambdas.DO_NOTHING);
     }
 
     protected <T> void doInBackground(final Consumer<Consumer<T>> task, final Consumer<List<T>> processor,
