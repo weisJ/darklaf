@@ -97,7 +97,7 @@ public class RotatableIconDemo implements ComponentDemo {
         controls = panel.addControls(new BorderLayout());
 
         AtomicReference<Icon> nextIcon = new AtomicReference<>(rotateIcon.getIcon());
-        JList<Pair<String, ? extends Icon>> list = AllIcons.createIconList(size);
+        JList<Pair<String, ? extends Icon>> list = AllIcons.createIconJList(size);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.addListSelectionListener(e -> nextIcon.set(list.getSelectedValue().getSecond()));
         controls.add(new OverlayScrollPane(list));

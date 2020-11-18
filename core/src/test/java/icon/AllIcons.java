@@ -61,12 +61,12 @@ public class AllIcons implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        return new OverlayScrollPane(createIconList(ICON_SIZE));
+        return new OverlayScrollPane(createIconJList(ICON_SIZE));
     }
 
-    protected static JList<Pair<String, ? extends Icon>> createIconList(final int displaySize) {
+    protected static JList<Pair<String, ? extends Icon>> createIconJList(final int displaySize) {
         JList<Pair<String, ? extends Icon>> list = new JList<>(new ListModel<Pair<String, ? extends Icon>>() {
-            final List<Pair<String, ? extends Icon>> elements = loadIcons(displaySize);
+            final List<Pair<String, ? extends Icon>> elements = loadIcons(displaySize, true);
 
             @Override
             public int getSize() {
@@ -90,26 +90,25 @@ public class AllIcons implements ComponentDemo {
         return list;
     }
 
-    private static List<Pair<String, ? extends Icon>> loadIcons(final int displaySize) {
+    protected static List<Pair<String, ? extends Icon>> loadIcons(final int displaySize, final boolean centered) {
         IconLoader loader = IconLoader.get();
         try (ResourceWalker walker = ResourceWalker.walkResources("com.github.weisj")) {
             return walker.stream().filter(p -> p.endsWith("svg")).map(p -> {
-                final int size = displaySize;
-                ThemedSVGIcon icon = (ThemedSVGIcon) loader.loadSVGIcon(p, size, size, true);
+                ThemedSVGIcon icon = (ThemedSVGIcon) loader.loadSVGIcon(p, displaySize, displaySize, true);
                 SVGIcon svgIcon = icon.getSVGIcon();
                 int autosize = svgIcon.getAutosize();
                 svgIcon.setAutosize(SVGIcon.AUTOSIZE_NONE);
-                int width = size;
+                int width = displaySize;
                 int height = (int) (((double) width / svgIcon.getIconWidth()) * svgIcon.getIconHeight());
-                if (height > size) {
-                    height = size;
+                if (height > displaySize) {
+                    height = displaySize;
                     width = (int) (((double) height / svgIcon.getIconHeight()) * svgIcon.getIconWidth());
                 }
 
                 icon.setDisplaySize(width, height);
                 svgIcon.setAutosize(autosize);
 
-                return new Pair<>(p, new CenterIcon(icon, size, size));
+                return new Pair<>(p, centered ? new CenterIcon(icon, displaySize, displaySize) : icon);
             }).collect(Collectors.groupingBy(pair -> pathToIconName(pair.getFirst()))).values().stream()
                     .peek(list -> makeUnique(list, 1)).flatMap(List::stream)
                     .sorted(Pair.compareFirst(AllIcons::pathToIconName)).collect(Collectors.toList());
