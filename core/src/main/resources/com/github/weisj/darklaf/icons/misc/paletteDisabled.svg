@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 13">
+    <defs id="colors">
+        <linearGradient id="menuIconDisabled">
+            <stop offset="0" stop-color="#6E6E6E"/>
+            <stop offset="1" stop-color="#6E6E6E"/>
+        </linearGradient>
+    </defs>
+    <path fill="url(#menuIconDisabled)"
+          d="M1.8 8h9.4a.8.8 0 0 1 .8.8v2.4a.8.8 0 0 1-.8.8H1.8a.8.8 0 0 1-.8-.8V8.8a.8.8 0 0 1 .8-.8zm8.2 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm2.013-4h-.533L9.613 3.767V1.5a.5.5 0 0 1 .5-.5h1.4a.5.5 0 0 1 .5.5V7zM8.64 7h-4.8L2.4 6.17a.5.5 0 0 1-.183-.683l.7-1.213a.5.5 0 0 1 .683-.183L8.64 7zm1.915 0h-.268L6.532 4.832 5.377 2.83a.5.5 0 0 1 .183-.683l1.212-.7a.5.5 0 0 1 .683.183L10.555 7z"
+          fill-rule="evenodd"/>
+</svg>
