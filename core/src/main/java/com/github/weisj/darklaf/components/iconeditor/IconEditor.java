@@ -106,6 +106,11 @@ public class IconEditor extends JPanel {
         int addIconSize = Math.min(Math.max(32, displayIconSize / 2), 50);
         JSplitButton addEditorButton = ComponentHelper.createIconOnlySplitButton(
                 DarkUIUtil.ICON_LOADER.getIcon("navigation/add.svg", addIconSize, addIconSize, true));
+        int overlaySize = (2 * addIconSize) / 3;
+        addEditorButton.setOverlayDropDownIcon(
+                DarkUIUtil.ICON_LOADER.getIcon("indicator/dropDown.svg", overlaySize, overlaySize, true));
+        addEditorButton.setOverlayDropDownDisabledIcon(
+                DarkUIUtil.ICON_LOADER.getIcon("indicator/dropDownDisabled.svg", overlaySize, overlaySize, true));
         addEditorButton.putClientProperty(ButtonConstants.KEY_ARC_MULTIPLIER, 3);
         JPopupMenu menu = addEditorButton.getActionMenu();
 

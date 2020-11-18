@@ -31,6 +31,8 @@ public class JSplitButton extends JButton {
     public static final String KEY_ACTION_REMOVED = "removedAction";
 
     private JPopupMenu actionMenu;
+    private Icon overlayDropDownIcon;
+    private Icon overlayDropDownDisabledIcon;
 
     /**
      * Creates a button with no set text or icon.
@@ -131,5 +133,26 @@ public class JSplitButton extends JButton {
         if (actionMenu != null) {
             SwingUtilities.updateComponentTreeUI(actionMenu);
         }
+    }
+
+    public void setOverlayDropDownIcon(final Icon overlayDropDownIcon) {
+        Icon old = this.overlayDropDownIcon;
+        this.overlayDropDownIcon = overlayDropDownIcon;
+        firePropertyChange("overlayDropDownIcon", old, overlayDropDownIcon);
+    }
+
+    public Icon getOverlayDropDownIcon() {
+        return overlayDropDownIcon;
+    }
+
+    public void setOverlayDropDownDisabledIcon(final Icon overlayDropDownDisabledIcon) {
+        Icon old = this.overlayDropDownDisabledIcon;
+        this.overlayDropDownDisabledIcon = overlayDropDownDisabledIcon;
+        firePropertyChange("overlayDropDownDisabledIcon", old, overlayDropDownDisabledIcon);
+
+    }
+
+    public Icon getOverlayDropDownDisabledIcon() {
+        return overlayDropDownDisabledIcon;
     }
 }

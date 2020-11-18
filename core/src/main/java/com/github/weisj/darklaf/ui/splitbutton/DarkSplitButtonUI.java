@@ -168,17 +168,17 @@ public class DarkSplitButtonUI extends DarkButtonUI {
     }
 
     @Override
-    public void paint(final Graphics g, final JComponent c) {
-        super.paint(g, c);
-        g.setColor(Color.RED);
-
-    }
-
-    @Override
     protected void paintIcon(final Graphics g, final AbstractButton b, final JComponent c) {
         super.paintIcon(g, b, c);
         if (b.getIcon() != null && !useArrowButton()) {
-            Icon overlay = b.isEnabled() ? overlayIcon : overlayDisabledIcon;
+            Icon overlay;
+            if (b.isEnabled()) {
+                overlay = splitButton.getOverlayDropDownIcon();
+                if (overlay == null) overlay = overlayIcon;
+            } else {
+                overlay = splitButton.getOverlayDropDownDisabledIcon();
+                if (overlay == null) overlay = overlayDisabledIcon;
+            }
             overlay.paintIcon(c, g, iconRect.x + iconRect.width - overlay.getIconWidth(),
                     iconRect.y + iconRect.height - overlay.getIconHeight());
         }
