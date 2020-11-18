@@ -94,7 +94,8 @@ public class IconEditorPanel extends JPanel {
         JPanel rendererPanel = new JPanel(new GridBagLayout());
         renderer = new JLabel();
         rendererPanel.add(renderer);
-        rendererPanel.setBackground(IconValues.getIconDefaults(theme).defaults.getColor("background"));
+        rendererPanel.setBackground(
+                new Color(IconValues.getIconDefaults(theme).defaults.getColor("background").getRGB(), true));
         rendererPanel.setBorder(BorderFactory.createCompoundBorder(
                 DarkBorders.createBottomBorderWithSpacing(),
                 BorderFactory.createEmptyBorder(topBottomPad, 0, topBottomPad, 0)));

@@ -34,6 +34,7 @@ import com.github.weisj.darklaf.DynamicUI;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.CloseButton;
 import com.github.weisj.darklaf.components.ComponentHelper;
+import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.components.button.JSplitButton;
 import com.github.weisj.darklaf.components.renderer.SimpleListCellRenderer;
@@ -41,6 +42,7 @@ import com.github.weisj.darklaf.icons.CustomThemedIcon;
 import com.github.weisj.darklaf.icons.DerivableIcon;
 import com.github.weisj.darklaf.icons.ThemedIcon;
 import com.github.weisj.darklaf.icons.ThemedSVGIcon;
+import com.github.weisj.darklaf.layout.HorizontalLayout;
 import com.github.weisj.darklaf.layout.LayoutHelper;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.button.ButtonConstants;
@@ -53,7 +55,7 @@ public class IconEditor extends JPanel {
 
     private final Map<IconEditorPanel, JButton> editors = new HashMap<>();
     private final Map<Theme, Action> newEditorActions = new HashMap<>();
-    private final Map<Theme, IconEditorPanel> editorCreatedForTheme = new HashMap<>();
+    private final Map<Theme, IconEditorPanel> editorMap = new HashMap<>();
     private final JComponent editorPanel;
     private final JComponent plusComp;
     private Icon selectedIcon;
@@ -65,7 +67,7 @@ public class IconEditor extends JPanel {
 
     public IconEditor(final List<Pair<String, ? extends Icon>> icons, final int displayIconSize) {
         setLayout(new BorderLayout());
-        editorPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        editorPanel = Box.createHorizontalBox();
 
         JComboBox<Pair<String, ThemedIcon>> iconCombo = new JComboBox<>();
         iconCombo.setMaximumSize(iconCombo.getPreferredSize());
@@ -100,9 +102,10 @@ public class IconEditor extends JPanel {
         north.add(iconCombo);
         north.add(Box.createHorizontalGlue());
 
-        plusComp = new JPanel(new BorderLayout());
-        JSplitButton addEditorButton = ComponentHelper
-                .createIconOnlySplitButton(DarkUIUtil.ICON_LOADER.getIcon("navigation/add.svg", 50, 50, true));
+        plusComp = new JPanel(new GridBagLayout());
+        int addIconSize = Math.min(Math.max(32, displayIconSize / 2), 50);
+        JSplitButton addEditorButton = ComponentHelper.createIconOnlySplitButton(
+                DarkUIUtil.ICON_LOADER.getIcon("navigation/add.svg", addIconSize, addIconSize, true));
         addEditorButton.putClientProperty(ButtonConstants.KEY_ARC_MULTIPLIER, 3);
         JPopupMenu menu = addEditorButton.getActionMenu();
 
@@ -113,16 +116,20 @@ public class IconEditor extends JPanel {
         }
         plusComp.setBorder(LayoutHelper.createEmptyContainerBorder());
         plusComp.add(addEditorButton);
-        if (showEditorAddRemoveControls) {
-            editorPanel.add(plusComp);
-        }
+        plusComp.setVisible(showEditorAddRemoveControls);
+        plusComp.setEnabled(showEditorAddRemoveControls);
 
-        iconCombo.setSelectedIndex(0);
+        JComponent holder = new JPanel(new HorizontalLayout());
+        holder.add(editorPanel);
+        holder.add(plusComp);
 
-        addEditor(LafManager.getTheme());
+        OverlayScrollPane sp = new OverlayScrollPane(holder);
+        sp.setAddVerticalScrollBarSize(true);
 
         add(north, BorderLayout.NORTH);
-        add(editorPanel, BorderLayout.CENTER);
+        add(sp, BorderLayout.CENTER);
+        addEditor(LafManager.getTheme());
+        iconCombo.setSelectedIndex(0);
     }
 
     /**
@@ -139,12 +146,13 @@ public class IconEditor extends JPanel {
 
     private IconEditorPanel addEditor(final Theme theme, final Icon icon) {
         Theme t = Theme.baseThemeOf(theme);
-        IconEditorPanel prevEditor = editorCreatedForTheme.get(t);
+        IconEditorPanel prevEditor = editorMap.get(t);
         if (prevEditor != null) return prevEditor;
 
         IconEditorPanel editor = new IconEditorPanel(icon, theme);
-        editor.setBorder(DarkBorders.createLineBorder(0, 0, 1, 1));
+        editor.setBorder(DarkBorders.createRightBorder());
         newEditorActions.get(t).setEnabled(false);
+        editorMap.put(t, editor);
 
         JButton closeButton = new CloseButton();
         DynamicUI.withLocalizedTooltip(closeButton, "Actions.close");
@@ -155,18 +163,17 @@ public class IconEditor extends JPanel {
         closeButton.setEnabled(showEditorAddRemoveControls);
         closeButton.setVisible(showEditorAddRemoveControls);
 
+        if (newEditorActions.size() == editorMap.size()) {
+            plusComp.setEnabled(false);
+            plusComp.setVisible(false);
+        }
 
         JComponent editorHolder = LayoutHelper.createPanelWithOverlay(editor, closeButton, Alignment.NORTH_WEST,
                 LayoutHelper.createEmptyContainerInsets());
 
         editors.put(editor, closeButton);
-        editorPanel.remove(plusComp);
         editorPanel.add(editorHolder);
-        if (showEditorAddRemoveControls && editorCreatedForTheme.size() < newEditorActions.size()) {
-            editorPanel.add(plusComp);
-        }
-        editorPanel.doLayout();
-        editorPanel.repaint();
+        updateLayout();
         return editor;
     }
 
@@ -184,14 +191,17 @@ public class IconEditor extends JPanel {
     public void removeEditor(final IconEditorPanel editor) {
         if (editors.remove(editor) == null) return;
         Theme t = Theme.baseThemeOf(editor.getTheme());
-        editorCreatedForTheme.remove(t);
+        editorMap.remove(t);
         newEditorActions.get(t).setEnabled(true);
-        if (plusComp.getParent() == null) {
-            editorPanel.add(plusComp);
-        }
+        plusComp.setVisible(true);
+        plusComp.setEnabled(true);
         editorPanel.remove(editor.getParent());
-        editorPanel.doLayout();
-        editorPanel.repaint();
+        updateLayout();
+    }
+
+    private void updateLayout() {
+        editorPanel.getParent().doLayout();
+        editorPanel.getParent().repaint();
     }
 
     /**
@@ -211,16 +221,17 @@ public class IconEditor extends JPanel {
     public void setShowEditorAddRemoveControls(final boolean showEditorAddRemoveControls) {
         if (this.showEditorAddRemoveControls != showEditorAddRemoveControls) {
             if (!showEditorAddRemoveControls) {
-                editorPanel.remove(plusComp);
-            } else if (editorCreatedForTheme.size() < newEditorActions.size()) {
-                editorPanel.add(plusComp);
+                plusComp.setVisible(false);
+                plusComp.setEnabled(false);
+            } else if (editorMap.size() < newEditorActions.size()) {
+                plusComp.setVisible(true);
+                plusComp.setEnabled(true);
             }
             editors.forEach((k, b) -> {
                 b.setVisible(showEditorAddRemoveControls);
                 b.setEnabled(showEditorAddRemoveControls);
             });
-            editorPanel.doLayout();
-            editorPanel.repaint();
+            updateLayout();
         }
         this.showEditorAddRemoveControls = showEditorAddRemoveControls;
     }

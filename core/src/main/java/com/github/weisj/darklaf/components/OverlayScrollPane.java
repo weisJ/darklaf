@@ -40,6 +40,8 @@ public class OverlayScrollPane extends JLayeredPane implements PropertyChangeLis
 
     protected final JScrollPane scrollPane;
     private final ControlPanel controlPanel;
+    private boolean addHorizontalScrollBarSize;
+    private boolean addVerticalScrollBarSize;
 
     /**
      * Creates a <code>OverlayScrollPane</code> that displays the contents of the specified component,
@@ -156,7 +158,30 @@ public class OverlayScrollPane extends JLayeredPane implements PropertyChangeLis
 
     @Override
     public Dimension getPreferredSize() {
-        return scrollPane.getPreferredSize();
+        Dimension dim = scrollPane.getPreferredSize();
+        if (addHorizontalScrollBarSize) {
+            dim.width += getHorizontalScrollBar().getPreferredSize().width;
+        }
+        if (addVerticalScrollBarSize) {
+            dim.height += getVerticalScrollBar().getPreferredSize().height;
+        }
+        return dim;
+    }
+
+    public void setAddHorizontalScrollBarSize(final boolean addHorizontalScrollBarSize) {
+        this.addHorizontalScrollBarSize = addHorizontalScrollBarSize;
+    }
+
+    public void setAddVerticalScrollBarSize(final boolean addVerticalScrollBarSize) {
+        this.addVerticalScrollBarSize = addVerticalScrollBarSize;
+    }
+
+    public boolean isAddHorizontalScrollBarSize() {
+        return addHorizontalScrollBarSize;
+    }
+
+    public boolean isAddVerticalScrollBarSize() {
+        return addVerticalScrollBarSize;
     }
 
     public JScrollBar getHorizontalScrollBar() {

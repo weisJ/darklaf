@@ -30,7 +30,7 @@ public class IconDelegate implements Icon {
     private final Icon icon;
 
     public IconDelegate(final Icon icon) {
-        this.icon = icon;
+        this.icon = icon != null ? icon : EmptyIcon.create(0);
     }
 
     @Override
