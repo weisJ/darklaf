@@ -57,8 +57,12 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
         // A grab needs to be added
         final Toolkit tk = Toolkit.getDefaultToolkit();
         AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
-            tk.addAWTEventListener(MouseGrabber.this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK
-                    | AWTEvent.MOUSE_WHEEL_EVENT_MASK | AWTEvent.WINDOW_EVENT_MASK | SunToolkit.GRAB_EVENT_MASK);
+            tk.addAWTEventListener(MouseGrabber.this,
+                    AWTEvent.MOUSE_EVENT_MASK |
+                            AWTEvent.MOUSE_MOTION_EVENT_MASK |
+                            AWTEvent.MOUSE_WHEEL_EVENT_MASK |
+                            AWTEvent.WINDOW_EVENT_MASK |
+                            SunToolkit.GRAB_EVENT_MASK);
             return null;
         });
 
