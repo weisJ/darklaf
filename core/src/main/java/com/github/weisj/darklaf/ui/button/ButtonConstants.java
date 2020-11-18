@@ -39,6 +39,7 @@ public interface ButtonConstants {
     String KEY_NO_BORDERLESS_OVERWRITE = "JButton.noBorderlessOverwrite";
     String KEY_CORNER = "JButton.cornerFlag";
     String KEY_ROUND = "JButton.round";
+    String KEY_ARC_MULTIPLIER = "JButton.arcMultiplier";
 
     String KEY_LEFT_NEIGHBOUR = "JButton.leftNeighbour";
     String KEY_RIGHT_NEIGHBOUR = "JButton.rightNeighbour";
@@ -57,6 +58,10 @@ public interface ButtonConstants {
         return PropertyUtil.getBooleanProperty(c, KEY_ALT_ARC);
     }
 
+    static int getArcMultiplier(final Component c) {
+        return PropertyUtil.getInteger(c, KEY_ARC_MULTIPLIER, 1);
+    }
+
     static int chooseArcWithBorder(final Component c, final int arc, final int minimum, final int altArc,
             final int borderSize) {
         return chooseArc(c, arc, minimum, altArc, c.getHeight() - 2 * borderSize);
@@ -66,7 +71,7 @@ public interface ButtonConstants {
         if (ButtonConstants.isNoArc(c)) return minimum;
         if (ButtonConstants.isRound(c)) return roundedArc;
         boolean alt = ButtonConstants.chooseAlternativeArc(c);
-        return alt ? altArc : arc;
+        return (alt ? altArc : arc) * getArcMultiplier(c);
     }
 
     static boolean isNoArc(final Component c) {
