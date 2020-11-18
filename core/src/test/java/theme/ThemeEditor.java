@@ -36,18 +36,17 @@ import ui.ComponentDemo;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.components.ComponentHelper;
 import com.github.weisj.darklaf.components.DefaultButton;
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.components.button.JSplitButton;
-import com.github.weisj.darklaf.graphics.GraphicsContext;
-import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.graphics.ThemedColor;
 import com.github.weisj.darklaf.icons.DerivableIcon;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.icons.OverlayIcon;
 import com.github.weisj.darklaf.icons.TextIcon;
-import com.github.weisj.darklaf.layout.LayoutManagerAdapter;
+import com.github.weisj.darklaf.layout.LayoutHelper;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.ThemeDelegate;
 import com.github.weisj.darklaf.theme.info.AccentColorRule;
@@ -291,38 +290,21 @@ public class ThemeEditor extends JPanel {
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.putClientProperty(TableConstants.KEY_CELL_VALUE_DETERMINES_EDITOR_CLASS, true);
 
-        JPanel buttonPanel = keyEditable ? createButtonPanel(table) : null;
-
-        OverlayScrollPane sp = new OverlayScrollPane(table) {
-            @Override
-            public void doLayout() {
-                super.doLayout();
-                if (!keyEditable) return;
-                Dimension prefSize = buttonPanel.getPreferredSize();
-                int pad = 10;
-                Component viewport = getScrollPane().getViewport();
-                Rectangle viewBounds = new Rectangle(0, 0, viewport.getWidth(), viewport.getHeight());
-                viewBounds = SwingUtilities.convertRectangle(viewport, viewBounds, this);
-                int x = viewBounds.x - pad - prefSize.width;
-                int columnEnd = table.getColumnModel().getColumn(0).getWidth();
-                if (getVerticalScrollBar() != null && getVerticalScrollBar().isVisible()) {
-                    columnEnd = Math.min(columnEnd, viewBounds.width - getVerticalScrollBar().getWidth());
-                }
-                x += columnEnd;
-                buttonPanel.setBounds(x, viewBounds.y + pad, prefSize.width, prefSize.height);
-                buttonPanel.doLayout();
-            }
-        };
-        if (keyEditable) {
-            sp.add(buttonPanel, Integer.valueOf(JLayeredPane.MODAL_LAYER - 1));
+        OverlayScrollPane sp;
+        if (!keyEditable) {
+            sp = new OverlayScrollPane(table);
+        } else {
+            sp = LayoutHelper.createScrollPaneWithOverlay(table, createButtonPanel(table), Alignment.NORTH_EAST, () -> {
+                Insets ins = new Insets(10, 10, 10, 10);
+                ins.right += table.getColumnModel().getColumn(0).getWidth();
+                return ins;
+            });
         }
-        sp.doLayout();
         sp.getScrollPane().setBorder(DarkBorders.createLineBorder(0, 0, 1, 0));
-
         return sp;
     }
 
-    private JPanel createButtonPanel(final JTable table) {
+    private JComponent createButtonPanel(final JTable table) {
         AtomicReference<EntryType> lastSelection = new AtomicReference<>(EntryType.COLOR);
 
         OverlayIcon overlayIcon =
@@ -348,15 +330,11 @@ public class ThemeEditor extends JPanel {
         addButton.putClientProperty(ButtonConstants.KEY_SQUARE, true);
         addButton.putClientProperty(ButtonConstants.KEY_THIN, true);
 
-        JButton deleteButton = new JButton();
+        JButton deleteButton = ComponentHelper.createIconOnlyButton(
+                DarkUIUtil.ICON_LOADER.getIcon("menu/delete.svg"),
+                DarkUIUtil.ICON_LOADER.getIcon("menu/deleteDisabled.svg"));
         deleteButton.setToolTipText("Remove selected entry");
-        deleteButton.setIcon(DarkUIUtil.ICON_LOADER.getIcon("menu/delete.svg"));
-        deleteButton.setDisabledIcon(DarkUIUtil.ICON_LOADER.getIcon("menu/deleteDisabled.svg"));
-        deleteButton.putClientProperty(ButtonConstants.KEY_VARIANT, ButtonConstants.VARIANT_BORDERLESS);
-        deleteButton.putClientProperty(ButtonConstants.KEY_SQUARE, true);
-        deleteButton.putClientProperty(ButtonConstants.KEY_THIN, true);
         deleteButton.setEnabled(table.getSelectedRow() >= 0);
-        deleteButton.setFocusable(false);
 
         deleteButton.addActionListener(e -> {
             int row = table.getSelectedRow();
@@ -369,49 +347,11 @@ public class ThemeEditor extends JPanel {
         });
         table.getSelectionModel().addListSelectionListener(e -> deleteButton.setEnabled(table.getSelectedRow() >= 0));
 
-        JPanel buttonPanel = new JPanel() {
-            @Override
-            protected void paintComponent(final Graphics g) {
-                super.paintComponent(g);
-                GraphicsContext context = new GraphicsContext(g);
-                ((Graphics2D) g).setComposite(PaintUtil.getShadowComposite().derive(0.7f));
-                g.setColor(UIManager.getColor("hoverHighlight"));
-                PaintUtil.fillRoundRect((Graphics2D) g, 0, 0, getWidth(), getHeight(), 10, false);
-                context.restore();
-            }
-        };
-        buttonPanel.setLayout(new LayoutManagerAdapter() {
-
-            private final int pad = 3;
-
-            @Override
-            public void layoutContainer(final Container parent) {
-                Dimension addPref = addButton.getPreferredSize();
-                Dimension delPref = deleteButton.getPreferredSize();
-                addButton.setBounds(pad, pad, addPref.width, addPref.height);
-                deleteButton.setBounds(2 * pad + addPref.width, pad, delPref.width, delPref.height);
-            }
-
-            @Override
-            public Dimension preferredLayoutSize(final Container parent) {
-                Dimension dim = addButton.getPreferredSize();
-                Dimension deleteSize = deleteButton.getPreferredSize();
-                dim.width += deleteSize.width + pad;
-                dim.height = Math.max(deleteSize.height, dim.height);
-                dim.width += 2 * pad;
-                dim.height += 2 * pad;
-                return dim;
-            }
-
-            @Override
-            public Dimension minimumLayoutSize(final Container parent) {
-                return preferredLayoutSize(parent);
-            }
-        });
-        buttonPanel.add(addButton);
-        buttonPanel.add(deleteButton);
-        buttonPanel.setOpaque(false);
-        return buttonPanel;
+        Box buttonBox = Box.createHorizontalBox();
+        buttonBox.add(addButton);
+        buttonBox.add(Box.createHorizontalStrut(3));
+        buttonBox.add(deleteButton);
+        return buttonBox;
     }
 
     private static class MutableThemedLaf extends DarkLaf {

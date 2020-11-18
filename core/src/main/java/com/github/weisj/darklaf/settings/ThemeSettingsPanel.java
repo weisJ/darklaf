@@ -36,6 +36,7 @@ import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
 import com.github.weisj.darklaf.components.tristate.TristateState;
 import com.github.weisj.darklaf.graphics.ThemedColor;
+import com.github.weisj.darklaf.layout.LayoutHelper;
 import com.github.weisj.darklaf.listener.UIUpdater;
 import com.github.weisj.darklaf.platform.ThemePreferencesHandler;
 import com.github.weisj.darklaf.platform.macos.theme.MacOSColors;
@@ -220,7 +221,8 @@ public class ThemeSettingsPanel extends JPanel {
 
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createTitledBorder(UIManager.getString("title_general", l)));
-        panel.add(getTwoColumnLayout(new JLabel[] {themeLabel, accentColorLabel, selectionColorLabel, fontSizeLabel},
+        panel.add(LayoutHelper.createTwoColumnPanel(
+                new JLabel[] {themeLabel, accentColorLabel, selectionColorLabel, fontSizeLabel},
                 new JComponent[] {themeComboBox, accentBox, selectionBox, fontSlider}));
         return panel;
     }
@@ -386,55 +388,10 @@ public class ThemeSettingsPanel extends JPanel {
 
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createTitledBorder(UIManager.getString("title_monitoring", l)));
-        panel.add(getTwoColumnLayout(
+        panel.add(LayoutHelper.createTwoColumnPanel(
                 new JComponent[] {enabledSystemPreferences, themeFollowsSystem, accentColorFollowsSystem},
                 new JComponent[] {new JLabel(), fontSizeFollowsSystem, selectionColorFollowsSystem},
                 GroupLayout.Alignment.LEADING, GroupLayout.Alignment.LEADING));
-        return panel;
-    }
-
-    private JComponent getTwoColumnLayout(final JComponent[] left, final JComponent[] right) {
-        return getTwoColumnLayout(left, right, GroupLayout.Alignment.TRAILING, GroupLayout.Alignment.LEADING);
-    }
-
-    private JComponent getTwoColumnLayout(final JComponent[] left, final JComponent[] right,
-            final GroupLayout.Alignment leftColumn, final GroupLayout.Alignment rightColumn) {
-        if (left.length != right.length) {
-            String s = left.length + " labels supplied for " + right.length + " fields!";
-            throw new IllegalArgumentException(s);
-        }
-        JComponent panel = new JPanel();
-        GroupLayout layout = new GroupLayout(panel);
-        panel.setLayout(layout);
-        layout.setAutoCreateGaps(true);
-        layout.setAutoCreateContainerGaps(false);
-
-        // Create a sequential group for the horizontal axis.
-        GroupLayout.SequentialGroup horizontalGroup = layout.createSequentialGroup();
-
-        GroupLayout.Group verticalLabelGroup = layout.createParallelGroup(leftColumn);
-        horizontalGroup.addGroup(verticalLabelGroup);
-
-        GroupLayout.Group verticalComponentGroup = layout.createParallelGroup(rightColumn);
-        horizontalGroup.addGroup(verticalComponentGroup);
-        layout.setHorizontalGroup(horizontalGroup);
-
-        // Create a sequential group for the vertical axis.
-        GroupLayout.SequentialGroup verticalGroup = layout.createSequentialGroup();
-        layout.setVerticalGroup(verticalGroup);
-
-        int p = GroupLayout.PREFERRED_SIZE;
-        // add the components to the groups
-        for (JComponent label : left) {
-            verticalLabelGroup.addComponent(label);
-        }
-        for (JComponent field : right) {
-            verticalComponentGroup.addComponent(field, p, p, p);
-        }
-        for (int i = 0; i < left.length; i++) {
-            verticalGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER).addComponent(left[i])
-                    .addComponent(right[i], p, p, p));
-        }
         return panel;
     }
 

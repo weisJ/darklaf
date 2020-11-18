@@ -32,6 +32,8 @@ import com.github.weisj.darklaf.util.Scale;
 public class PaintUtil {
 
     public static final Color TRANSPARENT_COLOR = new Color(0x0, true);
+    private static final AlphaComposite transparentComposite =
+            AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6f);
     private static AlphaComposite glowComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
     private static AlphaComposite dropComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f);
     private static AlphaComposite shadowComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f);
@@ -61,6 +63,10 @@ public class PaintUtil {
 
     public static AlphaComposite getShadowComposite() {
         return shadowComposite;
+    }
+
+    public static AlphaComposite getTransparentComposite() {
+        return transparentComposite;
     }
 
     public static AlphaComposite getGlowComposite() {
