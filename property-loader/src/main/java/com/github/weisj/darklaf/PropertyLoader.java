@@ -465,6 +465,10 @@ public final class PropertyLoader {
         return key;
     }
 
+    public static String getReferencePrefix() {
+        return String.valueOf(REFERENCE_PREFIX);
+    }
+
     private static final class LoadError {
     }
 
