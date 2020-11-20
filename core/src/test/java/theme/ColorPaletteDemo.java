@@ -28,8 +28,6 @@ import ui.ComponentDemo;
 import com.github.weisj.darklaf.graphics.ThemedColor;
 import com.github.weisj.darklaf.icons.SolidColorIcon;
 import com.github.weisj.darklaf.layout.LayoutHelper;
-import com.github.weisj.darklaf.theme.OneDarkTheme;
-import com.github.weisj.darklaf.theme.Theme;
 
 public class ColorPaletteDemo implements ComponentDemo {
 
@@ -56,6 +54,7 @@ public class ColorPaletteDemo implements ComponentDemo {
                 "palette.lime",
                 "palette.forest",
                 "palette.brown",
+                "palette.gray",
         };
 
         {
@@ -72,11 +71,6 @@ public class ColorPaletteDemo implements ComponentDemo {
         }
 
         return comp;
-    }
-
-    @Override
-    public Theme createTheme() {
-        return new OneDarkTheme();
     }
 
     @Override

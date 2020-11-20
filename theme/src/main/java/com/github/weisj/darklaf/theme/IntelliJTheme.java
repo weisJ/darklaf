@@ -72,6 +72,12 @@ public class IntelliJTheme extends Theme {
     }
 
     @Override
+    public void customizeIconTheme(final Properties properties, final UIDefaults currentDefaults) {
+        super.customizeIconTheme(properties, currentDefaults);
+        loadCustomProperties("icons", properties, currentDefaults);
+    }
+
+    @Override
     public boolean supportsCustomAccentColor() {
         return true;
     }

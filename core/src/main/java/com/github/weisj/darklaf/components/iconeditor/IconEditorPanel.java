@@ -392,6 +392,14 @@ public class IconEditorPanel extends JPanel {
                         .collect(Collectors.toList());
                 defaults.colors = entries.stream()
                         .map(p -> new NamedColor(p.getFirst(), p.getSecond()))
+                        .sorted((c1, c2) -> {
+                            String n1 = c1.getName();
+                            String n2 = c2.getName();
+                            boolean p1 = n1.startsWith("palette.");
+                            boolean p2 = n2.startsWith("palette.");
+                            if (p1 == p2) return n1.compareTo(n2);
+                            return Boolean.compare(p1, p2);
+                        })
                         .collect(Collectors.toList());
             }
             return new ColorPaletteChooser(defaults.colors);
