@@ -58,6 +58,7 @@ public class QuickColorChooser extends JPanel {
     public QuickColorChooser(final String title, final Color color, final BiConsumer<Boolean, Color> onStatusChange,
             final boolean showCheckBox, final Dimension pickerSize) {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        setAlignmentX(JComponent.LEFT_ALIGNMENT);
         if (showCheckBox) {
             checkBox = new JCheckBox();
             checkBox.addActionListener(e -> onStatusChange.accept(isSelected(), getColor()));
