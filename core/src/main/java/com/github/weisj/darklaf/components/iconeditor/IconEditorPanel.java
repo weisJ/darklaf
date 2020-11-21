@@ -441,7 +441,7 @@ public class IconEditorPanel extends JPanel {
         protected OpacityChooser(final List<NamedInt> values) {
             super(values);
             setBorder(LayoutHelper.createEmptyContainerBorder());
-            setCellRenderer(SimpleListCellRenderer.create(v -> v.getValue() + "% " + v.getName()));
+            listComp.setCellRenderer(SimpleListCellRenderer.create(v -> v.getValue() + "% " + v.getName()));
         }
     }
 
@@ -452,11 +452,12 @@ public class IconEditorPanel extends JPanel {
         protected ColorPaletteChooser(final List<NamedColor> values) {
             super(values);
             setBorder(LayoutHelper.createEmptyContainerBorder());
-            setCellRenderer(SimpleListCellRenderer.create((c, v) -> {
+            listComp.setCellRenderer(SimpleListCellRenderer.create((c, v) -> {
                 icon.setColor(v.getColor());
                 c.setIcon(icon);
                 c.setText(v.getName());
             }));
+            listComp.setVisibleRowCount(15);
         }
 
     }

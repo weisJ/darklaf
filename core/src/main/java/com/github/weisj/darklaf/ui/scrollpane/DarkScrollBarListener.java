@@ -383,13 +383,13 @@ public class DarkScrollBarListener<T extends DarkScrollBarUI> extends MouseAdapt
 
     protected abstract static class SBAnimator extends Animator {
 
-        private final Component component;
+        private final JComponent component;
         private final float minValue;
         private final float maxValue;
         private final boolean fadeIn;
 
         public SBAnimator(final int duration, final int resolution, final int delay,
-                final Component component, final float minValue, final float maxValue, final boolean fadeIn) {
+                final JComponent component, final float minValue, final float maxValue, final boolean fadeIn) {
             super(duration / resolution, duration, delay, false, true,
                     fadeIn ? DefaultInterpolator.EASE_OUT_CUBIC : DefaultInterpolator.EASE_IN_CUBIC);
             this.component = component;
@@ -416,6 +416,7 @@ public class DarkScrollBarListener<T extends DarkScrollBarUI> extends MouseAdapt
         private void repaint() {
             if (component != null) {
                 ((JComponent) component.getParent()).paintImmediately(component.getBounds());
+                component.getParent().repaint();
             }
         }
 

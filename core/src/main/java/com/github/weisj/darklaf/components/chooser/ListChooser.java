@@ -21,25 +21,30 @@
  */
 package com.github.weisj.darklaf.components.chooser;
 
+import java.awt.*;
 import java.util.List;
 import java.util.function.Consumer;
 
 import javax.swing.*;
 
-public class ListChooser<T> extends JList<T> implements ChooserComponent<T> {
 
+public class ListChooser<T> extends JPanel implements ChooserComponent<T> {
+
+    protected final JList<T> listComp;
     private final List<T> values;
     private T initial;
     private Consumer<T> callback;
 
     public ListChooser(final List<T> values) {
+        super(new BorderLayout());
         this.values = values;
         DefaultListModel<T> model = new DefaultListModel<>();
         values.forEach(model::addElement);
-        setModel(model);
-        addListSelectionListener(e -> {
-            if (callback != null) callback.accept(getSelectedValue());
+        listComp = new JList<>(model);
+        listComp.addListSelectionListener(e -> {
+            if (callback != null) callback.accept(listComp.getSelectedValue());
         });
+        add(new JScrollPane(listComp));
     }
 
     @Override
@@ -50,7 +55,7 @@ public class ListChooser<T> extends JList<T> implements ChooserComponent<T> {
             for (int i = 0; i < values.size(); i++) {
                 T value = values.get(i);
                 if (value != null && value.equals(initial)) {
-                    setSelectedIndex(i);
+                    listComp.setSelectedIndex(i);
                     break;
                 }
             }
@@ -64,6 +69,11 @@ public class ListChooser<T> extends JList<T> implements ChooserComponent<T> {
 
     @Override
     public T getSelected() {
-        return getSelectedValue();
+        return listComp.getSelectedValue();
+    }
+
+    @Override
+    public Color getBackground() {
+        return listComp != null ? listComp.getBackground() : super.getBackground();
     }
 }
