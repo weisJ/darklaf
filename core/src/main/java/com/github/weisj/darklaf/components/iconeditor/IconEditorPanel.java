@@ -30,10 +30,10 @@ import java.util.stream.Collectors;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.DarkLaf;
-import com.github.weisj.darklaf.DynamicUI;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.components.ComponentHelper;
+import com.github.weisj.darklaf.components.DynamicUI;
 import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.components.chooser.ListChooser;
 import com.github.weisj.darklaf.components.color.QuickColorChooser;

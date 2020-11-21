@@ -29,7 +29,9 @@ import javax.swing.*;
  * @author Jannis Weis
  */
 public class DarkLafInfo extends UIManager.LookAndFeelInfo {
-    /** Constructs a {@link UIManager}s {@link javax.swing.UIManager.LookAndFeelInfo} object. */
+    /**
+     * Constructs a {@link UIManager}s {@link javax.swing.UIManager.LookAndFeelInfo} object.
+     */
     public DarkLafInfo() {
         super("Darklaf", DarkLaf.class.getCanonicalName());
     }

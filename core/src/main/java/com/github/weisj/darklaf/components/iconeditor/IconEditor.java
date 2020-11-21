@@ -30,10 +30,10 @@ import java.util.stream.Collectors;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.DynamicUI;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.CloseButton;
 import com.github.weisj.darklaf.components.ComponentHelper;
+import com.github.weisj.darklaf.components.DynamicUI;
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.components.button.JSplitButton;
