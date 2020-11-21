@@ -32,6 +32,7 @@ import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.color.QuickColorChooser;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.icons.UIAwareIcon;
+import com.github.weisj.darklaf.layout.LayoutHelper;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.event.ThemeInstalledListener;
 import com.github.weisj.darklaf.util.DarkUIUtil;
@@ -46,8 +47,9 @@ public class IconDemo implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        iconPanel = new JPanel(new GridLayout(3, 2));
-        iconPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        iconPanel = new JPanel(new GridLayout(3, 2,
+                LayoutHelper.getDefaultSpacing(), LayoutHelper.getDefaultSpacing()));
+        iconPanel.setBorder(LayoutHelper.createEmptyContainerBorder());
 
         UIManager.put("TestIcon.color", new Color(255, 35, 181));
 
@@ -68,8 +70,6 @@ public class IconDemo implements ComponentDemo {
 
         DemoPanel panel = new DemoPanel(iconPanel, new BorderLayout(), 0);
         JPanel controlPanel = panel.addControls();
-        controlPanel.setLayout(new GridLayout(1, 2));
-
         controlPanel.add(new JToggleButton("Light/Dark") {
             {
                 LafManager.addThemeChangeListener(

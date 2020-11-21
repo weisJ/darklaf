@@ -49,7 +49,6 @@ class SlideComponent extends JComponent implements ColorListener {
     private final String title;
     private final List<Consumer<Integer>> listeners = new ArrayList<>();
     protected Color borderColor;
-    protected Color shadowColor;
     protected Color knobFill;
     private final boolean isOpacity;
     private int pointerValue = 0;
@@ -63,7 +62,6 @@ class SlideComponent extends JComponent implements ColorListener {
         this.isOpacity = isOpacity;
         this.color = Color.WHITE;
         this.borderColor = UIManager.getColor("ColorChooser.sliderBorderColor");
-        this.shadowColor = UIManager.getColor("ColorChooser.sliderShadow");
         this.knobFill = UIManager.getColor("ColorChooser.sliderKnobColor");
 
         toolTipContext.setAlignInside(false).setAlignment(vertical ? Alignment.WEST : Alignment.NORTH)
@@ -180,7 +178,6 @@ class SlideComponent extends JComponent implements ColorListener {
     public void updateUI() {
         super.updateUI();
         borderColor = UIManager.getColor("ColorChooser.sliderBorderColor");
-        shadowColor = UIManager.getColor("ColorChooser.sliderShadow");
         knobFill = UIManager.getColor("ColorChooser.sliderKnobColor");
         if (toolTipContext != null) toolTipContext.updateToolTipUI();
     }
@@ -215,42 +212,25 @@ class SlideComponent extends JComponent implements ColorListener {
 
     protected void drawKnob(final Graphics2D g2d, int x, int y, final boolean vertical) {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Polygon arrowHead;
         if (vertical) {
             y -= 6;
-            Polygon arrowShadow = new Polygon();
-            arrowShadow.addPoint(x - 5, y + 1);
-            arrowShadow.addPoint(x + 7, y + 7);
-            arrowShadow.addPoint(x - 5, y + 13);
-
-            g2d.setColor(ColorUtil.toAlpha(shadowColor, 0.5));
-            g2d.fill(arrowShadow);
-
-            Polygon arrowHead = new Polygon();
+            arrowHead = new Polygon();
             arrowHead.addPoint(x - 6, y);
             arrowHead.addPoint(x + 6, y + 6);
             arrowHead.addPoint(x - 6, y + 12);
-
-            g2d.setColor(knobFill);
-            g2d.fill(arrowHead);
         } else {
             x -= 6;
-
-            Polygon arrowShadow = new Polygon();
-            arrowShadow.addPoint(x + 1, y - 5);
-            arrowShadow.addPoint(x + 13, y - 5);
-            arrowShadow.addPoint(x + 7, y + 7);
-
-            g2d.setColor(ColorUtil.toAlpha(shadowColor, 0.5));
-            g2d.fill(arrowShadow);
-
-            Polygon arrowHead = new Polygon();
+            arrowHead = new Polygon();
             arrowHead.addPoint(x, y - 6);
             arrowHead.addPoint(x + 12, y - 6);
             arrowHead.addPoint(x + 6, y + 6);
-
-            g2d.setColor(knobFill);
-            g2d.fill(arrowHead);
         }
+
+        g2d.setColor(knobFill);
+        g2d.fill(arrowHead);
+        g2d.setColor(borderColor);
+        g2d.draw(arrowHead);
     }
 
     @Override
