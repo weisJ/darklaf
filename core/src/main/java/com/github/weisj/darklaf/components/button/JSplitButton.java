@@ -33,6 +33,7 @@ public class JSplitButton extends JButton {
     private JPopupMenu actionMenu;
     private Icon overlayDropDownIcon;
     private Icon overlayDropDownDisabledIcon;
+    private boolean fallbackMode;
 
     /**
      * Creates a button with no set text or icon.
@@ -91,7 +92,7 @@ public class JSplitButton extends JButton {
 
     @Override
     public String getUIClassID() {
-        return "SplitButtonUI";
+        return fallbackMode ? super.getUIClassID() : "SplitButtonUI";
     }
 
     @Override
@@ -129,7 +130,11 @@ public class JSplitButton extends JButton {
 
     @Override
     public void updateUI() {
+        fallbackMode = UIManager.get(getUIClassID()) == null;
         super.updateUI();
+        if (fallbackMode) {
+            setUI(new SplitButtonFallbackUI(getUI()));
+        }
         if (actionMenu != null) {
             SwingUtilities.updateComponentTreeUI(actionMenu);
         }

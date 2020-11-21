@@ -47,6 +47,7 @@ import com.github.weisj.darklaf.ui.colorchooser.ColorValueFormatter;
 import com.github.weisj.darklaf.ui.slider.DarkSliderUI;
 import com.github.weisj.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
 import com.github.weisj.darklaf.util.ColorUtil;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class SmallColorChooser extends JPanel implements ChooserComponent<Color> {
 
@@ -203,6 +204,7 @@ public class SmallColorChooser extends JPanel implements ChooserComponent<Color>
 
     private JButton createPipetteButton() {
         Icon pipetteIcon = UIManager.getIcon("ColorChooser.pipette.icon");
+        if (pipetteIcon == null) pipetteIcon = DarkUIUtil.ICON_LOADER.getIcon("misc/pipette.svg", true);
         Icon pipetteHoverIcon = UIManager.getIcon("ColorChooser.pipetteRollover.icon");
         JButton pipetteButton = new JButton();
         DefaultColorPipette defaultPipette = new DefaultColorPipette(this, (c, o) -> setColor(pipetteButton,
@@ -272,6 +274,7 @@ public class SmallColorChooser extends JPanel implements ChooserComponent<Color>
             slider.setValue(model.getDefault(i));
             slider.setSnapToTicks(false);
             slider.setPaintLabels(false);
+            slider.setOpaque(false);
             label.setLabelFor(slider);
 
             label.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));

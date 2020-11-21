@@ -55,6 +55,16 @@ public final class IconLoader {
     private final Map<IconKey, DarkUIAwareIcon> awareIconMap = new HashMap<>();
     private final Map<IconKey, Icon> iconMap = new HashMap<>();
 
+    static {
+        UIManager.addPropertyChangeListener(e -> {
+            if (UIManager.getLookAndFeel().getName().equalsIgnoreCase("darklaf")) return;
+            String key = e.getPropertyName();
+            if ("lookAndFeel".equals(key)) {
+                updateThemeStatus(new Object());
+            }
+        });
+    }
+
     private IconLoader(final Class<?> parentClass) {
         this.parentClass = parentClass;
         iconLoaderMap.put(parentClass, this);

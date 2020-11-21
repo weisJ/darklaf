@@ -30,7 +30,9 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
+import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.ui.colorchooser.ColorListener;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.TimerUtil;
 
 public class DefaultColorPipette extends ColorPipetteBase {
@@ -173,7 +175,10 @@ public class DefaultColorPipette extends ColorPipetteBase {
     }
 
     protected Icon getPipetteIcon() {
-        return UIManager.getIcon("ColorChooser.pipette.icon");
+        Icon icon = UIManager.getIcon("ColorChooser.pipette.icon");
+        if (icon == null) icon = DarkUIUtil.ICON_LOADER.getIcon("misc/pipette.svg", true);
+        if (icon == null) icon = EmptyIcon.create(0);
+        return icon;
     }
 
     protected Color getPipetteBorderColor() {

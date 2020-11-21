@@ -24,6 +24,7 @@ package com.github.weisj.darklaf.components;
 import java.awt.*;
 
 import javax.swing.*;
+import javax.swing.plaf.BorderUIResource;
 
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.PaintUtil;
@@ -44,7 +45,7 @@ public class HoveringPanel extends JPanel {
         super.paintComponent(g);
         GraphicsContext context = new GraphicsContext(g);
         ((Graphics2D) g).setComposite(PaintUtil.getTransparentComposite());
-        g.setColor(color);
+        g.setColor(color != null ? color : getBackground());
         PaintUtil.fillRoundRect((Graphics2D) g, 0, 0, getWidth(), getHeight(), arc, false);
         context.restore();
     }
@@ -55,6 +56,6 @@ public class HoveringPanel extends JPanel {
         arc = 2 * UIManager.getInt("arc");
         color = UIManager.getColor("hoverHighlight");
         int pad = 1 + UIManager.getInt("borderThickness");
-        PropertyUtil.installBorder(this, BorderFactory.createEmptyBorder(pad, pad, pad, pad));
+        PropertyUtil.installBorder(this, new BorderUIResource.EmptyBorderUIResource(pad, pad, pad, pad));
     }
 }

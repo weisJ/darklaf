@@ -172,7 +172,13 @@ public class LayoutHelper {
 
     public static JComponent createPanelWithHoverOverlay(final JComponent content, final JComponent overlayContent,
             final BiFunction<Rectangle, JComponent, Rectangle> layoutFunction) {
-        HoveringPanel hoveringPanel = new HoveringPanel();
+        HoveringPanel hoveringPanel = new HoveringPanel() {
+            @Override
+            public void updateUI() {
+                super.updateUI();
+                System.out.println("Here");
+            }
+        };
         hoveringPanel.add(overlayContent);
         return createPanelWithOverlay(content, hoveringPanel, (r, c) -> {
             hoveringPanel.setVisible(overlayContent.isVisible());

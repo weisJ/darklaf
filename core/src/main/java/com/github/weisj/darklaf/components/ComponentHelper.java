@@ -22,6 +22,8 @@
 package com.github.weisj.darklaf.components;
 
 
+import java.awt.*;
+
 import javax.swing.*;
 
 import com.github.weisj.darklaf.components.button.JSplitButton;

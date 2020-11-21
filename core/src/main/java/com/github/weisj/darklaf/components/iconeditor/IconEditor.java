@@ -183,6 +183,7 @@ public class IconEditor extends JPanel {
     }
 
     private Icon changeIconTheme(final ThemedSVGIcon icon, final Theme theme) {
+        if (icon == null) return null;
         return new CustomThemedIcon(icon,
                 IconEditorPanel.IconValues.getIconDefaults(theme).getDefaults(),
                 CustomThemedIcon.MergeMode.REMOVE_REFERENCES);

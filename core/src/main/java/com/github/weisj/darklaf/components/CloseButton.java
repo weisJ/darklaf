@@ -21,9 +21,12 @@
  */
 package com.github.weisj.darklaf.components;
 
+import java.awt.*;
+
 import javax.swing.*;
 
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class CloseButton extends JButton {
 
@@ -32,12 +35,23 @@ public class CloseButton extends JButton {
         putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS_RECTANGULAR);
         putClientProperty(DarkButtonUI.KEY_THIN, true);
         putClientProperty(DarkButtonUI.KEY_SQUARE, true);
+        setBorder(BorderFactory.createEmptyBorder());
+        setMargin(new Insets(0, 0, 0, 0));
         setOpaque(false);
         setRolloverEnabled(true);
         setBorderPainted(false);
         setContentAreaFilled(false);
-        setIcon(UIManager.getIcon("CloseButton.closeIcon"));
-        setDisabledIcon(UIManager.getIcon("CloseButton.closeDisabledIcon"));
-        setRolloverIcon(UIManager.getIcon("CloseButton.closeHoverIcon"));
+
+        Icon icon = UIManager.getIcon("CloseButton.closeIcon");
+        if (icon == null) icon = DarkUIUtil.ICON_LOADER.getIcon("navigation/close.svg", true);
+        setIcon(icon);
+
+        icon = UIManager.getIcon("CloseButton.closeDisabledIcon");
+        if (icon == null) icon = DarkUIUtil.ICON_LOADER.getIcon("navigation/closeDisabled.svg", true);
+        setDisabledIcon(icon);
+
+        icon = UIManager.getIcon("CloseButton.closeHoverIcon");
+        if (icon == null) icon = DarkUIUtil.ICON_LOADER.getIcon("navigation/closeHovered.svg", true);
+        setRolloverIcon(icon);
     }
 }

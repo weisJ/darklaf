@@ -22,18 +22,8 @@
 package com.github.weisj.darklaf.ui.colorchooser;
 
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.NoninvertibleTransformException;
-import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+import java.awt.event.*;
+import java.awt.geom.*;
 import java.awt.image.ColorModel;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
@@ -125,9 +115,13 @@ public class ColorTriangle extends JComponent {
     protected void updateDefaults() {
         background = UIManager.getColor("ColorChooser.colorWheelBackground");
         dropFill = UIManager.getColor("ColorChooser.colorWheelDropBackgroundColor");
+        if (dropFill == null) dropFill = UIManager.getColor("Label.background");
         dropBorder = UIManager.getColor("ColorChooser.colorWheelDropBorderColor");
+        if (dropBorder == null) dropBorder = UIManager.getColor("Label.foreground");
         outerIndicatorRadius = UIManager.getInt("ColorChooser.outerIndicatorRadius");
+        if (outerIndicatorRadius == 0) outerIndicatorRadius = 3;
         innerIndicatorRadius = UIManager.getInt("ColorChooser.innerIndicatorRadius");
+        if (innerIndicatorRadius == 0) innerIndicatorRadius = 3;
     }
 
     protected double getHue() {

@@ -45,6 +45,7 @@ public class ListChooser<T> extends JPanel implements ChooserComponent<T> {
             if (callback != null) callback.accept(listComp.getSelectedValue());
         });
         add(new JScrollPane(listComp));
+        setOpaque(false);
     }
 
     @Override
