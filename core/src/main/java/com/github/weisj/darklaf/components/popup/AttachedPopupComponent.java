@@ -31,6 +31,7 @@ import java.util.function.Supplier;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.chooser.ChooserComponent;
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.listener.MouseClickListener;
@@ -99,6 +100,15 @@ public class AttachedPopupComponent extends JToolTip {
     }
 
     public static void showComponent(final JComponent parent, final JComponent content,
+            final Runnable onClose, final Runnable onAbort, final Runnable afterClose) {
+        if (LafManager.isInstalled()) {
+            showComponentImpl(parent, content, onClose, onAbort, afterClose);
+        } else {
+            showComponentFallbackImpl(parent, content, onClose, onAbort, afterClose);
+        }
+    }
+
+    public static void showComponentImpl(final JComponent parent, final JComponent content,
             final Runnable onClose, final Runnable onAbort, final Runnable afterClose) {
         AttachedPopupComponent attachedComp = new AttachedPopupComponent(parent, content);
         /*
@@ -179,6 +189,22 @@ public class AttachedPopupComponent extends JToolTip {
             Toolkit.getDefaultToolkit().addAWTEventListener(listener,
                     AWTEvent.FOCUS_EVENT_MASK | AWTEvent.MOUSE_EVENT_MASK);
         });
+    }
+
+    public static void showComponentFallbackImpl(final JComponent parent, final JComponent content,
+            final Runnable onClose, final Runnable onAbort, final Runnable afterClose) {
+        int returnCode = JOptionPane.showOptionDialog(parent, content, "Dialog", JOptionPane.DEFAULT_OPTION,
+                JOptionPane.PLAIN_MESSAGE,
+                null, null, null);
+        switch (returnCode) {
+            case JOptionPane.CANCEL_OPTION:
+            case JOptionPane.CLOSED_OPTION:
+                onAbort.run();
+                break;
+            default:
+                onClose.run();
+        }
+        afterClose.run();
     }
 
     @Override
