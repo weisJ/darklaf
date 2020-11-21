@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
     <defs id="colors">
-        <linearGradient id="warningIconColor">
+        <linearGradient id="warningIconColor" fallback="#FFFF00">
             <stop offset="0" stop-color="#F0A732"/>
             <stop offset="1" stop-color="#F0A732"/>
         </linearGradient>

@@ -33,6 +33,7 @@ import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.Pair;
+import com.github.weisj.darklaf.util.Types;
 import com.kitfox.svg.*;
 import com.kitfox.svg.animation.AnimationElement;
 import com.kitfox.svg.app.beans.SVGIcon;
@@ -40,6 +41,7 @@ import com.kitfox.svg.xml.StyleAttribute;
 
 /** @author Jannis Weis */
 public final class IconColorMapper {
+    private static final String INLINE_VALUE_PREFIX = "#";
     private static final Logger LOGGER = LogUtil.getLogger(IconLoader.class);
     private static final Color FALLBACK_COLOR = Color.RED;
 
@@ -283,8 +285,17 @@ public final class IconColorMapper {
         for (int i = -1; i < max; i++) {
             currentKey = i < 0 ? key : fallbacks[i];
             int retryCount = 5;
+            if (i >= 0 && currentKey instanceof String && ((String) currentKey).startsWith(INLINE_VALUE_PREFIX)) {
+                obj = Types.safeCast(PropertyLoader.parseValue(
+                        Objects.toString(key),
+                        ((String) currentKey).substring(INLINE_VALUE_PREFIX.length()), map,
+                        contextDefaults, IconLoader.get()),
+                        type);
+            }
             do {
-                obj = map.get(currentKey);
+                if (obj == null) {
+                    obj = map.get(currentKey);
+                }
                 if (contextDefaults != null && (obj == null || seen.contains(obj))) {
                     obj = contextDefaults.get(currentKey);
                 }
@@ -295,10 +306,7 @@ public final class IconColorMapper {
                 }
                 retryCount--;
             } while (!(type.isInstance(obj)) && retryCount > 0);
-            if (retryCount == 0) {
-                LOGGER.warning(
-                        "Could not find value for key '" + key + "'. References are only searched up to 5 levels");
-            }
+            if (retryCount > 0) break;
         }
         return new Pair<>(currentKey, type.cast(obj));
     }

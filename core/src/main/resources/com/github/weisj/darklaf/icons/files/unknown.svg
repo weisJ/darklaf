@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
     <defs id="colors">
-        <linearGradient id="fileIconBackground">
+        <linearGradient id="fileIconBackground" fallback="Label.foreground">
             <stop offset="0" stop-color="#9AA7B0"/>
             <stop offset="1" stop-color="#9AA7B0"/>
         </linearGradient>
-        <linearGradient id="menuIconHighlight">
+        <linearGradient id="menuIconHighlight" fallback="textHighlight,#0000FF">
             <stop offset="0" stop-color="#40B6E0"/>
             <stop offset="1" stop-color="#40B6E0"/>
         </linearGradient>

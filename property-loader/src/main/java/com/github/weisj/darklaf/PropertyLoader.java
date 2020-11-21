@@ -162,7 +162,7 @@ public final class PropertyLoader {
     }
 
     public static Object parseValue(final String propertyKey, final String val, final Map<Object, Object> accumulator,
-            final UIDefaults currentDefaults, final IconLoader iconLoader) {
+            final Map<Object, Object> currentDefaults, final IconLoader iconLoader) {
         if (val == null || PropertyValue.NULL.equals(val)) {
             return null;
         }
@@ -224,12 +224,13 @@ public final class PropertyLoader {
     }
 
     private static <T> Pair<T, T> parsePair(final ParseFunction<T> mapper, final String value,
-            final Map<Object, Object> accumulator, final UIDefaults currentDefaults, final IconLoader iconLoader) {
+            final Map<Object, Object> accumulator, final Map<Object, Object> currentDefaults,
+            final IconLoader iconLoader) {
         return parsePair(mapper, mapper, value, accumulator, currentDefaults, iconLoader);
     }
 
     private static <T, K> Pair<T, K> parsePair(final ParseFunction<T> firstMapper, final ParseFunction<K> secondMapper,
-            final String value, final Map<Object, Object> accumulator, final UIDefaults currentDefaults,
+            final String value, final Map<Object, Object> accumulator, final Map<Object, Object> currentDefaults,
             final IconLoader iconLoader) {
         String[] pairVals = value.split(String.valueOf(PAIR_SEPARATOR), 2);
         return new Pair<>(firstMapper.parseValue(pairVals[0], accumulator, currentDefaults, iconLoader),
@@ -237,7 +238,7 @@ public final class PropertyLoader {
     }
 
     private static Object parseReference(final String key, final String value, final Map<Object, Object> accumulator,
-            final UIDefaults currentDefault) {
+            final Map<Object, Object> currentDefault) {
         String val = parseKey(value);
         String referenceFreeKey = val.substring(1);
         boolean accumulatorContainsKey =
@@ -259,7 +260,7 @@ public final class PropertyLoader {
     }
 
     private static Object parseInsets(final String value, final Map<Object, Object> accumulator,
-            final UIDefaults currentDefaults, final IconLoader iconLoader) {
+            final Map<Object, Object> currentDefaults, final IconLoader iconLoader) {
         List<Integer> insets = parseList((SimpleValueMapper<Integer>) Integer::parseInt, value, accumulator,
                 currentDefaults, iconLoader, Character.MIN_VALUE, Character.MIN_VALUE, SEPARATOR);
         return new InsetsUIResource(insets.get(0), insets.get(1), insets.get(2), insets.get(3));
@@ -267,7 +268,7 @@ public final class PropertyLoader {
 
     @SuppressWarnings("MagicConstant")
     private static Object parseFont(final String key, final String value, final Map<Object, Object> accumulator,
-            final UIDefaults currentDefaults) {
+            final Map<Object, Object> currentDefaults) {
         String val = value;
         Font base = null;
         int size = -1;
@@ -291,8 +292,8 @@ public final class PropertyLoader {
             if (val.isEmpty()) break;
         }
         if (base == null) base = parseExplicitFont(value);
-        if (base == null && accumulator.get(key) instanceof Font) base = (Font) accumulator.get(key);
-        if (base == null) base = currentDefaults.getFont(key);
+        if (base == null) base = Types.safeCast(accumulator.get(key), Font.class);
+        if (base == null) base = Types.safeCast(currentDefaults.get(key), Font.class);
         if (base == null) base = FontUtil.createFont(null, Font.PLAIN, 12);
         if (size <= 0) size = base.getSize();
         if (style < 0) style = base.getStyle();
@@ -311,7 +312,7 @@ public final class PropertyLoader {
     }
 
     private static Pair<Integer, String> parseFontAttribute(final String identifier, final String val,
-            final Map<Object, Object> accumulator, final UIDefaults currrentDefault) {
+            final Map<Object, Object> accumulator, final Map<Object, Object> currrentDefault) {
         String key = val.substring(identifier.length() + 1);
         int lastIndex = key.indexOf(ARG_END);
         String rest = key.substring(lastIndex + 1);
@@ -321,7 +322,7 @@ public final class PropertyLoader {
         for (int i = 0; i < values.length; i++) {
             if (subKeys[i].startsWith(String.valueOf(REFERENCE_PREFIX))) {
                 Object ref = unpackReference(parseReference(identifier, subKeys[i], accumulator, currrentDefault));
-                values[i] = ref instanceof Integer ? (Integer) ref : 0;
+                values[i] = Types.safeCast(ref, Integer.class, 0);
             } else {
                 try {
                     values[i] = Integer.parseInt(subKeys[i]);
@@ -346,24 +347,25 @@ public final class PropertyLoader {
     }
 
     private static Pair<Font, String> parseFrom(final String val, final Map<Object, Object> accumulator,
-            final UIDefaults currentDefaults) {
+            final Map<Object, Object> currentDefaults) {
         String key = val.substring(FONT_FROM.length() + 1);
         int index = key.indexOf(ARG_END);
         String rest = key.substring(index + 1);
         key = key.substring(0, index);
-        Font font = null;
-        if (accumulator.get(key) instanceof Font) font = (Font) accumulator.get(key);
-        if (font == null) font = currentDefaults.getFont(key);
+        Font font = Types.safeCast(accumulator.get(key), Font.class);
+        if (font == null) font = Types.safeCast(currentDefaults.get(key), Font.class);
         return new Pair<>(font, rest);
     }
 
     private static <T> List<T> parseList(final ParseFunction<T> mapper, final String value,
-            final Map<Object, Object> accumulator, final UIDefaults currentDefaults, final IconLoader iconLoader) {
+            final Map<Object, Object> accumulator, final Map<Object, Object> currentDefaults,
+            final IconLoader iconLoader) {
         return parseList(mapper, value, accumulator, currentDefaults, iconLoader, LIST_START, LIST_END, LIST_SEPARATOR);
     }
 
     private static <T> List<T> parseList(final ParseFunction<T> mapper, final String value,
-            final Map<Object, Object> accumulator, final UIDefaults currentDefaults, final IconLoader iconLoader,
+            final Map<Object, Object> accumulator, final Map<Object, Object> currentDefaults,
+            final IconLoader iconLoader,
             final char start, final char end, final char delimiter) {
         if (value == null || value.isEmpty()) return new ArrayList<>();
         String val = value;
@@ -377,7 +379,7 @@ public final class PropertyLoader {
     }
 
     private static Icon parseIcon(final String value, final Map<Object, Object> accumulator,
-            final UIDefaults currentDefaults, final IconLoader iconLoader) {
+            final Map<Object, Object> currentDefaults, final IconLoader iconLoader) {
         if (value.startsWith(String.valueOf(LIST_START))) {
             return parseStateIcon(value, accumulator, currentDefaults, iconLoader);
         }
@@ -423,7 +425,7 @@ public final class PropertyLoader {
     }
 
     private static Icon parseStateIcon(final String value, final Map<Object, Object> accumulator,
-            final UIDefaults currentDefaults, final IconLoader iconLoader) {
+            final Map<Object, Object> currentDefaults, final IconLoader iconLoader) {
         return new StateIcon(parseList(PropertyLoader::parseIcon, value, accumulator, currentDefaults, iconLoader));
     }
 
@@ -474,7 +476,8 @@ public final class PropertyLoader {
 
     private interface ParseFunction<T> {
 
-        T parseValue(final String value, final Map<Object, Object> accumulator, final UIDefaults currentDefaults,
+        T parseValue(final String value, final Map<Object, Object> accumulator,
+                final Map<Object, Object> currentDefaults,
                 final IconLoader iconLoader);
     }
 
@@ -484,7 +487,7 @@ public final class PropertyLoader {
 
         @Override
         default T parseValue(final String value, final Map<Object, Object> accumulator,
-                final UIDefaults currentDefaults, final IconLoader iconLoader) {
+                final Map<Object, Object> currentDefaults, final IconLoader iconLoader) {
             return map(value);
         }
     }

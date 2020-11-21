@@ -1,16 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
     <defs id="colors">
-        <linearGradient id="Icons.frame.color">
+        <linearGradient id="menuIconEnabled" fallback="Label.foreground">
             <stop offset="0" stop-color="#AFB1B3"/>
             <stop offset="1" stop-color="#AFB1B3"/>
         </linearGradient>
     </defs>
     <g fill="none" fill-rule="evenodd">
-        <rect fill="url(#Icons.frame.color)" x="2" y="2" width="10" height="1"/>
-        <rect fill="url(#Icons.frame.color)" x="2" y="2" width="1" height="10"/>
-        <rect fill="url(#Icons.frame.color)" x="4" y="4" width="1" height="10"/>
-        <rect fill="url(#Icons.frame.color)" x="4" y="4" width="10" height="1"/>
-        <rect fill="url(#Icons.frame.color)" x="4" y="13" width="10" height="1"/>
-        <rect fill="url(#Icons.frame.color)" x="13" y="4" width="1" height="10"/>
+        <rect fill="url(#menuIconEnabled)" x="2" y="2" width="10" height="1"/>
+        <rect fill="url(#menuIconEnabled)" x="2" y="2" width="1" height="10"/>
+        <rect fill="url(#menuIconEnabled)" x="4" y="4" width="1" height="10"/>
+        <rect fill="url(#menuIconEnabled)" x="4" y="4" width="10" height="1"/>
+        <rect fill="url(#menuIconEnabled)" x="4" y="13" width="10" height="1"/>
+        <rect fill="url(#menuIconEnabled)" x="13" y="4" width="1" height="10"/>
     </g>
 </svg>
