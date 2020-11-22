@@ -22,12 +22,16 @@
 package com.github.weisj.darklaf.components.color;
 
 import java.awt.*;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.text.*;
 
 import com.github.weisj.darklaf.color.DarkColorModel;
 import com.github.weisj.darklaf.color.DarkColorModelHSB;
@@ -38,6 +42,7 @@ import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.components.border.MarginBorderWrapper;
 import com.github.weisj.darklaf.components.chooser.ChooserComponent;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
+import com.github.weisj.darklaf.layout.LayoutHelper;
 import com.github.weisj.darklaf.listener.UpdateDocumentListener;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.colorchooser.ColorPipette;
@@ -261,23 +266,25 @@ public class SmallColorChooser extends JPanel implements ChooserComponent<Color>
 
     protected JComponent createColorModelComponent(final DarkColorModel model) {
         Box box = Box.createVerticalBox();
-        box.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        box.setBorder(LayoutHelper.createEmptyContainerBorder());
         String[] descriptors = model.getFullLabelDescriptorsBefore();
         String[] descriptorsAfter = model.getFullLabelDescriptorsAfter();
         int count = model.getCount();
         JSlider[] sliders = new JSlider[count];
         Descriptor[] labels = new Descriptor[count];
         for (int i = 0; i < count; i++) {
-            Descriptor label = new Descriptor(descriptors[i], descriptorsAfter[i]);
             JSlider slider = new JSlider(model.getMinimum(i), model.getMaximum(i));
             slider.putClientProperty(DarkSliderUI.KEY_INSTANT_SCROLL, true);
             slider.setValue(model.getDefault(i));
             slider.setSnapToTicks(false);
             slider.setPaintLabels(false);
             slider.setOpaque(false);
+
+            Descriptor label = new Descriptor(descriptors[i], descriptorsAfter[i],
+                    model.getMinimum(i), model.getMaximum(i), slider::setValue);
             label.setLabelFor(slider);
 
-            label.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+            label.setBorder(BorderFactory.createEmptyBorder(0, LayoutHelper.getDefaultSpacing(), 0, 0));
             JPanel holder = new JPanel(new BorderLayout());
             holder.setOpaque(false);
             holder.add(label, BorderLayout.BEFORE_FIRST_LINE);
@@ -336,22 +343,131 @@ public class SmallColorChooser extends JPanel implements ChooserComponent<Color>
         };
     }
 
-    protected static class Descriptor extends JLabel {
+    protected static class Descriptor extends JPanel {
 
-        protected final String before;
-        protected final String after;
-        protected String value;
 
-        public Descriptor(final String before, final String after) {
-            this.before = before;
-            this.after = after;
-            setValue(null);
+        private final JFormattedTextField textField;
+        private final JLabel label;
+
+        public Descriptor(final String before, final String after, final int min, final int max,
+                final Consumer<Integer> callback) {
+            setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+            setAlignmentX(Component.LEFT_ALIGNMENT);
+            label = new JLabel(before + ":");
+            add(label);
+            NumberFormat format = NumberFormat.getIntegerInstance();
+            format.setParseIntegerOnly(true);
+            format.setMinimumIntegerDigits(0);
+            format.setMaximumIntegerDigits((int) Math.ceil(Math.log10(max)));
+
+            textField = new JFormattedTextField(new JFormattedTextField.AbstractFormatterFactory() {
+                @Override
+                public JFormattedTextField.AbstractFormatter getFormatter(final JFormattedTextField tf) {
+                    return new JFormattedTextField.AbstractFormatter() {
+
+                        @Override
+                        public void install(final JFormattedTextField ftf) {
+                            super.install(ftf);
+                            ftf.setCaretPosition(ftf.getCaretPosition());
+                        }
+
+                        private final DocumentFilter documentFilter = new DocumentFilter() {
+                            @Override
+                            public void insertString(final FilterBypass fb, final int offset, final String string,
+                                    final AttributeSet attr)
+                                    throws BadLocationException {
+                                if (!isValidString(string)) return;
+                                super.insertString(fb, offset, string, attr);
+                            }
+
+                            @Override
+                            public void replace(final FilterBypass fb, final int offset, final int length,
+                                    final String text,
+                                    final AttributeSet attrs)
+                                    throws BadLocationException {
+                                if (!isValidString(text)) return;
+                                super.replace(fb, offset, length, text, attrs);
+                            }
+
+                            private boolean isValidString(final String text) {
+                                for (int i = 0; i < text.length(); i++) {
+                                    char c = text.charAt(i);
+                                    if (c < '0' || c > '9') return false;
+                                }
+                                return true;
+                            }
+                        };
+
+                        private final NavigationFilter navigationFilter = new NavigationFilter() {
+                            @Override
+                            public void setDot(final FilterBypass fb, final int dot, final Position.Bias bias) {
+                                super.setDot(fb, clampDot(dot, tf), bias);
+                            }
+
+                            @Override
+                            public void moveDot(final FilterBypass fb, final int dot, final Position.Bias bias) {
+                                super.moveDot(fb, clampDot(dot, tf), bias);
+                            }
+
+                            @Override
+                            public int getNextVisualPositionFrom(final JTextComponent text, final int pos,
+                                    final Position.Bias bias,
+                                    final int direction,
+                                    final Position.Bias[] biasRet) throws BadLocationException {
+                                return clampDot(super.getNextVisualPositionFrom(text, pos, bias, direction, biasRet),
+                                        text);
+                            }
+
+                            private int clampDot(final int dot, final JTextComponent c) {
+                                return Math.max(0, Math.min(dot, c.getDocument().getLength() - after.length()));
+                            }
+                        };
+
+                        @Override
+                        public Object stringToValue(final String text) throws ParseException {
+                            int value = Integer.parseInt(text.substring(0, text.length() - after.length()));
+                            if (value < min || value > max) throw new ParseException(text, 0);
+                            return value;
+                        }
+
+                        @Override
+                        public String valueToString(final Object value) {
+                            return value + after;
+                        }
+
+                        @Override
+                        protected DocumentFilter getDocumentFilter() {
+                            return documentFilter;
+                        }
+
+                        @Override
+                        protected NavigationFilter getNavigationFilter() {
+                            return navigationFilter;
+                        }
+                    };
+                }
+            });
+            AtomicBoolean adjusting = new AtomicBoolean();
+            textField.addPropertyChangeListener("value", e -> {
+                if (adjusting.get()) return;
+                adjusting.set(true);
+                if (textField.getValue() instanceof Integer) {
+                    callback.accept((Integer) textField.getValue());
+                }
+                adjusting.set(false);
+            });
+            textField.setBorder(BorderFactory.createEmptyBorder());
+            textField.setOpaque(false);
+            add(textField);
+            setValue(min);
         }
 
-        public void setValue(final String value) {
-            this.value = value;
-            if (this.value == null) this.value = "";
-            setText(before + ": " + value + after);
+        public void setValue(final Object value) {
+            textField.setValue(value);
+        }
+
+        public void setLabelFor(final JComponent c) {
+            label.setLabelFor(c);
         }
     }
 }
