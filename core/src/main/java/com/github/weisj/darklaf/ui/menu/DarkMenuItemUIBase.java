@@ -288,7 +288,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
     protected static class Actions extends UIAction {
         protected static final String CLICK = "doClick";
 
-        Actions(final String key) {
+        protected Actions(final String key) {
             super(key);
         }
 
