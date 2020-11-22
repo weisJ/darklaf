@@ -57,6 +57,7 @@ public class DummyTextPaneUI extends BasicTextPaneUI implements DummyTextUIMetho
 
     @Override
     public void uninstallUI(final JTextComponent editor) {
+        if (getComponent() == null) return;
         super.uninstallUI(editor);
     }
 }
