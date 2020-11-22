@@ -244,7 +244,6 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
         }
     }
 
-    @SuppressWarnings("deprecation")
     protected boolean isInPopup(final Component src) {
         for (Component c = src; c != null; c = c.getParent()) {
             if (c instanceof Applet || c instanceof Window) {
