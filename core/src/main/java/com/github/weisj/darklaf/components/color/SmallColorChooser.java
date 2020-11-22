@@ -452,6 +452,7 @@ public class SmallColorChooser extends JPanel implements ChooserComponent<Color>
             });
             textField.setBorder(BorderFactory.createEmptyBorder());
             textField.setOpaque(false);
+            setOpaque(false);
             add(textField);
             setValue(min);
         }
