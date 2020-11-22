@@ -22,7 +22,6 @@
 package com.github.weisj.darklaf.components.color;
 
 import java.awt.*;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
@@ -355,11 +354,6 @@ public class SmallColorChooser extends JPanel implements ChooserComponent<Color>
             setAlignmentX(Component.LEFT_ALIGNMENT);
             label = new JLabel(before + ":");
             add(label);
-            NumberFormat format = NumberFormat.getIntegerInstance();
-            format.setParseIntegerOnly(true);
-            format.setMinimumIntegerDigits(0);
-            format.setMaximumIntegerDigits((int) Math.ceil(Math.log10(max)));
-
             textField = new JFormattedTextField(new JFormattedTextField.AbstractFormatterFactory() {
                 @Override
                 public JFormattedTextField.AbstractFormatter getFormatter(final JFormattedTextField tf) {
