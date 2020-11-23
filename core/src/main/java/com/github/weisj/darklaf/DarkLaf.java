@@ -172,8 +172,8 @@ public class DarkLaf extends ThemedLookAndFeel {
     }
 
     @Override
-    public String getID() {
-        return getName();
+    public final String getID() {
+        return "darklaf";
     }
 
     @Override

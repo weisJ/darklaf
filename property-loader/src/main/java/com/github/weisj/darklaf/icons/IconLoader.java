@@ -57,7 +57,7 @@ public final class IconLoader {
 
     static {
         UIManager.addPropertyChangeListener(e -> {
-            if (UIManager.getLookAndFeel().getName().equalsIgnoreCase("darklaf")) return;
+            if (UIManager.getLookAndFeel().getID().equalsIgnoreCase("darklaf")) return;
             String key = e.getPropertyName();
             if ("lookAndFeel".equals(key)) {
                 updateThemeStatus(new Object());
