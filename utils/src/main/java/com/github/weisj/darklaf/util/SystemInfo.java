@@ -21,6 +21,7 @@
  */
 package com.github.weisj.darklaf.util;
 
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 /** @author Konstantin Bulenkov */
@@ -28,7 +29,7 @@ public class SystemInfo {
     public static final String X86 = "32";
     public static final String X64 = "64";
     public static final String OS_NAME = System.getProperty("os.name");
-    public static final String OS_VERSION = System.getProperty("os.version").toLowerCase();
+    public static final String OS_VERSION = System.getProperty("os.version").toLowerCase(Locale.ENGLISH);
     public static final String JAVA_VERSION = System.getProperty("java.version");
     public static final String JAVA_RUNTIME_VERSION = System.getProperty("java.runtime.version");
 
@@ -61,7 +62,7 @@ public class SystemInfo {
     public static final boolean isWindowsVista;
 
     static {
-        _OS_NAME = OS_NAME.toLowerCase();
+        _OS_NAME = OS_NAME.toLowerCase(Locale.ENGLISH);
         isWindows = _OS_NAME.startsWith("windows");
         isOS2 = _OS_NAME.startsWith("os/2") || _OS_NAME.startsWith("os2");
         isMac = _OS_NAME.startsWith("mac");
