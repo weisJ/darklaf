@@ -26,9 +26,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.beans.PropertyChangeListener;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicToolBarUI;
 
 import com.github.weisj.darklaf.listener.MouseResponder;
@@ -146,6 +149,27 @@ public class DarkToolBarUI extends BasicToolBarUI {
     protected void installDefaults() {
         super.installDefaults();
         background = UIManager.getColor("ToolBar.background");
+
+        // ToolBar#getMargin automatically initializes the margins field if non null.
+        // Using the listener we can obtain the actual original value.
+        AtomicReference<Insets> margin = new AtomicReference<>();
+        PropertyChangeListener changeListener = e -> margin.set((Insets) e.getOldValue());
+        toolBar.addPropertyChangeListener("margin", changeListener);
+        toolBar.setMargin(null);
+        toolBar.removePropertyChangeListener("margin", changeListener);
+        toolBar.setMargin(margin.get());
+
+        if (margin.get() == null || margin.get() instanceof UIResource) {
+            toolBar.setMargin(UIManager.getInsets("ToolBar.margins"));
+        }
+    }
+
+    @Override
+    protected void uninstallDefaults() {
+        super.uninstallDefaults();
+        if (toolBar.getMargin() instanceof UIResource) {
+            toolBar.setMargin(null);
+        }
     }
 
     @Override
