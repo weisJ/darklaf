@@ -577,22 +577,26 @@ public class ThemeSettingsPanel extends JPanel {
 
         @Override
         public void setAccentColorFollowsSystem(final boolean accentColorFollowsSystem) {
-            ThemeSettingsPanel.this.accentColorFollowsSystem.setSelected(accentColorFollowsSystem);
+            ThemeSettingsPanel.this.accentColorFollowsSystem
+                    .setSelected(accentColorFollowsSystem && isSystemAccentColorSupported(false));
         }
 
         @Override
         public void setFontSizeFollowsSystem(final boolean fontSizeFollowsSystem) {
-            ThemeSettingsPanel.this.fontSizeFollowsSystem.setSelected(fontSizeFollowsSystem);
+            ThemeSettingsPanel.this.fontSizeFollowsSystem
+                    .setSelected(fontSizeFollowsSystem && isSystemFontSizeSupported(false));
         }
 
         @Override
         public void setSelectionColorFollowsSystem(final boolean selectionColorFollowsSystem) {
-            ThemeSettingsPanel.this.selectionColorFollowsSystem.setSelected(selectionColorFollowsSystem);
+            ThemeSettingsPanel.this.selectionColorFollowsSystem
+                    .setSelected(selectionColorFollowsSystem && isSystemSelectionColorSupported(false));
         }
 
         @Override
         public void setThemeFollowsSystem(final boolean themeFollowsSystem) {
-            ThemeSettingsPanel.this.themeFollowsSystem.setSelected(themeFollowsSystem);
+            ThemeSettingsPanel.this.themeFollowsSystem
+                    .setSelected(themeFollowsSystem && isSystemThemeSupported(false));
         }
 
         @Override

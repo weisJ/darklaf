@@ -231,20 +231,40 @@ public class SettingsConfiguration {
     }
 
     public boolean isSystemAccentColorSupported() {
-        return isSystemPreferencesEnabled() && ThemePreferencesHandler.getSharedInstance().supportsNativeAccentColor();
+        return isSystemAccentColorSupported(true);
     }
 
     public boolean isSystemFontSizeSupported() {
-        return isSystemPreferencesEnabled() && ThemePreferencesHandler.getSharedInstance().supportsNativeFontSize();
+        return isSystemFontSizeSupported(true);
     }
 
     public boolean isSystemSelectionColorSupported() {
-        return isSystemPreferencesEnabled()
-                && ThemePreferencesHandler.getSharedInstance().supportsNativeSelectionColor();
+        return isSystemSelectionColorSupported(true);
     }
 
     public boolean isSystemThemeSupported() {
-        return isSystemPreferencesEnabled() && ThemePreferencesHandler.getSharedInstance().supportsNativeTheme();
+        return isSystemThemeSupported(true);
+    }
+
+    protected final boolean isSystemAccentColorSupported(final boolean checkSystemPreferencesEnabled) {
+        return (!checkSystemPreferencesEnabled || isSystemPreferencesEnabled())
+                && ThemePreferencesHandler.getSharedInstance().supportsNativeAccentColor();
+
+    }
+
+    protected final boolean isSystemFontSizeSupported(final boolean checkSystemPreferencesEnabled) {
+        return (!checkSystemPreferencesEnabled || isSystemPreferencesEnabled())
+                && ThemePreferencesHandler.getSharedInstance().supportsNativeFontSize();
+    }
+
+    protected final boolean isSystemSelectionColorSupported(final boolean checkSystemPreferencesEnabled) {
+        return (!checkSystemPreferencesEnabled || isSystemPreferencesEnabled())
+                && ThemePreferencesHandler.getSharedInstance().supportsNativeSelectionColor();
+    }
+
+    protected final boolean isSystemThemeSupported(final boolean checkSystemPreferencesEnabled) {
+        return (!checkSystemPreferencesEnabled || isSystemPreferencesEnabled())
+                && ThemePreferencesHandler.getSharedInstance().supportsNativeTheme();
     }
 
     @Override
