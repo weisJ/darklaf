@@ -86,7 +86,7 @@ public class ThemeSettingsPanel extends JPanel {
         add(createMonitorSettings(), BorderLayout.SOUTH);
     }
 
-    public void loadConfiguration(final SettingsConfiguration configuration) {
+    protected void loadConfiguration(final SettingsConfiguration configuration) {
         themeComboBox.setModel(LafManager.getThemeComboBoxModel());
         settingsConfiguration.load(configuration);
         settingsConfiguration.setAccentColorRule(settingsConfiguration.getAccentColorRule());
@@ -148,8 +148,12 @@ public class ThemeSettingsPanel extends JPanel {
         }
     }
 
-    public void updateConfiguration() {
+    protected void updateConfiguration() {
         ThemeSettings.getInstance().setConfiguration(settingsConfiguration);
+    }
+
+    public SettingsConfiguration getSettingsConfiguration() {
+        return settingsConfiguration;
     }
 
     private boolean updateButtonGroup(final ButtonGroup bg, final Color currentColor,
@@ -437,11 +441,6 @@ public class ThemeSettingsPanel extends JPanel {
         while (buttons.hasMoreElements()) {
             buttons.nextElement().setEnabled(enabled);
         }
-    }
-
-    private ColoredRadioButton addColoredButton(final ButtonGroup bg, final JComponent parent, final Color color,
-            final String tipText) {
-        return addColoredButton(bg, parent, color, color, tipText);
     }
 
     private ColoredRadioButton addColoredButton(final ButtonGroup bg, final JComponent parent, final Color color,

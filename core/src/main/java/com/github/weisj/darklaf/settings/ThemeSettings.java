@@ -143,7 +143,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      *
      * @return the settings panel.
      */
-    public JComponent getSettingsPanel() {
+    public ThemeSettingsPanel getSettingsPanel() {
         return settingsPanel.get();
     }
 
