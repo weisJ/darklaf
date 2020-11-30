@@ -27,6 +27,8 @@ import java.util.*;
 import java.util.function.Supplier;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.plaf.SliderUI;
 
 import com.github.weisj.darklaf.LafManager;
@@ -92,6 +94,24 @@ public class ThemeSettingsPanel extends JPanel {
         update();
     }
 
+    /**
+     * Add a listener which gets notified when a !potential! change is made to the settings.
+     *
+     * @param listener the listener to add.
+     */
+    public void addChangeListener(final ChangeListener listener) {
+        listenerList.add(ChangeListener.class, listener);
+    }
+
+    /**
+     * Removes a change listener.
+     *
+     * @param listener the listener to remove.
+     */
+    public void removeChangeListener(final ChangeListener listener) {
+        listenerList.remove(ChangeListener.class, listener);
+    }
+
     private void update() {
         boolean enabled = !enabledSystemPreferences.getTristateModel().isDeselected();
 
@@ -110,6 +130,18 @@ public class ThemeSettingsPanel extends JPanel {
                 && settingsConfiguration.getSelectedTheme().supportsCustomSelectionColor());
         themeComboBox.setEnabled(!settingsConfiguration.isThemeFollowsSystem());
         fontSlider.setEnabled(!settingsConfiguration.isFontSizeFollowsSystem());
+
+        Object[] listeners = listenerList.getListenerList();
+        ChangeEvent e = null;
+
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            if (listeners[i] == ChangeEvent.class) {
+                if (e == null) {
+                    e = new ChangeEvent(this);
+                }
+                ((ChangeListener) listeners[i + 1]).stateChanged(e);
+            }
+        }
     }
 
     public void updateConfiguration() {
@@ -287,6 +319,7 @@ public class ThemeSettingsPanel extends JPanel {
         fontSlider.setMinimum(FontSizePreset.TINY.getPercentage());
         fontSlider.setMaximum(FontSizePreset.HUGE.getPercentage());
         int tickSpacing = 25;
+        // noinspection unchecked
         Dictionary<Integer, JComponent> dict = fontSlider.createStandardLabels(tickSpacing);
         JLabel min = ((JLabel) dict.get(fontSlider.getMinimum()));
         UIUpdater.registerComponent(min);
