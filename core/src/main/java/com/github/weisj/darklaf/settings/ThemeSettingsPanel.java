@@ -57,6 +57,14 @@ public class ThemeSettingsPanel extends JPanel {
 
     private final SettingsPanelConfiguration settingsConfiguration;
 
+    private JLabel themeLabel;
+    private JLabel accentColorLabel;
+    private JLabel selectionColorLabel;
+    private JLabel fontSizeLabel;
+
+    private JComponent accentBox;
+    private JComponent selectionBox;
+
     private JCheckBox fontSizeFollowsSystem;
     private JCheckBox accentColorFollowsSystem;
     private JCheckBox selectionColorFollowsSystem;
@@ -85,7 +93,8 @@ public class ThemeSettingsPanel extends JPanel {
     protected void init() {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        add(createGeneralSettings(), BorderLayout.CENTER);
+        createGeneralSettings();
+        setLabelAlignment(GroupLayout.Alignment.TRAILING);
         add(createMonitorSettings(), BorderLayout.SOUTH);
     }
 
@@ -179,9 +188,9 @@ public class ThemeSettingsPanel extends JPanel {
         return null;
     }
 
-    private Component createGeneralSettings() {
+    private void createGeneralSettings() {
         Locale l = getLocale();
-        JLabel themeLabel = new JLabel(UIManager.getString("label_theme", l));
+        themeLabel = new JLabel(UIManager.getString("label_theme", l));
         themeComboBox = new JComboBox<>(LafManager.getThemeComboBoxModel());
         themeComboBox.setRenderer(LafManager.getThemeListCellRenderer());
         themeComboBox.setSelectedItem(LafManager.getTheme());
@@ -199,8 +208,8 @@ public class ThemeSettingsPanel extends JPanel {
         Color currentAccentColor = LafManager.getTheme().getAccentColorRule().getAccentColor();
         Color currentSelectionColor = LafManager.getTheme().getAccentColorRule().getSelectionColor();
 
-        JComponent selectionBox = Box.createHorizontalBox();
-        JLabel selectionColorLabel = new JLabel(UIManager.getString("label_selection_color", l));
+        selectionBox = Box.createHorizontalBox();
+        selectionColorLabel = new JLabel(UIManager.getString("label_selection_color", l));
         selectionColorLabel.setLabelFor(selectionBox);
 
         bgSelection = new ButtonGroup();
@@ -226,8 +235,8 @@ public class ThemeSettingsPanel extends JPanel {
         customSelection = addCustomButton(bgSelection, selectionBox, currentSelectionColor, defaultSelectionColor,
                 UIManager.getString("color_custom", l));
 
-        JComponent accentBox = Box.createHorizontalBox();
-        JLabel accentColorLabel = new JLabel(UIManager.getString("label_accent_color", l));
+        accentBox = Box.createHorizontalBox();
+        accentColorLabel = new JLabel(UIManager.getString("label_accent_color", l));
         accentColorLabel.setLabelFor(accentBox);
 
         defaultAccentColor = createDefaultColor("themeAccentColor");
@@ -254,15 +263,18 @@ public class ThemeSettingsPanel extends JPanel {
                 UIManager.getString("color_custom", l));
 
         fontSlider = createFontSlider();
-        JLabel fontSizeLabel = new JLabel(UIManager.getString("label_font_size", l));
+        fontSizeLabel = new JLabel(UIManager.getString("label_font_size", l));
         fontSizeLabel.setLabelFor(fontSlider);
+    }
 
+    public void setLabelAlignment(final GroupLayout.Alignment alignment) {
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(BorderFactory.createTitledBorder(UIManager.getString("title_general", l)));
+        panel.setBorder(BorderFactory.createTitledBorder(UIManager.getString("title_general", getLocale())));
         panel.add(LayoutHelper.createTwoColumnPanel(
-                new JLabel[] {themeLabel, accentColorLabel, selectionColorLabel, fontSizeLabel},
-                new JComponent[] {themeComboBox, accentBox, selectionBox, fontSlider}));
-        return panel;
+            new JLabel[] {themeLabel, accentColorLabel, selectionColorLabel, fontSizeLabel},
+            new JComponent[] {themeComboBox, accentBox, selectionBox, fontSlider},
+            alignment, GroupLayout.Alignment.LEADING));
+        add(panel, BorderLayout.CENTER);
     }
 
     protected ColoredRadioButton addCustomButton(final ButtonGroup bg, final JComponent parent,
