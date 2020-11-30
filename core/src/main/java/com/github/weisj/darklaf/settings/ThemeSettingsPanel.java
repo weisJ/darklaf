@@ -270,11 +270,13 @@ public class ThemeSettingsPanel extends JPanel {
     public void setLabelAlignment(final GroupLayout.Alignment alignment) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createTitledBorder(UIManager.getString("title_general", getLocale())));
+        panel.setBorder(BorderFactory.createTitledBorder("Test"));
         panel.add(LayoutHelper.createTwoColumnPanel(
-            new JLabel[] {themeLabel, accentColorLabel, selectionColorLabel, fontSizeLabel},
-            new JComponent[] {themeComboBox, accentBox, selectionBox, fontSlider},
-            alignment, GroupLayout.Alignment.LEADING));
+                new JLabel[] {themeLabel, accentColorLabel, selectionColorLabel, fontSizeLabel},
+                new JComponent[] {themeComboBox, accentBox, selectionBox, fontSlider},
+                alignment, GroupLayout.Alignment.LEADING));
         add(panel, BorderLayout.CENTER);
+        panel.getPreferredSize(); // Forces constraints to be recalculated.
     }
 
     protected ColoredRadioButton addCustomButton(final ButtonGroup bg, final JComponent parent,

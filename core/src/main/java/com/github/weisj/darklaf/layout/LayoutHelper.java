@@ -101,17 +101,19 @@ public class LayoutHelper {
         layout.setVerticalGroup(verticalGroup);
 
         int p = GroupLayout.PREFERRED_SIZE;
-        // add the components to the groups
-        for (JComponent label : left) {
-            verticalLabelGroup.addComponent(label, p, p, p);
-        }
-        for (JComponent field : right) {
-            verticalComponentGroup.addComponent(field, p, p, p);
-        }
         for (int i = 0; i < left.size(); i++) {
+            JComponent lComp = left.get(i);
+            JComponent rComp = right.get(i);
+
+            panel.add(lComp);
+            panel.add(rComp);
+
+            verticalLabelGroup.addComponent(lComp, p, p, p);
+            verticalComponentGroup.addComponent(rComp, p, p, p);
+
             verticalGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                    .addComponent(left.get(i), p, p, p)
-                    .addComponent(right.get(i), p, p, p));
+                    .addComponent(lComp, p, p, p)
+                    .addComponent(rComp, p, p, p));
         }
         return panel;
     }
