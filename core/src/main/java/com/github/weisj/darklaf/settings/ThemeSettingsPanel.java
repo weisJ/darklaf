@@ -94,6 +94,10 @@ public class ThemeSettingsPanel extends JPanel {
         update();
     }
 
+    public void setThemeComboBoxRenderer(final ListCellRenderer<Theme> renderer) {
+        themeComboBox.setRenderer(renderer != null ? renderer : LafManager.getThemeListCellRenderer());
+    }
+
     /**
      * Add a listener which gets notified when a !potential! change is made to the settings.
      *
