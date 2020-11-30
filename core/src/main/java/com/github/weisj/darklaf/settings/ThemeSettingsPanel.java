@@ -24,6 +24,7 @@ package com.github.weisj.darklaf.settings;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.*;
+import java.util.List;
 import java.util.function.Supplier;
 
 import javax.swing.*;
@@ -74,6 +75,8 @@ public class ThemeSettingsPanel extends JPanel {
     private ColoredRadioButton customSelection;
     private ColoredRadioButton defaultSelection;
 
+    private final List<ChangeListener> listeners = new ArrayList<>();
+
     public ThemeSettingsPanel() {
         this.settingsConfiguration = new SettingsPanelConfiguration();
         init();
@@ -104,7 +107,7 @@ public class ThemeSettingsPanel extends JPanel {
      * @param listener the listener to add.
      */
     public void addChangeListener(final ChangeListener listener) {
-        listenerList.add(ChangeListener.class, listener);
+        listeners.add(listener);
     }
 
     /**
@@ -113,7 +116,7 @@ public class ThemeSettingsPanel extends JPanel {
      * @param listener the listener to remove.
      */
     public void removeChangeListener(final ChangeListener listener) {
-        listenerList.remove(ChangeListener.class, listener);
+        listeners.remove(listener);
     }
 
     private void update() {
@@ -135,15 +138,10 @@ public class ThemeSettingsPanel extends JPanel {
         themeComboBox.setEnabled(!settingsConfiguration.isThemeFollowsSystem());
         fontSlider.setEnabled(!settingsConfiguration.isFontSizeFollowsSystem());
 
-        Object[] listeners = listenerList.getListenerList();
-        ChangeEvent e = null;
-
-        for (int i = listeners.length - 2; i >= 0; i -= 2) {
-            if (listeners[i] == ChangeEvent.class) {
-                if (e == null) {
-                    e = new ChangeEvent(this);
-                }
-                ((ChangeListener) listeners[i + 1]).stateChanged(e);
+        if (!listeners.isEmpty()) {
+            ChangeEvent e = new ChangeEvent(this);
+            for (ChangeListener listener : listeners) {
+                listener.stateChanged(e);
             }
         }
     }
