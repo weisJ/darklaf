@@ -21,7 +21,9 @@
  */
 package com.github.weisj.darklaf.theme.info;
 
-public enum FontSizePreset {
+import java.io.Serializable;
+
+public enum FontSizePreset implements Serializable {
     TINY(25),
     Small(50),
     SMALL(75),

@@ -22,9 +22,10 @@
 package com.github.weisj.darklaf.theme.info;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.Objects;
 
-public class AccentColorRule {
+public class AccentColorRule implements Serializable {
 
     private static final AccentColorRule DEFAULT = new AccentColorRule(null, null);
     private final Color accentColor;

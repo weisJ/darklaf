@@ -21,13 +21,15 @@
  */
 package com.github.weisj.darklaf.settings;
 
+import java.io.Serializable;
+
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.platform.ThemePreferencesHandler;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.AccentColorRule;
 import com.github.weisj.darklaf.theme.info.FontSizeRule;
 
-public class SettingsConfiguration {
+public class SettingsConfiguration implements Serializable {
 
     private boolean isSystemPreferencesEnabled;
     private boolean isAccentColorFollowsSystem;

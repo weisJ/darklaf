@@ -21,7 +21,9 @@
  */
 package com.github.weisj.darklaf.theme.info;
 
-public class FontSizeRule {
+import java.io.Serializable;
+
+public class FontSizeRule implements Serializable {
     private static final FontSizeRule DEFAULT = new FontSizeRule(AdjustmentType.NO_ADJUSTMENT, 1f);
 
     private final AdjustmentType type;
@@ -115,7 +117,7 @@ public class FontSizeRule {
         return result;
     }
 
-    public enum AdjustmentType {
+    public enum AdjustmentType implements Serializable {
         NO_ADJUSTMENT {
             @Override
             public float adjustSize(final float size, final float relative) {

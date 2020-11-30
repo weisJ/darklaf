@@ -22,6 +22,7 @@
 package com.github.weisj.darklaf.theme;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Properties;
@@ -37,7 +38,7 @@ import com.github.weisj.darklaf.theme.laf.RenamedTheme;
 import com.github.weisj.darklaf.util.LogUtil;
 
 /** @author Jannis Weis */
-public abstract class Theme implements Comparable<Theme>, Comparator<Theme> {
+public abstract class Theme implements Comparable<Theme>, Comparator<Theme>, Serializable {
     private static final Logger LOGGER = LogUtil.getLogger(Theme.class);
 
     private final FontSizeRule fontSizeRule;

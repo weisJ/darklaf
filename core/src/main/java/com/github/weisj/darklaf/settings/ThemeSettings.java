@@ -407,8 +407,28 @@ public class ThemeSettings implements ThemePreferenceListener {
         LOGGER.fine(() -> "Saving settings " + savedConfiguration);
     }
 
+    /**
+     * Sets the current {@link SettingsConfiguration}.
+     *
+     * @see #exportConfiguration()
+     * @param configuration the {@link SettingsConfiguration}.
+     */
     public void setConfiguration(final SettingsConfiguration configuration) {
         this.currentConfiguration.load(configuration);
+        updateSettingsPanel();
+        save();
+    }
+
+    /**
+     * Exports the current {@link SettingsConfiguration}.
+     *
+     * @see #setConfiguration(SettingsConfiguration)
+     * @return the current {@link SettingsConfiguration}.
+     */
+    public SettingsConfiguration exportConfiguration() {
+        SettingsConfiguration config = new SettingsConfiguration();
+        config.load(currentConfiguration);
+        return config;
     }
 
     /**
