@@ -41,6 +41,7 @@ import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyValue;
 import com.github.weisj.darklaf.util.LogUtil;
+import com.github.weisj.darklaf.util.MutableLazyValue;
 
 public class ThemeSettings implements ThemePreferenceListener {
 
@@ -48,7 +49,7 @@ public class ThemeSettings implements ThemePreferenceListener {
     private static final LazyValue<ThemeSettings> instance = new LazyValue<>(ThemeSettings::new);
     private static final LazyValue<Icon> icon = new LazyValue<>(() -> UIManager.getIcon("ThemeSettings.icon"));
 
-    private final LazyValue<ThemeSettingsPanel> settingsPanel;
+    private final MutableLazyValue<ThemeSettingsPanel> settingsPanel;
 
     private JDialog dialog;
 
@@ -88,7 +89,7 @@ public class ThemeSettings implements ThemePreferenceListener {
         LafManager.addThemePreferenceChangeListener(this);
         currentConfiguration = new DefaultSettingsConfiguration();
         savedConfiguration = new DefaultSettingsConfiguration();
-        settingsPanel = new LazyValue<>(() -> {
+        settingsPanel = new MutableLazyValue<>(() -> {
             ThemeSettingsPanel panel = new ThemeSettingsPanel();
             panel.loadConfiguration(currentConfiguration);
             return panel;
@@ -145,6 +146,18 @@ public class ThemeSettings implements ThemePreferenceListener {
      */
     public ThemeSettingsPanel getSettingsPanel() {
         return settingsPanel.get();
+    }
+
+    /**
+     * Set the shared {@link ThemeSettingsPanel}.
+     *
+     * @param panel the @link ThemeSettingsPanel}.
+     */
+    public void setThemeSettingsPanel(final ThemeSettingsPanel panel) {
+        if (panel != null) {
+            settingsPanel.set(panel);
+            panel.loadConfiguration(currentConfiguration);
+        }
     }
 
     /**

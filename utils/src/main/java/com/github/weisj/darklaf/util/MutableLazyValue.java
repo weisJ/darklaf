@@ -21,54 +21,20 @@
  */
 package com.github.weisj.darklaf.util;
 
-import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class LazyValue<T> {
+public class MutableLazyValue<T> extends LazyValue<T> {
 
-    private Supplier<T> supplier;
-    private T value;
 
-    public LazyValue(final T value) {
-        this.value = value;
+    public MutableLazyValue(final T value) {
+        super(value);
     }
 
-    public LazyValue(final Supplier<T> supplier) {
-        this.supplier = supplier;
+    public MutableLazyValue(final Supplier<T> supplier) {
+        super(supplier);
     }
 
-    public boolean isInitialized() {
-        return supplier == null;
-    }
-
-    protected T load() {
-        if (supplier != null) {
-            T obj = supplier.get();
-            supplier = null;
-            return obj;
-        }
-        return value;
-    }
-
-    protected void set(final T value) {
-        this.value = value;
-    }
-
-    public void ifPresent(final Consumer<T> action) {
-        if (isInitialized() && value != null) {
-            action.accept(value);
-        }
-    }
-
-    public void ifPresentNullable(final Consumer<Optional<T>> action) {
-        if (isInitialized()) {
-            action.accept(Optional.ofNullable(value));
-        }
-    }
-
-    public T get() {
-        if (value == null) set(load());
-        return value;
+    public void set(final T value) {
+        super.set(value);
     }
 }
