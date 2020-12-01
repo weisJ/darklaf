@@ -27,6 +27,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.InsetsUIResource;
 
+import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 public interface VisualPaddingProvider {
@@ -36,7 +37,7 @@ public interface VisualPaddingProvider {
     Insets getVisualPaddings(Component component);
 
     static void updateProperty(final JComponent c) {
-        Border b = c.getBorder();
+        Border b = DarkUIUtil.getUnwrappedBorder(c);
         if (b instanceof VisualPaddingProvider) {
             Insets ins = ((VisualPaddingProvider) b).getVisualPaddings(c);
             PropertyUtil.installProperty(c, VISUAL_PADDING_PROP,

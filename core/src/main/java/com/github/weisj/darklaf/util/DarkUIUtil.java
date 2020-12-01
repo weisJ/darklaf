@@ -35,6 +35,7 @@ import java.util.function.Predicate;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.InsetsUIResource;
 import javax.swing.table.TableCellEditor;
@@ -59,6 +60,14 @@ public final class DarkUIUtil {
     public static final IconLoader ICON_LOADER = IconLoader.get(IconLoader.class);
     private static final Rectangle iconRect = new Rectangle();
     private static final Rectangle textRect = new Rectangle();
+
+    public static Border getUnwrappedBorder(final JComponent c) {
+        Border b = c.getBorder();
+        while (b instanceof CompoundBorder) {
+            b = ((CompoundBorder) b).getOutsideBorder();
+        }
+        return b;
+    }
 
     public static Rectangle applyInsets(final Rectangle rect, final Insets insets) {
         if (insets != null && rect != null) {
