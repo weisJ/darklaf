@@ -30,13 +30,14 @@ import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.ui.DividedWidgetPainter;
+import com.github.weisj.darklaf.ui.VisualPaddingProvider;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /**
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
-public class DarkSpinnerBorder implements Border, UIResource {
+public class DarkSpinnerBorder implements Border, UIResource, VisualPaddingProvider {
 
     protected final Color focusBorderColor;
     protected final Color borderColor;
@@ -104,5 +105,10 @@ public class DarkSpinnerBorder implements Border, UIResource {
     @Override
     public boolean isBorderOpaque() {
         return true;
+    }
+
+    @Override
+    public Insets getVisualPaddings(final Component component) {
+        return getBorderInsets(component);
     }
 }

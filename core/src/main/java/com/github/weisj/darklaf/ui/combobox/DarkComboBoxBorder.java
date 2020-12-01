@@ -30,9 +30,10 @@ import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.DividedWidgetPainter;
+import com.github.weisj.darklaf.ui.VisualPaddingProvider;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 
-public class DarkComboBoxBorder implements Border, UIResource {
+public class DarkComboBoxBorder implements Border, UIResource, VisualPaddingProvider {
 
     protected final DarkComboBoxUI ui;
     protected final int borderSize;
@@ -106,6 +107,11 @@ public class DarkComboBoxBorder implements Border, UIResource {
             return new InsetsUIResource(0, 0, 0, 0);
         }
         return new InsetsUIResource(borderSize, borderSize, borderSize, borderSize);
+    }
+
+    @Override
+    public Insets getVisualPaddings(final Component component) {
+        return getBorderInsets(component);
     }
 
     @Override
