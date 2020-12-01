@@ -35,6 +35,7 @@ import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.icons.RotatableIcon;
+import com.github.weisj.darklaf.ui.VisualPaddingProvider;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
@@ -115,6 +116,12 @@ public class DarkSliderUI extends BasicSliderUI {
     }
 
     @Override
+    public void installUI(final JComponent c) {
+        super.installUI(c);
+        updateVisualPaddings();
+    }
+
+    @Override
     protected TrackListener createTrackListener(final JSlider slider) {
         return new SnapTrackListener();
     }
@@ -132,6 +139,13 @@ public class DarkSliderUI extends BasicSliderUI {
 
     protected DarkSliderListener createSliderListener() {
         return new DarkSliderListener(this, slider);
+    }
+
+    protected void updateVisualPaddings() {
+        calculateGeometry();
+        Rectangle r = new Rectangle(contentRect);
+        Insets ins = new Insets(r.y, r.x, slider.getHeight() - (r.y + r.height), slider.getWidth() - (r.x + r.width));
+        VisualPaddingProvider.updateProperty(slider, ins);
     }
 
     @Override

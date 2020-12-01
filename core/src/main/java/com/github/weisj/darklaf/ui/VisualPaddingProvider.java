@@ -39,7 +39,14 @@ public interface VisualPaddingProvider {
     static void updateProperty(final JComponent c) {
         Border b = DarkUIUtil.getUnwrappedBorder(c);
         if (b instanceof VisualPaddingProvider) {
-            Insets ins = ((VisualPaddingProvider) b).getVisualPaddings(c);
+            updateProperty(c, ((VisualPaddingProvider) b).getVisualPaddings(c));
+        } else {
+            updateProperty(c, null);
+        }
+    }
+
+    static void updateProperty(final JComponent c, final Insets ins) {
+        if (ins != null) {
             PropertyUtil.installProperty(c, VISUAL_PADDING_PROP,
                     new InsetsUIResource(ins.top, ins.left, ins.bottom, ins.right));
         } else {

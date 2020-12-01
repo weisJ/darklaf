@@ -29,6 +29,8 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.util.PropertyKey;
+
 public class DarkSliderListener extends MouseAdapter implements PropertyChangeListener {
 
     private final DarkSliderUI ui;
@@ -73,10 +75,11 @@ public class DarkSliderListener extends MouseAdapter implements PropertyChangeLi
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
-        if (DarkSliderUI.KEY_VARIANT.equals(key)) {
-            slider.repaint();
-        } else if (DarkSliderUI.KEY_SHOW_VOLUME_ICON.equals(key)) {
-            ui.calculateGeometry();
+        if (DarkSliderUI.KEY_VARIANT.equals(key)
+                || DarkSliderUI.KEY_SHOW_VOLUME_ICON.equals(key)
+                || PropertyKey.ORIENTATION.equals(key)
+                || PropertyKey.COMPONENT_ORIENTATION.equals(key)) {
+            ui.updateVisualPaddings();
             slider.repaint();
         }
     }
