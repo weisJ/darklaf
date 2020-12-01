@@ -25,7 +25,6 @@ import java.util.function.Supplier;
 
 public class MutableLazyValue<T> extends LazyValue<T> {
 
-
     public MutableLazyValue(final T value) {
         super(value);
     }
@@ -36,5 +35,10 @@ public class MutableLazyValue<T> extends LazyValue<T> {
 
     public void set(final T value) {
         super.set(value);
+    }
+
+    @Override
+    protected boolean discardSupplierOnLoad() {
+        return false;
     }
 }

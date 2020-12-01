@@ -39,16 +39,22 @@ public class LazyValue<T> {
     }
 
     public boolean isInitialized() {
-        return supplier == null;
+        return discardSupplierOnLoad() ? supplier == null : value != null;
     }
 
     protected T load() {
         if (supplier != null) {
             T obj = supplier.get();
-            supplier = null;
+            if (discardSupplierOnLoad()) {
+                supplier = null;
+            }
             return obj;
         }
         return value;
+    }
+
+    protected boolean discardSupplierOnLoad() {
+        return true;
     }
 
     protected void set(final T value) {
