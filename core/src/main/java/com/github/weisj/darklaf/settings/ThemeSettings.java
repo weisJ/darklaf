@@ -401,7 +401,12 @@ public class ThemeSettings implements ThemePreferenceListener {
 
     /** Saves the settings. */
     public void save() {
-        fetchFromSettingsPanel();
+        save(true);
+    }
+
+    /** Saves the settings. */
+    private void save(final boolean fetchFromPanel) {
+        if (fetchFromPanel) fetchFromSettingsPanel();
         LafManager.enabledPreferenceChangeReporting(currentConfiguration.isSystemPreferencesEnabled());
         savedConfiguration.load(currentConfiguration);
         LOGGER.fine(() -> "Saving settings " + savedConfiguration);
@@ -416,7 +421,7 @@ public class ThemeSettings implements ThemePreferenceListener {
     public void setConfiguration(final SettingsConfiguration configuration) {
         this.currentConfiguration.load(configuration);
         updateSettingsPanel();
-        save();
+        save(false);
     }
 
     /**
