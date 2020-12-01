@@ -70,6 +70,19 @@ public final class DarkUIUtil {
         return rect;
     }
 
+    public static Insets invert(final Insets ins) {
+        return scale(ins, -1);
+    }
+
+    public static Insets scale(final Insets ins, final int factor) {
+        if (ins == null) return null;
+        ins.left *= factor;
+        ins.right *= factor;
+        ins.top *= factor;
+        ins.bottom *= factor;
+        return ins;
+    }
+
     public static Insets addInsets(final Insets ins1, final Insets ins2, final boolean createNew) {
         if (createNew) {
             return addInsets(addInsets(new Insets(0, 0, 0, 0), ins1), ins2);

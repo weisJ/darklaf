@@ -32,6 +32,7 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicButtonListener;
 import javax.swing.plaf.metal.MetalRadioButtonUI;
 
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.graphics.GraphicsContext;
@@ -51,7 +52,6 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
     protected Dimension size = new Dimension();
     protected RectangularShape hitArea;
     protected JToggleButton radioButton;
-    protected int iconBaselineOffset;
 
     protected String displayString;
 
@@ -73,7 +73,6 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
     public void installDefaults(final AbstractButton b) {
         super.installDefaults(b);
         LookAndFeel.installProperty(b, PropertyKey.OPAQUE, false);
-        iconBaselineOffset = UIManager.getInt(getPropertyPrefix() + "iconBaselineOffset");
         hitArea = new Rectangle();
         installIcons();
         radioButton.setLayout(createLayout());
@@ -145,6 +144,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
             }
         }
         config.restore();
+
         if (displayString != null) {
             paintText(g, b, textRect, displayString, fm, getDisabledTextColor());
         }
@@ -231,13 +231,6 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
             hitArea.setFrame(0, 0, 0, 0);
         } else if (DarkToggleButtonUI.KEY_CLEAR_HIT_AREA.equals(key)) {
             hitArea.setFrame(0, 0, 0, 0);
-        } else if (KEY_VERTICAL_ICON_OFFSET.equals(key)) {
-            Object obj = evt.getNewValue();
-            if (obj instanceof Integer) {
-                iconBaselineOffset = (Integer) obj;
-            } else {
-                iconBaselineOffset = UIManager.getInt(getPropertyPrefix() + "iconBaselineOffset");
-            }
         } else if (PropertyKey.BORDER.equals(key)) {
             hitArea.setFrame(0, 0, 0, 0);
         }
@@ -281,7 +274,6 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
             String text = SwingUtilities.layoutCompoundLabel(b, fm, b.getText(), icon, b.getVerticalAlignment(),
                     b.getHorizontalAlignment(), b.getVerticalTextPosition(), b.getHorizontalTextPosition(), viewRect,
                     iconRect, textRect, b.getIconTextGap());
-            iconRect.y += iconBaselineOffset;
             if (ToggleButtonConstants.isInCell(b)) {
                 hitArea = calculateHitArea();
             } else {

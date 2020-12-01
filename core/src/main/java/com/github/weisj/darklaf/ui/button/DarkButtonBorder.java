@@ -30,12 +30,13 @@ import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.ui.VisualPaddingProvider;
 import com.github.weisj.darklaf.util.AlignmentExt;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /** @author Jannis Weis */
-public class DarkButtonBorder implements Border, UIResource {
+public class DarkButtonBorder implements Border, UIResource, VisualPaddingProvider {
 
     private final Color focusBorderColor;
     private final Color defaultBorderColor;
@@ -282,5 +283,10 @@ public class DarkButtonBorder implements Border, UIResource {
         ins.left -= insetMask.left;
         ins.right -= insetMask.right;
         return ins;
+    }
+
+    @Override
+    public Insets getVisualPaddings(final Component c) {
+        return getBorderInsets(c);
     }
 }

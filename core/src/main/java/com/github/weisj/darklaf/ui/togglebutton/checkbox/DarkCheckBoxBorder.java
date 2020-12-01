@@ -27,10 +27,15 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.UIResource;
 
+import com.github.weisj.darklaf.ui.VisualPaddingProvider;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 /** @author Jannis Weis */
-public class DarkCheckBoxBorder extends EmptyBorder implements UIResource, ToggleButtonConstants {
+public class DarkCheckBoxBorder extends EmptyBorder implements UIResource, ToggleButtonConstants,
+        VisualPaddingProvider {
+
+    private final Insets visualPadding = UIManager.getInsets("CheckBox.visualInsets");
 
     public DarkCheckBoxBorder() {
         super(UIManager.getInsets("CheckBox.borderInsets"));
@@ -43,5 +48,10 @@ public class DarkCheckBoxBorder extends EmptyBorder implements UIResource, Toggl
             return insets;
         }
         return super.getBorderInsets(c, insets);
+    }
+
+    @Override
+    public Insets getVisualPaddings(final Component c) {
+        return DarkUIUtil.addInsets(getBorderInsets(), visualPadding);
     }
 }

@@ -41,7 +41,6 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements Tog
     });
 
     protected MenuItemLayoutDelegate layoutDelegate = new ToggleButtonMenuItemLayoutDelegate(null);
-    protected int iconBaselineOffset;
     private Icon stateIcon;
 
     public static ComponentUI createUI(final JComponent c) {
@@ -56,7 +55,6 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements Tog
     @Override
     public void installDefaults() {
         super.installDefaults();
-        iconBaselineOffset = UIManager.getInt(getPropertyPrefix() + ".iconBaselineOffset");
         acceleratorFont = UIManager.getFont("MenuItem.font");
         acceleratorForeground = UIManager.getColor("MenuItem.foreground");
         acceleratorSelectionForeground = UIManager.getColor("MenuItem.selectionForeground");
@@ -100,7 +98,7 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements Tog
             rect.y = lr.getIconRect().y;
             rect.height = lr.getIconRect().height;
         }
-        getStateIcon(mi).paintIcon(mi, g2, rect.x, rect.y + iconBaselineOffset);
+        getStateIcon(mi).paintIcon(mi, g2, rect.x, rect.y);
     }
 
     protected Icon getStateIcon(final AbstractButton b) {

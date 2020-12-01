@@ -48,10 +48,12 @@ import com.github.weisj.darklaf.theme.info.AccentColorRule;
 import com.github.weisj.darklaf.theme.info.FontSizePreset;
 import com.github.weisj.darklaf.theme.info.FontSizeRule;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
+import com.github.weisj.darklaf.ui.VisualPaddingProvider;
 import com.github.weisj.darklaf.ui.combobox.ComboBoxConstants;
 import com.github.weisj.darklaf.ui.slider.DarkSliderUI;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
 import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class ThemeSettingsPanel extends JPanel {
 
@@ -432,7 +434,9 @@ public class ThemeSettingsPanel extends JPanel {
 
         Insets ins = new Insets(insets.top, insets.left, insets.bottom, insets.right);
         if (alignment == GroupLayout.Alignment.LEADING) {
-            ins.left -= enabledSystemPreferences.getInsets().left;
+            Insets padding = ((VisualPaddingProvider) enabledSystemPreferences.getBorder())
+                    .getVisualPaddings(enabledSystemPreferences);
+            ins = DarkUIUtil.addInsets(ins, DarkUIUtil.invert(padding));
         }
 
         JPanel panel = new JPanel(new BorderLayout());

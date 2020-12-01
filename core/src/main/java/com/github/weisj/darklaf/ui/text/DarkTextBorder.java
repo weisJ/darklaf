@@ -33,11 +33,12 @@ import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.Outline;
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.ui.VisualPaddingProvider;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /** @author Jannis Weis */
-public class DarkTextBorder implements Border, UIResource {
+public class DarkTextBorder implements Border, UIResource, VisualPaddingProvider {
 
     protected final Color errorBorderColor;
     protected final Color focusErrorBorderColor;
@@ -150,5 +151,10 @@ public class DarkTextBorder implements Border, UIResource {
     @Override
     public boolean isBorderOpaque() {
         return false;
+    }
+
+    @Override
+    public Insets getVisualPaddings(final Component component) {
+        return getBorderInsets(component);
     }
 }

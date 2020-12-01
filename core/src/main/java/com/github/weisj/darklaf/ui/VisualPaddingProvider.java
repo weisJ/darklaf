@@ -19,39 +19,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.ui.togglebutton.radiobutton;
+package com.github.weisj.darklaf.ui;
 
 import java.awt.*;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.plaf.UIResource;
-
-import com.github.weisj.darklaf.ui.VisualPaddingProvider;
-import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-
-/** @author Jannis Weis */
-public class DarkRadioButtonBorder extends EmptyBorder implements UIResource, ToggleButtonConstants,
-        VisualPaddingProvider {
-
-    private final Insets visualPadding = UIManager.getInsets("RadioButton.visualInsets");
-
-    public DarkRadioButtonBorder() {
-        super(UIManager.getInsets("RadioButton.borderInsets"));
-    }
-
-    @Override
-    public Insets getBorderInsets(final Component c, final Insets insets) {
-        if (ToggleButtonConstants.isInCell(c)) {
-            insets.set(0, 0, 0, 0);
-            return insets;
-        }
-        return super.getBorderInsets(c, insets);
-    }
-
-    @Override
-    public Insets getVisualPaddings(final Component c) {
-        return DarkUIUtil.addInsets(getBorderInsets(c), visualPadding);
-    }
+public interface VisualPaddingProvider {
+    Insets getVisualPaddings(Component component);
 }
