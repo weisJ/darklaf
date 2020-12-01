@@ -37,6 +37,7 @@ import javax.swing.text.JTextComponent;
 
 import com.github.weisj.darklaf.components.ArrowButton;
 import com.github.weisj.darklaf.ui.DividedWidgetPainter;
+import com.github.weisj.darklaf.ui.VisualPaddingListener;
 import com.github.weisj.darklaf.ui.list.DarkDefaultListCellRenderer;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
@@ -51,6 +52,7 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants {
 
     protected DarkComboBoxListener comboBoxListener;
+    protected VisualPaddingListener visualPaddingListener;
 
     protected int arcSize;
     protected int borderSize;
@@ -104,6 +106,8 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         comboBoxListener = createComboBoxListener();
         comboBox.addMouseListener(comboBoxListener);
         comboBox.addPropertyChangeListener(comboBoxListener);
+        visualPaddingListener = new VisualPaddingListener();
+        comboBox.addPropertyChangeListener(visualPaddingListener);
     }
 
     protected DarkComboBoxListener createComboBoxListener() {
@@ -116,6 +120,8 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         comboBox.removeMouseListener(comboBoxListener);
         comboBox.removePropertyChangeListener(comboBoxListener);
         comboBoxListener = null;
+        comboBox.removePropertyChangeListener(visualPaddingListener);
+        visualPaddingListener = null;
     }
 
     public JComboBox<?> getComboBox() {

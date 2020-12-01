@@ -67,8 +67,14 @@ public class PropertyUtil {
         }
     }
 
+    public static void uninstallProperty(final JComponent c, final String key) {
+        installProperty(c, key, null);
+    }
+
     public static void installProperty(final JComponent c, final String key, final Object value) {
-        if (c.getClientProperty(key) == null) {
+        if (c == null) return;
+        Object current = c.getClientProperty(key);
+        if (current == null || current instanceof UIResource) {
             c.putClientProperty(key, value);
         }
     }

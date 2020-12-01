@@ -32,12 +32,12 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicButtonListener;
 import javax.swing.plaf.metal.MetalRadioButtonUI;
 
-import com.github.weisj.darklaf.graphics.PaintUtil;
 import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.StringPainter;
+import com.github.weisj.darklaf.ui.VisualPaddingListener;
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonFocusNavigationActions;
@@ -58,6 +58,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
     private Icon stateIcon;
     protected BasicButtonListener buttonListener;
     protected ToggleButtonFocusNavigationActions keyboardAction;
+    protected VisualPaddingListener visualPaddingListener;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkRadioButtonUI();
@@ -97,6 +98,8 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
         button.addPropertyChangeListener(this);
         keyboardAction = new ToggleButtonFocusNavigationActions(button);
         keyboardAction.installActions();
+        visualPaddingListener = new VisualPaddingListener();
+        button.addPropertyChangeListener(visualPaddingListener);
     }
 
     @Override
@@ -121,6 +124,8 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
         button.removePropertyChangeListener(this);
         keyboardAction.uninstallActions();
         keyboardAction = null;
+        button.removePropertyChangeListener(visualPaddingListener);
+        visualPaddingListener = null;
     }
 
     @Override

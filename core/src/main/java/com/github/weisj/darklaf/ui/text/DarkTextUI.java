@@ -38,6 +38,7 @@ import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.graphics.StringPainter;
 import com.github.weisj.darklaf.ui.OpacityBufferedUI;
+import com.github.weisj.darklaf.ui.VisualPaddingListener;
 import com.github.weisj.darklaf.ui.cell.DarkCellBorder;
 import com.github.weisj.darklaf.ui.list.DarkListUI;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
@@ -65,6 +66,7 @@ public abstract class DarkTextUI extends BasicTextUI implements OpacityBufferedU
     protected static final String TOGGLE_INSERT = "toggle_insert";
 
     protected DarkTextListener textListener;
+    protected VisualPaddingListener visualPaddingListener;
 
     protected JTextComponent editor;
     protected DefaultTextRenderer defaultTextRenderer;
@@ -183,6 +185,8 @@ public abstract class DarkTextUI extends BasicTextUI implements OpacityBufferedU
         textListener = createTextListener();
         editor.addFocusListener(textListener);
         editor.addPropertyChangeListener(textListener);
+        visualPaddingListener = new VisualPaddingListener();
+        editor.addPropertyChangeListener(visualPaddingListener);
     }
 
     protected DarkTextListener createTextListener() {
@@ -195,6 +199,8 @@ public abstract class DarkTextUI extends BasicTextUI implements OpacityBufferedU
         editor.removeFocusListener(textListener);
         editor.removePropertyChangeListener(textListener);
         textListener = null;
+        editor.removePropertyChangeListener(visualPaddingListener);
+        visualPaddingListener = null;
     }
 
     protected Color getBackground(final JTextComponent c) {

@@ -34,6 +34,7 @@ import javax.swing.text.JTextComponent;
 
 import com.github.weisj.darklaf.components.ArrowButton;
 import com.github.weisj.darklaf.ui.DividedWidgetPainter;
+import com.github.weisj.darklaf.ui.VisualPaddingListener;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
@@ -60,6 +61,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
     private JComponent editor;
     private JButton prevButton;
     private JComponent editorComponent;
+    private VisualPaddingListener visualPaddingListener;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkSpinnerUI();
@@ -93,6 +95,8 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
         spinner.addMouseListener(spinnerListener);
         spinner.addMouseWheelListener(spinnerListener);
         spinner.addPropertyChangeListener(spinnerListener);
+        visualPaddingListener = new VisualPaddingListener();
+        spinner.addPropertyChangeListener(visualPaddingListener);
     }
 
     protected DarkSpinnerListener createSpinnerListener() {
@@ -109,6 +113,8 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
         spinner.removeMouseWheelListener(spinnerListener);
         spinner.removePropertyChangeListener(spinnerListener);
         spinnerListener = null;
+        spinner.removePropertyChangeListener(visualPaddingListener);
+        visualPaddingListener = null;
     }
 
     protected LayoutManager createLayout() {

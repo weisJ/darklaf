@@ -21,28 +21,20 @@
  */
 package com.github.weisj.darklaf.ui;
 
-import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.plaf.InsetsUIResource;
 
-import com.github.weisj.darklaf.util.PropertyUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.Types;
 
-public interface VisualPaddingProvider {
+public class VisualPaddingListener implements PropertyChangeListener {
 
-    String VISUAL_PADDING_PROP = "visualPadding";
-
-    Insets getVisualPaddings(Component component);
-
-    static void updateProperty(final JComponent c) {
-        Border b = c.getBorder();
-        if (b instanceof VisualPaddingProvider) {
-            Insets ins = ((VisualPaddingProvider) b).getVisualPaddings(c);
-            PropertyUtil.installProperty(c, VISUAL_PADDING_PROP,
-                    new InsetsUIResource(ins.top, ins.left, ins.bottom, ins.right));
-        } else {
-            PropertyUtil.uninstallProperty(c, VISUAL_PADDING_PROP);
+    @Override
+    public void propertyChange(final PropertyChangeEvent evt) {
+        if (PropertyKey.BORDER.equals(evt.getPropertyName())) {
+            VisualPaddingProvider.updateProperty(Types.safeCast(evt.getSource(), JComponent.class));
         }
     }
 }

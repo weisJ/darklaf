@@ -39,6 +39,7 @@ import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.graphics.StringPainter;
+import com.github.weisj.darklaf.ui.VisualPaddingListener;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonFocusNavigationActions;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
 import com.github.weisj.darklaf.util.AlignmentExt;
@@ -87,6 +88,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     protected int arc;
     protected int altArc;
     protected ToggleButtonFocusNavigationActions keyboardActions;
+    protected VisualPaddingListener visualPaddingListener;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkButtonUI();
@@ -146,6 +148,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         super.installListeners(b);
         keyboardActions = new ToggleButtonFocusNavigationActions(b);
         keyboardActions.installActions();
+        visualPaddingListener = new VisualPaddingListener();
+        b.addPropertyChangeListener(visualPaddingListener);
     }
 
     @Override
@@ -164,6 +168,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         super.uninstallListeners(b);
         keyboardActions.uninstallActions();
         keyboardActions = null;
+        b.removePropertyChangeListener(visualPaddingListener);
+        visualPaddingListener = null;
     }
 
     protected void validateLayout() {
