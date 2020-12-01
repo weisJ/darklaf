@@ -57,14 +57,6 @@ public class ThemeSettingsPanel extends JPanel {
 
     private final SettingsPanelConfiguration settingsConfiguration;
 
-    private JLabel themeLabel;
-    private JLabel accentColorLabel;
-    private JLabel selectionColorLabel;
-    private JLabel fontSizeLabel;
-
-    private JComponent accentBox;
-    private JComponent selectionBox;
-
     private JCheckBox fontSizeFollowsSystem;
     private JCheckBox accentColorFollowsSystem;
     private JCheckBox selectionColorFollowsSystem;
@@ -86,8 +78,7 @@ public class ThemeSettingsPanel extends JPanel {
     private final List<ChangeListener> listeners = new ArrayList<>();
 
     public ThemeSettingsPanel() {
-        this(GroupLayout.Alignment.TRAILING,
-                new Insets(0, LayoutHelper.getDefaultSpacing(), 0, LayoutHelper.getDefaultSpacing()));
+        this(GroupLayout.Alignment.TRAILING, new Insets(LayoutHelper.getDefaultSpacing(), 0, 0, 0));
     }
 
     public ThemeSettingsPanel(final GroupLayout.Alignment alignment, final Insets insets) {
@@ -98,9 +89,8 @@ public class ThemeSettingsPanel extends JPanel {
     protected void init(final GroupLayout.Alignment alignment, final Insets insets) {
         setLayout(new BorderLayout());
         setBorder(LayoutHelper.createEmptyContainerBorder());
-        createGeneralSettings();
-        setLabelAlignment(alignment, insets);
-        add(createMonitorSettings(), BorderLayout.SOUTH);
+        add(createGeneralSettings(alignment, insets), BorderLayout.CENTER);
+        add(createMonitorSettings(alignment, insets), BorderLayout.SOUTH);
     }
 
     public void loadConfiguration(final SettingsConfiguration configuration) {
@@ -192,9 +182,9 @@ public class ThemeSettingsPanel extends JPanel {
         return null;
     }
 
-    private void createGeneralSettings() {
+    private JComponent createGeneralSettings(final GroupLayout.Alignment alignment, final Insets insets) {
         Locale l = getLocale();
-        themeLabel = new JLabel(UIManager.getString("label_theme", l));
+        JLabel themeLabel = new JLabel(UIManager.getString("label_theme", l));
         themeComboBox = new JComboBox<>(LafManager.getThemeComboBoxModel());
         themeComboBox.setRenderer(LafManager.getThemeListCellRenderer());
         themeComboBox.setSelectedItem(LafManager.getTheme());
@@ -212,8 +202,8 @@ public class ThemeSettingsPanel extends JPanel {
         Color currentAccentColor = LafManager.getTheme().getAccentColorRule().getAccentColor();
         Color currentSelectionColor = LafManager.getTheme().getAccentColorRule().getSelectionColor();
 
-        selectionBox = Box.createHorizontalBox();
-        selectionColorLabel = new JLabel(UIManager.getString("label_selection_color", l));
+        JComponent selectionBox = Box.createHorizontalBox();
+        JLabel selectionColorLabel = new JLabel(UIManager.getString("label_selection_color", l));
         selectionColorLabel.setLabelFor(selectionBox);
 
         bgSelection = new ButtonGroup();
@@ -239,8 +229,8 @@ public class ThemeSettingsPanel extends JPanel {
         customSelection = addCustomButton(bgSelection, selectionBox, currentSelectionColor, defaultSelectionColor,
                 UIManager.getString("color_custom", l));
 
-        accentBox = Box.createHorizontalBox();
-        accentColorLabel = new JLabel(UIManager.getString("label_accent_color", l));
+        JComponent accentBox = Box.createHorizontalBox();
+        JLabel accentColorLabel = new JLabel(UIManager.getString("label_accent_color", l));
         accentColorLabel.setLabelFor(accentBox);
 
         defaultAccentColor = createDefaultColor("themeAccentColor");
@@ -267,21 +257,17 @@ public class ThemeSettingsPanel extends JPanel {
                 UIManager.getString("color_custom", l));
 
         fontSlider = createFontSlider();
-        fontSizeLabel = new JLabel(UIManager.getString("label_font_size", l));
+        JLabel fontSizeLabel = new JLabel(UIManager.getString("label_font_size", l));
         fontSizeLabel.setLabelFor(fontSlider);
-    }
-
-    protected void setLabelAlignment(final GroupLayout.Alignment alignment, final Insets insets) {
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder(UIManager.getString("title_general", getLocale())),
-                LayoutHelper.createEmptyBorder(insets)));
-        panel.add(LayoutHelper.createTwoColumnPanel(
+        panel.setBorder(BorderFactory.createTitledBorder(UIManager.getString("title_general", getLocale())));
+        JComponent c = LayoutHelper.createTwoColumnPanel(
                 new JLabel[] {themeLabel, accentColorLabel, selectionColorLabel, fontSizeLabel},
                 new JComponent[] {themeComboBox, accentBox, selectionBox, fontSlider},
-                alignment, GroupLayout.Alignment.LEADING));
-        add(panel, BorderLayout.CENTER);
-        panel.getPreferredSize(); // Forces constraints to be recalculated.
+                alignment, GroupLayout.Alignment.LEADING);
+        c.setBorder(LayoutHelper.createEmptyBorder(insets));
+        panel.add(c);
+        return panel;
     }
 
     protected ColoredRadioButton addCustomButton(final ButtonGroup bg, final JComponent parent,
@@ -381,7 +367,7 @@ public class ThemeSettingsPanel extends JPanel {
         return fontSlider;
     }
 
-    private Component createMonitorSettings() {
+    private Component createMonitorSettings(final GroupLayout.Alignment alignment, final Insets insets) {
         Locale l = getLocale();
         accentColorFollowsSystem = new JCheckBox(UIManager.getString("check_system_accent_color", l)) {
             @Override
@@ -444,12 +430,19 @@ public class ThemeSettingsPanel extends JPanel {
 
         enabledSystemPreferences.setSelected(LafManager.isPreferenceChangeReportingEnabled());
 
+        Insets ins = new Insets(insets.top, insets.left, insets.bottom, insets.right);
+        if (alignment == GroupLayout.Alignment.LEADING) {
+            ins.left -= enabledSystemPreferences.getInsets().left;
+        }
+
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createTitledBorder(UIManager.getString("title_monitoring", l)));
-        panel.add(LayoutHelper.createTwoColumnPanel(
+        JComponent c = LayoutHelper.createTwoColumnPanel(
                 new JComponent[] {enabledSystemPreferences, themeFollowsSystem, accentColorFollowsSystem},
                 new JComponent[] {new JLabel(), fontSizeFollowsSystem, selectionColorFollowsSystem},
-                GroupLayout.Alignment.LEADING, GroupLayout.Alignment.LEADING));
+                GroupLayout.Alignment.LEADING, GroupLayout.Alignment.LEADING);
+        c.setBorder(LayoutHelper.createEmptyBorder(ins));
+        panel.add(c);
         return panel;
     }
 
