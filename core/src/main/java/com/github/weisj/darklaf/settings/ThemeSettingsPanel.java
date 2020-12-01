@@ -103,11 +103,10 @@ public class ThemeSettingsPanel extends JPanel {
         add(createMonitorSettings(), BorderLayout.SOUTH);
     }
 
-    protected void loadConfiguration(final SettingsConfiguration configuration) {
+    public void loadConfiguration(final SettingsConfiguration configuration) {
         themeComboBox.setModel(LafManager.getThemeComboBoxModel());
         settingsConfiguration.load(configuration);
         settingsConfiguration.setAccentColorRule(settingsConfiguration.getAccentColorRule());
-
         update();
     }
 
