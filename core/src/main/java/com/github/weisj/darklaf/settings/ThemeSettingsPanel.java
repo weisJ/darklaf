@@ -86,15 +86,20 @@ public class ThemeSettingsPanel extends JPanel {
     private final List<ChangeListener> listeners = new ArrayList<>();
 
     public ThemeSettingsPanel() {
-        this.settingsConfiguration = new SettingsPanelConfiguration();
-        init();
+        this(GroupLayout.Alignment.TRAILING,
+                new Insets(0, LayoutHelper.getDefaultSpacing(), 0, LayoutHelper.getDefaultSpacing()));
     }
 
-    protected void init() {
+    public ThemeSettingsPanel(final GroupLayout.Alignment alignment, final Insets insets) {
+        this.settingsConfiguration = new SettingsPanelConfiguration();
+        init(alignment, insets);
+    }
+
+    protected void init(final GroupLayout.Alignment alignment, final Insets insets) {
         setLayout(new BorderLayout());
-        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        setBorder(LayoutHelper.createEmptyContainerBorder());
         createGeneralSettings();
-        setLabelAlignment(GroupLayout.Alignment.TRAILING);
+        setLabelAlignment(alignment, insets);
         add(createMonitorSettings(), BorderLayout.SOUTH);
     }
 
@@ -267,10 +272,11 @@ public class ThemeSettingsPanel extends JPanel {
         fontSizeLabel.setLabelFor(fontSlider);
     }
 
-    public void setLabelAlignment(final GroupLayout.Alignment alignment) {
+    protected void setLabelAlignment(final GroupLayout.Alignment alignment, final Insets insets) {
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(BorderFactory.createTitledBorder(UIManager.getString("title_general", getLocale())));
-        panel.setBorder(BorderFactory.createTitledBorder("Test"));
+        panel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder(UIManager.getString("title_general", getLocale())),
+                LayoutHelper.createEmptyBorder(insets)));
         panel.add(LayoutHelper.createTwoColumnPanel(
                 new JLabel[] {themeLabel, accentColorLabel, selectionColorLabel, fontSizeLabel},
                 new JComponent[] {themeComboBox, accentBox, selectionBox, fontSlider},
