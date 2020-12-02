@@ -553,6 +553,7 @@ public class JTabFrame extends JComponent {
         TabFrameTab compAtIndex = getTabComponentAt(a, index);
         if (!compAtIndex.isEnabled()) return;
         compAtIndex.setSelected(enabled);
+        compsForAlignment(a).get(index).setOpen(enabled);
         notifySelectionChange(compAtIndex);
         setPopupVisibility(compAtIndex, enabled);
         if (enabled) {

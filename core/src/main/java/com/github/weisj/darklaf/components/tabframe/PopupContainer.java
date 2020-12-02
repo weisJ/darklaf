@@ -38,6 +38,7 @@ public class PopupContainer extends JPanel {
     public PopupContainer() {
         super(new BorderLayout());
         super.setBorder(null);
+        setFocusable(true);
     }
 
 

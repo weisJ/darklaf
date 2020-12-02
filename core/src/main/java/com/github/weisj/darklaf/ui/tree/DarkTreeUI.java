@@ -438,7 +438,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
 
     protected Color getLineColor(final TreePath path) {
         if (isChildOfSelectionPath(path)) {
-            if (tree.hasFocus() || tree.isEditing()) {
+            if (tree.isEditing() || DarkUIUtil.hasFocus(tree)) {
                 return focusSelectedLineColor;
             } else {
                 return selectedLineColor;

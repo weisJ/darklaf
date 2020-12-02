@@ -23,8 +23,6 @@ package com.github.weisj.darklaf.ui.tabbedpane;
 
 import java.awt.*;
 import java.awt.dnd.DropTarget;
-import java.awt.event.AWTEventListener;
-import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.util.TooManyListenersException;
 import java.util.function.Consumer;
@@ -35,6 +33,7 @@ import javax.swing.plaf.UIResource;
 import javax.swing.text.View;
 
 import com.github.weisj.darklaf.components.uiresource.UIResourceWrapper;
+import com.github.weisj.darklaf.focus.FocusParentHelper;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.graphics.StringPainter;
@@ -66,11 +65,6 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     public static final String KEY_ROTATE_TAB_RUNS = KEY_PREFIX + "rotateTabRuns";
 
     protected static final TabbedPaneTransferHandler TRANSFER_HANDLER = new TabbedPaneTransferHandler.UIResource();
-    protected final AWTEventListener awtEventListener = e -> {
-        if (e.getID() == FocusEvent.FOCUS_GAINED) {
-            repaintTab(tabPane.getSelectedIndex());
-        }
-    };
     protected final Rectangle tabAreaBounds = new Rectangle(0, 0, 0, 0);
     protected final Rectangle dropRect = new Rectangle(0, 0, 0, 0);
     protected DarkScrollableTabSupport scrollableTabSupport;
@@ -315,7 +309,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
     @Override
     protected void uninstallListeners() {
         super.uninstallListeners();
-        Toolkit.getDefaultToolkit().removeAWTEventListener(awtEventListener);
+        FocusParentHelper.setFocusParent(tabPane, null);
     }
 
     @Override
@@ -327,7 +321,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
             tabScroller.viewport.addMouseMotionListener(getScrollHandler());
             tabScroller.viewport.addMouseListener(getScrollHandler());
         }
-        Toolkit.getDefaultToolkit().addAWTEventListener(awtEventListener, AWTEvent.FOCUS_EVENT_MASK);
+        FocusParentHelper.setFocusParent(tabPane, tabPane, c -> repaintTab(tabPane.getSelectedIndex()));
     }
 
     @Override

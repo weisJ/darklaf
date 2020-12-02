@@ -22,13 +22,10 @@
 package com.github.weisj.darklaf.ui.tabframe;
 
 import java.awt.*;
-import java.awt.event.AWTEventListener;
-import java.awt.event.FocusEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
-import javax.swing.FocusManager;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 
@@ -38,6 +35,7 @@ import com.github.weisj.darklaf.components.tabframe.PanelPopup;
 import com.github.weisj.darklaf.components.tabframe.TabFramePopup;
 import com.github.weisj.darklaf.components.tabframe.TabFramePopupUI;
 import com.github.weisj.darklaf.components.uiresource.JLabelUIResource;
+import com.github.weisj.darklaf.focus.FocusParentHelper;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.panel.DarkPanelUI;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
@@ -45,7 +43,7 @@ import com.github.weisj.darklaf.util.Actions;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
-public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListener, AWTEventListener, TabFramePopupUI {
+public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListener, TabFramePopupUI {
 
     protected HeaderButton closeButton;
     private final Action closeAction = Actions.create(e -> closeButton.doClick());
@@ -116,11 +114,22 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
 
     protected void installListeners() {
         popupComponent.addPropertyChangeListener(this);
-        Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.FOCUS_EVENT_MASK);
+        installFocusListener();
         JTabFrame frame = popupComponent.getTabFrame();
         if (frame != null) {
             frame.addPropertyChangeListener(this);
         }
+    }
+
+    protected void installFocusListener() {
+        JTabFrame tabFrame = popupComponent.getTabFrame();
+        Alignment a = popupComponent.getAlignment();
+        if (tabFrame == null || a == null) return;
+        JComponent container = tabFrame.getContentPane().getContainer(a);
+        FocusParentHelper.setFocusParent(popupComponent, container, c -> {
+            if (!popupComponent.isOpen()) return;
+            setHeaderBackground(DarkUIUtil.hasFocus(popupComponent));
+        });
     }
 
     protected HeaderButton createCloseButton() {
@@ -186,7 +195,6 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
 
     protected void uninstallListeners() {
         popupComponent.removePropertyChangeListener(this);
-        Toolkit.getDefaultToolkit().removeAWTEventListener(this);
         JTabFrame frame = popupComponent.getTabFrame();
         if (frame != null) {
             frame.removePropertyChangeListener(this);
@@ -223,9 +231,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
         if (TabFramePopup.KEY_OPEN.equals(key)) {
-            if (Boolean.TRUE.equals(evt.getNewValue())) {
-                setHeaderBackground(true);
-            }
+            setHeaderBackground(Boolean.TRUE.equals(evt.getNewValue()));
         } else if (TabFramePopup.KEY_CONTENT.equals(key)) {
             if (content == null) return;
             content.add((Component) evt.getNewValue(), BorderLayout.CENTER);
@@ -253,8 +259,11 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
             if (newVal instanceof JTabFrame) {
                 ((JTabFrame) newVal).addPropertyChangeListener(this);
             }
+            installFocusListener();
         } else if (TabFramePopup.KEY_PEER_INSETS.equals(key)) {
             updateBorder(false);
+        } else if (TabFramePopup.KEY_ALIGNMENT.equals(key)) {
+            installFocusListener();
         }
     }
 
@@ -342,22 +351,6 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
 
     protected boolean hasFocus() {
         return oldFocus;
-    }
-
-    @Override
-    public void eventDispatched(final AWTEvent event) {
-        if (event.getID() == FocusEvent.FOCUS_GAINED) {
-            Component focusOwner = FocusManager.getCurrentManager().getFocusOwner();
-            if (focusOwner instanceof JTabFrame) return;
-            if (focusOwner instanceof JRootPane) return;
-            boolean focus = DarkUIUtil.hasFocus(popupComponent);
-            if (popupComponent.getTabFrame() != null) {
-                Container container =
-                        popupComponent.getTabFrame().getContentPane().getContainer(popupComponent.getAlignment());
-                focus = focus || DarkUIUtil.hasFocus(container);
-            }
-            setHeaderBackground(focus);
-        }
     }
 
     protected static final class HeaderButton extends JButton implements UIResource {

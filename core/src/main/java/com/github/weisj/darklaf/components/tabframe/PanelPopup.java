@@ -142,14 +142,19 @@ public class PanelPopup extends JPanel implements TabFramePopup {
     public void close() {
         if (parent != null && getAlignment() != null && getIndex() >= 0
                 && parent.isSelected(getAlignment(), getIndex())) {
-            boolean oldOpen = isOpen();
             parent.closeTab(getAlignment(), getIndex());
-            open = false;
-            firePropertyChange(KEY_OPEN, oldOpen, false);
         }
     }
 
-    private boolean isOpen() {
+    @Override
+    public void setOpen(final boolean open) {
+        boolean old = this.open;
+        this.open = open;
+        firePropertyChange(KEY_OPEN, old, false);
+    }
+
+    @Override
+    public boolean isOpen() {
         return open;
     }
 
@@ -185,11 +190,7 @@ public class PanelPopup extends JPanel implements TabFramePopup {
     public void open() {
         if (parent != null && getAlignment() != null && getIndex() >= 0
                 && !parent.isSelected(getAlignment(), getIndex())) {
-            boolean oldOpen = isOpen();
             parent.openTab(getAlignment(), getIndex());
-            open = true;
-            firePropertyChange(KEY_OPEN, oldOpen, true);
-            requestFocusInWindow();
         }
     }
 

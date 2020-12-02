@@ -45,6 +45,7 @@ import javax.swing.tree.TreeCellRenderer;
 
 import sun.awt.SunToolkit;
 
+import com.github.weisj.darklaf.focus.FocusParentHelper;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.ui.cell.CellRenderer;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
@@ -194,11 +195,13 @@ public final class DarkUIUtil {
      * @return true if the component or one of its subcomponents has the focus.
      */
     public static boolean hasFocus(final Component c, final FocusEvent e) {
+        Component focusParent = PropertyUtil.getObject(c, FocusParentHelper.KEY_FOCUS_PARENT, Component.class);
+        return hasFocusImpl(c, focusParent, e);
+    }
+
+    public static boolean hasFocusImpl(final Component c, final Component focusParent, final FocusEvent e) {
         if (c == null) return false;
-        if (c.hasFocus()) return true;
-        if (c instanceof Window) {
-            return hasFocus(c);
-        }
+        if (c.hasFocus() || (focusParent != null && focusParent.hasFocus())) return true;
         Component owner = null;
         if (e != null) {
             owner = e.getOppositeComponent();
@@ -206,7 +209,15 @@ public final class DarkUIUtil {
         if (owner == null) {
             owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
         }
-        return (owner != null && SwingUtilities.isDescendingFrom(owner, c));
+        return (owner != null && isDescendingFrom(owner, c, focusParent));
+    }
+
+    private static boolean isDescendingFrom(final Component a, final Component b1, final Component b2) {
+        if (a == b1 || a == b2) return true;
+        for (Container p = a.getParent(); p != null; p = p.getParent()) {
+            if (p == b1 || p == b2) return true;
+        }
+        return false;
     }
 
     public static boolean hasFocus(final Window w) {

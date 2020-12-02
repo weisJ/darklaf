@@ -131,6 +131,20 @@ public interface TabFramePopup {
     boolean isEnabled();
 
     /**
+     * Set the open status of the popup. This method should not be used directly.
+     *
+     * @param open true if open.
+     */
+    void setOpen(boolean open);
+
+    /**
+     * Returns whether the popup is open.
+     *
+     * @return true if open.
+     */
+    boolean isOpen();
+
+    /**
      * Sets the enabled status of the popup.
      *
      * @param enabled true if enabled.
