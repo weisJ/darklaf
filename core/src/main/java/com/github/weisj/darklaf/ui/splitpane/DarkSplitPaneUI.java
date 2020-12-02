@@ -184,4 +184,13 @@ public class DarkSplitPaneUI extends BasicSplitPaneUI implements PropertyChangeL
     public DividerStyle getStyle() {
         return style;
     }
+
+    @Override
+    public int getMinimumDividerLocation(final JSplitPane jc) {
+        int loc = super.getMinimumDividerLocation(jc);
+        if (getDivider() instanceof ThinSplitPaneDivider) {
+            loc += getDividerDragOffset();
+        }
+        return loc;
+    }
 }
