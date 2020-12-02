@@ -182,12 +182,12 @@ public class LayoutHelper {
         });
     }
 
+
     public static JComponent createPanelWithOverlay(final JComponent content, final JComponent overlayContent) {
         return createPanelWithOverlay(content, overlayContent, Alignment.NORTH_EAST, createEmptyContainerInsets());
     }
 
-    public static JComponent createPanelWithOverlay(final JComponent content,
-            final JComponent overlayContent,
+    public static JComponent createPanelWithOverlay(final JComponent content, final JComponent overlayContent,
             final Alignment alignment, final Insets padding) {
         return createPanelWithOverlay(content, overlayContent, (r, c) -> {
             Dimension prefSize = c.getPreferredSize();
@@ -248,6 +248,19 @@ public class LayoutHelper {
         });
     }
 
+    public static OverlayScrollPane createScrollPaneWithHoverOverlay(final JComponent content,
+            final JComponent overlayContent,
+            final Alignment alignment, final Supplier<Insets> paddingSupplier) {
+        HoveringPanel hoveringPanel = new HoveringPanel() {
+            @Override
+            public boolean isVisible() {
+                return overlayContent.isVisible();
+            }
+        };
+        hoveringPanel.add(overlayContent);
+        return createScrollPaneWithOverlay(content, hoveringPanel, alignment, paddingSupplier);
+    }
+
     public static OverlayScrollPane createScrollPaneWithOverlay(final JComponent content,
             final JComponent overlayContent,
             final Alignment alignment, final Supplier<Insets> paddingSupplier) {
@@ -259,26 +272,34 @@ public class LayoutHelper {
         });
     }
 
+    public static OverlayScrollPane createScrollPaneWithHoverOverlay(final JComponent content,
+            final JComponent overlayContent,
+            final BiFunction<Rectangle, JComponent, Rectangle> layoutFunction) {
+        HoveringPanel hoveringPanel = new HoveringPanel();
+        hoveringPanel.add(overlayContent);
+        return createScrollPaneWithOverlay(content, hoveringPanel, (r, c) -> {
+            hoveringPanel.setVisible(overlayContent.isVisible());
+            return layoutFunction.apply(r, hoveringPanel);
+        });
+    }
+
     public static OverlayScrollPane createScrollPaneWithOverlay(final JComponent content,
             final JComponent overlayContent,
             final BiFunction<Rectangle, JComponent, Rectangle> layoutFunction) {
         return new OverlayScrollPane(content) {
 
-            private final HoveringPanel hoveringPanel = new HoveringPanel();
-
             {
-                hoveringPanel.add(overlayContent);
-                add(hoveringPanel, Integer.valueOf(JLayeredPane.MODAL_LAYER - 1));
+                add(overlayContent, Integer.valueOf(JLayeredPane.MODAL_LAYER - 1));
             }
 
             @Override
             public void doLayout() {
                 super.doLayout();
                 Component viewport = getScrollPane().getViewport();
-                hoveringPanel.setBounds(
-                        layoutFunction.apply(getLayoutRect(viewport.getWidth(), viewport.getHeight()), hoveringPanel));
-                hoveringPanel.doLayout();
-                hoveringPanel.setVisible(overlayContent.isVisible());
+                overlayContent.setBounds(
+                        layoutFunction.apply(getLayoutRect(viewport.getWidth(), viewport.getHeight()), overlayContent));
+                overlayContent.doLayout();
+                overlayContent.setVisible(overlayContent.isVisible());
             }
 
             private Rectangle getLayoutRect(final int width, final int height) {
@@ -299,8 +320,8 @@ public class LayoutHelper {
             @Override
             public Dimension getPreferredSize() {
                 Dimension dim = super.getPreferredSize();
-                if (hoveringPanel.isVisible()) {
-                    Rectangle layoutRect = layoutFunction.apply(getLayoutRect(dim.width, dim.height), hoveringPanel);
+                if (overlayContent.isVisible()) {
+                    Rectangle layoutRect = layoutFunction.apply(getLayoutRect(dim.width, dim.height), overlayContent);
                     dim.width = Math.max(dim.width, layoutRect.x + layoutRect.width);
                     dim.height = Math.max(dim.height, layoutRect.y + layoutRect.height);
                 }

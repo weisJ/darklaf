@@ -22,8 +22,6 @@
 package com.github.weisj.darklaf.components;
 
 
-import java.awt.*;
-
 import javax.swing.*;
 
 import com.github.weisj.darklaf.components.button.JSplitButton;
@@ -51,6 +49,12 @@ public class ComponentHelper {
 
     public static JSplitButton createIconOnlySplitButton(final Icon enabled, final Icon disabled) {
         JSplitButton button = new JSplitButton();
+        setup(button, enabled, disabled);
+        return button;
+    }
+
+    public static <T extends AbstractButton> T createIconOnlyButton(final T button, final Icon enabled,
+            final Icon disabled) {
         setup(button, enabled, disabled);
         return button;
     }

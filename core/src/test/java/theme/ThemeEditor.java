@@ -294,11 +294,12 @@ public class ThemeEditor extends JPanel {
         if (!keyEditable) {
             sp = new OverlayScrollPane(table);
         } else {
-            sp = LayoutHelper.createScrollPaneWithOverlay(table, createButtonPanel(table), Alignment.NORTH_EAST, () -> {
-                Insets ins = new Insets(10, 10, 10, 10);
-                ins.right += table.getColumnModel().getColumn(0).getWidth();
-                return ins;
-            });
+            sp = LayoutHelper.createScrollPaneWithHoverOverlay(table, createButtonPanel(table),
+                    Alignment.NORTH_EAST, () -> {
+                        Insets ins = new Insets(10, 10, 10, 10);
+                        ins.right += table.getColumnModel().getColumn(0).getWidth();
+                        return ins;
+                    });
         }
         sp.getScrollPane().setBorder(DarkBorders.createLineBorder(0, 0, 1, 0));
         return sp;
