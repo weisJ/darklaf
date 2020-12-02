@@ -94,6 +94,8 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         buttonPad = UIManager.getInsets("ComboBox.buttonInsets");
         valueInsets = UIManager.getInsets("ComboBox.valueInsets");
         editorCellInsets = UIManager.getInsets("ComboBox.cellEditorInsets");
+        updateForeground(comboBox);
+        updateBackground(comboBox);
     }
 
     protected Border createBorder() {
