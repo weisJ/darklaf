@@ -117,6 +117,7 @@ public abstract class DarkTextUI extends BasicTextUI implements OpacityBufferedU
         updateMargins();
         installBorder();
         installPopupMenu();
+        updateBackground(editor);
     }
 
 
@@ -201,6 +202,10 @@ public abstract class DarkTextUI extends BasicTextUI implements OpacityBufferedU
         textListener = null;
         editor.removePropertyChangeListener(visualPaddingListener);
         visualPaddingListener = null;
+    }
+
+    protected void updateBackground(final JTextComponent c) {
+        PropertyUtil.installBackground(c, getBackground(c));
     }
 
     protected Color getBackground(final JTextComponent c) {

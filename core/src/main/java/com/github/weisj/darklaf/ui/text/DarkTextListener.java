@@ -89,7 +89,7 @@ public class DarkTextListener implements FocusListener, PropertyChangeListener {
         } else if ("border".equals(key)) {
             ui.installBorder();
         } else if (PropertyKey.ENABLED.equals(key) || PropertyKey.EDITABLE.equals(key)) {
-            PropertyUtil.installBackground(editor, ui.getBackground(editor));
+            ui.updateBackground(editor);
         }
     }
 }
