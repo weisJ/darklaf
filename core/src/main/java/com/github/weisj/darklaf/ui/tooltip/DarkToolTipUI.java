@@ -115,6 +115,7 @@ public class DarkToolTipUI extends BasicToolTipUI
         toolTip.putClientProperty(DarkPopupFactory.KEY_NO_DECORATION, !useDecoratedPopup());
         toolTip.putClientProperty(DarkPopupFactory.KEY_START_HIDDEN, true);
         toolTip.putClientProperty(DarkPopupFactory.KEY_FORCE_HEAVYWEIGHT, true);
+        toolTip.setOpaque(false);
         fadeAnimator = new FadeInAnimator();
         updateTipText(toolTip);
         updateStyle();

@@ -54,12 +54,12 @@ public class DarkPopupFactory extends PopupFactory {
         return popup;
     }
 
-    protected Pair<Popup, PopupType> getEffectivePopup(final Component owner, final Component contents, final int x,
-            final int y) {
+    protected Pair<Popup, PopupType> getEffectivePopup(final Component owner, final Component contents,
+            final int x, final int y) {
         Popup popup = super.getPopup(owner, contents, x, y);
         PopupType type = getPopupType(popup);
-        boolean forceHeavy =
-                type != PopupType.HEAVY_WEIGHT && PropertyUtil.getBooleanProperty(contents, KEY_FORCE_HEAVYWEIGHT);
+        boolean forceHeavy = type != PopupType.HEAVY_WEIGHT
+                && PropertyUtil.getBooleanProperty(contents, KEY_FORCE_HEAVYWEIGHT);
         if (forceHeavy) {
             // Heavy weight owner forces a heavyweight popup.
             Window targetWindow = DarkUIUtil.getWindow(owner);
@@ -104,43 +104,46 @@ public class DarkPopupFactory extends PopupFactory {
             if (window != null) {
                 boolean isFocusable = PropertyUtil.getBooleanProperty(contents, KEY_FOCUSABLE_POPUP);
                 boolean startHidden = PropertyUtil.getBooleanProperty(contents, KEY_START_HIDDEN);
-                setupWindow(window, contents, isFocusable, startHidden);
+                setupHeavyWeightWindow(window, contents, isFocusable, startHidden);
                 window.setLocation(x, y);
             }
         }
     }
 
-    protected void setupWindow(final Window window, final Component contents, final boolean isFocusable,
-            final boolean startHidden) {
+    protected void setupHeavyWeightWindow(final Window window, final Component contents,
+            final boolean isFocusable, final boolean startHidden) {
         boolean noDecorations = PropertyUtil.getBooleanProperty(contents, KEY_NO_DECORATION);
         boolean opaque = PropertyUtil.getBooleanProperty(contents, KEY_OPAQUE);
         JRootPane rootPane = window instanceof RootPaneContainer ? ((RootPaneContainer) window).getRootPane() : null;
         setupWindowBackground(window, rootPane, opaque, !noDecorations);
-        setupWindowFocusableState(isFocusable, window);
+        setupFocusableWindowState(isFocusable, window);
         setupWindowDecorations(window, rootPane, noDecorations);
         setupWindowOpacity(startHidden, window);
     }
 
-    protected void setupWindowBackground(final Window window, final JRootPane rootPane, final boolean opaque,
-            final boolean decorations) {
+    protected void setupWindowBackground(final Window window, final JRootPane rootPane,
+            final boolean opaque, final boolean decorations) {
         /*
          * Sometimes the background is java.awt.SystemColor[i=7] It results in a flash of white background,
          * that is repainted with the proper popup background later. That is why we set window background
          * explicitly.
          */
         if (rootPane == null) return;
-        rootPane.setOpaque(opaque);
-        if (opaque) {
-            Color bg = ColorUtil.toAlpha(rootPane.getBackground(), 255);
-            window.setBackground(bg);
-        } else {
-            Color bg = getTranslucentPopupBackground(decorations);
-            window.setBackground(bg);
-            rootPane.setBackground(bg);
+        Color bg = opaque
+                ? ColorUtil.toAlpha(rootPane.getBackground(), 255)
+                : getTranslucentPopupBackground(decorations);
+        Container p = rootPane.getContentPane();
+        while (p != null && p != window) {
+            p.setBackground(bg);
+            if (p instanceof JComponent) {
+                ((JComponent) p).setOpaque(opaque);
+            }
+            p = p.getParent();
         }
+        window.setBackground(bg);
     }
 
-    protected void setupWindowFocusableState(final boolean isFocusable, final Window window) {
+    protected void setupFocusableWindowState(final boolean isFocusable, final Window window) {
         if (isFocusable && !window.getFocusableWindowState()) {
             window.dispose();
             window.setFocusableWindowState(true);
