@@ -130,14 +130,21 @@ public class DarkPopupFactory extends PopupFactory {
          */
         if (rootPane == null) return;
         rootPane.setOpaque(opaque);
+        Color bg;
         if (opaque) {
-            Color bg = ColorUtil.toAlpha(rootPane.getBackground(), 255);
-            window.setBackground(bg);
+            bg = ColorUtil.toAlpha(rootPane.getBackground(), 255);
         } else {
-            Color bg = getTranslucentPopupBackground(decorations);
-            window.setBackground(bg);
-            rootPane.setBackground(bg);
+            bg = getTranslucentPopupBackground(decorations);
+            Container p = rootPane;
+            while (p != null && p != window) {
+                p.setBackground(bg);
+                if (p instanceof JComponent) {
+                    ((JComponent) p).setOpaque(false);
+                }
+                p = p.getParent();
+            }
         }
+        window.setBackground(bg);
     }
 
     protected void setupWindowFocusableState(final boolean isFocusable, final Window window) {
