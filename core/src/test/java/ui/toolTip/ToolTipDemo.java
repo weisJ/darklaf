@@ -51,6 +51,7 @@ public class ToolTipDemo implements ComponentDemo {
                 + "<p style=\"color:blue;\">This is the ToolTip demo text!\n"
                 + "<p style=\"color:green;\">This is the ToolTip demo text!\n"));
         button.putClientProperty(DarkToolTipUI.KEY_STYLE, DarkToolTipUI.VARIANT_BALLOON);
+        button.putClientProperty(DarkToolTipUI.KEY_CONTEXT, context);
 
         JPanel controlPanel = panel.addControls(3);
 
