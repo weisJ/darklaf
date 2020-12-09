@@ -56,11 +56,13 @@ The LookAndFeel can be easily installed using the `LafManager`
 ````java
 // For default theme (IntelliJ)
 LafManager.install();
-
+````
+````java
 // Specify explicit theme.
 LafManager.setTheme(new IntelliJTheme());
 LafManager.install();
-
+````
+````java
 // Directly install theme
 LafManager.install(new DarculaTheme());
 ````
