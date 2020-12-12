@@ -45,7 +45,7 @@ public interface TableConstants extends CellConstants {
     String KEY_CELL_VALUE_DETERMINES_EDITOR_CLASS = "Table.cellDeterminesClass";
 
     static boolean isBooleanRenderingEnabled(final JTable table) {
-        return PropertyUtil.getBooleanProperty(table, DarkTableUI.KEY_RENDER_BOOLEAN_AS_CHECKBOX);
+        return PropertyUtil.getBooleanProperty(table, TableConstants.KEY_RENDER_BOOLEAN_AS_CHECKBOX);
     }
 
     static boolean useBooleanEditorForValue(final Object value, final JTable table, final int column,

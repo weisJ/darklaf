@@ -27,7 +27,7 @@ import javax.swing.*;
 import javax.swing.plaf.DimensionUIResource;
 import javax.swing.plaf.basic.BasicArrowButton;
 
-import com.github.weisj.darklaf.ui.button.DarkButtonUI;
+import com.github.weisj.darklaf.ui.button.ButtonConstants;
 
 /** @author Jannis Weis */
 public final class ArrowButton implements SwingConstants {
@@ -59,7 +59,7 @@ public final class ArrowButton implements SwingConstants {
         return new BasicArrowButton(orientation, null, null, null, null) {
             private final Insets ins = insets != null ? insets : new Insets(0, 0, 0, 0);
             {
-                putClientProperty(DarkButtonUI.KEY_NO_BORDERLESS_OVERWRITE, true);
+                putClientProperty(ButtonConstants.KEY_NO_BORDERLESS_OVERWRITE, true);
                 setMargin(new Insets(0, 0, 0, 0));
                 setBorder(BorderFactory.createEmptyBorder());
             }

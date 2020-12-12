@@ -202,12 +202,12 @@ public class DarkDefaultTreeEditor extends DefaultTreeCellEditor {
     protected JComponent getBooleanRendererComponent(final JTree tree) {
         DarkTreeCellRendererDelegate rend = getRendererDelegate(tree);
         if (rend == null) return null;
-        return rend.getBooleanRenderer(tree).getButton();
+        return rend.getBooleanRenderer().getRendererComponent(tree);
     }
 
     protected JComponent getTristateRendererComponent(final JTree tree) {
         DarkTreeCellRendererDelegate rend = getRendererDelegate(tree);
         if (rend == null) return null;
-        return rend.getTristateRenderer(tree).getButton();
+        return rend.getTristateRenderer().getRendererComponent();
     }
 }

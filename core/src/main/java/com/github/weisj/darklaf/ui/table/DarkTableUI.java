@@ -37,6 +37,7 @@ import sun.swing.SwingUtilities2;
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
+import com.github.weisj.darklaf.ui.cell.DarkBooleanCellRenderer;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererPane;
 import com.github.weisj.darklaf.ui.table.renderer.DarkColorTableCellRendererEditor;
 import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellEditorDelegate;
@@ -56,11 +57,13 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
     protected Handler handler;
 
     protected DarkTableCellRendererDelegate rendererDelegate;
+    private TableCellRenderer booleanCellRenderer;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTableUI();
     }
 
+    @Override
     protected boolean pointOutsidePrefSize(final int row, final int column, final Point p) {
         return false;
     }
@@ -125,12 +128,14 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
         return new DarkCellRendererPane();
     }
 
-    protected static void setupRendererComponents(final JTable table) {
+    protected void setupRendererComponents(final JTable table) {
+        booleanCellRenderer = new DarkBooleanCellRenderer(true);
         TableCellRenderer cellRenderer = new DarkTableCellRenderer();
         TableCellEditor cellEditor = new DarkTableCellEditorDelegate();
         DarkColorTableCellRendererEditor colorRendererEditor = new DarkColorTableCellRendererEditor();
 
         table.setDefaultRenderer(Object.class, cellRenderer);
+        table.setDefaultRenderer(Boolean.class, booleanCellRenderer);
         table.setDefaultRenderer(Color.class, colorRendererEditor);
 
         table.setDefaultEditor(Object.class, cellEditor);
@@ -427,7 +432,7 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
         TableCellRenderer renderer = table.getCellRenderer(row, column);
         if (renderer instanceof DarkTableCellRendererDelegate) return renderer;
         if (rendererDelegate == null) {
-            rendererDelegate = new DarkTableCellRendererDelegate(renderer);
+            rendererDelegate = new DarkTableCellRendererDelegate(renderer, booleanCellRenderer);
         }
         rendererDelegate.setDelegate(renderer);
         return rendererDelegate;
