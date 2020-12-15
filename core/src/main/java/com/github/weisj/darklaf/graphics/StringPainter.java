@@ -150,8 +150,6 @@ public class StringPainter {
                     (int) Math.round(scaleY * textRect.height));
             drawingGraphics = prepareImage(img, bgColor, fgColor, scaleX, scaleY);
             textRect.setLocation(0, 0);
-        } else {
-            drawingGraphics.clipRect(textRect.x, textRect.y, textRect.width, textRect.height);
         }
         drawingGraphics.setFont(font);
 
