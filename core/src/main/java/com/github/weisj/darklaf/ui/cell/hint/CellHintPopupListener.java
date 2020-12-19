@@ -24,6 +24,7 @@ package com.github.weisj.darklaf.ui.cell.hint;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -32,9 +33,12 @@ import javax.swing.event.MouseInputAdapter;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.WindowUtil;
 
 public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAdapter {
+
+    private static final Logger LOGGER = LogUtil.getLogger(CellHintPopupListener.class);
 
     private final IndexedCellContainer<T, I> cellContainer;
     private final PopupComponent popupComponent;
@@ -92,10 +96,12 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
         final Rectangle cellBounds = cellContainer.getCellBoundsAt(index, isEditing);
         if (cellBounds != null && allocation != null) {
             final Rectangle visibleBounds = allocation.intersection(cellBounds);
+            LOGGER.fine(() -> "Visible bounds at index " + index + ": " + visibleBounds);
             if (visibleBounds.contains(p)) {
                 if (isPopupNeeded(index, isEditing, visibleBounds)) {
                     Point popupLocation = cellContainer.getComponent().getLocationOnScreen();
                     Rectangle popupBounds = calculatePopupBounds(cellBounds, visibleBounds, !isEditing);
+                    LOGGER.fine(() -> "Popup bounds at index " + index + ": " + popupBounds);
                     if (!visibleBounds.contains(popupBounds)) {
                         cellBounds.x = popupBounds.x - cellBounds.x;
                         cellBounds.y = popupBounds.y - cellBounds.y;
@@ -120,6 +126,7 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
     private boolean isPopupNeeded(final I index, final boolean isEditing, final Rectangle visibleBounds) {
         final Component comp = cellContainer.getEffectiveCellRendererComponent(index, isEditing);
         final Dimension prefSize = getPreferredSize(isEditing, comp);
+        LOGGER.fine(() -> "Necessary cell size at index " + index + ": " + prefSize);
         return !fitsInside(prefSize, visibleBounds);
     }
 
@@ -237,6 +244,7 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
     }
 
     private void enter(final I index, final Rectangle bounds, final Rectangle rendererBounds) {
+        LOGGER.fine("Showing cell popup at index " + index);
         if (index != null) {
             lastIndex = index;
             popupComponent.setPreferredSize(bounds.getSize());
