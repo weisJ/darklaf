@@ -21,11 +21,18 @@
  */
 package com.github.weisj.darklaf.theme.laf;
 
-import com.github.weisj.darklaf.theme.Theme;
+import javax.swing.*;
+import javax.swing.plaf.basic.BasicLookAndFeel;
 
-public abstract class ThemedLookAndFeel extends NoOpBasicLookAndFeel {
+public abstract class NoOpBasicLookAndFeel extends BasicLookAndFeel {
 
-    protected abstract void setTheme(final Theme theme);
+    @Override
+    public abstract UIDefaults getDefaults();
 
-    public abstract Theme getTheme();
+    @Override
+    public abstract void initialize();
+
+    @Override
+    public abstract void uninitialize();
+
 }

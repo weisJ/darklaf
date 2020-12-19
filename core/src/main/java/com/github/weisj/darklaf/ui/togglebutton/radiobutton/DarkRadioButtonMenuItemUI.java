@@ -92,7 +92,7 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements Tog
 
     @Override
     protected void paintCheckIcon(final Graphics g2, final JMenuItem mi, final MenuItemLayoutHelper lh,
-            final MenuItemLayoutHelper.LayoutResult lr, final Color holdc, final Color foreground) {
+            final MenuItemLayoutHelper.LayoutResult lr, final Color foreground) {
         Rectangle rect = lr.getCheckRect();
         if (mi.getIcon() == null) {
             rect.y = lr.getIconRect().y;

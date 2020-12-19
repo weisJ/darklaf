@@ -132,6 +132,7 @@ public interface ComponentDemo {
 
     static JMenu createThemeMenu() {
         JMenu menu = new JMenu("Theme");
+        menu.setMnemonic('T');
         ButtonGroup bg = new ButtonGroup();
         for (UIManager.LookAndFeelInfo theme : LafManager.getRegisteredThemeInfos()) {
             createThemeItem(menu, bg, theme);

@@ -46,6 +46,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
 
     protected int acceleratorTextOffset;
     protected boolean useEvenHeight;
+    private boolean closeOnClick;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkMenuItemUIBase();
@@ -58,6 +59,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
     @Override
     public void installUI(final JComponent c) {
         super.installUI(c);
+        closeOnClick = !UIManager.getBoolean(getPropertyPrefix() + ".doNotCloseOnMouseClick");
         useEvenHeight = !Boolean.TRUE.equals(UIManager.get(getPropertyPrefix() + ".evenHeight"));
         acceleratorTextOffset = UIManager.getInt(getPropertyPrefix() + ".acceleratorTextOffset");
         acceleratorFont = UIManager.getFont("MenuItem.font");
@@ -93,8 +95,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
     protected void paintMenuItem(final Graphics g, final JComponent c, final Icon checkIcon, final Icon arrowIcon,
             final Color background, final Color foreground, final int defaultTextIconGap) {
         // Save original graphics font and color
-        Font holdf = g.getFont();
-        Color holdc = g.getColor();
+        GraphicsContext context = new GraphicsContext(g);
 
         JMenuItem mi = (JMenuItem) c;
         g.setFont(mi.getFont());
@@ -106,16 +107,18 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         MenuItemLayoutHelper.LayoutResult lr = lh.layoutMenuItem();
 
         paintBackground(g, mi, background);
-        paintCheckIcon(g, mi, lh, lr, holdc, foreground);
-        paintIcon(g, mi, lh, lr, holdc);
+        context.restore();
+
+        paintCheckIcon(g, mi, lh, lr, foreground);
+        context.restore();
+
+        paintIcon(g, mi, lh, lr);
+
         g.setColor(foreground);
         paintText(g, mi, lh, lr);
         paintAccText(g, mi, lh, lr);
         paintArrowIcon(g, mi, lh, lr, foreground);
-
-        // Restore original graphics font and color
-        g.setColor(holdc);
-        g.setFont(holdf);
+        context.restore();
     }
 
     protected MenuItemLayoutHelper getMenuItemLayoutHelper(final Icon checkIcon, final Icon arrowIcon,
@@ -126,18 +129,15 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
     }
 
     protected void paintCheckIcon(final Graphics g, final JMenuItem mi, final MenuItemLayoutHelper lh,
-            final MenuItemLayoutHelper.LayoutResult lr, final Color holdc, final Color foreground) {
+            final MenuItemLayoutHelper.LayoutResult lr, final Color foreground) {
         if (lh.getCheckIcon() != null) {
             ButtonModel model = mi.getModel();
             if (model.isArmed() || (mi instanceof JMenu && model.isSelected())) {
                 g.setColor(foreground);
-            } else {
-                g.setColor(holdc);
             }
             if (lh.useCheckAndArrow()) {
                 lh.getCheckIcon().paintIcon(mi, g, lr.getCheckRect().x, lr.getCheckRect().y);
             }
-            g.setColor(holdc);
         }
     }
 
@@ -170,7 +170,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
     }
 
     protected void paintIcon(final Graphics g, final JMenuItem mi, final MenuItemLayoutHelper lh,
-            final MenuItemLayoutHelper.LayoutResult lr, final Color holdc) {
+            final MenuItemLayoutHelper.LayoutResult lr) {
         if (lh.getIcon() != null) {
             Icon icon;
             ButtonModel model = mi.getModel();
@@ -188,7 +188,6 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
 
             if (icon != null) {
                 icon.paintIcon(mi, g, lr.getIconRect().x, lr.getIconRect().y);
-                g.setColor(holdc);
             }
         }
     }
@@ -232,17 +231,35 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         if (menuItem.isOpaque() && parentOpaque) {
             if (model.isArmed() || (menuItem instanceof JMenu && model.isSelected())) {
                 g.setColor(bgColor);
-                g.fillRect(0, 0, menuWidth, menuHeight);
             } else {
                 g.setColor(menuItem.getBackground());
-                g.fillRect(0, 0, menuWidth, menuHeight);
             }
+            g.fillRect(0, 0, menuWidth, menuHeight);
             g.setColor(oldColor);
         } else if (model.isArmed() || (menuItem instanceof JMenu && model.isSelected())) {
             g.setColor(bgColor);
             g.fillRect(0, 0, menuWidth, menuHeight);
             g.setColor(oldColor);
         }
+    }
+
+    @Override
+    protected void doClick(final MenuSelectionManager selectionManager) {
+        if (isCloseOnClick()) {
+            MenuSelectionManager msm = selectionManager;
+            // Visual feedback
+            if (msm == null) {
+                msm = MenuSelectionManager.defaultManager();
+            }
+            msm.clearSelectedPath();
+        }
+        JMenuItem item = menuItem;
+        item.doClick(0);
+        item.setArmed(!isCloseOnClick());
+    }
+
+    protected boolean isCloseOnClick() {
+        return closeOnClick;
     }
 
     @Override

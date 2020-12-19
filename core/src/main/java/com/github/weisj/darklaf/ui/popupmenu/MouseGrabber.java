@@ -237,23 +237,7 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
             for (JPopupMenu popup : popups) {
                 popup.putClientProperty("JPopupMenu.firePopupMenuCanceled", Boolean.TRUE);
             }
-            MenuElement[] path = MenuSelectionManager.defaultManager().getSelectedPath();
-            if (path.length > 0) {
-                /*
-                 * Change here: Clear armed/selected/rollover state of MenuItem. This is needed if the menuItem
-                 * changes the Laf.
-                 */
-                Component c = path[path.length - 1].getComponent();
-                if (c instanceof AbstractButton) {
-                    SwingUtilities.invokeLater(() -> {
-                        ((AbstractButton) c).getModel().setArmed(false);
-                        ((AbstractButton) c).getModel().setRollover(false);
-                        if (c instanceof JMenuItem) ((JMenuItem) c).setSelected(false);
-                    });
-                }
-            }
             MenuSelectionManager.defaultManager().clearSelectedPath();
-
         } catch (RuntimeException | Error ex) {
             realUngrabWindow();
             throw ex;
