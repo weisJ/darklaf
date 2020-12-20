@@ -1,6 +1,6 @@
 ### Visual changes
 
-## Behavioural changes
+### Behavioural changes
 
 ### API Changes
 
