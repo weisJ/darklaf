@@ -61,7 +61,7 @@ class TooltipTest extends AbstractImageTest {
     }
 
     @Test
-    @EnabledOnOs({OS.MAC, OS.WINDOWS})
+    @EnabledOnOs({OS.MAC, OS.WINDOWS, OS.LINUX})
     void testTooltipTransparency() throws Exception {
         JToolTip toolTip = createTooltip();
 
