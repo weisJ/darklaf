@@ -27,7 +27,6 @@ import java.util.logging.Logger;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.util.LogUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -39,6 +38,7 @@ import com.github.weisj.darklaf.theme.IntelliJTheme;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 class TooltipTest extends AbstractImageTest {
@@ -91,6 +91,7 @@ class TooltipTest extends AbstractImageTest {
             for (c = toolTip.getParent(); c != null; c = c.getParent()) {
                 Color bg = c.getBackground();
                 LOGGER.info("bg = " + bg + ": " + c);
+                Assertions.assertFalse(c.isOpaque(), "Component is opaque: " + c);
                 Assertions.assertNotNull(bg, "Background is null for " + c);
                 Assertions.assertEquals(0, bg.getAlpha(), "Background " + bg + " is opaque " + c);
                 if (c instanceof Window) break;
@@ -105,6 +106,8 @@ class TooltipTest extends AbstractImageTest {
             Assertions.assertNotNull(img, "Tooltip Image is null");
             int alpha = getAlpha(img.getRGB(img.getMinX(), img.getMinY() + img.getHeight() - 1));
             Assertions.assertEquals(0, alpha, "Tooltip is opaque");
+
+            LOGGER.info("Done!");
         });
     }
 
