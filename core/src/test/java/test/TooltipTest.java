@@ -23,9 +23,11 @@ package test;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.util.LogUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -40,6 +42,8 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 class TooltipTest extends AbstractImageTest {
+
+    private static final Logger LOGGER = LogUtil.getLogger(TooltipTest.class);
 
     public TooltipTest() {
         super("tooltip");
@@ -63,20 +67,30 @@ class TooltipTest extends AbstractImageTest {
     @Test
     @EnabledOnOs({OS.MAC, OS.WINDOWS, OS.LINUX})
     void testTooltipTransparency() throws Exception {
+        LOGGER.info("DISPLAY = " + System.getenv("DISPLAY"));
+        LOGGER.info("java.awt.headless = " + System.getProperty("java.awt.headless"));
+        LOGGER.info("Headless: " + GraphicsEnvironment.isHeadless());
         JToolTip toolTip = createTooltip();
 
+        LOGGER.info("Requesting popup");
         SwingUtilities.invokeAndWait(() -> {
             Popup popup = PopupFactory.getSharedInstance().getPopup(null, toolTip, 0, 0);
             popup.show();
+            LOGGER.info("Got popup: " + popup);
         });
 
         Window window = DarkUIUtil.getWindow(toolTip);
-        SwingUtilities.invokeAndWait(() -> window.setOpacity(1));
+        LOGGER.info("Popup Window: " + window);
+        if (window != null) {
+            SwingUtilities.invokeAndWait(() -> window.setOpacity(1));
+        }
 
         TestUtils.runOnSwingThreadNotThrowing(() -> {
             Component c;
+            LOGGER.info("Checking backgrounds:");
             for (c = toolTip.getParent(); c != null; c = c.getParent()) {
                 Color bg = c.getBackground();
+                LOGGER.info("bg = " + bg + ": " + c);
                 Assertions.assertNotNull(bg, "Background is null for " + c);
                 Assertions.assertEquals(0, bg.getAlpha(), "Background " + bg + " is opaque " + c);
                 if (c instanceof Window) break;
@@ -86,9 +100,6 @@ class TooltipTest extends AbstractImageTest {
             JRootPane rootPane = SwingUtilities.getRootPane(window);
             Assertions.assertNotNull(rootPane, "RootPane is null");
             Assertions.assertFalse(rootPane.isOpaque(), "RootPane is opaque");
-
-            Color backgroundColor = window.getBackground();
-            Assertions.assertNotNull(backgroundColor, "Background is null");
 
             BufferedImage img = saveScreenShot(getPath("tooltip_" + SystemInfo.getOsName()), window);
             Assertions.assertNotNull(img, "Tooltip Image is null");
