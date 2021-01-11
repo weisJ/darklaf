@@ -42,7 +42,6 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
     public static final String KEY_ALTERNATE_ROW_COLOR = KEY_PREFIX + "alternateRowColor";
     public static final String KEY_RENDER_BOOLEAN_AS_CHECKBOX = KEY_PREFIX + "renderBooleanAsCheckBox";
     public static final String KEY_BOOLEAN_RENDER_TYPE = KEY_PREFIX + "booleanRenderType";
-    public static final String KEY_SHRINK_WRAP = KEY_PREFIX + "shrinkWrap";
     public static final String KEY_FULL_ROW_SELECTION = KEY_PREFIX + "fullRowSelection";
     public static final String KEY_IS_EDITING = KEY_PREFIX + "isEditing";
     public static final String KEY_IS_LIST_EDITOR = "JComponent.listCellEditor";
@@ -191,16 +190,6 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
         } else {
             Component rendererComponent =
                     cellRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            if (PropertyUtil.getBooleanProperty(list, KEY_SHRINK_WRAP)) {
-                // Shrink renderer to preferred size. This is mostly used on Windows
-                // where selection is only shown around the file name, instead of
-                // across the whole list cell.
-                int w = Math.min(cw, rendererComponent.getPreferredSize().width + 4);
-                if (!list.getComponentOrientation().isLeftToRight()) {
-                    cx += (cw - w);
-                }
-                cw = w;
-            }
             rendererPane.paintComponent(g, rendererComponent, list, cx, cy, cw, ch, true);
         }
     }
