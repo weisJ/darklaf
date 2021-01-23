@@ -22,17 +22,21 @@
 package com.github.weisj.darklaf.icons;
 
 import java.awt.*;
+import java.awt.image.ImageObserver;
 import java.net.URL;
 import java.util.Locale;
 import java.util.function.Supplier;
+import java.util.logging.Logger;
 
 import javax.accessibility.*;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.util.LazyValue;
+import com.github.weisj.darklaf.util.LogUtil;
 
-public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Accessible {
+public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, ImageSource, Accessible {
 
+    private static final Logger LOGGER = LogUtil.getLogger(DerivableImageIcon.class);
     private static final int DEFAULT_SCALING_MODE = Image.SCALE_DEFAULT;
     private final int scalingMode;
 
@@ -247,8 +251,22 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
     public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
         Image img = image.get();
         if (img != null) {
-            g.drawImage(img, x, y, width, height, null);
+            if (ensureImageLoaded(img, c)) {
+                g.drawImage(img, x, y, width, height, null);
+            }
         }
+    }
+
+    private boolean ensureImageLoaded(final Image img, final Component c) {
+        MediaTracker tracker = new MediaTracker(c != null ? c : new Component() {});
+        tracker.addImage(img, 0);
+        try {
+            tracker.waitForAll();
+        } catch (final InterruptedException ex) {
+            LOGGER.warning("Image could not be loaded in time for painting.");
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -257,7 +275,17 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
      * @return the image.
      */
     public Image getImage() {
-        return image.get();
+        return getImage(null);
+    }
+
+    /**
+     * Get the underlying {@link Image}.
+     *
+     * @param observer the {@link ImageObserver}.
+     * @return the image.
+     */
+    public Image getImage(final ImageObserver observer) {
+        return image.get(observer);
     }
 
     protected Image getOriginal() {
@@ -314,6 +342,11 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
      */
     public void setDescription(final String description) {
         this.description = description;
+    }
+
+    @Override
+    public Image createImage(final Dimension size) {
+        return getOriginal().getScaledInstance(size.width, size.height, scalingMode);
     }
 
     protected static class AccessibleDerivableImageIcon extends AccessibleContext implements AccessibleIcon {
@@ -392,13 +425,22 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Ac
             return new LazyImageValue(icon);
         }
 
+        public Image get(final ImageObserver observer) {
+            if (value == null) set(load(observer));
+            return value;
+        }
+
         @Override
-        protected Image load() {
+        public Image get() {
+            return get(null);
+        }
+
+        protected Image load(final ImageObserver observer) {
             Image originalImage = icon.getOriginal();
             int width = icon.getIconWidth();
             int height = icon.getIconHeight();
             if (originalImage != null && width > 0 && height > 0) {
-                if (originalImage.getWidth(null) != width || originalImage.getHeight(null) != height) {
+                if (originalImage.getWidth(observer) != width || originalImage.getHeight(observer) != height) {
                     return originalImage.getScaledInstance(width, height, icon.scalingMode);
                 } else {
                     return originalImage;

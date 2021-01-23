@@ -27,8 +27,8 @@ import java.util.function.Supplier;
 
 public class LazyValue<T> {
 
-    private Supplier<T> supplier;
-    private T value;
+    protected Supplier<T> supplier;
+    protected T value;
 
     public LazyValue(final T value) {
         this.value = value;

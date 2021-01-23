@@ -22,6 +22,7 @@
 package com.github.weisj.darklaf.icons;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,7 +37,8 @@ public class DerivableImageIconTest {
         DerivableImageIcon icon = (DerivableImageIcon) loader.getIcon("image_icon.png");
         Set<Image> imageSet = new HashSet<>();
         for (int i = 0; i < 100; i++) {
-            Image img = ((DerivableImageIcon) loader.getIcon("image_icon.png", 100, 100)).getImage();
+            DerivableImageIcon imgIcon = ((DerivableImageIcon) loader.getIcon("image_icon.png", 100, 100));
+            Image img = imgIcon.getImage();
             imageSet.add(img);
         }
         Assertions.assertEquals(1, imageSet.size());
@@ -48,5 +50,29 @@ public class DerivableImageIconTest {
             imageSet.add(icon.getImage());
         }
         Assertions.assertEquals(1, imageSet.size());
+
+        imageSet.clear();
+        icon = icon.derive(50, 50);
+        for (int i = 1; i <= 100; i++) {
+            icon = icon.derive(i, i);
+            imageSet.add(icon.getOriginal());
+        }
+        Assertions.assertEquals(1, imageSet.size());
     }
+
+    @Test
+    void testLoading() {
+        IconLoader loader = IconLoader.get(DerivableImageIconTest.class);
+        Color imageColor = new Color(255, 165, 0);
+        for (int i = 1; i <= 100; i++) {
+            DerivableImageIcon imgIcon = ((DerivableImageIcon) loader.getIcon("image_icon.png", i, i));
+            BufferedImage bufImg = new BufferedImage(i, i, BufferedImage.TYPE_INT_ARGB);
+            Graphics g = bufImg.getGraphics();
+            imgIcon.paintIcon(null, g, 0, 0);
+            g.dispose();
+            Assertions.assertEquals(imageColor.getRGB(), bufImg.getRGB(0, 0),
+                    "Image not rendered on iteration " + i);
+        }
+    }
+
 }
