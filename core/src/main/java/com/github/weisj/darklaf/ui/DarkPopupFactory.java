@@ -115,14 +115,18 @@ public class DarkPopupFactory extends PopupFactory {
         boolean noDecorations = PropertyUtil.getBooleanProperty(contents, KEY_NO_DECORATION);
         boolean opaque = PropertyUtil.getBooleanProperty(contents, KEY_OPAQUE);
         JRootPane rootPane = window instanceof RootPaneContainer ? ((RootPaneContainer) window).getRootPane() : null;
-        if (rootPane != null && contents instanceof JComponent) rootPane.setContentPane((JComponent) contents);
+        if (rootPane != null && contents instanceof Container) {
+            JPanel contentPane = new JPanel(new BorderLayout());
+            contentPane.add(contents);
+            rootPane.setContentPane(contentPane);
+        }
         setupFocusableWindowState(isFocusable, window);
-        setupWindowBackground(window, rootPane, contents, opaque, !noDecorations);
+        setupWindowBackground(window, rootPane, opaque, !noDecorations);
         setupWindowDecorations(window, rootPane, noDecorations);
         setupWindowOpacity(startHidden, window);
     }
 
-    protected void setupWindowBackground(final Window window, final JRootPane rootPane, Component contents,
+    protected void setupWindowBackground(final Window window, final JRootPane rootPane,
             final boolean opaque, final boolean decorations) {
         /*
          * Sometimes the background is java.awt.SystemColor[i=7] It results in a flash of white background,
@@ -134,7 +138,6 @@ public class DarkPopupFactory extends PopupFactory {
             linuxOpacityFix(rootPane);
         }
 
-        Color contentBg = contents.getBackground();
         Color bg = opaque
                 ? ColorUtil.toAlpha(rootPane.getBackground(), 255)
                 : getTranslucentPopupBackground(decorations);
@@ -147,7 +150,6 @@ public class DarkPopupFactory extends PopupFactory {
             p = p.getParent();
         }
         window.setBackground(bg);
-        contents.setBackground(contentBg);
     }
 
     private void linuxOpacityFix(final JRootPane rootPane) {
@@ -190,7 +192,7 @@ public class DarkPopupFactory extends PopupFactory {
         if (startHidden && translucencySupported) {
             try {
                 window.setOpacity(0);
-            } catch (Exception ignored) {
+            } catch (final Exception ignored) {
             }
         }
     }
