@@ -27,7 +27,7 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
-public class WidgetPopupHelper {
+public final class WidgetPopupHelper {
 
     public static Rectangle getPopupBounds(final JComponent parent, final Dimension popupSize,
             final Dimension parentSize) {

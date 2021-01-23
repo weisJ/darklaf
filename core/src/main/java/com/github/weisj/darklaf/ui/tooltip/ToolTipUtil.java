@@ -32,7 +32,7 @@ import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.WindowUtil;
 
-public class ToolTipUtil {
+public final class ToolTipUtil {
 
     public static void applyContext(final JToolTip toolTip) {
         JComponent target = toolTip.getComponent();

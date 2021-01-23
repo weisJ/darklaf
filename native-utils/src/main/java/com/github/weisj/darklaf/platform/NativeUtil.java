@@ -37,7 +37,7 @@ import java.nio.file.*;
  * @see <a href=
  *      "https://github.com/adamheinrich/native-utils">https://github.com/adamheinrich/native-utils</a>
  */
-public class NativeUtil {
+public final class NativeUtil {
 
     public static final String NATIVE_FOLDER_PATH_PREFIX = "nativeutils";
     /**
@@ -93,10 +93,10 @@ public class NativeUtil {
         try (InputStream is = NativeUtil.class.getResourceAsStream(path)) {
             if (!temporaryDir.toFile().canWrite()) throw new IOException("Can't write to temporary directory.");
             Files.copy(is, temp.toAbsolutePath(), StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             delete(temp);
             throw e;
-        } catch (NullPointerException e) {
+        } catch (final NullPointerException e) {
             delete(temp);
             throw new FileNotFoundException("File " + path + " was not found inside JAR.");
         }
@@ -117,7 +117,7 @@ public class NativeUtil {
     private static void delete(final Path path) {
         try {
             Files.deleteIfExists(path);
-        } catch (IOException ignored) {
+        } catch (final IOException ignored) {
         }
     }
 

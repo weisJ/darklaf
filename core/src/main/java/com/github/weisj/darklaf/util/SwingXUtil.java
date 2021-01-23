@@ -29,7 +29,7 @@ import javax.swing.*;
 import org.jdesktop.jxlayer.JXLayer;
 import org.pbjar.jxlayer.plaf.ext.TransformUI;
 
-public class SwingXUtil {
+public final class SwingXUtil {
 
     @SuppressWarnings("unchecked")
     public static Point convertPointToParent(final Component source, final Point p) {

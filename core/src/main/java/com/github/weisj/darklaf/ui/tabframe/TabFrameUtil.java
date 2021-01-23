@@ -31,7 +31,7 @@ import com.github.weisj.darklaf.util.Actions;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
-public class TabFrameUtil {
+public final class TabFrameUtil {
 
     private static final String ACCELERATOR_PREFIX = "accelerator_";
 

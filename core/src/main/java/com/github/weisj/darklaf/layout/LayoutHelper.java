@@ -36,7 +36,7 @@ import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
-public class LayoutHelper {
+public final class LayoutHelper {
 
     private LayoutHelper() {
         throw new IllegalArgumentException("Utility class");

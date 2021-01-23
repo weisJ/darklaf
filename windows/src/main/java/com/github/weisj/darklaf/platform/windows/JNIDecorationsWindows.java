@@ -22,7 +22,7 @@
 package com.github.weisj.darklaf.platform.windows;
 
 /** @author Jannis Weis */
-public class JNIDecorationsWindows {
+public final class JNIDecorationsWindows {
 
     public static native void updateValues(final long hwnd, final int left, final int right, final int height);
 

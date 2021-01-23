@@ -25,7 +25,7 @@ import java.awt.*;
 
 import com.github.weisj.darklaf.platform.macos.theme.MacOSColors;
 
-public class JNIThemeInfoMacOS {
+public final class JNIThemeInfoMacOS {
 
     /**
      * Returns whether dark mode is enabled.

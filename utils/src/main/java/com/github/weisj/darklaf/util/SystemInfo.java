@@ -25,7 +25,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 /** @author Konstantin Bulenkov */
-public class SystemInfo {
+public final class SystemInfo {
     public static final String X86 = "32";
     public static final String X64 = "64";
     public static final String OS_NAME = System.getProperty("os.name");

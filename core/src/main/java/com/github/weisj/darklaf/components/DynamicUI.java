@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 
 import javax.swing.*;
 
-public class DynamicUI {
+public final class DynamicUI {
 
     private static final Map<Component, List<Consumer<Component>>> listeners = new WeakHashMap<>();
 

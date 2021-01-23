@@ -29,7 +29,7 @@ import java.awt.geom.RoundRectangle2D;
 
 import com.github.weisj.darklaf.util.Scale;
 
-public class PaintUtil {
+public final class PaintUtil {
 
     public static final Color TRANSPARENT_COLOR = new Color(0x0, true);
     private static final AlphaComposite transparentComposite =

@@ -27,7 +27,7 @@ import javax.swing.*;
 
 import com.sun.jna.Native;
 
-public class PointerUtil {
+public final class PointerUtil {
 
     /**
      * Get the window handle for the window the given component descends from.

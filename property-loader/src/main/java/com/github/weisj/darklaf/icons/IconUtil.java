@@ -33,7 +33,7 @@ import com.github.weisj.darklaf.util.ImageUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.Scale;
 
-public class IconUtil {
+public final class IconUtil {
 
     private static final int FRAME_ICON_SIZE = 32;
     private static final Map<Window, Icon> windowIconSet = new WeakHashMap<>();

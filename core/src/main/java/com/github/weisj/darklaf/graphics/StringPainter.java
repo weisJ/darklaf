@@ -37,7 +37,7 @@ import sun.swing.SwingUtilities2;
 import com.github.weisj.darklaf.ui.OpacityBufferedUI;
 import com.github.weisj.darklaf.util.*;
 
-public class StringPainter {
+public final class StringPainter {
 
     private static final Logger LOGGER = LogUtil.getLogger(StringPainter.class);
 
@@ -214,7 +214,7 @@ public class StringPainter {
             Field imgField;
             try {
                 imgField = surfaceDataValue.getClass().getDeclaredField("bufImg"); // BufImgSurfaceData
-            } catch (Exception ignored) {
+            } catch (final Exception ignored) {
                 imgField = surfaceDataValue.getClass().getField("offscreenImage"); // CGLSurfaceData
             }
             imgField.setAccessible(true);
@@ -222,7 +222,7 @@ public class StringPainter {
             if (img instanceof BufferedImage) {
                 return (BufferedImage) img;
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
         return null;

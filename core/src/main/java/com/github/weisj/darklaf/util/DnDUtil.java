@@ -25,7 +25,7 @@ import java.awt.*;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
 
-public class DnDUtil {
+public final class DnDUtil {
 
     public static Image createDragImage(final Component c, final int lw, final Color borderColor) {
         return createDragImage(c, new Rectangle(0, 0, c.getWidth(), c.getHeight()), lw, borderColor);

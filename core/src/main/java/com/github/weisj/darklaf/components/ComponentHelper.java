@@ -29,7 +29,7 @@ import javax.swing.*;
 import com.github.weisj.darklaf.components.button.JSplitButton;
 import com.github.weisj.darklaf.ui.button.ButtonConstants;
 
-public class ComponentHelper {
+public final class ComponentHelper {
 
     private ComponentHelper() {
         throw new IllegalStateException("Utility class");

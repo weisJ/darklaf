@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 import com.github.weisj.darklaf.util.Lambdas;
 
-public class ClassFinder {
+public final class ClassFinder {
 
     public static <T> List<T> getInstancesOfType(final Class<T> type, final String... packages) {
         try (ResourceWalker walker = ResourceWalker.walkResources(packages)) {

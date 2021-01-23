@@ -25,7 +25,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 
-public class Scale {
+public final class Scale {
     public static final double SCALE;
     public static final double SCALE_X;
     public static final double SCALE_Y;
@@ -151,7 +151,7 @@ public class Scale {
     public static Point inverseScale(final GraphicsConfiguration gc, final Point p) {
         try {
             return (Point) gc.getDefaultTransform().inverseTransform(p, p);
-        } catch (NoninvertibleTransformException e) {
+        } catch (final NoninvertibleTransformException e) {
             return p;
         }
     }

@@ -21,7 +21,7 @@
  */
 package com.github.weisj.darklaf.util;
 
-public class Types {
+public final class Types {
 
     private Types() {
         throw new IllegalStateException("Utility class");

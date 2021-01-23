@@ -28,7 +28,7 @@ import javax.swing.event.AncestorEvent;
 
 import com.github.weisj.darklaf.listener.AncestorAdapter;
 
-public class WindowUtil {
+public final class WindowUtil {
 
     public static void moveWindow(final Window w, final JComponent content, final int x, final int y) {
         w.setLocation(x, y);

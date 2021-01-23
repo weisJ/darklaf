@@ -23,7 +23,7 @@ package com.github.weisj.darklaf.ui.popupmenu;
 
 import javax.swing.plaf.basic.BasicLookAndFeel;
 
-public class EventHelperUtil {
+public final class EventHelperUtil {
 
     private static boolean eventHelperInstallerFlagSet;
 

@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 import com.github.weisj.darklaf.log.DarkLogHandler;
 import com.github.weisj.darklaf.log.LogFormatter;
 
-public class LogUtil {
+public final class LogUtil {
 
     private static final Logger PARENT = Logger.getLogger("com.github.weisj.darklaf");
     private static final Handler LOG_HANDLER = new DarkLogHandler();

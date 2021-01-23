@@ -23,7 +23,7 @@ package com.github.weisj.darklaf.platform.macos.theme;
 
 import java.awt.*;
 
-public class MacOSColors {
+public final class MacOSColors {
 
     // 0.000000 0.478431 1.000000
     public static final Color ACCENT_BLUE = color(0.000000f, 0.478431f, 1.000000f);

@@ -26,7 +26,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-public class Actions {
+public final class Actions {
 
     public static Action create(final ActionListener action) {
         return new AbstractAction() {

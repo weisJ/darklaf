@@ -26,7 +26,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class Lambdas {
+public final class Lambdas {
 
     private Lambdas() {}
 

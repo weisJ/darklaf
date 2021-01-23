@@ -25,7 +25,7 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
-public class DemoResources {
+public final class DemoResources {
     public static final String LOREM_IPSUM =
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempor quis nibh a semper. Nullam\n"
                     + " auctor, erat non viverra commodo, libero orci aliquam quam, ac interdum nunc est sed\n "

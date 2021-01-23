@@ -21,6 +21,6 @@
  */
 package com.github.weisj.darklaf.ui.text;
 
-public class StyleConstantsEx {
+public final class StyleConstantsEx {
     public static final Object SelectedForeground = "selectedForeground";
 }

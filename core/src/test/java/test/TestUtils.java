@@ -28,7 +28,7 @@ import javax.swing.*;
 
 import org.junit.jupiter.api.Assertions;
 
-class TestUtils {
+final class TestUtils {
 
     private TestUtils() {}
 
@@ -38,14 +38,14 @@ class TestUtils {
             SwingUtilities.invokeAndWait(() -> {
                 try {
                     action.run();
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     exceptionRef.set(e);
                 }
             });
-        } catch (InterruptedException e) {
+        } catch (final InterruptedException e) {
             e.printStackTrace();
             Assertions.fail(e.getMessage(), e);
-        } catch (InvocationTargetException e) {
+        } catch (final InvocationTargetException e) {
             e.getTargetException().printStackTrace();
             Throwable target = e.getTargetException();
             Assertions.fail(target.getMessage(), target);

@@ -32,7 +32,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.UIResource;
 
-public class PropertyUtil {
+public final class PropertyUtil {
 
     public static void installSystemProperty(final String key, final String value) {
         String current = System.getProperty(key);

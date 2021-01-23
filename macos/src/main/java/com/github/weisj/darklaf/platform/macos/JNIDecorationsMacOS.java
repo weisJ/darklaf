@@ -23,7 +23,7 @@ package com.github.weisj.darklaf.platform.macos;
 
 import java.awt.*;
 
-public class JNIDecorationsMacOS {
+public final class JNIDecorationsMacOS {
 
     public static native long getComponentPointer(final Window window);
 

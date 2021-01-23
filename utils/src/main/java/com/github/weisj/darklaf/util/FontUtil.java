@@ -27,7 +27,7 @@ import javax.swing.*;
 import javax.swing.text.StyleContext;
 
 
-public class FontUtil {
+public final class FontUtil {
 
     public static Font createFont(final String family, final int style, final int size) {
         // This method calls FontUtilities.getCompositeFontUIResource(Font) internally which

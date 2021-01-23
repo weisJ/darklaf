@@ -28,7 +28,7 @@ import javax.swing.*;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 
-public class DividedWidgetPainter {
+public final class DividedWidgetPainter {
 
     public static void paintBackground(final Graphics2D g, final JComponent c, final int arc,
             final Rectangle splitBounds, final Color bg, final Color splitBg, final boolean isCellEditor) {

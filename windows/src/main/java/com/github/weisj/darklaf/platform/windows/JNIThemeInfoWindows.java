@@ -21,7 +21,7 @@
  */
 package com.github.weisj.darklaf.platform.windows;
 
-public class JNIThemeInfoWindows {
+public final class JNIThemeInfoWindows {
 
     /**
      * Returns whether dark mode is enabled.

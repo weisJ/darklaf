@@ -35,7 +35,7 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-public class CellUtil {
+public final class CellUtil {
 
     public static final String KEY_SELECTED_CELL_RENDERER = "JComponent.selectedCellRenderer";
 

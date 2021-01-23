@@ -25,7 +25,7 @@ import java.awt.*;
 
 import com.github.weisj.darklaf.DarkLaf;
 
-public class ResourceUtil {
+public final class ResourceUtil {
 
     private static final String BUNDLE_DIR = "bundles";
 

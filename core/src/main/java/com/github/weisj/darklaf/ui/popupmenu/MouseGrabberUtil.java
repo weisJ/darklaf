@@ -32,7 +32,7 @@ import javax.swing.event.ChangeListener;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
-public class MouseGrabberUtil {
+public final class MouseGrabberUtil {
 
     private MouseGrabberUtil() {}
 

@@ -37,7 +37,7 @@ import javax.swing.*;
 import com.github.weisj.darklaf.icons.IconUtil;
 import com.github.weisj.darklaf.util.Pair;
 
-public class TransferUtil {
+public final class TransferUtil {
 
     private TransferUtil() {
         throw new IllegalStateException("Utility class");
@@ -94,7 +94,7 @@ public class TransferUtil {
                 try {
                     // noinspection unchecked
                     importer.accept((T) support.getTransferable().getTransferData(flavor));
-                } catch (Exception ignored) {
+                } catch (final Exception ignored) {
                 }
                 return false;
             }

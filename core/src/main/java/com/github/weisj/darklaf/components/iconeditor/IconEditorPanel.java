@@ -348,7 +348,7 @@ public class IconEditorPanel extends JPanel {
         }
     }
 
-    static class IconValues {
+    static final class IconValues {
 
         private static final Map<Theme, SharedComponent<ColorPaletteChooser>> chooserMap = new HashMap<>();
         private static final Map<Theme, SharedComponent<OpacityChooser>> opacityChooserMap = new HashMap<>();

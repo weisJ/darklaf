@@ -31,7 +31,7 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-public class FocusParentHelper {
+public final class FocusParentHelper {
 
     public static final String KEY_FOCUS_PARENT = "focusParent";
     public static final String KEY_FOCUS_ACTION = "focusOnParentChangedAction";
