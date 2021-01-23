@@ -251,19 +251,24 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Im
     public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
         Image img = image.get();
         if (img != null) {
-            if (ensureImageLoaded(img, c)) {
-                g.drawImage(img, x, y, width, height, null);
+            if (c == null) {
+                // Component is null and can't be used as an image observer for painting.
+                // To ensure the image is painted anyway we force load it.
+                if (!ensureImageLoaded(img)) {
+                    LOGGER.warning("Image could not be loaded in time for painting.");
+                    return;
+                }
             }
+            g.drawImage(img, x, y, width, height, c);
         }
     }
 
-    private boolean ensureImageLoaded(final Image img, final Component c) {
-        MediaTracker tracker = new MediaTracker(c != null ? c : new Component() {});
+    private boolean ensureImageLoaded(final Image img) {
+        MediaTracker tracker = new MediaTracker(new Component() {});
         tracker.addImage(img, 0);
         try {
             tracker.waitForAll();
         } catch (final InterruptedException ex) {
-            LOGGER.warning("Image could not be loaded in time for painting.");
             return false;
         }
         return true;
