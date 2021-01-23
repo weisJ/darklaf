@@ -22,6 +22,7 @@
 package com.github.weisj.darklaf.graphics;
 
 import java.awt.*;
+import java.util.Optional;
 
 import javax.swing.*;
 
@@ -96,5 +97,19 @@ public final class GraphicsUtil {
 
     public static boolean useQuartz() {
         return SystemInfo.isMac && PropertyValue.TRUE.equals(System.getProperty("apple.awt.graphics.UseQuartz"));
+    }
+
+    public static boolean supportsTransparency(final Window window) {
+        Optional<GraphicsDevice> gd =
+                Optional.ofNullable(window).map(Window::getGraphicsConfiguration).map(GraphicsConfiguration::getDevice);
+        return gd.map(d -> d.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.PERPIXEL_TRANSLUCENT))
+                .orElse(false);
+    }
+
+    public static boolean supportsTransparency() {
+        return !GraphicsEnvironment.isHeadless() && GraphicsEnvironment
+                .getLocalGraphicsEnvironment()
+                .getDefaultScreenDevice()
+                .isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.PERPIXEL_TRANSLUCENT);
     }
 }

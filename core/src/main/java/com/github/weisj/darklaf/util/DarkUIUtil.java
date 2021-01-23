@@ -29,7 +29,6 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.beans.PropertyChangeEvent;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -528,13 +527,6 @@ public final class DarkUIUtil {
 
     public static Container getOpaqueParent(final Container parent) {
         return getParentMatching(parent, Container::isOpaque);
-    }
-
-    public static boolean supportsTransparency(final Window window) {
-        Optional<GraphicsDevice> gd =
-                Optional.ofNullable(window).map(Window::getGraphicsConfiguration).map(GraphicsConfiguration::getDevice);
-        return gd.map(d -> d.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT))
-                .orElse(false);
     }
 
     public static Dimension getPreferredSize(final JComponent component) {
