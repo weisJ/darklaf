@@ -22,17 +22,17 @@
 package com.github.weisj.darklaf.ui;
 
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Objects;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
-import com.github.weisj.darklaf.util.ColorUtil;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.Pair;
-import com.github.weisj.darklaf.util.PropertyUtil;
+import com.github.weisj.darklaf.util.*;
 
 public class DarkPopupFactory extends PopupFactory {
 
@@ -115,13 +115,14 @@ public class DarkPopupFactory extends PopupFactory {
         boolean noDecorations = PropertyUtil.getBooleanProperty(contents, KEY_NO_DECORATION);
         boolean opaque = PropertyUtil.getBooleanProperty(contents, KEY_OPAQUE);
         JRootPane rootPane = window instanceof RootPaneContainer ? ((RootPaneContainer) window).getRootPane() : null;
-        setupWindowBackground(window, rootPane, opaque, !noDecorations);
+        if (rootPane != null && contents instanceof JComponent) rootPane.setContentPane((JComponent) contents);
         setupFocusableWindowState(isFocusable, window);
+        setupWindowBackground(window, rootPane, contents, opaque, !noDecorations);
         setupWindowDecorations(window, rootPane, noDecorations);
         setupWindowOpacity(startHidden, window);
     }
 
-    protected void setupWindowBackground(final Window window, final JRootPane rootPane,
+    protected void setupWindowBackground(final Window window, final JRootPane rootPane, Component contents,
             final boolean opaque, final boolean decorations) {
         /*
          * Sometimes the background is java.awt.SystemColor[i=7] It results in a flash of white background,
@@ -129,6 +130,11 @@ public class DarkPopupFactory extends PopupFactory {
          * explicitly.
          */
         if (rootPane == null) return;
+        if (SystemInfo.isLinux && !opaque) {
+            linuxOpacityFix(rootPane);
+        }
+
+        Color contentBg = contents.getBackground();
         Color bg = opaque
                 ? ColorUtil.toAlpha(rootPane.getBackground(), 255)
                 : getTranslucentPopupBackground(decorations);
@@ -141,6 +147,20 @@ public class DarkPopupFactory extends PopupFactory {
             p = p.getParent();
         }
         window.setBackground(bg);
+        contents.setBackground(contentBg);
+    }
+
+    private void linuxOpacityFix(final JRootPane rootPane) {
+        // HeavyWeights popups use rootpanes with double buffering disabled by setting
+        // setUseTrueDoubleBuffering(false). On some Linux window managers (e.g. Gnome) this results
+        // in windows not being transparent if requested.
+        try {
+            Method method = JRootPane.class.getDeclaredMethod("setUseTrueDoubleBuffering", boolean.class);
+            method.setAccessible(true);
+            method.invoke(rootPane, true);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 
     protected void setupFocusableWindowState(final boolean isFocusable, final Window window) {
@@ -166,7 +186,7 @@ public class DarkPopupFactory extends PopupFactory {
     }
 
     protected void setupWindowOpacity(final boolean startHidden, final Window window) {
-        boolean translucencySupported = DarkUIUtil.supportsTransparency(window);
+        boolean translucencySupported = GraphicsUtil.supportsTransparency(window);
         if (startHidden && translucencySupported) {
             try {
                 window.setOpacity(0);
@@ -226,4 +246,5 @@ public class DarkPopupFactory extends PopupFactory {
         MEDIUM_WEIGHT,
         HEAVY_WEIGHT
     }
+
 }
