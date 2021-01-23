@@ -58,7 +58,7 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
         int shadowSize = UIManager.getInt("ToolTip.shadowSize");
         float opacity = UIManager.getInt("ToolTip.shadowOpacity") / 100.0f;
         shadowBorder = new DropShadowBorder(UIManager.getColor("ToolTip.borderShadowColor"), shadowSize, opacity,
-                2 * shadowSize, false, true, true, true);
+                2 * shadowSize, true, true, true, true);
         paintShadow = UIManager.getBoolean("ToolTip.paintShadow");
     }
 
