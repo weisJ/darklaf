@@ -21,8 +21,6 @@
  */
 package com.github.weisj.darklaf.ui.cell;
 
-import java.awt.*;
-
 import javax.swing.*;
 
 public class DarkCellRendererPane extends CellRendererPane {
