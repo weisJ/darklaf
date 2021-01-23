@@ -134,4 +134,9 @@ public class DarkTreeCellRendererDelegate extends TreeCellRendererDelegate imple
     public Dimension getPreferredSize() {
         return getDelegate() instanceof JComponent ? ((JComponent) getDelegate()).getPreferredSize() : null;
     }
+
+    @Override
+    public Dimension getMinimumSize() {
+        return getDelegate() instanceof JComponent ? ((JComponent) getDelegate()).getMinimumSize() : null;
+    }
 }

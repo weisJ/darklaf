@@ -77,21 +77,36 @@ public class TreeRendererComponent extends Container {
     public Dimension getPreferredSize() {
         if (defaultRenderer != null) {
             Dimension pSize = renderComponent.getPreferredSize();
-
             pSize.width += getOffset() + PAD;
-
             Dimension rSize = defaultRenderer.getPreferredSize();
 
-            Icon icon = defaultRenderer.getIcon();
-            if (rSize != null) {
-                pSize.height = Math.max(pSize.height, rSize.height);
-            }
-            if (icon != null) {
-                pSize.height = Math.max(pSize.height, icon.getIconHeight());
-            }
+            addIconSize(pSize, rSize);
             return pSize;
         }
         return new Dimension(0, 0);
+    }
+
+    @Override
+    public Dimension getMinimumSize() {
+        if (defaultRenderer != null) {
+            Dimension pSize = renderComponent.getMinimumSize();
+            pSize.width += getOffset() + PAD;
+            Dimension rSize = defaultRenderer.getMinimumSize();
+
+            addIconSize(pSize, rSize);
+            return pSize;
+        }
+        return new Dimension(0, 0);
+    }
+
+    private void addIconSize(final Dimension pSize, final Dimension rSize) {
+        Icon icon = defaultRenderer.getIcon();
+        if (rSize != null) {
+            pSize.height = Math.max(pSize.height, rSize.height);
+        }
+        if (icon != null) {
+            pSize.height = Math.max(pSize.height, icon.getIconHeight());
+        }
     }
 
     @Override
