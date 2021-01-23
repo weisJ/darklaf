@@ -47,6 +47,7 @@ public class DarkToolTipUI extends BasicToolTipUI
         implements PropertyChangeListener, HierarchyListener, ToolTipConstants {
 
     protected static final float MAX_ALPHA = 1.0f;
+    protected static final float MIN_ALPHA = 0.1f;
 
     protected final MouseListener exitListener = new MouseAdapter() {
         @Override
@@ -348,7 +349,9 @@ public class DarkToolTipUI extends BasicToolTipUI
     }
 
     protected void scheduleAnimation() {
+        Window window = DarkUIUtil.getWindow(toolTip);
         animationScheduled = transparencySupported(DarkUIUtil.getWindow(toolTip));
+        if (window != null && animationScheduled) window.setOpacity(MIN_ALPHA);
     }
 
     protected boolean transparencySupported(final Window window) {
@@ -406,7 +409,7 @@ public class DarkToolTipUI extends BasicToolTipUI
 
         @Override
         public void paintNow(final float fraction) {
-            alpha = fraction * MAX_ALPHA;
+            alpha = MIN_ALPHA + fraction * (MAX_ALPHA - MIN_ALPHA);
             Window window = SwingUtilities.getWindowAncestor(toolTip);
             if (DarkUIUtil.isDecorated(window)) return;
             if (window != null) window.setOpacity(alpha);
