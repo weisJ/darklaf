@@ -33,4 +33,6 @@ public interface TreeRendererSupport {
     int getIconTextGap();
 
     Dimension getPreferredSize();
+
+    Dimension getMinimumSize();
 }
