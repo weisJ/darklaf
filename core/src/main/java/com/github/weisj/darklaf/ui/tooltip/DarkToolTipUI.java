@@ -352,7 +352,7 @@ public class DarkToolTipUI extends BasicToolTipUI
     }
 
     protected boolean transparencySupported(final Window window) {
-        return style != ToolTipStyle.PLAIN && DarkUIUtil.supportsTransparency(window);
+        return style != ToolTipStyle.PLAIN && GraphicsUtil.supportsTransparency(window);
     }
 
     protected void updateStyle() {
@@ -361,6 +361,7 @@ public class DarkToolTipUI extends BasicToolTipUI
         ToolTipStyle tooltipStyle = ToolTipStyle.parse(toolTip.getClientProperty(KEY_STYLE));
         if (style == null) style = tooltipStyle;
         if (style == null) style = ToolTipStyle.parse(UIManager.get("ToolTip.defaultStyle"));
+        if (style.isOpqaue() && !GraphicsUtil.supportsTransparency()) style = ToolTipStyle.PLAIN;
         if (style != tooltipStyle) {
             toolTip.putClientProperty(KEY_STYLE, style);
         }
