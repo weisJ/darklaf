@@ -78,11 +78,7 @@ public class DarkPopupFactory extends PopupFactory {
                 popup = super.getPopup(getHeavyWeightParent(DarkUIUtil.getWindow(owner)), contents, x, y);
                 window = DarkUIUtil.getWindow(contents);
             }
-            if (window != null) {
-                Window w = window;
-                w.setLocation(x, y);
-                SwingUtilities.invokeLater(() -> w.setLocation(x, y));
-            }
+            if (window != null) window.setLocation(x, y);
         }
         return new Pair<>(popup, type);
     }
