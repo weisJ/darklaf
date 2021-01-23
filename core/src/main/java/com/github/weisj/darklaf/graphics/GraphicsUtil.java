@@ -22,7 +22,6 @@
 package com.github.weisj.darklaf.graphics;
 
 import java.awt.*;
-import java.util.Optional;
 
 import javax.swing.*;
 
@@ -100,16 +99,20 @@ public final class GraphicsUtil {
     }
 
     public static boolean supportsTransparency(final Window window) {
-        Optional<GraphicsDevice> gd =
-                Optional.ofNullable(window).map(Window::getGraphicsConfiguration).map(GraphicsConfiguration::getDevice);
-        return gd.map(d -> d.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.PERPIXEL_TRANSLUCENT))
-                .orElse(false);
+        if (window == null || GraphicsEnvironment.isHeadless()) return false;
+        GraphicsConfiguration gc = window.getGraphicsConfiguration();
+        if (gc == null) return false;
+        return supportsTransparency(gc.getDevice());
     }
 
     public static boolean supportsTransparency() {
-        return !GraphicsEnvironment.isHeadless() && GraphicsEnvironment
-                .getLocalGraphicsEnvironment()
-                .getDefaultScreenDevice()
-                .isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.PERPIXEL_TRANSLUCENT);
+        if (GraphicsEnvironment.isHeadless()) return false;
+        return supportsTransparency(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice());
+    }
+
+    public static boolean supportsTransparency(final GraphicsDevice gd) {
+        return gd != null
+                && gd.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.PERPIXEL_TRANSLUCENT)
+                && gd.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT);
     }
 }
