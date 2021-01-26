@@ -76,6 +76,7 @@ fun BaseFormatExtension.configFilter(init: PatternFilterable.() -> Unit) {
     filter {
         // Autostyle does not support gitignore yet https://github.com/autostyle/autostyle/issues/13
         exclude("out/**")
+        exclude(".idea/**", ".run/**")
         if (project == rootProject) {
             exclude("gradlew*", "gradle/**")
         } else {
