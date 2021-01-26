@@ -37,6 +37,7 @@ import javax.swing.*;
 import javax.swing.plaf.DimensionUIResource;
 import javax.swing.plaf.InsetsUIResource;
 
+import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.icons.DarkUIAwareIcon;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.icons.IconLoader;
@@ -326,7 +327,7 @@ public final class PropertyLoader {
             } else {
                 try {
                     values[i] = Integer.parseInt(subKeys[i]);
-                } catch (NumberFormatException ignored) {
+                } catch (final NumberFormatException ignored) {
                     // In this case the value will be 0.
                 }
             }

@@ -28,6 +28,7 @@ import java.util.Objects;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;

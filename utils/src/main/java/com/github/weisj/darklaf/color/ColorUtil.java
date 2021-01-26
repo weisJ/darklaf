@@ -19,11 +19,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.util;
+package com.github.weisj.darklaf.color;
 
 import java.awt.*;
 
 import javax.swing.plaf.UIResource;
+
+import com.github.weisj.darklaf.util.ColorWrapper;
 
 /** @author Jannis Weis */
 public final class ColorUtil {
@@ -59,7 +61,7 @@ public final class ColorUtil {
     public static Color fromHex(final String str, final Color defaultValue) {
         try {
             return fromHex(str);
-        } catch (Exception var3) {
+        } catch (final Exception var3) {
             return defaultValue;
         }
     }

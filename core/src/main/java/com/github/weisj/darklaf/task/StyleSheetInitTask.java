@@ -27,8 +27,8 @@ import javax.swing.*;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 
+import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.util.ColorUtil;
 
 public class StyleSheetInitTask implements DefaultsInitTask {
 

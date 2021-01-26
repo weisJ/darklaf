@@ -32,13 +32,13 @@ import java.util.List;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.color.DarkColorModel;
 import com.github.weisj.darklaf.color.DarkColorModelHSB;
 import com.github.weisj.darklaf.color.DarkColorModelHSL;
 import com.github.weisj.darklaf.color.DarkColorModelRGB;
 import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
-import com.github.weisj.darklaf.util.ColorUtil;
 
 public class ColorTriangle extends JComponent {
 
@@ -449,7 +449,7 @@ public class ColorTriangle extends JComponent {
         try {
             // For calculating pick location. MouseEvents already respect the ui scaling.
             triangleInverse = rotationTransform.createInverse();
-        } catch (NoninvertibleTransformException e) {
+        } catch (final NoninvertibleTransformException e) {
             e.printStackTrace();
         }
     }
@@ -644,7 +644,7 @@ public class ColorTriangle extends JComponent {
                         triangleInverse.transform(dummy, dummy);
                         Point2D sv = getSaturationAndValue(dummy.getX(), dummy.getY());
                         setPixel(raster, i, j, getColorRGB(getHue(), sv.getX(), sv.getY()));
-                    } catch (NoninvertibleTransformException ignored) {
+                    } catch (final NoninvertibleTransformException ignored) {
                     }
                 }
             }

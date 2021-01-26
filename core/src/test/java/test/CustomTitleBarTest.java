@@ -35,10 +35,10 @@ import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
 import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.theme.DarculaTheme;
 import com.github.weisj.darklaf.theme.IntelliJTheme;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
-import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -99,7 +99,7 @@ class CustomTitleBarTest extends AbstractImageTest {
                 lock.wait(100000);
                 // Wait some time because the window may still be transparent.
                 Thread.sleep(500);
-            } catch (InterruptedException e) {
+            } catch (final InterruptedException e) {
                 e.printStackTrace();
                 Thread.currentThread().interrupt();
             }

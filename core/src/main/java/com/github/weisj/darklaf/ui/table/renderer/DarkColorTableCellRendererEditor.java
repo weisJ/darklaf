@@ -29,8 +29,8 @@ import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
+import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.components.color.PopupColorChooser;
-import com.github.weisj.darklaf.util.ColorUtil;
 
 /** @author Jannis Weis */
 public class DarkColorTableCellRendererEditor extends AbstractCellEditor implements TableCellRenderer, TableCellEditor {

@@ -40,12 +40,12 @@ import javax.swing.border.EmptyBorder;
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.PropertyLoader;
+import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.components.border.DropShadowBorder;
 import com.github.weisj.darklaf.icons.DarkSVGIcon;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.icons.IconColorMapper;
 import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.ImageUtil;
 import com.github.weisj.darklaf.util.StringUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
@@ -241,7 +241,7 @@ public class CreateUITable {
             } else {
                 path = createImage(value, keyName, size);
             }
-        } catch (IOException ignored) {
+        } catch (final IOException ignored) {
             return StringUtil.repeat(IDENT, ident) + "<td></td>\n";
         }
         return StringUtil.repeat(IDENT, ident) + String
@@ -278,7 +278,7 @@ public class CreateUITable {
         StringBuilder sb = new StringBuilder(StringUtil.repeat(IDENT, ident)).append("<td align=\"center\">\n");
         try {
             readFile(icon.getSvgURI().toURL(), sb, ident + 1);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
         sb.append(StringUtil.repeat(IDENT, ident)).append("</td>\n");

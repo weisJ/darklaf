@@ -28,8 +28,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
+import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
-import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /** @author Jannis Weis */
@@ -217,7 +217,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
     public void layoutContainer(final Container scrollbarContainer) {
         try {
             super.layoutContainer(scrollbarContainer);
-        } catch (NullPointerException ignore) {
+        } catch (final NullPointerException ignore) {
             // installUI is not performed yet or uninstallUI has set almost every field to null.
         }
     }

@@ -27,12 +27,12 @@ import java.util.Properties;
 
 import javax.swing.plaf.ColorUIResource;
 
+import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.color.DarkColorModelHSB;
 import com.github.weisj.darklaf.color.DarkColorModelHSL;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.AccentColorRule;
 import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
-import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.Pair;
 
 public class ForegroundColorGenerationTask extends ColorAdjustmentTask {

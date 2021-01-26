@@ -32,6 +32,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.*;
 
+import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.color.DarkColorModel;
 import com.github.weisj.darklaf.color.DarkColorModelHSB;
 import com.github.weisj.darklaf.color.DarkColorModelHSL;
@@ -50,7 +51,6 @@ import com.github.weisj.darklaf.ui.colorchooser.ColorTriangle;
 import com.github.weisj.darklaf.ui.colorchooser.ColorValueFormatter;
 import com.github.weisj.darklaf.ui.slider.DarkSliderUI;
 import com.github.weisj.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
-import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class SmallColorChooser extends JPanel implements ChooserComponent<Color> {

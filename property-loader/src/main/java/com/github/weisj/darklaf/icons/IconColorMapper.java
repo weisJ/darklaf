@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.PropertyLoader;
-import com.github.weisj.darklaf.util.ColorUtil;
+import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.Pair;
 import com.github.weisj.darklaf.util.Types;
@@ -60,7 +60,7 @@ public final class IconColorMapper {
         LOGGER.finer(() -> "Patching colors of icon " + svgIcon.getSvgURI());
         try {
             loadColors(diagram, defaults, contextDefaults);
-        } catch (SVGElementException e) {
+        } catch (final SVGElementException e) {
             LOGGER.log(Level.SEVERE, "Failed patching colors. " + e.getMessage(), e.getStackTrace());
         }
     }
@@ -158,7 +158,7 @@ public final class IconColorMapper {
         attribute.setName(key);
         try {
             child.getStyle(attribute);
-        } catch (SVGException e) {
+        } catch (final SVGException e) {
             return null;
         }
         return attribute;
@@ -169,7 +169,7 @@ public final class IconColorMapper {
         attribute.setName("stop-opacity");
         try {
             stop.getStyle(attribute);
-        } catch (SVGException e) {
+        } catch (final SVGException e) {
             return -1;
         }
         return !attribute.getStringValue().isEmpty() ? attribute.getFloatValue() : -1;
@@ -204,7 +204,7 @@ public final class IconColorMapper {
         attribute.setName("opacity");
         try {
             child.getStyle(attribute);
-        } catch (SVGException e) {
+        } catch (final SVGException e) {
             e.printStackTrace();
             return null;
         }
@@ -238,7 +238,7 @@ public final class IconColorMapper {
                 }
                 grad.loaderAddChild(null, stop1);
                 grad.loaderAddChild(null, stop2);
-            } catch (SVGException e) {
+            } catch (final SVGException e) {
                 e.printStackTrace();
             }
         });
