@@ -129,6 +129,7 @@ public final class LafManager {
      * @param enabled true if changes should be reported.
      */
     public static void enabledPreferenceChangeReporting(final boolean enabled) {
+        LOGGER.info("Preference reporting is set to: " + enabled);
         ThemePreferencesHandler.getSharedInstance().enablePreferenceChangeReporting(enabled);
         if (ThemeSettings.isInitialized()) ThemeSettings.getInstance().setSystemPreferencesEnabled(enabled);
     }

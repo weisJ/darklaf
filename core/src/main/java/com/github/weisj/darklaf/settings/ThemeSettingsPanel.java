@@ -560,50 +560,47 @@ public class ThemeSettingsPanel extends JPanel {
 
         @Override
         public AccentColorRule getAccentColorRule() {
-            PreferredThemeStyle preferredThemeStyle = LafManager.getPreferredThemeStyle();
-            return getAccentColorRule(getTheme(preferredThemeStyle));
-        }
-
-        private AccentColorRule getAccentColorRule(final Theme theme) {
-            if (theme == null) return AccentColorRule.getDefault();
-            Color accentColor = getAccentColor(theme, isAccentColorFollowsSystem());
-            Color selectionColor = getSelectionColor(theme, isSelectionColorFollowsSystem());
+            // Avoid unnecessary native calls.
+            boolean useSystemAccent = isAccentColorFollowsSystem();
+            boolean useSystemSelection = isSelectionColorFollowsSystem();
+            PreferredThemeStyle prefStyle = useSystemAccent || useSystemSelection
+                    ? LafManager.getPreferredThemeStyle()
+                    : null;
+            Theme theme = getTheme(prefStyle);
+            Color accentColor = theme.supportsCustomAccentColor()
+                    ? useSystemAccent
+                            ? prefStyle.getAccentColorRule().getAccentColor()
+                            : theme.getAccentColorRule().getAccentColor()
+                    : null;
+            Color selectionColor = theme.supportsCustomSelectionColor()
+                    ? useSystemSelection
+                            ? prefStyle.getAccentColorRule().getSelectionColor()
+                            : theme.getAccentColorRule().getSelectionColor()
+                    : null;
             return AccentColorRule.fromColor(accentColor, selectionColor);
-        }
-
-        private Color getAccentColor(final Theme theme, final boolean useThemeColor) {
-            return theme.supportsCustomAccentColor()
-                    ? useThemeColor ? theme.getAccentColorRule().getAccentColor()
-                            : getSelectedColor(bgAccent, defaultAccent)
-                    : null;
-        }
-
-        private Color getSelectionColor(final Theme theme, final boolean useThemeColor) {
-            return theme.supportsCustomSelectionColor()
-                    ? useThemeColor ? theme.getAccentColorRule().getSelectionColor()
-                            : getSelectedColor(bgSelection, defaultSelection)
-                    : null;
         }
 
         @Override
         public FontSizeRule getFontSizeRule() {
-            PreferredThemeStyle preferredThemeStyle = LafManager.getPreferredThemeStyle();
-            return getFontSizeRule(getTheme(preferredThemeStyle), preferredThemeStyle);
-        }
-
-        private FontSizeRule getFontSizeRule(final Theme theme, final PreferredThemeStyle preferredThemeStyle) {
-            if (theme == null) return FontSizeRule.getDefault();
-            return isFontSizeFollowsSystem() ? preferredThemeStyle.getFontSizeRule()
+            return isFontSizeFollowsSystem()
+                    ? LafManager.getPreferredThemeStyle().getFontSizeRule()
                     : FontSizeRule.relativeAdjustment(fontSlider.getValue());
         }
 
         @Override
         public Theme getTheme() {
-            return getTheme(LafManager.getPreferredThemeStyle());
+            return getTheme(null);
         }
 
         private Theme getTheme(final PreferredThemeStyle preferredThemeStyle) {
-            return isThemeFollowsSystem() ? LafManager.themeForPreferredStyle(preferredThemeStyle) : getSelectedTheme();
+            if (isThemeFollowsSystem()) {
+                PreferredThemeStyle prefStyle = preferredThemeStyle != null
+                        ? preferredThemeStyle
+                        : LafManager.getPreferredThemeStyle();
+                return LafManager.themeForPreferredStyle(prefStyle);
+            } else {
+                return getSelectedTheme();
+            }
         }
 
         private Theme getSelectedTheme() {
