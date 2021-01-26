@@ -63,6 +63,7 @@ public interface ComponentDemo {
 
     static void showDemo(final ComponentDemo demo, final boolean asDialog) {
         LafManager.enabledPreferenceChangeReporting(false);
+        LafManager.addThemePreferenceChangeListener(LafManager::installTheme);
         LafManager.setDecorationsEnabled(true);
         LafManager.setLogLevel(Level.FINE);
         SwingUtilities.invokeLater(() -> {

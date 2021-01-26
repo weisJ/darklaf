@@ -24,7 +24,6 @@
  */
 #include "com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows.h"
 
-#include <iostream>
 #include <string>
 #include <thread>
 #include <atomic>

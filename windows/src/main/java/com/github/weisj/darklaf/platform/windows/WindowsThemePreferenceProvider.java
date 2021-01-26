@@ -24,6 +24,7 @@ package com.github.weisj.darklaf.platform.windows;
 import java.awt.*;
 import java.util.function.Consumer;
 
+import com.github.weisj.darklaf.color.DarkColorModelHSB;
 import com.github.weisj.darklaf.theme.info.*;
 
 public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
@@ -48,8 +49,16 @@ public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
         ContrastRule contrastRule = highContrast ? ContrastRule.HIGH_CONTRAST : ContrastRule.STANDARD;
         ColorToneRule toneRule = darkMode ? ColorToneRule.DARK : ColorToneRule.LIGHT;
         FontSizeRule fontSizeRule = FontSizeRule.relativeAdjustment(fontScaling / 100f);
-        AccentColorRule accentColorRule = AccentColorRule.fromColor(createColorFromRGB(accentColorRGB));
+        Color accentColor = createColorFromRGB(accentColorRGB);
+        Color selectionColor = deriveSelectionColor(accentColor);
+        AccentColorRule accentColorRule = AccentColorRule.fromColor(accentColor, selectionColor);
         return new PreferredThemeStyle(contrastRule, toneRule, accentColorRule, fontSizeRule);
+    }
+
+    private Color deriveSelectionColor(final Color color) {
+        if (color == null) return null;
+        double[] hsb = DarkColorModelHSB.RGBtoHSBValues(color.getRed(), color.getGreen(), color.getBlue());
+        return DarkColorModelHSB.getColorFromHSBValues(hsb[0], hsb[1] / 2.5, Math.min(1, hsb[2] * 1.2));
     }
 
     private Color createColorFromRGB(final int rgb) {
@@ -96,6 +105,12 @@ public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
     @Override
     public boolean supportsNativeAccentColor() {
         return WindowsLibrary.get().isLoaded();
+    }
+
+    @Override
+    public boolean supportsNativeSelectionColor() {
+        // Depends on accent color as it is derived from it.
+        return supportsNativeAccentColor();
     }
 
     @Override
