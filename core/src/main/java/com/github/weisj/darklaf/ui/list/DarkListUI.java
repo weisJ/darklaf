@@ -29,7 +29,6 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 
 import com.github.weisj.darklaf.ui.cell.CellConstants;
-import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererPane;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -132,7 +131,7 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
             } else {
                 rowBounds.x += rowBounds.width;
                 rowBounds.width = maxX - rowBounds.x;
-                rowBounds.y = paintBounds.y;
+                rowBounds.y = Math.max(paintBounds.y, list.getInsets().top);
             }
 
             if (rowBounds == null) {
@@ -176,22 +175,18 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
             final ListSelectionModel selModel, final int leadIndex, final int row, final int bgWidth) {
         boolean empty = index < 0 || index >= list.getModel().getSize();
         Object value = empty ? null : dataModel.getElementAt(index);
-        boolean cellHasFocus = list.hasFocus() && (index == leadIndex);
-        boolean isSelected = selModel.isSelectedIndex(index);
+        boolean cellHasFocus = !empty && list.hasFocus() && (index == leadIndex);
+        boolean isSelected = !empty && selModel.isSelectedIndex(index);
+        int cellIndex = !empty ? index : -row; // Negative row indices aren't subject to model conversion.
 
         int cx = rowBounds.x;
         int cy = rowBounds.y;
-        int cw = rowBounds.width;
+        int cw = empty && bgWidth > 0 ? bgWidth : rowBounds.width;
         int ch = rowBounds.height;
 
-        if (empty) {
-            g.setColor(CellUtil.getListBackground(list, list, false, row));
-            g.fillRect(cx, cy, bgWidth > 0 ? bgWidth : cw, ch);
-        } else {
-            Component rendererComponent =
-                    cellRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            rendererPane.paintComponent(g, rendererComponent, list, cx, cy, cw, ch, true);
-        }
+        Component rendererComponent =
+                cellRenderer.getListCellRendererComponent(list, value, cellIndex, isSelected, cellHasFocus);
+        rendererPane.paintComponent(g, rendererComponent, list, cx, cy, cw, ch, true);
     }
 
     @Override
