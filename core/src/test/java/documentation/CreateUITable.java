@@ -46,6 +46,7 @@ import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.icons.IconColorMapper;
 import com.github.weisj.darklaf.parser.ParseResult;
 import com.github.weisj.darklaf.parser.Parser;
+import com.github.weisj.darklaf.parser.PrimitiveParser;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.ImageUtil;
 import com.github.weisj.darklaf.util.StringUtil;
@@ -337,8 +338,9 @@ public class CreateUITable {
         Object value = getValue(val);
         if (value instanceof Color) {
             Color color = (Color) value;
-            return String.format("#%s [%03d,%03d,%03d]", ColorUtil.toHex(color), color.getRed(), color.getGreen(),
-                    color.getBlue());
+            return String.format("%s%s [%03d,%03d,%03d]",
+                    PrimitiveParser.COLOR_PREFIX, ColorUtil.toHex(color),
+                    color.getRed(), color.getGreen(), color.getBlue());
         } else if (value instanceof Insets) {
             Insets insets = (Insets) value;
             return String.format("Insets [%d,%d,%d,%d]", insets.top, insets.left, insets.bottom, insets.right);
