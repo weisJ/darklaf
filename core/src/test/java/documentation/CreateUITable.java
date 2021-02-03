@@ -39,12 +39,13 @@ import javax.swing.border.EmptyBorder;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.components.border.DropShadowBorder;
 import com.github.weisj.darklaf.icons.DarkSVGIcon;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.icons.IconColorMapper;
+import com.github.weisj.darklaf.parser.ParseResult;
+import com.github.weisj.darklaf.parser.Parser;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.ImageUtil;
 import com.github.weisj.darklaf.util.StringUtil;
@@ -123,7 +124,7 @@ public class CreateUITable {
     }
 
     private UIDefaults setupThemeDefaults(final Theme theme) {
-        PropertyLoader.setDebugMode(true);
+        Parser.setDebugMode(true);
         LafManager.setTheme(theme);
         UIDefaults defaults = new DarkLaf() {
             @Override
@@ -131,7 +132,7 @@ public class CreateUITable {
                 return theme;
             }
         }.getDefaults();
-        PropertyLoader.setDebugMode(false);
+        Parser.setDebugMode(false);
         LafManager.installTheme(theme);
         currentDefaults = UIManager.getLookAndFeelDefaults();
         return defaults;
@@ -169,6 +170,7 @@ public class CreateUITable {
             Object val1 = o1.getValue();
             Object val2 = o2.getValue();
             if (val1 instanceof Comparable) {
+                // noinspection unchecked
                 return ((Comparable<Object>) val1).compareTo(val2);
             } else {
                 return val1.toString().compareTo(val2.toString());
@@ -191,12 +193,16 @@ public class CreateUITable {
         }
         appendData(builder, key, ident + 1);
         Object value = entry.getValue();
-        if (value instanceof PropertyLoader.ReferenceInfo) {
-            PropertyLoader.ReferenceInfo<?> info = (PropertyLoader.ReferenceInfo<?>) value;
-            appendData(builder, parseValue(info.getValue()), ident + 1); // Value
-            appendData(builder, info.getReferenceKey(), ident + 1); // Reference
-            builder.append(parsePreview(key, info.getValue(), ident + 1));
+        if (value instanceof Parser.DebugParseResult
+                && ((Parser.DebugParseResult) value).referenceKey != null) {
+            Parser.DebugParseResult debugResult = (Parser.DebugParseResult) value;
+            appendData(builder, parseValue(debugResult.result), ident + 1); // Value
+            appendData(builder, debugResult.referenceKey, ident + 1); // Reference
+            builder.append(parsePreview(key, debugResult.result, ident + 1));
         } else {
+            if (value instanceof ParseResult) {
+                value = ((ParseResult) value).result;
+            }
             appendData(builder, parseValue(value), ident + 1); // Value
             appendData(builder, "", ident + 1); // Reference
             builder.append(parsePreview(key, value, ident + 1));
@@ -220,7 +226,7 @@ public class CreateUITable {
     }
 
     private Object getValue(final Object val) {
-        Object value = PropertyLoader.unpackReference(val);
+        Object value = val;
         if (value instanceof UIDefaults.ActiveValue) {
             value = ((UIDefaults.ActiveValue) value).createValue(currentDefaults);
         }
@@ -308,12 +314,6 @@ public class CreateUITable {
             svg = svg.replaceAll("\\<defs id\\=\\\"colors\\\"\\>(\\n.*)* \\<\\/defs\\>\\s+", "");
         }
         return svg;
-    }
-
-    private Color getColor(final UIDefaults defaults, final String key) {
-        Object obj = getValue(defaults.get(key));
-        if (obj instanceof Color) return (Color) obj;
-        return null;
     }
 
     private void readFile(final URL url, final StringBuilder builder, final int ident) throws IOException {
