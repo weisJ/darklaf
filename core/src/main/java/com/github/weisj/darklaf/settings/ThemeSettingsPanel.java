@@ -332,7 +332,6 @@ public class ThemeSettingsPanel extends JPanel {
         fontSlider.setMinimum(FontSizePreset.TINY.getPercentage());
         fontSlider.setMaximum(FontSizePreset.HUGE.getPercentage());
         int tickSpacing = 25;
-        // noinspection unchecked
         Dictionary<Integer, JComponent> dict = fontSlider.createStandardLabels(tickSpacing);
         JLabel min = ((JLabel) dict.get(fontSlider.getMinimum()));
         UIUpdater.registerComponent(min);
@@ -570,12 +569,12 @@ public class ThemeSettingsPanel extends JPanel {
             Color accentColor = theme.supportsCustomAccentColor()
                     ? useSystemAccent
                             ? prefStyle.getAccentColorRule().getAccentColor()
-                            : theme.getAccentColorRule().getAccentColor()
+                            : getSelectedColor(bgAccent, defaultAccent)
                     : null;
             Color selectionColor = theme.supportsCustomSelectionColor()
                     ? useSystemSelection
                             ? prefStyle.getAccentColorRule().getSelectionColor()
-                            : theme.getAccentColorRule().getSelectionColor()
+                            : getSelectedColor(bgSelection, defaultSelection)
                     : null;
             return AccentColorRule.fromColor(accentColor, selectionColor);
         }
