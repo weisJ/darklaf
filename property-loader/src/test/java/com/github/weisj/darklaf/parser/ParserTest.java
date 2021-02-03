@@ -180,11 +180,11 @@ class ParserTest {
         Object obj = new Object();
         context.accumulator.put("key", obj);
         List<Object> list = Arrays.asList("Test", false, 15, obj);
-        Assertions.assertEquals(list, parse("listKey", "[Test;false;15;%key]"));
+        Assertions.assertEquals(list, parse("listKey", "[Test,false,15,%key]"));
 
         List<Object> nestedList =
                 Arrays.asList(1, 2, Arrays.asList(3, Arrays.asList(4, 5), 6, 7), 8, Collections.singletonList(9), 10);
-        Assertions.assertEquals(nestedList, parse("listKey", "[1;2;[3;[4;5];6;7];8;[9];10]"));
+        Assertions.assertEquals(nestedList, parse("listKey", "[1,2,[3,[4,5],6,7],8,[9],10]"));
     }
 
     @Test
@@ -194,7 +194,7 @@ class ParserTest {
         map.put("key2", false);
         map.put(3, "value3");
         map.put("key4", Arrays.asList(1, 2, 3));
-        Assertions.assertEquals(map, parse("mapKey", "{key1:1;key2:false;3:value3;key4:[1;2;3]}"));
+        Assertions.assertEquals(map, parse("mapKey", "{key1:1,key2:false,3:value3,key4:[1,2,3]}"));
     }
 
     @Test
