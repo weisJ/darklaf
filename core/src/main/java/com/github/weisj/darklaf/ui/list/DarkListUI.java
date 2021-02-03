@@ -184,8 +184,14 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
         int cw = empty && bgWidth > 0 ? bgWidth : rowBounds.width;
         int ch = rowBounds.height;
 
+        ListCellRenderer<Object> renderer = cellRenderer;
+        if (empty) {
+            rendererDelegate.setDelegate(null);
+            renderer = rendererDelegate;
+        }
+
         Component rendererComponent =
-                cellRenderer.getListCellRendererComponent(list, value, cellIndex, isSelected, cellHasFocus);
+                renderer.getListCellRendererComponent(list, value, cellIndex, isSelected, cellHasFocus);
         rendererPane.paintComponent(g, rendererComponent, list, cx, cy, cw, ch, true);
     }
 

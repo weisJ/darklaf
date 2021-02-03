@@ -27,9 +27,13 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.delegate.ListCellRendererDelegate;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
+import com.github.weisj.darklaf.util.LazyValue;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class DarkListCellRendererDelegate extends ListCellRendererDelegate<Object> implements SwingConstants {
+
+    private static final LazyValue<DefaultListCellRenderer> DEFAULT_RENDERER =
+            new LazyValue<>(DefaultListCellRenderer::new);
 
     public DarkListCellRendererDelegate() {
         super(null);
@@ -38,7 +42,7 @@ public class DarkListCellRendererDelegate extends ListCellRendererDelegate<Objec
     @Override
     public void setDelegate(final ListCellRenderer<Object> delegate) {
         if (delegate == null) {
-            super.setDelegate(new DefaultListCellRenderer());
+            super.setDelegate(DEFAULT_RENDERER.get());
         } else {
             super.setDelegate(delegate);
         }

@@ -152,10 +152,8 @@ public class AllIcons implements ComponentDemo {
         public Component getListCellRendererComponent(final JList<? extends Pair<String, ? extends Icon>> list,
                 final Pair<String, ? extends Icon> value, final int index, final boolean isSelected,
                 final boolean cellHasFocus) {
-            if (value != null) {
-                setIcon(value.getSecond());
-                setText(value.getFirst());
-            }
+            setIcon(value.getSecond());
+            setText(value.getFirst());
             return this;
         }
     }
