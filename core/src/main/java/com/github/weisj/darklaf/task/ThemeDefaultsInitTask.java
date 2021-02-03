@@ -93,8 +93,8 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
     }
 
     private void backupAccentColors(final Properties uiProps) {
-        uiProps.put(ACCENT_COLOR_BACKUP_KEY, Objects
-                .requireNonNull(uiProps.get(PropertyLoader.asKey(ACCENT_COLOR_SOURCE_KEY)), ACCENT_COLOR_SOURCE_KEY));
+        uiProps.put(ACCENT_COLOR_BACKUP_KEY, Objects.requireNonNull(
+                uiProps.get(PropertyLoader.asKey(ACCENT_COLOR_SOURCE_KEY)), ACCENT_COLOR_SOURCE_KEY));
         uiProps.put(SELECTION_COLOR_BACKUP_KEY, Objects.requireNonNull(
                 uiProps.get(PropertyLoader.asKey(SELECTION_COLOR_SOURCE_KEY)), SELECTION_COLOR_SOURCE_KEY));
     }

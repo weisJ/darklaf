@@ -23,7 +23,9 @@ package com.github.weisj.darklaf.task;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import javax.swing.plaf.ColorUIResource;
 
@@ -33,10 +35,11 @@ import com.github.weisj.darklaf.color.DarkColorModelHSL;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.AccentColorRule;
 import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
-import com.github.weisj.darklaf.util.Pair;
+import com.github.weisj.darklaf.util.LogUtil;
 
 public class ForegroundColorGenerationTask extends ColorAdjustmentTask {
 
+    private static final Logger LOGGER = LogUtil.getLogger(ForegroundColorGenerationTask.class);
     private static final String FOREGROUND_LIST_KEY = "selectionForeground.propertyList";
     private static final String ACCENT_LIST_KEY = "accentForeground.propertyList";
     private static final double MIN_FOREGROUND_DIFFERENCE = 0.5;
@@ -52,17 +55,33 @@ public class ForegroundColorGenerationTask extends ColorAdjustmentTask {
         Properties props = currentTheme.loadPropertyFile("accents", true);
         AccentColorRule accentColorRule = currentTheme.getAccentColorRule();
         if (accentColorRule.getAccentColor() != null && currentTheme.supportsCustomAccentColor()) {
-            adjust(ACCENT_LIST_KEY, props, list -> adjustForegroundList(list, properties));
+            adjust(ACCENT_LIST_KEY, props, map -> adjustForegroundList(map, properties));
         }
         if (accentColorRule.getSelectionColor() != null && currentTheme.supportsCustomSelectionColor()) {
-            adjust(FOREGROUND_LIST_KEY, props, list -> adjustForegroundList(list, properties));
+            adjust(FOREGROUND_LIST_KEY, props, map -> adjustForegroundList(map, properties));
         }
     }
 
-    private void adjustForegroundList(final List<?> list, final Properties properties) {
-        list.stream().filter(o -> o instanceof Pair<?, ?>).map(Pair.class::cast)
-                .filter(p -> p.getFirst() instanceof Color)
-                .forEach(p -> properties.put(p.getSecond(), makeForeground((Color) p.getFirst())));
+    private void adjustForegroundList(final Map<?, ?> map, final Properties properties) {
+        map.entrySet().stream()
+                .filter(e -> e.getKey() instanceof Color)
+                .forEach(e -> {
+                    Object targets = e.getValue();
+                    Color c = makeForeground((Color) e.getKey());
+                    if (targets instanceof String) {
+                        properties.put(targets.toString(), c);
+                    } else if (targets instanceof List) {
+                        for (Object target : (List<?>) targets) {
+                            if (target instanceof String) {
+                                properties.put(target.toString(), c);
+                            } else {
+                                LOGGER.warning("Invalid target " + target);
+                            }
+                        }
+                    } else {
+                        LOGGER.warning("Invalid target declaration " + targets);
+                    }
+                });
     }
 
     public static ColorUIResource makeForeground(final Color bg) {

@@ -21,19 +21,23 @@
  */
 package com.github.weisj.darklaf.task;
 
-import java.awt.*;
-import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.PropertyLoader;
+import com.github.weisj.darklaf.parser.ParseResult;
+import com.github.weisj.darklaf.parser.Parser;
+import com.github.weisj.darklaf.parser.ParserContext;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.LogUtil;
 
 public abstract class ColorAdjustmentTask implements DefaultsAdjustmentTask {
 
+    private static final Logger LOGGER = LogUtil.getLogger(ColorAdjustmentTask.class);
     protected static final UIDefaults DEFAULTS = new UIDefaults();
 
     @Override
@@ -51,11 +55,15 @@ public abstract class ColorAdjustmentTask implements DefaultsAdjustmentTask {
         DEFAULTS.clear();
     }
 
-    protected void adjust(final String listKey, final Properties listProperties, final Consumer<List<?>> action) {
-        Object obj = PropertyLoader.parseValue(listKey, listProperties.getProperty(listKey), listProperties, DEFAULTS,
-                DarkUIUtil.ICON_LOADER);
-        if (obj instanceof List<?>) {
-            action.accept((List<?>) obj);
+    protected void adjust(final String listKey, final Properties listProperties, final Consumer<Map<?, ?>> action) {
+        ParseResult p = Parser.parse(Parser.createParseResult(listKey, listProperties.getProperty(listKey)),
+                new ParserContext(listProperties, DEFAULTS, DarkUIUtil.ICON_LOADER));
+        Object obj = p.result;
+        if (obj instanceof Map<?, ?>) {
+            action.accept((Map<?, ?>) obj);
+        } else if (listProperties.contains(listKey)) {
+            LOGGER.severe("Expected map object but got " + obj + "[" + obj.getClass() + "]."
+                    + " Declared as " + listProperties.getProperty(listKey) + " with key " + listKey);
         }
     }
 }

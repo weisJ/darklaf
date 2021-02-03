@@ -22,15 +22,18 @@
 package com.github.weisj.darklaf.task;
 
 import java.awt.*;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
 import com.github.weisj.darklaf.color.DarkColorModelHSB;
+import com.github.weisj.darklaf.parser.Parser;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.util.LogUtil;
-import com.github.weisj.darklaf.util.Pair;
+import com.github.weisj.darklaf.util.Types;
 
 public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
 
@@ -67,16 +70,16 @@ public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
 
     private void adjustColors(final String listKey, final Color c, final Properties listProperties,
             final Properties properties) {
-        adjust(listKey, listProperties, list -> {
+        adjust(listKey, listProperties, map -> {
             double[] hsb = DarkColorModelHSB.RGBtoHSBValues(c.getRed(), c.getGreen(), c.getBlue());
-            adjustColorList(list, hsb, properties);
+            adjustColorList(map, hsb, properties);
         });
     }
 
-    private void adjustColorList(final List<?> list, final double[] hsb, final Properties properties) {
+    private void adjustColorList(final Map<?, ?> map, final double[] hsb, final Properties properties) {
         ColorInfo info = new ColorInfo();
-        for (Object o : list) {
-            setColorInfo(o, info);
+        for (Map.Entry<?, ?> entry : map.entrySet()) {
+            setColorInfo(entry, info);
             if (info.key == null) continue;
             Object c = mapColor(info, hsb, properties);
             if (c instanceof Color) {
@@ -88,25 +91,24 @@ public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
         }
     }
 
-    private void setColorInfo(final Object o, final ColorInfo info) {
+    private void setColorInfo(final Map.Entry<?, ?> o, final ColorInfo info) {
         info.set(null, 0, 0, 0);
-        if (o instanceof String) {
-            info.set(o.toString(), 100, 100, 100);
+        String targetKey = Types.safeCast(o.getKey(), String.class);
+        List<?> modifiers = o.getValue() == Parser.EMPTY_VALUE
+                ? Arrays.asList(100, 100, 100)
+                : Types.safeCast(o.getValue(), List.class);
+        if (targetKey == null) {
+            LOGGER.severe("Target key is null");
             return;
         }
-        if (o instanceof Pair<?, ?>) {
-            Object first = ((Pair<?, ?>) o).getFirst();
-            Object second = ((Pair<?, ?>) o).getSecond();
-            if (!(first instanceof String)) return;
-            if (!(second instanceof List<?>)) return;
-            String key = first.toString();
-            List<?> list = (List<?>) second;
-            if (list.size() != 3 || !(list.get(0) instanceof Integer) || !(list.get(1) instanceof Integer)
-                    || !(list.get(2) instanceof Integer)) {
-                return;
-            }
-            info.set(key, (Integer) list.get(0), (Integer) list.get(1), (Integer) list.get(2));
+        if (modifiers == null || modifiers.size() != 3
+                || !(modifiers.get(0) instanceof Integer)
+                || !(modifiers.get(1) instanceof Integer)
+                || !(modifiers.get(2) instanceof Integer)) {
+            LOGGER.severe("Incorrect modifier list " + modifiers);
+            return;
         }
+        info.set(targetKey, (Integer) modifiers.get(0), (Integer) modifiers.get(1), (Integer) modifiers.get(2));
     }
 
     private Object mapColor(final ColorInfo info, final double[] hsbMatch, final Properties properties) {

@@ -31,6 +31,9 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.color.ColorUtil;
+import com.github.weisj.darklaf.parser.ParseResult;
+import com.github.weisj.darklaf.parser.Parser;
+import com.github.weisj.darklaf.parser.ParserContext;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.Pair;
 import com.github.weisj.darklaf.util.Types;
@@ -286,11 +289,11 @@ public final class IconColorMapper {
             currentKey = i < 0 ? key : fallbacks[i];
             int retryCount = 5;
             if (i >= 0 && currentKey instanceof String && ((String) currentKey).startsWith(INLINE_VALUE_PREFIX)) {
-                obj = Types.safeCast(PropertyLoader.parseValue(
-                        Objects.toString(key),
-                        ((String) currentKey).substring(INLINE_VALUE_PREFIX.length()), map,
-                        contextDefaults, IconLoader.get()),
-                        type);
+                ParseResult p = Parser.parse(
+                        Parser.createParseResult(Objects.toString(key),
+                                ((String) currentKey).substring(INLINE_VALUE_PREFIX.length())),
+                        new ParserContext(map, contextDefaults, IconLoader.get()));
+                obj = Types.safeCast(p.result, type);
             }
             do {
                 if (obj == null) {
