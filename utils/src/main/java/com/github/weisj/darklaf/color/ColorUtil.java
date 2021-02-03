@@ -59,8 +59,12 @@ public final class ColorUtil {
     }
 
     public static Color fromHex(final String str, final Color defaultValue) {
+        return fromHex(str, defaultValue, false);
+    }
+
+    public static Color fromHex(final String str, final Color defaultValue, final boolean fullSizeHex) {
         try {
-            return fromHex(str);
+            return fromHex(str, fullSizeHex);
         } catch (final Exception var3) {
             return defaultValue;
         }
@@ -74,12 +78,12 @@ public final class ColorUtil {
         return String.format("%02X%02X%02X", r, g, b);
     }
 
-    public static Color fromHex(String str) {
+    static Color fromHex(String str, final boolean fullSizeHex) {
         if (str.startsWith("#")) {
             str = str.substring(1);
         }
 
-        if (str.length() == 3) {
+        if (!fullSizeHex && str.length() == 3) {
             return new Color(17 * Integer.valueOf(String.valueOf(str.charAt(0)), 16),
                     17 * Integer.valueOf(String.valueOf(str.charAt(1)), 16),
                     17 * Integer.valueOf(String.valueOf(str.charAt(2)), 16));
