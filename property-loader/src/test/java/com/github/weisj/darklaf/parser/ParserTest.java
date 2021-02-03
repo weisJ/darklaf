@@ -81,7 +81,7 @@ class ParserTest {
         Random r = new Random();
         for (int i = 0; i < 100; i++) {
             Color c = new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256));
-            Assertions.assertEquals(c, parse("key", ColorUtil.toHex(c)));
+            Assertions.assertEquals(c, parse("key", PrimitiveParser.COLOR_PREFIX + ColorUtil.toHex(c)));
         }
     }
 

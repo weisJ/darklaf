@@ -29,10 +29,14 @@ import com.github.weisj.darklaf.util.PropertyValue;
 
 public class PrimitiveParser implements PropertyParser {
 
+    public static final String COLOR_PREFIX = "#";
+
     @Override
     public ParseResult doParse(final ParseResult parseResult, final ParserContext context) {
-        Color c = ColorUtil.fromHex(parseResult.value, null, true);
-        ParserUtil.setNonNull(parseResult, c != null ? new DarkColorUIResource(c) : null);
+        if (parseResult.value.startsWith(COLOR_PREFIX)) {
+            Color c = ColorUtil.fromHex(parseResult.value, null, true);
+            ParserUtil.setNonNull(parseResult, c != null ? new DarkColorUIResource(c) : null);
+        }
         if (parseResult.finished) return parseResult;
         ParserUtil.setNonNull(parseResult, getInteger(parseResult.value));
         if (parseResult.finished) return parseResult;
