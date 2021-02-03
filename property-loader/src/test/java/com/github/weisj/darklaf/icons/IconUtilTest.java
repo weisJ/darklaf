@@ -29,7 +29,7 @@ import javax.swing.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class IconUtilTest {
+class IconUtilTest {
 
     @Test
     public void testWeakFrameCache() {
