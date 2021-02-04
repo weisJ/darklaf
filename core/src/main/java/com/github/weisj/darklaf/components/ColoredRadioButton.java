@@ -40,7 +40,12 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class ColoredRadioButton extends JRadioButton {
 
-    public static final Color DEFAULT_COLOR = new Color(0);
+    public static final Color DEFAULT_COLOR = new Color(0) {
+        @Override
+        public boolean equals(final Object obj) {
+            return obj == this;
+        }
+    };
     private Color color;
     private Color focusColor;
 
@@ -105,27 +110,40 @@ public class ColoredRadioButton extends JRadioButton {
 
     protected static class ColoredRadioButtonUI extends DarkRadioButtonUI {
 
-        private static final String[] PROPERTIES = {"Icons.RadioButton.activeFillColor",
-                "Icons.RadioButton.activeBorderColor", "Icons.RadioButtonDisabled.inactiveFillColor",
-                "Icons.RadioButtonDisabled.inactiveBorderColor", "Icons.RadioButtonFocused.activeFillColor",
-                "Icons.RadioButtonFocused.focusBorderColor", "Icons.RadioButtonFocused.glowFocus",
-                "Icons.RadioButtonFocused.glowOpacity", "Icons.RadioButtonSelected.selectedFillColor",
-                "Icons.RadioButtonSelected.selectedBorderColor", "Icons.RadioButtonSelected.selectionSelectedColor",
+        private static final String[] PROPERTIES = {
+                "Icons.RadioButton.activeFillColor",
+                "Icons.RadioButton.activeBorderColor",
+                "Icons.RadioButtonDisabled.inactiveFillColor",
+                "Icons.RadioButtonDisabled.inactiveBorderColor",
+                "Icons.RadioButtonFocused.activeFillColor",
+                "Icons.RadioButtonFocused.focusBorderColor",
+                "Icons.RadioButtonFocused.glowFocus",
+                "Icons.RadioButtonFocused.glowOpacity",
+                "Icons.RadioButtonSelected.selectedFillColor",
+                "Icons.RadioButtonSelected.selectedBorderColor",
+                "Icons.RadioButtonSelected.selectionSelectedColor",
                 "Icons.RadioButtonSelectedDisabled.inactiveFillColor",
                 "Icons.RadioButtonSelectedDisabled.inactiveBorderColor",
                 "Icons.RadioButtonSelectedDisabled.selectionDisabledColor",
                 "Icons.RadioButtonSelectedFocused.selectedFillColor",
                 "Icons.RadioButtonSelectedFocused.focusSelectedBorderColor",
                 "Icons.RadioButtonSelectedFocused.selectionFocusSelectedColor",
-                "Icons.RadioButtonSelectedFocused.glowFocus", "Icons.RadioButtonSelectedFocused.glowOpacity"};
-        private static final String[] COLOR_PROPERTIES = {"Icons.RadioButton.activeFillColor",
-                "Icons.RadioButton.activeBorderColor", "Icons.RadioButtonFocused.activeFillColor",
-                "Icons.RadioButtonFocused.focusBorderColor", "Icons.RadioButtonSelected.selectedFillColor",
-                "Icons.RadioButtonSelected.selectedBorderColor", "Icons.RadioButtonSelectedFocused.selectedFillColor",
+                "Icons.RadioButtonSelectedFocused.glowFocus",
+                "Icons.RadioButtonSelectedFocused.glowOpacity"};
+        private static final String[] COLOR_PROPERTIES = {
+                "Icons.RadioButton.activeFillColor",
+                "Icons.RadioButton.activeBorderColor",
+                "Icons.RadioButtonFocused.activeFillColor",
+                "Icons.RadioButtonFocused.focusBorderColor",
+                "Icons.RadioButtonSelected.selectedFillColor",
+                "Icons.RadioButtonSelected.selectedBorderColor",
+                "Icons.RadioButtonSelectedFocused.selectedFillColor",
                 "Icons.RadioButtonSelectedFocused.focusSelectedBorderColor"};
-        private static final String[] FOCUS_COLOR_PROPERTIES =
-                {"Icons.RadioButtonFocused.glowFocus", "Icons.RadioButtonSelectedFocused.glowFocus"};
-        private static final String[] FOREGROUND_PROPERTIES = {"Icons.RadioButtonSelected.selectionSelectedColor",
+        private static final String[] FOCUS_COLOR_PROPERTIES = {
+                "Icons.RadioButtonFocused.glowFocus",
+                "Icons.RadioButtonSelectedFocused.glowFocus"};
+        private static final String[] FOREGROUND_PROPERTIES = {
+                "Icons.RadioButtonSelected.selectionSelectedColor",
                 "Icons.RadioButtonSelectedFocused.selectionFocusSelectedColor"};
         private static final double MIN_FG_CONTRAST = 0.6;
         private Properties propertyMap;
@@ -196,15 +214,17 @@ public class ColoredRadioButton extends JRadioButton {
                 }
             }
             for (String prop : FOREGROUND_PROPERTIES) {
-                ForegroundColorGenerationTask.Bias bias = ForegroundColorGenerationTask.Bias.getBackground(0.552);
                 Color fg = ForegroundColorGenerationTask.makeAdjustedForeground((Color) props.get(prop), accentCol,
-                        bias, MIN_FG_CONTRAST);
+                        ForegroundColorGenerationTask.Bias.BACKGROUND, MIN_FG_CONTRAST);
                 propertyMap.put(prop, fg);
             }
 
-            stateIcon = new StateIcon(new Icon[] {load(loader, "control/radio.svg"),
-                    load(loader, "control/radioDisabled.svg"), load(loader, "control/radioFocused.svg"),
-                    load(loader, "control/radioSelected.svg"), load(loader, "control/radioSelectedDisabled.svg"),
+            stateIcon = new StateIcon(new Icon[] {
+                    load(loader, "control/radio.svg"),
+                    load(loader, "control/radioDisabled.svg"),
+                    load(loader, "control/radioFocused.svg"),
+                    load(loader, "control/radioSelected.svg"),
+                    load(loader, "control/radioSelectedDisabled.svg"),
                     load(loader, "control/radioSelectedFocused.svg")});
             patched = true;
         }
