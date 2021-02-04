@@ -60,10 +60,10 @@ public class AccentColorAdjustmentTask extends ColorAdjustmentTask {
         }
         Properties props = currentTheme.loadAccentProperties();
         if (props == null || props.isEmpty()) return;
-        if (accentColor != null) {
+        if (accentColor != null && currentTheme.supportsCustomAccentColor()) {
             adjustColors(MAIN_ACCENT_LIST_KEY, accentColor, props, properties);
         }
-        if (selectionColor != null) {
+        if (selectionColor != null && currentTheme.supportsCustomSelectionColor()) {
             adjustColors(SELECTION_ACCENT_LIST_KEY, selectionColor, props, properties);
         }
     }
