@@ -36,12 +36,17 @@ import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.AccentColorRule;
 import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.util.LogUtil;
+import com.github.weisj.darklaf.util.Types;
 
 public class ForegroundColorGenerationTask extends ColorAdjustmentTask {
+
 
     private static final Logger LOGGER = LogUtil.getLogger(ForegroundColorGenerationTask.class);
     private static final String FOREGROUND_LIST_KEY = "selectionForeground.propertyList";
     private static final String ACCENT_LIST_KEY = "accentForeground.propertyList";
+
+    private static final double DEFAULT_COLOR_ADJUSTED_BG_THRESHOLD = 0.552;
+    private static final double DEFAULT_COLOR_ADJUSTED_FG_DIFFERENCE = 0.8;
     private static final double MIN_FOREGROUND_DIFFERENCE = 0.5;
 
     @Override
@@ -64,16 +69,15 @@ public class ForegroundColorGenerationTask extends ColorAdjustmentTask {
 
     private void adjustForegroundList(final Map<?, ?> map, final Properties properties) {
         map.entrySet().stream()
-                .filter(e -> e.getKey() instanceof Color)
+                .filter(e -> e.getValue() instanceof Color)
                 .forEach(e -> {
-                    Object targets = e.getValue();
-                    Color c = makeForeground((Color) e.getKey());
+                    Object targets = e.getKey();
                     if (targets instanceof String) {
-                        properties.put(targets.toString(), c);
+                        adjustForeground(targets.toString(), (Color) e.getValue(), properties);
                     } else if (targets instanceof List) {
                         for (Object target : (List<?>) targets) {
                             if (target instanceof String) {
-                                properties.put(target.toString(), c);
+                                adjustForeground(target.toString(), (Color) e.getValue(), properties);
                             } else {
                                 LOGGER.warning("Invalid target " + target);
                             }
@@ -84,41 +88,64 @@ public class ForegroundColorGenerationTask extends ColorAdjustmentTask {
                 });
     }
 
+    private void adjustForeground(final String fgKey, final Color bg, final Properties properties) {
+        Color suggestion = Types.safeCast(properties.get(fgKey), Color.class);
+        Color c = makeAdjustedForeground(suggestion, bg, Bias.BACKGROUND,
+                DEFAULT_COLOR_ADJUSTED_FG_DIFFERENCE, DEFAULT_COLOR_ADJUSTED_BG_THRESHOLD);
+        properties.put(fgKey, c);
+    }
+
+
     public static ColorUIResource makeForeground(final Color bg) {
         return makeForeground(bg, MIN_FOREGROUND_DIFFERENCE);
     }
 
     public static ColorUIResource makeForeground(final Color bg, final double minimumBrightnessDifference) {
-        double[] hsbBG = DarkColorModelHSB.RGBtoHSBValues(bg.getRed(), bg.getGreen(), bg.getBlue());
-        Color fg = DarkColorModelHSB.getColorFromHSBValues(hsbBG[0], 0, 1 - hsbBG[2]);
-        return makeAdjustedForeground(fg, bg, Bias.getBackground(), minimumBrightnessDifference);
+        return makeAdjustedForeground(null, bg, Bias.BACKGROUND, minimumBrightnessDifference);
+    }
+
+    public static ColorUIResource makeAdjustedForeground(final Color fg, final Color bg) {
+        return makeAdjustedForeground(fg, bg, MIN_FOREGROUND_DIFFERENCE);
     }
 
     public static ColorUIResource makeAdjustedForeground(final Color fg, final Color bg,
             final double minimumBrightnessDifference) {
-        return makeAdjustedForeground(fg, bg, Bias.getBackground(), minimumBrightnessDifference);
+        return makeAdjustedForeground(fg, bg, Bias.BACKGROUND, minimumBrightnessDifference);
     }
 
-    public static ColorUIResource makeAdjustedForeground(final Color fg, final Color bg, final Bias bias,
+    public static ColorUIResource makeAdjustedForeground(final Color fgSuggestion, final Color bg, final Bias bias,
             final double minimumBrightnessDifference) {
+        return makeAdjustedForeground(fgSuggestion, bg, bias, minimumBrightnessDifference,
+                DEFAULT_COLOR_ADJUSTED_BG_THRESHOLD);
+    }
+
+    public static ColorUIResource makeAdjustedForeground(final Color fgSuggestion, final Color bg, final Bias bias,
+            final double minimumBrightnessDifference, final double backgroundBiasThreshold) {
+        Color fg = fgSuggestion;
+        if (fg == null) {
+            double[] hsbBG = DarkColorModelHSB.RGBtoHSBValues(bg.getRed(), bg.getGreen(), bg.getBlue());
+            fg = DarkColorModelHSB.getColorFromHSBValues(hsbBG[0], 0, 1 - hsbBG[2]);
+        }
+
         final double[] hslFG = DarkColorModelHSL.RGBtoHSLValues(fg.getRed(), fg.getGreen(), fg.getBlue());
         final double[] hslBG = DarkColorModelHSL.RGBtoHSLValues(bg.getRed(), bg.getGreen(), bg.getBlue());
         double bgBrightness = hslBG[2];
         double fgBrightness = hslFG[2];
 
-        Bias b = bias != null ? bias : Bias.getBackground();
+        Bias b = bias != null ? bias : Bias.BACKGROUND;
 
         if (b == Bias.BACKGROUND) {
             double bgBright = ColorUtil.getLuminance(bg);
-            b = bgBright <= b.threshold ? Bias.WHITE : Bias.BLACK;
+            double threshold = backgroundBiasThreshold < 0 ? 0.5 : backgroundBiasThreshold;
+            b = bgBright <= threshold ? Bias.WHITE : Bias.BLACK;
         }
 
-        double bright1 =
-                fgBrightness > bgBrightness && (fgBrightness - bgBrightness) >= minimumBrightnessDifference ? hslFG[2]
-                        : Math.min(bgBrightness + minimumBrightnessDifference, 1);
-        double bright2 =
-                fgBrightness < bgBrightness && (bgBrightness - fgBrightness) >= minimumBrightnessDifference ? hslFG[2]
-                        : Math.max(bgBrightness - minimumBrightnessDifference, 0);
+        double bright1 = fgBrightness > bgBrightness && (fgBrightness - bgBrightness) >= minimumBrightnessDifference
+                ? hslFG[2]
+                : Math.min(bgBrightness + minimumBrightnessDifference, 1);
+        double bright2 = fgBrightness < bgBrightness && (bgBrightness - fgBrightness) >= minimumBrightnessDifference
+                ? hslFG[2]
+                : Math.max(bgBrightness - minimumBrightnessDifference, 0);
 
         double brightness = b == Bias.WHITE ? bright1 : bright2;
         return new DarkColorUIResource(DarkColorModelHSL.getColorFromHSLValues(hslFG[0], hslFG[1], brightness));
@@ -127,21 +154,6 @@ public class ForegroundColorGenerationTask extends ColorAdjustmentTask {
     public enum Bias {
         BACKGROUND,
         WHITE,
-        BLACK;
-
-        public static Bias getBackground() {
-            return getBackground(0.5);
-        }
-
-        public static Bias getBackground(final double threshold) {
-            BACKGROUND.setThreshold(threshold);
-            return BACKGROUND;
-        }
-
-        private double threshold = 0.5;
-
-        public void setThreshold(final double threshold) {
-            this.threshold = threshold;
-        }
+        BLACK
     }
 }
