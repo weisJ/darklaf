@@ -61,8 +61,8 @@ public abstract class ColorAdjustmentTask implements DefaultsAdjustmentTask {
         Object obj = p.result;
         if (obj instanceof Map<?, ?>) {
             action.accept((Map<?, ?>) obj);
-        } else if (listProperties.contains(listKey)) {
-            LOGGER.severe("Expected map object but got " + obj + "[" + obj.getClass() + "]."
+        } else if (listProperties.containsKey(listKey)) {
+            LOGGER.severe("Expected map object but received " + obj + "[" + obj.getClass() + "]."
                     + " Declared as " + listProperties.getProperty(listKey) + " with key " + listKey);
         }
     }
