@@ -117,6 +117,7 @@ public final class CellUtil {
     // List Colors
     private static Color listCellForeground;
     private static Color listCellForegroundSelected;
+    private static Color comboListCellForegroundSelected;
     private static Color listCellForegroundNoFocus;
     private static Color listCellForegroundSelectedNoFocus;
 
@@ -220,6 +221,7 @@ public final class CellUtil {
         // List colors
         listCellForeground = d.getColor("List.foreground");
         listCellForegroundSelected = d.getColor("List.foregroundSelected");
+        comboListCellForegroundSelected = d.getColor("ComboBox.selectionForeground");
         listCellForegroundNoFocus = d.getColor("List.foregroundNoFocus");
         listCellForegroundSelectedNoFocus = d.getColor("List.foregroundSelectedNoFocus");
 
@@ -260,7 +262,9 @@ public final class CellUtil {
     }
 
     public static void setupListForeground(final Component comp, final JList<?> parent, final boolean selected) {
-        setupForeground(comp, parent, selected, listCellForeground, listCellForegroundSelected,
+        boolean comboList = PropertyUtil.getBooleanProperty(parent, DarkListUI.KEY_IS_COMBO_LIST);
+        setupForeground(comp, parent, selected, listCellForeground,
+                comboList ? comboListCellForegroundSelected : listCellForegroundSelected,
                 listCellForegroundNoFocus, listCellForegroundSelectedNoFocus, listCellInactiveForeground,
                 listCellInactiveForegroundSelected, listCellInactiveForegroundNoFocus,
                 listCellInactiveForegroundSelectedNoFocus);
