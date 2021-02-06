@@ -53,11 +53,13 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
     private static final double extraScale = 2.0;
 
     private final AtomicBoolean loaded;
-    private final Dimension size;
+    private final Dimension iconSize;
     private final SVGIcon icon;
 
     private Supplier<URI> uriSupplier;
     private URI uri;
+
+    private IconLoader.IconKey iconKey;
 
     private boolean directRendering;
     private boolean loadedWithExtraScale;
@@ -75,7 +77,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
     public DarkSVGIcon(final Supplier<URI> uriSupplier, final int displayWidth, final int displayHeight) {
         this.uri = null;
         this.uriSupplier = uriSupplier;
-        size = new Dimension(displayWidth, displayHeight);
+        iconSize = new Dimension(displayWidth, displayHeight);
         icon = createSVGIcon();
         icon.setAutosize(SVGIcon.AUTOSIZE_STRETCH);
         icon.setAntiAlias(true);
@@ -92,7 +94,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
     public DarkSVGIcon(final URI uri, final int displayWidth, final int displayHeight) {
         this.uri = uri;
         uriSupplier = null;
-        size = new Dimension(displayWidth, displayHeight);
+        iconSize = new Dimension(displayWidth, displayHeight);
         icon = createSVGIcon();
         icon.setAutosize(SVGIcon.AUTOSIZE_STRETCH);
         icon.setAntiAlias(true);
@@ -100,11 +102,15 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
     }
 
     protected DarkSVGIcon(final int width, final int height, final DarkSVGIcon parent) {
-        this.size = new Dimension(width, height);
+        this.iconSize = new Dimension(width, height);
         this.icon = parent.icon;
         this.uri = parent.uri;
         this.uriSupplier = parent.uriSupplier;
         this.loaded = parent.loaded;
+    }
+
+    void setIconKey(final IconLoader.IconKey iconKey) {
+        this.iconKey = iconKey;
     }
 
     @Override
@@ -113,7 +119,11 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
     }
 
     public void setDisplaySize(final int width, final int height) {
-        size.setSize(width, height);
+        if (iconKey != null) {
+            iconKey.w = width;
+            iconKey.h = height;
+        }
+        iconSize.setSize(width, height);
     }
 
     @Override
@@ -160,7 +170,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
         scaleY = sy;
         double effectiveScaleX = loadedWithExtraScale ? scaleX * extraScale : scaleX;
         double effectiveScaleY = loadedWithExtraScale ? scaleY * extraScale : scaleY;
-        image = createImage(Scale.scale(effectiveScaleX, effectiveScaleY, size));
+        image = createImage(Scale.scale(effectiveScaleX, effectiveScaleY, getSize()));
     }
 
     @Override
@@ -169,7 +179,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
         icon.setPreferredSize(size);
         try {
             return icon.getImage();
-        } catch (RuntimeException e) {
+        } catch (final RuntimeException e) {
             if (!(this instanceof ThemedSVGIcon)) {
                 IconColorMapper.patchColors(icon);
                 Image img = icon.getImage();
@@ -212,7 +222,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
         boolean dr = isDirectRenderingMode();
         if (dr) {
             ensureLoaded(true);
-            icon.setPreferredSize(size);
+            icon.setPreferredSize(getSize());
         } else {
             ensureImageLoaded(c, rotation);
         }
@@ -222,6 +232,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
         g2.translate(x, y);
 
 
+        Dimension size = getSize();
         double imageWidth = dr ? size.width : image.getWidth(null);
         double imageHeight = dr ? size.height : image.getHeight(null);
         double sx = size.width / imageWidth;
@@ -251,12 +262,52 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
 
     @Override
     public int getIconWidth() {
-        return size.width;
+        ensureSizeLoaded();
+        return getSize().width;
     }
 
     @Override
     public int getIconHeight() {
-        return size.height;
+        return getSize().height;
+    }
+
+    protected Dimension getSize() {
+        ensureSizeLoaded();
+        return iconSize;
+    }
+
+    private void ensureSizeLoaded() {
+        if (iconSize.width < 0 || iconSize.height < 0) {
+            SVGIcon svg = getSVGIcon();
+            int autoSizeMode = svg.getAutosize();
+            svg.setAutosize(SVGIcon.AUTOSIZE_NONE);
+            int width = svg.getIconWidthIgnoreAutosize();
+            int height = svg.getIconHeightIgnoreAutosize();
+            svg.setAutosize(autoSizeMode);
+
+            if (iconSize.height < 0 && iconSize.width >= 0) {
+                height = (int) ((iconSize.width * height) / (double) width);
+                width = iconSize.width;
+            } else if (iconSize.height >= 0 && iconSize.width < 0) {
+                width = (int) ((iconSize.height * width) / (double) height);
+                height = iconSize.height;
+            } else if (iconSize.width == iconSize.height && iconSize.height < -1) {
+                // Scale to make largest side fit the given size.
+                int size = Math.abs(iconSize.width);
+                if (width == height) {
+                    width = size;
+                    height = size;
+                } else if (width > height) {
+                    height = (int) ((size * height) / (double) width);
+                    width = size;
+                } else {
+                    width = (int) ((size * width) / (double) height);
+                    height = size;
+                }
+            }
+            setDisplaySize(width, height);
+            LOGGER.fine(() -> "Inferred size of icon '" + getName(uri) + "' to " + iconSize);
+        }
     }
 
     public SVGIcon getSVGIcon() {

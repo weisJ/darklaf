@@ -39,7 +39,6 @@ import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.icons.ThemedSVGIcon;
 import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
 import com.github.weisj.darklaf.util.Pair;
-import com.kitfox.svg.app.beans.SVGIcon;
 
 public class AllIcons implements ComponentDemo {
 
@@ -94,20 +93,7 @@ public class AllIcons implements ComponentDemo {
         IconLoader loader = IconLoader.get();
         try (ResourceWalker walker = ResourceWalker.walkResources("com.github.weisj")) {
             return walker.stream().filter(p -> p.endsWith("svg")).map(p -> {
-                ThemedSVGIcon icon = (ThemedSVGIcon) loader.loadSVGIcon(p, displaySize, displaySize, true);
-                SVGIcon svgIcon = icon.getSVGIcon();
-                int autosize = svgIcon.getAutosize();
-                svgIcon.setAutosize(SVGIcon.AUTOSIZE_NONE);
-                int width = displaySize;
-                int height = (int) (((double) width / svgIcon.getIconWidth()) * svgIcon.getIconHeight());
-                if (height > displaySize) {
-                    height = displaySize;
-                    width = (int) (((double) height / svgIcon.getIconHeight()) * svgIcon.getIconWidth());
-                }
-
-                icon.setDisplaySize(width, height);
-                svgIcon.setAutosize(autosize);
-
+                ThemedSVGIcon icon = (ThemedSVGIcon) loader.loadSVGIcon(p, -displaySize, -displaySize, true);
                 return new Pair<>(p, centered ? new CenterIcon(icon, displaySize, displaySize) : icon);
             }).collect(Collectors.groupingBy(pair -> pathToIconName(pair.getFirst()))).values().stream()
                     .peek(list -> makeUnique(list, 1)).flatMap(List::stream)

@@ -230,7 +230,7 @@ public class ColoredRadioButton extends JRadioButton {
         }
 
         private Icon load(final IconLoader loader, final String name) {
-            return loader.loadSVGIcon(name, 19, 19, true, propertyMap);
+            return loader.loadSVGIcon(name, -1, -1, true, propertyMap);
         }
 
         @Override

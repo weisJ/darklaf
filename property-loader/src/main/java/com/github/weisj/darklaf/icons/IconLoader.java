@@ -47,8 +47,9 @@ public final class IconLoader {
     private static final AtomicReference<Object> currentThemeKey = new AtomicReference<>(null);
     private static final AtomicReference<AwareIconStyle> currentAwareStyle = new AtomicReference<>(null);
 
-    private static final int DEFAULT_W = 16;
-    private static final int DEFAULT_H = 16;
+    // Infer size by default.
+    private static final int DEFAULT_WIDTH_SVG = -1;
+    private static final int DEFAULT_HEIGHT_SVG = -1;
     private final Class<?> parentClass;
 
     private boolean cacheEnabled = true;
@@ -273,6 +274,10 @@ public final class IconLoader {
      * @return the icon.
      */
     public Icon getIcon(final String path, final int w, final int h, final boolean themed) {
+        return getIconImpl(path, w, h, themed);
+    }
+
+    private Icon getIconImpl(final String path, final int w, final int h, final boolean themed) {
         IconKey key = new IconKey(path, w, h);
 
         if (isCacheEnabled()) {
@@ -286,15 +291,11 @@ public final class IconLoader {
         }
 
         // Icon not found or caching is disabled.
-        if (isSVGIcon(path)) {
-            Icon icon = loadSVGIcon(path, w, h, themed);
-            cache(iconMap, key, icon);
-            return icon;
-        } else {
-            Icon icon = new DerivableImageIcon(new LazyImageIconSupplier(path, key, parentClass), w, h);
-            cache(iconMap, key, icon);
-            return icon;
-        }
+        Icon icon = isSVGIcon(path)
+                ? loadSVGIcon(path, w, h, themed, null, key)
+                : new DerivableImageIcon(new LazyImageIconSupplier(path, key, parentClass), w, h);
+        cache(iconMap, key, icon);
+        return icon;
     }
 
     private Icon getWildcardIcon(final Map<IconKey, Icon> iconMap, final IconKey iconKey, final int w, final int h) {
@@ -328,7 +329,7 @@ public final class IconLoader {
      * @return the icon.
      */
     public Icon loadSVGIcon(final String path, final boolean themed) {
-        return loadSVGIcon(path, DEFAULT_W, DEFAULT_H, themed);
+        return loadSVGIcon(path, DEFAULT_WIDTH_SVG, DEFAULT_HEIGHT_SVG, themed);
     }
 
     /**
@@ -361,16 +362,24 @@ public final class IconLoader {
      */
     public Icon loadSVGIcon(final String path, final int w, final int h, final boolean themed,
             final Map<Object, Object> propertyMap) {
+        return loadSVGIcon(path, w, h, themed, propertyMap, null);
+    }
+
+    private Icon loadSVGIcon(final String path, final int w, final int h, final boolean themed,
+            final Map<Object, Object> propertyMap, final IconKey iconKey) {
         Supplier<URI> uriSupplier = createURISupplier(path);
+        DarkSVGIcon svgIcon;
         if (themed) {
             if (propertyMap != null) {
-                return new CustomThemedIcon(uriSupplier, w, h, propertyMap);
+                svgIcon = new CustomThemedIcon(uriSupplier, w, h, propertyMap);
             } else {
-                return new ThemedSVGIcon(uriSupplier, w, h);
+                svgIcon = new ThemedSVGIcon(uriSupplier, w, h);
             }
         } else {
-            return new DarkSVGIcon(createURISupplier(path), w, h);
+            svgIcon = new DarkSVGIcon(createURISupplier(path), w, h);
         }
+        svgIcon.setIconKey(iconKey);
+        return svgIcon;
     }
 
     private Supplier<URI> createURISupplier(final String path) {
@@ -440,12 +449,12 @@ public final class IconLoader {
 
     private int getDefaultWidth(final String path) {
         if (!isSVGIcon(path)) return -1;
-        return DEFAULT_W;
+        return DEFAULT_WIDTH_SVG;
     }
 
     private int getDefaultHeight(final String path) {
         if (!isSVGIcon(path)) return -1;
-        return DEFAULT_H;
+        return DEFAULT_HEIGHT_SVG;
     }
 
     private boolean isSVGIcon(final String path) {
@@ -466,7 +475,7 @@ public final class IconLoader {
 
         @Override
         public int hashCode() {
-            return Objects.hash(path);
+            return Objects.hashCode(path);
         }
 
         @Override

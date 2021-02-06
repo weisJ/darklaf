@@ -52,7 +52,7 @@ public class IconParser extends KeyFilteredParser implements Delimiters {
                 && parseResult.value.endsWith(String.valueOf(LIST_END))) {
             return parseStateIcon(parseResult, context);
         }
-        Dimension dim = new Dimension(16, 16);
+        Dimension dim = new Dimension(-1, -1);
         if (parseResult.value.endsWith(String.valueOf(ARG_END))) {
             List<Integer> dimensions = ParserUtil.parseDelimited(ARG_START, ARG_END, ARG_SEPARATOR, false,
                     PropertyParser.of(Integer::parseInt), Integer.class, parseResult, context);
@@ -76,6 +76,7 @@ public class IconParser extends KeyFilteredParser implements Delimiters {
             return ParserUtil.error(parseResult,
                     "Modifiers " + AWARE_KEY + " and " + THEMED_KEY + " are mutually exclusive.");
         }
+
         Icon icon;
         if (ICON_EMPTY.equals(parseResult.value)) {
             icon = EmptyIcon.create(dim.width, dim.height);
