@@ -95,8 +95,10 @@ public class AllIcons implements ComponentDemo {
             return walker.stream().filter(p -> p.endsWith("svg")).map(p -> {
                 ThemedSVGIcon icon = (ThemedSVGIcon) loader.loadSVGIcon(p, -displaySize, -displaySize, true);
                 return new Pair<>(p, centered ? new CenterIcon(icon, displaySize, displaySize) : icon);
-            }).collect(Collectors.groupingBy(pair -> pathToIconName(pair.getFirst()))).values().stream()
-                    .peek(list -> makeUnique(list, 1)).flatMap(List::stream)
+            }).collect(Collectors.groupingBy(pair -> pathToIconName(pair.getFirst())))
+                    .values().stream()
+                    .peek(list -> makeUnique(list, 1))
+                    .flatMap(List::stream)
                     .sorted(Pair.compareFirst(AllIcons::pathToIconName)).collect(Collectors.toList());
         }
     }
@@ -105,7 +107,9 @@ public class AllIcons implements ComponentDemo {
         if (iconList.size() <= 1) {
             iconList.forEach(p -> p.setFirst(pathToIconName(p.getFirst(), depth)));
         } else {
-            iconList.stream().collect(Collectors.groupingBy(p -> pathToIconName(p.getFirst(), depth + 1))).values()
+            iconList.stream()
+                    .collect(Collectors.groupingBy(p -> pathToIconName(p.getFirst(), depth + 1)))
+                    .values()
                     .forEach(list -> makeUnique(list, depth + 1));
         }
     }

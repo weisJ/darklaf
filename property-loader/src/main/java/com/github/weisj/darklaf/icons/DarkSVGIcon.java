@@ -115,6 +115,12 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
 
     @Override
     public DarkSVGIcon derive(final int width, final int height) {
+        if (width == getIconWidth() && height == getIconHeight()) {
+            // Even though checking the size may cause the icon to be loaded, we
+            // do this optimization as painting to different off-screen images is more
+            // expensive than loading the icon.
+            return this;
+        }
         return new DarkSVGIcon(width, height, this);
     }
 
@@ -141,7 +147,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
     }
 
     private boolean ensureSVGLoaded() {
-        if (!loaded.get()) {
+        if (!isSVGLoaded()) {
             URI iconUri = getUri();
             LOGGER.finer(() -> "Loading icon '" + iconUri.toASCIIString() + "'.");
             icon.setSvgURI(iconUri);
@@ -149,6 +155,10 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
             return true;
         }
         return false;
+    }
+
+    private boolean isSVGLoaded() {
+        return loaded.get();
     }
 
     private void ensureURILoaded() {
@@ -311,7 +321,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
     }
 
     public SVGIcon getSVGIcon() {
-        if (!loaded.get()) ensureSVGLoaded();
+        ensureSVGLoaded();
         return icon;
     }
 }

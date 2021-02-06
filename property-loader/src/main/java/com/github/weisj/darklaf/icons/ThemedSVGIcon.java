@@ -51,6 +51,12 @@ public class ThemedSVGIcon extends DarkSVGIcon implements ThemedIcon {
 
     @Override
     public ThemedSVGIcon derive(final int width, final int height) {
+        if (width == getIconWidth() && height == getIconHeight()) {
+            // Even though checking the size may cause the icon to be loaded, we
+            // do this optimization as painting to different off-screen images is more
+            // expensive than loading the icon.
+            return this;
+        }
         return new ThemedSVGIcon(width, height, this);
     }
 
