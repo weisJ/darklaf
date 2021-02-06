@@ -182,10 +182,12 @@ public class ThemeEditor extends JPanel {
 
         apply.addActionListener(e -> {
             mutableTheme.setDelegate(baseTheme.get());
-            mutableTheme.colorToneRule =
-                    darkToggle.isSelected() ? ColorToneRule.DARK : ColorToneRule.LIGHT;
-            mutableTheme.contrastRule =
-                    contrastToggle.isSelected() ? ContrastRule.HIGH_CONTRAST : ContrastRule.STANDARD;
+            mutableTheme.colorToneRule = darkToggle.isSelected()
+                    ? ColorToneRule.DARK
+                    : ColorToneRule.LIGHT;
+            mutableTheme.contrastRule = contrastToggle.isSelected()
+                    ? ContrastRule.HIGH_CONTRAST
+                    : ContrastRule.STANDARD;
             LafManager.setTheme((Theme) null);
             LafManager.install(mutableTheme);
         });
