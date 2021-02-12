@@ -87,7 +87,7 @@ public class DarkTextListener implements FocusListener, PropertyChangeListener {
             boolean extendLines = PropertyUtil.getBooleanProperty(editor, DarkTextUI.KEY_EXTEND_LINE_SELECTION);
             ui.getDarkCaret().setLineExtendingEnabled(extendLines);
             editor.repaint();
-        } else if ("border".equals(key)) {
+        } else if (PropertyKey.BORDER.equals(key)) {
             ui.installBorder();
         } else if (PropertyKey.ENABLED.equals(key) || PropertyKey.EDITABLE.equals(key)) {
             ui.updateBackground(editor);
