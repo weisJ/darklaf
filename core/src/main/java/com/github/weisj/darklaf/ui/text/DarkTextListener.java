@@ -80,7 +80,8 @@ public class DarkTextListener implements FocusListener, PropertyChangeListener {
             boolean rounded = PropertyUtil.getBooleanProperty(editor, DarkTextUI.KEY_ROUNDED_SELECTION);
             ui.getDarkCaret().setRoundedSelectionEdges(rounded);
             editor.repaint();
-        } else if (DarkTextUI.KEY_HAS_ERROR.equals(key)) {
+        } else if (DarkTextUI.KEY_HAS_ERROR.equals(key)
+                || DarkTextUI.KEY_HAS_WARNING.equals(key)) {
             editor.repaint();
         } else if (DarkTextUI.KEY_EXTEND_LINE_SELECTION.equals(key)) {
             boolean extendLines = PropertyUtil.getBooleanProperty(editor, DarkTextUI.KEY_EXTEND_LINE_SELECTION);
