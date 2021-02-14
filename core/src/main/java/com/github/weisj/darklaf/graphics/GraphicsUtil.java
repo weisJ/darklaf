@@ -56,11 +56,7 @@ public final class GraphicsUtil {
     public static GraphicsContext setupAntialiasing(final Graphics g2, final boolean enableAA,
             final boolean ignoreSystemSettings) {
         GraphicsContext config = new GraphicsContext(g2);
-        if (ignoreSystemSettings && g2 instanceof Graphics2D) {
-            Graphics2D g = (Graphics2D) g2;
-            g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                    enableAA ? RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HBGR : RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
-        }
+        config.setupAntialiasing(enableAA, ignoreSystemSettings);
         return config;
     }
 
@@ -68,17 +64,14 @@ public final class GraphicsUtil {
         assert 0.0F <= alpha && alpha <= 1.0F : "alpha should be in range 0.0f .. 1.0f";
 
         GraphicsContext config = new GraphicsContext(g);
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+        config.setAlpha(alpha);
         return config;
     }
 
     public static GraphicsContext setupStrokePainting(final Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         GraphicsContext context = new GraphicsContext(g2);
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL,
-                useQuartz() ? RenderingHints.VALUE_STROKE_PURE : RenderingHints.VALUE_STROKE_NORMALIZE);
+        context.setupStrokePainting();
         return context;
     }
 

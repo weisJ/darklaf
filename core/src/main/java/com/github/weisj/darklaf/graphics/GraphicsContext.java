@@ -49,6 +49,25 @@ public class GraphicsContext {
         return this.graphics2D;
     }
 
+    public void setupStrokePainting() {
+        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics2D.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, GraphicsUtil.useQuartz()
+                ? RenderingHints.VALUE_STROKE_PURE
+                : RenderingHints.VALUE_STROKE_NORMALIZE);
+    }
+
+    public void setAlpha(final float alpha) {
+        graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+    }
+
+    public void setupAntialiasing(final boolean enableAA, final boolean ignoreSystemSettings) {
+        if (ignoreSystemSettings) {
+            graphics2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, enableAA
+                    ? RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HBGR
+                    : RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+        }
+    }
+
     public void restore() {
         restoreRenderingHints();
         restoreComposite();
