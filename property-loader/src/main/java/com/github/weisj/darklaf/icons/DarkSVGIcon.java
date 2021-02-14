@@ -23,11 +23,14 @@ package com.github.weisj.darklaf.icons;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
+
+import javax.swing.UIManager;
 
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.Scale;
@@ -188,7 +191,17 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
         ensureLoaded(false);
         icon.setPreferredSize(size);
         try {
-            return icon.getImage();
+            BufferedImage bi = new BufferedImage(getIconWidth(), getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = (Graphics2D) bi.getGraphics();
+            g.setRenderingHint(
+                    RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g.setRenderingHint(
+                    RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_NORMALIZE);
+            g.setRenderingHint(
+                    RenderingHints.KEY_TEXT_ANTIALIASING, UIManager.get(RenderingHints.KEY_TEXT_ANTIALIASING));
+            icon.paintIcon(null, g, 0, 0);
+            g.dispose();
+            return bi;
         } catch (final RuntimeException e) {
             if (!(this instanceof ThemedSVGIcon)) {
                 IconColorMapper.patchColors(icon);
@@ -240,7 +253,6 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
         Graphics2D g2 = (Graphics2D) g;
         AffineTransform transform = g2.getTransform();
         g2.translate(x, y);
-
 
         Dimension size = getSize();
         double imageWidth = dr ? size.width : image.getWidth(null);
