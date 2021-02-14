@@ -36,6 +36,13 @@ public class PrimitiveParser implements PropertyParser {
         if (parseResult.value.startsWith(COLOR_PREFIX)) {
             Color c = ColorUtil.fromHex(parseResult.value, null, true);
             ParserUtil.setNonNull(parseResult, c != null ? new DarkColorUIResource(c) : null);
+        } else {
+            Color c = ColorUtil.fromHex(parseResult.value, null, true);
+            ParserUtil.setNonNull(parseResult, c != null ? new DarkColorUIResource(c) : null);
+            if (parseResult.finished) {
+                ParserUtil.warning("Declaration '" + parseResult.value + "' specifies a color "
+                        + " without a '#' prefix, which is deprecated. Support will be dropped in future versions.");
+            }
         }
         if (parseResult.finished) return parseResult;
         ParserUtil.setNonNull(parseResult, getInteger(parseResult.value));

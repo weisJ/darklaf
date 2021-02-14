@@ -86,6 +86,15 @@ class ParserTest {
     }
 
     @Test
+    void testColorLegacy() {
+        Random r = new Random();
+        for (int i = 0; i < 100; i++) {
+            Color c = new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256));
+            Assertions.assertEquals(c, parse("key", ColorUtil.toHex(c)));
+        }
+    }
+
+    @Test
     void testReferences() {
         Assertions.assertEquals("key", Parser.parse(new ParseResult("%key", "value"), context).key);
 
@@ -126,11 +135,22 @@ class ParserTest {
         Assertions.assertEquals(dim, parse("key.size", "%key.width," + dim.height));
     }
 
+    private boolean isValidColor(final int value) {
+        return ColorUtil.fromHex(String.valueOf(value), null) != null;
+    }
+
     @Test
     void testInsets() {
         Random r = new Random();
         for (int i = 0; i < 100; i++) {
             Insets insets = new Insets(r.nextInt(), r.nextInt(), r.nextInt(), r.nextInt());
+
+            // While legacy declarations are supported these may be a valid color value.
+            // and parse incorrectly.
+            if (isValidColor(insets.left)) continue;
+            if (isValidColor(insets.right)) continue;
+            if (isValidColor(insets.bottom)) continue;
+            if (isValidColor(insets.right)) continue;
             Assertions.assertEquals(insets, parse("test.insets",
                     insets.top + "," + insets.left + "," + insets.bottom + "," + insets.right));
             Assertions.assertEquals(insets, parse("testInsets",
