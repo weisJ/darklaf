@@ -46,6 +46,7 @@ import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.StringUtil;
 
 public class DarkNumberingPaneUI extends ComponentUI {
 
@@ -137,6 +138,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
 
     @Override
     public void paint(final Graphics g, final JComponent c) {
+        GraphicsUtil.setupStrokePainting(g);
         if (c.isOpaque()) {
             g.setColor(c.getBackground());
             g.fillRect(0, 0, c.getWidth(), c.getHeight());
@@ -177,7 +179,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
         Rectangle rect;
         try {
             rect = textComponent.modelToView(currOffset).getBounds();
-        } catch (BadLocationException e) {
+        } catch (final BadLocationException e) {
             rect = new Rectangle(0, 0, 0, 0);
         }
         g.fillRect(0, rect.y, numberingPane.getWidth(), rect.height);
@@ -188,24 +190,38 @@ public class DarkNumberingPaneUI extends ComponentUI {
             final Element root, final int descent) {
         GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         g.setColor(numberingPane.getForeground());
-        Font font = numberingPane.getTextComponent().getFont();
-        if (font != null) {
-            float newSize = (float) font.getSize() - 1;
-            if (newSize > 0) {
-                g.setFont(numberingPane.getFont().deriveFont(newSize));
-            }
-        }
+
+        Font font = getNumberingFont(numberingPane.getTextComponent(), g);
+        g.setFont(font);
+        FontMetrics fm = numberingPane.getFontMetrics(font);
+
         int digits = String.valueOf(root.getElementCount()).length();
+        int digitLength = fm.stringWidth(StringUtil.repeat("0", digits));
         for (int i = startLine; i <= endLine; i++) {
             int off = root.getElement(i).getStartOffset();
             try {
+                String numberStr = String.valueOf(i);
                 Rectangle lineRect = textComponent.modelToView(off);
                 g.setColor(lineRect.y == yCur ? foregroundHighlight : numberingPane.getForeground());
-                g.drawString(String.format("%1$" + digits + "d", i), OUTER_PAD, lineRect.y + lineRect.height - descent);
-            } catch (BadLocationException ignored) {
+                g.drawString(numberStr, OUTER_PAD + digitLength - fm.stringWidth(numberStr),
+                        lineRect.y + lineRect.height - descent);
+            } catch (final BadLocationException ignored) {
             }
         }
         config.restore();
+    }
+
+    private Font getNumberingFont(final JComponent c, final Graphics g) {
+        Font font = c.getFont();
+        if (font != null) {
+            float newSize = (float) font.getSize() - 1;
+            if (newSize > 0) {
+                font = font.deriveFont(newSize);
+            }
+        } else {
+            font = g.getFont();
+        }
+        return font;
     }
 
     protected void paintIcons(final Graphics g, final int startLine, final int endLine, final Element root) {
@@ -217,9 +233,9 @@ public class DarkNumberingPaneUI extends ComponentUI {
                 lineRect = textComponent.modelToView(icon.getKey().getOffset());
                 int h = icon.getValue().getIconHeight();
                 int x = OUTER_PAD + PAD + textWidth;
-                int y = lineRect.y + lineRect.height / 2 - h / 2;
+                int y = lineRect.y + (lineRect.height - h) / 2;
                 icon.getValue().paintIcon(numberingPane, g, x, y);
-            } catch (BadLocationException ignored) {
+            } catch (final BadLocationException ignored) {
             }
         }
     }
@@ -274,7 +290,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
                                 listener.iconClicked(e);
                             }
                         }
-                    } catch (BadLocationException ignored) {
+                    } catch (final BadLocationException ignored) {
                     }
                 }
                 IndexListener[] list = numberingPane.getIndexListeners();
@@ -360,7 +376,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
                         currentHighlight = textComponent.getHighlighter().addHighlight(0, 0, currentLinePainter);
                         textComponent.getCaret().addChangeListener(currentLinePainter);
                         currentLinePainter.setComponent(textComponent);
-                    } catch (BadLocationException ignored) {
+                    } catch (final BadLocationException ignored) {
                     }
                     textComponent.addPropertyChangeListener(getPropertyChangeListener());
                     textComponent.getCaret().addChangeListener(getChangeListener());

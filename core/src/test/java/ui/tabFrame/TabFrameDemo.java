@@ -52,19 +52,24 @@ public class TabFrameDemo implements ComponentDemo {
     private static Component createTextArea() {
         NumberedTextComponent numberPane = new NumberedTextComponent(new NonWrappingTextPane() {
             {
+                setFont(getFont().deriveFont(16f));
                 setText(StringUtil.repeat(DemoResources.LOREM_IPSUM, 10));
             }
         });
         NumberingPane numbering = numberPane.getNumberingPane();
         Icon icon = DarkUIUtil.ICON_LOADER.getIcon("navigation/arrow/thick/arrowRight.svg");
+        addLineIcons(numbering, icon);
+        return numberPane;
+    }
+
+    private static void addLineIcons(final NumberingPane numberingPane, final Icon icon) {
         try {
-            numbering.addIconAtLine(5, icon);
-            numbering.addIconAtLine(10, icon);
-            numbering.addIconAtLine(15, icon);
-        } catch (BadLocationException e) {
+            numberingPane.addIconAtLine(5, icon);
+            numberingPane.addIconAtLine(10, icon);
+            numberingPane.addIconAtLine(15, icon);
+        } catch (final BadLocationException e) {
             e.printStackTrace();
         }
-        return numberPane;
     }
 
     @Override
