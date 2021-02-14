@@ -74,8 +74,8 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
      */
     private static final String MAC_OS_CATALINA_FONT_NAME = ".AppleSystemUIFont";
     private static final String MAC_OS_CATALINA_FONT_NAME_FALLBACK = "Helvetica Neue";
-    private static final String WINDOWS_10_FONT_NAME = "Segoe UI";
     private static final String MAC_OS_FONT_NAME = ".SF NS Text";
+    private static final String WINDOWS_10_FONT_NAME = "Segoe UI";
 
     @Override
     public void run(final Theme currentTheme, final UIDefaults defaults) {
@@ -181,12 +181,15 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     }
 
     private void patchOSFonts(final UIDefaults defaults, final Function<Map.Entry<Object, Font>, Font> mapper) {
-        PropertyLoader.replacePropertyEntriesOfType(Font.class, defaults, e -> true, mapper);
+        PropertyLoader.replacePropertyEntriesOfType(Font.class, defaults,
+                e -> Font.DIALOG.equals(e.getValue().getName()), mapper);
     }
 
     private Font mapMacOSFont(final Map.Entry<Object, Font> entry) {
         Font font = entry.getValue();
-        String fontName = SystemInfo.isMacOSCatalina ? MAC_OS_CATALINA_FONT_NAME_FALLBACK : MAC_OS_FONT_NAME;
+        String fontName = SystemInfo.isMacOSCatalina
+                ? MAC_OS_CATALINA_FONT_NAME_FALLBACK
+                : MAC_OS_FONT_NAME;
         Font macFont = FontUtil.createFont(fontName, font.getStyle(), font.getSize());
         if (SystemInfo.isMacOSMojave) macFont = macFont.deriveFont(ENABLE_KERNING);
         if (font instanceof UIResource) {
