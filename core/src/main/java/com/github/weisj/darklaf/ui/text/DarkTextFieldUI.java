@@ -220,6 +220,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         GraphicsContext context = new GraphicsContext(g);
         super.paintSafely(g);
         context.restore();
+        context.setupStrokePainting();
         paintIcons(g);
     }
 
