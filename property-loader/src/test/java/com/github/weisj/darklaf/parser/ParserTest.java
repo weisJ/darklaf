@@ -126,6 +126,10 @@ class ParserTest {
         for (int i = 0; i < 100; i++) {
             int w = r.nextInt();
             int h = r.nextInt();
+            // While legacy declarations are supported these may be a valid color value.
+            // and parse incorrectly.
+            if (isValidColor(w)) continue;
+            if (isValidColor(h)) continue;
             Assertions.assertEquals(new Dimension(w, h), parse("test.size", w + "," + h));
             Assertions.assertEquals(new Dimension(w, h), parse("testSize", w + "," + h));
         }
