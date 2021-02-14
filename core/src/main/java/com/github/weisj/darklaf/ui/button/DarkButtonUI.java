@@ -304,7 +304,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
             int w = width - x - Math.max(ins.right, margin.right);
             int h = height - y - Math.max(ins.bottom, margin.bottom);
 
-            GraphicsUtil.setupAAPainting(g);
+            GraphicsUtil.setupStrokePainting(g);
             if (ButtonConstants.isBorderlessRectangular(b)) {
                 paintBorderlessRectangularBackgroundIml(b, g, x, y, w, h);
             } else if (ButtonConstants.isBorderless(b)) {

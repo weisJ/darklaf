@@ -175,7 +175,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
         wrapper.setCustomForeground(!isForeground);
 
         Graphics2D g2d = (Graphics2D) g;
-        GraphicsContext context = GraphicsUtil.setupAAPainting(g2d);
+        GraphicsContext context = GraphicsUtil.setupStrokePainting(g2d);
 
         if (getAlpha() < 1.0f) {
             g2d.setComposite(getAlphaComposite());
@@ -393,8 +393,8 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     private Rectangle getPosRect(final JTextComponent c, final int offset, final Position.Bias bias) {
         try {
             return c.getUI().modelToView(c, Math.max(0, Math.min(offset, c.getDocument().getLength())), bias);
-        } catch (BadLocationException ignored) {
-        } catch (IllegalArgumentException e) {
+        } catch (final BadLocationException ignored) {
+        } catch (final IllegalArgumentException e) {
             new RuntimeException("" + offset).printStackTrace();
         }
         return new Rectangle(Integer.MIN_VALUE + 100, Integer.MIN_VALUE + 100, 0, 0);

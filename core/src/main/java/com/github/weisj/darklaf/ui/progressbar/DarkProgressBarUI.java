@@ -280,7 +280,7 @@ public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyCha
             g2.fill(coloredShape);
 
             if (progressBar.isStringPainted()) {
-                GraphicsContext config = GraphicsUtil.setupAAPainting(g);
+                GraphicsContext config = GraphicsUtil.setupStrokePainting(g);
                 Rectangle progressRect = coloredShape.getBounds();
                 if (progressBar.getOrientation() == JProgressBar.HORIZONTAL) {
                     paintString((Graphics2D) g, i.left, i.top, r.width, r.height, progressRect.x,

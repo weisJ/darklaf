@@ -408,7 +408,7 @@ public class ColorTriangle extends JComponent {
 
     @Override
     public void paint(final Graphics g) {
-        GraphicsContext context = GraphicsUtil.setupAAPainting(g);
+        GraphicsContext context = GraphicsUtil.setupStrokePainting(g);
         Graphics2D g2d = (Graphics2D) g;
 
         final Dimension dim = getSize();
