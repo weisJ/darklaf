@@ -85,6 +85,15 @@ public class ThemedSVGIcon extends DarkSVGIcon implements ThemedIcon {
         return false;
     }
 
+    @Override
+    public String toString() {
+        return "ThemedSVGIcon{" +
+                "parentState= " + super.toString() +
+                "currentTheme=" + currentTheme +
+                ", updatedNotDuringPaint=" + updatedNotDuringPaint +
+                '}';
+    }
+
     protected void invalidate() {
         currentTheme = new Object();
     }

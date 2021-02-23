@@ -184,7 +184,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
         double effectiveScaleX = loadedWithExtraScale ? scaleX * extraScale : scaleX;
         double effectiveScaleY = loadedWithExtraScale ? scaleY * extraScale : scaleY;
         LOGGER.finer(() -> String.format("Creating Image with size (w=%s, h=%s, scaleW=%s, scaleH=%s) for icon '%s'",
-                getSize().width, getSize().height, effectiveScaleX, effectiveScaleX, icon.getSvgURI().toASCIIString()));
+                getSize().width, getSize().height, effectiveScaleX, effectiveScaleX, getName(getUri())));
         image = createImage(Scale.scale(effectiveScaleX, effectiveScaleY, getSize()));
     }
 
@@ -337,5 +337,22 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
     public SVGIcon getSVGIcon() {
         ensureSVGLoaded();
         return icon;
+    }
+
+    @Override
+    public String toString() {
+        return "DarkSVGIcon{" +
+                "loaded=" + loaded +
+                ", iconSize=" + iconSize +
+                ", icon=" + icon +
+                ", uriSupplier=" + uriSupplier +
+                ", uri=" + uri +
+                ", iconKey=" + iconKey +
+                ", directRendering=" + directRendering +
+                ", loadedWithExtraScale=" + loadedWithExtraScale +
+                ", scaleX=" + scaleX +
+                ", scaleY=" + scaleY +
+                ", image=" + image +
+                '}';
     }
 }
