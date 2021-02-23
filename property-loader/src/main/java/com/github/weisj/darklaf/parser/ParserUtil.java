@@ -53,6 +53,14 @@ final class ParserUtil implements Delimiters {
         return parser != null ? parser.parse(p, c) : p;
     }
 
+    static boolean startsWith(final ParseResult parseResult, final String prefix) {
+        return parseResult.value.startsWith(prefix);
+    }
+
+    static boolean startsWith(final ParseResult parseResult, final char prefix) {
+        return parseResult.value.length() > 0 && parseResult.value.charAt(0) == prefix;
+    }
+
     static boolean stripPrefixFromKey(final ParseResult parseResult, final String prefix) {
         if (parseResult.key.startsWith(prefix)) {
             parseResult.key = parseResult.key.substring(prefix.length());
@@ -62,7 +70,7 @@ final class ParserUtil implements Delimiters {
     }
 
     static boolean stripPrefixFromValue(final ParseResult parseResult, final String prefix) {
-        if (parseResult.value.startsWith(prefix)) {
+        if (startsWith(parseResult, prefix)) {
             parseResult.value = parseResult.value.substring(prefix.length());
             return true;
         }

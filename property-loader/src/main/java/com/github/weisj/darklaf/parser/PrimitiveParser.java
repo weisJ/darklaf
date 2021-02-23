@@ -30,6 +30,7 @@ import com.github.weisj.darklaf.util.PropertyValue;
 public class PrimitiveParser implements PropertyParser {
 
     public static final String COLOR_PREFIX = "#";
+    public static final char STRING_DELIMITER = '\'';
 
     @Override
     public ParseResult doParse(final ParseResult parseResult, final ParserContext context) {
@@ -43,6 +44,13 @@ public class PrimitiveParser implements PropertyParser {
                 ParserUtil.warning("Declaration '" + parseResult.value + "' specifies a color "
                         + " without a '#' prefix, which is deprecated. Support will be dropped in future versions.");
             }
+        }
+        if (parseResult.finished) return parseResult;
+        if (ParserUtil.startsWith(parseResult, STRING_DELIMITER)) {
+            ParserUtil.setNonNull(parseResult,
+                    ParserUtil.parseBetween(STRING_DELIMITER, STRING_DELIMITER,
+                            PropertyParser.of(String::valueOf), String.class,
+                            parseResult, context).orElse(null));
         }
         if (parseResult.finished) return parseResult;
         ParserUtil.setNonNull(parseResult, getInteger(parseResult.value));
