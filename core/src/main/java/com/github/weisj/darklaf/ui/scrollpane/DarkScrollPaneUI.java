@@ -137,31 +137,24 @@ public class DarkScrollPaneUI extends BasicScrollPaneUI implements PropertyChang
         if (e.getSource() == scrollpane) {
             String propertyName = e.getPropertyName();
             if ("verticalScrollBar".equals(propertyName)) {
-                Object old = e.getOldValue();
-                Object newVal = e.getNewValue();
-                if (old instanceof JScrollBar) {
-                    ((JScrollBar) old).removeMouseWheelListener(verticalMouseWheelListener);
-                    ((JScrollBar) old).removePropertyChangeListener(scrollbarPropertyChangeListener);
-                }
-                if (newVal instanceof JScrollBar) {
-                    ((JScrollBar) newVal).addMouseWheelListener(verticalMouseWheelListener);
-                    ((JScrollBar) newVal).addPropertyChangeListener(scrollbarPropertyChangeListener);
-                    PropertyUtil.installBackground((Component) newVal, getViewBackground());
-                }
+                transferListeners(e, verticalMouseWheelListener);
             } else if ("horizontalScrollBar".equals(propertyName)) {
-                Object old = e.getOldValue();
-                Object newVal = e.getNewValue();
-                if (old instanceof JScrollBar) {
-                    ((JScrollBar) old).removeMouseWheelListener(horizontalMouseWheelListener);
-                    ((JScrollBar) old).removePropertyChangeListener(scrollbarPropertyChangeListener);
-                }
-                if (newVal instanceof JScrollBar) {
-                    ((JScrollBar) newVal).addMouseWheelListener(horizontalMouseWheelListener);
-                    ((JScrollBar) newVal).addPropertyChangeListener(scrollbarPropertyChangeListener);
-                    PropertyUtil.installBackground((Component) newVal, getViewBackground());
-                }
-
+                transferListeners(e, horizontalMouseWheelListener);
             }
+        }
+    }
+
+    public void transferListeners(final PropertyChangeEvent e, final MouseWheelListener mouseWheelListener) {
+        Object old = e.getOldValue();
+        Object newVal = e.getNewValue();
+        if (old instanceof JScrollBar) {
+            ((JScrollBar) old).removeMouseWheelListener(mouseWheelListener);
+            ((JScrollBar) old).removePropertyChangeListener(scrollbarPropertyChangeListener);
+        }
+        if (newVal instanceof JScrollBar) {
+            ((JScrollBar) newVal).addMouseWheelListener(mouseWheelListener);
+            ((JScrollBar) newVal).addPropertyChangeListener(scrollbarPropertyChangeListener);
+            PropertyUtil.installBackground((Component) newVal, getViewBackground());
         }
     }
 
