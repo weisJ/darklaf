@@ -183,7 +183,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
         scaleY = sy;
         double effectiveScaleX = loadedWithExtraScale ? scaleX * extraScale : scaleX;
         double effectiveScaleY = loadedWithExtraScale ? scaleY * extraScale : scaleY;
-        LOGGER.fine(() -> String.format("Creating Image with size (w=%s, h=%s, scaleW=%s, scaleH=%s)for icon '%s'",
+        LOGGER.finer(() -> String.format("Creating Image with size (w=%s, h=%s, scaleW=%s, scaleH=%s) for icon '%s'",
                 getSize().width, getSize().height, effectiveScaleX, effectiveScaleX, icon.getSvgURI().toASCIIString()));
         image = createImage(Scale.scale(effectiveScaleX, effectiveScaleY, getSize()));
     }
