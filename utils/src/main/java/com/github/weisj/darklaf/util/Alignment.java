@@ -282,12 +282,14 @@ public enum Alignment {
         return isWest(true);
     }
 
-    public boolean isEast(final boolean includePure) {
-        return (this == Alignment.EAST && includePure) || this == Alignment.NORTH_EAST || this == Alignment.SOUTH_EAST;
+    public boolean isEast(final boolean includePureDirections) {
+        return (this == Alignment.EAST && includePureDirections) || this == Alignment.NORTH_EAST
+                || this == Alignment.SOUTH_EAST;
     }
 
-    public boolean isWest(final boolean includePure) {
-        return (this == Alignment.WEST && includePure) || this == Alignment.NORTH_WEST || this == Alignment.SOUTH_WEST;
+    public boolean isWest(final boolean includePureDirections) {
+        return (this == Alignment.WEST && includePureDirections) || this == Alignment.NORTH_WEST
+                || this == Alignment.SOUTH_WEST;
     }
 
     public boolean isVertical() {
