@@ -22,7 +22,6 @@
 package icon;
 
 import java.awt.*;
-import java.util.stream.Collectors;
 
 import javax.swing.*;
 
@@ -30,8 +29,6 @@ import ui.ComponentDemo;
 import ui.DemoPanel;
 
 import com.github.weisj.darklaf.components.iconeditor.IconEditor;
-import com.github.weisj.darklaf.icons.ThemedIcon;
-import com.github.weisj.darklaf.util.Pair;
 
 public class IconEditorDemo implements ComponentDemo {
 
@@ -41,10 +38,7 @@ public class IconEditorDemo implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        IconEditor editor = new IconEditor(AllIcons.loadIcons(16, false).stream()
-                .filter(p -> p.getSecond() instanceof ThemedIcon)
-                .map(p -> new Pair<>(p.getFirst(), (ThemedIcon) p.getSecond()))
-                .collect(Collectors.toList()));
+        IconEditor editor = new IconEditor(AllIcons.loadIcons(16, false));
         DemoPanel panel = new DemoPanel(editor, new BorderLayout(), 0);
         JPanel controls = panel.addControls();
         controls.add(new JCheckBox("Show add/remove controls") {
