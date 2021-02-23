@@ -601,14 +601,17 @@ public class ToolTipContext {
         if (b instanceof AlignableTooltipBorder) {
             AlignableTooltipBorder border = (AlignableTooltipBorder) b;
             int factor = outside ? 1 : -1;
+            int pointerDist = border.getDistanceToPointer();
             if (align == Alignment.EAST) {
-                p.x -= factor * border.getDistanceToPointer();
+                p.x -= factor * pointerDist;
+                p.y -= factor * pointerDist;
             } else if (align == Alignment.WEST) {
-                p.x += factor * border.getDistanceToPointer();
+                p.x += factor * pointerDist;
+                p.y -= factor * pointerDist;
             } else if (align.isNorth()) {
-                p.y += factor * border.getDistanceToPointer();
+                p.y += factor * pointerDist;
             } else if (align.isSouth()) {
-                p.y -= factor * border.getDistanceToPointer();
+                p.y -= factor * pointerDist;
             }
             if (align.isEast(false)) {
                 p.x -= factor * border.getPointerOffset(toolTip, dim, factor);
