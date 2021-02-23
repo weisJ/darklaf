@@ -422,7 +422,8 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     }
 
     protected Color getBorderlessBackground(final AbstractButton c) {
-        return isArmedBorderless(c) ? PropertyUtil.getColor(c, KEY_CLICK_COLOR, borderlessClick)
+        return isArmedBorderless(c)
+                ? PropertyUtil.getColor(c, KEY_CLICK_COLOR, borderlessClick)
                 : PropertyUtil.getColor(c, KEY_HOVER_COLOR, borderlessHover);
     }
 
