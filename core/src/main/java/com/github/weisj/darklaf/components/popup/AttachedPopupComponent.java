@@ -223,14 +223,23 @@ public class AttachedPopupComponent extends JToolTip {
     }
 
     protected ToolTipContext createToolTipContext() {
-        return new ToolTipContext().setAlignment(Alignment.CENTER).setCenterAlignment(Alignment.SOUTH)
-                .setUseBestFit(true).setToolTipInsets(new Insets(2, 2, 2, 2)).setFallBackPositionProvider(c -> {
+        return new ToolTipContext()
+                .setAlignment(Alignment.CENTER)
+                .setCenterAlignment(Alignment.SOUTH)
+                .setUseBestFit(true)
+                .setToolTipInsets(new Insets(2, 2, 2, 2))
+                .setFallBackPositionProvider(c -> {
                     Window window = DarkUIUtil.getWindow(c.getTarget());
                     Dimension size = c.getToolTip().getPreferredSize();
                     Rectangle bounds = window.getBounds();
                     return new Point(bounds.x + (bounds.width - size.width) / 2,
                             bounds.y + (bounds.height - size.height) / 2);
                 });
+    }
+
+    @Override
+    public void setToolTipText(final String text) {
+        /* Not supported */
     }
 
     @Override
