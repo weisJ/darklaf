@@ -29,15 +29,12 @@ import com.github.weisj.darklaf.util.Alignment;
 
 public interface AlignableTooltipBorder {
 
-    default int getDistanceToPointer() {
-        return 0;
-    }
-
-    default int getPointerOffset(final Component c, final Dimension dim, final int factor) {
-        return 0;
-    }
-
     default void adjustContentSize(final JToolTip toolTip, final Dimension dimension, final Alignment align) {}
 
     default void setPointerLocation(final Alignment center, final boolean showPointer) {}
+
+    default Point alignTooltip(final Component c, final Point p, final Alignment align, final Dimension dim,
+            final boolean outside) {
+        return p;
+    }
 }

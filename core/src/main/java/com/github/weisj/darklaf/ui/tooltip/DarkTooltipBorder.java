@@ -72,8 +72,7 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
                 height - ins.top - ins.bottom, bubbleBorder.getThickness() / 3f);
     }
 
-    @Override
-    public int getPointerOffset(final Component c, final Dimension dimension, final int thicknessFactor) {
+    private int getPointerOffset(final Component c, final Dimension dimension, final int thicknessFactor) {
         if (!showPointer || isPlain(c)) return 0;
         int offset = (int) bubbleBorder.getOffset(dimension.width - 2 * shadowBorder.getShadowSize(), dimension.height)
                 + shadowBorder.getShadowSize();
@@ -201,7 +200,30 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
     }
 
     @Override
-    public int getDistanceToPointer() {
+    public Point alignTooltip(final Component c, final Point p, final Alignment align, final Dimension dim,
+            final boolean outside) {
+        int factor = outside ? 1 : -1;
+        int pointerDist = getDistanceToPointer();
+        if (align == Alignment.EAST) {
+            p.x -= factor * pointerDist;
+            p.y -= factor * pointerDist;
+        } else if (align == Alignment.WEST) {
+            p.x += factor * pointerDist;
+            p.y -= factor * pointerDist;
+        } else if (align.isNorth()) {
+            p.y += factor * pointerDist;
+        } else if (align.isSouth()) {
+            p.y -= factor * pointerDist;
+        }
+        if (align.isEast(false)) {
+            p.x -= factor * getPointerOffset(c, dim, factor);
+        } else if (align.isWest(false)) {
+            p.x += factor * getPointerOffset(c, dim, factor);
+        }
+        return p;
+    }
+
+    private int getDistanceToPointer() {
         switch (alignment) {
             case WEST:
             case SOUTH:
