@@ -72,8 +72,8 @@ public class IntelliJTheme extends Theme {
     }
 
     @Override
-    public void customizeIconTheme(final Properties properties, final UIDefaults currentDefaults) {
-        super.customizeIconTheme(properties, currentDefaults);
+    public void loadIconTheme(final Properties properties, final UIDefaults currentDefaults) {
+        super.loadIconTheme(properties, currentDefaults);
         loadCustomProperties("icons", properties, currentDefaults);
     }
 

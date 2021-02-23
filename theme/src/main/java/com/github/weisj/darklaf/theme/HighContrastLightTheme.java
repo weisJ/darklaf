@@ -37,7 +37,7 @@ public class HighContrastLightTheme extends Theme {
 
     @Override
     protected PresetIconRule getPresetIconRule() {
-        return PresetIconRule.LIGHT;
+        return PresetIconRule.NONE;
     }
 
     @Override
@@ -80,11 +80,5 @@ public class HighContrastLightTheme extends Theme {
     public void customizePlatformProperties(final Properties properties, final UIDefaults currentDefaults) {
         super.customizePlatformProperties(properties, currentDefaults);
         loadCustomProperties("platform", properties, currentDefaults);
-    }
-
-    @Override
-    public void customizeIconTheme(final Properties properties, final UIDefaults currentDefaults) {
-        super.customizeIconTheme(properties, currentDefaults);
-        loadCustomProperties("icons", properties, currentDefaults);
     }
 }
