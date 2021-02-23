@@ -40,6 +40,7 @@ import com.github.weisj.darklaf.components.button.JSplitButton;
 import com.github.weisj.darklaf.components.renderer.SimpleListCellRenderer;
 import com.github.weisj.darklaf.icons.CustomThemedIcon;
 import com.github.weisj.darklaf.icons.DerivableIcon;
+import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.icons.ThemedIcon;
 import com.github.weisj.darklaf.icons.ThemedSVGIcon;
 import com.github.weisj.darklaf.layout.HorizontalLayout;
@@ -66,6 +67,11 @@ public class IconEditor extends JPanel {
     }
 
     public IconEditor(final List<Pair<String, ? extends Icon>> icons, final int displayIconSize) {
+        this(icons, displayIconSize, 16);
+    }
+
+    public IconEditor(final List<Pair<String, ? extends Icon>> icons,
+            final int displayIconSize, final int comboIconSize) {
         setLayout(new BorderLayout());
         editorPanel = Box.createHorizontalBox();
 
@@ -74,14 +80,18 @@ public class IconEditor extends JPanel {
 
         List<Pair<String, ThemedIcon>> themedIcons = icons.stream()
                 .filter(p -> p.getSecond() instanceof ThemedIcon)
-                .map(p -> new Pair<>(p.getFirst(), (ThemedIcon) p.getSecond()))
+                .map(p -> new Pair<>(p.getFirst(),
+                        fitIconToSize((ThemedIcon) p.getSecond(), comboIconSize, comboIconSize)))
                 .collect(Collectors.toList());
 
         ComboBoxModel<Pair<String, ThemedIcon>> model = new DefaultComboBoxModel<>(new Vector<>(themedIcons));
         iconCombo.setModel(model);
+
+        DisplayIcon comboDisplayIcon = new DisplayIcon(null, comboIconSize, comboIconSize);
         iconCombo.setRenderer(SimpleListCellRenderer.create((c, p) -> {
             c.setText(p.getFirst());
-            c.setIcon(p.getSecond());
+            comboDisplayIcon.setIcon(p.getSecond());
+            c.setIcon(comboDisplayIcon);
         }));
         iconCombo.addItemListener(e -> {
             Pair<String, ThemedIcon> pair = model.getElementAt(iconCombo.getSelectedIndex());
@@ -251,5 +261,59 @@ public class IconEditor extends JPanel {
         return editors.keySet().stream()
                 .map(e -> new Pair<>(e.getTheme(), e.exportProperties()))
                 .collect(Collectors.toList());
+    }
+
+    private ThemedIcon fitIconToSize(final ThemedIcon icon, final int width, final int height) {
+        int w = icon.getIconWidth();
+        int h = icon.getIconHeight();
+        if (w > width || h > height && icon instanceof DerivableIcon) {
+            int wExtra = w - width;
+            int hExtra = h - height;
+            int newWidth;
+            int newHeight;
+            if (wExtra >= hExtra) {
+                newWidth = width;
+                newHeight = (int) ((h / (float) w) * newWidth);
+            } else {
+                newHeight = height;
+                newWidth = (int) ((w / (float) h) * newHeight);
+            }
+            return (ThemedIcon) ((DerivableIcon<?>) icon).derive(newWidth, newHeight);
+        }
+        return icon;
+    }
+
+    private static class DisplayIcon implements Icon {
+
+        private Icon icon;
+        private final int width;
+        private final int height;
+
+        public DisplayIcon(final Icon icon, final int width, final int height) {
+            setIcon(icon);
+            this.width = width;
+            this.height = height;
+        }
+
+        public void setIcon(final Icon icon) {
+            this.icon = icon != null ? icon : EmptyIcon.create(0);
+        }
+
+        @Override
+        public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
+            int px = x + (width - icon.getIconWidth()) / 2;
+            int py = y + (height - icon.getIconHeight()) / 2;
+            icon.paintIcon(c, g, px, py);
+        }
+
+        @Override
+        public int getIconWidth() {
+            return width;
+        }
+
+        @Override
+        public int getIconHeight() {
+            return height;
+        }
     }
 }
