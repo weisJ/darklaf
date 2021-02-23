@@ -330,7 +330,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
                 }
             }
             setDisplaySize(width, height);
-            LOGGER.fine(() -> "Inferred size of icon '" + getName(uri) + "' to " + iconSize);
+            LOGGER.finer(() -> "Inferred size of icon '" + getName(uri) + "' to " + iconSize);
         }
     }
 
