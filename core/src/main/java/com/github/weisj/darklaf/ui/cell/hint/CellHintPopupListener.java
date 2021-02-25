@@ -24,6 +24,7 @@ package com.github.weisj.darklaf.ui.cell.hint;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Objects;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.*;
@@ -244,7 +245,7 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
     }
 
     private void enter(final I index, final Rectangle bounds, final Rectangle rendererBounds) {
-        LOGGER.fine("Showing cell popup at index " + index);
+        LOGGER.log(popupComponent.isShowing() ? Level.FINER : Level.FINE, "Showing cell popup at index " + index);
         if (index != null) {
             lastIndex = index;
             popupComponent.setPreferredSize(bounds.getSize());
@@ -334,7 +335,11 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
     }
 
     private Component getRenderer() {
-        return cellContainer.getEffectiveCellRendererComponent(lastIndex, cellContainer.isEditingCell(lastIndex));
+        return cellContainer.getEffectiveCellRendererComponent(lastIndex, isCurrentCellEditing());
+    }
+
+    private boolean isCurrentCellEditing() {
+        return cellContainer.isEditingCell(lastIndex);
     }
 
     private Color getBackground(final Component renderer) {
@@ -401,14 +406,24 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
             if (rendererBounds != null && renderer != null) {
                 paintBackground(g, renderer);
                 g.translate(-rendererBounds.x, -rendererBounds.y);
-
                 // If the renderer is an editor we need to restore the bounds.
                 Rectangle bounds = renderer.getBounds();
-                renderer.setBounds(0, 0, rendererBounds.width, rendererBounds.height);
-                renderer.doLayout();
-                renderer.paint(g);
-                renderer.setBounds(bounds);
 
+                boolean doubleBuffered = renderer.isDoubleBuffered();
+                try {
+                    if (renderer instanceof JComponent) {
+                        ((JComponent) renderer).setDoubleBuffered(false);
+                    }
+                    renderer.setBounds(0, 0, rendererBounds.width, rendererBounds.height);
+                    renderer.doLayout();
+                    renderer.paint(g);
+                } finally {
+                    if (renderer instanceof JComponent) {
+                        ((JComponent) renderer).setDoubleBuffered(doubleBuffered);
+                    }
+                }
+
+                renderer.setBounds(bounds);
                 g.translate(rendererBounds.x, rendererBounds.y);
             }
             g.setColor(getBorderColor());
