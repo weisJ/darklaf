@@ -46,7 +46,6 @@ import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
-import com.github.weisj.darklaf.util.StringUtil;
 
 public class DarkNumberingPaneUI extends ComponentUI {
 
@@ -195,15 +194,14 @@ public class DarkNumberingPaneUI extends ComponentUI {
         g.setFont(font);
         FontMetrics fm = numberingPane.getFontMetrics(font);
 
-        int digits = String.valueOf(root.getElementCount()).length();
-        int digitLength = fm.stringWidth(StringUtil.repeat("0", digits));
+        int width = numberingPane.getWidth();
         for (int i = startLine; i <= endLine; i++) {
             int off = root.getElement(i).getStartOffset();
             try {
                 String numberStr = String.valueOf(i);
                 Rectangle lineRect = textComponent.modelToView(off);
                 g.setColor(lineRect.y == yCur ? foregroundHighlight : numberingPane.getForeground());
-                g.drawString(numberStr, OUTER_PAD + digitLength - fm.stringWidth(numberStr),
+                g.drawString(numberStr, width - OUTER_PAD - fm.stringWidth(numberStr),
                         lineRect.y + lineRect.height - descent);
             } catch (final BadLocationException ignored) {
             }
