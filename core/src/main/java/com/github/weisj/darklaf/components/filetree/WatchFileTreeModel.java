@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Jannis Weis
+ * Copyright (c) 2021 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -51,7 +51,7 @@ public class WatchFileTreeModel extends FileTreeModel {
         WatchService ws = null;
         try {
             ws = FileSystems.getDefault().newWatchService();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
         return ws;
@@ -119,7 +119,7 @@ public class WatchFileTreeModel extends FileTreeModel {
             WatchKey key;
             try {
                 key = watchService.take();
-            } catch (InterruptedException x) {
+            } catch (final InterruptedException x) {
                 x.printStackTrace();
                 return;
             }
@@ -166,7 +166,7 @@ public class WatchFileTreeModel extends FileTreeModel {
                 node.watchKey = path.register(ws, StandardWatchEventKinds.ENTRY_CREATE,
                         StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
                 getNodeMap().put(path, node);
-            } catch (IOException ignored) {
+            } catch (final IOException ignored) {
             }
         }
     }

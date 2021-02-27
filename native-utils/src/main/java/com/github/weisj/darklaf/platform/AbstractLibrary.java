@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Jannis Weis
+ * Copyright (c) 2021 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -61,7 +61,7 @@ public abstract class AbstractLibrary {
                 loaded = true;
                 info("Loaded " + getLibraryName() + ".");
             }
-        } catch (Throwable e) {
+        } catch (final Throwable e) {
             // Library not found, SecurityManager prevents library loading etc.
             error("Could not load library " + getLibraryName() + ".", e);
         }

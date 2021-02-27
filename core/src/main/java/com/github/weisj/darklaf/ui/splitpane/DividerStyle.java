@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Jannis Weis
+ * Copyright (c) 2021 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -69,7 +69,7 @@ public enum DividerStyle {
         if (obj instanceof DividerStyle) return (DividerStyle) obj;
         try {
             return valueOf(obj.toString());
-        } catch (IllegalArgumentException ignored) {
+        } catch (final IllegalArgumentException ignored) {
         }
         for (DividerStyle s : values()) {
             if (s.name.equalsIgnoreCase(obj.toString())) return s;

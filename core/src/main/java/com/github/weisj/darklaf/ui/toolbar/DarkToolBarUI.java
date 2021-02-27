@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Jannis Weis
+ * Copyright (c) 2021 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -63,7 +63,7 @@ public class DarkToolBarUI extends BasicToolBarUI {
     private static Robot createRobot() {
         try {
             return new Robot();
-        } catch (AWTException e) {
+        } catch (final AWTException e) {
             return null;
         }
     }
@@ -347,7 +347,7 @@ public class DarkToolBarUI extends BasicToolBarUI {
                     setFloating(true, null);
                 }
                 dockingSource.remove(previewPanel);
-            } catch (IllegalComponentStateException ignored) {
+            } catch (final IllegalComponentStateException ignored) {
             }
         }
     }

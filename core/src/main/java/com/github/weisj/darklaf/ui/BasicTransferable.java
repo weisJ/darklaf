@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Jannis Weis
+ * Copyright (c) 2021 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -60,7 +60,7 @@ public class BasicTransferable implements Transferable, UIResource {
             stringFlavors[0] = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + ";class=java.lang.String");
             stringFlavors[1] = DataFlavor.stringFlavor;
 
-        } catch (ClassNotFoundException cle) {
+        } catch (final ClassNotFoundException cle) {
             Logger.getGlobal().severe("error initializing javax.swing.plaf.basic.BasicTranserable");
         }
     }

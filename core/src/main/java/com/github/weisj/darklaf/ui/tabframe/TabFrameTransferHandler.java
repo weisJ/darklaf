@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Jannis Weis
+ * Copyright (c) 2021 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -61,7 +61,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
     public TabFrameTransferHandler() {
         try {
             tabFlavor = new DataFlavor(MIME_TYPE);
-        } catch (ClassNotFoundException ignored) {
+        } catch (final ClassNotFoundException ignored) {
         }
         timer = new Timer(100, e -> {
             if (lastTabFrame != null) {
@@ -141,7 +141,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
                         int h = getUI(sourceTab).getTabHeight(sourceTab, sourceAlign, sourceIndex);
                         ui.setDropSize(w, h);
                         ui.setTargetIndicator(tab.getAlignment(), tab.getIndex());
-                    } catch (IndexOutOfBoundsException ex) {
+                    } catch (final IndexOutOfBoundsException ex) {
                         ui.clearTargetIndicator();
                     }
                 }
@@ -263,7 +263,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
                 if (ui != null) {
                     ui.clearTargetIndicator();
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 e.printStackTrace();
             }
         }
@@ -402,7 +402,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
                         dge.startDrag(Cursor.getDefaultCursor(), im, th.getDragImageOffset(), t, this);
                     }
                     return;
-                } catch (RuntimeException re) {
+                } catch (final RuntimeException re) {
                     c.setAutoscrolls(scrolls);
                 }
             }

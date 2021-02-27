@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Jannis Weis
+ * Copyright (c) 2021 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -57,7 +57,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
     public TabbedPaneTransferHandler() {
         try {
             tabFlavor = new DataFlavor(MIME_TYPE);
-        } catch (ClassNotFoundException ignored) {
+        } catch (final ClassNotFoundException ignored) {
         }
     }
 
@@ -113,7 +113,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
                 if (ui != null) {
                     ui.clearDropIndicator();
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 e.printStackTrace();
             }
         }
@@ -345,7 +345,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
                         dge.startDrag(Cursor.getDefaultCursor(), im, th.getDragImageOffset(), t, this);
                     }
                     return;
-                } catch (RuntimeException re) {
+                } catch (final RuntimeException re) {
                     c.setAutoscrolls(scrolls);
                 }
             }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Jannis Weis
+ * Copyright (c) 2021 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -96,7 +96,7 @@ public class LazyActionMap extends ActionMapUIResource {
             try {
                 Method method = klass.getDeclaredMethod("loadActionMap", LazyActionMap.class);
                 method.invoke(klass, this);
-            } catch (NoSuchMethodException nsme) {
+            } catch (final NoSuchMethodException nsme) {
                 assert false : "LazyActionMap unable to load actions " + klass;
             } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException iae) {
                 assert false : "LazyActionMap unable to load actions " + iae;

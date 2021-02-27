@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Jannis Weis
+ * Copyright (c) 2021 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -900,7 +900,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
             File canonical;
             try {
                 canonical = ShellFolder.getNormalizedFile(directory);
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 // Maybe drive is not ready. Can't abort here.
                 canonical = directory;
             }
@@ -928,7 +928,7 @@ public abstract class DarkFileChooserUIBridge extends BasicFileChooserUI {
                 }
                 calculateDepths();
                 setSelectedItem(sf);
-            } catch (FileNotFoundException ex) {
+            } catch (final FileNotFoundException ex) {
                 calculateDepths();
             }
         }

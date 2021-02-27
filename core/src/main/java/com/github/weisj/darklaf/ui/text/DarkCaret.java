@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Jannis Weis
+ * Copyright (c) 2021 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -103,7 +103,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
         if (dot >= doc.getLength()) return true;
         try {
             return target.getText(dot, 1).equals("\n");
-        } catch (BadLocationException e) {
+        } catch (final BadLocationException e) {
             return false;
         }
     }
@@ -270,7 +270,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                             else {
                                 textArea.paste();
                             }
-                        } catch (HeadlessException ignored) {
+                        } catch (final HeadlessException ignored) {
                         }
                     }
                 }
@@ -362,7 +362,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
             Rectangle r;
             try {
                 r = mapper.modelToView(textArea, getDot(), getDotBias());
-            } catch (BadLocationException ex) {
+            } catch (final BadLocationException ex) {
                 r = new Rectangle(0, 0, 0, 0);
             }
             validateWidth(r);
@@ -473,7 +473,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
             JTextComponent textArea = getComponent();
             try {
                 textArea.getDocument().getText(getDot(), 1, seg);
-            } catch (BadLocationException ble) {
+            } catch (final BadLocationException ble) {
                 // This shouldn't ever happen.
                 ble.printStackTrace();
                 rect.width = 8;

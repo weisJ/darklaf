@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Jannis Weis
+ * Copyright (c) 2021 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -319,7 +319,7 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
                 if (usesShellFolder(chooser)) {
                     try {
                         return ShellFolder.getShellFolder(f).canWrite();
-                    } catch (FileNotFoundException ex) {
+                    } catch (final FileNotFoundException ex) {
                         // File doesn't exist
                         return false;
                     }
@@ -328,7 +328,7 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
                     return f.canWrite();
                 }
             }
-        } catch (SecurityException e) {
+        } catch (final SecurityException e) {
             return false;
         }
     }
@@ -1120,7 +1120,7 @@ public abstract class DarkFilePaneUIBridge extends JPanel implements PropertyCha
             if (dir != null && usesShellFolder(chooser)) {
                 try {
                     dir = ShellFolder.getShellFolder(dir);
-                } catch (FileNotFoundException e) {
+                } catch (final FileNotFoundException e) {
                     // Leave dir without changing
                 }
             }

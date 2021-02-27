@@ -132,7 +132,6 @@ allprojects {
             format("configs") {
                 configFilter {
                     include("**/*.sh", "**/*.bsh", "**/*.cmd", "**/*.bat")
-                    include("**/*.yml")
                     include("**/*.xsd", "**/*.xsl", "**/*.xml")
                     exclude("**/*.eclipseformat.xml")
                 }

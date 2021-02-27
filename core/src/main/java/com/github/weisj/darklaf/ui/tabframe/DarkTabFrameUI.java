@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Jannis Weis
+ * Copyright (c) 2021 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -149,7 +149,7 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
                 dropTarget.addDropTargetListener(TRANSFER_HANDLER);
                 dropTarget.setActive(tabFrame.isDndEnabled());
             }
-        } catch (TooManyListenersException e) {
+        } catch (final TooManyListenersException e) {
             e.printStackTrace();
         }
     }

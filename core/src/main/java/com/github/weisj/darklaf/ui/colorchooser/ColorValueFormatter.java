@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Jannis Weis
+ * Copyright (c) 2021 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -135,7 +135,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
                 if (text != null) {
                     text.commitEdit();
                 }
-            } catch (ParseException e) {
+            } catch (final ParseException e) {
                 e.printStackTrace();
             }
         });
@@ -191,7 +191,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
     private boolean isValidValue(final String text) {
         try {
             stringToValue(text);
-        } catch (ParseException e) {
+        } catch (final ParseException e) {
             return false;
         }
         return true;
@@ -221,7 +221,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
                 checkRange(value, min, max);
                 return value;
             }
-        } catch (NumberFormatException nfe) {
+        } catch (final NumberFormatException nfe) {
             ParseException pe = new ParseException("illegal format", 0);
             pe.initCause(nfe);
             throw pe;

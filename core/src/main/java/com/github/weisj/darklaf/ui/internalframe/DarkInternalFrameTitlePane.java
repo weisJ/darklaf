@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Jannis Weis
+ * Copyright (c) 2021 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -197,7 +197,7 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
     private static int getButtonMnemonic(final String button) {
         try {
             return Integer.parseInt(UIManager.getString("InternalFrameTitlePane." + button + "Button.mnemonic"));
-        } catch (NumberFormatException e) {
+        } catch (final NumberFormatException e) {
             return -1;
         }
     }

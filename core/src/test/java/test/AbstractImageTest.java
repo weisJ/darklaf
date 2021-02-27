@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Jannis Weis
+ * Copyright (c) 2021 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -65,7 +65,7 @@ abstract class AbstractImageTest {
             BufferedImage image = ImageUtil.scaledImageFromComponent(c, rect, scalingFactor, scalingFactor, false);
             ImageIO.write(image, "png", file);
             return image;
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
         return null;

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Jannis Weis
+ * Copyright (c) 2021 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -64,7 +64,7 @@ public class FileNode implements Comparable<FileNode> {
             try (Stream<Path> s = Files.list(path)) {
                 empty = s.filter(Files::isReadable).noneMatch(p -> showHiddenFiles || !isHidden(p));
                 valid = true;
-            } catch (IOException ignored) {
+            } catch (final IOException ignored) {
             }
         }
         return valid;
@@ -81,7 +81,7 @@ public class FileNode implements Comparable<FileNode> {
     private static Path toPath(final File file) {
         try {
             return file.toPath();
-        } catch (InvalidPathException e) {
+        } catch (final InvalidPathException e) {
             return null;
         }
     }
@@ -143,7 +143,7 @@ public class FileNode implements Comparable<FileNode> {
         if (path != null) {
             try {
                 return Files.isHidden(path);
-            } catch (IOException ignored) {
+            } catch (final IOException ignored) {
             }
         }
         return false;

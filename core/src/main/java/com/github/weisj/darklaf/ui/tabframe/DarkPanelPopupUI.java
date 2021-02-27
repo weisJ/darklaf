@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Jannis Weis
+ * Copyright (c) 2021 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -294,7 +294,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
                 try {
                     Component peer = tabFrame.getPopupComponentAt(tabFrame.getPeer(popupComponent.getAlignment()));
                     peer.firePropertyChange(TabFramePopup.KEY_PEER_INSETS, 0, 1);
-                } catch (IndexOutOfBoundsException ignored) {
+                } catch (final IndexOutOfBoundsException ignored) {
                     /* may happen during transfer */ }
             }
         }
