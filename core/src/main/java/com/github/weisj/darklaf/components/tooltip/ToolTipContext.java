@@ -366,8 +366,11 @@ public class ToolTipContext {
     public void updateToolTip() {
         if (toolTip != null) {
             toolTip.putClientProperty(DarkToolTipUI.KEY_POINTER_LOCATION,
-                    alignment == Alignment.CENTER ? centerAlignment.opposite()
-                            : alignInside ? alignment : alignment.opposite());
+                    alignment == Alignment.CENTER
+                            ? centerAlignment.opposite()
+                            : alignInside
+                                    ? alignment
+                                    : alignment.opposite());
             toolTip.putClientProperty(DarkToolTipUI.KEY_INSETS, insets);
             toolTip.doLayout();
         }

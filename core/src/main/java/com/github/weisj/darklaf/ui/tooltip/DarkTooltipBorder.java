@@ -99,7 +99,7 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
         } else if (align == Alignment.WEST) {
             si.left -= pointerSize;
         } else if (align.isNorth()) {
-            si.top = 0;
+            si.top -= pointerSize;
         }
     }
 
@@ -147,14 +147,10 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
         Insets ins = new Insets(0, 0, 0, 0);
         Insets bi = bubbleBorder.getBorderInsets(c);
         Insets si = shadowBorder.getBorderInsets(c);
-        ins.bottom = Math.max(bi.bottom, si.bottom);
-        ins.left = Math.max(bi.left, si.left);
-        ins.right = Math.max(bi.right, si.right);
-        ins.top = Math.max(bi.top, si.top);
-        ins.left += uIns.left;
-        ins.top += uIns.top;
-        ins.right += uIns.right;
-        ins.bottom += uIns.bottom;
+        ins.bottom = Math.max(bi.bottom, si.bottom) + uIns.bottom;
+        ins.left = Math.max(bi.left, si.left) + uIns.left;
+        ins.right = Math.max(bi.right, si.right) + uIns.right;
+        ins.top = Math.max(bi.top, si.top) + uIns.top;
         return ins;
     }
 

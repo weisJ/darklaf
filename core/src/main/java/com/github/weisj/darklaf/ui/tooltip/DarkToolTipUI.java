@@ -55,9 +55,10 @@ public class DarkToolTipUI extends BasicToolTipUI
             boolean inside = isInside(e);
             if (!inside) {
                 ToolTipManager.sharedInstance()
-                        .mouseExited(new MouseEvent(toolTip.getComponent(), e.getID(), e.getWhen(), e.getModifiersEx(),
-                                Integer.MIN_VALUE, Integer.MIN_VALUE, e.getClickCount(), e.isPopupTrigger(),
-                                e.getButton()));
+                        .mouseExited(new MouseEvent(
+                                toolTip.getComponent(), e.getID(), e.getWhen(),
+                                e.getModifiersEx(), Integer.MIN_VALUE, Integer.MIN_VALUE,
+                                e.getClickCount(), e.isPopupTrigger(), e.getButton()));
             }
         }
     };
@@ -77,8 +78,11 @@ public class DarkToolTipUI extends BasicToolTipUI
             if (p.y == c.getHeight()) p.y--;
             p.x = Math.max(p.x, 0);
             p.y = Math.max(p.y, 0);
-            ToolTipManager.sharedInstance().mouseEntered(new MouseEvent(c, e.getID(), e.getWhen(), e.getModifiersEx(),
-                    p.x, p.y, e.getClickCount(), e.isPopupTrigger(), e.getButton()));
+            ToolTipManager.sharedInstance()
+                    .mouseEntered(new MouseEvent(
+                            c, e.getID(), e.getWhen(),
+                            e.getModifiersEx(), p.x, p.y,
+                            e.getClickCount(), e.isPopupTrigger(), e.getButton()));
         }
 
         @Override
@@ -209,7 +213,10 @@ public class DarkToolTipUI extends BasicToolTipUI
             Insets insets = c.getInsets();
             Rectangle paintTextR = new Rectangle(insets.left, insets.top, size.width - (insets.left + insets.right),
                     size.height - (insets.top + insets.bottom));
+            Rectangle r = new Rectangle(paintTextR);
             StringPainter.drawString(g, c, tipText, paintTextR);
+            g.setColor(Color.GREEN);
+            PaintUtil.drawRect(g, r);
         }
     }
 
