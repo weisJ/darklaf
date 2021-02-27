@@ -27,15 +27,19 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 
 import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.platform.macos.JNIDecorationsMacOS;
+import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class MacOSTitlePane extends CustomTitlePane {
+
+    private static final Logger LOGGER = LogUtil.getLogger(MacOSTitlePane.class);
 
     private final JRootPane rootPane;
     private final Window window;
@@ -204,10 +208,13 @@ public class MacOSTitlePane extends CustomTitlePane {
         if (decorationInformation == null) return new Dimension(0, 0);
         int height = decorationInformation.titleBarHeight;
         if (hideTitleBar()) {
+            LOGGER.finer("Title bar is hidden.");
             height = 0;
         } else if (useCustomTitle()) {
+            LOGGER.finer("Using custom title label.");
             height = Math.max(height, titleLabel.getPreferredSize().height);
         }
+        LOGGER.finer("Preferred height of title pane: " + height);
         return new Dimension(0, height);
     }
 
@@ -233,7 +240,7 @@ public class MacOSTitlePane extends CustomTitlePane {
     @Override
     public void doLayout() {
         boolean hide = hideTitleBar();
-        if (useCustomTitle() && !hide) {
+        if (!hide && useCustomTitle()) {
             int width = getWidth();
             int height = getHeight();
             int labelWidth = titleLabel.getPreferredSize().width;

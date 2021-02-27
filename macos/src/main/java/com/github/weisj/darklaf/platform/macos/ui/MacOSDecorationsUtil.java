@@ -60,7 +60,9 @@ public final class MacOSDecorationsUtil {
             boolean isDarkTheme = UIManager.getBoolean("Theme.dark");
             JNIDecorationsMacOS.setDarkTheme(windowHandle, isDarkTheme);
         }
-        return new DecorationInformation(windowHandle, fullWindowContent, transparentTitleBar, useColoredTitleBar,
+        return new DecorationInformation(
+                windowHandle, fullWindowContent,
+                transparentTitleBar, useColoredTitleBar,
                 jniInstall, rootPane,
                 titleVisible, titleBarHeight, titleFontSize);
     }
