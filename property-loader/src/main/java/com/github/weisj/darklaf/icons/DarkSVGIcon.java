@@ -271,7 +271,7 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
         if (dr) {
             getSVGIcon().paintIcon(c, g, 0, 0);
         } else {
-            g2.drawImage(image, 0, 0, null);
+            g2.drawImage(image, 0, 0, c);
         }
         g2.scale(1 / sx, 1 / sy);
         g2.translate(-x, -y);
