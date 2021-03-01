@@ -213,7 +213,6 @@ public class DarkToolTipUI extends BasicToolTipUI
             Insets insets = c.getInsets();
             Rectangle paintTextR = new Rectangle(insets.left, insets.top, size.width - (insets.left + insets.right),
                     size.height - (insets.top + insets.bottom));
-            Rectangle r = new Rectangle(paintTextR);
             StringPainter.drawString(g, c, tipText, paintTextR);
         }
     }
