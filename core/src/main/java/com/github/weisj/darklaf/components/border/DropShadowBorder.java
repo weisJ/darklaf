@@ -25,6 +25,7 @@ import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
+import java.awt.image.ImageObserver;
 import java.awt.image.Kernel;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -158,51 +159,52 @@ public class DropShadowBorder implements Border, Serializable {
             if (showLeftShadow) {
                 assert topLeftShadowPoint != null && bottomLeftShadowPoint != null;
                 drawImage(g2, images[Position.LEFT.ordinal()], x, topLeftShadowPoint.y + shadowSize, shadowSize,
-                        bottomLeftShadowPoint.y - topLeftShadowPoint.y - shadowSize);
+                        bottomLeftShadowPoint.y - topLeftShadowPoint.y - shadowSize, c);
             }
 
             if (showBottomShadow) {
                 assert bottomLeftShadowPoint != null && bottomRightShadowPoint != null;
                 drawImage(g2, images[Position.BOTTOM.ordinal()], bottomLeftShadowPoint.x + shadowSize,
                         y + height - shadowSize, bottomRightShadowPoint.x - bottomLeftShadowPoint.x - shadowSize,
-                        shadowSize);
+                        shadowSize, c);
             }
 
             if (showRightShadow) {
                 assert topRightShadowPoint != null && bottomRightShadowPoint != null;
                 drawImage(g2, images[Position.RIGHT.ordinal()], x + width - shadowSize,
                         topRightShadowPoint.y + shadowSize, shadowSize,
-                        bottomRightShadowPoint.y - topRightShadowPoint.y - shadowSize);
+                        bottomRightShadowPoint.y - topRightShadowPoint.y - shadowSize, c);
             }
 
             if (showTopShadow) {
                 assert topLeftShadowPoint != null && topRightShadowPoint != null;
                 drawImage(g2, images[Position.TOP.ordinal()], topLeftShadowPoint.x + shadowSize, y,
-                        topRightShadowPoint.x - topLeftShadowPoint.x - shadowSize, shadowSize);
+                        topRightShadowPoint.x - topLeftShadowPoint.x - shadowSize, shadowSize, c);
             }
 
             if (showLeftShadow || showTopShadow) {
-                drawImage(g2, images[Position.TOP_LEFT.ordinal()], topLeftShadowPoint);
+                drawImage(g2, images[Position.TOP_LEFT.ordinal()], topLeftShadowPoint, c);
             }
             if (showLeftShadow || showBottomShadow) {
-                drawImage(g2, images[Position.BOTTOM_LEFT.ordinal()], bottomLeftShadowPoint);
+                drawImage(g2, images[Position.BOTTOM_LEFT.ordinal()], bottomLeftShadowPoint, c);
             }
             if (showRightShadow || showBottomShadow) {
-                drawImage(g2, images[Position.BOTTOM_RIGHT.ordinal()], bottomRightShadowPoint);
+                drawImage(g2, images[Position.BOTTOM_RIGHT.ordinal()], bottomRightShadowPoint, c);
             }
             if (showRightShadow || showTopShadow) {
-                drawImage(g2, images[Position.TOP_RIGHT.ordinal()], topRightShadowPoint);
+                drawImage(g2, images[Position.TOP_RIGHT.ordinal()], topRightShadowPoint, c);
             }
         }
     }
 
-    protected void drawImage(final Graphics g, final Image image, final Point p) {
+    protected void drawImage(final Graphics g, final Image image, final Point p, final ImageObserver observer) {
         if (p == null) return;
-        g.drawImage(image, p.x, p.y, null);
+        g.drawImage(image, p.x, p.y, observer);
     }
 
-    protected void drawImage(final Graphics g, final Image image, final int x, final int y, final int w, final int h) {
-        g.drawImage(image, x, y, w, h, null);
+    protected void drawImage(final Graphics g, final Image image, final int x, final int y, final int w, final int h,
+            final ImageObserver observer) {
+        g.drawImage(image, x, y, w, h, observer);
     }
 
     @SuppressWarnings("SuspiciousNameCombination")
@@ -214,12 +216,23 @@ public class DropShadowBorder implements Border, Serializable {
             images = new BufferedImage[Position.count()];
 
             /*
-             * To draw a drop shadow, I have to: 1) Create a rounded rectangle 2) Create a BufferedImage to draw
-             * the rounded rect in 3) Translate the graphics for the image, so that the rectangle is centered in
-             * the drawn space. The border around the rectangle needs to be shadowWidth wide, so that there is
-             * space for the shadow to be drawn. 4) Draw the rounded rect as shadowColor, with an opacity of
-             * shadowOpacity 5) Create the BLUR_KERNEL 6) Blur the image 7) copy off the corners, sides, etc
-             * into images to be used for drawing the Border
+             * To draw a drop shadow, I have to:
+             *
+             * 1) Create a rounded rectangle
+             *
+             * 2) Create a BufferedImage to draw the rounded rect in
+             *
+             * 3) Translate the graphics for the image, so that the rectangle is centered in the drawn space.
+             * The border around the rectangle needs to be shadowWidth wide, so that there is space for the
+             * shadow to be drawn.
+             *
+             * 4) Draw the rounded rect as shadowColor, with an opacity of shadowOpacity
+             *
+             * 5) Create the BLUR_KERNEL
+             *
+             * 6) Blur the image
+             *
+             * 7) copy off the corners, sides, etc. into images to be used for drawing the Border
              */
             int rectWidth = cornerSize + 1;
             RoundRectangle2D rect = new RoundRectangle2D.Double(0, 0, rectWidth, rectWidth, cornerSize, cornerSize);
@@ -239,7 +252,10 @@ public class DropShadowBorder implements Border, Serializable {
             Arrays.fill(blurKernel, blurry);
             ConvolveOp blur = new ConvolveOp(new Kernel(shadowSize, shadowSize, blurKernel));
             BufferedImage targetImage = ImageUtil.createCompatibleTranslucentImage(imageWidth, imageWidth);
-            ((Graphics2D) targetImage.getGraphics()).drawImage(image, blur, -(shadowSize / 2), -(shadowSize / 2));
+            Graphics2D targetGraphics = (Graphics2D) targetImage.getGraphics();
+            try (Disposable d = targetGraphics::dispose) {
+                targetGraphics.drawImage(image, blur, -(shadowSize / 2), -(shadowSize / 2));
+            }
 
             int x = 1;
             int y = 1;
@@ -301,14 +317,7 @@ public class DropShadowBorder implements Border, Serializable {
      * strategies on later JDKs.)
      */
     private BufferedImage getSubImage(final BufferedImage img, final int x, final int y, final int w, final int h) {
-        BufferedImage ret = ImageUtil.createCompatibleTranslucentImage(w, h);
-        Graphics2D g2 = ret.createGraphics();
-
-        try (Disposable d = g2::dispose) {
-            g2.drawImage(img, 0, 0, w, h, x, y, x + w, y + h, null);
-        }
-
-        return ret;
+        return img.getSubimage(x, y, w, h);
     }
 
     /** {@inheritDoc} */
