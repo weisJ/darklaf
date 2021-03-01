@@ -220,20 +220,7 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
     }
 
     private int getDistanceToPointer() {
-        switch (alignment) {
-            case WEST:
-            case SOUTH:
-            case SOUTH_EAST:
-            case SOUTH_WEST:
-            case EAST:
-                return Math.max(0, shadowBorder.getShadowSize() - bubbleBorder.getPointerSize())
-                        + bubbleBorder.getThickness();
-            case NORTH:
-            case NORTH_EAST:
-            case NORTH_WEST:
-            case CENTER:
-            default:
-                return bubbleBorder.getThickness();
-        }
+        if (alignment == Alignment.CENTER) return 0;
+        return Math.max(0, shadowBorder.getShadowSize() - bubbleBorder.getPointerSize()) + bubbleBorder.getThickness();
     }
 }
