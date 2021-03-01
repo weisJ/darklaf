@@ -226,8 +226,8 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
 
     protected void paintIcons(final Graphics g) {
         JTextComponent c = getComponent();
-        if (doPaintLeftIcon(c)) paintLeftIcon(g);
-        if (doPaintRightIcon(c)) paintRightIcon(g);
+        if (doPaintLeftIcon(c)) paintLeftIcon(c, g);
+        if (doPaintRightIcon(c)) paintRightIcon(c, g);
     }
 
     protected boolean doPaintLeftIcon(final JTextComponent c) {
@@ -238,14 +238,14 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
         return c.isEditable() && c.getText().length() > 0 && showClearIcon(c);
     }
 
-    protected void paintRightIcon(final Graphics g) {
+    protected void paintRightIcon(final Component c, final Graphics g) {
         Point p = getRightIconPos();
-        getRightIcon(editor).paintIcon(null, g, p.x, p.y);
+        getRightIcon(editor).paintIcon(c, g, p.x, p.y);
     }
 
-    protected void paintLeftIcon(final Graphics g) {
+    protected void paintLeftIcon(final Component c, final Graphics g) {
         Point p = getLeftIconPos();
-        getLeftIcon(editor).paintIcon(null, g, p.x, p.y);
+        getLeftIcon(editor).paintIcon(c, g, p.x, p.y);
     }
 
     protected Point getLeftIconPos() {
