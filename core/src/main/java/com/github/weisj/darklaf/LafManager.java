@@ -69,8 +69,12 @@ public final class LafManager {
      *
      * @see #setLogLevel(Level)
      * @param logEnabled true if messages should be logged.
+     * @deprecated Use {@link #setLogLevel(Level)} instead.
      */
+    @Deprecated
     public static void enableLogging(final boolean logEnabled) {
+        LOGGER.warning("LafManger#enableLogging will overwrite specific log levels and is deprecated. "
+                + "Use LafManager#setLogLevel instead.");
         setLogLevel(logEnabled ? Level.INFO : Level.SEVERE);
     }
 
