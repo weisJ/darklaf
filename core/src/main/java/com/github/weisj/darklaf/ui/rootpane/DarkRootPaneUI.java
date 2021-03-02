@@ -47,8 +47,8 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     public static final String KEY_UNIFIED_MENUBAR = KEY_PREFIX + "unifiedMenuBar";
     protected static final String[] borderKeys = new String[] {"RootPane.border", "RootPane.frameBorder",
             "RootPane.plainDialogBorder", "RootPane.informationDialogBorder", "RootPane.errorDialogBorder",
-            "RootPane.colorChooserDialogBorder", "RootPane.fileChooserDialogBorder", "RootPane.questionDialogBorder",
-            "RootPane.warningDialogBorder"};
+            "RootPane.colorChooserDialogBorder", "RootPane.fileChooserDialogBorder",
+            "RootPane.questionDialogBorder", "RootPane.warningDialogBorder"};
 
     private Window window;
     private CustomTitlePane titlePane;

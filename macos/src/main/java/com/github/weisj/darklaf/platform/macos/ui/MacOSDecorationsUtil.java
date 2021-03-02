@@ -22,15 +22,18 @@
 package com.github.weisj.darklaf.platform.macos.ui;
 
 import java.awt.*;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 
 import com.github.weisj.darklaf.platform.macos.JNIDecorationsMacOS;
+import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 public final class MacOSDecorationsUtil {
 
+    private static final Logger LOGGER = LogUtil.getLogger(MacOSDecorationsUtil.class);
     private static final String FULL_WINDOW_CONTENT_KEY = "apple.awt.fullWindowContent";
     private static final String TRANSPARENT_TITLE_BAR_KEY = "apple.awt.transparentTitleBar";
 
@@ -42,6 +45,7 @@ public final class MacOSDecorationsUtil {
         if (windowHandle == 0) {
             return new DecorationInformation(0, false, false, false, false, rootPane, false, 0, 0);
         }
+        LOGGER.fine("Installing decorations for window " + windowHandle);
         JNIDecorationsMacOS.retainWindow(windowHandle);
         boolean fullWindowContent = isFullWindowContentEnabled(rootPane);
         boolean transparentTitleBar = isTransparentTitleBarEnabled(rootPane);

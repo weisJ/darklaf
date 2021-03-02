@@ -22,18 +22,22 @@
 package com.github.weisj.darklaf.ui.rootpane;
 
 import java.awt.*;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.LogUtil;
 
 /**
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
 class DarkSubstanceRootLayout implements LayoutManager2 {
+
+    private static final Logger LOGGER = LogUtil.getLogger(DarkSubstanceRootLayout.class);
 
     @Override
     public void addLayoutComponent(final String name, final Component comp) {}
@@ -62,6 +66,7 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
         } else {
             cpd = root.getSize();
         }
+        LOGGER.finer("[PrefSize] JRootPane content size: " + cpd);
         if (cpd != null) {
             cpWidth = cpd.width;
             cpHeight = cpd.height;
@@ -81,6 +86,7 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
                 tpWidth = tpd.width;
                 tpHeight = tpd.height;
             }
+            LOGGER.finer("[PrefSize] JRootPane titlePane size: " + tpd);
         }
 
         return new Dimension(Math.max(Math.max(cpWidth, mbWidth), tpWidth) + i.left + i.right,
@@ -97,12 +103,14 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
         int tpHeight = 0;
         Insets i = parent.getInsets();
         JRootPane root = (JRootPane) parent;
+        CustomTitlePane titlePane = getTitlePane(root);
 
         if (root.getContentPane() != null) {
             cpd = root.getContentPane().getMinimumSize();
         } else {
             cpd = root.getSize();
         }
+        LOGGER.finer("[MinSize] JRootPane content size: " + cpd);
         if (cpd != null) {
             cpWidth = cpd.width;
             cpHeight = cpd.height;
@@ -115,15 +123,14 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
                 mbHeight = mbd.height;
             }
         }
-        if ((root.getWindowDecorationStyle() != JRootPane.NONE) && (root.getUI() instanceof DarkRootPaneUI)) {
-            JComponent titlePane = ((DarkRootPaneUI) root.getUI()).getTitlePane();
-            if (titlePane != null) {
-                tpd = titlePane.getMinimumSize();
-                if (tpd != null) {
-                    tpWidth = tpd.width;
-                    tpHeight = tpd.height;
-                }
+
+        if (titlePane != null) {
+            tpd = titlePane.getMinimumSize();
+            if (tpd != null) {
+                tpWidth = tpd.width;
+                tpHeight = tpd.height;
             }
+            LOGGER.finer("[MinSize] JRootPane titlePane size: " + tpd);
         }
 
         return new Dimension(Math.max(Math.max(cpWidth, mbWidth), tpWidth) + i.left + i.right,
