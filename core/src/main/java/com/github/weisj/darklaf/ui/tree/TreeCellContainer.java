@@ -28,16 +28,15 @@ import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 
 import com.github.weisj.darklaf.ui.cell.CellUtil;
-import com.github.weisj.darklaf.ui.cell.hint.IndexedCellContainer;
+import com.github.weisj.darklaf.ui.cell.hint.AbstractIndexedCellContainer;
 
-public class TreeCellContainer implements IndexedCellContainer<JTree, Integer> {
+public class TreeCellContainer extends AbstractIndexedCellContainer<JTree, Integer, DarkTreeUI> {
 
     private final JTree tree;
-    private final DarkTreeUI ui;
 
     public TreeCellContainer(final JTree tree, final DarkTreeUI ui) {
+        super(ui);
         this.tree = tree;
-        this.ui = ui;
     }
 
     @Override

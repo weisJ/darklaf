@@ -52,4 +52,6 @@ public interface IndexedCellContainer<T extends JComponent, I> extends CellConta
     Component getCellRendererComponent(final I position);
 
     Component getCellEditorComponent(final I position);
+
+    Dimension getRequiredCellSize(final I lastIndex, final Component comp);
 }

@@ -39,6 +39,7 @@ import javax.swing.tree.TreePath;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.icons.RotatableIcon;
+import com.github.weisj.darklaf.ui.HasRendererPane;
 import com.github.weisj.darklaf.ui.cell.CellConstants;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererPane;
@@ -51,7 +52,7 @@ import com.github.weisj.darklaf.util.SystemInfo;
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
-public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, CellConstants {
+public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, CellConstants, HasRendererPane {
 
     protected static final String KEY_PREFIX = "JTree.";
     public static final String KEY_ALTERNATE_ROW_COLOR = KEY_PREFIX + "alternateRowColor";
@@ -604,6 +605,11 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         TreePath path = tree.getPathForRow(row);
         if (path != null) return tree.getModel().isLeaf(path.getLastPathComponent());
         return true;
+    }
+
+    @Override
+    public Container getRendererPane() {
+        return rendererPane;
     }
 
     protected static class TreeUIAction extends AbstractAction implements UIResource {

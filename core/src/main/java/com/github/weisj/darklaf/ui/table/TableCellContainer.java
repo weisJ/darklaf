@@ -25,17 +25,16 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.cell.hint.IndexedCellContainer;
+import com.github.weisj.darklaf.ui.cell.hint.AbstractIndexedCellContainer;
 import com.github.weisj.darklaf.util.Pair;
 
-public class TableCellContainer implements IndexedCellContainer<JTable, Pair<Integer, Integer>> {
+public class TableCellContainer extends AbstractIndexedCellContainer<JTable, Pair<Integer, Integer>, DarkTableUI> {
 
     private final JTable table;
-    private final DarkTableUI ui;
 
     public TableCellContainer(final JTable table, final DarkTableUI ui) {
+        super(ui);
         this.table = table;
-        this.ui = ui;
     }
 
     @Override

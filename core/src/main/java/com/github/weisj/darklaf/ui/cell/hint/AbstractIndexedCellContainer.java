@@ -21,19 +21,37 @@
  */
 package com.github.weisj.darklaf.ui.cell.hint;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
 
-import javax.swing.*;
+import javax.swing.JComponent;
 
-public interface CellContainer<T extends JComponent> {
+import com.github.weisj.darklaf.ui.HasRendererPane;
 
-    T getComponent();
+public abstract class AbstractIndexedCellContainer<T extends JComponent, I, UI extends HasRendererPane>
+        implements IndexedCellContainer<T, I> {
 
-    boolean isEditing();
+    protected final UI ui;
 
-    default Rectangle getAllocation() {
-        return getComponent().getVisibleRect();
+    protected AbstractIndexedCellContainer(final UI ui) {
+        this.ui = ui;
     }
 
-    void addRenderer(final Component renderer);
+    @Override
+    public void addRenderer(final Component renderer) {
+        ui.getRendererPane().add(renderer);
+    }
+
+    @Override
+    public Dimension getRequiredCellSize(final I lastIndex, final Component comp) {
+        // Components without a parent may report incorrect preferred/minimum size as the
+        // associated FontMetrics have a missing default transform. This is bad for
+        // determining the actual needed size on screen.
+        // We add the component to the renderer pane to circumvent the issue.
+        boolean hasParent = comp.getParent() != null;
+        if (!hasParent) {
+            addRenderer(comp);
+        }
+        return comp.getMinimumSize();
+    }
 }

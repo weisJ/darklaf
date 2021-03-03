@@ -36,6 +36,7 @@ import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.ui.HasRendererPane;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.ui.cell.DarkBooleanCellRenderer;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererPane;
@@ -48,7 +49,7 @@ import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /** @author Jannis Weis */
-public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
+public class DarkTableUI extends DarkTableUIBridge implements TableConstants, HasRendererPane {
 
     private static final int ROW_HEIGHT_FALLBACK = 22;
     protected Color selectionBackgroundNoFocus;
@@ -449,6 +450,11 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants {
             dist = max - rect.x - rect.width;
         }
         return dist;
+    }
+
+    @Override
+    public Container getRendererPane() {
+        return rendererPane;
     }
 
     protected class DarkHandler extends Handler {

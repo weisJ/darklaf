@@ -136,7 +136,12 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
     }
 
     private Dimension getPreferredSize(final boolean isEditing, final Component comp) {
-        final Dimension prefSize = isEditing ? comp.getBounds().getSize() : comp.getMinimumSize();
+        Dimension prefSize;
+        if (isEditing) {
+            prefSize = comp.getBounds().getSize();
+        } else {
+            prefSize = cellContainer.getRequiredCellSize(lastIndex, comp);
+        }
         if (comp instanceof JComponent) {
             // Avoid showing the popup if only the border is obscured.
             Border border = ((JComponent) comp).getBorder();
@@ -245,7 +250,7 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
     }
 
     private void enter(final I index, final Rectangle bounds, final Rectangle rendererBounds) {
-        LOGGER.log(popupComponent.isShowing() ? Level.FINER : Level.FINE, "Showing cell popup at index " + index);
+        LOGGER.log(popupComponent.isShowing() ? Level.FINEST : Level.FINE, "Showing cell popup at index " + index);
         if (index != null) {
             lastIndex = index;
             popupComponent.setPreferredSize(bounds.getSize());
@@ -413,6 +418,11 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
                 try {
                     if (renderer instanceof JComponent) {
                         ((JComponent) renderer).setDoubleBuffered(false);
+                    }
+                    if (!cellHintPopupListener.isCurrentCellEditing()) {
+                        // Ensure correct parent. Without the component may use an incorrect
+                        // font rendering context.
+                        cellHintPopupListener.cellContainer.addRenderer(renderer);
                     }
                     renderer.setBounds(0, 0, rendererBounds.width, rendererBounds.height);
                     renderer.doLayout();

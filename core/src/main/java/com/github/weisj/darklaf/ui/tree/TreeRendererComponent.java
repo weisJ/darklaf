@@ -25,7 +25,13 @@ import java.awt.*;
 
 import javax.swing.*;
 
-/** @author Jannis Weis */
+
+/**
+ * Component which wraps a non standard cell renderer and provides it with the capability to display
+ * the nodes icon.
+ *
+ * @author Jannis Weis
+ */
 public class TreeRendererComponent extends Container {
 
     private static final int PAD = 5;
@@ -47,6 +53,10 @@ public class TreeRendererComponent extends Container {
         add(renderComponent);
     }
 
+    public Component getRenderComponent() {
+        return renderComponent;
+    }
+
     @Override
     public boolean isShowing() {
         return true;
@@ -56,7 +66,7 @@ public class TreeRendererComponent extends Container {
     public void doLayout() {
         if (renderComponent != null) {
             int offset = getOffset();
-            int width = renderComponent.getPreferredSize().width;
+            int width = Math.min(renderComponent.getPreferredSize().width, getWidth());
             int height = getHeight();
             if (getComponentOrientation().isLeftToRight()) {
                 renderComponent.setBounds(offset, 0, width, height);
@@ -76,12 +86,11 @@ public class TreeRendererComponent extends Container {
     @Override
     public Dimension getPreferredSize() {
         if (defaultRenderer != null) {
-            Dimension pSize = renderComponent.getPreferredSize();
-            pSize.width += getOffset() + PAD;
-            Dimension rSize = defaultRenderer.getPreferredSize();
+            Dimension actualRendererPreferredSize = renderComponent.getPreferredSize();
+            Dimension rendererSize = defaultRenderer.getPreferredSize();
 
-            addIconSize(pSize, rSize);
-            return pSize;
+            addIconSize(actualRendererPreferredSize, rendererSize);
+            return actualRendererPreferredSize;
         }
         return new Dimension(0, 0);
     }
@@ -89,23 +98,25 @@ public class TreeRendererComponent extends Container {
     @Override
     public Dimension getMinimumSize() {
         if (defaultRenderer != null) {
-            Dimension pSize = renderComponent.getMinimumSize();
-            pSize.width += getOffset() + PAD;
-            Dimension rSize = defaultRenderer.getMinimumSize();
+            Dimension actualRendererMinimumSize = renderComponent.getMinimumSize();
+            Dimension renderSize = defaultRenderer.getMinimumSize();
 
-            addIconSize(pSize, rSize);
-            return pSize;
+            addIconSize(actualRendererMinimumSize, renderSize);
+            return actualRendererMinimumSize;
         }
         return new Dimension(0, 0);
     }
 
-    private void addIconSize(final Dimension pSize, final Dimension rSize) {
+    private void addIconSize(final Dimension actualSize, final Dimension rendererSize) {
         Icon icon = defaultRenderer.getIcon();
-        if (rSize != null) {
-            pSize.height = Math.max(pSize.height, rSize.height);
+        if (icon != null) {
+            actualSize.width += getOffset() + PAD;
+        }
+        if (rendererSize != null) {
+            actualSize.height = Math.max(actualSize.height, rendererSize.height);
         }
         if (icon != null) {
-            pSize.height = Math.max(pSize.height, icon.getIconHeight());
+            actualSize.height = Math.max(actualSize.height, icon.getIconHeight());
         }
     }
 

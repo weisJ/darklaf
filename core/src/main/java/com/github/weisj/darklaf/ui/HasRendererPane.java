@@ -19,21 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.ui.cell.hint;
+package com.github.weisj.darklaf.ui;
 
-import java.awt.*;
+import java.awt.Container;
 
-import javax.swing.*;
+public interface HasRendererPane {
 
-public interface CellContainer<T extends JComponent> {
-
-    T getComponent();
-
-    boolean isEditing();
-
-    default Rectangle getAllocation() {
-        return getComponent().getVisibleRect();
-    }
-
-    void addRenderer(final Component renderer);
+    Container getRendererPane();
 }

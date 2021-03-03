@@ -44,15 +44,16 @@ public class DarkBooleanCellRenderer implements TableCellRenderer, TreeCellRende
     @Override
     public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
             final boolean hasFocus, final int row, final int column) {
-        return getBooleanRenderer(table).getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        return getBooleanRenderer(table)
+                .getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
     }
 
     @Override
     public Component getTreeCellRendererComponent(final JTree tree, final Object value, final boolean selected,
             final boolean expanded,
             final boolean leaf, final int row, final boolean hasFocus) {
-        return getBooleanRenderer(tree).getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row,
-                hasFocus);
+        return getBooleanRenderer(tree)
+                .getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
     }
 
     protected ComponentBasedTableCellRenderer getBooleanRenderer(final JTable table) {
