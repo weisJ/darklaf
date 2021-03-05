@@ -30,10 +30,10 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.ui.table.DarkTableScrollPaneBorder;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 
 /** @author Jannis Weis */
 public class DarkTableHeaderUI extends BasicTableHeaderUI {

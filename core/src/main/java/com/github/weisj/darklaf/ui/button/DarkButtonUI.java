@@ -35,8 +35,6 @@ import javax.swing.plaf.basic.BasicGraphicsUtils;
 
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.delegate.AbstractButtonLayoutDelegate;
-import com.github.weisj.darklaf.graphics.GraphicsContext;
-import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.graphics.StringPainter;
 import com.github.weisj.darklaf.ui.VisualPaddingListener;
@@ -46,6 +44,8 @@ import com.github.weisj.darklaf.util.AlignmentExt;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
+import com.github.weisj.darklaf.util.graphics.GraphicsContext;
+import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
 /** @author Jannis Weis */
 public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {

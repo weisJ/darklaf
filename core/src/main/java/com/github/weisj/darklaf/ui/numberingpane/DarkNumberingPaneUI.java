@@ -42,10 +42,10 @@ import com.github.weisj.darklaf.components.text.IconListener;
 import com.github.weisj.darklaf.components.text.IndexListener;
 import com.github.weisj.darklaf.components.text.LineHighlighter;
 import com.github.weisj.darklaf.components.text.NumberingPane;
-import com.github.weisj.darklaf.graphics.GraphicsContext;
-import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.graphics.GraphicsContext;
+import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
 public class DarkNumberingPaneUI extends ComponentUI {
 

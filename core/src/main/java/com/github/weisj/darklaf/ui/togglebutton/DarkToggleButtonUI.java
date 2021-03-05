@@ -28,11 +28,11 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicButtonListener;
 
-import com.github.weisj.darklaf.graphics.GraphicsContext;
-import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.button.ButtonConstants;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
+import com.github.weisj.darklaf.util.graphics.GraphicsContext;
+import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
 /** @author Jannis Weis */
 public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonConstants {

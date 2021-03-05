@@ -31,10 +31,10 @@ import javax.swing.border.Border;
 import com.github.weisj.darklaf.components.border.BubbleBorder;
 import com.github.weisj.darklaf.components.border.DropShadowBorder;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
-import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.PropertyUtil;
+import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 
 /** @author Jannis Weis */
 public class DarkTooltipBorder implements Border, AlignableTooltipBorder {

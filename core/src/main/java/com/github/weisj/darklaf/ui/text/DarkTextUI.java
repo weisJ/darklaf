@@ -33,8 +33,6 @@ import javax.swing.text.*;
 
 import com.github.weisj.darklaf.components.border.MarginBorderWrapper;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
-import com.github.weisj.darklaf.graphics.GraphicsContext;
-import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.graphics.StringPainter;
 import com.github.weisj.darklaf.ui.OpacityBufferedUI;
@@ -49,6 +47,8 @@ import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
+import com.github.weisj.darklaf.util.graphics.GraphicsContext;
+import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
 /** @author Jannis Weis */
 public abstract class DarkTextUI extends BasicTextUI implements OpacityBufferedUI {

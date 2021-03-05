@@ -32,11 +32,11 @@ import sun.swing.MenuItemLayoutHelper;
 import sun.swing.SwingUtilities2;
 import sun.swing.UIAction;
 
-import com.github.weisj.darklaf.graphics.GraphicsContext;
-import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
 import com.github.weisj.darklaf.util.StringUtil;
+import com.github.weisj.darklaf.util.graphics.GraphicsContext;
+import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
 /**
  * @author Konstantin Bulenkov

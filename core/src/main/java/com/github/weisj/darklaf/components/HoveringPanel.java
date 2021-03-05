@@ -26,9 +26,9 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.plaf.BorderUIResource;
 
-import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
+import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 
 public class HoveringPanel extends JPanel {
 

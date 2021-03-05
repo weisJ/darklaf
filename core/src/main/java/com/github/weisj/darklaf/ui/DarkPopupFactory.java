@@ -29,11 +29,11 @@ import java.util.Objects;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.color.ColorUtil;
-import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.util.*;
+import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
 public class DarkPopupFactory extends PopupFactory {
 

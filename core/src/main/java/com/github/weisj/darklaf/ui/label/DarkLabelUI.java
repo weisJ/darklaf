@@ -31,10 +31,10 @@ import javax.swing.plaf.basic.BasicLabelUI;
 
 import sun.swing.SwingUtilities2;
 
-import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.StringPainter;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 
 /** @author Jannis Weis */
 public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener {

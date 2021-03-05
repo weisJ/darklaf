@@ -41,7 +41,6 @@ import com.github.weisj.darklaf.components.DefaultColorPipette;
 import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.components.border.MarginBorderWrapper;
 import com.github.weisj.darklaf.components.chooser.ChooserComponent;
-import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.layout.LayoutHelper;
 import com.github.weisj.darklaf.listener.UpdateDocumentListener;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
@@ -52,6 +51,7 @@ import com.github.weisj.darklaf.ui.colorchooser.ColorValueFormatter;
 import com.github.weisj.darklaf.ui.slider.DarkSliderUI;
 import com.github.weisj.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
 public class SmallColorChooser extends JPanel implements ChooserComponent<Color> {
 

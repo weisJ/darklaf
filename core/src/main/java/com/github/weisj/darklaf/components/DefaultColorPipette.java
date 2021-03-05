@@ -28,12 +28,12 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.graphics.GraphicsContext;
-import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.ui.colorchooser.ColorListener;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.TimerUtil;
+import com.github.weisj.darklaf.util.graphics.GraphicsContext;
+import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
 public class DefaultColorPipette extends ColorPipetteBase {
     private static final int SIZE = 36;

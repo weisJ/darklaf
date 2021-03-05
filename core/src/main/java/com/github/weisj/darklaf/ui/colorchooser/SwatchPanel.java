@@ -27,10 +27,10 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
-import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.task.ForegroundColorGenerationTask;
 import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
 /** @author Jannis Weis */
 public abstract class SwatchPanel extends JPanel {

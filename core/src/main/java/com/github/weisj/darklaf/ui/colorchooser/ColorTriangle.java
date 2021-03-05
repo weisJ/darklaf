@@ -37,8 +37,8 @@ import com.github.weisj.darklaf.color.DarkColorModel;
 import com.github.weisj.darklaf.color.DarkColorModelHSB;
 import com.github.weisj.darklaf.color.DarkColorModelHSL;
 import com.github.weisj.darklaf.color.DarkColorModelRGB;
-import com.github.weisj.darklaf.graphics.GraphicsContext;
-import com.github.weisj.darklaf.graphics.GraphicsUtil;
+import com.github.weisj.darklaf.util.graphics.GraphicsContext;
+import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
 public class ColorTriangle extends JComponent {
 

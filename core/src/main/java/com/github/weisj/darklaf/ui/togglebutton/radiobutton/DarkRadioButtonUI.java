@@ -34,14 +34,14 @@ import javax.swing.plaf.metal.MetalRadioButtonUI;
 
 import sun.swing.SwingUtilities2;
 
-import com.github.weisj.darklaf.graphics.GraphicsContext;
-import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.graphics.StringPainter;
 import com.github.weisj.darklaf.ui.VisualPaddingListener;
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonFocusNavigationActions;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.graphics.GraphicsContext;
+import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
 /** @author Jannis Weis */
 public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyChangeListener, ToggleButtonConstants {

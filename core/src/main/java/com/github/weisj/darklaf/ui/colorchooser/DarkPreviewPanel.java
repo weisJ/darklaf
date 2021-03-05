@@ -27,8 +27,8 @@ import javax.swing.*;
 
 import sun.swing.SwingUtilities2;
 
-import com.github.weisj.darklaf.graphics.GraphicsContext;
-import com.github.weisj.darklaf.graphics.GraphicsUtil;
+import com.github.weisj.darklaf.util.graphics.GraphicsContext;
+import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
 /** @author Jannis Weis */
 public class DarkPreviewPanel extends JPanel {

@@ -37,6 +37,8 @@ import sun.swing.SwingUtilities2;
 import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.ui.OpacityBufferedUI;
 import com.github.weisj.darklaf.util.*;
+import com.github.weisj.darklaf.util.graphics.GraphicsContext;
+import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
 public final class StringPainter {
 

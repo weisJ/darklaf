@@ -29,9 +29,9 @@ import java.awt.geom.RoundRectangle2D;
 import javax.swing.border.AbstractBorder;
 import javax.swing.plaf.InsetsUIResource;
 
-import com.github.weisj.darklaf.graphics.GraphicsContext;
-import com.github.weisj.darklaf.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.util.graphics.GraphicsContext;
+import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
 /** @author Jannis Weis */
 public class BubbleBorder extends AbstractBorder {

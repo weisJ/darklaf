@@ -34,11 +34,11 @@ import javax.swing.text.View;
 
 import com.github.weisj.darklaf.components.uiresource.UIResourceWrapper;
 import com.github.weisj.darklaf.focus.FocusParentHelper;
-import com.github.weisj.darklaf.graphics.GraphicsContext;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.graphics.StringPainter;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
+import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 
 /** @author Jannis Weis */
 public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
