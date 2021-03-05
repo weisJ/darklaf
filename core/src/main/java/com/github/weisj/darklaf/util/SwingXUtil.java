@@ -31,12 +31,6 @@ import org.pbjar.jxlayer.plaf.ext.TransformUI;
 
 public final class SwingXUtil {
 
-    @SuppressWarnings("unchecked")
-    public static Point convertPointToParent(final Component source, final Point p) {
-        JXLayer<? extends JComponent> layer = DarkUIUtil.getParentOfType(JXLayer.class, source);
-        return convertPointToParent(source, layer, p);
-    }
-
     public static <T extends JComponent> Point convertPointToParent(final Component source, final JXLayer<T> layer,
             final Point p) {
         if (layer != null && layer.getUI() instanceof TransformUI) {

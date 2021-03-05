@@ -36,13 +36,4 @@ public final class TimerUtil {
             }
         };
     }
-
-    public static Timer createNamedTimer(final String name, final int delay) {
-        return new Timer(delay, null) {
-            @Override
-            public String toString() {
-                return name;
-            }
-        };
-    }
 }
