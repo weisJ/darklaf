@@ -51,13 +51,12 @@ import com.github.weisj.darklaf.util.LogUtil;
 public final class LafManager {
 
     private static final Logger LOGGER = LogUtil.getLogger(LafManager.class);
+    private static final LafInstaller installer = new LafInstaller();
     private static ThemeProvider themeProvider;
     private static Theme theme;
     private static final List<Theme> registeredThemes = new ArrayList<>();
     private static final Collection<DefaultsAdjustmentTask> uiDefaultsTasks = new ArrayList<>();
     private static final Collection<DefaultsInitTask> uiInitTasks = new ArrayList<>();
-    private static final ThemeEventSupport<ThemeChangeEvent, ThemeChangeListener> eventSupport =
-            new ThemeEventSupport<>();
 
     static {
         setLogLevel(Level.WARNING);
@@ -179,7 +178,7 @@ public final class LafManager {
      * @param listener the listener to add.
      */
     public static void addThemeChangeListener(final ThemeChangeListener listener) {
-        eventSupport.addListener(listener);
+        installer.addThemeChangeListener(listener);
     }
 
     /**
@@ -188,7 +187,7 @@ public final class LafManager {
      * @param listener the listener to add.
      */
     public static void removeThemeChangeListener(final ThemeChangeListener listener) {
-        eventSupport.removeListener(listener);
+        installer.removeThemeChangeListener(listener);
     }
 
     /**
@@ -373,10 +372,7 @@ public final class LafManager {
     public static void setTheme(final Theme theme) {
         Theme old = LafManager.theme;
         LafManager.theme = theme;
-        if (old != theme) {
-            eventSupport.dispatchEvent(new ThemeChangeEvent(old, theme), ThemeChangeListener::themeChanged);
-            LOGGER.fine(() -> "Setting theme to " + theme);
-        }
+        installer.notifyThemeChanged(old, theme);
         if (ThemeSettings.isInitialized()) ThemeSettings.getInstance().refresh();
     }
 
@@ -436,33 +432,12 @@ public final class LafManager {
      * {@link ThemeProvider}. This sets the current LaF and applies the given theme.
      */
     public static void install() {
-        try {
-            getTheme();
-            LOGGER.fine(() -> "Installing theme " + theme);
-            UIManager.setLookAndFeel(new DarkLaf());
-            updateLaf();
-            notifyThemeInstalled();
-        } catch (final UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /* default */ static void notifyThemeInstalled() {
-        eventSupport.dispatchEvent(new ThemeChangeEvent(null, getTheme()), ThemeChangeListener::themeInstalled);
+        installer.install(getTheme());
     }
 
     /** Update the component ui classes for all current windows. */
     public static void updateLaf() {
-        for (final Window w : Window.getWindows()) {
-            updateLafRecursively(w);
-        }
-    }
-
-    private static void updateLafRecursively(final Window window) {
-        for (final Window childWindow : window.getOwnedWindows()) {
-            updateLafRecursively(childWindow);
-        }
-        SwingUtilities.updateComponentTreeUI(window);
+        installer.updateLaf();
     }
 
     /**
@@ -536,5 +511,9 @@ public final class LafManager {
             if (registered.getThemeClass().equals(theme.getThemeClass())) return registered;
         }
         return themeForPreferredStyle(null);
+    }
+
+    static void notifyThemeInstalled() {
+        installer.notifyThemeInstalled(getTheme());
     }
 }

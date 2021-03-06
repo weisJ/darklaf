@@ -31,6 +31,7 @@ import javax.imageio.ImageIO;
 
 import com.github.weisj.darklaf.util.ImageUtil;
 import com.github.weisj.darklaf.util.Scale;
+import com.github.weisj.darklaf.util.graphics.ScaledImage;
 
 abstract class AbstractImageTest {
     private static final int SCALING_FACTOR = 3;
@@ -62,9 +63,9 @@ abstract class AbstractImageTest {
             File file = new File(name + ".png");
             file.getParentFile().mkdirs();
             Rectangle rect = new Rectangle(0, 0, c.getWidth(), c.getHeight());
-            BufferedImage image = ImageUtil.scaledImageFromComponent(c, rect, scalingFactor, scalingFactor, false);
-            ImageIO.write(image, "png", file);
-            return image;
+            ScaledImage image = ImageUtil.scaledImageFromComponent(c, rect, scalingFactor, scalingFactor, false);
+            ImageIO.write(image.getDelegate(), "png", file);
+            return image.getDelegate();
         } catch (final IOException e) {
             e.printStackTrace();
         }
