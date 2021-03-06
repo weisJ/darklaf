@@ -26,6 +26,7 @@ import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
@@ -39,6 +40,7 @@ import com.github.weisj.darklaf.icons.ToggleIcon;
 import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.platform.windows.JNIDecorationsWindows;
 import com.github.weisj.darklaf.platform.windows.PointerUtil;
+import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.Scale;
@@ -48,6 +50,8 @@ public class WindowsTitlePane extends CustomTitlePane {
     public static final String KEY_RESIZABLE = "resizable";
     public static final String KEY_STATE = "state";
     public static final String KEY_ICON_IMAGE = "iconImage";
+
+    private static final Logger LOGGER = LogUtil.getLogger(WindowsTitlePane.class);
     private static final int PAD = 5;
     private static final int BAR_HEIGHT = 28;
     private static final int BUTTON_WIDTH = 46;
@@ -278,7 +282,10 @@ public class WindowsTitlePane extends CustomTitlePane {
         if (window instanceof Dialog || window instanceof Frame) {
             windowHandle = PointerUtil.getHWND(window);
             if (windowHandle != 0) {
-                JNIDecorationsWindows.installDecorations(windowHandle);
+                LOGGER.fine("Installing decorations for window " + windowHandle);
+                if (!JNIDecorationsWindows.installDecorations(windowHandle)) {
+                    LOGGER.fine("Already installed.");
+                }
                 updateResizeBehaviour();
                 Color color = rootPane.getBackground();
                 JNIDecorationsWindows.setBackground(windowHandle, color.getRed(), color.getGreen(), color.getBlue());
