@@ -31,7 +31,7 @@ import com.github.weisj.darklaf.theme.event.ThemePreferenceChangeEvent;
 import com.github.weisj.darklaf.theme.event.ThemePreferenceListener;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 import com.github.weisj.darklaf.theme.info.ThemePreferenceProvider;
-import com.github.weisj.darklaf.util.PropertyValue;
+import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 public class ThemePreferencesHandler {
@@ -90,13 +90,13 @@ public class ThemePreferencesHandler {
     }
 
     private boolean isNativePreferencesEnabled() {
-        return !PropertyValue.FALSE.equals(System.getProperty(PREFERENCE_REPORTING_FLAG))
-                && !PropertyValue.FALSE.equals(System.getProperty(DarkLaf.ALLOW_NATIVE_CODE_FLAG));
+        return PropertyUtil.getSystemFlag(PREFERENCE_REPORTING_FLAG)
+                && PropertyUtil.getSystemFlag(DarkLaf.ALLOW_NATIVE_CODE_FLAG);
     }
 
     public boolean isPreferenceChangeReportingEnabled() {
         return preferenceProvider.canReport() && preferenceProvider.isReporting()
-                && !PropertyValue.FALSE.equals(System.getProperty(PREFERENCE_REPORTING_FLAG));
+                && PropertyUtil.getSystemFlag(PREFERENCE_REPORTING_FLAG);
     }
 
     public boolean supportsNativeAccentColor() {

@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.DarkLaf;
-import com.github.weisj.darklaf.util.PropertyValue;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /** @author Konstantin Bulenkov */
 public abstract class Animator {
@@ -127,7 +127,7 @@ public abstract class Animator {
     }
 
     private boolean animationsEnabled() {
-        return enabled && !PropertyValue.FALSE.equals(System.getProperty(ANIMATIONS_FLAG));
+        return enabled && PropertyUtil.getSystemFlag(ANIMATIONS_FLAG);
     }
 
     public boolean isEnabled() {

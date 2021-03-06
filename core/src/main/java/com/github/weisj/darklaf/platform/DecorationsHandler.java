@@ -32,7 +32,7 @@ import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
 import com.github.weisj.darklaf.platform.macos.MacOSDecorationsProvider;
 import com.github.weisj.darklaf.platform.windows.WindowsDecorationsProvider;
-import com.github.weisj.darklaf.util.PropertyValue;
+import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 public class DecorationsHandler {
@@ -88,8 +88,8 @@ public class DecorationsHandler {
     }
 
     private boolean isNativeDecorationsEnabled() {
-        return !PropertyValue.FALSE.equals(System.getProperty(DECORATIONS_FLAG))
-                && !PropertyValue.FALSE.equals(System.getProperty(DarkLaf.ALLOW_NATIVE_CODE_FLAG));
+        return PropertyUtil.getSystemFlag(DECORATIONS_FLAG)
+                && PropertyUtil.getSystemFlag(DarkLaf.ALLOW_NATIVE_CODE_FLAG);
     }
 
     public void initialize() {

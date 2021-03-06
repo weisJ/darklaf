@@ -222,4 +222,16 @@ public final class PropertyUtil {
         }
         return -1;
     }
+
+    public static boolean getSystemFlag(final String key) {
+        return getSystemFlag(key, true);
+    }
+
+    public static boolean getSystemFlag(final String key, final boolean defaultValue) {
+        if (defaultValue) {
+            return !PropertyValue.FALSE.equals(System.getProperty(key));
+        } else {
+            return !PropertyValue.TRUE.equals(System.getProperty(key));
+        }
+    }
 }
