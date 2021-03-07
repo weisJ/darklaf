@@ -420,7 +420,7 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_setBackgrou
 JNIEXPORT jboolean JNICALL
 Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_installDecorations(JNIEnv *env, jclass obj, jlong hwnd) {
     HWND handle = reinterpret_cast<HWND>(hwnd);
-    return (jboolean) InstallDecorations(handle, false);
+    return static_cast<jboolean>(InstallDecorations(handle, false));
 }
 
 JNIEXPORT void JNICALL
@@ -437,7 +437,7 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_uninstallDe
 JNIEXPORT jboolean JNICALL
 Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_installPopupMenuDecorations(JNIEnv *env, jclass obj, jlong hwnd) {
     HWND handle = reinterpret_cast<HWND>(hwnd);
-    return (jboolean) InstallDecorations(handle, true);
+    return static_cast<jboolean>(InstallDecorations(handle, true));
 }
 
 //Window functions.
