@@ -60,7 +60,10 @@ public class QuickColorChooser extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setAlignmentX(JComponent.LEFT_ALIGNMENT);
         if (showCheckBox) {
-            checkBox = new JCheckBox();
+            // u200B is a zero-width space. This is used to enforce a gap with the size of the text-icon-gap
+            // property. This way the spacing stays consistent with the spacing of the color label across LaF
+            // changes.
+            checkBox = new JCheckBox("\u200B");
             checkBox.addActionListener(e -> onStatusChange.accept(isSelected(), getColor()));
             add(checkBox);
         } else {
