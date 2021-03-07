@@ -54,6 +54,7 @@ public final class LafManager {
     private static final LafInstaller installer = new LafInstaller();
     private static ThemeProvider themeProvider;
     private static Theme theme;
+    private static Theme installedTheme;
     private static final List<Theme> registeredThemes = new ArrayList<>();
     private static final Collection<DefaultsAdjustmentTask> uiDefaultsTasks = new ArrayList<>();
     private static final Collection<DefaultsInitTask> uiInitTasks = new ArrayList<>();
@@ -348,11 +349,12 @@ public final class LafManager {
      * @return the currently installed theme.
      */
     public static Theme getInstalledTheme() {
-        LookAndFeel laf = UIManager.getLookAndFeel();
-        if (laf instanceof ThemedLookAndFeel) {
-            return ((ThemedLookAndFeel) laf).getTheme();
-        }
-        return getTheme();
+        return installedTheme != null ? installedTheme : getTheme();
+    }
+
+    static void setInstalledTheme(final Theme theme) {
+        LOGGER.info("Setting installed theme: " + theme);
+        installedTheme = theme;
     }
 
     /**
@@ -432,7 +434,9 @@ public final class LafManager {
      * {@link ThemeProvider}. This sets the current LaF and applies the given theme.
      */
     public static void install() {
-        installer.install(getTheme());
+        Theme theme = getTheme();
+        installer.install(theme);
+        setInstalledTheme(theme);
     }
 
     /** Update the component ui classes for all current windows. */

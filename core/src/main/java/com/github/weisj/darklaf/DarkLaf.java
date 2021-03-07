@@ -75,14 +75,15 @@ public class DarkLaf extends ThemedLookAndFeel {
 
     private final boolean runListenerCallback;
 
-    DarkLaf(final boolean runListenerCallback) {
+    DarkLaf(final Theme theme, final boolean runListenerCallback) {
         this.runListenerCallback = runListenerCallback;
-        base = getBase();
+        this.theme = theme;
+        this.base = getBase();
     }
 
     /** Create Custom Darcula LaF. */
     public DarkLaf() {
-        this(true);
+        this(null, true);
     }
 
     private LookAndFeel getBase() {
@@ -142,14 +143,22 @@ public class DarkLaf extends ThemedLookAndFeel {
     public UIDefaults getDefaults() {
         final UIDefaults defaults = base.getDefaults();
         final Theme currentTheme = getTheme();
-        if (isInitialized && !LafManager.getTheme().equals(currentTheme)) {
-            LafManager.setTheme(currentTheme);
-        }
         for (DefaultsInitTask task : INIT_TASKS) {
             if (task.onlyDuringInstallation() && !isInitialized) continue;
             task.run(currentTheme, defaults);
         }
+        if (isInitialized) {
+            postInstall();
+        }
         return defaults;
+    }
+
+    private void postInstall() {
+        Theme currentTheme = getTheme();
+        if (!LafManager.getInstalledTheme().equals(currentTheme)) {
+            LafManager.setInstalledTheme(currentTheme);
+            LafManager.setTheme(currentTheme);
+        }
     }
 
     @Override

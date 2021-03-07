@@ -44,7 +44,7 @@ final class LafInstaller {
         try {
             LOGGER.fine(() -> "Installing theme " + theme);
             LafTransition transition = LafTransition.showSnapshot();
-            UIManager.setLookAndFeel(new DarkLaf(false));
+            UIManager.setLookAndFeel(new DarkLaf(theme, false));
             updateLaf();
             SwingUtilities.invokeLater(transition::runTransition);
             notifyThemeInstalled(theme);
