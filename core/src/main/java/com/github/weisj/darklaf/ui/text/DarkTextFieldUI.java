@@ -148,6 +148,12 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
             rect.y = ins.top + FontUtil.getCenteredFontPosition(height, fm);
             rect.height = fm.getHeight();
         }
+        if (rect != null) {
+            // Provide spacing for caret to avoid jumping text if the caret moves to the start or end of the
+            // line.
+            // This space is already included in DarkTextUI#getPreferredSize.
+            rect.width += getCaretWidth(editor);
+        }
         adjustTextRect(getComponent(), rect);
         return rect;
     }

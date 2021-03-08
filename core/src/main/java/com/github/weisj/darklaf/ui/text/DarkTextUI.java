@@ -235,6 +235,8 @@ public abstract class DarkTextUI extends BasicTextUI implements OpacityBufferedU
             }
         }
         if (c.getSize().width < dim.width) {
+            // Provide spacing for caret to avoid jumping text if the caret moves to the start or end of the
+            // line.
             dim.width += getCaretWidth(editor);
         }
         return dim;
