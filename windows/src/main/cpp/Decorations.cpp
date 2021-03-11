@@ -274,7 +274,7 @@ void ExtendClientFrame(HWND handle) {
 /**
  * Make sure windows recognizes the window to be resizable. Necessary for shadows and aero-snap.
  */
-void SetupWindowStyle(HWND handle, bool is_popup) {
+void SetupWindowStyle(HWND handle) {
     auto style = GetWindowLongPtr(handle, GWL_STYLE);
     style |= WS_THICKFRAME;
     SetWindowLongPtr(handle, GWL_STYLE, style);
@@ -285,7 +285,7 @@ bool InstallDecorations(HWND handle, bool is_popup) {
     auto it = wrapper_map.find(handle);
     if (it != wrapper_map.end()) return false;
 
-    SetupWindowStyle(handle, is_popup);
+    SetupWindowStyle(handle);
     ExtendClientFrame(handle);
 
     WNDPROC proc = reinterpret_cast<WNDPROC>(GetWindowLongPtr(handle, GWLP_WNDPROC));
@@ -389,7 +389,7 @@ LRESULT CALLBACK WindowWrapper::WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ 
 }
 // @formatter:on
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_setResizable(JNIEnv *env, jclass obj, jlong hwnd, jboolean res) {
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_setResizable(JNIEnv*, jclass, jlong hwnd, jboolean res) {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     auto wrap = wrapper_map[handle];
     if (wrap) {
@@ -398,7 +398,7 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_setResizabl
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_updateValues(JNIEnv *env, jclass obj, jlong hwnd, jint l, jint r, jint h) {
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_updateValues(JNIEnv*, jclass, jlong hwnd, jint l, jint r, jint h) {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     auto wrap = wrapper_map[handle];
     if (wrap) {
@@ -409,7 +409,7 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_updateValue
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_setBackground(JNIEnv *env, jclass obj, jlong hwnd, jint r, jint g, jint b) {
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_setBackground(JNIEnv*, jclass, jlong hwnd, jint r, jint g, jint b) {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     auto wrap = wrapper_map[handle];
     if (wrap) {
@@ -418,13 +418,13 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_setBackgrou
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_installDecorations(JNIEnv *env, jclass obj, jlong hwnd) {
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_installDecorations(JNIEnv*, jclass, jlong hwnd) {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     return static_cast<jboolean>(InstallDecorations(handle, false));
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_uninstallDecorations(JNIEnv *env, jclass obj, jlong hwnd, jboolean decorated) {
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_uninstallDecorations(JNIEnv*, jclass, jlong hwnd, jboolean decorated) {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     auto wrap = wrapper_map[handle];
     if (wrap) {
@@ -435,7 +435,7 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_uninstallDe
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_installPopupMenuDecorations(JNIEnv *env, jclass obj, jlong hwnd) {
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_installPopupMenuDecorations(JNIEnv*, jclass, jlong hwnd) {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     return static_cast<jboolean>(InstallDecorations(handle, true));
 }
@@ -443,19 +443,19 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_installPopu
 //Window functions.
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_minimize(JNIEnv *env, jclass obj, jlong hwnd) {
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_minimize(JNIEnv*, jclass, jlong hwnd) {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     ShowWindow(handle, SW_MINIMIZE);
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_maximize(JNIEnv *env, jclass obj, jlong hwnd) {
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_maximize(JNIEnv*, jclass, jlong hwnd) {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     ShowWindow(handle, SW_MAXIMIZE);
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_restore(JNIEnv *env, jclass obj, jlong hwnd) {
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_restore(JNIEnv*, jclass, jlong hwnd) {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     ShowWindow(handle, SW_RESTORE);
 }

@@ -102,7 +102,7 @@ bool IsDarkMode() {
 
         std::string themeValue = RegGetString(HKEY_CURRENT_USER, HIGH_CONTRAST_PATH, HIGH_CONTRAST_THEME_KEY);
         return (strcmp(themeValue.c_str(), HIGH_CONTRAST_LIGHT_THEME) != 0);
-    } catch (LONG e) {
+    } catch (LONG) {
         return DARK_MODE_DEFAULT_VALUE;
     }
 }
@@ -110,7 +110,7 @@ bool IsDarkMode() {
 unsigned int GetTextScaleFactor() {
     try {
         return RegGetDword(HKEY_CURRENT_USER, FONT_SCALE_PATH, FONT_SCALE_KEY);
-    } catch (LONG e) {
+    } catch (LONG) {
         return FONT_SCALE_DEFAULT_VALUE;
     }
 }
@@ -131,28 +131,28 @@ bool RegisterRegistryEvent(const LPCSTR subKey, HANDLE event) {
 int GetAccentColor() {
     try {
         return RegGetDword(HKEY_CURRENT_USER, ACCENT_COLOR_PATH, ACCENT_COLOR_KEY);
-    } catch (LONG e) {
+    } catch (LONG) {
         return ACCENT_COLOR_DEFAULT_VALUE;
     }
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_isDarkThemeEnabled(JNIEnv *env, jclass obj) {
+Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_isDarkThemeEnabled(JNIEnv*, jclass) {
     return static_cast<jboolean>(IsDarkMode());
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_isHighContrastEnabled(JNIEnv *env, jclass obj) {
+Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_isHighContrastEnabled(JNIEnv*, jclass) {
     return static_cast<jboolean>(IsHighContrastMode());
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_getFontScaleFactor(JNIEnv *env, jclass obj) {
+Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_getFontScaleFactor(JNIEnv*, jclass) {
     return static_cast<jlong>(GetTextScaleFactor());
 }
 
 JNIEXPORT jint JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_getAccentColor(JNIEnv *env, jclass obj) {
+Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_getAccentColor(JNIEnv*, jclass) {
     return static_cast<jint>(GetAccentColor());
 }
 
@@ -215,7 +215,7 @@ struct EventHandler {
 };
 
 JNIEXPORT jlong JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_createEventHandler(JNIEnv *env, jclass obj, jobject callback) {
+Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_createEventHandler(JNIEnv *env, jclass, jobject callback) {
     JavaVM *jvm;
     if (env->GetJavaVM(&jvm) == JNI_OK) {
         jobject callbackRef = env->NewGlobalRef(callback);
@@ -227,7 +227,7 @@ Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_createEventHa
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_deleteEventHandler(JNIEnv *env, jclass obj, jlong eventHandler) {
+Java_com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows_deleteEventHandler(JNIEnv *env, jclass, jlong eventHandler) {
     EventHandler *handler = reinterpret_cast<EventHandler *>(eventHandler);
     if (handler) {
         env->DeleteGlobalRef(handler->callback);

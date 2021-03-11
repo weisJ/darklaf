@@ -25,8 +25,8 @@ library {
             compileTasks.configureEach {
                 compilerArgs.addAll(toolChain.map {
                     when (it) {
-                        is Gcc, is Clang -> listOf("--std=c++11")
-                        is VisualCpp -> listOf("/EHsc")
+                        is Gcc, is Clang -> listOf("--std=c++11", "-Wall", "-Wextra", "-pedantic", "-Werror")
+                        is VisualCpp -> listOf("/EHsc", "/W4", "/permissive", "/WX")
                         else -> emptyList()
                     }
                 })
