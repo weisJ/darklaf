@@ -42,7 +42,6 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
     private final DropShadowBorder shadowBorder;
     private final BubbleBorder bubbleBorder;
     private final boolean paintShadow;
-    private boolean skipShadow;
     private Insets margin;
     private Alignment alignment;
     private boolean showPointer;
@@ -117,7 +116,7 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
         adjustInsets(ins);
         Area innerArea = bubbleBorder.getBubbleArea(x + ins.left, y + ins.top, width - ins.left - ins.right,
                 height - ins.top - ins.bottom, bubbleBorder.getThickness());
-        if (!skipShadow && paintShadow) {
+        if (paintShadow) {
             paintShadow(c, g, x, y, width, height, innerArea);
         }
         Area outerArea = bubbleBorder.getBubbleArea(x + ins.left, y + ins.top, width - ins.left - ins.right,
@@ -189,10 +188,6 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
     public int getShadowSize(final Component c) {
         if (isPlain(c)) return 0;
         return shadowBorder.getShadowSize();
-    }
-
-    public void setSkipShadow(final boolean skip) {
-        this.skipShadow = skip;
     }
 
     @Override

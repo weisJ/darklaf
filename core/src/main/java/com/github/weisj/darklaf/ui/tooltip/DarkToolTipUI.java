@@ -134,7 +134,13 @@ public class DarkToolTipUI extends BasicToolTipUI
 
     @Override
     public void update(final Graphics g, final JComponent c) {
-        // Ensures no background is painted.
+        if (style.isOpqaue()) {
+            g.setColor(c.getBackground());
+        } else {
+            // Erase background completely.
+            g.setColor(PaintUtil.TRANSPARENT_COLOR);
+        }
+        g.fillRect(0, 0, c.getWidth(), c.getHeight());
         paint(g, c);
     }
 
@@ -419,10 +425,6 @@ public class DarkToolTipUI extends BasicToolTipUI
             Window window = SwingUtilities.getWindowAncestor(toolTip);
             if (DarkUIUtil.isDecorated(window)) return;
             if (window != null) window.setOpacity(alpha);
-            Border border = toolTip.getBorder();
-            if (border instanceof DarkTooltipBorder) {
-                ((DarkTooltipBorder) border).setSkipShadow(false);
-            }
         }
 
         @Override
@@ -431,10 +433,6 @@ public class DarkToolTipUI extends BasicToolTipUI
             Window window = SwingUtilities.getWindowAncestor(toolTip);
             if (window != null && !DarkUIUtil.isDecorated(window)) {
                 window.setOpacity(alpha);
-                Border border = toolTip.getBorder();
-                if (window.getFocusableWindowState() && border instanceof DarkTooltipBorder) {
-                    ((DarkTooltipBorder) border).setSkipShadow(true);
-                }
             }
         }
     }
