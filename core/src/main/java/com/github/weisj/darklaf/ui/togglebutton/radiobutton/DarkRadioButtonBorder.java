@@ -27,9 +27,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.UIResource;
 
-import com.github.weisj.darklaf.ui.VisualPaddingProvider;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.swingdsl.laf.VisualPaddingProvider;
 
 /** @author Jannis Weis */
 public class DarkRadioButtonBorder extends EmptyBorder implements UIResource, ToggleButtonConstants,

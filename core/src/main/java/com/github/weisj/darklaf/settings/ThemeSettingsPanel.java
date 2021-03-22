@@ -48,12 +48,12 @@ import com.github.weisj.darklaf.theme.info.AccentColorRule;
 import com.github.weisj.darklaf.theme.info.FontSizePreset;
 import com.github.weisj.darklaf.theme.info.FontSizeRule;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
-import com.github.weisj.darklaf.ui.VisualPaddingProvider;
 import com.github.weisj.darklaf.ui.combobox.ComboBoxConstants;
 import com.github.weisj.darklaf.ui.slider.DarkSliderUI;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.swingdsl.laf.VisualPaddingProvider;
 
 public class ThemeSettingsPanel extends JPanel {
 

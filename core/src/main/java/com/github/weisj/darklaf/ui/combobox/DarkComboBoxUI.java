@@ -36,8 +36,8 @@ import javax.swing.plaf.basic.ComboPopup;
 import javax.swing.text.JTextComponent;
 
 import com.github.weisj.darklaf.components.ArrowButton;
+import com.github.weisj.darklaf.swingdsl.VisualPaddingListener;
 import com.github.weisj.darklaf.ui.DividedWidgetPainter;
-import com.github.weisj.darklaf.ui.VisualPaddingListener;
 import com.github.weisj.darklaf.ui.list.DarkDefaultListCellRenderer;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;

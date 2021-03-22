@@ -29,11 +29,11 @@ import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
-import com.github.weisj.darklaf.ui.VisualPaddingProvider;
 import com.github.weisj.darklaf.util.AlignmentExt;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
+import com.github.weisj.swingdsl.laf.VisualPaddingProvider;
 
 /** @author Jannis Weis */
 public class DarkButtonBorder implements Border, UIResource, VisualPaddingProvider {

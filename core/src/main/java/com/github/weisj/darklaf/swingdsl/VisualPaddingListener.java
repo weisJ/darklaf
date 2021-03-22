@@ -19,38 +19,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.ui;
+package com.github.weisj.darklaf.swingdsl;
 
-import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.plaf.InsetsUIResource;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.PropertyUtil;
+import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.Types;
 
-public interface VisualPaddingProvider {
+public class VisualPaddingListener implements PropertyChangeListener {
 
-    String VISUAL_PADDING_PROP = "visualPadding";
-
-    Insets getVisualPaddings(Component component);
-
-    static void updateProperty(final JComponent c) {
-        Border b = DarkUIUtil.getUnwrappedBorder(c);
-        if (b instanceof VisualPaddingProvider) {
-            updateProperty(c, ((VisualPaddingProvider) b).getVisualPaddings(c));
-        } else {
-            updateProperty(c, null);
-        }
-    }
-
-    static void updateProperty(final JComponent c, final Insets ins) {
-        if (ins != null) {
-            PropertyUtil.installProperty(c, VISUAL_PADDING_PROP,
-                    new InsetsUIResource(ins.top, ins.left, ins.bottom, ins.right));
-        } else {
-            PropertyUtil.uninstallProperty(c, VISUAL_PADDING_PROP);
+    @Override
+    public void propertyChange(final PropertyChangeEvent evt) {
+        if (PropertyKey.BORDER.equals(evt.getPropertyName())) {
+            VisualPaddingUtil.updateProperty(Types.safeCast(evt.getSource(), JComponent.class));
         }
     }
 }

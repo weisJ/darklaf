@@ -37,7 +37,7 @@ import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.delegate.AbstractButtonLayoutDelegate;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.graphics.StringPainter;
-import com.github.weisj.darklaf.ui.VisualPaddingListener;
+import com.github.weisj.darklaf.swingdsl.VisualPaddingListener;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonFocusNavigationActions;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
 import com.github.weisj.darklaf.util.AlignmentExt;

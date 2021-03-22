@@ -16,6 +16,7 @@ dependencies {
     implementation(project(":darklaf-macos"))
     implementation("org.swinglabs:jxlayer")
     implementation("com.formdev:svgSalamander")
+    implementation("com.github.weisj:swing-dsl-laf-support")
     compileOnly("org.swinglabs:swingx")
 
     testImplementation("com.formdev:svgSalamander")

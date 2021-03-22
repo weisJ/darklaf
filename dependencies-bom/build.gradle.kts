@@ -41,5 +41,6 @@ dependencies {
         apiv("com.google.auto.service:auto-service-annotations", "auto-service")
         apiv("com.google.auto.service:auto-service", "auto-service")
         apiv("com.github.lgooddatepicker:LGoodDatePicker")
+        apiv("com.github.weisj:swing-dsl-laf-support", "swing-dsl")
     }
 }

@@ -31,11 +31,11 @@ import javax.swing.text.JTextComponent;
 
 import com.github.weisj.darklaf.graphics.Outline;
 import com.github.weisj.darklaf.graphics.PaintUtil;
-import com.github.weisj.darklaf.ui.VisualPaddingProvider;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
+import com.github.weisj.swingdsl.laf.VisualPaddingProvider;
 
 /** @author Jannis Weis */
 public class DarkTextBorder implements Border, UIResource, VisualPaddingProvider {

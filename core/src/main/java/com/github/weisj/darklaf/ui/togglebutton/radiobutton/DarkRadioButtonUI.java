@@ -35,7 +35,7 @@ import javax.swing.plaf.metal.MetalRadioButtonUI;
 import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.graphics.StringPainter;
-import com.github.weisj.darklaf.ui.VisualPaddingListener;
+import com.github.weisj.darklaf.swingdsl.VisualPaddingListener;
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonFocusNavigationActions;
