@@ -21,18 +21,60 @@
  */
 package com.github.weisj.darklaf.swingdsl;
 
-import javax.swing.BorderFactory;
+import java.awt.Color;
+
+import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
-import javax.swing.border.Border;
+import javax.swing.UIManager;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.components.border.DarkBorders;
+import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.swingdsl.laf.CollapsibleComponent;
+import com.github.weisj.swingdsl.laf.ComponentFactoryDelegate;
 import com.github.weisj.swingdsl.laf.DefaultComponentFactory;
+import com.github.weisj.swingdsl.laf.DefaultSupplier;
 import com.github.weisj.swingdsl.laf.DefaultWrappedComponent;
+import com.github.weisj.swingdsl.laf.SeparatorSpec;
+import com.github.weisj.swingdsl.laf.TextProperty;
 import com.github.weisj.swingdsl.laf.WrappedComponent;
 
-public class DarklafComponentFactory extends DefaultComponentFactory {
+public class DarklafComponentFactory extends ComponentFactoryDelegate {
+
+    private final DefaultSupplier<Color> lineColorSupplier = enabled -> {
+        if (enabled) {
+            Color c = UIManager.getColor("borderSecondary");
+            if (c != null) return c;
+            c = UIManager.getColor("Label.foreground");
+            if (c != null) return c;
+            return Color.BLACK;
+        } else {
+            Color c = UIManager.getColor("widgetBorderInactive");
+            if (c != null) return c;
+            c = UIManager.getColor("Label.disabledForeground");
+            if (c != null) return c;
+            return Color.GRAY;
+        }
+    };
+    private final DefaultSupplier<Icon> expandedIconSupplier = enabled -> {
+        if (enabled) {
+            return DarkUIUtil.ICON_LOADER.getIcon("navigation/arrow/thick/arrowDown.svg");
+        } else {
+            return DarkUIUtil.ICON_LOADER.getIcon("navigation/arrow/thick/arrowDownDisabled.svg");
+        }
+    };
+    private final DefaultSupplier<Icon> collapsedIconSupplier = enabled -> {
+        if (enabled) {
+            return DarkUIUtil.ICON_LOADER.getIcon("navigation/arrow/thick/arrowRight.svg");
+        } else {
+            return DarkUIUtil.ICON_LOADER.getIcon("navigation/arrow/thick/arrowRightDisabled.svg");
+        }
+    };
+
+    public DarklafComponentFactory() {
+        super(DefaultComponentFactory.create());
+    }
+
     @Override
     public WrappedComponent<JScrollPane> createScrollPane(final JComponent content) {
         OverlayScrollPane sp = new OverlayScrollPane(content);
@@ -40,7 +82,17 @@ public class DarklafComponentFactory extends DefaultComponentFactory {
     }
 
     @Override
-    public Border createDividerBorder(final String title) {
-        return BorderFactory.createTitledBorder(DarkBorders.createTopBorder(), title);
+    public SeparatorSpec<JComponent, SeparatorSpec.Default> createSeparatorComponent(final TextProperty label) {
+        return new SeparatorSpec<>(null, new SeparatorSpec.Default(lineColorSupplier));
+    }
+
+    @Override
+    public SeparatorSpec<CollapsibleComponent, SeparatorSpec.DefaultCollapsible> createCollapsibleSeparatorComponent(
+            final TextProperty label) {
+        return new SeparatorSpec<>(null,
+                new SeparatorSpec.DefaultCollapsible(
+                        lineColorSupplier,
+                        collapsedIconSupplier,
+                        expandedIconSupplier));
     }
 }

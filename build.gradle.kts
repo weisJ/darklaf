@@ -100,6 +100,10 @@ allprojects {
         mavenCentral()
     }
 
+    configurations.all {
+        resolutionStrategy.cacheChangingModulesFor(0, "seconds")
+    }
+
     val githubAccessToken by props("")
 
     plugins.withType<UsePrebuiltBinariesWhenUnbuildablePlugin> {

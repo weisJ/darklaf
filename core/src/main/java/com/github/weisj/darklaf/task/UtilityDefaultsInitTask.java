@@ -21,6 +21,8 @@
  */
 package com.github.weisj.darklaf.task;
 
+import java.util.function.Supplier;
+
 import javax.swing.*;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
@@ -59,7 +61,8 @@ public class UtilityDefaultsInitTask implements DefaultsInitTask {
         IconLoader.reloadFrameIcons();
 
         // Support for external libraries.
-        defaults.put(ComponentFactory.COMPONENT_FACTORY_KEY, new DarklafComponentFactory());
+        defaults.put(ComponentFactory.COMPONENT_FACTORY_PROVIDER_KEY,
+                (Supplier<ComponentFactory>) DarklafComponentFactory::new);
     }
 
     private float getOpacity(final UIDefaults defaults, final String key) {
