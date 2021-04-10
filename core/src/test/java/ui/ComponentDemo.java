@@ -41,6 +41,7 @@ import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.event.ThemeInstalledListener;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
+import com.github.weisj.darklaf.util.Lambdas;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 public interface ComponentDemo {
@@ -242,18 +243,28 @@ public interface ComponentDemo {
                         .putClientProperty(DarkRootPaneUI.KEY_UNIFIED_MENUBAR, isSelected()));
             }
         });
-        dev.add(new JCheckBoxMenuItem("Darklaf/System Laf") {
-            {
-                setSelected(LafManager.isInstalled());
-                addActionListener(e -> {
-                    if (isSelected()) {
-                        LafManager.install();
-                    } else {
-                        installSystemLaf();
-                    }
-                });
+        JMenu lafs = new JMenu("Laf");
+        ButtonGroup lafBg = new ButtonGroup();
+        JMenuItem darklafLaf = new JRadioButtonMenuItem("Darklaf");
+        lafBg.add(darklafLaf);
+        lafs.add(darklafLaf);
+        darklafLaf.setSelected(true);
+        darklafLaf.addActionListener(e -> LafManager.install());
+        for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+            if (info.getName().startsWith("com.github.weisj.darklaf")) continue;
+            JMenuItem item = new JRadioButtonMenuItem(info.getName());
+            lafBg.add(item);
+            lafs.add(item);
+            if (UIManager.getLookAndFeel().getClass().getName().equals(info.getClassName())) {
+                item.setSelected(true);
             }
-        });
+            Runnable lafSetter = Lambdas.wrap(() -> {
+                UIManager.setLookAndFeel(info.getClassName());
+                LafManager.updateLaf();
+            });
+            item.addActionListener(e -> lafSetter.run());
+        }
+        dev.add(lafs);
         return dev;
     }
 
