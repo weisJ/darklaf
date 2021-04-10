@@ -262,6 +262,12 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     }
 
     @Override
+    protected void uninstallKeyboardActions() {
+        super.uninstallKeyboardActions();
+        TreeUIAction.uninstallActions(tree);
+    }
+
+    @Override
     public void paint(final Graphics g, final JComponent c) {
         if (tree != c) {
             throw new InternalError("incorrect component");
@@ -625,13 +631,27 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
             actionListener.actionPerformed(e);
         }
 
+        protected static void uninstallActions(final JTree tree) {
+            tree.putClientProperty(KEY_MAC_ACTIONS_INSTALLED, Boolean.FALSE);
+            final InputMap inputMap = tree.getInputMap(JComponent.WHEN_FOCUSED);
+            uninstallInputMap(inputMap);
+
+            final ActionMap actionMap = tree.getActionMap();
+            uninstallActionMap(actionMap);
+        }
+
         protected static void installActions(final JTree tree) {
             if (PropertyUtil.getBooleanProperty(tree, KEY_MAC_ACTIONS_INSTALLED)) return;
             tree.putClientProperty(KEY_MAC_ACTIONS_INSTALLED, Boolean.TRUE);
 
-            installInputMap(tree.getInputMap(JComponent.WHEN_FOCUSED));
+            final InputMap inputMap = tree.getInputMap(JComponent.WHEN_FOCUSED);
+            installInputMap(inputMap);
 
             final ActionMap actionMap = tree.getActionMap();
+            installActionMap(tree, actionMap);
+        }
+
+        private static void installActionMap(final JTree tree, final ActionMap actionMap) {
             actionMap.put("expand_or_move_down", new TreeUIAction(e -> {
                 JTree target = getTree(e);
                 if (target == null) return;
@@ -653,12 +673,19 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
                 int selectionRow = target.getLeadSelectionRow();
                 if (selectionRow == -1) return;
 
-                if (isLeaf(target, selectionRow) || target.isCollapsed(selectionRow)) {
-                    if (!PropertyUtil.getBooleanProperty(target, KEY_IS_TABLE_TREE)) {
-                        moveTo(target, selectionRow - 1);
-                    }
-                } else {
+                if (!isLeaf(target, selectionRow) && target.isExpanded(selectionRow)) {
                     target.collapseRow(selectionRow);
+                } else {
+                    if (!PropertyUtil.getBooleanProperty(target, KEY_IS_TABLE_TREE)) {
+                        TreePath parentPath = target.getPathForRow(selectionRow).getParentPath();
+                        if (parentPath == null) {
+                            // No node above. Move to the first node.
+                            moveTo(target, 0);
+                        } else {
+
+                            moveTo(target, tree.getRowForPath(parentPath));
+                        }
+                    }
                 }
                 target.repaint();
             }));
@@ -667,12 +694,42 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
             actionMap.put("toggle_edit", new TreeUIAction(e -> toggleEdit(getTree(e))));
         }
 
+        protected static void uninstallActionMap(final ActionMap actionMap) {
+            remove(actionMap, "expand_or_move_down");
+            remove(actionMap, "collapse_or_move_up");
+            remove(actionMap, "move_down");
+            remove(actionMap, "move_up");
+            remove(actionMap, "toggle_edit");
+        }
+
         protected static void installInputMap(final InputMap inputMap) {
             inputMap.put(KeyStroke.getKeyStroke("pressed LEFT"), "collapse_or_move_up");
             inputMap.put(KeyStroke.getKeyStroke("pressed RIGHT"), "expand_or_move_down");
             inputMap.put(KeyStroke.getKeyStroke("pressed DOWN"), "move_down");
             inputMap.put(KeyStroke.getKeyStroke("pressed UP"), "move_up");
             inputMap.put(KeyStroke.getKeyStroke("pressed ENTER"), "toggle_edit");
+        }
+
+        protected static void uninstallInputMap(final InputMap inputMap) {
+            remove(inputMap, KeyStroke.getKeyStroke("pressed LEFT"));
+            remove(inputMap, KeyStroke.getKeyStroke("pressed RIGHT"));
+            remove(inputMap, KeyStroke.getKeyStroke("pressed DOWN"));
+            remove(inputMap, KeyStroke.getKeyStroke("pressed UP"));
+            remove(inputMap, KeyStroke.getKeyStroke("pressed ENTER"));
+        }
+
+        private static void remove(final InputMap inputMap, final KeyStroke ks) {
+            Object key = inputMap.get(ks);
+            if (key == null || key instanceof UIResource) {
+                inputMap.remove(ks);
+            }
+        }
+
+        private static void remove(final ActionMap actionMap, final String key) {
+            Object action = actionMap.get(key);
+            if (action == null || action instanceof UIResource) {
+                actionMap.remove(key);
+            }
         }
 
         protected static JTree getTree(final ActionEvent e) {
@@ -699,6 +756,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
 
         protected static void moveTo(final JTree tree, final int row) {
             int newRow = Math.max(Math.min(row, tree.getRowCount() - 1), 0);
+            if (newRow < 0) return;
             tree.setSelectionRow(newRow);
             scrollRowToVisible(tree, newRow);
             tree.repaint();
