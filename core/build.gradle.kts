@@ -17,6 +17,8 @@ dependencies {
     implementation("org.swinglabs:jxlayer")
     implementation("com.formdev:svgSalamander")
     implementation("com.github.weisj:swing-dsl-laf-support")
+
+    compileOnly("org.jetbrains:annotations")
     compileOnly("org.swinglabs:swingx")
 
     testImplementation("com.formdev:svgSalamander")
