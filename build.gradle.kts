@@ -107,13 +107,14 @@ allprojects {
     val githubAccessToken by props("")
 
     plugins.withType<UsePrebuiltBinariesWhenUnbuildablePlugin> {
-        prebuildBinaries {
-            prebuildLibrariesFolder = "pre-build-libraries"
-            missingLibraryIsFailure = false
-            github {
-                user = "weisj"
-                repository = "darklaf"
+        prebuiltBinaries {
+            prebuiltLibrariesFolder = "pre-build-libraries"
+            failIfLibraryIsMissing = false
+            github(
+                user = "weisj",
+                repository = "darklaf",
                 workflow = "libs.yml"
+            ) {
                 branches = listOf("master", "v$projectVersion", projectVersion)
                 accessToken = githubAccessToken
                 manualDownloadUrl =

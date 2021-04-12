@@ -1,5 +1,3 @@
-import JniUtils.asVariantName
-
 plugins {
     java
     id("dev.nokee.jni-library")
@@ -30,7 +28,7 @@ library {
 
     targetMachines.addAll(machines.macOS.x86_64)
     variants.configureEach {
-        resourcePath.set("com/github/weisj/darklaf/platform/${project.name}/${asVariantName(targetMachine)}")
+        resourcePath.set("com/github/weisj/darklaf/platform/${project.name}/${targetMachine.variantName}")
         sharedLibrary {
             compileTasks.configureEach {
                 compilerArgs.addAll("-mmacosx-version-min=$minOs")

@@ -1,14 +1,15 @@
 apply(from= "../gradle/loadProps.gradle.kts")
 
 plugins {
+    `kotlin-dsl`
     `java-gradle-plugin`
-    groovy
 }
 
 val nokeeVersion = extra["nokee.version"]
 
 dependencies {
     implementation(platform("dev.nokee:nokee-gradle-plugins:$nokeeVersion"))
+    implementation(gradleApi())
 }
 
 repositories {
