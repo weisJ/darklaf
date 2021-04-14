@@ -3,12 +3,12 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":darklaf-property-loader"))
-    implementation(project(":darklaf-utils"))
+    implementation(projects.darklafPropertyLoader)
+    implementation(projects.darklafUtils)
 
-    compileOnly(project(":darklaf-annotations"))
-    annotationProcessor(project(":darklaf-annotations-processor"))
+    compileOnly(projects.darklafAnnotations)
+    annotationProcessor(projects.darklafAnnotationsProcessor)
 
-    annotationProcessor("com.google.auto.service:auto-service")
-    compileOnly("com.google.auto.service:auto-service-annotations")
+    compileOnly(libs.autoservice.annotations)
+    annotationProcessor(libs.autoservice.processor)
 }

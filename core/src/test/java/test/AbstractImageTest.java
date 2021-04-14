@@ -30,7 +30,6 @@ import java.nio.file.Files;
 import javax.imageio.ImageIO;
 
 import com.github.weisj.darklaf.util.ImageUtil;
-import com.github.weisj.darklaf.util.Scale;
 import com.github.weisj.darklaf.util.graphics.ScaledImage;
 
 abstract class AbstractImageTest {
@@ -79,7 +78,7 @@ abstract class AbstractImageTest {
             Robot robot = new Robot();
             Point p = w.getLocationOnScreen();
             BufferedImage image = robot.createScreenCapture(
-                    new Rectangle(p.x, p.y, Scale.scaleWidth(w.getWidth()), Scale.scaleHeight(w.getHeight())));
+                    new Rectangle(p.x, p.y, w.getWidth(), w.getHeight()));
             ImageIO.write(image, "png", file);
             return image;
         } catch (IOException | AWTException e) {

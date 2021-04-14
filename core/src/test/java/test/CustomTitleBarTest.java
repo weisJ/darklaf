@@ -91,6 +91,7 @@ class CustomTitleBarTest extends AbstractImageTest {
                     });
                 }
             });
+            f.setAlwaysOnTop(true);
             f.setVisible(true);
             frameModifier.accept(f);
         });
@@ -103,6 +104,11 @@ class CustomTitleBarTest extends AbstractImageTest {
                 e.printStackTrace();
                 Thread.currentThread().interrupt();
             }
+        }
+        try {
+            new Robot().waitForIdle();
+        } catch (AWTException e) {
+            e.printStackTrace();
         }
         return frame;
     }
@@ -201,7 +207,7 @@ class CustomTitleBarTest extends AbstractImageTest {
     @Test
     @EnabledOnOs({OS.MAC, OS.WINDOWS})
     void checkTitleBarHidden() {
-        SwingUtilities.invokeLater(() -> LafManager.install(new IntelliJTheme()));
+        TestUtils.runOnSwingThreadNotThrowing(() -> LafManager.install(new IntelliJTheme()));
         UIManager.put("macos.coloredTitleBar", true);
         Assertions.assertTrue(LafManager.isDecorationsEnabled());
         checkImage("title_bar_hidden_" + SystemInfo.getOsName(),

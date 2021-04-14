@@ -7,31 +7,30 @@ plugins {
 }
 
 dependencies {
-    api(project(":darklaf-theme"))
-    api(project(":darklaf-property-loader"))
-    api(project(":darklaf-utils"))
-    implementation(project(":darklaf-native-utils"))
-    implementation(project(":darklaf-platform-base"))
-    implementation(project(":darklaf-windows"))
-    implementation(project(":darklaf-macos"))
-    implementation("org.swinglabs:jxlayer")
-    implementation("com.formdev:svgSalamander")
-    implementation("com.github.weisj:swing-dsl-laf-support")
+    api(projects.darklafTheme)
+    api(projects.darklafPropertyLoader)
+    api(projects.darklafUtils)
+    implementation(projects.darklafNativeUtils)
+    implementation(projects.darklafPlatformBase)
+    implementation(projects.darklafWindows)
+    implementation(projects.darklafMacos)
+    implementation(libs.swingDsl)
+    implementation(libs.svgSalamander)
+    implementation(libs.jxlayer)
 
-    compileOnly("org.jetbrains:annotations")
-    compileOnly("org.swinglabs:swingx")
+    compileOnly(libs.nullabilityAnnotations)
+    compileOnly(libs.swingx)
 
-    testImplementation("com.formdev:svgSalamander")
-    testImplementation("com.miglayout:miglayout-core")
-    testImplementation("com.miglayout:miglayout-swing")
-    testImplementation("org.swinglabs:swingx")
-    testImplementation("org.junit.jupiter:junit-jupiter-api")
-    testImplementation("com.fifesoft:rsyntaxtextarea")
-    testImplementation("com.github.lgooddatepicker:LGoodDatePicker")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testImplementation(libs.svgSalamander)
+    testImplementation(libs.bundles.test.miglayout)
+    testImplementation(libs.swingx)
+    testImplementation(libs.test.rsyntaxtextarea)
+    testImplementation(libs.test.lGoodDatePicker)
+    testImplementation(libs.test.junit.api)
+    testRuntimeOnly(libs.test.junit.engine)
 
-    annotationProcessor("com.google.auto.service:auto-service")
-    compileOnly("com.google.auto.service:auto-service-annotations")
+    compileOnly(libs.autoservice.annotations)
+    annotationProcessor(libs.autoservice.processor)
 }
 
 tasks.test {
@@ -44,6 +43,7 @@ fun Jar.includeLicenses() {
     CrLfSpec(LineEndings.LF).run {
         into("META-INF") {
             filteringCharset = "UTF-8"
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
             textFrom("$rootDir/licenses/DARCULA_LICENSE.txt")
             textFrom("$rootDir/licenses/INTELLIJ_LICENSE.txt")
             textFrom("$rootDir/licenses/INTELLIJ_NOTICE.txt")

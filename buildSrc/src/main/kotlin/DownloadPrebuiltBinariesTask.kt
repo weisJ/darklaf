@@ -117,7 +117,7 @@ open class DownloadPrebuiltBinariesTask @Inject constructor(
 
     private val Json.latestRun: Json?
         get() {
-            val runs = this["workflow_runs"] as List<Json>
+            val runs = this["workflow_runs"] as? List<Json> ?: return null
             val candidates = runs.asSequence().filter {
                 val completed = "completed" == it["status"]
                 val success = "success" == it["conclusion"]

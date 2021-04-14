@@ -9,6 +9,7 @@ tasks.jar {
     CrLfSpec(LineEndings.LF).run {
         into("META-INF") {
             filteringCharset = "UTF-8"
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
             textFrom("$rootDir/licenses/NATIVEUTIL_LICENSE.txt")
         }
     }
