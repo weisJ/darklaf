@@ -3,5 +3,5 @@ plugins {
 }
 
 dependencies {
-    api(project(":darklaf-annotations"))
+    api(projects.darklafAnnotations)
 }

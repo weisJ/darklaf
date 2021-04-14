@@ -1,3 +1,5 @@
+import org.gradle.util.VersionNumber
+
 plugins {
     java
     id("dev.nokee.jni-library")
@@ -7,29 +9,32 @@ plugins {
 }
 
 library {
-    val minOs = "10.10"
-    val frameworkVersion = "10.15"
-
     dependencies {
-        jvmImplementation(project(":darklaf-theme"))
-        jvmImplementation(project(":darklaf-native-utils"))
-        jvmImplementation(project(":darklaf-utils"))
-        jvmImplementation(project(":darklaf-platform-base"))
-        jvmImplementation(project(":darklaf-property-loader"))
-        nativeImplementation("dev.nokee.framework:JavaVM:[$frameworkVersion,)")
-        nativeImplementation("dev.nokee.framework:JavaVM:[$frameworkVersion,)") {
-            capabilities {
-                requireCapability("JavaVM:JavaNativeFoundation:[$frameworkVersion,)")
+        jvmImplementation(projects.darklafTheme)
+        jvmImplementation(projects.darklafNativeUtils)
+        jvmImplementation(projects.darklafUtils)
+        jvmImplementation(projects.darklafPlatformBase)
+        jvmImplementation(projects.darklafPropertyLoader)
+        nativeLibImplementation(libs.macos.appKit)
+        nativeLibImplementation(libs.macos.cocoa)
+        val xCodeVersion = getXCodeVersion()
+        if (xCodeVersion != null && xCodeVersion >= VersionNumber.parse("12.2")) {
+            nativeLibImplementation(libs.macos.javaNativeFoundation)
+        } else {
+            nativeLibImplementation(libs.macosLegacy.javaVM.base)
+            nativeLibImplementation(libs.macosLegacy.javaVM.base) {
+                capabilities {
+                    requireLibCapability(libs.macosLegacy.javaVM.capability.javaNativeFoundation)
+                }
             }
         }
-        nativeImplementation("dev.nokee.framework:AppKit:[$frameworkVersion,)")
-        nativeImplementation("dev.nokee.framework:Cocoa:[$frameworkVersion,)")
     }
 
     targetMachines.addAll(machines.macOS.x86_64)
     variants.configureEach {
         resourcePath.set("com/github/weisj/darklaf/platform/${project.name}/${targetMachine.variantName}")
         sharedLibrary {
+            val minOs = "10.10"
             compileTasks.configureEach {
                 compilerArgs.addAll("-mmacosx-version-min=$minOs")
                 // Build type not modeled yet, assuming release

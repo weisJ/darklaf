@@ -9,6 +9,7 @@ import com.github.vlsi.gradle.publishing.dsl.simplifyXml
 import com.github.vlsi.gradle.publishing.dsl.versionFromResolution
 
 plugins {
+    idea
     id("com.github.autostyle")
     id("com.github.vlsi.crlf")
     id("com.github.vlsi.gradle-extensions")
@@ -16,9 +17,9 @@ plugins {
 }
 
 val skipJavadoc by props()
-val enableMavenLocal by props()
+val enableMavenLocal by props(false)
 val enableGradleMetadata by props()
-val skipAutostyle by props()
+val skipAutostyle by props(false)
 val isRelease = project.stringProperty("release").toBool()
 val snapshotName by props("")
 
@@ -56,6 +57,7 @@ tasks.closeRepository.configure { enabled = isRelease }
 val buildVersion = "$projectVersion$snapshotIdentifier${releaseParams.snapshotSuffix}"
 println("Building: Darklaf $buildVersion")
 println("     JDK: " + System.getProperty("java.home"))
+println("  Gradle: " + gradle.gradleVersion)
 
 fun BaseFormatExtension.license(addition: String = "") {
     val extra = if (addition.isEmpty()) "" else "\n$addition"
@@ -107,9 +109,10 @@ allprojects {
     val githubAccessToken by props("")
 
     plugins.withType<UsePrebuiltBinariesWhenUnbuildablePlugin> {
+        val failIfLibraryMissing by props(false)
         prebuiltBinaries {
             prebuiltLibrariesFolder = "pre-build-libraries"
-            failIfLibraryIsMissing = false
+            failIfLibraryIsMissing = failIfLibraryMissing
             github(
                 user = "weisj",
                 repository = "darklaf",
@@ -168,13 +171,6 @@ allprojects {
         fileMode = "664".toInt(8)
     }
 
-    plugins.withType<JavaLibraryPlugin> {
-        dependencies {
-            "api"(platform(project(":darklaf-dependencies-bom")))
-            "annotationProcessor"(platform(project(":darklaf-dependencies-bom")))
-        }
-    }
-
     if (!enableGradleMetadata) {
         tasks.withType<GenerateModuleMetadata> {
             enabled = false
@@ -227,6 +223,7 @@ allprojects {
                 from(source) {
                     include("**/*.properties")
                     filteringCharset = "UTF-8"
+                    duplicatesStrategy = DuplicatesStrategy.INCLUDE
                     // apply native2ascii conversion since Java 8 expects properties to have ascii symbols only
                     filter(org.apache.tools.ant.filters.EscapeUnicode::class)
                 }
@@ -289,10 +286,8 @@ allprojects {
         }
 
         configure<PublishingExtension> {
-            if (project.path.startsWith(":darklaf-dependencies-bom") ||
-                project.path == ":"
-            ) {
-                // We don't it to Central for now
+            if (project.path == ":") {
+                // Skip the root project
                 return@configure
             }
 

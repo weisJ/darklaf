@@ -25,6 +25,8 @@ repo/
 /buildSrc/out/
 /*/out/
 *.iml
+*.ipr
+*.iws
 .run/
 
 # VS Code

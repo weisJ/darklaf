@@ -3,10 +3,10 @@ plugins {
 }
 
 dependencies {
-    api(project(":darklaf-utils"))
-    implementation("com.formdev:svgSalamander")
-    testImplementation("org.junit.jupiter:junit-jupiter-api")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    api(projects.darklafUtils)
+    implementation(libs.svgSalamander)
+    testImplementation(libs.test.junit.api)
+    testRuntimeOnly(libs.test.junit.engine)
 }
 
 tasks.test {

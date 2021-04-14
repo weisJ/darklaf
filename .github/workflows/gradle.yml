@@ -45,7 +45,9 @@ jobs:
         with:
           java-version: 8
       - name: Build & Test
-        run: xvfb-run -a -server-num=1 --server-args="-screen 0 2000x3000x16" ./gradlew build test -PskipAutostyle --info --no-daemon
+        env:
+          PROPS_GITHUB: "-PgithubAccessToken=${{ secrets.GITHUB_TOKEN }}"
+        run: xvfb-run -a -server-num=1 --server-args="-screen 0 2000x3000x16" ./gradlew build test -PskipAutostyle  -PfailIfLibraryMissing=true $(echo $PROPS_GITHUB) --info --no-daemon
       - name: Upload Test Results
         if: ${{ always() }}
         uses: actions/upload-artifact@v1
