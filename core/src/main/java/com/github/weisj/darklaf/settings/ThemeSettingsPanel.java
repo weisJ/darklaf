@@ -189,7 +189,7 @@ public class ThemeSettingsPanel extends JPanel {
         JLabel themeLabel = new JLabel(UIManager.getString("label_theme", l));
         themeComboBox = new JComboBox<>(LafManager.getThemeComboBoxModel());
         themeComboBox.setRenderer(LafManager.getThemeListCellRenderer());
-        themeComboBox.setSelectedItem(LafManager.getTheme());
+        settingsConfiguration.setTheme(LafManager.getTheme());
 
         themeComboBox.putClientProperty(ComboBoxConstants.KEY_DO_NOT_UPDATE_WHEN_SCROLLED, true);
         themeComboBox.addItemListener(e -> update());
@@ -603,7 +603,13 @@ public class ThemeSettingsPanel extends JPanel {
         }
 
         private Theme getSelectedTheme() {
-            return (Theme) themeComboBox.getSelectedItem();
+            Theme selected = (Theme) themeComboBox.getSelectedItem();
+            if (selected == null) {
+                selected = LafManager.getInstalledTheme();
+                selected = selected != null ? selected : LafManager.getTheme();
+                setTheme(selected);
+            }
+            return selected;
         }
 
         @Override
