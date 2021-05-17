@@ -85,7 +85,7 @@ std::string RegGetString(HKEY hKey, const LPCSTR subKey, const LPCSTR value) {
 }
 
 bool IsHighContrastMode() {
-    HIGHCONTRAST info = { 0 };
+    HIGHCONTRAST info = { 0, 0, 0 };
     info.cbSize = sizeof(HIGHCONTRAST);
     BOOL ok = SystemParametersInfo(SPI_GETHIGHCONTRAST, 0, &info, 0);
     if (ok) {

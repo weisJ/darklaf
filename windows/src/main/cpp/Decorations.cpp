@@ -154,7 +154,7 @@ void UpdateRegion(WindowWrapper *wrapper) {
     // Avoid unnecessarily updating the region to avoid unnecessary redraws
     if (EqualRect(&wrapper->rgn, &old_rgn)) return;
     // Treat empty regions as NULL regions
-    RECT empty = { 0 };
+    RECT empty = { 0, 0, 0, 0 };
     if (EqualRect(&wrapper->rgn, &empty)) SetWindowRgn(wrapper->window, NULL, TRUE);
     else SetWindowRgn(wrapper->window, CreateRectRgnIndirect(&wrapper->rgn), TRUE);
 }
