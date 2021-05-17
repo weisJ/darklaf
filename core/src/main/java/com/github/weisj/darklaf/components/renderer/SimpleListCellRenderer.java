@@ -34,7 +34,7 @@ public class SimpleListCellRenderer<T> extends JLabel implements ListCellRendere
         return new SimpleListCellRenderer<T>() {
             @Override
             protected void customize(final T value) {
-                setText(toText.apply(value));
+                setText(value != null ? toText.apply(value) : "");
             }
         };
     }
