@@ -581,7 +581,7 @@ public abstract class TableUIBridge extends BasicTableUI {
             if (table.isEditing() && !table.getCellEditor().stopCellEditing()) {
                 Component editorComponent = table.getEditorComponent();
                 if (editorComponent != null && !editorComponent.hasFocus()) {
-                    SwingUtilities2.compositeRequestFocus(editorComponent);
+                    SwingUtil.compositeRequestFocus(editorComponent);
                 }
                 return;
             }
@@ -599,7 +599,7 @@ public abstract class TableUIBridge extends BasicTableUI {
             if (table.getDragEnabled()) {
                 mousePressedDND(e);
             } else {
-                SwingUtilities2.adjustFocus(table);
+                SwingUtil.adjustFocus(table);
                 if (!isFileList) {
                     setValueIsAdjusting(true);
                 }
@@ -634,7 +634,7 @@ public abstract class TableUIBridge extends BasicTableUI {
         protected void mouseReleasedDND(final MouseEvent e) {
             MouseEvent me = DragRecognitionSupport.mouseReleased(e);
             if (me != null) {
-                SwingUtilities2.adjustFocus(table);
+                SwingUtil.adjustFocus(table);
                 if (!dragPressDidSelection) {
                     adjustSelection(me);
                 }
@@ -728,7 +728,7 @@ public abstract class TableUIBridge extends BasicTableUI {
             Point p = e.getPoint();
             Point p2 = SwingUtilities.convertPoint(table, p, editorComponent);
             dispatchComponent = SwingUtilities.getDeepestComponentAt(editorComponent, p2.x, p2.y);
-            SwingUtilities2.setSkipClickCount(dispatchComponent, e.getClickCount() - 1);
+            SwingUtil.setSkipClickCount(dispatchComponent, e.getClickCount() - 1);
         }
 
         /**
@@ -785,7 +785,7 @@ public abstract class TableUIBridge extends BasicTableUI {
             }
 
             if (grabFocus) {
-                SwingUtilities2.adjustFocus(table);
+                SwingUtil.adjustFocus(table);
             }
 
             adjustSelection(e);
@@ -840,7 +840,7 @@ public abstract class TableUIBridge extends BasicTableUI {
             table.editCellAt(pressedRow, pressedCol, null);
             Component editorComponent = table.getEditorComponent();
             if (editorComponent != null && !editorComponent.hasFocus()) {
-                SwingUtilities2.compositeRequestFocus(editorComponent);
+                SwingUtil.compositeRequestFocus(editorComponent);
             }
         }
 

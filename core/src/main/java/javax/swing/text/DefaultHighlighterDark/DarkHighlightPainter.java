@@ -31,8 +31,6 @@ import java.util.Objects;
 import javax.swing.*;
 import javax.swing.text.*;
 
-import sun.swing.SwingUtilities2;
-
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.text.StyleConstantsEx;
 import com.github.weisj.darklaf.util.Alignment;
@@ -42,7 +40,7 @@ import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
 /**
  * Note this class only sits inside this weird package because of a hack used in
- * {@link SwingUtilities2#useSelectedTextColor(Highlighter.Highlight, JTextComponent)} that makes it
+ * SwingUtilities2#useSelectedTextColor(Highlighter.Highlight, JTextComponent) that makes it
  * impossible for custom highlighters to use the correct text foreground specified by
  * {@link JTextComponent#getSelectedTextColor()}.
  *

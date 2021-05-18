@@ -1913,7 +1913,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
                     list.setSelectionInterval(0, size - 1);
 
                     // this is done to restore the anchor and lead
-                    SwingUtilities2.setLeadAnchorWithoutSelection(lsm, anchor, lead);
+                    SwingUtil.setLeadAnchorWithoutSelection(lsm, anchor, lead);
 
                     list.setValueIsAdjusting(false);
                 }
@@ -2508,7 +2508,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
             }
 
             if (grabFocus) {
-                SwingUtilities2.adjustFocus(list);
+                SwingUtil.adjustFocus(list);
             }
 
             adjustSelection(e);
@@ -2570,7 +2570,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
             if (list.getDragEnabled()) {
                 MouseEvent me = DragRecognitionSupport.mouseReleased(e);
                 if (me != null) {
-                    SwingUtilities2.adjustFocus(list);
+                    SwingUtil.adjustFocus(list);
                     if (!dragPressDidSelection) {
                         adjustSelection(me);
                     }

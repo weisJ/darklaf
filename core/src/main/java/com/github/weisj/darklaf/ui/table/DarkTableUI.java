@@ -32,8 +32,6 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.table.*;
 
-import sun.swing.SwingUtilities2;
-
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.HasRendererPane;
@@ -47,6 +45,7 @@ import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellRendererDelegate;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
+import com.github.weisj.darklaf.util.SwingUtil;
 
 /** @author Jannis Weis */
 public class DarkTableUI extends DarkTableUIBridge implements TableConstants, HasRendererPane {
@@ -498,7 +497,7 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
             table.editCellAt(row, column, null);
             Component editorComponent = table.getEditorComponent();
             if (editorComponent != null && !editorComponent.hasFocus()) {
-                SwingUtilities2.compositeRequestFocus(editorComponent);
+                SwingUtil.compositeRequestFocus(editorComponent);
             }
         }
 
