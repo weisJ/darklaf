@@ -882,10 +882,10 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         if (mnemonicToIndexMap == null) {
             initMnemonics();
         }
-        mnemonicInputMap.put(KeyStroke.getKeyStroke(mnemonic, DarkUIUtil.getFocusAcceleratorKeyMask()),
+        mnemonicInputMap.put(KeyStroke.getKeyStroke(mnemonic, SwingUtil.getFocusAcceleratorKeyMask()),
                 "setSelectedIndex");
         mnemonicInputMap.put(KeyStroke.getKeyStroke(mnemonic,
-                InputEvent.ALT_GRAPH_DOWN_MASK | DarkUIUtil.getFocusAcceleratorKeyMask()), "setSelectedIndex");
+                InputEvent.ALT_GRAPH_DOWN_MASK | SwingUtil.getFocusAcceleratorKeyMask()), "setSelectedIndex");
         mnemonicToIndexMap.put(mnemonic, index);
     }
 

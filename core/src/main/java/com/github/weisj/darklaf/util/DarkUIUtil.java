@@ -22,7 +22,6 @@
 package com.github.weisj.darklaf.util;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
@@ -41,8 +40,6 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreeCellRenderer;
-
-import sun.awt.SunToolkit;
 
 import com.github.weisj.darklaf.focus.FocusParentHelper;
 import com.github.weisj.darklaf.icons.IconLoader;
@@ -239,14 +236,6 @@ public final class DarkUIUtil {
             parent = parent.getParent();
         }
         return parent;
-    }
-
-    public static int getFocusAcceleratorKeyMask() {
-        Toolkit tk = Toolkit.getDefaultToolkit();
-        if (tk instanceof SunToolkit) {
-            return ((SunToolkit) tk).getFocusAcceleratorKeyMask();
-        }
-        return ActionEvent.ALT_MASK;
     }
 
     public static <T> T getUIOfType(final ComponentUI ui, final Class<T> klass) {

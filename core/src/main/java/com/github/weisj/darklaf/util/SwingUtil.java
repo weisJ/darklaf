@@ -69,6 +69,10 @@ public final class SwingUtil {
         return SwingUtilities2.clipStringIfNecessary(c, fm, string, availTextWidth);
     }
 
+    public static int getFocusAcceleratorKeyMask() {
+        return SwingUtilities2.getSystemMnemonicKeyMask();
+    }
+
     public static FontMetrics getFontMetrics(final JComponent c, final Graphics g) {
         if (g == null) throw new IllegalArgumentException("Graphics must not be null");
         return getFontMetrics(c, g.getFont());
