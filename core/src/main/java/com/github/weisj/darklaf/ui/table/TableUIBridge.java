@@ -37,8 +37,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 
-import sun.swing.DefaultLookup;
-
 import com.github.weisj.darklaf.ui.DragRecognitionSupport;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -179,11 +177,11 @@ public abstract class TableUIBridge extends BasicTableUI {
      */
     InputMap getInputMap(final int condition) {
         if (condition == JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT) {
-            InputMap keyMap = (InputMap) DefaultLookup.get(table, this, "Table.ancestorInputMap");
+            InputMap keyMap = (InputMap) UIManager.get("Table.ancestorInputMap", table.getLocale());
             InputMap rtlKeyMap;
 
             if (table.getComponentOrientation().isLeftToRight() || ((rtlKeyMap =
-                    (InputMap) DefaultLookup.get(table, this, "Table.ancestorInputMap.RightToLeft")) == null)) {
+                    (InputMap) UIManager.get("Table.ancestorInputMap.RightToLeft", table.getLocale())) == null)) {
                 return keyMap;
             } else {
                 rtlKeyMap.setParent(keyMap);

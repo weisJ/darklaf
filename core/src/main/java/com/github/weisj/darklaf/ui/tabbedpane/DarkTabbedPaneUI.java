@@ -683,12 +683,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
             // center component
             int x = outerX + (outerWidth - width) / 2;
             int y = outerY + (outerHeight - height) / 2;
-
-            int tabPlacement = tabPane.getTabPlacement();
-            boolean isSeleceted = i == tabPane.getSelectedIndex();
-
-            c.setBounds(x + getTabLabelShiftX(tabPlacement, i, isSeleceted),
-                    y + getTabLabelShiftY(tabPlacement, i, isSeleceted), width, height);
+            c.setBounds(x, y, width, height);
         }
     }
 

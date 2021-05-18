@@ -36,11 +36,9 @@ import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicListUI;
 import javax.swing.text.Position;
 
-import sun.swing.DefaultLookup;
-import com.github.weisj.darklaf.ui.UIAction;
-
 import com.github.weisj.darklaf.ui.BasicTransferable;
 import com.github.weisj.darklaf.ui.DragRecognitionSupport;
+import com.github.weisj.darklaf.ui.UIAction;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
 import com.github.weisj.darklaf.util.PropertyKey;
@@ -615,11 +613,11 @@ public abstract class DarkListUIBridge extends BasicListUI {
      */
     InputMap getInputMap(final int condition) {
         if (condition == JComponent.WHEN_FOCUSED) {
-            InputMap keyMap = (InputMap) DefaultLookup.get(list, this, "List.focusInputMap");
+            InputMap keyMap = (InputMap) UIManager.get("List.focusInputMap", list.getLocale());
             InputMap rtlKeyMap;
 
             if (isLeftToRight || ((rtlKeyMap =
-                    (InputMap) DefaultLookup.get(list, this, "List.focusInputMap.RightToLeft")) == null)) {
+                    (InputMap) UIManager.get("List.focusInputMap.RightToLeft", list.getLocale())) == null)) {
                 return keyMap;
             } else {
                 rtlKeyMap.setParent(keyMap);
@@ -1248,7 +1246,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
             return;
         }
 
-        Color c = DefaultLookup.getColor(list, this, "List.dropLineColor", null);
+        Color c = UIManager.getColor("List.dropLineColor");
         if (c != null) {
             g.setColor(c);
             Rectangle rect = getDropLineRect(loc);

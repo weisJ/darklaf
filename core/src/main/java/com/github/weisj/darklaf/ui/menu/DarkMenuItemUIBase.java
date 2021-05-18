@@ -29,8 +29,8 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicMenuItemUI;
 
 import sun.swing.MenuItemLayoutHelper;
-import com.github.weisj.darklaf.ui.UIAction;
 
+import com.github.weisj.darklaf.ui.UIAction;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
 import com.github.weisj.darklaf.util.StringUtil;

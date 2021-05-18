@@ -28,7 +28,6 @@ import javax.swing.border.Border;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicOptionPaneUI;
 
-import sun.swing.DefaultLookup;
 
 public class DarkOptionPaneUI extends BasicOptionPaneUI {
 
@@ -39,16 +38,16 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
     @Override
     protected Container createButtonArea() {
         JPanel bottom = new JPanel();
-        Border border = (Border) DefaultLookup.get(optionPane, this, "OptionPane.buttonAreaBorder");
+        Border border = (Border) UIManager.get("OptionPane.buttonAreaBorder");
         bottom.setName("OptionPane.buttonArea");
         if (border != null) {
             bottom.setBorder(border);
         }
         bottom.setLayout(new DarkButtonAreaLayout(
-                DefaultLookup.getBoolean(optionPane, this, "OptionPane.sameSizeButtons", false),
-                DefaultLookup.getInt(optionPane, this, "OptionPane.buttonPadding", 6),
-                DefaultLookup.getInt(optionPane, this, "OptionPane.buttonOrientation", SwingConstants.CENTER),
-                DefaultLookup.getBoolean(optionPane, this, "OptionPane.isYesLast", false)));
+                UIManager.getBoolean("OptionPane.sameSizeButtons"),
+                UIManager.getInt("OptionPane.buttonPadding"),
+                UIManager.getInt("OptionPane.buttonOrientation"),
+                UIManager.getBoolean("OptionPane.isYesLast")));
         addButtonComponents(bottom, getButtons(), getInitialValueIndex());
         return bottom;
     }

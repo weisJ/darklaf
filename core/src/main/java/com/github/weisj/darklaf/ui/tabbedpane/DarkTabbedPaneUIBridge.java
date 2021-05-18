@@ -39,9 +39,7 @@ import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
 
-import sun.swing.DefaultLookup;
 import com.github.weisj.darklaf.ui.UIAction;
-
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
 import com.github.weisj.darklaf.util.PropertyKey;
@@ -659,7 +657,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     protected int getTabLabelShiftX(final int tabPlacement, final int tabIndex, final boolean isSelected) {
         Rectangle tabRect = rects[tabIndex];
         String propKey = (isSelected ? "selectedLabelShift" : "labelShift");
-        int nudge = DefaultLookup.getInt(tabPane, this, "TabbedPane." + propKey, 1);
+        int nudge = UIManager.getInt("TabbedPane." + propKey);
 
         switch (tabPlacement) {
             case LEFT:
@@ -683,8 +681,8 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      */
     protected int getTabLabelShiftY(final int tabPlacement, final int tabIndex, final boolean isSelected) {
         Rectangle tabRect = rects[tabIndex];
-        int nudge = (isSelected ? DefaultLookup.getInt(tabPane, this, "TabbedPane.selectedLabelShift", -1)
-                : DefaultLookup.getInt(tabPane, this, "TabbedPane.labelShift", 1));
+        int nudge = (isSelected ? UIManager.getInt("TabbedPane.selectedLabelShift")
+                : UIManager.getInt("TabbedPane.labelShift"));
 
         switch (tabPlacement) {
             case BOTTOM:
@@ -857,9 +855,9 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      */
     InputMap getInputMap(final int condition) {
         if (condition == JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT) {
-            return (InputMap) DefaultLookup.get(tabPane, this, "TabbedPane.ancestorInputMap");
+            return (InputMap) UIManager.get("TabbedPane.ancestorInputMap", tabPane.getLocale());
         } else if (condition == JComponent.WHEN_FOCUSED) {
-            return (InputMap) DefaultLookup.get(tabPane, this, "TabbedPane.focusInputMap");
+            return (InputMap) UIManager.get("TabbedPane.focusInputMap", tabPane.getLocale());
         }
         return null;
     }
@@ -1509,7 +1507,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      */
     protected void navigateSelectedTab(final int direction) {
         int tabPlacement = tabPane.getTabPlacement();
-        int current = DefaultLookup.getBoolean(tabPane, this, "TabbedPane.selectionFollowsFocus", true)
+        int current = !Boolean.FALSE.equals(UIManager.get("TabbedPane.selectionFollowsFocus"))
                 ? tabPane.getSelectedIndex()
                 : getFocusIndex();
         int tabCount = tabPane.getTabCount();
@@ -1682,7 +1680,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * @param index the index
      */
     protected void navigateTo(final int index) {
-        if (DefaultLookup.getBoolean(tabPane, this, "TabbedPane.selectionFollowsFocus", true)) {
+        if (!Boolean.FALSE.equals(UIManager.get("TabbedPane.selectionFollowsFocus"))) {
             tabPane.setSelectedIndex(index);
         } else {
             // Just move focus (not selection)
