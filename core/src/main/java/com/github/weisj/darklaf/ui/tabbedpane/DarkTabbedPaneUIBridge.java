@@ -1382,7 +1382,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             } else {
                 // plain text
                 String title = tabPane.getTitleAt(tabIndex);
-                width += SwingUtilities2.stringWidth(tabPane, metrics, title);
+                width += SwingUtil.stringWidth(tabPane, metrics, title);
             }
         }
         return width;

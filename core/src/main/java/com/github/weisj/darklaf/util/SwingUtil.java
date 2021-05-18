@@ -55,4 +55,8 @@ public final class SwingUtil {
     public static void drawString(final JComponent c, final Graphics g, final String text, int x, int y) {
         SwingUtilities2.drawString(c, g, text, x, y);
     }
+
+    public static int stringWidth(final JComponent c, final FontMetrics fm, final String string) {
+        return SwingUtilities2.stringWidth(c, fm, string);
+    }
 }

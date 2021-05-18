@@ -25,8 +25,6 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import sun.swing.SwingUtilities2;
-
 import com.github.weisj.darklaf.util.SwingUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
@@ -69,7 +67,7 @@ public class DarkPreviewPanel extends JPanel {
         FontMetrics fm = host.getFontMetrics(getFont());
 
         int height = fm.getHeight();
-        int width = SwingUtilities2.stringWidth(host, fm, getSampleText());
+        int width = SwingUtil.stringWidth(host, fm, getSampleText());
 
         int y = height * 3 + TEXT_GAP * 3;
         int x = SQUARE_SIZE * 3 + SQUARE_GAP * 2 + SWATCH_WIDTH + width + TEXT_GAP * 3;
@@ -138,7 +136,7 @@ public class DarkPreviewPanel extends JPanel {
 
         int ascent = fm.getAscent();
         int height = fm.getHeight();
-        int width = SwingUtilities2.stringWidth(host, fm, getSampleText());
+        int width = SwingUtil.stringWidth(host, fm, getSampleText());
         int textXOffset = offsetX + TEXT_GAP;
 
         Color color = getForeground();

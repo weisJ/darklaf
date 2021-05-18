@@ -30,13 +30,12 @@ import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 
-import sun.swing.SwingUtilities2;
-
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.components.uiresource.JButtonUIResource;
 import com.github.weisj.darklaf.icons.ToggleIcon;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.tooltip.DarkToolTipUI;
+import com.github.weisj.darklaf.util.SwingUtil;
 
 /** @author Jannis Weis */
 public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane implements PropertyChangeListener {
@@ -338,12 +337,12 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
             }
 
             String frameTitle = frame.getTitle();
-            int titleWidth = frameTitle != null ? SwingUtilities2.stringWidth(frame, fm, frameTitle) : 0;
+            int titleWidth = frameTitle != null ? SwingUtil.stringWidth(frame, fm, frameTitle) : 0;
             int titleLength = frameTitle != null ? frameTitle.length() : 0;
 
             // Leave room for three characters in the title.
             if (titleLength > 3) {
-                int subtitle_w = SwingUtilities2.stringWidth(frame, fm, frameTitle.substring(0, 3) + "...");
+                int subtitle_w = SwingUtil.stringWidth(frame, fm, frameTitle.substring(0, 3) + "...");
                 width += Math.min(titleWidth, subtitle_w);
             } else {
                 width += titleWidth;
