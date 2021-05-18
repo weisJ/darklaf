@@ -46,6 +46,7 @@ import sun.swing.UIAction;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.SwingUtil;
 
 /**
  * A Basic L&amp;F implementation of TabbedPaneUI.
@@ -474,7 +475,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
         String title = tabPane.getTitleAt(tabIndex);
         Font font = tabPane.getFont();
-        FontMetrics metrics = SwingUtilities2.getFontMetrics(tabPane, g, font);
+        FontMetrics metrics = SwingUtil.getFontMetrics(tabPane, font);
         Icon icon = getIconForTab(tabIndex);
 
         layoutLabel(tabPlacement, metrics, tabIndex, title, icon, tabRect, iconRect, textRect, isSelected);
@@ -2104,7 +2105,6 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     // Controller: event listeners
 
     /** The type Tab container. */
-    @SuppressWarnings("serial") // Superclass is not serializable across versions
     protected class TabContainer extends JPanel implements UIResource {
         /** The Notify tabbed pane. */
         protected boolean notifyTabbedPane = true;

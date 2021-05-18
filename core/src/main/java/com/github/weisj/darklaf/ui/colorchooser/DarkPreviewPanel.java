@@ -27,6 +27,7 @@ import javax.swing.*;
 
 import sun.swing.SwingUtilities2;
 
+import com.github.weisj.darklaf.util.SwingUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
@@ -133,7 +134,7 @@ public class DarkPreviewPanel extends JPanel {
         if (host == null) {
             host = this;
         }
-        FontMetrics fm = SwingUtilities2.getFontMetrics(host, g);
+        FontMetrics fm = SwingUtil.getFontMetrics(host, g);
 
         int ascent = fm.getAscent();
         int height = fm.getHeight();

@@ -32,14 +32,13 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicButtonListener;
 import javax.swing.plaf.metal.MetalRadioButtonUI;
 
-import sun.swing.SwingUtilities2;
-
 import com.github.weisj.darklaf.graphics.StringPainter;
 import com.github.weisj.darklaf.swingdsl.VisualPaddingListener;
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonFocusNavigationActions;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.SwingUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
@@ -133,9 +132,8 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
         Graphics2D g = (Graphics2D) g2d;
         AbstractButton b = (AbstractButton) c;
 
-        Font f = c.getFont();
-        g.setFont(f);
-        FontMetrics fm = SwingUtilities2.getFontMetrics(c, g, f);
+        g.setFont(c.getFont());
+        FontMetrics fm = SwingUtil.getFontMetrics(c, g);
 
         paintBackground(c, g);
         GraphicsContext config = GraphicsUtil.setupStrokePainting(g);

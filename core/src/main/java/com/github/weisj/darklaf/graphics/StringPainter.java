@@ -65,7 +65,7 @@ public final class StringPainter {
 
     public static <T extends JComponent> void drawString(final Graphics g, final T c, final String text,
             final Rectangle textRect) {
-        drawString(g, c, text, textRect, SwingUtilities2.getFontMetrics(c, g));
+        drawString(g, c, text, textRect, SwingUtil.getFontMetrics(c, g));
     }
 
     public static <T extends JComponent> void drawString(final Graphics g, final T c, final View view,
@@ -85,7 +85,7 @@ public final class StringPainter {
 
     public static <T extends JComponent> void drawStringUnderlineCharAt(final Graphics g, final T c, final String text,
             final int mnemIndex, final Rectangle textRect, final Font f) {
-        drawStringUnderlineCharAt(g, c, text, mnemIndex, textRect, f, SwingUtilities2.getFontMetrics(c, g));
+        drawStringUnderlineCharAt(g, c, text, mnemIndex, textRect, f, SwingUtil.getFontMetrics(c, g));
     }
 
     public static <T extends JComponent> void drawStringUnderlineCharAt(final Graphics g, final T c, final View view,

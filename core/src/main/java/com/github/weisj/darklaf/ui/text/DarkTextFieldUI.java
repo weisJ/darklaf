@@ -32,8 +32,6 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.text.JTextComponent;
 
-import sun.swing.SwingUtilities2;
-
 import com.github.weisj.darklaf.listener.MouseClickListener;
 import com.github.weisj.darklaf.listener.MouseMovementListener;
 import com.github.weisj.darklaf.listener.PopupMenuAdapter;
@@ -41,6 +39,7 @@ import com.github.weisj.darklaf.ui.text.bridge.DarkTextFieldUIBridge;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.FontUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
+import com.github.weisj.darklaf.util.SwingUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 
 /** @author Jannis Weis */
@@ -142,7 +141,7 @@ public class DarkTextFieldUI extends DarkTextFieldUIBridge implements PropertyCh
     protected Rectangle getVisibleEditorRect(final boolean shrinkHeight) {
         Rectangle rect = super.getVisibleEditorRect();
         if (rect != null && shrinkHeight) {
-            FontMetrics fm = SwingUtilities2.getFontMetrics(editor, editor.getFont());
+            FontMetrics fm = SwingUtil.getFontMetrics(editor, editor.getFont());
             Insets ins = editor.getInsets();
             int height = editor.getHeight() - ins.top - ins.bottom;
             rect.y = ins.top + FontUtil.getCenteredFontPosition(height, fm);
