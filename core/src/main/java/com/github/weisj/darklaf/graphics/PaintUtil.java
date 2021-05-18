@@ -275,4 +275,22 @@ public final class PaintUtil {
     public static void fillRect(final Graphics g, final int x, final int y, final int w, final int h) {
         g.fillRect(x, y, w, h);
     }
+
+    public static void drawVLine(final Graphics g, int x, int y1, int y2) {
+        if (y2 < y1) {
+            final int temp = y2;
+            y2 = y1;
+            y1 = temp;
+        }
+        g.fillRect(x, y1, 1, y2 - y1 + 1);
+    }
+
+    public static void drawHLine(final Graphics g, int x1, int x2, int y) {
+        if (x2 < x1) {
+            final int temp = x2;
+            x2 = x1;
+            x1 = temp;
+        }
+        g.fillRect(x1, y, x2 - x1 + 1, 1);
+    }
 }

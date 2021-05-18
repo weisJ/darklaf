@@ -172,7 +172,7 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
             int y = damagedArea.y;
             for (int row = rMin; row <= rMax; row++) {
                 y += table.getRowHeight(row);
-                SwingUtilities2.drawHLine(g, damagedArea.x, tableWidth - 1, y - 1);
+                PaintUtil.drawHLine(g, damagedArea.x, tableWidth - 1, y - 1);
             }
         }
 
@@ -185,14 +185,14 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
             boolean ltr = table.getComponentOrientation().isLeftToRight();
             x = damagedArea.x;
             if (scrollPaneRtl && scrollBarVisible()) {
-                SwingUtilities2.drawVLine(g, x, 0, tableHeight - 1);
+                PaintUtil.drawVLine(g, x, 0, tableHeight - 1);
             }
             if (ltr) {
                 for (int column = cMin; column <= cMax; column++) {
                     int w = cm.getColumn(column).getWidth();
                     x += w;
                     if (showVerticalLine(true, scrollVisible, !scrollPaneRtl, column, draggedIndex, cMin, cMax)) {
-                        SwingUtilities2.drawVLine(g, x - 1, 0, tableHeight - 1);
+                        PaintUtil.drawVLine(g, x - 1, 0, tableHeight - 1);
                     }
                 }
             } else {
@@ -200,7 +200,7 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
                     int w = cm.getColumn(column).getWidth();
                     x += w;
                     if (showVerticalLine(false, scrollVisible, !scrollPaneRtl, column, draggedIndex, cMin, cMax)) {
-                        SwingUtilities2.drawVLine(g, x - 1, 0, tableHeight - 1);
+                        PaintUtil.drawVLine(g, x - 1, 0, tableHeight - 1);
                     }
                 }
             }
