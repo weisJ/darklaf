@@ -40,7 +40,6 @@ import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
 
 import sun.swing.DefaultLookup;
-import sun.swing.SwingUtilities2;
 import sun.swing.UIAction;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
@@ -1973,7 +1972,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     // protected in the next release where
     // API changes are allowed
     boolean requestFocusForVisibleComponent() {
-        return SwingUtilities2.tabbedPaneChangeFocusTo(getVisibleComponent());
+        return SwingUtil.tabbedPaneChangeFocusTo(getVisibleComponent());
     }
 
     /**

@@ -155,4 +155,31 @@ public final class SwingUtil {
         return p.x > cellBounds.x + cellBounds.width ||
                 p.y > cellBounds.y + cellBounds.height;
     }
+
+    public static boolean tabbedPaneChangeFocusTo(final Component comp) {
+        if (comp != null) {
+            if (comp.isFocusable()) {
+                SwingUtilities2.compositeRequestFocus(comp);
+                return true;
+            } else {
+                return comp instanceof JComponent && requestDefaultFocus((JComponent) comp);
+            }
+        }
+        return false;
+    }
+
+    private static boolean requestDefaultFocus(final JComponent comp) {
+        Container nearestRoot =
+                (comp.isFocusCycleRoot()) ? comp : comp.getFocusCycleRootAncestor();
+        if (nearestRoot == null) {
+            return false;
+        }
+        Component c = nearestRoot.getFocusTraversalPolicy().getDefaultComponent(nearestRoot);
+        if (c != null) {
+            c.requestFocus();
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
