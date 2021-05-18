@@ -37,7 +37,7 @@ import javax.swing.plaf.basic.BasicListUI;
 import javax.swing.text.Position;
 
 import sun.swing.DefaultLookup;
-import sun.swing.UIAction;
+import com.github.weisj.darklaf.ui.UIAction;
 
 import com.github.weisj.darklaf.ui.BasicTransferable;
 import com.github.weisj.darklaf.ui.DragRecognitionSupport;

@@ -40,7 +40,7 @@ import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
 
 import sun.swing.DefaultLookup;
-import sun.swing.UIAction;
+import com.github.weisj.darklaf.ui.UIAction;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
