@@ -484,7 +484,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             String clippedTitle = title;
 
             if (!scrollableTabLayoutEnabled() && isHorizontalTabPlacement()) {
-                clippedTitle = SwingUtilities2.clipStringIfNecessary(null, metrics, title, textRect.width);
+                clippedTitle = SwingUtil.clipStringIfNecessary(null, metrics, title, textRect.width);
             }
 
             paintText(g, tabPlacement, font, metrics, tabIndex, clippedTitle, textRect, isSelected);

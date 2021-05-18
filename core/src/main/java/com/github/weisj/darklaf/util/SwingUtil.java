@@ -52,6 +52,15 @@ public final class SwingUtil {
         SwingUtilities2.setSkipClickCount(comp, count);
     }
 
+    public static int stringWidth(final JComponent c, final FontMetrics fm, final String string) {
+        return SwingUtilities2.stringWidth(c, fm, string);
+    }
+
+    public static String clipStringIfNecessary(final JComponent c, final FontMetrics fm,
+            final String string, int availTextWidth) {
+        return SwingUtilities2.clipStringIfNecessary(c, fm, string, availTextWidth);
+    }
+
     public static FontMetrics getFontMetrics(final JComponent c, final Graphics g) {
         if (g == null) throw new IllegalArgumentException("Graphics must not be null");
         return getFontMetrics(c, g.getFont());
@@ -64,10 +73,6 @@ public final class SwingUtil {
         // from the widget to layout out text, otherwise we can get
         // mismatches when printing.
         return c.getFontMetrics(font);
-    }
-
-    public static int stringWidth(final JComponent c, final FontMetrics fm, final String string) {
-        return SwingUtilities2.stringWidth(c, fm, string);
     }
 
     public static boolean shouldIgnore(final MouseEvent me, final JComponent c) {
