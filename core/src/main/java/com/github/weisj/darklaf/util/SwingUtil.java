@@ -33,12 +33,15 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
+import javax.swing.JList;
 import javax.swing.JTable;
+import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellRenderer;
 
 import sun.swing.SwingUtilities2;
+
 
 public final class SwingUtil {
 
@@ -181,5 +184,31 @@ public final class SwingUtil {
         } else {
             return false;
         }
+    }
+
+    public static int loc2IndexFileList(final JList<?> list, final Point point) {
+        int index = list.locationToIndex(point);
+        if (index != -1) {
+            boolean bySize = PropertyUtil.getBooleanProperty(list, "List.isFileList");
+            if (bySize && !pointIsInActualBounds(list, index, point)) {
+                index = -1;
+            }
+        }
+        return index;
+    }
+
+    private static <T> boolean pointIsInActualBounds(final JList<T> list, int index, final Point point) {
+        ListCellRenderer<? super T> renderer = list.getCellRenderer();
+        T value = list.getModel().getElementAt(index);
+        Component item = renderer.getListCellRendererComponent(list,
+                value, index, false, false);
+        Dimension itemSize = item.getPreferredSize();
+        Rectangle cellBounds = list.getCellBounds(index, index);
+        if (!item.getComponentOrientation().isLeftToRight()) {
+            cellBounds.x += (cellBounds.width - itemSize.width);
+        }
+        cellBounds.width = itemSize.width;
+
+        return cellBounds.contains(point);
     }
 }

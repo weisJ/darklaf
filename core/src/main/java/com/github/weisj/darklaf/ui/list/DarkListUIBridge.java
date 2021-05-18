@@ -37,7 +37,6 @@ import javax.swing.plaf.basic.BasicListUI;
 import javax.swing.text.Position;
 
 import sun.swing.DefaultLookup;
-import sun.swing.SwingUtilities2;
 import sun.swing.UIAction;
 
 import com.github.weisj.darklaf.ui.BasicTransferable;
@@ -2479,7 +2478,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
 
             // different behavior if drag is enabled
             if (dragEnabled) {
-                int row = SwingUtilities2.loc2IndexFileList(list, e.getPoint());
+                int row = SwingUtil.loc2IndexFileList(list, e.getPoint());
                 // if we have a valid row and this is a drag initiating event
                 if (row != -1 && DragRecognitionSupport.mousePressed(e)) {
                     dragPressDidSelection = false;
@@ -2520,7 +2519,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
          * @param e the e
          */
         protected void adjustSelection(final MouseEvent e) {
-            int row = SwingUtilities2.loc2IndexFileList(list, e.getPoint());
+            int row = SwingUtil.loc2IndexFileList(list, e.getPoint());
             if (row < 0) {
                 // If shift is down in multi-select, we should do nothing.
                 // For single select or non-shift-click, clear the selection
@@ -2586,7 +2585,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
 
         public void dragStarting(final MouseEvent me) {
             if (DarkUIUtil.isMenuShortcutKeyDown(me)) {
-                int row = SwingUtilities2.loc2IndexFileList(list, me.getPoint());
+                int row = SwingUtil.loc2IndexFileList(list, me.getPoint());
                 list.addSelectionInterval(row, row);
             }
         }
