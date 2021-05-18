@@ -38,7 +38,6 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 
 import sun.swing.DefaultLookup;
-import sun.swing.SwingUtilities2;
 
 import com.github.weisj.darklaf.ui.DragRecognitionSupport;
 import com.github.weisj.darklaf.util.DarkUIUtil;
@@ -116,8 +115,7 @@ public abstract class TableUIBridge extends BasicTableUI {
         if (!isFileList) {
             return false;
         }
-
-        return SwingUtilities2.pointOutsidePrefSize(table, row, column, p);
+        return SwingUtil.pointOutsidePrefSize(table, row, column, p);
     }
 
     //

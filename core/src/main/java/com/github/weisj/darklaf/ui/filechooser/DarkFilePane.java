@@ -40,8 +40,6 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
 
-import sun.swing.SwingUtilities2;
-
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.listener.AncestorAdapter;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
@@ -50,6 +48,7 @@ import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellEditor;
 import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellEditorDelegate;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.SwingUtil;
 
 public class DarkFilePane extends DarkFilePaneUIBridge {
 
@@ -420,8 +419,7 @@ public class DarkFilePane extends DarkFilePaneUIBridge {
                 Point p = evt.getPoint();
                 index = table.rowAtPoint(p);
 
-                boolean pointOutsidePrefSize =
-                        SwingUtilities2.pointOutsidePrefSize(table, index, table.columnAtPoint(p), p);
+                boolean pointOutsidePrefSize = SwingUtil.pointOutsidePrefSize(table, index, table.columnAtPoint(p), p);
 
                 if (pointOutsidePrefSize && !fullRowSelection) {
                     return;

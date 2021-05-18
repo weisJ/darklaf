@@ -23,15 +23,20 @@ package com.github.weisj.darklaf.util;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FocusTraversalPolicy;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.table.TableCellRenderer;
 
 import sun.swing.SwingUtilities2;
 
@@ -129,5 +134,25 @@ public final class SwingUtil {
             }
             model.setAnchorSelectionIndex(anchor);
         }
+    }
+
+    public static boolean pointOutsidePrefSize(JTable table, int row, int column, Point p) {
+        if (table.convertColumnIndexToModel(column) != 0 || row == -1) {
+            return true;
+        }
+        TableCellRenderer tcr = table.getCellRenderer(row, column);
+        Object value = table.getValueAt(row, column);
+        Component cell = tcr.getTableCellRendererComponent(table, value, false,
+                false, row, column);
+        Dimension itemSize = cell.getPreferredSize();
+        Rectangle cellBounds = table.getCellRect(row, column, false);
+        cellBounds.width = itemSize.width;
+        cellBounds.height = itemSize.height;
+
+        // See if coordinates are inside
+        // ASSUME: mouse x,y will never be < cell's x,y
+        assert (p.x >= cellBounds.x && p.y >= cellBounds.y);
+        return p.x > cellBounds.x + cellBounds.width ||
+                p.y > cellBounds.y + cellBounds.height;
     }
 }
