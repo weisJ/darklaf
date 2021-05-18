@@ -24,8 +24,10 @@ package com.github.weisj.darklaf.util;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 
 import sun.swing.SwingUtilities2;
 
@@ -58,5 +60,11 @@ public final class SwingUtil {
 
     public static int stringWidth(final JComponent c, final FontMetrics fm, final String string) {
         return SwingUtilities2.stringWidth(c, fm, string);
+    }
+
+    public static boolean shouldIgnore(final MouseEvent me, final JComponent c) {
+        return c == null || !c.isEnabled()
+                || !SwingUtilities.isLeftMouseButton(me)
+                || me.isConsumed();
     }
 }

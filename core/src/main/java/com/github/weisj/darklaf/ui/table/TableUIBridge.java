@@ -43,6 +43,7 @@ import sun.swing.SwingUtilities2;
 import com.github.weisj.darklaf.ui.DragRecognitionSupport;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
+import com.github.weisj.darklaf.util.SwingUtil;
 
 /** The type Table ui bridge. */
 public abstract class TableUIBridge extends BasicTableUI {
@@ -573,7 +574,7 @@ public abstract class TableUIBridge extends BasicTableUI {
         public void mouseClicked(final MouseEvent e) {}
 
         public void mousePressed(final MouseEvent e) {
-            if (SwingUtilities2.shouldIgnore(e, table)) {
+            if (SwingUtil.shouldIgnore(e, table)) {
                 return;
             }
 
@@ -607,7 +608,7 @@ public abstract class TableUIBridge extends BasicTableUI {
         }
 
         public void mouseReleased(final MouseEvent e) {
-            if (SwingUtilities2.shouldIgnore(e, table)) {
+            if (SwingUtil.shouldIgnore(e, table)) {
                 return;
             }
 
@@ -855,7 +856,7 @@ public abstract class TableUIBridge extends BasicTableUI {
         }
 
         public void mouseDragged(final MouseEvent e) {
-            if (SwingUtilities2.shouldIgnore(e, table)) {
+            if (SwingUtil.shouldIgnore(e, table)) {
                 return;
             }
 

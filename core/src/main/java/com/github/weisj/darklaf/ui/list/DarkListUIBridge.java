@@ -46,6 +46,7 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
+import com.github.weisj.darklaf.util.SwingUtil;
 
 /**
  * An extensible implementation of {@code ListUI}.
@@ -2469,7 +2470,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
         public void mouseClicked(final MouseEvent e) {}
 
         public void mousePressed(final MouseEvent e) {
-            if (SwingUtilities2.shouldIgnore(e, list)) {
+            if (SwingUtil.shouldIgnore(e, list)) {
                 return;
             }
 
@@ -2562,7 +2563,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
         }
 
         public void mouseReleased(final MouseEvent e) {
-            if (SwingUtilities2.shouldIgnore(e, list)) {
+            if (SwingUtil.shouldIgnore(e, list)) {
                 return;
             }
 
@@ -2591,7 +2592,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
         }
 
         public void mouseDragged(final MouseEvent e) {
-            if (SwingUtilities2.shouldIgnore(e, list)) {
+            if (SwingUtil.shouldIgnore(e, list)) {
                 return;
             }
 
