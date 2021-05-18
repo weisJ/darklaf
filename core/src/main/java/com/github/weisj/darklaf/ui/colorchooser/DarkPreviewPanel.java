@@ -143,12 +143,12 @@ public class DarkPreviewPanel extends JPanel {
 
         Color color = getForeground();
         g.setColor(color);
-        SwingUtilities2.drawString(host, g, getSampleText(), textXOffset + (TEXT_GAP / 2), ascent);
+        SwingUtil.drawString(host, g, getSampleText(), textXOffset + (TEXT_GAP / 2), ascent);
 
         g.fillRect(textXOffset, (height) + TEXT_GAP, width + (TEXT_GAP), height + 2);
 
         g.setColor(Color.black);
-        SwingUtilities2.drawString(host, g, getSampleText(), textXOffset + (TEXT_GAP / 2),
+        SwingUtil.drawString(host, g, getSampleText(), textXOffset + (TEXT_GAP / 2),
                 height + ascent + TEXT_GAP + 2);
 
         g.setColor(Color.white);
@@ -156,7 +156,7 @@ public class DarkPreviewPanel extends JPanel {
         g.fillRect(textXOffset, (height + TEXT_GAP) * 2, width + (TEXT_GAP), height + 2);
 
         g.setColor(color);
-        SwingUtilities2.drawString(host, g, getSampleText(), textXOffset + (TEXT_GAP / 2),
+        SwingUtil.drawString(host, g, getSampleText(), textXOffset + (TEXT_GAP / 2),
                 ((height + TEXT_GAP) * 2) + ascent + 2);
 
         config.restore();

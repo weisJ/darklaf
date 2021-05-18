@@ -32,8 +32,6 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
 
-import sun.swing.SwingUtilities2;
-
 import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.ui.OpacityBufferedUI;
 import com.github.weisj.darklaf.util.*;
@@ -162,9 +160,9 @@ public final class StringPainter {
         } else {
             int textY = textRect.y + asc;
             if (mnemIndex >= 0) {
-                SwingUtilities2.drawStringUnderlineCharAt(c, drawingGraphics, text, mnemIndex, textRect.x, textY);
+                SwingUtil.drawStringUnderlineCharAt(c, drawingGraphics, text, mnemIndex, textRect.x, textY);
             } else {
-                SwingUtilities2.drawString(c, drawingGraphics, text, textRect.x, textY);
+                SwingUtil.drawString(c, drawingGraphics, text, textRect.x, textY);
             }
         }
 

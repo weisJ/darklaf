@@ -27,6 +27,8 @@ import java.awt.Graphics;
 
 import javax.swing.JComponent;
 
+import sun.swing.SwingUtilities2;
+
 public final class SwingUtil {
 
     private SwingUtil() {}
@@ -43,5 +45,14 @@ public final class SwingUtil {
         // from the widget to layout out text, otherwise we can get
         // mismatches when printing.
         return c.getFontMetrics(font);
+    }
+
+    public static void drawStringUnderlineCharAt(JComponent c, Graphics g,
+            String text, int underlinedIndex, int x, int y) {
+        SwingUtilities2.drawStringUnderlineCharAt(c, g, text, underlinedIndex, x, y);
+    }
+
+    public static void drawString(final JComponent c, final Graphics g, final String text, int x, int y) {
+        SwingUtilities2.drawString(c, g, text, x, y);
     }
 }

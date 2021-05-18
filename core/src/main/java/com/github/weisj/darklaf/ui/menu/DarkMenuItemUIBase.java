@@ -29,12 +29,12 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicMenuItemUI;
 
 import sun.swing.MenuItemLayoutHelper;
-import sun.swing.SwingUtilities2;
 import sun.swing.UIAction;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
 import com.github.weisj.darklaf.util.StringUtil;
+import com.github.weisj.darklaf.util.SwingUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
@@ -148,7 +148,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI {
         if (!StringUtil.isBlank(lh.getAccText())) {
             g.setFont(lh.getAccFontMetrics().getFont());
             g.setColor(getAcceleratorForeground(mi));
-            SwingUtilities2.drawString(mi, g, lh.getAccText(), lr.getAccRect().x,
+            SwingUtil.drawString(mi, g, lh.getAccText(), lr.getAccRect().x,
                     lr.getAccRect().y + lh.getAccFontMetrics().getAscent());
         }
         config.restore();
