@@ -311,40 +311,40 @@ public final class CellUtil {
         setupBackground(comp, getTableBackground(comp, parent, selected, hasFocus(parent, comp), row));
     }
 
+    public static Color getTreeBackground(final JTree tree, final boolean selected, final int row) {
+        return getTreeBackground(tree, tree, selected, hasFocus(tree, tree), row);
+    }
+
     public static Color getTreeBackground(final Component comp, final JTree parent, final boolean selected,
             final boolean focus, final int row) {
-        boolean alt = row % 2 == 1 && PropertyUtil.getBooleanProperty(parent, DarkTreeUI.KEY_ALTERNATE_ROW_COLOR);
-        return getColor(comp, focus, selected, alt ? treeCellBackgroundAlternative : treeCellBackground,
-                treeCellBackgroundSelected, alt ? treeCellBackgroundNoFocusAlternative : treeCellBackgroundNoFocus,
+        Color treeBg = parent.getBackground();
+        boolean canOverwrite = ColorUtil.canOverwriteColor(treeBg);
+        boolean alt = canOverwrite && row % 2 == 1
+                && PropertyUtil.getBooleanProperty(parent, DarkTreeUI.KEY_ALTERNATE_ROW_COLOR);
+        Color defaultBg = canOverwrite ? treeCellBackground : treeBg;
+        Color defaultBgNoFocus = canOverwrite ? treeCellBackgroundNoFocus : treeBg;
+        Color defaultBgInactive = canOverwrite ? treeCellInactiveBackground : treeBg;
+        Color defaultBgInactiveNoFocus = canOverwrite ? treeCellInactiveBackgroundNoFocus : treeBg;
+        return getColor(comp.isEnabled(), focus, selected,
+                alt ? treeCellBackgroundAlternative : defaultBg, treeCellBackgroundSelected,
+                alt ? treeCellBackgroundNoFocusAlternative : defaultBgNoFocus,
                 treeCellBackgroundSelectedNoFocus,
-                alt ? treeCellInactiveBackgroundAlternative : treeCellInactiveBackground,
+                alt ? treeCellInactiveBackgroundAlternative : defaultBgInactive,
                 treeCellInactiveBackgroundSelected,
-                alt ? treeCellInactiveBackgroundNoFocusAlternative : treeCellInactiveBackgroundNoFocus,
+                alt ? treeCellInactiveBackgroundNoFocusAlternative : defaultBgInactiveNoFocus,
                 treeCellInactiveBackgroundSelectedNoFocus);
     }
 
     public static void setupTreeBackground(final Component comp, final JTree parent, final boolean selected,
             final int row) {
         Color bg = getTreeBackground(comp, parent, selected, hasFocus(parent, comp), row);
-        setupBackground(comp, bg);
+        comp.setBackground(bg);
         if (comp instanceof DefaultTreeCellRenderer) {
             Color c = comp.getBackground();
             if (ColorUtil.canOverwriteColor(c)) {
                 comp.setBackground(ColorUtil.stripUIResource(bg, true));
             }
         }
-    }
-
-    public static Color getTreeBackground(final JTree tree, final boolean selected, final int row) {
-        boolean alt = row % 2 == 1 && PropertyUtil.getBooleanProperty(tree, DarkTreeUI.KEY_ALTERNATE_ROW_COLOR);
-        return getColor(tree.isEnabled(), hasFocus(tree, tree), selected,
-                alt ? treeCellBackgroundAlternative : treeCellBackground, treeCellBackgroundSelected,
-                alt ? treeCellBackgroundNoFocusAlternative : treeCellBackgroundNoFocus,
-                treeCellBackgroundSelectedNoFocus,
-                alt ? treeCellInactiveBackgroundAlternative : treeCellInactiveBackground,
-                treeCellInactiveBackgroundSelected,
-                alt ? treeCellInactiveBackgroundNoFocusAlternative : treeCellInactiveBackgroundNoFocus,
-                treeCellInactiveBackgroundSelectedNoFocus);
     }
 
     public static Color getListBackground(final Component comp, final JList<?> parent, final boolean selected,
