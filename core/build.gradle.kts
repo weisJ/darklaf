@@ -14,7 +14,7 @@ dependencies {
     implementation(projects.darklafPlatformBase)
     implementation(projects.darklafWindows)
     implementation(projects.darklafMacos)
-    implementation(libs.swingDsl)
+    implementation(libs.swingDsl.lafSupport)
     implementation(libs.svgSalamander)
     implementation(libs.jxlayer)
 
