@@ -68,6 +68,11 @@ public class DarklafComponentFactory extends ComponentFactoryDelegate {
     }
 
     @Override
+    public @NotNull Color getHyperlinkClickColor() {
+        return UIManager.getColor("hyperlinkAccent");
+    }
+
+    @Override
     public @NotNull StateValue<Icon> getExpandedIcon() {
         return new StateValue<>(
                 DarkUIUtil.ICON_LOADER.getIcon("navigation/arrow/thick/arrowDown.svg"),
@@ -79,5 +84,10 @@ public class DarklafComponentFactory extends ComponentFactoryDelegate {
         return new StateValue<>(
                 DarkUIUtil.ICON_LOADER.getIcon("navigation/arrow/thick/arrowRight.svg"),
                 DarkUIUtil.ICON_LOADER.getIcon("navigation/arrow/thick/arrowRightDisabled.svg"));
+    }
+
+    @Override
+    public @NotNull Color getColorBackgroundColor() {
+        return UIManager.getColor("backgroundColorful");
     }
 }
