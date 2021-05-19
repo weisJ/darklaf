@@ -613,6 +613,41 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         return true;
     }
 
+    protected void ensureRowsAreVisible(int beginRow, int endRow) {
+        if (tree != null && beginRow >= 0 && endRow < getRowCount(tree)) {
+            boolean scrollVert = UIManager.getBoolean("Tree.scrollsHorizontallyAndVertically");
+            if (beginRow == endRow) {
+                Rectangle scrollBounds = getPathBounds(tree, getPathForRow(tree, beginRow));
+                if (scrollBounds == null) return;
+                if (!scrollVert) {
+                    scrollBounds.x = tree.getVisibleRect().x;
+                    scrollBounds.width = 1;
+                }
+                tree.scrollRectToVisible(scrollBounds);
+            } else {
+                Rectangle beginRect = getPathBounds(tree, getPathForRow(tree, beginRow));
+                if (beginRect == null) return;
+
+                Rectangle visRect = DarkUIUtil.applyInsets(tree.getVisibleRect(), tree.getInsets());
+                Rectangle testRect = beginRect;
+                int beginY = beginRect.y;
+                int maxY = visRect.y + visRect.height;
+
+                for (int i = beginRow + 1; i <= endRow; i++) {
+                    testRect = getPathBounds(tree, getPathForRow(tree, i));
+                    if (testRect == null) return;
+
+                    if ((testRect.y + testRect.height) > maxY) {
+                        i = endRow;
+                    }
+                }
+                Rectangle targetRect = new Rectangle(visRect.x, beginY, 1,
+                                                     testRect.y + testRect.height - beginY);
+                tree.scrollRectToVisible(targetRect);
+            }
+        }
+    }
+
     @Override
     public Container getRendererPane() {
         return rendererPane;
