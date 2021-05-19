@@ -642,7 +642,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
                     }
                 }
                 Rectangle targetRect = new Rectangle(visRect.x, beginY, 1,
-                                                     testRect.y + testRect.height - beginY);
+                        testRect.y + testRect.height - beginY);
                 tree.scrollRectToVisible(targetRect);
             }
         }

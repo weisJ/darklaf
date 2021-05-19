@@ -21,8 +21,6 @@
  */
 package com.github.weisj.darklaf.log;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -130,11 +128,11 @@ public class LogFormatter extends Formatter {
     }
 
     private void printEnclosedStackTrace(final StringBuilder builder,
-                                         final Throwable throwable,
-                                         final StackTraceElement[] enclosingTrace,
-                                         final String caption,
-                                         final String prefix,
-                                         final Set<Throwable> dejaVu) {
+            final Throwable throwable,
+            final StackTraceElement[] enclosingTrace,
+            final String caption,
+            final String prefix,
+            final Set<Throwable> dejaVu) {
         if (dejaVu.contains(throwable)) {
             builder.append(prefix).append(caption).append("[CIRCULAR REFERENCE: ").append(this).append("]\n");
         } else {
