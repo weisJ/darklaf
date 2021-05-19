@@ -7,7 +7,6 @@ svgSalamander = "1.1.2.4"
 rsyntaxtextarea = "3.1.1"
 junit = "5.6.2"
 autoservice = "1.0-rc7"
-miglayout = "5.2"
 lGoodDatePicker = "11.0.2"
 swingDsl = "latest.integration"
 nullabilityAnnotations = "16.0.2"
@@ -18,7 +17,7 @@ jna = { module = "net.java.dev.jna:jna", version.ref = "jna" }
 jxlayer = { module = "org.swinglabs:jxlayer", version.ref = "jxlayer" }
 swingx = { module = "org.swinglabs:swingx", version.ref = "swingx" }
 svgSalamander = { module = "com.formdev:svgSalamander", version.ref = "svgSalamander" }
-swingDsl-lafSupport = { module = "com.github.weisj:swing-dsl-laf-support", version.ref = "swingDsl" }
+swingDslLafSupport = { module = "com.github.weisj:swing-dsl-laf-support", version.ref = "swingDsl" }
 autoservice-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "autoservice" }
 autoservice-processor = { module = "com.google.auto.service:auto-service", version.ref = "autoservice" }
 nullabilityAnnotations = { module = "org.jetbrains:annotations", version.ref = "nullabilityAnnotations" }
