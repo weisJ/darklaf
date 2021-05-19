@@ -22,6 +22,7 @@
 package com.github.weisj.darklaf;
 
 import java.awt.Window;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.SwingUtilities;
@@ -49,7 +50,7 @@ final class LafInstaller {
             SwingUtilities.invokeLater(transition::runTransition);
             notifyThemeInstalled(theme);
         } catch (final UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Could not install LaF", e);
         }
     }
 

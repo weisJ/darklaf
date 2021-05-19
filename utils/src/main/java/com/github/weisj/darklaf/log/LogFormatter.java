@@ -21,15 +21,22 @@
  */
 package com.github.weisj.darklaf.log;
 
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
+import java.util.IdentityHashMap;
+import java.util.Set;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import com.github.weisj.darklaf.util.StringUtil;
 
-/** @author Jannis Weis */
+/**
+ * @author Jannis Weis
+ */
 public class LogFormatter extends Formatter {
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLACK = "\u001B[30m";
@@ -92,7 +99,77 @@ public class LogFormatter extends Formatter {
 
         builder.append(ANSI_RESET);
         builder.append("\n");
+        if (record.getThrown() != null) {
+            builder.append(getMessageColor(record));
+            appendExceptionMessage(builder, record.getThrown());
+        }
+
         return builder.toString();
+    }
+
+    private void appendExceptionMessage(final StringBuilder builder, final Throwable throwable) {
+        builder.append(throwable.getClass().getCanonicalName()).append(": ");
+        builder.append(throwable.getMessage());
+        builder.append('\n');
+        StackTraceElement[] trace = throwable.getStackTrace();
+        for (StackTraceElement element : trace) {
+            builder.append("\tat ").append(element).append('\n');
+        }
+
+        Set<Throwable> dejaVu = Collections.newSetFromMap(new IdentityHashMap<>());
+        // Print suppressed exceptions, if any
+        for (Throwable se : throwable.getSuppressed()) {
+            printEnclosedStackTrace(builder, se, trace, "Suppressed: ", "\t", dejaVu);
+        }
+
+        // Print cause, if any
+        Throwable cause = throwable.getCause();
+        if (cause != null) {
+            printEnclosedStackTrace(builder, cause, trace, "Caused by: ", "", dejaVu);
+        }
+    }
+
+    private void printEnclosedStackTrace(final StringBuilder builder,
+                                         final Throwable throwable,
+                                         final StackTraceElement[] enclosingTrace,
+                                         final String caption,
+                                         final String prefix,
+                                         final Set<Throwable> dejaVu) {
+        if (dejaVu.contains(throwable)) {
+            builder.append(prefix).append(caption).append("[CIRCULAR REFERENCE: ").append(this).append("]\n");
+        } else {
+            dejaVu.add(throwable);
+            // Compute number of frames in common between this and enclosing trace
+            StackTraceElement[] trace = throwable.getStackTrace();
+            int m = trace.length - 1;
+            int n = enclosingTrace.length - 1;
+            while (m >= 0 && n >= 0 && trace[m].equals(enclosingTrace[n])) {
+                m--;
+                n--;
+            }
+            int framesInCommon = trace.length - 1 - m;
+
+            // Print the stack trace
+            builder.append(prefix).append(caption).append(throwable).append('\n');
+            for (int i = 0; i <= m; i++) {
+                builder.append(prefix).append("\tat ").append(trace[i]);
+            }
+
+            if (framesInCommon != 0) {
+                builder.append(prefix).append("\t... ").append(framesInCommon).append(" more\n");
+            }
+
+            // Print suppressed exceptions, if any
+            for (Throwable se : throwable.getSuppressed()) {
+                printEnclosedStackTrace(builder, se, trace, "Suppressed: ", prefix + "\t", dejaVu);
+            }
+
+            // Print cause, if any
+            Throwable cause = throwable.getCause();
+            if (cause != null) {
+                printEnclosedStackTrace(builder, cause, trace, "Caused by: ", prefix, dejaVu);
+            }
+        }
     }
 
     private String calculateDateString(final long milliseconds) {

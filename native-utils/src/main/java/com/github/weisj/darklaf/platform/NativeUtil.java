@@ -91,14 +91,12 @@ public final class NativeUtil {
         Path temp = temporaryDir.resolve(filename);
 
         try (InputStream is = NativeUtil.class.getResourceAsStream(path)) {
+            if (is == null) throw new FileNotFoundException("File " + path + " was not found inside JAR.");
             if (!temporaryDir.toFile().canWrite()) throw new IOException("Can't write to temporary directory.");
             Files.copy(is, temp.toAbsolutePath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (final IOException e) {
             delete(temp);
             throw e;
-        } catch (final NullPointerException e) {
-            delete(temp);
-            throw new FileNotFoundException("File " + path + " was not found inside JAR.");
         }
 
         try {
