@@ -5,6 +5,10 @@ plugins {
     `java-library`
 }
 
+dependencies {
+    implementation(projects.darklafUtils)
+}
+
 tasks.jar {
     CrLfSpec(LineEndings.LF).run {
         into("META-INF") {
