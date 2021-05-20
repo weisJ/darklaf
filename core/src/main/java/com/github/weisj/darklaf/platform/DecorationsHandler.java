@@ -71,14 +71,17 @@ public class DecorationsHandler {
     }
 
     public CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle, final Window window) {
+        if (!decorationsProvider.isCustomDecorationSupported()) return DefaultDecorationsProvider.createNoOPTitlePane();
         return decorationsProvider.createTitlePane(rootPane, decorationStyle, window);
     }
 
     public void installPopupWindow(final Window window) {
+        if (!decorationsProvider.isCustomDecorationSupported()) return;
         decorationsProvider.installPopupWindow(window);
     }
 
     public void uninstallPopupWindow(final Window window) {
+        if (!decorationsProvider.isCustomDecorationSupported()) return;
         decorationsProvider.uninstallPopupWindow(window);
     }
 

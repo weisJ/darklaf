@@ -178,6 +178,8 @@ public class DarkPopupFactory extends PopupFactory {
             rootPane.putClientProperty("Window.shadow", !noDecorations);
         }
         if (noDecorations) {
+            // We also uninstall if decorations aren't enabled/supported as a reused window could be
+            // decorated previously.
             DecorationsHandler.getSharedInstance().uninstallPopupWindow(window);
         } else if (DecorationsHandler.getSharedInstance().isCustomDecorationSupported()) {
             DecorationsHandler.getSharedInstance().installPopupWindow(window);

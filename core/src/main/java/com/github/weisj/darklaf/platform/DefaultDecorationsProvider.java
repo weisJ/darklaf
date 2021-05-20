@@ -32,6 +32,10 @@ import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
 public class DefaultDecorationsProvider implements DecorationsProvider {
     @Override
     public CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle, final Window window) {
+        return createNoOPTitlePane();
+    }
+
+    static CustomTitlePane createNoOPTitlePane() {
         return new CustomTitlePane() {
             @Override
             public void uninstall(final boolean removeDecorations) {}
