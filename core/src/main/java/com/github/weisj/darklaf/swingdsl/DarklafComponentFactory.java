@@ -90,4 +90,19 @@ public class DarklafComponentFactory extends ComponentFactoryDelegate {
     public @NotNull Color getColorBackgroundColor() {
         return UIManager.getColor("backgroundColorful");
     }
+
+    @Override
+    public @NotNull Color getSecondaryTextForeground() {
+        return UIManager.getColor("textForegroundSecondary");
+    }
+
+    @Override
+    public @NotNull Color getWarningColor() {
+        return UIManager.getColor("warningIconColor");
+    }
+
+    @Override
+    public @NotNull Color getErrorColor() {
+        return UIManager.getColor("errorIconColor");
+    }
 }
