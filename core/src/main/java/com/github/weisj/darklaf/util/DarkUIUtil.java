@@ -192,6 +192,9 @@ public final class DarkUIUtil {
      */
     public static boolean hasFocus(final Component c, final FocusEvent e) {
         Component focusParent = PropertyUtil.getObject(c, FocusParentHelper.KEY_FOCUS_PARENT, Component.class);
+        if (c instanceof JComponent) {
+            FocusParentHelper.updateFocusParentRegistry((JComponent) c, focusParent);
+        }
         return hasFocusImpl(c, focusParent, e);
     }
 

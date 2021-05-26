@@ -44,7 +44,7 @@ public final class FocusParentHelper {
             if (e.getID() != FocusEvent.FOCUS_GAINED && e.getID() != FocusEvent.FOCUS_LOST) return;
             Component comp = e.getComponent();
             listeners.forEach((c, focusParent) -> {
-                if (SwingUtilities.isDescendingFrom(comp, focusParent)) {
+                if (c instanceof JComponent && SwingUtilities.isDescendingFrom(comp, focusParent)) {
                     RepaintAction repaintAction = PropertyUtil.getObject(c, KEY_FOCUS_ACTION, RepaintAction.class);
                     if (repaintAction != null) {
                         repaintAction.accept(c);
@@ -52,6 +52,15 @@ public final class FocusParentHelper {
                 }
             });
         }, AWTEvent.FOCUS_EVENT_MASK);
+    }
+
+    public static void updateFocusParentRegistry(final JComponent c, final Component parent) {
+        if (parent == null) {
+            c.putClientProperty(KEY_FOCUS_ACTION, null);
+            listeners.remove(c);
+        } else {
+            listeners.put(c, parent);
+        }
     }
 
     public static void setFocusParent(final JComponent c, final JComponent focusParent) {
@@ -62,12 +71,9 @@ public final class FocusParentHelper {
             final RepaintAction focusChangedAction) {
         if (c == null) return;
         c.putClientProperty(KEY_FOCUS_PARENT, focusParent);
-        if (focusParent == null) {
-            c.putClientProperty(KEY_FOCUS_ACTION, null);
-            listeners.remove(c);
-        } else {
+        updateFocusParentRegistry(c, focusParent);
+        if (focusParent != null) {
             c.putClientProperty(KEY_FOCUS_ACTION, focusChangedAction);
-            listeners.put(c, focusParent);
         }
     }
 
