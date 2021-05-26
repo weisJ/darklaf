@@ -44,10 +44,13 @@ public final class FocusParentHelper {
             if (e.getID() != FocusEvent.FOCUS_GAINED && e.getID() != FocusEvent.FOCUS_LOST) return;
             Component comp = e.getComponent();
             listeners.forEach((c, focusParent) -> {
-                if (c instanceof JComponent && SwingUtilities.isDescendingFrom(comp, focusParent)) {
-                    RepaintAction repaintAction = PropertyUtil.getObject(c, KEY_FOCUS_ACTION, RepaintAction.class);
-                    if (repaintAction != null) {
-                        repaintAction.accept(c);
+                if (SwingUtilities.isDescendingFrom(comp, focusParent)) {
+                    OnFocusChangedAction onFocusChangedAction =
+                            PropertyUtil.getObject(c, KEY_FOCUS_ACTION, OnFocusChangedAction.class);
+                    if (onFocusChangedAction != null) {
+                        onFocusChangedAction.accept(c);
+                    } else {
+                        c.repaint();
                     }
                 }
             });
@@ -68,7 +71,7 @@ public final class FocusParentHelper {
     }
 
     public static void setFocusParent(final JComponent c, final JComponent focusParent,
-            final RepaintAction focusChangedAction) {
+            final OnFocusChangedAction focusChangedAction) {
         if (c == null) return;
         c.putClientProperty(KEY_FOCUS_PARENT, focusParent);
         updateFocusParentRegistry(c, focusParent);
@@ -77,6 +80,6 @@ public final class FocusParentHelper {
         }
     }
 
-    public interface RepaintAction extends Consumer<Component> {
+    public interface OnFocusChangedAction extends Consumer<Component> {
     }
 }
