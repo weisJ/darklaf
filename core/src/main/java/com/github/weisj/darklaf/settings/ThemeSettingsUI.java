@@ -325,6 +325,7 @@ public class ThemeSettingsUI {
                     return new Rectangle(0, 0, fontSlider.getWidth(), fontSlider.getHeight());
                 });
         fontSlider.putClientProperty(DarkSliderUI.KEY_INSTANT_SCROLL, true);
+        fontSlider.putClientProperty(DarkSliderUI.KEY_USE_TRACK_AS_BASELINE, true);
         fontSlider.putClientProperty(ToolTipConstants.KEY_CONTEXT, context);
         fontSlider.putClientProperty(ToolTipConstants.KEY_STYLE, ToolTipConstants.VARIANT_BALLOON);
         fontSlider.setToolTipText(String.valueOf(fontSlider.getValue()));

@@ -50,6 +50,7 @@ public class DarkSliderUI extends BasicSliderUI {
     public static final String KEY_VARIANT = KEY_PREFIX + "variant";
     public static final String KEY_INSTANT_SCROLL = KEY_PREFIX + "instantScrollEnabled";
     public static final String KEY_MANUAL_LABEL_ALIGN = KEY_PREFIX + "manualLabelAlign";
+    public static final String KEY_USE_TRACK_AS_BASELINE = KEY_PREFIX + "useTrackAsBaseline";
     public static final String VARIANT_VOLUME = "volume";
 
     protected final Rectangle iconRect = new Rectangle(0, 0, 0, 0);
@@ -155,6 +156,15 @@ public class DarkSliderUI extends BasicSliderUI {
         slider.removeMouseWheelListener(sliderListener);
         slider.removePropertyChangeListener(sliderListener);
         sliderListener = null;
+    }
+
+    @Override
+    public int getBaseline(JComponent c, int width, int height) {
+        if (isHorizontal() && PropertyUtil.getBooleanProperty(c, KEY_USE_TRACK_AS_BASELINE)) {
+            return trackRect.y + trackRect.height / 2;
+        } else {
+            return super.getBaseline(c, width, height);
+        }
     }
 
     @Override

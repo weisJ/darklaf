@@ -111,7 +111,7 @@ public final class LayoutHelper {
             verticalLabelGroup.addComponent(lComp, p, p, p);
             verticalComponentGroup.addComponent(rComp, p, p, p);
 
-            verticalGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+            verticalGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(lComp, p, p, p)
                     .addComponent(rComp, p, p, p));
         }
