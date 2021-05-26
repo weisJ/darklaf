@@ -22,6 +22,7 @@
 package com.github.weisj.darklaf.settings;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.platform.ThemePreferencesHandler;
@@ -276,5 +277,16 @@ public class SettingsConfiguration implements Serializable {
                 + isFontSizeFollowsSystem + ", isThemeFollowsSystem=" + isThemeFollowsSystem
                 + ", isSelectionColorFollowsSystem=" + isSelectionColorFollowsSystem + ", accentColorRule="
                 + accentColorRule + ", fontSizeRule=" + fontSizeRule + ", theme=" + theme + '}';
+    }
+
+    public boolean isResultingAppearanceEqualTo(final SettingsConfiguration other) {
+        return other.isSystemPreferencesEnabled() == isSystemPreferencesEnabled() &&
+                other.isThemeFollowsSystem() == isThemeFollowsSystem() &&
+                other.isAccentColorFollowsSystem() == isAccentColorFollowsSystem() &&
+                other.isSelectionColorFollowsSystem() == isSelectionColorFollowsSystem() &&
+                other.isFontSizeFollowsSystem() == isFontSizeFollowsSystem() &&
+                Objects.equals(other.getAccentColorRule(), getAccentColorRule()) &&
+                Objects.equals(other.getFontSizeRule(), getFontSizeRule()) &&
+                Objects.equals(Theme.baseThemeOf(other.getTheme()), Theme.baseThemeOf(getTheme()));
     }
 }
