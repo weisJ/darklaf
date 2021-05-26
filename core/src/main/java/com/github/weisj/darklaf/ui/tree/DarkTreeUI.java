@@ -342,12 +342,13 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         boolean isExpanded = !isLeaf && treeState.getExpandedState(path);
         boolean hasBeenExpanded = !isLeaf && tree.hasBeenExpanded(path);
 
+        boolean isFocused = hasFocus();
         if (shouldPaintExpandControl(path, row, isExpanded, hasBeenExpanded, isLeaf)) {
-            paintExpandControl(g, paintBounds, insets, cellBounds, path, row, isExpanded, hasBeenExpanded, isLeaf);
+            paintExpandControl(g, cellBounds, path, row, isExpanded, isLeaf, isFocused);
         }
         paintRow(g, paintBounds, insets, cellBounds, path, row, isExpanded, hasBeenExpanded, isLeaf);
 
-        if (!selected && tree.getLeadSelectionRow() == row && tree.hasFocus()) {
+        if (!selected && tree.getLeadSelectionRow() == row && isFocused) {
             g.setColor(CellUtil.getTreeBackground(tree, true, row));
             cellBounds.x = xOffset;
             cellBounds.width = containerWidth;
@@ -449,7 +450,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
 
     protected Color getLineColor(final TreePath path) {
         if (isChildOfSelectionPath(path)) {
-            if (tree.isEditing() || DarkUIUtil.hasFocus(tree)) {
+            if (tree.isEditing() || hasFocus()) {
                 return focusSelectedLineColor;
             } else {
                 return selectedLineColor;
@@ -520,13 +521,17 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
             final TreePath path) {}
 
     @Override
-    protected void paintExpandControl(final Graphics g, final Rectangle clipBounds, final Insets insets,
-            final Rectangle bounds, final TreePath path, final int row, final boolean isExpanded,
-            final boolean hasBeenExpanded, final boolean isLeaf) {
+    protected void paintExpandControl(Graphics g, Rectangle clipBounds, Insets insets, Rectangle bounds, TreePath path,
+            int row, boolean isExpanded, boolean hasBeenExpanded, boolean isLeaf) {
+        throw new UnsupportedOperationException("Use own implementation");
+    }
+
+    protected void paintExpandControl(final Graphics g, final Rectangle bounds, final TreePath path,
+            final int row, final boolean isExpanded, final boolean isLeaf, final boolean isFocused) {
         if (!isLeaf(row)) {
             boolean isPathSelected = tree.isPathSelected(path);
-            setExpandedIcon(getExpandedIcon(isPathSelected, tree.hasFocus() || tree.isEditing()));
-            setCollapsedIcon(getCollapsedIcon(isPathSelected, tree.hasFocus() || tree.isEditing()));
+            setExpandedIcon(getExpandedIcon(isPathSelected, isFocused || tree.isEditing()));
+            setCollapsedIcon(getCollapsedIcon(isPathSelected, isFocused || tree.isEditing()));
         }
         // Draw icons if not a leaf and either hasn't been loaded,
         // or the model child count is > 0.
