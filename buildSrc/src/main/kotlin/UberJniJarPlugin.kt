@@ -3,6 +3,7 @@ import dev.nokee.platform.jni.JniJarBinary
 import dev.nokee.platform.jni.JniLibraryExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.file.FileTree
 import org.gradle.api.provider.Provider
 import org.gradle.jvm.tasks.Jar
@@ -44,10 +45,12 @@ class UberJniJarPlugin : Plugin<Project> {
                 // nativeRuntimeFiles will be populated in this case due to using pre-build binaries.
                 task.from(targetVariant.map { it.nativeRuntimeFiles }) {
                     into(targetVariant.map { it.resourcePath })
+                    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
                 }
             } else {
                 task.from(targetVariant.map { it.sharedLibrary.linkTask.map { linkTask -> linkTask.linkedFile } }) {
                     into(targetVariant.map { it.resourcePath })
+                    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
                 }
             }
         }
