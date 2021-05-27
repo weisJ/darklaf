@@ -30,6 +30,7 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
@@ -50,6 +51,7 @@ import com.github.weisj.darklaf.parser.Parser;
 import com.github.weisj.darklaf.parser.PrimitiveParser;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.ImageUtil;
+import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.StringUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 import com.kitfox.svg.LinearGradient;
@@ -59,6 +61,8 @@ import com.kitfox.svg.app.beans.SVGIcon;
 import defaults.SampleRenderer;
 
 public class CreateUITable {
+
+    private static final Logger LOGGER = LogUtil.getLogger(CreateUITable.class);
 
     private static final int SAMPLE_WIDTH = 150;
     private static final int SAMPLE_HEIGHT = 25;
@@ -74,6 +78,7 @@ public class CreateUITable {
 
     public static void main(final String[] args) throws IOException {
         for (Theme theme : LafManager.getRegisteredThemes()) {
+            LOGGER.info("Creating defaults table for " + theme.getDisplayName());
             createThemeDefaultsPage(theme);
         }
     }
@@ -260,7 +265,7 @@ public class CreateUITable {
     }
 
     private String createImage(final Object value, final String name, final Dimension size) throws IOException {
-        //noinspection ResultOfMethodCallIgnored
+        // noinspection ResultOfMethodCallIgnored
         new File(workingFolder + "img/").mkdirs();
         String fileName = "img/" + name + "_" + SystemInfo.getOsName() + ".png";
         File imageFile = new File(workingFolder + fileName);

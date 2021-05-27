@@ -25,6 +25,7 @@ import java.util.Properties;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.annotations.SynthesiseLaf;
 import com.github.weisj.darklaf.theme.info.ColorToneRule;
 import com.github.weisj.darklaf.theme.info.ContrastRule;
@@ -37,7 +38,7 @@ public class HighContrastLightTheme extends Theme {
 
     @Override
     protected PresetIconRule getPresetIconRule() {
-        return PresetIconRule.NONE;
+        return PresetIconRule.LIGHT;
     }
 
     @Override
@@ -68,6 +69,14 @@ public class HighContrastLightTheme extends Theme {
     @Override
     public ContrastRule getContrastRule() {
         return ContrastRule.HIGH_CONTRAST;
+    }
+
+    @Override
+    public void loadIconTheme(Properties properties, UIDefaults currentDefaults) {
+        // First load base theme
+        super.loadIconTheme(properties, currentDefaults);
+        // Then customize using our own values.
+        PropertyLoader.putProperties(loadPropertyFile("icons"), properties, currentDefaults);
     }
 
     @Override
