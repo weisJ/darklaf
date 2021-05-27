@@ -8,7 +8,7 @@ rsyntaxtextarea = "3.1.1"
 junit = "5.6.2"
 autoservice = "1.0-rc7"
 lGoodDatePicker = "11.0.2"
-swingDsl = "latest.integration"
+swingDsl = "0.1.2"
 nullabilityAnnotations = "16.0.2"
 macOSFramework = "latest.release"
 
