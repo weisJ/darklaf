@@ -199,8 +199,8 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
                     RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g.setRenderingHint(
                     RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_NORMALIZE);
-            g.setRenderingHint(
-                    RenderingHints.KEY_TEXT_ANTIALIASING, UIManager.get(RenderingHints.KEY_TEXT_ANTIALIASING));
+            Object aaHint = UIManager.get(RenderingHints.KEY_TEXT_ANTIALIASING);
+            if (aaHint != null) g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, aaHint);
             icon.paintIcon(null, g, 0, 0);
             g.dispose();
             return bi;
