@@ -79,10 +79,14 @@ public final class Parser {
 
     public static class DebugParseResult extends ParseResult {
 
+        public String originalKey;
+        public String originalValue;
         public String referenceKey;
 
         public DebugParseResult(final String key, final String value) {
             super(key, value);
+            this.originalKey = key;
+            this.originalValue = value;
         }
     }
 }

@@ -30,7 +30,6 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
@@ -51,9 +50,9 @@ import com.github.weisj.darklaf.parser.Parser;
 import com.github.weisj.darklaf.parser.PrimitiveParser;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.ImageUtil;
-import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.StringUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
+import com.github.weisj.darklaf.util.Types;
 import com.kitfox.svg.LinearGradient;
 import com.kitfox.svg.SVGDiagram;
 import com.kitfox.svg.SVGElement;
@@ -61,8 +60,6 @@ import com.kitfox.svg.app.beans.SVGIcon;
 import defaults.SampleRenderer;
 
 public class CreateUITable {
-
-    private static final Logger LOGGER = LogUtil.getLogger(CreateUITable.class);
 
     private static final int SAMPLE_WIDTH = 150;
     private static final int SAMPLE_HEIGHT = 25;
@@ -78,7 +75,6 @@ public class CreateUITable {
 
     public static void main(final String[] args) throws IOException {
         for (Theme theme : LafManager.getRegisteredThemes()) {
-            LOGGER.info("Creating defaults table for " + theme.getDisplayName());
             createThemeDefaultsPage(theme);
         }
     }
@@ -103,16 +99,21 @@ public class CreateUITable {
         }
     }
 
+    private String getGroup(final Map.Entry<Object, Object> entry) {
+        Parser.DebugParseResult value = Types.safeCast(entry.getValue(), Parser.DebugParseResult.class);
+        String s = value != null ? value.originalKey : entry.getKey().toString();
+        if (s.startsWith(THEME_GROUP)) return THEME_GROUP;
+        if (s.contains(".")) return s.split("\\.")[0];
+        if (s.endsWith("UI")) return s.substring(0, s.length() - 2);
+        return MISC_GROUP + s;
+    }
+
     private String createTables(final Theme theme, final int ident) {
         UIDefaults defaults = setupThemeDefaults(theme);
 
-        Set<String> groups = defaults.keySet().stream().map(key -> {
-            String s = key.toString();
-            if (s.startsWith(THEME_GROUP)) return THEME_GROUP;
-            if (s.contains(".")) return s.split("\\.")[0];
-            if (s.endsWith("UI")) return s.substring(0, s.length() - 2);
-            return MISC_GROUP + s;
-        }).collect(Collectors.toSet());
+        Set<String> groups = defaults.entrySet().stream()
+                .map(this::getGroup)
+                .collect(Collectors.toSet());
 
         Set<String> miscKeys = groups.stream()
                 .filter(s -> s.startsWith(MISC_GROUP))
@@ -148,16 +149,18 @@ public class CreateUITable {
     private void appendGroup(final int ident, final UIDefaults defaults, final StringBuilder builder,
             final String group, final String heading) {
         builder.append(StringUtil.repeat(IDENT, ident)).append("<h3>").append(heading).append("</h3>\n");
-        Set<Map.Entry<Object, Object>> values = defaults.entrySet().stream().filter(entry -> {
-            String key = entry.getKey().toString();
-            if (key.startsWith("%")) return true;
-            if (key.endsWith("UI")) return key.substring(0, key.length() - 2).equals(group);
-            if (key.contains(".")) return key.split("\\.")[0].equals(group);
-            return key.equals(group);
-        }).collect(Collectors.toSet());
+        Set<Map.Entry<Object, Object>> values = defaults.entrySet().stream()
+                .filter(entry -> getGroup(entry).equals(group)).collect(Collectors.toSet());
         appendTable(builder, values, ident);
         values.forEach(entry -> defaults.remove(entry.getKey()));
         builder.append('\n');
+    }
+
+    private Object unwrap(final Object o) {
+        if (o instanceof ParseResult) {
+            return ((ParseResult) o).result;
+        }
+        return o;
     }
 
     private void appendTable(final StringBuilder builder, final Set<Map.Entry<Object, Object>> values,
@@ -172,16 +175,11 @@ public class CreateUITable {
         values.stream().filter(entry -> entry.getKey().toString().endsWith("UI"))
                 .forEach(entry -> appendRow(builder, entry, ident + 1));
         values.stream().filter(entry -> !entry.getKey().toString().endsWith("UI")).sorted((o1, o2) -> {
-            int res = o1.getValue().getClass().getSimpleName().compareTo(o2.getValue().getClass().getSimpleName());
+            Object v1 = unwrap(o1.getValue());
+            Object v2 = unwrap(o2.getValue());
+            int res = v1.getClass().getSimpleName().compareTo(v2.getClass().getSimpleName());
             if (res != 0) return res;
-            Object val1 = o1.getValue();
-            Object val2 = o2.getValue();
-            if (val1 instanceof Comparable) {
-                // noinspection unchecked
-                return ((Comparable<Object>) val1).compareTo(val2);
-            } else {
-                return val1.toString().compareTo(val2.toString());
-            }
+            return o1.getKey().toString().compareTo(o2.getKey().toString());
         }).forEach(entry -> appendRow(builder, entry, ident + 1));
         builder.append(StringUtil.repeat(IDENT, ident)).append("</table>\n");
     }
@@ -207,9 +205,7 @@ public class CreateUITable {
             appendData(builder, debugResult.referenceKey, ident + 1); // Reference
             builder.append(parsePreview(key, debugResult.result, ident + 1));
         } else {
-            if (value instanceof ParseResult) {
-                value = ((ParseResult) value).result;
-            }
+            value = unwrap(value);
             appendData(builder, parseValue(value), ident + 1); // Value
             appendData(builder, "", ident + 1); // Reference
             builder.append(parsePreview(key, value, ident + 1));
@@ -261,7 +257,7 @@ public class CreateUITable {
             return StringUtil.repeat(IDENT, ident) + "<td></td>\n";
         }
         return StringUtil.repeat(IDENT, ident) + String
-                .format("<td style=\"padding:0px\" align=\"center\"><img src=\"%s\" alt=\"%s\"></td>\n", path, key);
+                .format("<td style=\"padding:0\" align=\"center\"><img src=\"%s\" alt=\"%s\"></td>\n", path, key);
     }
 
     private String createImage(final Object value, final String name, final Dimension size) throws IOException {
@@ -314,7 +310,10 @@ public class CreateUITable {
                     String id = ((LinearGradient) child).getId();
                     String match = "=\"url\\(#" + id + "\\)\"";
                     String fillReplacement = "fill=\"#" + ColorUtil.toHex(color) + "\"";
-                    if (opacity != 1) fillReplacement += " fill-opacity=\"" + opacity + "\"";
+                    if (opacity != 1) {
+                        fillReplacement += " fill-opacity=\"" + opacity + "\"";
+                        svg = svg.replaceAll("fill-opacity=\"[^\"]*\"", "");
+                    }
                     svg = svg.replaceAll("fill" + match, fillReplacement);
 
                     String strokeReplacement = "stroke=\"#" + ColorUtil.toHex(color) + "\"";

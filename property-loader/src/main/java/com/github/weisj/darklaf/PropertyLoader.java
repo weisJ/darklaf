@@ -125,9 +125,4 @@ public final class PropertyLoader {
     public static String getReferencePrefix() {
         return String.valueOf(REFERENCE_PREFIX);
     }
-
-    public static String asKey(final String key) {
-        // if (Parser.isDebugMode()) return getReferencePrefix() + key;
-        return key;
-    }
 }
