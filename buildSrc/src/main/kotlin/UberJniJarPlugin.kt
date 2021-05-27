@@ -36,6 +36,7 @@ class UberJniJarPlugin : Plugin<Project> {
             }
             task.dependsOn(sharedLibrary.linkTask)
         }
+        task.duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         targetMachines.forEach { target ->
             val targetVariant = library.variants.filter { it.targetMachine == target }.map {
                 check(it.size == 1)
@@ -45,12 +46,10 @@ class UberJniJarPlugin : Plugin<Project> {
                 // nativeRuntimeFiles will be populated in this case due to using pre-build binaries.
                 task.from(targetVariant.map { it.nativeRuntimeFiles }) {
                     into(targetVariant.map { it.resourcePath })
-                    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
                 }
             } else {
                 task.from(targetVariant.map { it.sharedLibrary.linkTask.map { linkTask -> linkTask.linkedFile } }) {
                     into(targetVariant.map { it.resourcePath })
-                    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
                 }
             }
         }
