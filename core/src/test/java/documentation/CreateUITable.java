@@ -44,6 +44,7 @@ import com.github.weisj.darklaf.components.border.DropShadowBorder;
 import com.github.weisj.darklaf.icons.DarkSVGIcon;
 import com.github.weisj.darklaf.icons.EmptyIcon;
 import com.github.weisj.darklaf.icons.IconColorMapper;
+import com.github.weisj.darklaf.icons.StateIcon;
 import com.github.weisj.darklaf.parser.ParseResult;
 import com.github.weisj.darklaf.parser.Parser;
 import com.github.weisj.darklaf.parser.PrimitiveParser;
@@ -213,6 +214,9 @@ public class CreateUITable {
 
     private String parsePreview(final String key, final Object val, final int ident) {
         Object value = getValue(val);
+        if (value instanceof StateIcon) {
+            value = ((StateIcon) value).getIcon(null);
+        }
         if (value instanceof Color) {
             return StringUtil.repeat(IDENT, ident)
                     + String.format("<td style=\"background-color: #%s\" width=\"%d\" height=\"%d\">\n",
@@ -256,6 +260,7 @@ public class CreateUITable {
     }
 
     private String createImage(final Object value, final String name, final Dimension size) throws IOException {
+        //noinspection ResultOfMethodCallIgnored
         new File(workingFolder + "img/").mkdirs();
         String fileName = "img/" + name + "_" + SystemInfo.getOsName() + ".png";
         File imageFile = new File(workingFolder + fileName);
@@ -312,7 +317,7 @@ public class CreateUITable {
                     svg = svg.replaceAll("stroke" + match, strokeReplacement);
                 }
             }
-            svg = svg.replaceAll("\\<defs id\\=\\\"colors\\\"\\>(\\n.*)* \\<\\/defs\\>\\s+", "");
+            svg = svg.replaceAll("<defs id=\"colors\">(\\n.*)* </defs>\\s+", "");
         }
         return svg;
     }
