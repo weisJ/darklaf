@@ -201,9 +201,7 @@ public class StyleSheetInitTask implements DefaultsInitTask {
                 .fontWeight("bold")
                 .fontStyle("italic");
         builder.group("table")
-                .borderColor(hex("border"))
-                .borderStyle("solid")
-                .borderWidth(px(1))
+                .borderStyle("none")
                 .borderCollapse("collapse");
         builder.group("td")
                 .borderColor(hex("border"))
