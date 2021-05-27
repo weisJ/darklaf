@@ -422,6 +422,11 @@ public class ThemeSettingsUI {
             return super.isSystemSelectionColorSupported() && getSelectedTheme().supportsCustomSelectionColor();
         }
 
+        private Color getSelectedColor(final RadioColorChooser chooser) {
+            Color c = chooser.getSelectedColor();
+            return c == chooser.getDefaultColor() ? null : c;
+        }
+
         @Override
         public AccentColorRule getAccentColorRule() {
             // Avoid unnecessary native calls.
@@ -431,16 +436,18 @@ public class ThemeSettingsUI {
                     ? LafManager.getPreferredThemeStyle()
                     : null;
             Theme theme = getTheme(prefStyle);
-            Color accentColor = theme.supportsCustomAccentColor()
-                    ? useSystemAccent
-                            ? prefStyle.getAccentColorRule().getAccentColor()
-                            : ThemeSettingsUI.this.accentChooser.getSelectedColor()
-                    : null;
-            Color selectionColor = theme.supportsCustomSelectionColor()
-                    ? useSystemSelection
-                            ? prefStyle.getAccentColorRule().getSelectionColor()
-                            : ThemeSettingsUI.this.selectionChooser.getSelectedColor()
-                    : null;
+            Color accentColor = null;
+            Color selectionColor = null;
+            if (theme.supportsCustomAccentColor()) {
+                accentColor = useSystemAccent
+                        ? prefStyle.getAccentColorRule().getAccentColor()
+                        : getSelectedColor(ThemeSettingsUI.this.accentChooser);
+            }
+            if (theme.supportsCustomSelectionColor()) {
+                selectionColor = useSystemSelection
+                        ? prefStyle.getAccentColorRule().getSelectionColor()
+                        : getSelectedColor(ThemeSettingsUI.this.selectionChooser);
+            }
             return AccentColorRule.fromColor(accentColor, selectionColor);
         }
 

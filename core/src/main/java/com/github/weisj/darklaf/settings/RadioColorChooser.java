@@ -129,6 +129,10 @@ public class RadioColorChooser {
         return defaultColor;
     }
 
+    public Color getDefaultColor() {
+        return defaultColor;
+    }
+
     public void setEnabled(final boolean enabled) {
         Enumeration<AbstractButton> buttons = bg.getElements();
         while (buttons.hasMoreElements()) {
