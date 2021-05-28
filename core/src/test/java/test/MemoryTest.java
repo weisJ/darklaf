@@ -32,20 +32,35 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.theme.DarculaTheme;
+import com.github.weisj.darklaf.components.DynamicUI;
+import com.github.weisj.darklaf.listener.UIUpdater;
 
 @Timeout(value = 5)
 class MemoryTest {
+
+    @BeforeAll
+    static void setupLaf() {
+        TestUtils.runOnSwingThreadNotThrowing(LafManager::install);
+    }
+
+    @BeforeEach
+    void checkLaf() {
+        Assertions.assertTrue(LafManager.isInstalled());
+    }
 
     @Test
     void frameGetsGarbageCollectedSimpleContent() {
@@ -75,10 +90,34 @@ class MemoryTest {
         });
     }
 
+    @Test
+    void uiUpdaterReleasesMemory() {
+        AtomicReference<JLabel> labelRef = new AtomicReference<>();
+        TestUtils.runOnSwingThreadNotThrowing(() -> {
+            labelRef.set(new JLabel());
+            UIUpdater.registerComponent(labelRef.get());
+        });
+        WeakReference<JLabel> weakRef = new WeakReference<>(labelRef.get());
+        SwingUtilities.invokeLater(() -> labelRef.set(null));
+        Assertions.assertNotNull(weakRef.get());
+        waitForGarbageCollection(weakRef);
+    }
+
+    @Test
+    void dynamicUiReleasesMemory() {
+        AtomicReference<JLabel> labelRef = new AtomicReference<>();
+        TestUtils.runOnSwingThreadNotThrowing(
+                () -> labelRef.set(DynamicUI.withDynamic(new JLabel(), c -> {
+                })));
+        WeakReference<JLabel> weakRef = new WeakReference<>(labelRef.get());
+        SwingUtilities.invokeLater(() -> labelRef.set(null));
+        Assertions.assertNotNull(weakRef.get());
+        waitForGarbageCollection(weakRef);
+    }
+
     private void testWithContentPane(final Supplier<JComponent> content) {
         AtomicReference<JFrame> frame = new AtomicReference<>();
         TestUtils.runOnSwingThreadNotThrowing(() -> {
-            LafManager.install(new DarculaTheme());
             JFrame f = new JFrame();
             f.setContentPane(content.get());
             f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

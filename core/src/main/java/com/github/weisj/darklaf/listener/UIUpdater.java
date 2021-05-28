@@ -22,6 +22,7 @@
 package com.github.weisj.darklaf.listener;
 
 import java.awt.*;
+import java.lang.ref.WeakReference;
 
 import javax.swing.*;
 
@@ -66,11 +67,11 @@ public class UIUpdater implements ThemeChangeListener {
     }
 
     private static void removeComponent(final JComponent component, final UIUpdater updater) {
-        component.putClientProperty(KEY_UPDATER, null);
+        if (component != null) component.putClientProperty(KEY_UPDATER, null);
         LafManager.removeThemeChangeListener(updater);
     }
 
-    private final Component component;
+    private final WeakReference<JComponent> component;
 
     /**
      * Creates a new ui updater for the given component. After a new theme has been installed This
@@ -80,8 +81,8 @@ public class UIUpdater implements ThemeChangeListener {
      *
      * @param component the component to update.
      */
-    public UIUpdater(final Component component) {
-        this.component = component;
+    public UIUpdater(final JComponent component) {
+        this.component = new WeakReference<>(component);
     }
 
     @Override
@@ -89,6 +90,11 @@ public class UIUpdater implements ThemeChangeListener {
 
     @Override
     public void themeInstalled(final ThemeChangeEvent e) {
-        if (component != null) SwingUtilities.updateComponentTreeUI(component);
+        JComponent comp = component.get();
+        if (comp != null) {
+            SwingUtilities.updateComponentTreeUI(comp);
+        } else {
+            removeComponent(null, this);
+        }
     }
 }
