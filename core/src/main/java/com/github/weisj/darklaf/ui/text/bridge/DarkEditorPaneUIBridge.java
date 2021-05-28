@@ -33,12 +33,13 @@ import com.github.weisj.darklaf.ui.text.dummy.DummyEditorPane;
 import com.github.weisj.darklaf.ui.text.dummy.DummyEditorPaneUI;
 import com.github.weisj.darklaf.ui.text.dummy.DummyTextUIMethods;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.value.WeakShared;
 
 /** @author Jannis Weis */
 public abstract class DarkEditorPaneUIBridge extends DarkTextUI {
 
-    private static final DummyEditorPane shareDummyEditorPane = new DummyEditorPane();
-    private static final DummyTextUIMethods sharedDummyUI = new DummyEditorPaneUI();
+    private static final WeakShared<DummyEditorPane> shareDummyEditorPane = new WeakShared<>(DummyEditorPane::new);
+    private static final WeakShared<DummyTextUIMethods> sharedDummyUI = new WeakShared<>(DummyEditorPaneUI::new);
 
     private DummyEditorPane editorPane;
     private DummyTextUIMethods basicEditorPaneUI;
@@ -55,11 +56,11 @@ public abstract class DarkEditorPaneUIBridge extends DarkTextUI {
     }
 
     protected DummyTextUIMethods createDummyUI() {
-        return sharedDummyUI;
+        return sharedDummyUI.get();
     }
 
     protected DummyEditorPane createDummyEditorPane() {
-        return shareDummyEditorPane;
+        return shareDummyEditorPane.get();
     }
 
     @Override
@@ -74,6 +75,8 @@ public abstract class DarkEditorPaneUIBridge extends DarkTextUI {
         super.uninstallUI(c);
         editorPane.setEditorPane(null);
         editorPane.addPropertyChangeListener(null);
+        editorPane = null;
+        basicEditorPaneUI = null;
     }
 
     protected void updateDisplayProperties() {

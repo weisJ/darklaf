@@ -21,24 +21,23 @@
  */
 package com.github.weisj.darklaf.ui.text.bridge;
 
-import javax.swing.*;
-
 import com.github.weisj.darklaf.ui.text.DarkEditorPaneUI;
 import com.github.weisj.darklaf.ui.text.dummy.DummyEditorPane;
 import com.github.weisj.darklaf.ui.text.dummy.DummyTextPaneUI;
 import com.github.weisj.darklaf.ui.text.dummy.DummyTextUIMethods;
+import com.github.weisj.darklaf.util.value.WeakShared;
 
 /** @author Jannis Weis */
 public abstract class DarkTextPaneUIBridge extends DarkEditorPaneUI {
 
-    private static final DummyEditorPane sharedDummyTextPane = new DummyEditorPane();
-    private static final DummyTextUIMethods sharedDummyUI = new DummyTextPaneUI();
+    private static final WeakShared<DummyEditorPane> sharedDummyTextPane = new WeakShared<>(DummyEditorPane::new);
+    private static final WeakShared<DummyTextUIMethods> sharedDummyUI = new WeakShared<>(DummyTextPaneUI::new);
 
     protected DummyTextUIMethods createDummyUI() {
-        return sharedDummyUI;
+        return sharedDummyUI.get();
     }
 
     protected DummyEditorPane createDummyEditorPane() {
-        return sharedDummyTextPane;
+        return sharedDummyTextPane.get();
     }
 }

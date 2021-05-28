@@ -19,39 +19,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.icons;
+package com.github.weisj.darklaf.util.value;
 
-import java.awt.*;
+import java.lang.ref.WeakReference;
+import java.util.function.Supplier;
 
-import javax.swing.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import com.github.weisj.darklaf.util.Scale;
+public class WeakShared<T> {
 
-public class ScaledIcon implements Icon {
+    private @NotNull final Supplier<T> supplier;
+    private @Nullable WeakReference<T> reference = null;
 
-    private final Image img;
-    private final Component c;
-
-    public ScaledIcon(final Image img, final Component c) {
-        this.img = img;
-        this.c = c;
+    public WeakShared(@NotNull final Supplier<@NotNull T> supplier) {
+        this.supplier = supplier;
     }
 
-    @Override
-    public void paintIcon(final Component c, final Graphics g2, final int x, final int y) {
-        Graphics2D g = (Graphics2D) g2;
-        g.translate(x, y);
-        g.scale(1.0 / Scale.getScaleX(g), 1.0 / Scale.getScaleY(g));
-        g.drawImage(img, 0, 0, img.getWidth(c), img.getHeight(c), c);
+    @NotNull
+    protected T create() {
+        return supplier.get();
     }
 
-    @Override
-    public int getIconWidth() {
-        return (int) (img.getWidth(c) / Scale.getScaleX(c.getGraphicsConfiguration()));
-    }
-
-    @Override
-    public int getIconHeight() {
-        return (int) (img.getHeight(c) / Scale.getScaleY(c.getGraphicsConfiguration()));
+    @NotNull
+    public T get() {
+        T value;
+        if (reference == null) {
+            value = create();
+            reference = new WeakReference<>(value);
+        } else {
+            value = reference.get();
+            if (value == null) {
+                value = create();
+                reference = new WeakReference<>(value);
+            }
+        }
+        return value;
     }
 }

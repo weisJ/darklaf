@@ -19,39 +19,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.icons;
+package com.github.weisj.darklaf.util.value;
 
-import java.awt.*;
-
-import javax.swing.*;
-
-import com.github.weisj.darklaf.util.Scale;
-
-public class ScaledIcon implements Icon {
-
-    private final Image img;
-    private final Component c;
-
-    public ScaledIcon(final Image img, final Component c) {
-        this.img = img;
-        this.c = c;
-    }
+public interface CleanupTask extends AutoCloseable {
 
     @Override
-    public void paintIcon(final Component c, final Graphics g2, final int x, final int y) {
-        Graphics2D g = (Graphics2D) g2;
-        g.translate(x, y);
-        g.scale(1.0 / Scale.getScaleX(g), 1.0 / Scale.getScaleY(g));
-        g.drawImage(img, 0, 0, img.getWidth(c), img.getHeight(c), c);
-    }
-
-    @Override
-    public int getIconWidth() {
-        return (int) (img.getWidth(c) / Scale.getScaleX(c.getGraphicsConfiguration()));
-    }
-
-    @Override
-    public int getIconHeight() {
-        return (int) (img.getHeight(c) / Scale.getScaleY(c.getGraphicsConfiguration()));
-    }
+    void close();
 }

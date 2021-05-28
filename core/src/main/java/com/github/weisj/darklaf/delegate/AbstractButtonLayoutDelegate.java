@@ -29,12 +29,13 @@ import javax.swing.*;
 import javax.swing.border.Border;
 
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.value.CleanupTask;
 
-public class AbstractButtonLayoutDelegate extends AbstractButton {
+public class AbstractButtonLayoutDelegate extends AbstractButton implements CleanupTask {
 
     protected AbstractButton delegate;
 
-    public void setDelegate(final AbstractButton delegate) {
+    private void setDelegate(final AbstractButton delegate) {
         this.delegate = delegate;
         if (delegate != null) {
             putClientProperty(PropertyKey.HTML, delegate.getClientProperty(PropertyKey.HTML));
@@ -42,6 +43,11 @@ public class AbstractButtonLayoutDelegate extends AbstractButton {
             putClientProperty(KEY_TEXT_LCD_CONTRAST, delegate.getClientProperty(KEY_TEXT_LCD_CONTRAST));
             putClientProperty(KEY_FRACTIONALMETRICS, delegate.getClientProperty(KEY_FRACTIONALMETRICS));
         }
+    }
+
+    public CleanupTask useWithDelegate(final AbstractButton delegate) {
+        setDelegate(delegate);
+        return this;
     }
 
     @Override
@@ -107,5 +113,10 @@ public class AbstractButtonLayoutDelegate extends AbstractButton {
     @Override
     public ComponentOrientation getComponentOrientation() {
         return delegate.getComponentOrientation();
+    }
+
+    @Override
+    public void close() {
+        setDelegate(null);
     }
 }

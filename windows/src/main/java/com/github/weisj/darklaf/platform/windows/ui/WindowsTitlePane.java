@@ -185,12 +185,8 @@ public class WindowsTitlePane extends CustomTitlePane {
     }
 
     private static JButton createButton(final Icon icon, final Action action, final boolean close) {
-        JButton button = new JButton(action) {
-            @Override
-            public boolean isRolloverEnabled() {
-                return true;
-            }
-        };
+        JButton button = new JButton(action);
+        button.setRolloverEnabled(true);
         if (close) {
             button.putClientProperty("JButton.borderless.hover",
                     UIManager.getColor("Windows.TitlePane.close.rollOverColor"));
@@ -398,15 +394,15 @@ public class WindowsTitlePane extends CustomTitlePane {
     }
 
     protected JButton createWindowIcon() {
-        windowIconButton = new JButton();
-        windowIconButton.putClientProperty("JButton.noShadowOverwrite", true);
-        windowIconButton.setComponentPopupMenu(createMenu());
-        windowIconButton.addActionListener(e -> windowIconButton.getComponentPopupMenu().show(windowIconButton,
-                windowIconButton.getWidth() / 2, windowIconButton.getHeight() / 2));
-        windowIconButton.setFocusable(false);
-        windowIconButton.setContentAreaFilled(false);
-        windowIconButton.setBorderPainted(false);
-        return windowIconButton;
+        JButton button = new JButton();
+        button.putClientProperty("JButton.noShadowOverwrite", true);
+        button.setComponentPopupMenu(createMenu());
+        button.addActionListener(e -> button.getComponentPopupMenu().show(button,
+                button.getWidth() / 2, button.getHeight() / 2));
+        button.setFocusable(false);
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
+        return button;
     }
 
     private JPopupMenu createMenu() {
@@ -417,30 +413,19 @@ public class WindowsTitlePane extends CustomTitlePane {
         return menu;
     }
 
+    private JMenuItem itemWithDisabledIcon(final JMenuItem item, final Icon disabledIcon) {
+        item.setDisabledIcon(disabledIcon);
+        return item;
+    }
+
     private void addMenuItems(final JPopupMenu menu) {
-        menu.add(new JMenuItem(restoreAction) {
-            {
-                setDisabledIcon(restoreIcon);
-            }
-        });
-        menu.add(new JMenuItem(minimizeAction) {
-            {
-                setDisabledIcon(minimizeIcon);
-            }
-        });
+        menu.add(itemWithDisabledIcon(new JMenuItem(restoreAction), restoreIcon));
+        menu.add(itemWithDisabledIcon(new JMenuItem(minimizeAction), minimizeIcon));
         if (Toolkit.getDefaultToolkit().isFrameStateSupported(Frame.MAXIMIZED_BOTH)) {
-            menu.add(new JMenuItem(maximizeAction) {
-                {
-                    setDisabledIcon(maximizeIcon);
-                }
-            });
+            menu.add(itemWithDisabledIcon(new JMenuItem(maximizeAction), maximizeIcon));
         }
         menu.addSeparator();
-        menu.add(new JMenuItem(closeAction) {
-            {
-                setDisabledIcon(closeIcon);
-            }
-        });
+        menu.add(itemWithDisabledIcon(new JMenuItem(closeAction), closeIcon));
     }
 
     private void close() {

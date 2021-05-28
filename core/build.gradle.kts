@@ -34,9 +34,11 @@ dependencies {
 }
 
 tasks.test {
+    doFirst {
+        workingDir = File(project.rootDir, "build/test_results")
+        workingDir.mkdirs()
+    }
     useJUnitPlatform()
-    workingDir = File(project.rootDir, "build/test_results")
-    workingDir.mkdirs()
 }
 
 fun Jar.includeLicenses() {

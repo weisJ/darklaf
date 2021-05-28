@@ -33,12 +33,30 @@ import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.ui.text.dummy.DummyTextArea;
 import com.github.weisj.darklaf.ui.text.dummy.DummyTextAreaUI;
 import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.util.value.WeakShared;
 
 /** @author Jannis Weis */
 public abstract class DarkTextAreaUIBridge extends DarkTextUI {
 
-    private static final JTextArea area = new DummyTextArea();
-    private static final DummyTextAreaUI basicTextAreaUI = new DummyTextAreaUI();
+    private static final WeakShared<JTextArea> sharedArea = new WeakShared<>(DummyTextArea::new);
+    private static final WeakShared<DummyTextAreaUI> sharedBasicTextAreaUI = new WeakShared<>(DummyTextAreaUI::new);
+
+    private JTextArea textArea;
+    private DummyTextAreaUI basicTextAreaUI;
+
+    @Override
+    public void installUI(JComponent c) {
+        textArea = sharedArea.get();
+        basicTextAreaUI = sharedBasicTextAreaUI.get();
+        super.installUI(c);
+    }
+
+    @Override
+    public void uninstallUI(JComponent c) {
+        super.uninstallUI(c);
+        textArea = null;
+        basicTextAreaUI = null;
+    }
 
     /*
      * Implementation of BasicTextAreaUI
@@ -60,9 +78,9 @@ public abstract class DarkTextAreaUIBridge extends DarkTextUI {
         JTextComponent editor = getComponent();
         if (editor instanceof JTextArea) {
             JTextArea c = (JTextArea) editor;
-            area.setLineWrap(c.getLineWrap());
-            area.setWrapStyleWord(c.getWrapStyleWord());
-            basicTextAreaUI.installUI(area);
+            textArea.setLineWrap(c.getLineWrap());
+            textArea.setWrapStyleWord(c.getWrapStyleWord());
+            basicTextAreaUI.installUI(textArea);
         }
         return basicTextAreaUI.create(elem);
     }

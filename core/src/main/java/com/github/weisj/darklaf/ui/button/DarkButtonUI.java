@@ -46,13 +46,17 @@ import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
+import com.github.weisj.darklaf.util.value.CleanupTask;
+import com.github.weisj.darklaf.util.value.WeakShared;
 
 /** @author Jannis Weis */
 public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
 
     protected static final RoundRectangle2D hitArea = new RoundRectangle2D.Float();
-    protected static final AbstractButtonLayoutDelegate layoutDelegate = new ButtonLayoutDelegate();
+    private static final WeakShared<AbstractButtonLayoutDelegate> sharedLayoutDelegate =
+            new WeakShared<>(ButtonLayoutDelegate::new);
 
+    protected AbstractButtonLayoutDelegate layoutDelegate;
     protected boolean isDefaultButton = false;
 
     protected final Rectangle viewRect = new Rectangle();
@@ -97,6 +101,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     @Override
     public void installUI(final JComponent c) {
         button = (AbstractButton) c;
+        layoutDelegate = sharedLayoutDelegate.get();
         super.installUI(c);
     }
 
@@ -158,6 +163,12 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     }
 
     @Override
+    public void uninstallUI(JComponent c) {
+        super.uninstallUI(c);
+        layoutDelegate = null;
+    }
+
+    @Override
     protected void uninstallDefaults(final AbstractButton b) {
         super.uninstallDefaults(b);
         b.setLayout(null);
@@ -186,13 +197,13 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         GraphicsContext config = new GraphicsContext(g);
 
         AbstractButton b = (AbstractButton) c;
-        prepareDelegate(b);
+        try (CleanupTask clean = prepareDelegate(b)) {
+            paintButtonBackground(g, c);
 
-        paintButtonBackground(g, c);
-
-        paintIcon(g, b, c);
-        config.restoreClip();
-        paintText(g, b, displayText);
+            paintIcon(g, b, c);
+            config.restoreClip();
+            paintText(g, b, displayText);
+        }
     }
 
     protected void paintButtonBackground(final Graphics g, final JComponent c) {
@@ -442,24 +453,26 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     @Override
     public Dimension getPreferredSize(final JComponent c) {
         AbstractButton b = (AbstractButton) c;
-        prepareDelegate(b);
-        Dimension dim = BasicGraphicsUtils.getPreferredButtonSize(layoutDelegate, b.getIconTextGap());
-        DarkUIUtil.addInsets(dim, b.getMargin());
-        if (ButtonConstants.isSquare(b)) {
-            int size = Math.max(dim.width, dim.height);
-            dim.setSize(size, size);
+        try (CleanupTask clean = prepareDelegate(b)) {
+            Dimension dim = BasicGraphicsUtils.getPreferredButtonSize(layoutDelegate, b.getIconTextGap());
+            DarkUIUtil.addInsets(dim, b.getMargin());
+            if (ButtonConstants.isSquare(b)) {
+                int size = Math.max(dim.width, dim.height);
+                dim.setSize(size, size);
+            }
+            return dim;
         }
-        return dim;
     }
 
-    protected void prepareDelegate(final AbstractButton b) {
-        layoutDelegate.setDelegate(b);
+    protected CleanupTask prepareDelegate(final AbstractButton b) {
+        CleanupTask closeable = layoutDelegate.useWithDelegate(b);
         Font f = b.getFont();
         if (ButtonConstants.isDefaultButton(b) && !f.isBold()) {
             layoutDelegate.setFont(f.deriveFont(Font.BOLD));
         } else {
             layoutDelegate.setFont(f);
         }
+        return closeable;
     }
 
     public void updateMargins(final AbstractButton b) {
@@ -528,9 +541,10 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         @Override
         public void layoutContainer(final Container parent) {
             AbstractButton b = (AbstractButton) parent;
-            prepareDelegate(b);
-            FontMetrics fm = b.getFontMetrics(layoutDelegate.getFont());
-            displayText = layout(layoutDelegate, b, fm, b.getWidth(), b.getHeight());
+            try (CleanupTask clean = prepareDelegate(b)) {
+                FontMetrics fm = b.getFontMetrics(layoutDelegate.getFont());
+                displayText = layout(layoutDelegate, b, fm, b.getWidth(), b.getHeight());
+            }
         }
 
         protected String layout(final AbstractButtonLayoutDelegate bl, final AbstractButton b, final FontMetrics fm,

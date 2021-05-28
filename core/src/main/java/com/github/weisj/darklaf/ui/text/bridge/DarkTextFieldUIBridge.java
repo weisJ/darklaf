@@ -30,6 +30,7 @@ import javax.swing.text.*;
 import com.github.weisj.darklaf.ui.text.DarkTextFieldUI;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.ui.text.dummy.DummyTextFieldUI;
+import com.github.weisj.darklaf.util.value.WeakShared;
 
 /**
  * This class is an exact copy of the implementation of {@link BasicTextFieldUI}. In this way it is
@@ -40,7 +41,21 @@ import com.github.weisj.darklaf.ui.text.dummy.DummyTextFieldUI;
  */
 public abstract class DarkTextFieldUIBridge extends DarkTextUI {
 
-    private static final DummyTextFieldUI basicTextFieldUI = new DummyTextFieldUI();
+    private static final WeakShared<DummyTextFieldUI> sharedBasicTextFieldUI = new WeakShared<>(DummyTextFieldUI::new);
+
+    private DummyTextFieldUI basicTextFieldUI;
+
+    @Override
+    public void installUI(JComponent c) {
+        basicTextFieldUI = sharedBasicTextFieldUI.get();
+        super.installUI(c);
+    }
+
+    @Override
+    public void uninstallUI(JComponent c) {
+        super.uninstallUI(c);
+        basicTextFieldUI = null;
+    }
 
     protected String getPropertyPrefix() {
         return "TextField";

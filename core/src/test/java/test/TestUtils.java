@@ -32,6 +32,25 @@ final class TestUtils {
 
     private TestUtils() {}
 
+    static void runOnThreadNotThrowing(final Runnable action) {
+        AtomicReference<Exception> exceptionRef = new AtomicReference<>();
+        try {
+            new Thread(() -> {
+                try {
+                    action.run();
+                } catch (final Exception e) {
+                    exceptionRef.set(e);
+                }
+            }).start();
+        } catch (final Exception e) {
+            e.printStackTrace();
+            Assertions.fail(e.getMessage(), e);
+        }
+        if (exceptionRef.get() != null) {
+            Assertions.fail(exceptionRef.get().getMessage(), exceptionRef.get());
+        }
+    }
+
     static void runOnSwingThreadNotThrowing(final Runnable action) {
         AtomicReference<Exception> exceptionRef = new AtomicReference<>();
         try {

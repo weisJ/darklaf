@@ -21,10 +21,12 @@
  */
 package com.github.weisj.darklaf.util.value;
 
-public class Shared<T> {
-    private T value;
+import org.jetbrains.annotations.Nullable;
 
-    public Shared(final T initial) {
+public class Shared<T> {
+    private @Nullable T value;
+
+    public Shared(@Nullable final T initial) {
         set(initial);
     }
 
@@ -32,7 +34,7 @@ public class Shared<T> {
         return value;
     }
 
-    public void set(final T value) {
+    public void set(final @Nullable T value) {
         this.value = value;
     }
 }
