@@ -32,9 +32,15 @@ import java.util.logging.Logger;
 
 import javax.swing.UIManager;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.Scale;
+import com.github.weisj.swingdsl.visualpadding.VisualPaddingProvider;
+import com.kitfox.svg.SVGException;
+import com.kitfox.svg.SVGRoot;
 import com.kitfox.svg.app.beans.SVGIcon;
+import com.kitfox.svg.xml.StyleAttribute;
 
 /**
  * Icon from SVG image.
@@ -42,7 +48,8 @@ import com.kitfox.svg.app.beans.SVGIcon;
  * @author Jannis Weis
  * @since 2019
  */
-public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Serializable, ImageSource {
+public class DarkSVGIcon
+        implements DerivableIcon<DarkSVGIcon>, RotateIcon, Serializable, ImageSource, VisualPaddingProvider {
 
     private static final Logger LOGGER = LogUtil.getLogger(DarkSVGIcon.class);
 
@@ -356,5 +363,22 @@ public class DarkSVGIcon implements DerivableIcon<DarkSVGIcon>, RotateIcon, Seri
                 ", scaleY=" + scaleY +
                 ", image=" + image +
                 '}';
+    }
+
+    @Override
+    public @NotNull Insets getVisualPaddings(@NotNull Component component) {
+        SVGIcon icon = getSVGIcon();
+        SVGRoot root = icon.getSvgUniverse().getDiagram(icon.getSvgURI()).getRoot();
+        StyleAttribute attr = new StyleAttribute("visualPadding");
+        try {
+            if (root.getStyle(attr, false)) {
+                int[] paddings = attr.getIntList();
+                if (paddings.length == 4) {
+                    return new Insets(paddings[0], paddings[1], paddings[2], paddings[3]);
+                }
+            }
+        } catch (SVGException ignore) {
+        }
+        return new Insets(0, 0, 0, 0);
     }
 }

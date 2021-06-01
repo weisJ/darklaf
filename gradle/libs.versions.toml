@@ -18,6 +18,7 @@ jxlayer = { module = "org.swinglabs:jxlayer", version.ref = "jxlayer" }
 swingx = { module = "org.swinglabs:swingx", version.ref = "swingx" }
 svgSalamander = { module = "com.formdev:svgSalamander", version.ref = "svgSalamander" }
 swingDslLafSupport = { module = "com.github.weisj:swing-extensions-laf-support", version.ref = "swingDsl" }
+visualPaddings = { module = "com.github.weisj:swing-extensions-visual-padding", version.ref = "swingDsl" }
 autoservice-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "autoservice" }
 autoservice-processor = { module = "com.google.auto.service:auto-service", version.ref = "autoservice" }
 nullabilityAnnotations = { module = "org.jetbrains:annotations", version.ref = "nullabilityAnnotations" }
