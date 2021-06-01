@@ -29,7 +29,7 @@ import javax.swing.plaf.InsetsUIResource;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
-import com.github.weisj.swingdsl.laf.VisualPaddingProvider;
+import com.github.weisj.swingdsl.visualpadding.VisualPaddingProvider;
 
 public final class VisualPaddingUtil {
 

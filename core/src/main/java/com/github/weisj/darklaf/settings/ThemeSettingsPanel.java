@@ -33,7 +33,7 @@ import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
 import com.github.weisj.darklaf.layout.LayoutHelper;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.swingdsl.laf.VisualPaddingProvider;
+import com.github.weisj.swingdsl.visualpadding.VisualPaddingProvider;
 
 public class ThemeSettingsPanel extends JPanel {
 

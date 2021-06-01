@@ -35,7 +35,7 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
-import com.github.weisj.swingdsl.laf.VisualPaddingProvider;
+import com.github.weisj.swingdsl.visualpadding.VisualPaddingProvider;
 
 /** @author Jannis Weis */
 public class DarkTextBorder implements Border, UIResource, VisualPaddingProvider {

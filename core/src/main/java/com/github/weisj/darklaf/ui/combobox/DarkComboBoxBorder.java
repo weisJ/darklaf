@@ -31,7 +31,7 @@ import javax.swing.plaf.UIResource;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.DividedWidgetPainter;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
-import com.github.weisj.swingdsl.laf.VisualPaddingProvider;
+import com.github.weisj.swingdsl.visualpadding.VisualPaddingProvider;
 
 public class DarkComboBoxBorder implements Border, UIResource, VisualPaddingProvider {
 
