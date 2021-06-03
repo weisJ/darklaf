@@ -40,6 +40,7 @@ import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
+import com.github.weisj.swingdsl.visualpadding.VisualPaddingProvider;
 
 /** @author Jannis Weis */
 public class DarkSliderUI extends BasicSliderUI {
@@ -161,7 +162,21 @@ public class DarkSliderUI extends BasicSliderUI {
     @Override
     public int getBaseline(JComponent c, int width, int height) {
         if (isHorizontal() && PropertyUtil.getBooleanProperty(c, KEY_USE_TRACK_AS_BASELINE)) {
-            return trackRect.y + trackRect.height / 2;
+            int thumbY = focusInsets.top + trackBuffer;
+            if (isPlainThumb()) {
+                Dimension thumbSize = getThumbSize();
+                return thumbY + thumbSize.height - focusBorderSize;
+            } else {
+                Icon icon = getThumbIcon();
+                int baseline = thumbY + icon.getIconHeight();
+                if (icon instanceof RotatableIcon) {
+                    icon = ((RotatableIcon) icon).getIcon();
+                }
+                if (icon instanceof VisualPaddingProvider) {
+                    baseline -= ((VisualPaddingProvider) icon).getVisualPaddings(slider).bottom;
+                }
+                return baseline;
+            }
         } else {
             return super.getBaseline(c, width, height);
         }
@@ -260,6 +275,7 @@ public class DarkSliderUI extends BasicSliderUI {
      * @param direction the direction
      */
     public void scrollByBlock(final int direction) {
+        // noinspection SynchronizeOnNonFinalField
         synchronized (slider) {
             int blockIncrement = (slider.getMaximum() - slider.getMinimum()) / 10;
             if (blockIncrement == 0) {
@@ -289,6 +305,7 @@ public class DarkSliderUI extends BasicSliderUI {
      * @param direction the direction
      */
     public void scrollByUnit(final int direction) {
+        // noinspection SynchronizeOnNonFinalField
         synchronized (slider) {
             int delta = ((direction > 0) ? POSITIVE_SCROLL : NEGATIVE_SCROLL);
 
@@ -401,6 +418,7 @@ public class DarkSliderUI extends BasicSliderUI {
             int bw = 2 * getFocusBorderSize();
             return new Dimension(plainThumbRadius + bw, plainThumbRadius + bw);
         }
+        // noinspection SuspiciousNameCombination
         return isHorizontal() ? new Dimension(thumbSize.width, thumbSize.height)
                 : new Dimension(thumbSize.height, thumbSize.width);
     }
