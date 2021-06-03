@@ -118,7 +118,8 @@ public class DarkTableCellRendererDelegate extends TableCellRendererDelegate imp
             } else {
                 component.putClientProperty(KEY_FULL_ROW_FOCUS_BORDER, false);
             }
-        } else if (component.getBorder() == focusBorder) {
+        } else if (component.getBorder() == focusBorder
+                || focusBorder.getClass().isInstance(component.getBorder())) {
             component.setBorder(UIManager.getBorder("Table.cellNoFocusBorder"));
         }
     }

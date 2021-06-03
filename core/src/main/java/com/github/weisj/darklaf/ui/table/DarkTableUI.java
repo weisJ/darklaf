@@ -38,6 +38,7 @@ import com.github.weisj.darklaf.ui.HasRendererPane;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.ui.cell.DarkBooleanCellRenderer;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererPane;
+import com.github.weisj.darklaf.ui.cell.hint.CellHintPopupListener;
 import com.github.weisj.darklaf.ui.table.renderer.DarkColorTableCellRendererEditor;
 import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellEditorDelegate;
 import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellRenderer;
@@ -51,10 +52,13 @@ import com.github.weisj.darklaf.util.SwingUtil;
 public class DarkTableUI extends DarkTableUIBridge implements TableConstants, HasRendererPane {
 
     private static final int ROW_HEIGHT_FALLBACK = 22;
+    private static final boolean CELL_POPUP_ENABLED = false;
     protected Color selectionBackgroundNoFocus;
     protected Color selectionBackground;
     protected Color borderColor;
     protected Handler handler;
+
+    protected CellHintPopupListener<JTable, ?> popupListener;
 
     protected DarkTableCellRendererDelegate rendererDelegate;
     private TableCellRenderer booleanCellRenderer;
@@ -119,8 +123,26 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
     }
 
     @Override
+    protected void installListeners() {
+        super.installListeners();
+        if (CELL_POPUP_ENABLED && UIManager.getBoolean("Table.showFullCellInPopup")) {
+            popupListener = createPopupMouseListener();
+            popupListener.install();
+        }
+    }
+
+    protected CellHintPopupListener<JTable, ?> createPopupMouseListener() {
+        return new CellHintPopupListener<>(new TableCellContainer(table, this));
+    }
+
+    @Override
     protected void uninstallListeners() {
         super.uninstallListeners();
+        if (popupListener != null) {
+            popupListener.uninstall();
+            popupListener = null;
+        }
+        // Handler is uninstalled in super.uninstallListeners()
         handler = null;
     }
 

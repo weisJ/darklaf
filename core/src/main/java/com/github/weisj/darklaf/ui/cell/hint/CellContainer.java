@@ -36,4 +36,13 @@ public interface CellContainer<T extends JComponent> {
     }
 
     void addRenderer(final Component renderer);
+
+    default void adjustCellBoundsToPreferredSize(final Rectangle cellBounds, final Dimension prefSize) {
+        if (cellBounds.width < prefSize.width) {
+            cellBounds.width = prefSize.width;
+        }
+        if (cellBounds.height < prefSize.height) {
+            cellBounds.height = prefSize.height;
+        }
+    }
 }
