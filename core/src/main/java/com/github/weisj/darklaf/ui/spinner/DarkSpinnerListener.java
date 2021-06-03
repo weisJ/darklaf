@@ -101,10 +101,22 @@ public class DarkSpinnerListener extends MouseAdapter
         super.mouseWheelMoved(e);
         if (!DarkUIUtil.hasFocus(spinner)) return;
         int rotation = e.getWheelRotation();
-        if (rotation > 0) {
-            spinner.setValue(spinner.getPreviousValue());
-        } else if (rotation < 0) {
-            spinner.setValue(spinner.getNextValue());
+        try {
+            if (rotation > 0) {
+                Object previousValue = spinner.getModel().getPreviousValue();
+                if (previousValue != null) {
+                    spinner.setValue(previousValue);
+                    e.consume();
+                }
+            } else if (rotation < 0) {
+                Object nextValue = spinner.getModel().getNextValue();
+                if (nextValue != null) {
+                    spinner.setValue(nextValue);
+                    e.consume();
+                }
+            }
+        } catch (Exception ignored) {
+            // Invalid value
         }
     }
 }
