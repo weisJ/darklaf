@@ -438,6 +438,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
             TabFrameUI ui = getUI(currentTransferable.transferData.sourceTabFrame);
             if (ui != null) {
                 ui.clearSourceIndicator();
+                ui.clearTargetIndicator();
             }
             if (!dsde.getDropSuccess() && currentTransferable.transferData.wasSelected) {
                 selectTab(currentTransferable.transferData.sourceTabFrame,
