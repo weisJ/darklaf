@@ -165,8 +165,8 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         Color color = ui != null ? ui.getDragBorderColor()
                 : tabbedPane.getBackgroundAt(currentTransferable.transferData.tabIndex);
         Image tabImage = DnDUtil.createDragImage(tabbedPane, currentTransferable.transferData.tabBounds, 2, color);
-        int w = tabImage.getWidth(null);
-        int h = tabImage.getHeight(null);
+        int w = tabImage.getWidth(tabbedPane);
+        int h = tabImage.getHeight(tabbedPane);
         setDragImageOffset(new Point(w / 2, h / 2));
         setDragImage(tabImage);
     }
