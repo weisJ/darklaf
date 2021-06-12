@@ -22,25 +22,28 @@
 package com.github.weisj.darklaf.util;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.util.graphics.ScaledImage;
 
 public final class DnDUtil {
 
-    public static Image createDragImage(final Component c, final int lw, final Color borderColor) {
+    public static BufferedImage createDragImage(final Component c, final int lw, final Color borderColor) {
         return createDragImage(c, new Rectangle(0, 0, c.getWidth(), c.getHeight()), lw, borderColor);
     }
 
-    public static Image createDragImage(final Component c, final Rectangle bounds, final int lw,
+    public static BufferedImage createDragImage(final Component c, final Rectangle bounds, final int lw,
             final Color borderColor) {
-        Image tabImage = ImageUtil.scaledImageFromComponent(c, bounds);
-        int w = tabImage.getWidth(null);
-        int h = tabImage.getHeight(null);
-        Graphics g = tabImage.getGraphics();
+        ScaledImage tabImage = ImageUtil.scaledImageFromComponent(c, bounds);
+        int w = tabImage.getWidth(c);
+        int h = tabImage.getHeight(c);
 
+        Graphics g = tabImage.getGraphics();
         g.setColor(borderColor);
         PaintUtil.drawRect(g, 0, 0, w, h, lw);
         g.dispose();
-        return tabImage;
+        // The DnD api expects a BufferedImage. So we need to unwrap the delegate.
+        return tabImage.getDelegate();
     }
 }
