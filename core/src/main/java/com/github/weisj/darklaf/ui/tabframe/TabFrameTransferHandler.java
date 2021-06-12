@@ -43,7 +43,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
 
     private static final String MIME_TYPE =
             DataFlavor.javaJVMLocalObjectMimeType + ";class=com.github.weisj.darklaf.components.tabframe.JTabFrame";
-    private static TabbedPaneDragGestureRecognizer recognizer = null;
+    private static TabFrameDragGestureRecognizer recognizer = null;
     private final Timer timer;
     private final Timer startTimer;
     /**
@@ -109,7 +109,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
 
         if (action != NONE && !GraphicsEnvironment.isHeadless()) {
             if (recognizer == null) {
-                recognizer = new TabbedPaneDragGestureRecognizer(new TabbedPaneDragHandler());
+                recognizer = new TabFrameDragGestureRecognizer(new TabbedPaneDragHandler());
             }
             recognizer.gestured(comp, (MouseEvent) e, srcActions, action);
         } else {
@@ -301,9 +301,9 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
         setDragImage(tabImage);
     }
 
-    protected static class TabbedPaneDragGestureRecognizer extends DragGestureRecognizer {
+    protected static class TabFrameDragGestureRecognizer extends DragGestureRecognizer {
 
-        protected TabbedPaneDragGestureRecognizer(final DragGestureListener dgl) {
+        protected TabFrameDragGestureRecognizer(final DragGestureListener dgl) {
             super(DragSource.getDefaultDragSource(), null, NONE, dgl);
         }
 
