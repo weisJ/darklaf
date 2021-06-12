@@ -122,7 +122,8 @@ public final class IconColorMapper {
 
                 Color c = resolveColor(id, getFallbacks(colorFallbacks), FALLBACK_COLOR, defaults, contextDefaults);
                 Pair<LinearGradient, Runnable> result =
-                        createColor(c, id, opacityKey, colorFallbacks, opacity1, opacity2);
+                        createColor(c, id, opacityKey, new StyleAttribute[] {colorFallbacks, opacityFallbacks},
+                                opacity1, opacity2);
                 LinearGradient gradient = result.getFirst();
                 Runnable finalizer = result.getSecond();
                 themedDefs.loaderAddChild(null, gradient);
@@ -215,14 +216,19 @@ public final class IconColorMapper {
     }
 
     private static Pair<LinearGradient, Runnable> createColor(final Color c, final String name, final String opacityKey,
-            final StyleAttribute fallbacks, final float opacity1, final float opacity2) throws SVGElementException {
+            final StyleAttribute[] extraAttributes, final float opacity1, final float opacity2)
+            throws SVGElementException {
         LinearGradient grad = new LinearGradient();
         grad.addAttribute("id", AnimationElement.AT_XML, name);
         if (opacityKey != null && !opacityKey.isEmpty()) {
             grad.addAttribute("opacity", AnimationElement.AT_XML, opacityKey);
         }
-        if (fallbacks != null && !fallbacks.getStringValue().isEmpty()) {
-            grad.addAttribute(fallbacks.getName(), AnimationElement.AT_XML, fallbacks.getStringValue());
+        if (extraAttributes != null) {
+            for (StyleAttribute attribute : extraAttributes) {
+                if (attribute != null && !attribute.getStringValue().isEmpty()) {
+                    grad.addAttribute(attribute.getName(), AnimationElement.AT_XML, attribute.getStringValue());
+                }
+            }
         }
         return new Pair<>(grad, () -> {
             Stop stop1 = new Stop();
