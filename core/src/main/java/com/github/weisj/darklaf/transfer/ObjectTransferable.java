@@ -32,8 +32,7 @@ public class ObjectTransferable<T> implements Transferable {
     public ObjectTransferable(final T value, final Class<T> type) {
         this.value = value;
         try {
-            flavor = new DataFlavor(
-                    DataFlavor.javaJVMLocalObjectMimeType + ";class=" + type.getCanonicalName());
+            flavor = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + ";class=" + type.getName());
         } catch (final ClassNotFoundException e) {
             throw new IllegalArgumentException(e);
         }

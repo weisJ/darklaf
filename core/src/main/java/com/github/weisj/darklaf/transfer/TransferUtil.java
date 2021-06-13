@@ -54,7 +54,7 @@ public final class TransferUtil {
             {
                 try {
                     flavor = new DataFlavor(
-                            DataFlavor.javaJVMLocalObjectMimeType + ";class=" + dataType.getCanonicalName());
+                            DataFlavor.javaJVMLocalObjectMimeType + ";class=" + dataType.getName());
                 } catch (final ClassNotFoundException e) {
                     throw new IllegalStateException(e);
                 }
