@@ -28,6 +28,8 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.plaf.TabbedPaneUI;
@@ -40,7 +42,8 @@ import com.github.weisj.darklaf.util.DnDUtil;
  */
 public class TabbedPaneTransferHandler extends TransferHandler implements DropTargetListener, SwingConstants {
 
-    private static final String MIME_TYPE = DataFlavor.javaJVMLocalObjectMimeType + ";class=javax.swing.JTabbedPane";
+    private static final String MIME_TYPE = DataFlavor.javaJVMLocalObjectMimeType + ";class="
+            + TabTransferData.class.getName();
     private static TabbedPaneDragGestureRecognizer recognizer = null;
     /**
      * The location of the mouse cursor throughout the drag-and-drop. This is here because of a
@@ -103,7 +106,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
                 JTabbedPane tabbedPane = (JTabbedPane) c;
                 int tab = TabbedPaneUtil.getDroppedTabIndex(currentTransferable.getTabBounds(), tabbedPane,
                         supportsIndicator(tabbedPane), mouseLocation);
-                TabTransferable.TabTransferData td = (TabTransferable.TabTransferData) t.getTransferData(tabFlavor);
+                TabTransferData td = (TabTransferData) t.getTransferData(tabFlavor);
                 if (!TabbedPaneUtil.moveTabs(td.sourceTabbedPane, tabbedPane, td.tabIndex, tab)) {
                     return true;
                 }
@@ -278,11 +281,11 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
     /** Transferable representing a tab from a tabbed pane and its contents. */
     public class TabTransferable implements Transferable {
 
-        private final TabTransferData transferData;
+        private final TabbedPaneTransferHandler.TabTransferData transferData;
 
         public TabTransferable(final JTabbedPane tabbedPane) {
             int index = tabbedPane.getSelectedIndex();
-            transferData = new TabTransferData(tabbedPane, index);
+            transferData = new TabbedPaneTransferHandler.TabTransferData(tabbedPane, index);
         }
 
         public Rectangle getTabBounds() {
@@ -308,18 +311,19 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
             return transferData;
         }
 
-        /** The data remembered about the tab. */
-        public class TabTransferData {
+    }
 
-            private final JTabbedPane sourceTabbedPane;
-            private final int tabIndex;
-            private final Rectangle tabBounds;
+    /** The data remembered about the tab. */
+    public static class TabTransferData {
 
-            public TabTransferData(final JTabbedPane tabbedPane, final int tabIndex) {
-                this.sourceTabbedPane = tabbedPane;
-                this.tabIndex = tabIndex;
-                this.tabBounds = tabbedPane.getBoundsAt(tabIndex);
-            }
+        private final JTabbedPane sourceTabbedPane;
+        private final int tabIndex;
+        private final Rectangle tabBounds;
+
+        public TabTransferData(final JTabbedPane tabbedPane, final int tabIndex) {
+            this.sourceTabbedPane = tabbedPane;
+            this.tabIndex = tabIndex;
+            this.tabBounds = tabbedPane.getBoundsAt(tabIndex);
         }
     }
 

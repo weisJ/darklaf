@@ -28,6 +28,8 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 
@@ -41,8 +43,8 @@ import com.github.weisj.darklaf.util.DnDUtil;
 /** @author Jannis Weis */
 public class TabFrameTransferHandler extends TransferHandler implements DropTargetListener, SwingConstants {
 
-    private static final String MIME_TYPE =
-            DataFlavor.javaJVMLocalObjectMimeType + ";class=com.github.weisj.darklaf.components.tabframe.JTabFrame";
+    private static final String MIME_TYPE = DataFlavor.javaJVMLocalObjectMimeType + ";class="
+            + TabTransferData.class.getName();
     private static TabFrameDragGestureRecognizer recognizer = null;
     private final Timer timer;
     private final Timer startTimer;
@@ -230,7 +232,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
                 JTabFrame.TabFramePosition tab = getDropPosition(mouseLocation, tabFrame);
                 Alignment a = tab.getAlignment();
                 int index = tab.getIndex();
-                TabTransferable.TabTransferData td = (TabTransferable.TabTransferData) t.getTransferData(tabFlavor);
+                TabTransferData td = (TabTransferData) t.getTransferData(tabFlavor);
 
                 if (tabFrame == td.sourceTabFrame && td.tabAlignment == a) {
                     if (index >= td.tabIndex) {
@@ -332,10 +334,10 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
     /** Transferable representing a tab from a tabbed pane and its contents. */
     public class TabTransferable implements Transferable {
 
-        private final TabTransferData transferData;
+        private final TabFrameTransferHandler.TabTransferData transferData;
 
         public TabTransferable(final JTabFrame tabFrame, final JTabFrame.TabFramePosition ind) {
-            transferData = new TabTransferData(tabFrame, ind.getAlignment(), ind.getIndex());
+            transferData = new TabFrameTransferHandler.TabTransferData(tabFrame, ind.getAlignment(), ind.getIndex());
         }
 
         public TabFrameTab getTab() {
@@ -361,22 +363,23 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
             return transferData;
         }
 
-        /** The data remembered about the tab. */
-        public class TabTransferData {
+    }
 
-            private final JTabFrame sourceTabFrame;
-            private final int tabIndex;
-            private final Alignment tabAlignment;
-            private final TabFrameTab tab;
-            private final boolean wasSelected;
+    /** The data remembered about the tab. */
+    public static class TabTransferData {
 
-            public TabTransferData(final JTabFrame tabbedPane, final Alignment tabAlignment, final int tabIndex) {
-                this.sourceTabFrame = tabbedPane;
-                this.tabAlignment = tabAlignment;
-                this.tabIndex = tabIndex;
-                this.tab = tabbedPane.getTabComponentAt(tabAlignment, tabIndex);
-                this.wasSelected = tab.isSelected();
-            }
+        private final JTabFrame sourceTabFrame;
+        private final int tabIndex;
+        private final Alignment tabAlignment;
+        private final TabFrameTab tab;
+        private final boolean wasSelected;
+
+        public TabTransferData(final JTabFrame tabbedPane, final Alignment tabAlignment, final int tabIndex) {
+            this.sourceTabFrame = tabbedPane;
+            this.tabAlignment = tabAlignment;
+            this.tabIndex = tabIndex;
+            this.tab = tabbedPane.getTabComponentAt(tabAlignment, tabIndex);
+            this.wasSelected = tab.isSelected();
         }
     }
 
