@@ -119,7 +119,7 @@ public class ScrollPopupMenu extends JPopupMenu {
     }
 
     private Popup createPopup() {
-        return popupMenuContainer.createPopup(this, posX, posY, maxHeight);
+        return popupMenuContainer.createPopup(this, posX, posY, -1, maxHeight);
     }
 
     @Override

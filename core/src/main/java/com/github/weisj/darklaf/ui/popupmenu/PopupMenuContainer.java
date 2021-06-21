@@ -125,10 +125,13 @@ public class PopupMenuContainer extends JPanel {
         }
     }
 
-    public Popup createPopup(final JPopupMenu popupMenu, final int posX, final int posY, final int maxHeight) {
+    public Popup createPopup(final JPopupMenu popupMenu, final int posX, final int posY,
+            final int maxWidth, final int maxHeight) {
         final Dimension prefSize = popupMenu.getPreferredSize();
         uninstallListeners();
-        if (maxHeight <= 0 || prefSize.height <= maxHeight) {
+        boolean exceedsHorizontalSize = (maxHeight > 0 && prefSize.height > maxHeight);
+        boolean exceedsVerticalSize = (maxWidth > 0 && prefSize.width > maxWidth);
+        if (!exceedsHorizontalSize && !exceedsVerticalSize) {
             setBounds(0, 0, prefSize.width, prefSize.height);
             popupMenu.setBorderPainted(true);
             return PopupFactory.getSharedInstance().getPopup(popupMenu.getInvoker(), popupMenu, posX, posY);
@@ -139,14 +142,24 @@ public class PopupMenuContainer extends JPanel {
             if (popupMenu.getComponentCount() > 0) {
                 increment = Math.max(1, popupMenu.getComponent(0).getPreferredSize().height / 2);
             }
-            JScrollBar bar = scrollPane.getVerticalScrollBar();
-            bar.setValue(bar.getMinimum());
-            bar.setUnitIncrement(increment);
+            JScrollBar verticalBar = scrollPane.getVerticalScrollBar();
+            verticalBar.setValue(verticalBar.getMinimum());
+            verticalBar.setUnitIncrement(increment);
+
+            JScrollBar horizontalBar = scrollPane.getHorizontalScrollBar();
+            horizontalBar.setValue(horizontalBar.getMinimum());
+            horizontalBar.setUnitIncrement(increment);
+
             view.removeAll();
             view.add(popupMenu, BorderLayout.CENTER);
             setBorder(popupMenu.getBorder());
             popupMenu.setBorderPainted(false);
-            setPreferredSize(new Dimension(prefSize.width + bar.getPreferredSize().width, maxHeight));
+            Dimension constraintSize = new Dimension(prefSize);
+            if (exceedsHorizontalSize) constraintSize.width += verticalBar.getPreferredSize().width;
+            if (exceedsVerticalSize) constraintSize.height += horizontalBar.getPreferredSize().height;
+            if (maxWidth > 0) constraintSize.width = Math.min(constraintSize.width, maxWidth);
+            if (maxHeight > 0) constraintSize.height = Math.min(constraintSize.height, maxHeight);
+            setPreferredSize(constraintSize);
             return PopupFactory.getSharedInstance().getPopup(popupMenu.getInvoker(), this, posX, posY);
         }
     }

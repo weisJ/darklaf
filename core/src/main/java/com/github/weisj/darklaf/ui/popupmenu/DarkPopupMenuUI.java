@@ -33,6 +33,7 @@ import javax.swing.plaf.basic.BasicPopupMenuUI;
 import com.github.weisj.darklaf.components.ScrollPopupMenu;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * This implementation for PopupMenuUI is almost identical to the one of BasicPopupMenuUI. The key
@@ -48,6 +49,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
     public static final String KEY_DO_NOT_CANCEL_ON_SCROLL = "doNotCancelOnScroll";
     public static final String HIDE_POPUP_VALUE = "doNotCancelPopup";
     public static final String KEY_DEFAULT_LIGHTWEIGHT_POPUPS = "PopupMenu.defaultLightWeightPopups";
+    public static final String KEY_MAX_POPUP_SIZE = "maxPopupSize";
     private PopupMenuContainer popupMenuContainer;
 
     public static ComponentUI createUI(final JComponent x) {
@@ -103,7 +105,18 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
     public Popup getPopup(final JPopupMenu popup, final int x, final int y) {
         PopupMenuContainer container = getPopupMenuContainer();
         if (container == null) return super.getPopup(popup, x, y);
-        int maxHeight = DarkUIUtil.getScreenBounds(popup, x, y, false).height;
-        return container.createPopup(popup, x, y, maxHeight);
+        Dimension maxSize = PropertyUtil.getObject(popup, KEY_MAX_POPUP_SIZE, Dimension.class);
+        int maxHeight = -1;
+        int maxWidth = -1;
+        if (maxSize != null) {
+            maxHeight = maxSize.height;
+            maxWidth = maxSize.width;
+        }
+        if (maxHeight <= 0 || maxWidth <= 0) {
+            Rectangle screenSize = DarkUIUtil.getScreenBounds(popup, x, y, false);
+            if (maxHeight <= 0) maxHeight = screenSize.height;
+            if (maxWidth <= 0) maxWidth = screenSize.width;
+        }
+        return container.createPopup(popup, x, y, maxWidth, maxHeight);
     }
 }
