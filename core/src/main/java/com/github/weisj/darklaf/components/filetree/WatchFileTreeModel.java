@@ -36,6 +36,10 @@ import javax.swing.filechooser.FileSystemView;
 
 import com.github.weisj.darklaf.util.LogUtil;
 
+/**
+ * @deprecated {@link FileTree} will be moved to https://github.com/weisJ/swing-dsl
+ */
+@Deprecated
 public class WatchFileTreeModel extends FileTreeModel {
 
     private static final Logger LOGGER = LogUtil.getLogger(WatchFileTreeModel.class);

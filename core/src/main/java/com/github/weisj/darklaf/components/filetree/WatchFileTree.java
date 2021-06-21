@@ -26,6 +26,10 @@ import java.io.File;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 
+/**
+ * @deprecated {@link FileTree} will be moved to https://github.com/weisJ/swing-dsl
+ */
+@Deprecated
 public class WatchFileTree extends FileTree {
 
     public WatchFileTree() {

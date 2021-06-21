@@ -33,6 +33,10 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 
+/**
+ * @deprecated {@link FileTree} will be moved to https://github.com/weisJ/swing-dsl
+ */
+@Deprecated
 public class FileTree extends JTree {
 
     public FileTree() {

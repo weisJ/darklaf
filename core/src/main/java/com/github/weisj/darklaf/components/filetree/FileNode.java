@@ -34,6 +34,10 @@ import java.util.stream.Stream;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 
+/**
+ * @deprecated {@link FileTree} will be moved to https://github.com/weisJ/swing-dsl
+ */
+@Deprecated
 public class FileNode implements Comparable<FileNode> {
 
     private static final AtomicBoolean LOCKED = new AtomicBoolean(false);

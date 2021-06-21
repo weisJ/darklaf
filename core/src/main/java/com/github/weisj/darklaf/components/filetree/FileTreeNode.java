@@ -36,6 +36,10 @@ import javax.swing.tree.TreeNode;
 import com.github.weisj.darklaf.util.Lambdas;
 import com.github.weisj.darklaf.util.StreamUtil;
 
+/**
+ * @deprecated {@link FileTree} will be moved to https://github.com/weisJ/swing-dsl
+ */
+@Deprecated
 public class FileTreeNode implements TreeNode, Comparable<FileTreeNode> {
 
     protected final FileTreeNode parent;

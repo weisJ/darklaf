@@ -27,6 +27,10 @@ import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
+/**
+ * @deprecated {@link FileTree} will be moved to https://github.com/weisJ/swing-dsl
+ */
+@Deprecated
 public class FileTreeCellRenderer extends DefaultTreeCellRenderer {
 
     private final FileSystemView fsv;

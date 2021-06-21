@@ -30,6 +30,10 @@ import java.util.stream.Collectors;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.tree.DefaultTreeModel;
 
+/**
+ * @deprecated {@link FileTree} will be moved to https://github.com/weisJ/swing-dsl
+ */
+@Deprecated
 public class FileTreeModel extends DefaultTreeModel {
 
     protected final FileSystemView fsv;
