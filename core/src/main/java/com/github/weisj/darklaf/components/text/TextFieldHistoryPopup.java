@@ -122,15 +122,6 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
     @Override
     public void show(final Component invoker, final int x, final int y) {
         if (history.size() == 0) return;
-        super.show(invoker, x, y);
-    }
-
-    @Override
-    protected void showPopup() {
-        if (history.size() == 0) {
-            firePopupMenuCanceled();
-            return;
-        }
         this.removeAll();
         LinkedList<String> list = new LinkedList<>(history);
         Iterator<String> itr = list.descendingIterator();
@@ -138,7 +129,7 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
             String item = itr.next();
             add(new JMenuItem(new PlainAction(item, () -> textField.setText(item))));
         }
-        super.showPopup();
+        super.show(invoker, x, y);
     }
 
     /** Clear all entries from the history. */

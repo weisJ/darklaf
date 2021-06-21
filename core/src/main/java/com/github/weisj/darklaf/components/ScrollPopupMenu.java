@@ -21,112 +21,42 @@
  */
 package com.github.weisj.darklaf.components;
 
-import java.awt.*;
+import java.awt.Dimension;
 
-import javax.swing.*;
+import javax.swing.JPopupMenu;
 
-import com.github.weisj.darklaf.ui.popupmenu.PopupMenuContainer;
-import com.github.weisj.darklaf.util.PropertyKey;
+import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
 
 /** @author Jannis Weis */
 public class ScrollPopupMenu extends JPopupMenu {
 
-    private final PopupMenuContainer popupMenuContainer;
-    private int maxHeight;
-    private Popup popup;
-    private int posX;
-    private int posY;
-    private boolean isVisible;
+    private final Dimension maxSize = new Dimension(-1, -1);
+
+    {
+        putClientProperty(DarkPopupMenuUI.KEY_MAX_POPUP_SIZE, maxSize);
+    }
 
     public ScrollPopupMenu(final int maxHeight) {
-        popupMenuContainer = new PopupMenuContainer();
-        this.maxHeight = maxHeight;
+        maxSize.height = maxHeight;
     }
 
-    /**
-     * Set the maximum height of the popup. If the size is larger than the specified maximum height the
-     * content will be wrapped inside a scroll pane.
-     *
-     * <p>
-     * Note: A value of less than or equal to 0 indicates that the height should not be limited.
-     *
-     * @param maxHeight the max height to use.
-     */
+    public ScrollPopupMenu(final int maxWidth, final int maxHeight) {
+        maxSize.setSize(maxWidth, maxHeight);
+    }
+
+    public int getMaxHeight() {
+        return maxSize.height;
+    }
+
+    public int getMaxWidth() {
+        return maxSize.width;
+    }
+
     public void setMaxHeight(final int maxHeight) {
-        this.maxHeight = maxHeight;
+        maxSize.height = maxHeight;
     }
 
-    protected void showPopup() {
-        isVisible = true;
-        popup = createPopup();
-        popup.show();
-    }
-
-    /**
-     * Get the scroll pane of the popup.
-     *
-     * @return scroll pane;
-     */
-    public JScrollPane getScrollPane() {
-        return popupMenuContainer.getScrollPane();
-    }
-
-    @Override
-    public boolean isVisible() {
-        return isVisible;
-    }
-
-    @Override
-    public void setLocation(final int x, final int y) {
-        posX = x;
-        posY = y;
-    }
-
-    @Override
-    public void setVisible(final boolean b) {
-        if (b == isVisible()) {
-            return;
-        }
-        if (b) {
-            if (isPopupMenu()) {
-                MenuElement[] menuElements = new MenuElement[1];
-                if (getSubElements().length > 0) {
-                    menuElements = new MenuElement[2];
-                    menuElements[1] = getSubElements()[0];
-                }
-                menuElements[0] = this;
-                MenuSelectionManager.defaultManager().setSelectedPath(menuElements);
-            }
-            firePopupMenuWillBecomeVisible();
-            showPopup();
-            firePropertyChange(PropertyKey.VISIBLE, Boolean.FALSE, Boolean.TRUE);
-        } else {
-            hidePopup();
-        }
-    }
-
-    protected void hidePopup() {
-        if (popup != null) {
-            firePopupMenuWillBecomeInvisible();
-            popup.hide();
-            isVisible = false;
-            popup = null;
-            firePropertyChange(PropertyKey.VISIBLE, Boolean.TRUE, Boolean.FALSE);
-            if (isPopupMenu()) {
-                MenuSelectionManager.defaultManager().clearSelectedPath();
-            }
-        }
-    }
-
-    private Popup createPopup() {
-        return popupMenuContainer.createPopup(this, posX, posY, -1, maxHeight);
-    }
-
-    @Override
-    public void pack() {}
-
-    private boolean isPopupMenu() {
-        Component invoker = getInvoker();
-        return ((invoker != null) && !(invoker instanceof JMenu));
+    public void setMaxWidth(final int maxWidth) {
+        maxSize.width = maxWidth;
     }
 }
