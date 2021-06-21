@@ -46,28 +46,9 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
     private I lastIndex;
     private Popup popup;
 
-    private boolean respectCellHeight = false;
-    private boolean respectCellWidth = true;
-
     public CellHintPopupListener(final IndexedCellContainer<T, I> cellContainer) {
         this.cellContainer = cellContainer;
         this.popupComponent = new PopupComponent(this);
-    }
-
-    public void setRespectCellHeight(final boolean respectCellHeight) {
-        this.respectCellHeight = respectCellHeight;
-    }
-
-    public void setRespectCellWidth(final boolean respectCellWidth) {
-        this.respectCellWidth = respectCellWidth;
-    }
-
-    public boolean isRespectCellHeight() {
-        return respectCellHeight;
-    }
-
-    public boolean isRespectCellWidth() {
-        return respectCellWidth;
     }
 
     public void install() {
@@ -160,11 +141,14 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
         boolean ltr = cellContainer.getComponent().getComponentOrientation().isLeftToRight();
         popupComponent.setBorderInsets(1, 1, 1, 1);
 
-        if (isRespectCellWidth()) {
-            calculatePopupWidth(cellBounds, visibleBounds, rect, ltr);
-        }
-        if (isRespectCellHeight()) {
+        // Wen only support showing either a horizontal or vertical completion of the cell
+        // Calculate which portion would be bigger.
+        int hiddenVerticalSpace = Math.abs(cellBounds.width - visibleBounds.width);
+        int hiddenHorizontalSpace = Math.abs(cellBounds.height - visibleBounds.height);
+        if (hiddenHorizontalSpace > hiddenVerticalSpace) {
             calculatePopupHeight(cellBounds, visibleBounds, rect);
+        } else {
+            calculatePopupWidth(cellBounds, visibleBounds, rect, ltr);
         }
         if (!addBorder) {
             popupComponent.setBorderInsets(0, 0, 0, 0);
@@ -189,11 +173,11 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
             if (upperDiff >= lowerDiff) {
                 rect.y = visibleBounds.y + visibleBounds.height;
                 rect.height = upperDiff;
-                popupComponent.setBottom(0);
+                popupComponent.setTop(0);
             } else {
                 rect.y = cellBounds.y;
                 rect.height = lowerDiff;
-                popupComponent.setTop(0);
+                popupComponent.setBottom(0);
             }
         }
     }
