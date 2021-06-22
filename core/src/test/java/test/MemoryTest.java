@@ -54,7 +54,7 @@ class MemoryTest {
 
     @BeforeAll
     static void setupLaf() {
-        TestUtils.runOnSwingThreadNotThrowing(LafManager::install);
+        TestUtils.ensureLafInstalled();
     }
 
     @BeforeEach

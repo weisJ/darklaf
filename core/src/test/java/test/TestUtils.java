@@ -26,11 +26,20 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.theme.IntelliJTheme;
 import org.junit.jupiter.api.Assertions;
+
+import com.github.weisj.darklaf.LafManager;
 
 final class TestUtils {
 
     private TestUtils() {}
+
+    static void ensureLafInstalled() {
+        if (!LafManager.isInstalled()) {
+            runOnSwingThreadNotThrowing(() -> LafManager.install(new IntelliJTheme()));
+        }
+    }
 
     static void runOnThreadNotThrowing(final Runnable action) {
         AtomicReference<Exception> exceptionRef = new AtomicReference<>();

@@ -33,8 +33,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
-import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.theme.IntelliJTheme;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
 import com.github.weisj.darklaf.util.DarkUIUtil;
@@ -51,7 +49,7 @@ class TooltipTest extends AbstractImageTest {
 
     @BeforeAll
     static void setup() {
-        TestUtils.runOnSwingThreadNotThrowing(() -> LafManager.install(new IntelliJTheme()));
+        TestUtils.ensureLafInstalled();
     }
 
     private JToolTip createTooltip() {
