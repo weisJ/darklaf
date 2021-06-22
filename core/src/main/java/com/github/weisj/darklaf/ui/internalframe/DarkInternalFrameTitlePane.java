@@ -307,7 +307,7 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
 
             // Calculate height.
             Icon icon = frame.getFrameIcon();
-            FontMetrics fm = frame.getFontMetrics(getFont());
+            FontMetrics fm = label.getFontMetrics(label.getFont());
 
             int iconHeight = 0;
             if (icon != null) {
