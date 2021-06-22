@@ -22,9 +22,9 @@
 package com.github.weisj.darklaf.ui.popupmenu;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -50,6 +50,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
     public static final String HIDE_POPUP_VALUE = "doNotCancelPopup";
     public static final String KEY_DEFAULT_LIGHTWEIGHT_POPUPS = "PopupMenu.defaultLightWeightPopups";
     public static final String KEY_MAX_POPUP_SIZE = "maxPopupSize";
+    final SizeLock sizeLock = new SizeLock();
     private PopupMenuContainer popupMenuContainer;
 
     public static ComponentUI createUI(final JComponent x) {
@@ -101,22 +102,74 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
         MouseGrabberUtil.installMouseGrabber();
     }
 
+    private Dimension getConstraintSizes(final JComponent popup, final Point pos) {
+        Dimension maxSize = PropertyUtil.getObject(popup, KEY_MAX_POPUP_SIZE, Dimension.class);
+        if (maxSize == null) {
+            maxSize = new Dimension(-1, -1);
+        }
+        if (pos != null && (maxSize.height <= 0 || maxSize.width <= 0)) {
+            Rectangle screenSize = DarkUIUtil.getScreenBounds(popup, pos.x, pos.y, false);
+            if (maxSize.height <= 0) maxSize.height = screenSize.height;
+            if (maxSize.width <= 0) maxSize.width = screenSize.width;
+        }
+        return maxSize;
+    }
+
     @Override
     public Popup getPopup(final JPopupMenu popup, final int x, final int y) {
         PopupMenuContainer container = getPopupMenuContainer();
         if (container == null) return super.getPopup(popup, x, y);
-        Dimension maxSize = PropertyUtil.getObject(popup, KEY_MAX_POPUP_SIZE, Dimension.class);
-        int maxHeight = -1;
-        int maxWidth = -1;
-        if (maxSize != null) {
-            maxHeight = maxSize.height;
-            maxWidth = maxSize.width;
+        Dimension constraintSize = getConstraintSizes(popup, new Point(x, y));
+        try (SizeLock l = sizeLock.lock()) {
+            Dimension prefSize = popup.getPreferredSize();
+            return container.createPopup(popup, prefSize, x, y, constraintSize.width, constraintSize.height);
         }
-        if (maxHeight <= 0 || maxWidth <= 0) {
-            Rectangle screenSize = DarkUIUtil.getScreenBounds(popup, x, y, false);
-            if (maxHeight <= 0) maxHeight = screenSize.height;
-            if (maxWidth <= 0) maxWidth = screenSize.width;
+    }
+
+    @Override
+    public Dimension getPreferredSize(JComponent c) {
+        if (sizeLock.isLocked()) return null;
+        try (SizeLock l = sizeLock.lock()) {
+            Dimension prefSize = c.getPreferredSize();
+            Dimension constraintSize = getConstraintSizes(c, null);
+            return getPopupMenuContainer().adjustSize(prefSize, constraintSize.width, constraintSize.height);
         }
-        return container.createPopup(popup, x, y, maxWidth, maxHeight);
+    }
+
+    @Override
+    public Dimension getMinimumSize(JComponent c) {
+        if (sizeLock.isLocked()) return null;
+        try (SizeLock l = sizeLock.lock()) {
+            Dimension prefSize = c.getMinimumSize();
+            Dimension constraintSize = getConstraintSizes(c, null);
+            return getPopupMenuContainer().adjustSize(prefSize, constraintSize.width, constraintSize.height);
+        }
+    }
+
+    @Override
+    public Dimension getMaximumSize(JComponent c) {
+        if (sizeLock.isLocked()) return null;
+        try (SizeLock l = sizeLock.lock()) {
+            Dimension prefSize = c.getMaximumSize();
+            Dimension constraintSize = getConstraintSizes(c, null);
+            return getPopupMenuContainer().adjustSize(prefSize, constraintSize.width, constraintSize.height);
+        }
+    }
+
+    static class SizeLock extends AtomicBoolean implements AutoCloseable {
+
+        boolean isLocked() {
+            return get();
+        }
+
+        SizeLock lock() {
+            set(true);
+            return this;
+        }
+
+        @Override
+        public void close() {
+            set(false);
+        }
     }
 }

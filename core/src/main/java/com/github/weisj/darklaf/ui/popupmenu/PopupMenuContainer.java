@@ -37,7 +37,7 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 public class PopupMenuContainer extends JPanel {
 
     private JScrollPane scrollPane;
-    private JPanel view;
+    private ViewPanel view;
 
     private MenuKeyListener menuKeyListener;
     private PopupMenuListener menuListener;
@@ -49,7 +49,7 @@ public class PopupMenuContainer extends JPanel {
 
     private void initComponents() {
         if (view == null) {
-            view = new JPanel(new BorderLayout());
+            view = new ViewPanel();
             OverlayScrollPane overlayScrollPane = createScrollPane(view);
             scrollPane = overlayScrollPane.getScrollPane();
             add(overlayScrollPane, BorderLayout.CENTER);
@@ -125,18 +125,15 @@ public class PopupMenuContainer extends JPanel {
         }
     }
 
-    public Popup createPopup(final JPopupMenu popupMenu, final int posX, final int posY,
-            final int maxWidth, final int maxHeight) {
-        final Dimension prefSize = popupMenu.getPreferredSize();
+    public Popup createPopup(final JPopupMenu popupMenu, final Dimension prefSize,
+            final int posX, final int posY, final int maxWidth, final int maxHeight) {
         uninstallListeners();
-        boolean exceedsHorizontalSize = (maxHeight > 0 && prefSize.height > maxHeight);
-        boolean exceedsVerticalSize = (maxWidth > 0 && prefSize.width > maxWidth);
-        if (!exceedsHorizontalSize && !exceedsVerticalSize) {
+        Dimension adjustedSize = adjustSize(prefSize, maxWidth, maxHeight);
+        if (adjustedSize.width == prefSize.width && adjustedSize.height == prefSize.height) {
             setBounds(0, 0, prefSize.width, prefSize.height);
             popupMenu.setBorderPainted(true);
             return PopupFactory.getSharedInstance().getPopup(popupMenu.getInvoker(), popupMenu, posX, posY);
         } else {
-            initComponents();
             setPopupMenu(popupMenu);
             int increment = 1;
             if (popupMenu.getComponentCount() > 0) {
@@ -150,17 +147,30 @@ public class PopupMenuContainer extends JPanel {
             horizontalBar.setValue(horizontalBar.getMinimum());
             horizontalBar.setUnitIncrement(increment);
 
-            view.removeAll();
-            view.add(popupMenu, BorderLayout.CENTER);
+            view.setContent(popupMenu);
             setBorder(popupMenu.getBorder());
             popupMenu.setBorderPainted(false);
-            Dimension constraintSize = new Dimension(prefSize);
+
+            setPreferredSize(adjustedSize);
+            return PopupFactory.getSharedInstance().getPopup(popupMenu.getInvoker(), this, posX, posY);
+        }
+    }
+
+    public Dimension adjustSize(final Dimension size, final int maxWidth, final int maxHeight) {
+        boolean exceedsHorizontalSize = (maxHeight > 0 && size.height > maxHeight);
+        boolean exceedsVerticalSize = (maxWidth > 0 && size.width > maxWidth);
+        if (!exceedsHorizontalSize && !exceedsVerticalSize) {
+            return size;
+        } else {
+            initComponents();
+            JScrollBar verticalBar = scrollPane.getVerticalScrollBar();
+            JScrollBar horizontalBar = scrollPane.getHorizontalScrollBar();
+            Dimension constraintSize = new Dimension(size);
             if (exceedsHorizontalSize) constraintSize.width += verticalBar.getPreferredSize().width;
             if (exceedsVerticalSize) constraintSize.height += horizontalBar.getPreferredSize().height;
             if (maxWidth > 0) constraintSize.width = Math.min(constraintSize.width, maxWidth);
             if (maxHeight > 0) constraintSize.height = Math.min(constraintSize.height, maxHeight);
-            setPreferredSize(constraintSize);
-            return PopupFactory.getSharedInstance().getPopup(popupMenu.getInvoker(), this, posX, posY);
+            return constraintSize;
         }
     }
 
@@ -176,5 +186,56 @@ public class PopupMenuContainer extends JPanel {
 
     public JScrollPane getScrollPane() {
         return scrollPane;
+    }
+
+    private static class ViewPanel extends JPanel {
+
+        private JPopupMenu content;
+        private DarkPopupMenuUI.SizeLock sizeLock;
+
+        public void setContent(JPopupMenu content) {
+            this.content = content;
+            DarkPopupMenuUI ui = DarkUIUtil.getUIOfType(content.getUI(), DarkPopupMenuUI.class);
+            this.sizeLock = ui != null ? ui.sizeLock : new DarkPopupMenuUI.SizeLock();
+            removeAll();
+            add(content);
+        }
+
+        @Override
+        public Dimension getMinimumSize() {
+            if (content != null) {
+                try (DarkPopupMenuUI.SizeLock l = sizeLock.lock()) {
+                    return content.getMinimumSize();
+                }
+            }
+            return super.getMinimumSize();
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            if (content != null) {
+                try (DarkPopupMenuUI.SizeLock l = sizeLock.lock()) {
+                    return content.getPreferredSize();
+                }
+            }
+            return super.getPreferredSize();
+        }
+
+        @Override
+        public Dimension getMaximumSize() {
+            if (content != null) {
+                try (DarkPopupMenuUI.SizeLock l = sizeLock.lock()) {
+                    return content.getMaximumSize();
+                }
+            }
+            return super.getMaximumSize();
+        }
+
+        @Override
+        public void doLayout() {
+            if (content != null) {
+                content.setBounds(0, 0, getWidth(), getHeight());
+            }
+        }
     }
 }
