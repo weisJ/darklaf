@@ -51,7 +51,7 @@ class TooltipTest extends AbstractImageTest {
 
     @BeforeAll
     static void setup() {
-        LafManager.install(new IntelliJTheme());
+        TestUtils.runOnSwingThreadNotThrowing(() -> LafManager.install(new IntelliJTheme()));
     }
 
     private JToolTip createTooltip() {
