@@ -30,9 +30,18 @@ import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
+import com.github.weisj.darklaf.platform.decorations.UnsupportedProviderException;
 import com.github.weisj.darklaf.platform.macos.ui.MacOSTitlePane;
+import com.github.weisj.darklaf.util.SystemInfo;
 
 public class MacOSDecorationsProvider implements DecorationsProvider {
+
+    public MacOSDecorationsProvider() throws UnsupportedProviderException {
+        if (!SystemInfo.isMacOSYosemite)
+            throw new UnsupportedProviderException("Only macOS Yosemite or later is supported");
+        if (!MacOSLibrary.get().canLoad())
+            throw new UnsupportedProviderException("Can't load native library");
+    }
 
     @Override
     public CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle, final Window window) {

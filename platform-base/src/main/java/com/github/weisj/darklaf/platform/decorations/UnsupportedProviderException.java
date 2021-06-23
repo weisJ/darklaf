@@ -19,28 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.platform.macos;
+package com.github.weisj.darklaf.platform.decorations;
 
-import com.github.weisj.darklaf.platform.AbstractLibrary;
-import com.github.weisj.darklaf.util.LogUtil;
-import com.github.weisj.darklaf.util.SystemInfo;
+public class UnsupportedProviderException extends Exception {
 
-public class MacOSLibrary extends AbstractLibrary {
-
-    private static final String PATH = "/com/github/weisj/darklaf/platform/darklaf-macos/macos-x86-64/";
-    private static final String DLL_NAME = "libdarklaf-macos.dylib";
-    private static final MacOSLibrary instance = new MacOSLibrary();
-
-    public static MacOSLibrary get() {
-        return instance;
-    }
-
-    protected MacOSLibrary() {
-        super(PATH, DLL_NAME, LogUtil.getLogger(MacOSLibrary.class));
-    }
-
-    @Override
-    protected boolean canLoad() {
-        return (SystemInfo.isX86Compatible && SystemInfo.isX64) && SystemInfo.isMacOSYosemite;
+    public UnsupportedProviderException(final String message) {
+        super(message);
     }
 }

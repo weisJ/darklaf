@@ -31,9 +31,18 @@ import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
+import com.github.weisj.darklaf.platform.decorations.UnsupportedProviderException;
 import com.github.weisj.darklaf.platform.windows.ui.WindowsTitlePane;
+import com.github.weisj.darklaf.util.SystemInfo;
 
 public class WindowsDecorationsProvider implements DecorationsProvider {
+
+    public WindowsDecorationsProvider() throws UnsupportedProviderException {
+        if (!SystemInfo.isWindows10)
+            throw new UnsupportedProviderException("Only supported on Windows 10 or later");
+        if (!WindowsLibrary.get().canLoad())
+            throw new UnsupportedProviderException("Native components aren't supported");
+    }
 
     @Override
     public CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle, final Window window) {

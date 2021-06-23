@@ -50,6 +50,11 @@ public final class SystemInfo {
     public static final boolean isX64;
     public static final boolean undefinedArchitecture;
 
+    public static final String OS_ARCH = System.getProperty("os.arch");
+    public static final boolean isX86Compatible;
+    public static final boolean isARM;
+    public static final boolean isM1;
+
     public static final boolean isJava9OrGreater;
 
     protected static final String _OS_NAME;
@@ -75,6 +80,10 @@ public final class SystemInfo {
         isX64 = X64.equals(jreArchitecture);
         isX86 = X86.equals(jreArchitecture);
         undefinedArchitecture = !isX86 && !isX64;
+        isARM = OS_ARCH.contains("arm");
+        isM1 = isMac && "aarch64".equals(OS_ARCH);
+        // This is very much incorrect but will work for most processors.
+        isX86Compatible = !isARM && !isM1;
         isMacOSCatalina = isMac && isOsVersionAtLeast("10.15");
         isMacOSMojave = isMacOSCatalina || (isMac && isOsVersionAtLeast("10.14"));
         isMacOSYosemite = isMacOSCatalina || (isMac && isOsVersionAtLeast("10.10"));

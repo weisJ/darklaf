@@ -55,10 +55,10 @@ public class DecorationsHandler {
         try {
             // Extend for different platforms.
             boolean enableDecorations = isNativeDecorationsEnabled();
-            if (SystemInfo.isWindows10 && enableDecorations) {
+            if (SystemInfo.isWindows && enableDecorations) {
                 // Decorations are in the Windows10 visuals. Disable for older version.
                 decorationsProvider = new WindowsDecorationsProvider();
-            } else if (SystemInfo.isMacOSYosemite && enableDecorations) {
+            } else if (SystemInfo.isMac && enableDecorations) {
                 // Compiled binary needs at least macOS 10.10 (Yosemite).
                 decorationsProvider = new MacOSDecorationsProvider();
             } else {
