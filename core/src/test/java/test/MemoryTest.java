@@ -22,6 +22,7 @@
 package test;
 
 import java.awt.FlowLayout;
+import java.awt.KeyboardFocusManager;
 import java.awt.Window;
 import java.awt.event.WindowEvent;
 import java.lang.ref.WeakReference;
@@ -125,11 +126,30 @@ class MemoryTest {
             frame.set(f);
         });
         WeakReference<JFrame> ref = new WeakReference<>(frame.get());
-        SwingUtilities.invokeLater(() -> {
-            closeWindow(frame.get());
-            frame.set(null);
-        });
+        TestUtils.runOnSwingThreadNotThrowing(() -> closeWindow(frame.get()));
+        Assertions.assertFalse(frame.get().isVisible());
+        resetFocusWindow(ref.get());
+        frame.set(null);
         waitForGarbageCollection(ref);
+    }
+
+    private void resetFocusWindow(final JFrame frame) {
+        if (frame == null) return;
+        AtomicReference<JFrame> f = new AtomicReference<>();
+        TestUtils.runOnSwingThreadNotThrowing(() -> {
+            f.set(new JFrame("Focus Frame"));
+            f.get().setVisible(true);
+            f.get().requestFocus();
+        });
+        TestUtils.runOnSwingThreadNotThrowing(() -> {
+            KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+            Assertions.assertEquals(f.get(), manager.getFocusedWindow());
+            Assertions.assertEquals(f.get(), manager.getActiveWindow());
+        });
+        KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        Assertions.assertNotEquals(frame, manager.getFocusedWindow());
+        Assertions.assertNotEquals(frame, manager.getActiveWindow());
+        TestUtils.runOnSwingThreadNotThrowing(() -> closeWindow(f.get()));
     }
 
     private void closeWindow(final Window window) {
