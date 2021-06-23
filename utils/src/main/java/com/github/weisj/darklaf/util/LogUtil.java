@@ -45,6 +45,12 @@ public final class LogUtil {
         return logger;
     }
 
+    public static Logger getDetachedLogger(final Class<?> clazz) {
+        Logger logger = getLogger(clazz);
+        logger.setParent(PARENT);
+        return logger;
+    }
+
     public static void setLevel(final Level level) {
         PARENT.setLevel(level);
         LOG_HANDLER.setLevel(level);

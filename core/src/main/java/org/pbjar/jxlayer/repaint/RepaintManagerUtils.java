@@ -49,7 +49,7 @@ import com.github.weisj.darklaf.util.LogUtil;
  */
 public final class RepaintManagerUtils {
 
-    private static final Logger LOGGER = LogUtil.getLogger(RepaintManagerUtils.class);
+    private static final Logger LOGGER = LogUtil.getDetachedLogger(RepaintManagerUtils.class);
     /**
      * Indicates the availability of SwingX on the class path.
      */

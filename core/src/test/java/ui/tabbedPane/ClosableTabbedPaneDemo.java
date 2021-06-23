@@ -32,7 +32,7 @@ import com.github.weisj.darklaf.util.LogUtil;
 
 public class ClosableTabbedPaneDemo extends AbstractTabbedPaneDemo<ClosableTabbedPane> implements TabListener {
 
-    private static final Logger LOGGER = LogUtil.getLogger(ClosableTabbedPane.class);
+    private static final Logger LOGGER = LogUtil.getDetachedLogger(ClosableTabbedPane.class);
 
     public static void main(final String[] args) {
         ComponentDemo.showDemo(new ClosableTabbedPaneDemo());

@@ -52,7 +52,7 @@ import com.github.weisj.darklaf.util.LogUtil;
  */
 public final class TransformRPMImpl {
 
-    private static final Logger LOGGER = LogUtil.getLogger(TransformRPMImpl.class);
+    private static final Logger LOGGER = LogUtil.getDetachedLogger(TransformRPMImpl.class);
     /**
      * A flag, indicating whether or not a very dirty initialization on created {@link RepaintManager}s must be
      * performed.

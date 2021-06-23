@@ -41,7 +41,7 @@ import com.github.weisj.darklaf.util.SystemInfo;
 
 class TooltipTest extends AbstractImageTest {
 
-    private static final Logger LOGGER = LogUtil.getLogger(TooltipTest.class);
+    private static final Logger LOGGER = LogUtil.getDetachedLogger(TooltipTest.class);
 
     public TooltipTest() {
         super("tooltip");
