@@ -168,7 +168,7 @@ class MemoryTest {
             }
             try {
                 // noinspection BusyWait
-                Thread.sleep(100);
+                Thread.sleep(500);
             } catch (InterruptedException ignored) {
             }
             System.gc();
