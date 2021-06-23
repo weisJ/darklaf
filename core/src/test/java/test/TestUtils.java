@@ -26,18 +26,23 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.theme.IntelliJTheme;
 import org.junit.jupiter.api.Assertions;
 
 import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.theme.IntelliJTheme;
+import com.github.weisj.darklaf.theme.Theme;
 
 final class TestUtils {
 
     private TestUtils() {}
 
     static void ensureLafInstalled() {
+        ensureLafInstalled(new IntelliJTheme());
+    }
+
+    static void ensureLafInstalled(final Theme theme) {
         if (!LafManager.isInstalled()) {
-            runOnSwingThreadNotThrowing(() -> LafManager.install(new IntelliJTheme()));
+            runOnSwingThreadNotThrowing(() -> LafManager.install(theme));
         }
     }
 

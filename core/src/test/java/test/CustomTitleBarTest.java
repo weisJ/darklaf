@@ -33,12 +33,17 @@ import javax.swing.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.color.ColorUtil;
+import com.github.weisj.darklaf.theme.DarculaTheme;
+import com.github.weisj.darklaf.theme.IntelliJTheme;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 import com.github.weisj.darklaf.util.SystemInfo;
 
+@Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CustomTitleBarTest extends AbstractImageTest {
 
@@ -59,7 +64,6 @@ class CustomTitleBarTest extends AbstractImageTest {
             d.put("Windows.TitlePane.background", TITLE_BAR_COLOR);
             d.put("Windows.TitlePane.inactiveBackground", TITLE_BAR_COLOR);
         }));
-        TestUtils.ensureLafInstalled();
     }
 
     @BeforeEach
@@ -154,6 +158,7 @@ class CustomTitleBarTest extends AbstractImageTest {
     @Test
     @EnabledOnOs({OS.MAC, OS.WINDOWS})
     void checkTitleBarColored() {
+        TestUtils.ensureLafInstalled();
         UIManager.put("macos.coloredTitleBar", true);
         checkImage("colored_title_" + SystemInfo.getOsName(),
                 img -> assertScreenColorEquals(TITLE_BAR_COLOR, new Color(img.getRGB(img.getWidth() / 2, TITLE_BAR_Y)),
@@ -163,6 +168,7 @@ class CustomTitleBarTest extends AbstractImageTest {
     @Test
     @EnabledOnOs(OS.MAC)
     void checkTitleBarNotColored() {
+        TestUtils.ensureLafInstalled();
         UIManager.put("macos.coloredTitleBar", false);
         checkImage("non_colored_title_" + SystemInfo.getOsName(), img -> {
             Color c = new Color(img.getRGB(img.getWidth() / 2, TITLE_BAR_Y));
@@ -174,6 +180,7 @@ class CustomTitleBarTest extends AbstractImageTest {
     @Test
     @EnabledOnOs(OS.MAC)
     void checkForDarkNativeTitle() {
+        TestUtils.ensureLafInstalled(new DarculaTheme());
         UIManager.put("macos.coloredTitleBar", false);
         checkImage("native_title_dark_mac", img -> {
             assertScreenColorNotEquals(CONTENT_COLOR, new Color(img.getRGB(img.getWidth() / 2, TITLE_BAR_Y)),
@@ -188,6 +195,7 @@ class CustomTitleBarTest extends AbstractImageTest {
     @Test
     @EnabledOnOs(OS.MAC)
     void checkForLightNativeTitle() {
+        TestUtils.ensureLafInstalled(new IntelliJTheme());
         UIManager.put("macos.coloredTitleBar", false);
         checkImage("native_title_light_mac", img -> {
             assertScreenColorNotEquals(CONTENT_COLOR, new Color(img.getRGB(img.getWidth() / 2, TITLE_BAR_Y)),
@@ -202,6 +210,7 @@ class CustomTitleBarTest extends AbstractImageTest {
     @Test
     @EnabledOnOs({OS.MAC, OS.WINDOWS})
     void checkTitleBarHidden() {
+        TestUtils.ensureLafInstalled();
         UIManager.put("macos.coloredTitleBar", true);
         Assertions.assertTrue(LafManager.isDecorationsEnabled());
         checkImage("title_bar_hidden_" + SystemInfo.getOsName(),
@@ -216,6 +225,7 @@ class CustomTitleBarTest extends AbstractImageTest {
     @Test
     @EnabledOnOs(OS.WINDOWS)
     void checkDisableCustomDecoration() {
+        TestUtils.ensureLafInstalled();
         checkImage("native_title_bar_window",
                 f -> LafManager.setDecorationsEnabled(false),
                 img -> assertScreenColorNotEquals(TITLE_BAR_COLOR,
