@@ -39,7 +39,7 @@ import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
-class TooltipTest extends AbstractImageTest {
+class TooltipTest extends AbstractImageTest implements NonThreadSafeTest {
 
     private static final Logger LOGGER = LogUtil.getDetachedLogger(TooltipTest.class);
 

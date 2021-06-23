@@ -21,6 +21,8 @@
  */
 package test;
 
+import java.awt.Window;
+import java.awt.event.WindowEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -36,13 +38,17 @@ final class TestUtils {
 
     private TestUtils() {}
 
+    private static final Object lock = new Object();
+
     static void ensureLafInstalled() {
         ensureLafInstalled(new IntelliJTheme());
     }
 
     static void ensureLafInstalled(final Theme theme) {
-        if (!LafManager.isInstalled()) {
-            runOnSwingThreadNotThrowing(() -> LafManager.install(theme));
+        synchronized (lock) {
+            if (!LafManager.isInstalled() || !LafManager.getInstalledTheme().equals(theme)) {
+                runOnSwingThreadNotThrowing(() -> LafManager.install(theme));
+            }
         }
     }
 
@@ -86,5 +92,10 @@ final class TestUtils {
         if (exceptionRef.get() != null) {
             Assertions.fail(exceptionRef.get().getMessage(), exceptionRef.get());
         }
+    }
+
+    static void closeWindow(final Window window) {
+        window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
+        window.dispose();
     }
 }

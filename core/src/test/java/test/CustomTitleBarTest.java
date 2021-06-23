@@ -33,8 +33,6 @@ import javax.swing.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.color.ColorUtil;
@@ -43,14 +41,12 @@ import com.github.weisj.darklaf.theme.IntelliJTheme;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 import com.github.weisj.darklaf.util.SystemInfo;
 
-@Execution(ExecutionMode.SAME_THREAD)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class CustomTitleBarTest extends AbstractImageTest {
+class CustomTitleBarTest extends AbstractImageTest implements NonThreadSafeTest {
 
     private static final Color TITLE_BAR_COLOR = Color.RED;
     private static final Color CONTENT_COLOR = Color.BLUE;
     private static final int TITLE_BAR_Y = 10;
-    private static final int TOLERANCE = SystemInfo.isMac ? 55 : 0;
+    private static final int TOLERANCE = SystemInfo.isMac ? 60 : 0;
 
     public CustomTitleBarTest() {
         super("titlebar");
@@ -77,9 +73,11 @@ class CustomTitleBarTest extends AbstractImageTest {
         TestUtils.runOnSwingThreadNotThrowing(() -> {
             JFrame f = new JFrame("");
             frame.set(f);
-            JPanel content = new JPanel();
+            JPanel content = new JPanel(new GridBagLayout());
             content.setBackground(CONTENT_COLOR);
             content.setPreferredSize(new Dimension(200, 200));
+            JLabel contentLabel = new JLabel(LafManager.getInstalledTheme().getDisplayName());
+            content.add(contentLabel, null);
             f.setContentPane(content);
             f.pack();
             f.setLocationRelativeTo(null);
@@ -153,6 +151,7 @@ class CustomTitleBarTest extends AbstractImageTest {
             rect.setLocation(0, 0);
             check.accept(saveWindowScreenShot(getPath(fileName), frame.get()));
         });
+        TestUtils.runOnSwingThreadNotThrowing(() -> TestUtils.closeWindow(frame.get()));
     }
 
     @Test
@@ -223,7 +222,7 @@ class CustomTitleBarTest extends AbstractImageTest {
     }
 
     @Test
-    @EnabledOnOs(OS.WINDOWS)
+    @EnabledOnOs({OS.MAC, OS.WINDOWS})
     void checkDisableCustomDecoration() {
         TestUtils.ensureLafInstalled();
         checkImage("native_title_bar_window",
