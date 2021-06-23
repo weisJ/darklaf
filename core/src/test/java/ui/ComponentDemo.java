@@ -43,6 +43,7 @@ import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 import com.github.weisj.darklaf.util.Lambdas;
 import com.github.weisj.darklaf.util.PropertyUtil;
+import com.github.weisj.darklaf.util.SystemInfo;
 
 public interface ComponentDemo {
 
@@ -162,7 +163,9 @@ public interface ComponentDemo {
         Enumeration<AbstractButton> enumeration = bg.getElements();
         while (enumeration.hasMoreElements()) {
             JMenuItem mi = (JMenuItem) enumeration.nextElement();
-            if (Objects.equals(currentThemeName, mi.getText())) return mi;
+            if (Objects.equals(currentThemeName, mi.getText())) {
+                return mi;
+            }
         }
         return null;
     }
@@ -235,14 +238,26 @@ public interface ComponentDemo {
                 addActionListener(e -> LafManager.setDecorationsEnabled(isSelected()));
             }
         });
-        dev.add(new JCheckBoxMenuItem("Unified Menubar") {
-            {
-                SwingUtilities.invokeLater(() -> setSelected(PropertyUtil
-                        .getBooleanProperty(SwingUtilities.getRootPane(dev), DarkRootPaneUI.KEY_UNIFIED_MENUBAR)));
-                addActionListener(e -> SwingUtilities.getRootPane(dev)
-                        .putClientProperty(DarkRootPaneUI.KEY_UNIFIED_MENUBAR, isSelected()));
-            }
-        });
+        if (SystemInfo.isWindows) {
+            dev.add(new JCheckBoxMenuItem("Unified Menubar") {
+                {
+                    SwingUtilities.invokeLater(() -> setSelected(PropertyUtil.getBooleanProperty(
+                            SwingUtilities.getRootPane(dev), DarkRootPaneUI.KEY_UNIFIED_MENUBAR)));
+                    addActionListener(e -> SwingUtilities.getRootPane(dev)
+                            .putClientProperty(DarkRootPaneUI.KEY_UNIFIED_MENUBAR, isSelected()));
+                }
+            });
+        }
+        if (SystemInfo.isMac) {
+            dev.add(new JCheckBoxMenuItem("Colored Titlebar") {
+                {
+                    SwingUtilities.invokeLater(() -> setSelected(PropertyUtil.getBooleanProperty(
+                            SwingUtilities.getRootPane(dev), DarkRootPaneUI.KEY_COLORED_TITLE_BAR)));
+                    addActionListener(e -> SwingUtilities.getRootPane(dev)
+                            .putClientProperty(DarkRootPaneUI.KEY_COLORED_TITLE_BAR, isSelected()));
+                }
+            });
+        }
         JMenu lafs = new JMenu("Laf");
         ButtonGroup lafBg = new ButtonGroup();
         JMenuItem darklafLaf = new JRadioButtonMenuItem("Darklaf");
@@ -251,7 +266,9 @@ public interface ComponentDemo {
         darklafLaf.setSelected(true);
         darklafLaf.addActionListener(e -> LafManager.install());
         for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-            if (info.getName().startsWith("com.github.weisj.darklaf")) continue;
+            if (info.getName().startsWith("com.github.weisj.darklaf")) {
+                continue;
+            }
             JMenuItem item = new JRadioButtonMenuItem(info.getName());
             lafBg.add(item);
             lafs.add(item);

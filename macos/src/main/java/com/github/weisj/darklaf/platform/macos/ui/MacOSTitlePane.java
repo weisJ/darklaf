@@ -43,7 +43,6 @@ public class MacOSTitlePane extends CustomTitlePane {
 
     private final JRootPane rootPane;
     private final Window window;
-    private final boolean useColoredTitleBar;
     private WindowListener windowListener;
     private Color inactiveBackground;
     private Color activeBackground;
@@ -60,7 +59,6 @@ public class MacOSTitlePane extends CustomTitlePane {
     public MacOSTitlePane(final JRootPane rootPane, final Window window) {
         this.rootPane = rootPane;
         this.window = window;
-        this.useColoredTitleBar = UIManager.getBoolean("macos.coloredTitleBar");
         determineColors();
         updateTitleBarVisibility();
     }
@@ -124,7 +122,9 @@ public class MacOSTitlePane extends CustomTitlePane {
     public void install() {
         determineColors();
         JRootPane rootPane = getRootPane();
-        decorationInformation = MacOSDecorationsUtil.installDecorations(rootPane, useColoredTitleBar);
+        if (decorationInformation == null) {
+            decorationInformation = MacOSDecorationsUtil.installDecorations(rootPane, isUseColoredTitleBar(rootPane));
+        }
         installListeners();
         if (!decorationInformation.titleVisible) {
             titleLabel = new JLabel();
@@ -133,6 +133,10 @@ public class MacOSTitlePane extends CustomTitlePane {
             titleLabel.setText(getTitle());
             add(titleLabel);
         }
+    }
+
+    private boolean isUseColoredTitleBar(final JRootPane rootPane) {
+        return PropertyUtil.getBooleanProperty(rootPane, "JRootPane.coloredTitleBar", true);
     }
 
     private String getTitle() {
@@ -151,8 +155,13 @@ public class MacOSTitlePane extends CustomTitlePane {
             titleLabel = null;
         }
         uninstallListeners();
-        MacOSDecorationsUtil.uninstallDecorations(decorationInformation);
-        decorationInformation = null;
+        if (decorationInformation != null) {
+            if (removeDecorations || decorationInformation.useColoredTitleBar != isUseColoredTitleBar(getRootPane())) {
+                System.out.println("Uninstalling");
+                MacOSDecorationsUtil.uninstallDecorations(decorationInformation);
+                decorationInformation = null;
+            }
+        }
     }
 
     private void installListeners() {
@@ -189,6 +198,9 @@ public class MacOSTitlePane extends CustomTitlePane {
         public void propertyChange(final PropertyChangeEvent evt) {
             if ("JRootPane.hideTitleBar".equals(evt.getPropertyName())) {
                 updateTitleBarVisibility();
+            } else if ("JRootPane.coloredTitleBar".equals(evt.getPropertyName())) {
+                uninstall(false);
+                install();
             }
         }
     }
@@ -205,7 +217,9 @@ public class MacOSTitlePane extends CustomTitlePane {
 
     @Override
     public Dimension getPreferredSize() {
-        if (decorationInformation == null) return new Dimension(0, 0);
+        if (decorationInformation == null) {
+            return new Dimension(0, 0);
+        }
         int height = decorationInformation.titleBarHeight;
         if (hideTitleBar()) {
             LOGGER.finer("Title bar is hidden.");
@@ -219,8 +233,12 @@ public class MacOSTitlePane extends CustomTitlePane {
     }
 
     private boolean hideTitleBar() {
-        if (!useColoredTitleBar) return true;
-        if (titleBarHidden) return true;
+        if (decorationInformation == null || !decorationInformation.useColoredTitleBar) {
+            return true;
+        }
+        if (titleBarHidden) {
+            return true;
+        }
         return (decorationInformation.windowHandle == 0)
                 || JNIDecorationsMacOS.isFullscreen(decorationInformation.windowHandle)
                 || getDecorationStyle() == JRootPane.NONE;

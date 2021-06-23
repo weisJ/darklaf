@@ -45,6 +45,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     public static final String KEY_NO_DECORATIONS_UPDATE = KEY_PREFIX + "noDecorationsUpdate";
     public static final String KEY_NO_DECORATIONS = KEY_PREFIX + "noDecorations";
     public static final String KEY_UNIFIED_MENUBAR = KEY_PREFIX + "unifiedMenuBar";
+    public static final String KEY_COLORED_TITLE_BAR = KEY_PREFIX + "coloredTitleBar";
     protected static final String[] borderKeys = new String[] {"RootPane.border", "RootPane.frameBorder",
             "RootPane.plainDialogBorder", "RootPane.informationDialogBorder", "RootPane.errorDialogBorder",
             "RootPane.colorChooserDialogBorder", "RootPane.fileChooserDialogBorder",
@@ -75,7 +76,8 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
     @Override
     protected void installDefaults(final JRootPane c) {
         super.installDefaults(c);
-        c.putClientProperty(KEY_UNIFIED_MENUBAR, UIManager.getBoolean("TitlePane.unifiedMenuBar"));
+        PropertyUtil.installBooleanProperty(c, KEY_UNIFIED_MENUBAR, "TitlePane.unifiedMenuBar");
+        PropertyUtil.installBooleanProperty(c, KEY_COLORED_TITLE_BAR, "macos.coloredTitleBar");
         LookAndFeel.installColors(c, "RootPane.background", "RootPane.foreground");
     }
 
