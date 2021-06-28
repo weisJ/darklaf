@@ -65,8 +65,8 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI implements MenuItemUI {
 
     @Override
     public void uninstallUI(JComponent c) {
-        super.uninstallUI(c);
         MenuItemLayoutHelper.clearUsedParentClientProperties(menuItem);
+        super.uninstallUI(c);
     }
 
     @Override
