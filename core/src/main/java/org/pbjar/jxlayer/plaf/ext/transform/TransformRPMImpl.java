@@ -38,6 +38,7 @@ import java.util.logging.Logger;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.util.SystemInfo;
 import org.jdesktop.jxlayer.JXLayer;
 import org.jdesktop.jxlayer.plaf.LayerUI;
 import org.pbjar.jxlayer.plaf.ext.TransformUI;
@@ -59,7 +60,7 @@ public final class TransformRPMImpl {
      *
      * @see #hackInitialization(RepaintManager, RepaintManager)
      */
-    public static final boolean hack = false;
+    public static final boolean hack = !SystemInfo.isJavaVersionAtLeast("9");
 
     private TransformRPMImpl() {}
 
