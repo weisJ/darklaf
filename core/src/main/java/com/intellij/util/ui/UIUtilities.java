@@ -199,9 +199,10 @@ public class UIUtilities {
         } else if (code <= 0x200d) { // zwj or zwnj
             return true;
         } else // directional control
-            if (code >= 0x202a && code <= 0x202e) { // directional control
+        if (code >= 0x202a && code <= 0x202e) { // directional control
             return true;
-        } else return code >= 0x206a && code <= 0x206f;
+        } else
+            return code >= 0x206a && code <= 0x206f;
     }
 
     public static UIUtilities.AATextInfo drawTextAntialiased(JComponent c) {
@@ -831,19 +832,19 @@ public class UIUtilities {
     private static synchronized boolean inputEvent_canAccessSystemClipboard(InputEvent ie) {
         if (inputEvent_CanAccessSystemClipboard_Field == null) {
             inputEvent_CanAccessSystemClipboard_Field =
-                AccessController.doPrivileged(new PrivilegedAction<Field>() {
-                    public Field run() {
-                        try {
-                            Field field = InputEvent.class.getDeclaredField("canAccessSystemClipboard");
-                            field.setAccessible(true);
-                            return field;
-                        } catch (SecurityException var2) {
-                        } catch (NoSuchFieldException var3) {
-                        }
+                    AccessController.doPrivileged(new PrivilegedAction<Field>() {
+                        public Field run() {
+                            try {
+                                Field field = InputEvent.class.getDeclaredField("canAccessSystemClipboard");
+                                field.setAccessible(true);
+                                return field;
+                            } catch (SecurityException var2) {
+                            } catch (NoSuchFieldException var3) {
+                            }
 
-                        return null;
-                    }
-                });
+                            return null;
+                        }
+                    });
         }
 
         if (inputEvent_CanAccessSystemClipboard_Field == null) {
@@ -892,7 +893,8 @@ public class UIUtilities {
         if (!EventQueue.isDispatchThread()) {
             return true;
         } else {
-            return e instanceof InputEvent && (!checkGesture || isAccessClipboardGesture((InputEvent) e)) && inputEvent_canAccessSystemClipboard((InputEvent) e);
+            return e instanceof InputEvent && (!checkGesture || isAccessClipboardGesture((InputEvent) e))
+                    && inputEvent_canAccessSystemClipboard((InputEvent) e);
         }
     }
 

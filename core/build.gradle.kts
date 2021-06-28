@@ -72,25 +72,25 @@ val makeDocumentation by tasks.registering(JavaExec::class) {
 
     workingDir = File(project.rootDir, "build")
     workingDir.mkdirs()
-    main = "documentation.CreateUITable"
+    main = "com.github.weisj.darklaf.documentation.CreateUITable"
     classpath(sourceSets.main.get().runtimeClasspath, sourceSets.test.get().runtimeClasspath)
 }
 
 abstract class DemoTask : JavaExec() {
     init {
-        main = "DemoLauncher"
+        main = "com.github.weisj.darklaf.ui.DemoLauncher"
     }
 
     @Option(
         option = "class",
-        description = "Specifies the main class to run (e.g. UIDemo, ui.table.TableDemo, ui.button.ButtonDemo, ...)"
+        description = "Specifies the main class to run (e.g. com.github.weisj.darklaf.ui.table.TableDemo, com.github.weisj.ui.button.ButtonDemo, ...)"
     )
     override fun setMain(mainClassName: String?) = super.setMain(mainClassName)
 }
 
 val runDemo by tasks.registering(DemoTask::class) {
     group = LifecycleBasePlugin.VERIFICATION_GROUP
-    description = "Launches demo (e.g. DemoLauncher, ui.table.TableDemo, ui.button.ButtonDemo, ...)"
+    description = "Launches demo (e.g. com.github.weisj.darklaf.ui.table.TableDemo, com.github.weisj.darklaf.ui.button.ButtonDemo, ...)"
 
     classpath(sourceSets.test.map { it.runtimeClasspath })
 
