@@ -21,7 +21,6 @@
  */
 package util;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Objects;
@@ -45,8 +44,7 @@ public final class ClassFinder {
     private static <T> T getInstance(final Class<T> type) {
         try {
             return type.getDeclaredConstructor().newInstance();
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException
-                | NoSuchMethodException e) {
+        } catch (Throwable e) {
             e.printStackTrace();
             return null;
         }
