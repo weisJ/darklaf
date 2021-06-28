@@ -23,6 +23,7 @@ package com.github.weisj.darklaf.delegate;
 
 import java.awt.*;
 import java.util.EventObject;
+import java.util.Objects;
 
 import javax.swing.*;
 import javax.swing.event.CellEditorListener;
@@ -30,7 +31,7 @@ import javax.swing.table.TableCellEditor;
 
 public class TableCellEditorDelegate implements TableCellEditor {
 
-    private final TableCellEditor delegate;
+    private TableCellEditor delegate;
 
     public TableCellEditorDelegate(final TableCellEditor editor) {
         this.delegate = editor;
@@ -38,6 +39,10 @@ public class TableCellEditorDelegate implements TableCellEditor {
 
     public TableCellEditor getDelegate() {
         return delegate;
+    }
+
+    public void setDelegate(TableCellEditor delegate) {
+        this.delegate = Objects.requireNonNull(delegate);
     }
 
     @Override
