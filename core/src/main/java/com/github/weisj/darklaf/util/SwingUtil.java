@@ -30,7 +30,11 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.Window;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
+import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.JList;
@@ -44,7 +48,51 @@ import com.intellij.util.ui.UIUtilities;
 
 public final class SwingUtil {
 
+    private static final Logger LOGGER = LogUtil.getLogger(SwingUtil.class);
+
     private SwingUtil() {}
+
+    private static boolean swingInteropAvailable;
+
+    static {
+        try {
+            Class.forName("jdk.swing.interop.SwingInterOpUtils");
+            swingInteropAvailable = true;
+        } catch (Throwable e) {
+            swingInteropAvailable = false;
+        }
+        LOGGER.fine("SwingInterOpUtils available: " + swingInteropAvailable);
+    }
+
+    public static void grab(final Toolkit toolkit, final Window window) {
+        if (swingInteropAvailable) {
+            try {
+                Class.forName("jdk.swing.interop.SwingInterOpUtils")
+                        .getMethod("grab", Toolkit.class, Window.class)
+                        .invoke(null, toolkit, window);
+            } catch (Throwable ignored) {
+            }
+        } else {
+            if (toolkit instanceof sun.awt.SunToolkit) {
+                ((sun.awt.SunToolkit) toolkit).grab(window);
+            }
+        }
+    }
+
+    public static void ungrab(final Toolkit toolkit, final Window window) {
+        if (swingInteropAvailable) {
+            try {
+                Class.forName("jdk.swing.interop.SwingInterOpUtils")
+                        .getMethod("ungrab", Toolkit.class, Window.class)
+                        .invoke(null, toolkit, window);
+            } catch (Throwable ignored) {
+            }
+        } else {
+            if (toolkit instanceof sun.awt.SunToolkit) {
+                ((sun.awt.SunToolkit) toolkit).ungrab(window);
+            }
+        }
+    }
 
     public static void drawStringUnderlineCharAt(JComponent c, Graphics g,
             String text, int underlinedIndex, int x, int y) {
@@ -69,7 +117,11 @@ public final class SwingUtil {
     }
 
     public static int getFocusAcceleratorKeyMask() {
-        return UIUtilities.getSystemMnemonicKeyMask();
+        if (SystemInfo.isMac) {
+            return InputEvent.CTRL_MASK | InputEvent.ALT_MASK;
+        } else {
+            return InputEvent.ALT_MASK;
+        }
     }
 
     public static FontMetrics getFontMetrics(final JComponent c, final Graphics g) {

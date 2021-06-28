@@ -32,15 +32,14 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import sun.awt.SunToolkit;
-import sun.awt.UngrabEvent;
-
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
+import com.github.weisj.darklaf.util.SwingUtil;
 
 public class MouseGrabber implements ChangeListener, AWTEventListener, ComponentListener, WindowListener {
 
+    private static final int GRAB_EVENT_MASK = 0x80000000;
     Window grabbedWindow;
     MenuElement[] lastPathSelected;
 
@@ -62,7 +61,7 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
                             AWTEvent.MOUSE_MOTION_EVENT_MASK |
                             AWTEvent.MOUSE_WHEEL_EVENT_MASK |
                             AWTEvent.WINDOW_EVENT_MASK |
-                            SunToolkit.GRAB_EVENT_MASK);
+                            GRAB_EVENT_MASK);
             return null;
         });
 
@@ -72,8 +71,8 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
         }
         grabbedWindow = DarkUIUtil.getWindow(invoker);
         if (grabbedWindow != null) {
-            if (tk instanceof SunToolkit) {
-                ((SunToolkit) tk).grab(grabbedWindow);
+            if (tk.getClass().getName().equals("SunToolkit")) {
+                SwingUtil.grab(tk, grabbedWindow);
             } else {
                 grabbedWindow.addComponentListener(this);
                 grabbedWindow.addWindowListener(this);
@@ -99,8 +98,8 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
     protected void realUngrabWindow() {
         Toolkit tk = Toolkit.getDefaultToolkit();
         if (grabbedWindow != null) {
-            if (tk instanceof SunToolkit) {
-                ((SunToolkit) tk).ungrab(grabbedWindow);
+            if (tk.getClass().getName().equals("SunToolkit")) {
+                SwingUtil.ungrab(tk, grabbedWindow);
             } else {
                 grabbedWindow.removeComponentListener(this);
                 grabbedWindow.removeWindowListener(this);
@@ -149,7 +148,7 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
     }
 
     public void eventDispatched(final AWTEvent ev) {
-        if (ev instanceof UngrabEvent) {
+        if (ev != null && ev.getClass().getName().equals("UngrabEvent")) {
             // Popup should be canceled in case of ungrab event
             cancelPopupMenu();
             return;
