@@ -64,7 +64,7 @@ public class CreateUITable {
     private static final int SAMPLE_WIDTH = 150;
     private static final int SAMPLE_HEIGHT = 25;
 
-    private static final String FOLDER = "com/github/weisj/darklaf/documentation/";
+    private static final String FOLDER = "documentation/";
     private static final String IDENT = "    ";
 
     private static final String MISC_GROUP = "__Misc__";
