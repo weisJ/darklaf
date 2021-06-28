@@ -21,20 +21,23 @@
  */
 package com.github.weisj.darklaf.ui.text.dummy;
 
+import java.lang.ref.WeakReference;
+
 import javax.swing.plaf.basic.BasicTextFieldUI;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.View;
 
 public class DummyTextFieldUI extends BasicTextFieldUI {
 
-    private View rootView;
+    private WeakReference<View> rootView;
 
     @Override
     public View getRootView(final JTextComponent tc) {
-        return rootView != null ? rootView : super.getRootView(tc);
+        View view = rootView != null ? rootView.get() : null;
+        return view != null ? view : super.getRootView(tc);
     }
 
     public void setRootView(final View rootView) {
-        this.rootView = rootView;
+        this.rootView = new WeakReference<>(rootView);
     }
 }

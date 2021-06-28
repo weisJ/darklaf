@@ -41,7 +41,7 @@ import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyValue;
 import com.github.weisj.darklaf.util.LogUtil;
-import com.github.weisj.darklaf.util.MutableLazyValue;
+import com.github.weisj.darklaf.util.value.WeakShared;
 
 public class ThemeSettings implements ThemePreferenceListener {
 
@@ -49,7 +49,8 @@ public class ThemeSettings implements ThemePreferenceListener {
     private static final LazyValue<ThemeSettings> instance = new LazyValue<>(ThemeSettings::new);
     private static final LazyValue<Icon> icon = new LazyValue<>(() -> UIManager.getIcon("ThemeSettings.icon"));
 
-    private final MutableLazyValue<ThemeSettingsPanel> settingsPanel;
+    private final WeakShared<ThemeSettingsPanel> settingsPanel;
+    private ThemeSettingsPanel customThemeSettingsPanel;
 
     private JDialog dialog;
 
@@ -89,7 +90,7 @@ public class ThemeSettings implements ThemePreferenceListener {
         LafManager.addThemePreferenceChangeListener(this);
         currentConfiguration = new DefaultSettingsConfiguration();
         savedConfiguration = new DefaultSettingsConfiguration();
-        settingsPanel = new MutableLazyValue<>(() -> {
+        settingsPanel = new WeakShared<>(() -> {
             ThemeSettingsPanel panel = new ThemeSettingsPanel();
             panel.loadConfiguration(currentConfiguration);
             return panel;
@@ -155,8 +156,10 @@ public class ThemeSettings implements ThemePreferenceListener {
      */
     public void setThemeSettingsPanel(final ThemeSettingsPanel panel) {
         if (panel != null) {
-            settingsPanel.set(panel);
+            customThemeSettingsPanel = panel;
             panel.loadConfiguration(currentConfiguration);
+        } else {
+            customThemeSettingsPanel = null;
         }
     }
 
@@ -381,9 +384,7 @@ public class ThemeSettings implements ThemePreferenceListener {
             dialog.dispatchEvent(new WindowEvent(dialog, WindowEvent.WINDOW_CLOSING));
         });
         JButton apply = new JButton(UIManager.getString("dialog_apply", l));
-        apply.addActionListener(e -> {
-            apply();
-        });
+        apply.addActionListener(e -> apply());
 
         Box box = Box.createHorizontalBox();
         box.add(Box.createHorizontalGlue());
@@ -404,12 +405,19 @@ public class ThemeSettings implements ThemePreferenceListener {
         updateSettingsPanel();
     }
 
+    private ThemeSettingsPanel getThemeSettingsPanelWeak() {
+        if (customThemeSettingsPanel != null) return customThemeSettingsPanel;
+        return settingsPanel.getIfPresent();
+    }
+
     private void updateSettingsPanel() {
-        settingsPanel.ifPresent(p -> p.loadConfiguration(currentConfiguration));
+        ThemeSettingsPanel panel = getThemeSettingsPanelWeak();
+        if (panel != null) panel.loadConfiguration(currentConfiguration);
     }
 
     private void fetchFromSettingsPanel() {
-        settingsPanel.ifPresent(ThemeSettingsPanel::updateConfiguration);
+        ThemeSettingsPanel panel = getThemeSettingsPanelWeak();
+        if (panel != null) panel.updateConfiguration();
     }
 
     /** Saves the settings. */

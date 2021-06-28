@@ -80,6 +80,7 @@ public abstract class DarkEditorPaneUIBridge extends DarkTextUI {
     }
 
     protected void updateDisplayProperties() {
+        editorPane.setEditorPane((JEditorPane) editor);
         updateDisplayProperties((JEditorPane) getComponent(),
                 new PropertyChangeEvent(editorPane, PropertyKey.FONT, editorPane.getFont(), editorPane.getFont()));
     }

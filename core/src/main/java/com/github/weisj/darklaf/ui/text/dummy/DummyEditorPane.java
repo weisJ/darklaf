@@ -27,6 +27,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelListener;
 import java.beans.PropertyChangeListener;
+import java.lang.ref.WeakReference;
 
 import javax.swing.*;
 import javax.swing.event.DocumentListener;
@@ -38,18 +39,18 @@ import javax.swing.text.Highlighter;
 
 public class DummyEditorPane extends JEditorPane {
 
-    private JEditorPane editorPane;
+    private WeakReference<JEditorPane> editorPane;
     private PropertyChangeListener propertyChangeListener;
 
-    public void setEditorPane(final JEditorPane editorPane) {
-        this.editorPane = editorPane;
-        if (editorPane != null) {
-            copyProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES);
-            copyProperty(JEditorPane.W3C_LENGTH_UNITS);
+    public void setEditorPane(final JEditorPane editor) {
+        this.editorPane = new WeakReference<>(editor);
+        if (editor != null) {
+            copyProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, editor);
+            copyProperty(JEditorPane.W3C_LENGTH_UNITS, editor);
         }
     }
 
-    protected void copyProperty(final String key) {
+    protected void copyProperty(final String key, final JEditorPane editorPane) {
         putClientProperty(key, editorPane.getClientProperty(key));
     }
 
@@ -57,33 +58,43 @@ public class DummyEditorPane extends JEditorPane {
         return propertyChangeListener;
     }
 
+    private JEditorPane getEditor() {
+        return editorPane != null ? editorPane.get() : null;
+    }
+
     @Override
     public Document getDocument() {
-        if (editorPane == null) return super.getDocument();
-        return editorPane.getDocument();
+        JEditorPane editor = getEditor();
+        if (editor == null) return super.getDocument();
+        return editor.getDocument();
     }
 
     @Override
     public Font getFont() {
-        if (editorPane == null) return null;
-        return editorPane.getFont();
+        JEditorPane editor = getEditor();
+        if (editor == null) return null;
+        return editor.getFont();
     }
 
     @Override
     public Color getForeground() {
-        if (editorPane == null) return null;
-        return editorPane.getForeground();
+        JEditorPane editor = getEditor();
+        if (editor == null) return null;
+        return editor.getForeground();
     }
 
     @Override
     public Color getBackground() {
-        if (editorPane == null) return null;
-        return editorPane.getBackground();
+        JEditorPane editor = getEditor();
+        if (editor == null) return null;
+        return editor.getBackground();
     }
 
     @Override
     public boolean isEditable() {
-        return editorPane.isEditable();
+        JEditorPane editor = getEditor();
+        if (editor == null) return false;
+        return editor.isEditable();
     }
 
     @Override

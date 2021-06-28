@@ -56,4 +56,9 @@ public class WeakShared<T> {
         }
         return value;
     }
+
+    public T getIfPresent() {
+        WeakReference<T> ref = reference;
+        return ref != null ? ref.get() : null;
+    }
 }

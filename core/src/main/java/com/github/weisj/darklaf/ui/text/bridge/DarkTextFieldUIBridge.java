@@ -69,7 +69,9 @@ public abstract class DarkTextFieldUIBridge extends DarkTextUI {
     @Override
     public int getBaseline(final JComponent c, final int width, final int height) {
         basicTextFieldUI.setRootView(getRootView((JTextComponent) c));
-        return basicTextFieldUI.getBaseline(c, width, height);
+        int baseLine = basicTextFieldUI.getBaseline(c, width, height);
+        basicTextFieldUI.setRootView(null);
+        return baseLine;
     }
 
     @Override
