@@ -97,11 +97,10 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
         }
         maybeUpdateLayoutState();
 
-        ListCellRenderer<Object> renderer = getCellRenderer(list);
         ListModel<Object> dataModel = list.getModel();
         ListSelectionModel selModel = list.getSelectionModel();
 
-        if ((renderer == null) || dataModel.getSize() == 0) {
+        if (dataModel.getSize() == 0) {
             return;
         }
 
@@ -154,7 +153,7 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
                 g.clipRect(paintBounds.x, paintBounds.y, paintBounds.width, paintBounds.height);
                 int cellIndex = row < maxRow && colCounter <= endColumn ? index : -1;
                 int rowIndex = row;
-                paintCell(g, cellIndex, rowBounds, renderer, dataModel, selModel, leadIndex, rowIndex, bgWidth);
+                paintCell(g, cellIndex, rowBounds, dataModel, selModel, leadIndex, rowIndex, bgWidth);
                 rowBounds.y += rowBounds.height;
                 index += rowIncrement;
                 row++;
@@ -171,7 +170,7 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
     }
 
     protected void paintCell(final Graphics g, final int index, final Rectangle rowBounds,
-            final ListCellRenderer<Object> cellRenderer, final ListModel<Object> dataModel,
+            final ListModel<Object> dataModel,
             final ListSelectionModel selModel, final int leadIndex, final int row, final int bgWidth) {
         boolean empty = index < 0 || index >= list.getModel().getSize();
         Object value = empty ? null : dataModel.getElementAt(index);
@@ -184,7 +183,7 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
         int cw = empty && bgWidth > 0 ? bgWidth : rowBounds.width;
         int ch = rowBounds.height;
 
-        ListCellRenderer<Object> renderer = cellRenderer;
+        ListCellRenderer<Object> renderer = getCellRenderer(list);
         if (empty) {
             rendererDelegate.setDelegate(null);
             renderer = rendererDelegate;
