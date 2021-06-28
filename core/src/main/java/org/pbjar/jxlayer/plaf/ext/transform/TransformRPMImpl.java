@@ -60,7 +60,7 @@ public final class TransformRPMImpl {
      *
      * @see #hackInitialization(RepaintManager, RepaintManager)
      */
-    public static final boolean hack = !SystemInfo.isJavaVersionAtLeast("9");
+    public static final boolean hack = !SystemInfo.isJava9OrGreater;
 
     private TransformRPMImpl() {}
 

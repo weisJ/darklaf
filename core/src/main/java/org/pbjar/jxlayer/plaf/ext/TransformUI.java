@@ -116,8 +116,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
     static {
         boolean value;
         try {
-            boolean isJava9OrLater = SystemInfo.isJavaVersionAtLeast("9");
-            if (!isJava9OrLater) {
+            if (!SystemInfo.isJava9OrGreater) {
                 swingUtilities3 = Class.forName("com.sun.java.swing.SwingUtilities3");
                 setDelegateRepaintManagerMethod =
                         swingUtilities3.getMethod("setDelegateRepaintManager", JComponent.class, RepaintManager.class);
