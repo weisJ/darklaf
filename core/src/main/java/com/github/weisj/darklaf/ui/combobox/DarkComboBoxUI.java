@@ -94,6 +94,12 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         buttonPad = UIManager.getInsets("ComboBox.buttonInsets");
         valueInsets = UIManager.getInsets("ComboBox.valueInsets");
         editorCellInsets = UIManager.getInsets("ComboBox.cellEditorInsets");
+
+        int maximumRowCount = UIManager.getInt("ComboBox.maximumRowCount");
+        if (maximumRowCount > 0 && maximumRowCount != 8 && comboBox.getMaximumRowCount() == 8) {
+            comboBox.setMaximumRowCount(maximumRowCount);
+        }
+
         updateForeground(comboBox);
         updateBackground(comboBox);
     }
@@ -348,7 +354,6 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         return rect;
     }
 
-    @SuppressWarnings("unchecked")
     protected Component getRendererForCurrentValue() {
         return comboBox.getRenderer().getListCellRendererComponent(listBox, comboBox.getSelectedItem(), -1, false,
                 false);
