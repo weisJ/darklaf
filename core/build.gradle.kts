@@ -1,5 +1,6 @@
 import com.github.vlsi.gradle.crlf.CrLfSpec
 import com.github.vlsi.gradle.crlf.LineEndings
+import com.github.vlsi.gradle.properties.dsl.props
 
 plugins {
     `java-library`
@@ -39,6 +40,10 @@ tasks.test {
         workingDir.mkdirs()
     }
     useJUnitPlatform()
+    val verboseTest by props(false)
+    if (!verboseTest) {
+        exclude("**/DemoTest*")
+    }
 }
 
 fun Jar.includeLicenses() {
