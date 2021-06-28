@@ -27,6 +27,7 @@ import java.lang.reflect.Method;
 import java.util.Objects;
 
 import javax.swing.*;
+import javax.swing.plaf.RootPaneUI;
 
 import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
@@ -131,7 +132,7 @@ public class DarkPopupFactory extends PopupFactory {
          * explicitly.
          */
         if (rootPane == null) return;
-        if (SystemInfo.isLinux && !opaque) {
+        if (!opaque) {
             linuxOpacityFix(rootPane);
         }
 
@@ -153,13 +154,24 @@ public class DarkPopupFactory extends PopupFactory {
         // HeavyWeights popups use rootpanes with double buffering disabled by setting
         // setUseTrueDoubleBuffering(false). On some Linux window managers (e.g. Gnome) this results
         // in windows not being transparent if requested.
-        try {
-            Method method = JRootPane.class.getDeclaredMethod("setUseTrueDoubleBuffering", boolean.class);
-            method.setAccessible(true);
-            method.invoke(rootPane, true);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+        if (applyRootPaneFix()) {
+            try {
+                Method method = JRootPane.class.getDeclaredMethod("setUseTrueDoubleBuffering", boolean.class);
+                method.setAccessible(true);
+                method.invoke(rootPane, true);
+                return;
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
         }
+        // Could not fix using reflection. Replace rootPane.
+        JRootPane wrapperRootPane = new WrapperRootPane();
+        wrapperRootPane.setContentPane(rootPane.getContentPane());
+        rootPane.setContentPane(wrapperRootPane);
+    }
+
+    public static boolean applyRootPaneFix() {
+        return SystemInfo.isLinux && !SystemInfo.isJava9OrGreater;
     }
 
     protected void setupFocusableWindowState(final boolean isFocusable, final Window window) {
@@ -212,6 +224,7 @@ public class DarkPopupFactory extends PopupFactory {
         return c;
     }
 
+
     private static class HeavyWeightParent extends JComponent {
 
         private int parentRequestCount = 0;
@@ -248,4 +261,25 @@ public class DarkPopupFactory extends PopupFactory {
         HEAVY_WEIGHT
     }
 
+    private static class WrapperRootPane extends JRootPane {
+
+        @Override
+        public void updateUI() {
+            setUI(new RootPaneUI() {});
+        }
+
+        @Override
+        public void doLayout() {
+            int w = getWidth();
+            int h = getHeight();
+            layout(getLayeredPane(), w, h);
+            layout(getGlassPane(), w, h);
+            layout(getContentPane(), w, h);
+        }
+
+        private void layout(final Component c, final int w, final int h) {
+            c.setBounds(0, 0, w, h);
+            c.doLayout();
+        }
+    }
 }
