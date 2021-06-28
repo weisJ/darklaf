@@ -149,8 +149,8 @@ class ParserTest {
         for (int i = 0; i < 100; i++) {
             Insets insets = new Insets(r.nextInt(), r.nextInt(), r.nextInt(), r.nextInt());
 
-            // While legacy declarations are supported these may be a valid color value.
-            // and parse incorrectly.
+            // While legacy declarations are supported these may be a valid color value
+            // hence parse incorrectly.
             if (isValidColor(insets.left)) continue;
             if (isValidColor(insets.right)) continue;
             if (isValidColor(insets.bottom)) continue;
