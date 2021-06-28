@@ -175,7 +175,7 @@ public class DarkFileChooserUI extends MetalFileChooserUI {
         ListCellRenderer<Object> realRenderer = new DarkFilterComboBoxRenderer();
         return new FilterComboBoxRenderer() {
             @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
                     boolean cellHasFocus) {
                 return realRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             }
