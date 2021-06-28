@@ -19,34 +19,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.ui.togglebutton.checkbox;
 
-import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
 
-import com.github.weisj.darklaf.ui.togglebutton.radiobutton.DarkRadioButtonMenuItemUI;
+package com.intellij.util.ui;
 
-/** @author Jannis Weis */
-public class DarkCheckBoxMenuItemUI extends DarkRadioButtonMenuItemUI {
+public class StringUIClientPropertyKey implements UIClientPropertyKey {
+    private final String key;
 
-    private Icon stateIcon;
-
-    public static ComponentUI createUI(final JComponent c) {
-        return new DarkCheckBoxMenuItemUI();
+    public StringUIClientPropertyKey(String key) {
+        this.key = key;
     }
 
-    @Override
-    public String getPropertyPrefix() {
-        return "CheckBoxMenuItem";
-    }
-
-    @Override
-    protected void installIcons() {
-        stateIcon = UIManager.getIcon("CheckBox.icon");
-    }
-
-    @Override
-    protected Icon getStateIcon(final AbstractButton b) {
-        return stateIcon;
+    public String toString() {
+        return this.key;
     }
 }

@@ -19,34 +19,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.ui.togglebutton.checkbox;
+package com.intellij.util.ui;
 
-import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
+import java.awt.Image;
 
-import com.github.weisj.darklaf.ui.togglebutton.radiobutton.DarkRadioButtonMenuItemUI;
+import javax.swing.ImageIcon;
+import javax.swing.plaf.UIResource;
 
-/** @author Jannis Weis */
-public class DarkCheckBoxMenuItemUI extends DarkRadioButtonMenuItemUI {
+public class ImageIconUIResource extends ImageIcon implements UIResource {
 
-    private Icon stateIcon;
-
-    public static ComponentUI createUI(final JComponent c) {
-        return new DarkCheckBoxMenuItemUI();
+    /**
+     * Calls the superclass constructor with the same parameter.
+     *
+     * @param imageData an array of pixels
+     * @see javax.swing.ImageIcon#ImageIcon(byte[])
+     */
+    public ImageIconUIResource(byte[] imageData) {
+        super(imageData);
     }
 
-    @Override
-    public String getPropertyPrefix() {
-        return "CheckBoxMenuItem";
-    }
-
-    @Override
-    protected void installIcons() {
-        stateIcon = UIManager.getIcon("CheckBox.icon");
-    }
-
-    @Override
-    protected Icon getStateIcon(final AbstractButton b) {
-        return stateIcon;
+    /**
+     * Calls the superclass constructor with the same parameter.
+     *
+     * @param image an image
+     * @see javax.swing.ImageIcon#ImageIcon(Image)
+     */
+    public ImageIconUIResource(Image image) {
+        super(image);
     }
 }

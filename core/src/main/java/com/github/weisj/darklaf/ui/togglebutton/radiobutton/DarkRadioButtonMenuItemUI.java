@@ -26,12 +26,11 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 
-import sun.swing.MenuItemLayoutHelper;
-
 import com.github.weisj.darklaf.listener.MouseClickListener;
 import com.github.weisj.darklaf.ui.menu.DarkMenuItemUIBase;
 import com.github.weisj.darklaf.ui.menu.MenuItemLayoutDelegate;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonMenuItemConstants;
+import com.intellij.util.ui.MenuItemLayoutHelper;
 
 /** @author Jannis Weis */
 public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements ToggleButtonMenuItemConstants {
@@ -48,7 +47,7 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements Tog
     }
 
     @Override
-    protected String getPropertyPrefix() {
+    public String getPropertyPrefix() {
         return "RadioButtonMenuItem";
     }
 
@@ -80,7 +79,7 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements Tog
     }
 
     @Override
-    protected MenuItemLayoutHelper getMenuItemLayoutHelper(final Icon checkIcon, final Icon arrowIcon,
+    public MenuItemLayoutHelper getMenuItemLayoutHelper(final Icon checkIcon, final Icon arrowIcon,
             final int defaultTextIconGap, final JMenuItem mi, final Rectangle viewRect) {
         if (mi.getIcon() == null) {
             layoutDelegate.setDelegate(mi);
@@ -91,7 +90,7 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements Tog
     }
 
     @Override
-    protected void paintCheckIcon(final Graphics g2, final JMenuItem mi, final MenuItemLayoutHelper lh,
+    public void paintCheckIcon(final Graphics g2, final JMenuItem mi, final MenuItemLayoutHelper lh,
             final MenuItemLayoutHelper.LayoutResult lr, final Color foreground) {
         Rectangle rect = lr.getCheckRect();
         if (mi.getIcon() == null) {

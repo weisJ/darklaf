@@ -40,8 +40,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellRenderer;
 
-import sun.swing.SwingUtilities2;
-
+import com.intellij.util.ui.UIUtilities;
 
 public final class SwingUtil {
 
@@ -49,28 +48,28 @@ public final class SwingUtil {
 
     public static void drawStringUnderlineCharAt(JComponent c, Graphics g,
             String text, int underlinedIndex, int x, int y) {
-        SwingUtilities2.drawStringUnderlineCharAt(c, g, text, underlinedIndex, x, y);
+        UIUtilities.drawStringUnderlineCharAt(c, g, text, underlinedIndex, x, y);
     }
 
     public static void drawString(final JComponent c, final Graphics g, final String text, int x, int y) {
-        SwingUtilities2.drawString(c, g, text, x, y);
+        UIUtilities.drawString(c, g, text, x, y);
     }
 
     public static void setSkipClickCount(final Component comp, int count) {
-        SwingUtilities2.setSkipClickCount(comp, count);
+        UIUtilities.setSkipClickCount(comp, count);
     }
 
     public static int stringWidth(final JComponent c, final FontMetrics fm, final String string) {
-        return SwingUtilities2.stringWidth(c, fm, string);
+        return UIUtilities.stringWidth(c, fm, string);
     }
 
     public static String clipStringIfNecessary(final JComponent c, final FontMetrics fm,
             final String string, int availTextWidth) {
-        return SwingUtilities2.clipStringIfNecessary(c, fm, string, availTextWidth);
+        return UIUtilities.clipStringIfNecessary(c, fm, string, availTextWidth);
     }
 
     public static int getFocusAcceleratorKeyMask() {
-        return SwingUtilities2.getSystemMnemonicKeyMask();
+        return UIUtilities.getSystemMnemonicKeyMask();
     }
 
     public static FontMetrics getFontMetrics(final JComponent c, final Graphics g) {
@@ -166,7 +165,7 @@ public final class SwingUtil {
     public static boolean tabbedPaneChangeFocusTo(final Component comp) {
         if (comp != null) {
             if (comp.isFocusable()) {
-                SwingUtilities2.compositeRequestFocus(comp);
+                UIUtilities.compositeRequestFocus(comp);
                 return true;
             } else {
                 return comp instanceof JComponent && requestDefaultFocus((JComponent) comp);

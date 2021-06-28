@@ -23,6 +23,7 @@ package com.github.weisj.darklaf.platform.windows.ui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
@@ -32,8 +33,6 @@ import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.UIResource;
-
-import sun.awt.SunToolkit;
 
 import com.github.weisj.darklaf.icons.ScaledIcon;
 import com.github.weisj.darklaf.icons.ToggleIcon;
@@ -658,12 +657,58 @@ public class WindowsTitlePane extends CustomTitlePane {
             systemIcon = new ScaledIcon(icons.get(0).getScaledInstance((int) Scale.scaleWidth(ICON_SIZE, gc),
                     (int) Scale.scaleHeight(ICON_SIZE, gc), Image.SCALE_AREA_AVERAGING), this);
         } else {
-            systemIcon = new ScaledIcon(SunToolkit.getScaledIconImage(icons, (int) Scale.scaleWidth(ICON_SIZE, gc),
+            systemIcon = new ScaledIcon(getScaledIconImage(this, icons,
+                    (int) Scale.scaleWidth(ICON_SIZE, gc),
                     (int) Scale.scaleHeight(ICON_SIZE, gc)), this);
         }
         if (windowIconButton != null) {
             windowIconButton.setIcon(systemIcon);
             SwingUtilities.invokeLater(this::repaint);
+        }
+    }
+
+    private Image getScaledIconImage(final Component c, final List<Image> images,
+            final int width, final int height) {
+        Image bestImage = null;
+        int dw = 0;
+        int dh = 0;
+        for (Image image : images) {
+            ensureImageLoaded(c, image);
+            int dwi = Math.abs(dw - image.getWidth(c));
+            int dhi = Math.abs(dh - image.getHeight(c));
+            if (bestImage == null || (dwi + dhi < dw + dh)) {
+                bestImage = image;
+                dw = dwi;
+                dh = dhi;
+            }
+        }
+        if (bestImage == null) return null;
+        int iw = bestImage.getWidth(null);
+        int ih = bestImage.getHeight(null);
+        double scaleFactor = Math.min((double) width / (double) iw, (double) height / (double) ih);
+        int bestWidth = (int) (scaleFactor * iw);
+        int bestHeight = (int) (scaleFactor * ih);
+        BufferedImage bimage =
+                new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = bimage.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        try {
+            int x = (width - bestWidth) / 2;
+            int y = (height - bestHeight) / 2;
+            g.drawImage(bestImage, x, y, bestWidth, bestHeight, c);
+        } finally {
+            g.dispose();
+        }
+        return bimage;
+    }
+
+    private void ensureImageLoaded(final Component c, final Image img) {
+        MediaTracker tracker = new MediaTracker(c);
+        tracker.addImage(img, 0);
+        try {
+            tracker.waitForAll();
+        } catch (final InterruptedException ignored) {
         }
     }
 

@@ -6,6 +6,13 @@ plugins {
     id("com.github.vlsi.crlf")
 }
 
+val fatJar by tasks.registering(Jar::class) {
+    archiveBaseName.set("fatJar")
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from(configurations["runtimeClasspath"].map { if (it.isDirectory) it else zipTree(it) })
+    with(tasks["jar"] as CopySpec)
+}
+
 dependencies {
     api(projects.darklafTheme)
     api(projects.darklafPropertyLoader)

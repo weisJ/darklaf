@@ -31,11 +31,12 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicMenuUI;
 
 import com.github.weisj.darklaf.listener.MouseInputDelegate;
-import com.github.weisj.darklaf.util.graphics.GraphicsContext;
-import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
+import com.intellij.util.ui.MenuItemLayoutHelper;
 
-public class DarkMenuUI extends BasicMenuUI {
+public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
 
+    protected int acceleratorTextOffset;
+    protected boolean useEvenHeight;
     protected Icon arrowIconHover;
     protected JMenu menu;
     protected MouseListener mouseListener;
@@ -48,6 +49,12 @@ public class DarkMenuUI extends BasicMenuUI {
     public void installUI(final JComponent c) {
         menu = (JMenu) c;
         super.installUI(c);
+    }
+
+    @Override
+    public void uninstallUI(JComponent c) {
+        super.uninstallUI(c);
+        MenuItemLayoutHelper.clearUsedParentClientProperties(menuItem);
     }
 
     @Override
@@ -100,13 +107,19 @@ public class DarkMenuUI extends BasicMenuUI {
         acceleratorForeground = UIManager.getColor("Menu.foreground");
         acceleratorSelectionForeground = UIManager.getColor("Menu.selectionForeground");
         arrowIconHover = UIManager.getIcon("Menu.arrowHover.icon");
+        useEvenHeight = !Boolean.TRUE.equals(UIManager.get(getPropertyPrefix() + ".evenHeight"));
+        acceleratorTextOffset = UIManager.getInt(getPropertyPrefix() + ".acceleratorTextOffset");
     }
 
     public void paint(final Graphics g, final JComponent c) {
-        GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
-        paintMenuItem(g, c, checkIcon, getArrowIcon(), selectionBackground,
+        paintMenuItemImpl(g, c, checkIcon, getArrowIcon(), selectionBackground,
                 isSelected(c) ? selectionForeground : c.getForeground(), defaultTextIconGap);
-        config.restore();
+    }
+
+    @Override
+    protected Dimension getPreferredMenuItemSize(final JComponent c, final Icon checkIcon, final Icon arrowIcon,
+            final int defaultTextIconGap) {
+        return getPreferredMenuItemSizeImpl(c, checkIcon, arrowIcon, defaultTextIconGap);
     }
 
     protected Icon getArrowIcon() {
@@ -118,5 +131,47 @@ public class DarkMenuUI extends BasicMenuUI {
     protected boolean isSelected(final JComponent menuItem) {
         if (!(menuItem instanceof JMenuItem)) return false;
         return menuItem.isEnabled() && ((JMenuItem) menuItem).isArmed();
+    }
+
+    @Override
+    public MenuItemLayoutHelper getMenuItemLayoutHelper(Icon checkIcon, Icon arrowIcon, int defaultTextIconGap,
+            JMenuItem mi, Rectangle viewRect) {
+        return DarkMenuItemUIBase.getMenuItemLayoutHelperImpl(acceleratorDelimiter, acceleratorFont,
+                getPropertyPrefix(), checkIcon, arrowIcon, defaultTextIconGap, mi, viewRect);
+    }
+
+    @Override
+    public String getPropertyPrefix() {
+        return super.getPropertyPrefix();
+    }
+
+    @Override
+    public Color getDisabledForeground() {
+        return disabledForeground;
+    }
+
+    @Override
+    public Color getSelectionForeground() {
+        return selectionForeground;
+    }
+
+    @Override
+    public Color getAcceleratorSelectionForeground() {
+        return acceleratorSelectionForeground;
+    }
+
+    @Override
+    public Color getAcceleratorForeground() {
+        return acceleratorForeground;
+    }
+
+    @Override
+    public int getAcceleratorTextOffset() {
+        return acceleratorTextOffset;
+    }
+
+    @Override
+    public boolean isUseEvenHeight() {
+        return useEvenHeight;
     }
 }
