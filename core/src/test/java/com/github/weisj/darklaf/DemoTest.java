@@ -45,6 +45,7 @@ class DemoTest implements NonThreadSafeTest {
         for (Theme theme : LafManager.getRegisteredThemes()) {
             LOGGER.warning("Testing " + theme.getDisplayName());
             runDemos(theme);
+            if (!Boolean.getBoolean("runAllThemes")) break;
         }
     }
 
