@@ -27,12 +27,14 @@ import java.io.File;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 
+import com.github.weisj.darklaf.DelicateDemo;
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.components.filetree.FileTree;
 import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.button.ButtonConstants;
 
+@DelicateDemo(reason = "Deprecated")
 public class FileTreeDemo implements ComponentDemo {
 
     public static void main(final String[] args) {

@@ -27,11 +27,13 @@ import java.util.Random;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.DelicateDemo;
 import com.github.weisj.darklaf.components.treetable.JTreeTable;
 import com.github.weisj.darklaf.components.treetable.model.*;
 import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoPanel;
 
+@DelicateDemo
 public class TreeTableDemo implements ComponentDemo {
 
     public static void main(final String[] args) {

@@ -23,6 +23,7 @@ package com.github.weisj.darklaf.icon;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
@@ -36,6 +37,8 @@ import com.github.weisj.darklaf.icons.ThemedSVGIcon;
 import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
 import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.util.ClassFinder;
+import com.github.weisj.darklaf.util.Instantiable;
+import com.github.weisj.darklaf.util.Lambdas;
 import com.github.weisj.darklaf.util.Pair;
 import com.github.weisj.darklaf.util.ResourceWalker;
 
@@ -49,7 +52,11 @@ public class AllIcons implements ComponentDemo {
 
     public AllIcons() {
         List<DecorationsProvider> decorationsProviders =
-                ClassFinder.getInstancesOfType(DecorationsProvider.class, "com.github.weisj");
+                ClassFinder.getInstancesOfType(DecorationsProvider.class, "com.github.weisj.darklaf")
+                        .stream()
+                        .map(Lambdas.orDefault(Instantiable::instantiate, null))
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
         LafManager.registerInitTask((currentTheme, defaults) -> {
             Properties props = new Properties();
             decorationsProviders.forEach(provider -> provider.loadDecorationProperties(props, defaults));

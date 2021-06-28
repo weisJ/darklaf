@@ -64,11 +64,15 @@ public interface ComponentDemo {
         showDemo(demo, false);
     }
 
+    static AtomicReference<Window> showDemo(final ComponentDemo demo, final boolean asDialog, final Level logLevel) {
+        LafManager.setLogLevel(logLevel != null ? logLevel : Level.FINE);
+        return showDemo(demo, asDialog);
+    }
+
     static AtomicReference<Window> showDemo(final ComponentDemo demo, final boolean asDialog) {
         LafManager.enabledPreferenceChangeReporting(false);
         LafManager.addThemePreferenceChangeListener(LafManager::installTheme);
         LafManager.setDecorationsEnabled(true);
-        LafManager.setLogLevel(Level.FINE);
         AtomicReference<Window> windowRef = new AtomicReference<>();
         SwingUtilities.invokeLater(() -> {
             if (demo.useDarkLaf()) {

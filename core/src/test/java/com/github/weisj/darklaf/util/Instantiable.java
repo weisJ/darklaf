@@ -21,30 +21,21 @@
  */
 package com.github.weisj.darklaf.util;
 
-import java.lang.reflect.Modifier;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+public class Instantiable<T> {
 
-public final class ClassFinder {
+    private final Class<T> type;
+    private final LazyValue<T> lazyValue;
 
-    public static <T> List<Instantiable<T>> getInstancesOfType(final Class<T> type, final String... packages) {
-        try (ResourceWalker walker = ResourceWalker.walkResources(packages)) {
-            return walker.stream()
-                    .filter(p -> p.endsWith(".class"))
-                    .map(p -> p.replace('/', '.'))
-                    .map(p -> p.substring(0, p.length() - 6))
-                    .map(Lambdas.orDefault(Class::forName, null))
-                    .filter(Objects::nonNull)
-                    .filter(type::isAssignableFrom)
-                    .filter(cls -> !cls.isInterface())
-                    .filter(cls -> !Modifier.isAbstract(cls.getModifiers()))
-                    .map(c -> new Instantiable<T>((Class<T>) c))
-                    .collect(Collectors.toList());
-        }
+    public Instantiable(final Class<T> type) {
+        this.type = type;
+        lazyValue = new LazyValue<>(Lambdas.wrap(() -> ClassFinder.getInstance(type)));
     }
 
-    public static <T> T getInstance(final Class<T> type) throws ReflectiveOperationException {
-        return type.getDeclaredConstructor().newInstance();
+    public Class<T> getType() {
+        return type;
+    }
+
+    public T instantiate() {
+        return lazyValue.get();
     }
 }

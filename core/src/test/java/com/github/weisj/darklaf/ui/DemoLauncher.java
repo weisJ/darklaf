@@ -19,38 +19,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.ui;/*
-                                     * MIT License
-                                     *
-                                     * Copyright (c) 2021 Jannis Weis
-                                     *
-                                     * Permission is hereby granted, free of charge, to any person obtaining a copy of
-                                     * this software and associated com.github.weisj.documentation files (the
-                                     * "Software"), to deal in the Software without restriction, including without
-                                     * limitation the rights to use, copy, modify, merge, publish, distribute,
-                                     * sublicense, and/or sell copies of the Software, and to permit persons to whom the
-                                     * Software is furnished to do so, subject to the following conditions:
-                                     *
-                                     * The above copyright notice and this permission notice shall be included in all
-                                     * copies or substantial portions of the Software.
-                                     *
-                                     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-                                     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-                                     * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-                                     * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
-                                     * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-                                     * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-                                     *
-                                     */
+package com.github.weisj.darklaf.ui;
 
 import java.awt.Window;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.DelicateDemo;
 import com.github.weisj.darklaf.util.ClassFinder;
+import com.github.weisj.darklaf.util.Instantiable;
 
 
 public class DemoLauncher implements ComponentDemo {
@@ -67,10 +48,15 @@ public class DemoLauncher implements ComponentDemo {
 
     public DemoLauncher() {
         Class<ComponentDemo> demoType = ComponentDemo.class;
-        demoClasses =
-                ClassFinder.getInstancesOfType(demoType, "ui", "icon", "com/github/weisj/darklaf/defaults").stream()
-                        .filter(obj -> !(obj instanceof DemoLauncher)).map(DemoEntry::new)
-                        .sorted(Comparator.comparing(DemoEntry::toString)).collect(Collectors.toList());
+        String[] packages = {
+                "com/github/weisj/darklaf/ui",
+                "com/github/weisj/darklaf/icon",
+                "com/github/weisj/darklaf/defaults"
+        };
+        demoClasses = ClassFinder.getInstancesOfType(demoType, packages).stream()
+                .filter(i -> !DemoLauncher.class.isAssignableFrom(i.getType()))
+                .map(DemoEntry::new)
+                .sorted(Comparator.comparing(DemoEntry::toString)).collect(Collectors.toList());
     }
 
     @Override
@@ -93,19 +79,27 @@ public class DemoLauncher implements ComponentDemo {
 
     public static class DemoEntry {
 
-        private final ComponentDemo demo;
+        private final Instantiable<ComponentDemo> demo;
 
-        public DemoEntry(final ComponentDemo demo) {
+        public DemoEntry(final Instantiable<ComponentDemo> demo) {
             this.demo = demo;
         }
 
         public AtomicReference<Window> start() {
-            return ComponentDemo.showDemo(demo, true);
+            return start(null);
+        }
+
+        public AtomicReference<Window> start(final Level logLevel) {
+            return ComponentDemo.showDemo(demo.instantiate(), true, logLevel);
         }
 
         @Override
         public String toString() {
-            return demo.getClass().getSimpleName() + ".java";
+            return demo.getType().getSimpleName() + ".java";
+        }
+
+        public boolean isDelicate() {
+            return demo.getType().getAnnotation(DelicateDemo.class) != null;
         }
     }
 }
