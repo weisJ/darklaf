@@ -15,6 +15,7 @@ plugins {
     id("com.github.vlsi.gradle-extensions")
     id("com.github.vlsi.stage-vote-release")
     id("org.ajoberstar.grgit")
+    id("org.javamodularity.moduleplugin") version "1.8.7" apply false
 }
 
 val skipJavadoc by props()
@@ -180,9 +181,12 @@ allprojects {
     }
 
     plugins.withType<JavaPlugin> {
+        apply(plugin = "org.javamodularity.moduleplugin")
+        configure<org.javamodularity.moduleplugin.extensions.ModularityExtension> {
+            mixedJavaRelease(8)
+        }
+
         configure<JavaPluginExtension> {
-            sourceCompatibility = JavaVersion.VERSION_1_8
-            targetCompatibility = JavaVersion.VERSION_1_8
             withSourcesJar()
             if (!skipJavadoc && isRelease) {
                 withJavadocJar()

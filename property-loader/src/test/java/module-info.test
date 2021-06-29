@@ -1,0 +1,5 @@
+--add-modules
+  darklaf.utils
+
+//--add-reads
+//  greeter.provider=java.scripting,org.hamcrest
