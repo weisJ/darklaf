@@ -26,7 +26,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import com.github.weisj.darklaf.color.ColorUtil;
+import com.github.weisj.darklaf.util.ColorUtil;
 
 /** @author Jannis Weis */
 public class DarkTableCellRenderer extends DefaultTableCellRenderer {

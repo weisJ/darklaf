@@ -38,9 +38,6 @@ import javax.tools.JavaFileObject;
 
 import com.github.weisj.darklaf.annotations.SynthesiseLaf;
 
-/**
- * @deprecated Auto-Generated class. Use LafManager.installTheme(Theme) instead.
- */
 @SupportedAnnotationTypes("com.github.weisj.darklaf.annotations.SynthesiseLaf")
 public class SynthesiseLafProcessor extends AbstractProcessor {
 

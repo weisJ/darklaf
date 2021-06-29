@@ -30,11 +30,11 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.plaf.RootPaneUI;
 
-import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.util.*;
+import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
 public class DarkPopupFactory extends PopupFactory {
@@ -252,7 +252,7 @@ public class DarkPopupFactory extends PopupFactory {
         }
     }
 
-    protected HeavyWeightParent getHeavyWeightParent(final Container owner) {
+    private HeavyWeightParent getHeavyWeightParent(final Container owner) {
         if (heavyWeightParent == null) {
             JComponent box = Box.createHorizontalBox();
             super.getPopup(null, box, 0, 0);

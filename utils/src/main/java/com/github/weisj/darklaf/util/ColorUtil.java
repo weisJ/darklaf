@@ -19,13 +19,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.color;
+package com.github.weisj.darklaf.util;
 
 import java.awt.*;
 
 import javax.swing.plaf.UIResource;
 
-import com.github.weisj.darklaf.util.ColorWrapper;
 
 /** @author Jannis Weis */
 public final class ColorUtil {

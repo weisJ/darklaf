@@ -34,10 +34,10 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
-import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.theme.DarculaTheme;
 import com.github.weisj.darklaf.theme.IntelliJTheme;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
+import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 class CustomTitleBarTest extends AbstractImageTest implements NonThreadSafeTest {
