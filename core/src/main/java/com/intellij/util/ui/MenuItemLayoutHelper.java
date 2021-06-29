@@ -45,6 +45,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.text.View;
 
+@SuppressWarnings("unused")
 public class MenuItemLayoutHelper {
     public static final StringUIClientPropertyKey MAX_ARROW_WIDTH = new StringUIClientPropertyKey("maxArrowWidth");
     public static final StringUIClientPropertyKey MAX_CHECK_WIDTH = new StringUIClientPropertyKey("maxCheckWidth");
@@ -152,6 +153,7 @@ public class MenuItemLayoutHelper {
         this.arrowSize.origWidth = this.arrowSize.width;
     }
 
+    @SuppressWarnings("deprecation")
     private String getAccText(String acceleratorDelimiter) {
         String accText = "";
         KeyStroke accelerator = this.mi.getAccelerator();
@@ -323,18 +325,11 @@ public class MenuItemLayoutHelper {
             value = this.miParent.getClientProperty(propertyName);
         }
 
-        if (value == null || !(value instanceof Integer)) {
+        if (!(value instanceof Integer)) {
             value = 0;
         }
 
         return (Integer) value;
-    }
-
-    public static boolean isColumnLayout(boolean isLeftToRight, JMenuItem mi) {
-        assert mi != null;
-
-        return isColumnLayout(isLeftToRight, mi.getHorizontalAlignment(), mi.getHorizontalTextPosition(),
-                mi.getVerticalTextPosition());
     }
 
     public static boolean isColumnLayout(boolean isLeftToRight, int horizontalAlignment, int horizontalTextPosition,
@@ -584,11 +579,8 @@ public class MenuItemLayoutHelper {
 
     private void calcXPositionsLTR(int startXPos, int leadingGap, int gap, Rectangle... rects) {
         int curXPos = startXPos + leadingGap;
-        Rectangle[] var6 = rects;
-        int var7 = rects.length;
 
-        for (int var8 = 0; var8 < var7; ++var8) {
-            Rectangle rect = var6[var8];
+        for (Rectangle rect : rects) {
             rect.x = curXPos;
             if (rect.width > 0) {
                 curXPos += rect.width + gap;
@@ -599,11 +591,8 @@ public class MenuItemLayoutHelper {
 
     private void calcXPositionsRTL(int startXPos, int leadingGap, int gap, Rectangle... rects) {
         int curXPos = startXPos - leadingGap;
-        Rectangle[] var6 = rects;
-        int var7 = rects.length;
 
-        for (int var8 = 0; var8 < var7; ++var8) {
-            Rectangle rect = var6[var8];
+        for (Rectangle rect : rects) {
             rect.x = curXPos - rect.width;
             if (rect.width > 0) {
                 curXPos -= rect.width + gap;
@@ -670,11 +659,8 @@ public class MenuItemLayoutHelper {
 
     public static int max(int... values) {
         int maxValue = -2147483648;
-        int[] var2 = values;
-        int var3 = values.length;
 
-        for (int var4 = 0; var4 < var3; ++var4) {
-            int i = var2[var4];
+        for (int i : values) {
             if (i > maxValue) {
                 maxValue = i;
             }
@@ -698,7 +684,6 @@ public class MenuItemLayoutHelper {
         if (width > 0) {
             result.width += width + gap;
         }
-
     }
 
     public JMenuItem getMenuItem() {
@@ -954,9 +939,7 @@ public class MenuItemLayoutHelper {
     }
 
     public static boolean useCheckAndArrow(JMenuItem menuItem) {
-        boolean b = !(menuItem instanceof JMenu) || !((JMenu) menuItem).isTopLevelMenu();
-
-        return b;
+        return !(menuItem instanceof JMenu) || !((JMenu) menuItem).isTopLevelMenu();
     }
 
     public static class RectSize {
@@ -1128,7 +1111,7 @@ public class MenuItemLayoutHelper {
         }
 
         public Map<String, Rectangle> getAllRects() {
-            Map<String, Rectangle> result = new HashMap();
+            Map<String, Rectangle> result = new HashMap<>();
             result.put("checkRect", this.checkRect);
             result.put("iconRect", this.iconRect);
             result.put("textRect", this.textRect);

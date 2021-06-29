@@ -22,14 +22,10 @@
 package com.github.weisj.darklaf.util;
 
 import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FocusTraversalPolicy;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.InputEvent;
@@ -39,10 +35,8 @@ import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JTable;
-import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
-import javax.swing.table.TableCellRenderer;
 
 import com.intellij.util.ui.UIUtilities;
 
@@ -116,6 +110,7 @@ public final class SwingUtil {
         return UIUtilities.clipStringIfNecessary(c, fm, string, availTextWidth);
     }
 
+    @SuppressWarnings("deprecation")
     public static int getFocusAcceleratorKeyMask() {
         if (SystemInfo.isMac) {
             return InputEvent.CTRL_MASK | InputEvent.ALT_MASK;
@@ -151,119 +146,22 @@ public final class SwingUtil {
     }
 
     public static void compositeRequestFocus(final Component component) {
-        if (component instanceof Container) {
-            Container container = (Container) component;
-            if (container.isFocusCycleRoot()) {
-                FocusTraversalPolicy policy = container.getFocusTraversalPolicy();
-                Component comp = policy.getDefaultComponent(container);
-                if (comp != null) {
-                    comp.requestFocus();
-                    return;
-                }
-            }
-            Container rootAncestor = container.getFocusCycleRootAncestor();
-            if (rootAncestor != null) {
-                FocusTraversalPolicy policy = rootAncestor.getFocusTraversalPolicy();
-                Component comp = policy.getComponentAfter(rootAncestor, container);
-
-                if (comp != null && SwingUtilities.isDescendingFrom(comp, container)) {
-                    comp.requestFocus();
-                    return;
-                }
-            }
-        }
-        if (component.isFocusable()) {
-            component.requestFocus();
-        }
+        UIUtilities.compositeRequestFocus(component);
     }
 
     public static void setLeadAnchorWithoutSelection(final ListSelectionModel model, int lead, int anchor) {
-        if (anchor == -1) {
-            anchor = lead;
-        }
-        if (lead == -1) {
-            model.setAnchorSelectionIndex(-1);
-            model.setLeadSelectionIndex(-1);
-        } else {
-            if (model.isSelectedIndex(lead)) {
-                model.addSelectionInterval(lead, lead);
-            } else {
-                model.removeSelectionInterval(lead, lead);
-            }
-            model.setAnchorSelectionIndex(anchor);
-        }
+        UIUtilities.setLeadAnchorWithoutSelection(model, lead, anchor);
     }
 
     public static boolean pointOutsidePrefSize(JTable table, int row, int column, Point p) {
-        if (table.convertColumnIndexToModel(column) != 0 || row == -1) {
-            return true;
-        }
-        TableCellRenderer tcr = table.getCellRenderer(row, column);
-        Object value = table.getValueAt(row, column);
-        Component cell = tcr.getTableCellRendererComponent(table, value, false,
-                false, row, column);
-        Dimension itemSize = cell.getPreferredSize();
-        Rectangle cellBounds = table.getCellRect(row, column, false);
-        cellBounds.width = itemSize.width;
-        cellBounds.height = itemSize.height;
-
-        // See if coordinates are inside
-        // ASSUME: mouse x,y will never be < cell's x,y
-        assert (p.x >= cellBounds.x && p.y >= cellBounds.y);
-        return p.x > cellBounds.x + cellBounds.width ||
-                p.y > cellBounds.y + cellBounds.height;
+        return UIUtilities.pointOutsidePrefSize(table, row, column, p);
     }
 
     public static boolean tabbedPaneChangeFocusTo(final Component comp) {
-        if (comp != null) {
-            if (comp.isFocusable()) {
-                UIUtilities.compositeRequestFocus(comp);
-                return true;
-            } else {
-                return comp instanceof JComponent && requestDefaultFocus((JComponent) comp);
-            }
-        }
-        return false;
-    }
-
-    private static boolean requestDefaultFocus(final JComponent comp) {
-        Container nearestRoot =
-                (comp.isFocusCycleRoot()) ? comp : comp.getFocusCycleRootAncestor();
-        if (nearestRoot == null) {
-            return false;
-        }
-        Component c = nearestRoot.getFocusTraversalPolicy().getDefaultComponent(nearestRoot);
-        if (c != null) {
-            c.requestFocus();
-            return true;
-        } else {
-            return false;
-        }
+        return UIUtilities.tabbedPaneChangeFocusTo(comp);
     }
 
     public static int loc2IndexFileList(final JList<?> list, final Point point) {
-        int index = list.locationToIndex(point);
-        if (index != -1) {
-            boolean bySize = PropertyUtil.getBooleanProperty(list, "List.isFileList");
-            if (bySize && !pointIsInActualBounds(list, index, point)) {
-                index = -1;
-            }
-        }
-        return index;
-    }
-
-    private static <T> boolean pointIsInActualBounds(final JList<T> list, int index, final Point point) {
-        ListCellRenderer<? super T> renderer = list.getCellRenderer();
-        T value = list.getModel().getElementAt(index);
-        Component item = renderer.getListCellRendererComponent(list,
-                value, index, false, false);
-        Dimension itemSize = item.getPreferredSize();
-        Rectangle cellBounds = list.getCellBounds(index, index);
-        if (!item.getComponentOrientation().isLeftToRight()) {
-            cellBounds.x += (cellBounds.width - itemSize.width);
-        }
-        cellBounds.width = itemSize.width;
-
-        return cellBounds.contains(point);
+        return UIUtilities.loc2IndexFileList(list, point);
     }
 }
