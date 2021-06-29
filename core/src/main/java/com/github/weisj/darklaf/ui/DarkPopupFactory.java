@@ -43,6 +43,7 @@ public class DarkPopupFactory extends PopupFactory {
     public static final String KEY_FORCE_HEAVYWEIGHT = "JPopupFactory.forceHeavyweight";
     public static final String KEY_OPAQUE = "JPopupFactory.opaque";
     public static final String KEY_START_HIDDEN = "JPopupFactory.startHidden";
+    public static final String KEY_DOUBLE_BUFFERED = "JPopupFactory.doubleBuffered";
 
     private HeavyWeightParent heavyWeightParent;
 
@@ -80,15 +81,21 @@ public class DarkPopupFactory extends PopupFactory {
                 popup = super.getPopup(getHeavyWeightParent(DarkUIUtil.getWindow(owner)), contents, x, y);
                 window = DarkUIUtil.getWindow(contents);
             }
-            if (window != null) window.setLocation(x, y);
+            if (window != null) {
+                window.setLocation(x, y);
+            }
         }
         return new Pair<>(popup, type);
     }
 
     public static PopupType getPopupType(final Popup popup) {
         String popupClassName = popup.getClass().getSimpleName();
-        if (popupClassName.endsWith("LightWeightPopup")) return PopupType.LIGHT_WEIGHT;
-        if (popupClassName.endsWith("MediumWeightPopup")) return PopupType.MEDIUM_WEIGHT;
+        if (popupClassName.endsWith("LightWeightPopup")) {
+            return PopupType.LIGHT_WEIGHT;
+        }
+        if (popupClassName.endsWith("MediumWeightPopup")) {
+            return PopupType.MEDIUM_WEIGHT;
+        }
         return PopupType.HEAVY_WEIGHT;
     }
 
@@ -96,7 +103,9 @@ public class DarkPopupFactory extends PopupFactory {
         if (type == PopupType.MEDIUM_WEIGHT) {
             JRootPane rootPane = SwingUtilities.getRootPane(contents);
             // Prevents decorations from being reinstalled.
-            if (rootPane != null) rootPane.putClientProperty(DarkRootPaneUI.KEY_NO_DECORATIONS_UPDATE, true);
+            if (rootPane != null) {
+                rootPane.putClientProperty(DarkRootPaneUI.KEY_NO_DECORATIONS_UPDATE, true);
+            }
         } else if (type == PopupType.HEAVY_WEIGHT) {
             Window window = SwingUtilities.getWindowAncestor(contents);
             if (window != null) {
@@ -126,7 +135,9 @@ public class DarkPopupFactory extends PopupFactory {
 
     protected void setupWindowBackground(final Window window, final JRootPane rootPane,
             final Component content, final boolean opaque, final boolean decorations) {
-        if (rootPane == null) return;
+        if (rootPane == null) {
+            return;
+        }
 
         Color bg = opaque
                 ? ColorUtil.toAlpha(rootPane.getBackground(), 255)
@@ -139,7 +150,8 @@ public class DarkPopupFactory extends PopupFactory {
          * explicitly.
          */
         if (!opaque) {
-            linuxOpacityFix(rootPane);
+            boolean doubleBufferHint = PropertyUtil.getBooleanProperty(content, KEY_DOUBLE_BUFFERED);
+            linuxOpacityFix(rootPane, doubleBufferHint);
         }
 
         while (p != null && p != window) {
@@ -152,37 +164,46 @@ public class DarkPopupFactory extends PopupFactory {
         window.setBackground(bg);
     }
 
-    private void linuxOpacityFix(final JRootPane rootPane) {
-        // See: https://bugs.java.com/bugdatabase/view_bug.do?bug_id=6848852
-        rootPane.setDoubleBuffered(false);
-        disableDoubleBuffer(rootPane.getGlassPane());
-        disableDoubleBuffer(rootPane.getLayeredPane());
-        disableDoubleBuffer(rootPane.getContentPane());
+    private void linuxOpacityFix(final JRootPane rootPane, final boolean doubleBufferHint) {
+        boolean useDoubleBuffering = doubleBufferHint && canApplyRootPaneFix();
 
-        // HeavyWeights popups use rootpanes with double buffering disabled by setting
-        // setUseTrueDoubleBuffering(false). On some Linux window managers (e.g. Gnome) this results
-        // in windows not being transparent if requested.
-        if (applyRootPaneFix()) {
-            try {
-                Method method = JRootPane.class.getDeclaredMethod("setUseTrueDoubleBuffering", boolean.class);
-                method.setAccessible(true);
-                method.invoke(rootPane, true);
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+        // See: https://bugs.java.com/bugdatabase/view_bug.do?bug_id=6848852
+        rootPane.setDoubleBuffered(useDoubleBuffering);
+        setUseDoubleBuffer(rootPane, useDoubleBuffering);
+        setUseDoubleBuffer(rootPane.getGlassPane(), useDoubleBuffering);
+        setUseDoubleBuffer(rootPane.getLayeredPane(), useDoubleBuffering);
+        setUseDoubleBuffer(rootPane.getContentPane(), useDoubleBuffering);
+
+        if (useDoubleBuffering) {
+            // HeavyWeights popups use rootpanes with double buffering disabled by setting
+            // setUseTrueDoubleBuffering(false). On some Linux window managers (e.g. Gnome) this results
+            // in windows not being transparent if requested.
+            if (canApplyRootPaneFix()) {
+                try {
+                    Method method = JRootPane.class.getDeclaredMethod("setUseTrueDoubleBuffering", boolean.class);
+                    method.setAccessible(true);
+                    method.invoke(rootPane, true);
+                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
-    private void disableDoubleBuffer(final Component c) {
-        if (c instanceof JComponent) disableDoubleBuffer(((JComponent) c));
+    private void setUseDoubleBuffer(final Component c, final boolean enabled) {
+        if (c instanceof JComponent) {
+            setUseDoubleBuffer(((JComponent) c), enabled);
+        }
     }
 
-    private void disableDoubleBuffer(final JComponent c) {
-        if (c != null) c.setDoubleBuffered(false);
+    private void setUseDoubleBuffer(final JComponent c, final boolean enabled) {
+        if (c != null) {
+            c.setDoubleBuffered(enabled);
+        }
     }
 
-    public static boolean applyRootPaneFix() {
-        return SystemInfo.isLinux && !SystemInfo.isJava9OrGreater;
+    public static boolean canApplyRootPaneFix() {
+        return !SystemInfo.isJava9OrGreater;
     }
 
     protected void setupFocusableWindowState(final boolean isFocusable, final Window window) {
@@ -231,7 +252,9 @@ public class DarkPopupFactory extends PopupFactory {
 
     protected Color getTranslucentPopupBackground(final boolean decorated) {
         Color c = UIManager.getColor("PopupMenu.translucentBackground");
-        if (!decorated) c = new DarkColorUIResource(ColorUtil.toAlpha(c, 0));
+        if (!decorated) {
+            c = new DarkColorUIResource(ColorUtil.toAlpha(c, 0));
+        }
         return c;
     }
 

@@ -41,6 +41,7 @@ import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
 import com.github.weisj.darklaf.util.Actions;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class AttachedPopupComponent extends JToolTip {
 
@@ -48,6 +49,7 @@ public class AttachedPopupComponent extends JToolTip {
     private static ToolTipContext context;
 
     protected AttachedPopupComponent(final JComponent parent, final JComponent content) {
+        PropertyUtil.installProperty(this, DarkPopupFactory.KEY_DOUBLE_BUFFERED, true);
         setComponent(parent);
         setLayout(new BorderLayout());
         this.content = content;
