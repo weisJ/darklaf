@@ -32,10 +32,10 @@ import java.util.function.Consumer;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.util.ColorUtil;
 
 /**
  * @author Alexey Pegov

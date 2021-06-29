@@ -39,7 +39,6 @@ import javax.swing.border.EmptyBorder;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.components.border.DropShadowBorder;
 import com.github.weisj.darklaf.defaults.SampleRenderer;
 import com.github.weisj.darklaf.icons.DarkSVGIcon;
@@ -50,6 +49,7 @@ import com.github.weisj.darklaf.parser.ParseResult;
 import com.github.weisj.darklaf.parser.Parser;
 import com.github.weisj.darklaf.parser.PrimitiveParser;
 import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.ImageUtil;
 import com.github.weisj.darklaf.util.StringUtil;
 import com.github.weisj.darklaf.util.SystemInfo;

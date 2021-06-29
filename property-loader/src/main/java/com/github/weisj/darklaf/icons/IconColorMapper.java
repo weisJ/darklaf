@@ -30,10 +30,10 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.PropertyLoader;
-import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.parser.ParseResult;
 import com.github.weisj.darklaf.parser.Parser;
 import com.github.weisj.darklaf.parser.ParserContext;
+import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.Pair;
 import com.github.weisj.darklaf.util.Types;

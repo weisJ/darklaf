@@ -37,8 +37,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.util.ColorUtil;
 
 class ParserTest {
 

@@ -23,8 +23,8 @@ package com.github.weisj.darklaf.parser;
 
 import java.awt.Color;
 
-import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
+import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.PropertyValue;
 
 public class PrimitiveParser implements PropertyParser {
