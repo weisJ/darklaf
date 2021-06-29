@@ -1,7 +1,8 @@
 plugins {
     `java-library`
+    `module-info-compile`
 }
 
 dependencies {
-    implementation(libs.nullabilityAnnotations)
+    compileOnly(libs.nullabilityAnnotations)
 }

@@ -3,6 +3,7 @@ import com.github.vlsi.gradle.crlf.LineEndings
 
 plugins {
     `java-library`
+    `module-info-compile`
 }
 
 dependencies {

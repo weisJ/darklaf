@@ -1,5 +1,6 @@
 plugins {
     java
+    `module-info-compile`
     id("dev.nokee.jni-library")
     id("dev.nokee.cpp-language")
     `uber-jni-jar`
