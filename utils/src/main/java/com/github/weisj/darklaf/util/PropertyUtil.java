@@ -32,8 +32,6 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.UIResource;
 
-import com.github.weisj.darklaf.color.ColorUtil;
-
 public final class PropertyUtil {
 
     public static boolean canOverwrite(final Object o) {

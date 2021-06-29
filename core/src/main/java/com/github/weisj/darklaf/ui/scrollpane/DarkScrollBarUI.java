@@ -28,8 +28,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
-import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /** @author Jannis Weis */
