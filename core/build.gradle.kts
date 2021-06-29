@@ -4,7 +4,15 @@ import com.github.vlsi.gradle.properties.dsl.props
 
 plugins {
     `java-library`
+    `module-info-compile`
     id("com.github.vlsi.crlf")
+}
+
+configure<ModuleInfoExtension> {
+    version = JavaVersion.VERSION_11
+    extraArgs = listOf(
+        "--add-exports", "java.desktop/sun.awt=darklaf.core"
+    )
 }
 
 dependencies {

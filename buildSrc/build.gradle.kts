@@ -33,5 +33,9 @@ gradlePlugin {
             id = "apple-m1-toolchain"
             implementationClass = "AppleM1ToolChainRule"
         }
+        create("module-info-compile") {
+            id = "module-info-compile"
+            implementationClass = "ModuleInfoCompilePlugin"
+        }
     }
 }

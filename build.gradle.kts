@@ -133,7 +133,7 @@ allprojects {
         apply(plugin = "com.github.autostyle")
         autostyle {
             kotlinGradle {
-                ktlint()
+                ktlint(version = "ktlint".v)
             }
             format("properties") {
                 configFilter {
@@ -162,6 +162,16 @@ allprojects {
                     configFile("${project.rootDir}/darklaf_cpp.eclipseformat.xml")
                 }
             }
+            plugins.withType<JavaPlugin>().configureEach {
+                java {
+                    importOrder("java", "javax", "org", "com")
+                    removeUnusedImports()
+                    license()
+                    eclipse {
+                        configFile("${project.rootDir}/darklaf_java.eclipseformat.xml")
+                    }
+                }
+            }
         }
     }
 
@@ -188,20 +198,6 @@ allprojects {
                 withJavadocJar()
             }
         }
-
-        if (!skipAutostyle) {
-            autostyle {
-                java {
-                    importOrder("java", "javax", "org", "com")
-                    removeUnusedImports()
-                    license()
-                    eclipse {
-                        configFile("${project.rootDir}/darklaf_java.eclipseformat.xml")
-                    }
-                }
-            }
-        }
-
         apply(plugin = "maven-publish")
 
         val useInMemoryKey by props()
