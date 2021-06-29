@@ -119,27 +119,29 @@ public class DarkPopupFactory extends PopupFactory {
             rootPane.setContentPane(contentPane);
         }
         setupFocusableWindowState(isFocusable, window);
-        setupWindowBackground(window, rootPane, opaque, !noDecorations);
+        setupWindowBackground(window, rootPane, contents, opaque, !noDecorations);
         setupWindowDecorations(window, rootPane, noDecorations);
         setupWindowOpacity(startHidden, window);
     }
 
     protected void setupWindowBackground(final Window window, final JRootPane rootPane,
-            final boolean opaque, final boolean decorations) {
+            final Component content, final boolean opaque, final boolean decorations) {
+        if (rootPane == null) return;
+
+        Color bg = opaque
+                ? ColorUtil.toAlpha(rootPane.getBackground(), 255)
+                : getTranslucentPopupBackground(decorations);
+        Component p = content.getParent();
+
         /*
          * Sometimes the background is java.awt.SystemColor[i=7] It results in a flash of white background,
          * that is repainted with the proper popup background later. That is why we set window background
          * explicitly.
          */
-        if (rootPane == null) return;
         if (!opaque) {
             linuxOpacityFix(rootPane);
         }
 
-        Color bg = opaque
-                ? ColorUtil.toAlpha(rootPane.getBackground(), 255)
-                : getTranslucentPopupBackground(decorations);
-        Container p = rootPane.getContentPane();
         while (p != null && p != window) {
             p.setBackground(bg);
             if (p instanceof JComponent) {
@@ -151,6 +153,12 @@ public class DarkPopupFactory extends PopupFactory {
     }
 
     private void linuxOpacityFix(final JRootPane rootPane) {
+        // See: https://bugs.java.com/bugdatabase/view_bug.do?bug_id=6848852
+        rootPane.setDoubleBuffered(false);
+        disableDoubleBuffer(rootPane.getGlassPane());
+        disableDoubleBuffer(rootPane.getLayeredPane());
+        disableDoubleBuffer(rootPane.getContentPane());
+
         // HeavyWeights popups use rootpanes with double buffering disabled by setting
         // setUseTrueDoubleBuffering(false). On some Linux window managers (e.g. Gnome) this results
         // in windows not being transparent if requested.
@@ -159,15 +167,18 @@ public class DarkPopupFactory extends PopupFactory {
                 Method method = JRootPane.class.getDeclaredMethod("setUseTrueDoubleBuffering", boolean.class);
                 method.setAccessible(true);
                 method.invoke(rootPane, true);
-                return;
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
         }
-        // Could not fix using reflection. Replace rootPane.
-        JRootPane wrapperRootPane = new WrapperRootPane();
-        wrapperRootPane.setContentPane(rootPane.getContentPane());
-        rootPane.setContentPane(wrapperRootPane);
+    }
+
+    private void disableDoubleBuffer(final Component c) {
+        if (c instanceof JComponent) disableDoubleBuffer(((JComponent) c));
+    }
+
+    private void disableDoubleBuffer(final JComponent c) {
+        if (c != null) c.setDoubleBuffered(false);
     }
 
     public static boolean applyRootPaneFix() {
@@ -261,12 +272,25 @@ public class DarkPopupFactory extends PopupFactory {
         HEAVY_WEIGHT
     }
 
-    private static class WrapperRootPane extends JRootPane {
+    private static class WrapperRootPane extends JRootPane implements RootPaneContainer {
 
         @Override
         public void updateUI() {
             setUI(new RootPaneUI() {});
         }
+
+        @Override
+        public boolean isOpaque() {
+            return false;
+        }
+
+        @Override
+        public JRootPane getRootPane() {
+            return this;
+        }
+
+        @Override
+        protected void paintComponent(final Graphics g) {}
 
         @Override
         public void doLayout() {
