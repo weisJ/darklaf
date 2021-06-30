@@ -23,11 +23,12 @@ library {
             compileTasks.configureEach {
                 compilerArgs.addAll(toolChain.map {
                     when (it) {
-                        is Gcc, is Clang -> listOf("--std=c++17", "-Wall", "-Wextra", "-pedantic", "-O2")
-                        is VisualCpp -> listOf("/std:c++17", "/EHsc", "/W4", "/permissive", "/WX", "/02")
+                        is Gcc, is Clang -> listOf("--std=c++17", "-Wall", "-Wextra", "-pedantic")
+                        is VisualCpp -> listOf("/std:c++17", "/EHsc", "/W4", "/permissive", "/WX")
                         else -> emptyList()
                     }
                 })
+                optimizedBinary()
             }
             linkTask.configure {
                 linkerArgs.addAll(toolChain.map {

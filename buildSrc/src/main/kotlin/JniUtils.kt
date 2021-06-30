@@ -2,6 +2,7 @@ import dev.nokee.platform.jni.JniLibraryDependencies
 import org.gradle.nativeplatform.MachineArchitecture
 import dev.nokee.runtime.nativebase.OperatingSystemFamily
 import dev.nokee.runtime.nativebase.TargetMachine
+import dev.nokee.language.base.tasks.SourceCompile
 import org.gradle.api.Action
 import org.gradle.api.GradleException
 import org.gradle.api.Project
@@ -9,6 +10,9 @@ import org.gradle.api.artifacts.MinimalExternalModuleDependency
 import org.gradle.api.artifacts.ModuleDependency
 import org.gradle.api.artifacts.ModuleDependencyCapabilitiesHandler
 import org.gradle.api.provider.Provider
+import org.gradle.nativeplatform.toolchain.Clang
+import org.gradle.nativeplatform.toolchain.Gcc
+import org.gradle.nativeplatform.toolchain.VisualCpp
 
 typealias OSFamily = org.gradle.nativeplatform.OperatingSystemFamily
 
@@ -65,4 +69,14 @@ fun libraryFileNameFor(project: Project, osFamily: OperatingSystemFamily): Strin
     osFamily.isLinux -> "lib${project.name}.so"
     osFamily.isMacOS -> "lib${project.name}.dylib"
     else -> throw GradleException("Unknown operating system family '${osFamily}'.")
+}
+
+fun SourceCompile.optimizedBinary() {
+    compilerArgs.addAll(toolChain.map {
+        when (it) {
+            is Gcc, is Clang -> listOf("-O2")
+            is VisualCpp -> listOf("/O2")
+            else -> emptyList()
+        }
+    })
 }
