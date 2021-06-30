@@ -1,7 +1,7 @@
+import dev.nokee.platform.jni.JavaNativeInterfaceLibrary
 import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import dev.nokee.platform.jni.JniLibraryExtension
 import dev.nokee.platform.jni.JniLibrary
 import java.io.File
 
@@ -15,7 +15,7 @@ class UsePrebuiltBinariesWhenUnbuildablePlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
         prebuiltExtension = target.extensions.create("prebuiltBinaries", PrebuiltBinariesExtension::class.java)
-        val library = target.extensions.getByType(JniLibraryExtension::class.java)
+        val library = target.extensions.getByType(JavaNativeInterfaceLibrary::class.java)
         library.variants.configureEach {
             if (prebuiltExtension.alwaysUsePrebuiltArtifact || !sharedLibrary.isBuildable) {
                 configure(target, this)
