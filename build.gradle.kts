@@ -15,7 +15,7 @@ plugins {
     id("com.github.vlsi.gradle-extensions")
     id("com.github.vlsi.stage-vote-release")
     id("org.ajoberstar.grgit")
-    id("org.javamodularity.moduleplugin") version "1.8.7" apply false
+    id("org.beryx.jar") version "1.2.0" apply false
 }
 
 val skipJavadoc by props()
@@ -163,6 +163,16 @@ allprojects {
                     configFile("${project.rootDir}/darklaf_cpp.eclipseformat.xml")
                 }
             }
+            plugins.withType<JavaPlugin>().configureEach {
+                java {
+                    importOrder("java", "javax", "org", "com")
+                    removeUnusedImports()
+                    license()
+                    eclipse {
+                        configFile("${project.rootDir}/darklaf_java.eclipseformat.xml")
+                    }
+                }
+            }
         }
     }
 
@@ -181,28 +191,12 @@ allprojects {
     }
 
     plugins.withType<JavaPlugin> {
-        apply(plugin = "org.javamodularity.moduleplugin")
-        configure<org.javamodularity.moduleplugin.extensions.ModularityExtension> {
-            mixedJavaRelease(8)
-        }
-
         configure<JavaPluginExtension> {
+            sourceCompatibility = JavaVersion.VERSION_1_8
+            targetCompatibility = JavaVersion.VERSION_1_8
             withSourcesJar()
             if (!skipJavadoc && isRelease) {
                 withJavadocJar()
-            }
-        }
-
-        if (!skipAutostyle) {
-            autostyle {
-                java {
-                    importOrder("java", "javax", "org", "com")
-                    removeUnusedImports()
-                    license()
-                    eclipse {
-                        configFile("${project.rootDir}/darklaf_java.eclipseformat.xml")
-                    }
-                }
             }
         }
 
