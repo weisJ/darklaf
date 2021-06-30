@@ -3,6 +3,7 @@ import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import dev.nokee.platform.jni.JniLibrary
+ import dev.nokee.platform.nativebase.SharedLibraryBinary
 import java.io.File
 
 class UsePrebuiltBinariesWhenUnbuildablePlugin : Plugin<Project> {
@@ -17,11 +18,17 @@ class UsePrebuiltBinariesWhenUnbuildablePlugin : Plugin<Project> {
         prebuiltExtension = target.extensions.create("prebuiltBinaries", PrebuiltBinariesExtension::class.java)
         val library = target.extensions.getByType(JavaNativeInterfaceLibrary::class.java)
         library.variants.configureEach {
-            if (prebuiltExtension.alwaysUsePrebuiltArtifact || !sharedLibrary.isBuildable) {
+            if (prebuiltExtension.alwaysUsePrebuiltArtifact || !sharedLibrary.getIsBuildableSafely()) {
                 configure(target, this)
             }
         }
     }
+
+    private fun SharedLibraryBinary.getIsBuildableSafely() : Boolean = runCatching {
+        // Currently this will throw on non macOS hosts for macOS toolchains as it tries to probe whether
+        // it is buildable by running `xcrun`.
+        isBuildable
+    }.getOrDefault(false)
 
     private fun configure(project: Project, library: JniLibrary) {
         with(prebuiltExtension) {
