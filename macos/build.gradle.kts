@@ -1,4 +1,4 @@
-import org.gradle.util.VersionNumber
+import com.github.vlsi.gradle.properties.dsl.stringProperty
 
 plugins {
     java
@@ -6,6 +6,18 @@ plugins {
     id("dev.nokee.objective-cpp-language")
     `uber-jni-jar`
     `use-prebuilt-binaries`
+    `apple-m1-toolchain`
+}
+
+repositories {
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/weisj/JavaNativeFoundation")
+        credentials {
+            username = project.stringProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+            password = project.stringProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
 }
 
 library {
@@ -15,33 +27,33 @@ library {
         jvmImplementation(projects.darklafUtils)
         jvmImplementation(projects.darklafPlatformBase)
         jvmImplementation(projects.darklafPropertyLoader)
-        nativeLibImplementation(libs.macos.appKit)
-        nativeLibImplementation(libs.macos.cocoa)
-        val xCodeVersion = getXCodeVersion()
-        if (xCodeVersion != null && xCodeVersion >= VersionNumber.parse("12.2")) {
-            nativeLibImplementation(libs.macos.javaNativeFoundation)
-        } else {
-            nativeLibImplementation(libs.macosLegacy.javaVM.base)
-            nativeLibImplementation(libs.macosLegacy.javaVM.base) {
-                capabilities {
-                    requireLibCapability(libs.macosLegacy.javaVM.capability.javaNativeFoundation)
-                }
-            }
-        }
+        // nativeLibImplementation(libs.macos.appKit)
+        // nativeLibImplementation(libs.macos.cocoa)
+        nativeLibImplementation(libs.macos.javaNativeFoundation)
     }
 
-    targetMachines.addAll(machines.macOS.x86_64)
+    targetMachines.addAll(machines.macOS.x86_64, machines.macOS.architecture("arm64"))
     variants.configureEach {
         resourcePath.set("com/github/weisj/darklaf/platform/${project.name}/${targetMachine.variantName}")
         sharedLibrary {
-            val minOs = "10.10"
+            val isArm = targetMachine.architectureString == "arm64"
+            val minOs = if (isArm) "11" else "10.10"
             compileTasks.configureEach {
                 compilerArgs.addAll("-mmacosx-version-min=$minOs")
                 // Build type not modeled yet, assuming release
                 optimizedBinary()
             }
             linkTask.configure {
-                linkerArgs.addAll("-lobjc", "-mmacosx-version-min=$minOs")
+                linkerArgs.addAll(
+                    "-lobjc", "-mmacosx-version-min=$minOs",
+                    "-framework", "AppKit",
+                    "-framework", "Cocoa",
+                    // The custom JNF framework specified @rpath for searching. As we aren't actually linking
+                    // with the dynamic library of the framework we specifically have to add the system framework
+                    // search paths accordingly.
+                    "-rpath", "/System/Library/Frameworks/JavaVM.framework/Versions/A/Frameworks/",
+                    "-rpath", "/System/Library/Frameworks/"
+                )
             }
         }
     }
