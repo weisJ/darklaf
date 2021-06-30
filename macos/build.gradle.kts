@@ -38,13 +38,7 @@ library {
             compileTasks.configureEach {
                 compilerArgs.addAll("-mmacosx-version-min=$minOs")
                 // Build type not modeled yet, assuming release
-                compilerArgs.addAll(toolChain.map {
-                    when (it) {
-                        is Gcc, is Clang -> listOf("-O2")
-                        is VisualCpp -> listOf("/O2")
-                        else -> emptyList()
-                    }
-                })
+                optimizedBinary()
             }
             linkTask.configure {
                 linkerArgs.addAll("-lobjc", "-mmacosx-version-min=$minOs")
