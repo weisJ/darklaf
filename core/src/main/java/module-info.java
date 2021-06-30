@@ -25,17 +25,19 @@
 module darklaf.core {
     requires transitive java.desktop;
     requires transitive darklaf.theme;
-    requires transitive darklaf.propertyLoader;
+    requires transitive darklaf.properties;
     requires transitive darklaf.utils;
 
     requires darklaf.nativeUtils;
     requires darklaf.platform.base;
-    requires darklaf.windows;
-    requires darklaf.macos;
+    requires darklaf.platform.windows;
+    requires darklaf.platform.macos;
     requires jxlayer;
-    requires swingx;
-    requires annotations;
     requires swing.extensions.laf.support;
+    requires jdk.unsupported.desktop;
+
+    requires static annotations;
+    requires static swingx;
 
     exports com.github.weisj.darklaf;
     exports com.github.weisj.darklaf.components;

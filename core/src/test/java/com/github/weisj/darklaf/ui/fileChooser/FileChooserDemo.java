@@ -27,7 +27,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.ui.ComponentDemo;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 public final class FileChooserDemo {
 

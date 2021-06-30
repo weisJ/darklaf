@@ -31,7 +31,7 @@ import javax.swing.UIManager;
 import org.jetbrains.annotations.NotNull;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.swingdsl.laf.ComponentFactoryDelegate;
 import com.github.weisj.swingdsl.laf.DefaultComponentFactory;
 import com.github.weisj.swingdsl.laf.DefaultWrappedComponent;

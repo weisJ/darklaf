@@ -32,12 +32,12 @@ import javax.swing.event.AncestorListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicColorChooserUI;
 
-import com.github.weisj.darklaf.color.DarkColorModelCMYK;
-import com.github.weisj.darklaf.color.DarkColorModelHSB;
-import com.github.weisj.darklaf.color.DarkColorModelHSL;
-import com.github.weisj.darklaf.color.DarkColorModelRGB;
-import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.listener.AncestorAdapter;
+import com.github.weisj.darklaf.properties.color.DarkColorModelCMYK;
+import com.github.weisj.darklaf.properties.color.DarkColorModelHSB;
+import com.github.weisj.darklaf.properties.color.DarkColorModelHSL;
+import com.github.weisj.darklaf.properties.color.DarkColorModelRGB;
+import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.util.PropertyKey;
 
 /** @author Jannis Weis */

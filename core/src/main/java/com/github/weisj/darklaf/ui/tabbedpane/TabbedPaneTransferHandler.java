@@ -32,7 +32,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 import javax.swing.plaf.TabbedPaneUI;
 
-import com.github.weisj.darklaf.util.DnDUtil;
+import com.github.weisj.darklaf.ui.util.DnDUtil;
 
 /**
  * @author Robert Futrell

@@ -41,11 +41,12 @@ import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.components.button.JSplitButton;
 import com.github.weisj.darklaf.defaults.UIManagerDefaults;
 import com.github.weisj.darklaf.graphics.ThemedColor;
-import com.github.weisj.darklaf.icons.DerivableIcon;
-import com.github.weisj.darklaf.icons.IconLoader;
-import com.github.weisj.darklaf.icons.OverlayIcon;
-import com.github.weisj.darklaf.icons.TextIcon;
 import com.github.weisj.darklaf.layout.LayoutHelper;
+import com.github.weisj.darklaf.properties.icons.DerivableIcon;
+import com.github.weisj.darklaf.properties.icons.IconLoader;
+import com.github.weisj.darklaf.properties.icons.OverlayIcon;
+import com.github.weisj.darklaf.properties.icons.TextIcon;
+import com.github.weisj.darklaf.properties.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.theme.info.AccentColorRule;
 import com.github.weisj.darklaf.theme.info.ColorToneRule;
 import com.github.weisj.darklaf.theme.info.ContrastRule;
@@ -54,9 +55,8 @@ import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.button.ButtonConstants;
 import com.github.weisj.darklaf.ui.table.TableConstants;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
-import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.FontUtil;
 
 public class ThemeEditor extends JPanel {

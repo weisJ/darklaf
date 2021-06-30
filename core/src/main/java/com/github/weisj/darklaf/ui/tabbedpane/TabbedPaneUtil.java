@@ -25,7 +25,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 /** @author Jannis Weis */
 public class TabbedPaneUtil implements SwingConstants {

@@ -32,7 +32,7 @@ import javax.swing.plaf.basic.BasicPopupMenuUI;
 
 import com.github.weisj.darklaf.components.ScrollPopupMenu;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**

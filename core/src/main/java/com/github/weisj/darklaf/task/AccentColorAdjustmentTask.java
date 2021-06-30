@@ -28,10 +28,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import com.github.weisj.darklaf.color.DarkColorModelHSB;
-import com.github.weisj.darklaf.parser.Parser;
+import com.github.weisj.darklaf.properties.color.DarkColorModelHSB;
+import com.github.weisj.darklaf.properties.parser.Parser;
+import com.github.weisj.darklaf.properties.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.Types;
 

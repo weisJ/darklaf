@@ -25,7 +25,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.color.DarkColorModel;
+import com.github.weisj.darklaf.properties.color.DarkColorModel;
 
 /**
  * @author pegov

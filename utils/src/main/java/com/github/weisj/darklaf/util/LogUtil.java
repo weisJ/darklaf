@@ -25,8 +25,8 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.github.weisj.darklaf.log.DarkLogHandler;
-import com.github.weisj.darklaf.log.LogFormatter;
+import com.github.weisj.darklaf.util.log.DarkLogHandler;
+import com.github.weisj.darklaf.util.log.LogFormatter;
 
 public final class LogUtil {
 

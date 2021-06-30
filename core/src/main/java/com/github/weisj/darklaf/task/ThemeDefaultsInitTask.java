@@ -29,8 +29,8 @@ import java.util.Properties;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.DarkLaf;
-import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
+import com.github.weisj.darklaf.properties.PropertyLoader;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.SystemInfo;

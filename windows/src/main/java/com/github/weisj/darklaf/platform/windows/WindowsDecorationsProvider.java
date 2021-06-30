@@ -27,12 +27,12 @@ import java.util.Properties;
 import javax.swing.*;
 import javax.swing.border.Border;
 
-import com.github.weisj.darklaf.PropertyLoader;
-import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
 import com.github.weisj.darklaf.platform.decorations.UnsupportedProviderException;
 import com.github.weisj.darklaf.platform.windows.ui.WindowsTitlePane;
+import com.github.weisj.darklaf.properties.PropertyLoader;
+import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 public class WindowsDecorationsProvider implements DecorationsProvider {

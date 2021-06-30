@@ -31,8 +31,9 @@ import javax.swing.*;
 import javax.swing.plaf.RootPaneUI;
 
 import com.github.weisj.darklaf.platform.DecorationsHandler;
+import com.github.weisj.darklaf.properties.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
-import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.*;
 import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;

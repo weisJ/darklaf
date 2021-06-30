@@ -35,7 +35,7 @@ import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicToolBarUI;
 
 import com.github.weisj.darklaf.listener.MouseResponder;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 /** @author Jannis Weis */
 public class DarkToolBarUI extends BasicToolBarUI {

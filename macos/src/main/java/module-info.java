@@ -22,12 +22,12 @@
  * SOFTWARE.
  *
  */
-module darklaf.macos {
+module darklaf.platform.macos {
     requires transitive darklaf.platform.base;
     requires transitive darklaf.theme;
 
     requires darklaf.utils;
-    requires darklaf.propertyLoader;
+    requires darklaf.properties;
 
     exports com.github.weisj.darklaf.platform.macos;
     exports com.github.weisj.darklaf.platform.macos.theme;

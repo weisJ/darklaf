@@ -22,15 +22,17 @@
  * SOFTWARE.
  *
  */
-module darklaf.propertyLoader {
+module darklaf.properties {
     requires transitive java.desktop;
     requires transitive darklaf.utils;
-    requires annotations;
     requires swing.extensions.visual.padding;
     requires com.kitfox.svg;
 
-    exports com.github.weisj.darklaf;
-    exports com.github.weisj.darklaf.uiresource;
-    exports com.github.weisj.darklaf.color;
-    exports com.github.weisj.darklaf.icons;
+    requires static annotations;
+
+    exports com.github.weisj.darklaf.properties;
+    exports com.github.weisj.darklaf.properties.parser;
+    exports com.github.weisj.darklaf.properties.uiresource;
+    exports com.github.weisj.darklaf.properties.color;
+    exports com.github.weisj.darklaf.properties.icons;
 }

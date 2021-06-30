@@ -27,6 +27,8 @@ module darklaf.theme {
 
     requires darklaf.annotations;
     requires com.google.auto.service;
+    requires darklaf.utils;
+    requires darklaf.properties;
 
     exports com.github.weisj.darklaf.theme;
     exports com.github.weisj.darklaf.theme.info;

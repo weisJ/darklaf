@@ -25,9 +25,9 @@
 module darklaf.utils {
     requires transitive java.desktop;
     requires transitive java.logging;
-    requires annotations;
 
-    exports com.github.weisj.darklaf.log;
+    requires static annotations;
+
     exports com.github.weisj.darklaf.util;
     exports com.github.weisj.darklaf.util.graphics;
     exports com.github.weisj.darklaf.util.value;

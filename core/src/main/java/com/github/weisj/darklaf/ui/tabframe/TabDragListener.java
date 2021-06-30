@@ -30,8 +30,8 @@ import javax.swing.*;
 import org.jdesktop.jxlayer.JXLayer;
 
 import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.SwingXUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.SwingXUtil;
 
 public class TabDragListener extends MouseAdapter {
 

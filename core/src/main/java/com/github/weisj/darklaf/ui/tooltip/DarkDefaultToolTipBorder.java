@@ -27,7 +27,7 @@ import javax.swing.*;
 import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.components.border.MutableLineBorder;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 public class DarkDefaultToolTipBorder extends MutableLineBorder implements UIResource, AlignableTooltipBorder {
 

@@ -29,7 +29,7 @@ import javax.swing.*;
 import org.jdesktop.jxlayer.JXLayer;
 import org.pbjar.jxlayer.plaf.ext.TransformUI;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 /** Popup menu that is aware of {@link org.pbjar.jxlayer.plaf.ext.TransformUI}. */
 public class JXPopupMenu extends JPopupMenu {

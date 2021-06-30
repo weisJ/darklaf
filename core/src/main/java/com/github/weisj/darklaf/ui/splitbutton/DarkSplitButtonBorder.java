@@ -28,7 +28,7 @@ import javax.swing.*;
 import com.github.weisj.darklaf.components.button.JSplitButton;
 import com.github.weisj.darklaf.ui.button.ButtonConstants;
 import com.github.weisj.darklaf.ui.button.DarkButtonBorder;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 public class DarkSplitButtonBorder extends DarkButtonBorder {
 

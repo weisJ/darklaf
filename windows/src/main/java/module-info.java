@@ -22,12 +22,13 @@
  * SOFTWARE.
  *
  */
-module darklaf.windows {
+module darklaf.platform.windows {
     requires transitive darklaf.platform.base;
     requires transitive darklaf.theme;
 
     requires darklaf.utils;
-    requires darklaf.propertyLoader;
+    requires darklaf.properties;
+    requires darklaf.nativeUtils;
 
     exports com.github.weisj.darklaf.platform.windows;
 }

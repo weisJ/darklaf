@@ -38,18 +38,18 @@ import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.components.button.JSplitButton;
 import com.github.weisj.darklaf.components.renderer.SimpleListCellRenderer;
-import com.github.weisj.darklaf.icons.CustomThemedIcon;
-import com.github.weisj.darklaf.icons.DerivableIcon;
-import com.github.weisj.darklaf.icons.EmptyIcon;
-import com.github.weisj.darklaf.icons.ThemedIcon;
-import com.github.weisj.darklaf.icons.ThemedSVGIcon;
 import com.github.weisj.darklaf.layout.HorizontalLayout;
 import com.github.weisj.darklaf.layout.LayoutHelper;
+import com.github.weisj.darklaf.properties.icons.CustomThemedIcon;
+import com.github.weisj.darklaf.properties.icons.DerivableIcon;
+import com.github.weisj.darklaf.properties.icons.EmptyIcon;
+import com.github.weisj.darklaf.properties.icons.ThemedIcon;
+import com.github.weisj.darklaf.properties.icons.ThemedSVGIcon;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.button.ButtonConstants;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.Actions;
 import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.Pair;
 
 public class IconEditor extends JPanel {

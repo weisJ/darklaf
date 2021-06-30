@@ -26,7 +26,7 @@ import java.util.Properties;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.DarkLaf;
-import com.github.weisj.darklaf.PropertyLoader;
+import com.github.weisj.darklaf.properties.PropertyLoader;
 import com.github.weisj.darklaf.theme.Theme;
 
 public class SystemDefaultsInitTask implements DefaultsInitTask {

@@ -33,9 +33,9 @@ import javax.swing.event.MouseInputAdapter;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.WindowUtil;
 import com.github.weisj.darklaf.util.LogUtil;
-import com.github.weisj.darklaf.util.WindowUtil;
 
 public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAdapter {
 

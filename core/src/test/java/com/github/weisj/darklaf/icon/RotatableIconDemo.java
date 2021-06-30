@@ -27,8 +27,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.icons.DarkSVGIcon;
-import com.github.weisj.darklaf.icons.RotatableIcon;
+import com.github.weisj.darklaf.properties.icons.DarkSVGIcon;
+import com.github.weisj.darklaf.properties.icons.RotatableIcon;
 import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.DemoResources;

@@ -37,7 +37,7 @@ import com.github.weisj.darklaf.components.tristate.TristateState;
 import com.github.weisj.darklaf.delegate.TreeCellEditorDelegate;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /** @author Jannis Weis */
