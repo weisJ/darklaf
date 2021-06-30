@@ -385,9 +385,6 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
         // Move to the where the cell has been dragged.
         vacatedColumnRect.x += dist;
 
-        g.setColor(Color.RED);
-        PaintUtil.drawRect(g, vacatedColumnRect);
-
         boolean ltr = table.getComponentOrientation().isLeftToRight();
 
         // Fill the background.
