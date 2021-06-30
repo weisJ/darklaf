@@ -30,8 +30,8 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import com.github.weisj.darklaf.color.DarkColorModelHSB;
 import com.github.weisj.darklaf.listener.InsertDocumentListener;
+import com.github.weisj.darklaf.properties.color.DarkColorModelHSB;
 import com.github.weisj.darklaf.ui.ComponentDemo;
 
 public class ColoredTextDemo extends TextPaneDemo {

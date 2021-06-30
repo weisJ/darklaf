@@ -26,7 +26,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 public class CloseButton extends JButton {
 

@@ -26,7 +26,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 public abstract class TabButtonContainer extends JPanel implements UIResource {
 

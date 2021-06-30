@@ -28,7 +28,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.swingdsl.visualpadding.VisualPaddingProvider;
 
 /** @author Jannis Weis */

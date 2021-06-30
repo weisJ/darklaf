@@ -28,7 +28,7 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 
 public class DarkSpinnerListener extends MouseAdapter

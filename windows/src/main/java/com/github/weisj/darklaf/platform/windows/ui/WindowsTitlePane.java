@@ -34,11 +34,11 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.UIResource;
 
-import com.github.weisj.darklaf.icons.ScaledIcon;
-import com.github.weisj.darklaf.icons.ToggleIcon;
 import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.platform.windows.JNIDecorationsWindows;
 import com.github.weisj.darklaf.platform.windows.PointerUtil;
+import com.github.weisj.darklaf.properties.icons.ScaledIcon;
+import com.github.weisj.darklaf.properties.icons.ToggleIcon;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;

@@ -24,7 +24,7 @@ package com.github.weisj.darklaf.misc;
 import java.awt.*;
 import java.util.logging.Logger;
 
-import com.github.weisj.darklaf.color.DarkColorModelHSL;
+import com.github.weisj.darklaf.properties.color.DarkColorModelHSL;
 
 /** Used to generate the color swatches for ColorChooser. */
 public final class GenerateColors {

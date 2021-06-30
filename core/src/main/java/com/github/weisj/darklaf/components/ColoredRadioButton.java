@@ -29,14 +29,14 @@ import javax.swing.plaf.ComponentUI;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.PropertyLoader;
-import com.github.weisj.darklaf.icons.IconLoader;
-import com.github.weisj.darklaf.icons.StateIcon;
+import com.github.weisj.darklaf.properties.PropertyLoader;
+import com.github.weisj.darklaf.properties.icons.IconLoader;
+import com.github.weisj.darklaf.properties.icons.StateIcon;
 import com.github.weisj.darklaf.task.AccentColorAdjustmentTask;
 import com.github.weisj.darklaf.task.ForegroundColorGenerationTask;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.togglebutton.radiobutton.DarkRadioButtonUI;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 public class ColoredRadioButton extends JRadioButton {
 

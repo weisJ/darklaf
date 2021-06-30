@@ -34,10 +34,10 @@ import javax.swing.*;
 import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.DarkLaf;
-import com.github.weisj.darklaf.PropertyLoader;
+import com.github.weisj.darklaf.properties.PropertyLoader;
+import com.github.weisj.darklaf.properties.uiresource.DarkFontUIResource;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.FontSizeRule;
-import com.github.weisj.darklaf.uiresource.DarkFontUIResource;
 import com.github.weisj.darklaf.util.FontUtil;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;

@@ -29,7 +29,7 @@ import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.ui.DividedWidgetPainter;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.swingdsl.visualpadding.VisualPaddingProvider;
 

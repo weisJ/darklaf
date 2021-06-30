@@ -22,7 +22,7 @@
 package com.github.weisj.darklaf.graphics;
 
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.color.DynamicColor;
+import com.github.weisj.darklaf.properties.color.DynamicColor;
 import com.github.weisj.darklaf.theme.Theme;
 
 public class ThemedColor extends DynamicColor {

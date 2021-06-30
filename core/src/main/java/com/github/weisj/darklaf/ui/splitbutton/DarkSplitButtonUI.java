@@ -28,7 +28,7 @@ import javax.swing.plaf.ComponentUI;
 
 import com.github.weisj.darklaf.components.ArrowButton;
 import com.github.weisj.darklaf.components.button.JSplitButton;
-import com.github.weisj.darklaf.icons.ToggleIcon;
+import com.github.weisj.darklaf.properties.icons.ToggleIcon;
 import com.github.weisj.darklaf.ui.button.ButtonConstants;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;

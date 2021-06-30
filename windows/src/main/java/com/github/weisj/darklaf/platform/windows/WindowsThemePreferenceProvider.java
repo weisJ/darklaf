@@ -24,7 +24,7 @@ package com.github.weisj.darklaf.platform.windows;
 import java.awt.*;
 import java.util.function.Consumer;
 
-import com.github.weisj.darklaf.color.DarkColorModelHSB;
+import com.github.weisj.darklaf.properties.color.DarkColorModelHSB;
 import com.github.weisj.darklaf.theme.info.*;
 
 public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {

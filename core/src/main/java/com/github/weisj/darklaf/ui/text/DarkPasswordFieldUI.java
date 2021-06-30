@@ -30,7 +30,7 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.text.JTextComponent;
 
-import com.github.weisj.darklaf.icons.EmptyIcon;
+import com.github.weisj.darklaf.properties.icons.EmptyIcon;
 import com.github.weisj.darklaf.ui.text.bridge.DarkPasswordFieldUIBridge;
 import com.github.weisj.darklaf.util.PropertyUtil;
 

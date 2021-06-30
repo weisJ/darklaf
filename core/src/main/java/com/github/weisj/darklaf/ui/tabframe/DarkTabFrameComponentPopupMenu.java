@@ -30,7 +30,7 @@ import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.components.JXPopupMenu;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
-import com.github.weisj.darklaf.icons.EmptyIcon;
+import com.github.weisj.darklaf.properties.icons.EmptyIcon;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.PropertyKey;
 

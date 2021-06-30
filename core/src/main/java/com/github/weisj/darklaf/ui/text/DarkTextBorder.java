@@ -31,7 +31,7 @@ import javax.swing.text.JTextComponent;
 
 import com.github.weisj.darklaf.graphics.Outline;
 import com.github.weisj.darklaf.graphics.PaintUtil;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;

@@ -32,10 +32,10 @@ import java.util.List;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.color.DarkColorModel;
-import com.github.weisj.darklaf.color.DarkColorModelHSB;
-import com.github.weisj.darklaf.color.DarkColorModelHSL;
-import com.github.weisj.darklaf.color.DarkColorModelRGB;
+import com.github.weisj.darklaf.properties.color.DarkColorModel;
+import com.github.weisj.darklaf.properties.color.DarkColorModelHSB;
+import com.github.weisj.darklaf.properties.color.DarkColorModelHSL;
+import com.github.weisj.darklaf.properties.color.DarkColorModelRGB;
 import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;

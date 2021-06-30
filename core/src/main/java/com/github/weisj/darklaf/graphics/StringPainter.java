@@ -33,6 +33,8 @@ import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
 
 import com.github.weisj.darklaf.ui.OpacityBufferedUI;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.SwingUtil;
 import com.github.weisj.darklaf.util.*;
 import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;

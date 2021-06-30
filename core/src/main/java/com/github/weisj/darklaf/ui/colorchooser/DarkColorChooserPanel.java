@@ -28,10 +28,10 @@ import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.colorchooser.ColorSelectionModel;
 import javax.swing.event.AncestorEvent;
 
-import com.github.weisj.darklaf.color.DarkColorModel;
 import com.github.weisj.darklaf.components.DefaultColorPipette;
 import com.github.weisj.darklaf.listener.AncestorAdapter;
 import com.github.weisj.darklaf.listener.UpdateDocumentListener;
+import com.github.weisj.darklaf.properties.color.DarkColorModel;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
