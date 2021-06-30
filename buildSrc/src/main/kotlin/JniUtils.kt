@@ -1,5 +1,4 @@
-import dev.nokee.platform.jni.JniLibraryDependencies
-import org.gradle.nativeplatform.MachineArchitecture
+import dev.nokee.platform.jni.JavaNativeInterfaceLibraryComponentDependencies
 import dev.nokee.runtime.nativebase.OperatingSystemFamily
 import dev.nokee.runtime.nativebase.TargetMachine
 import dev.nokee.language.base.tasks.SourceCompile
@@ -8,7 +7,6 @@ import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.artifacts.MinimalExternalModuleDependency
 import org.gradle.api.artifacts.ModuleDependency
-import org.gradle.api.artifacts.ModuleDependencyCapabilitiesHandler
 import org.gradle.api.provider.Provider
 import org.gradle.nativeplatform.toolchain.Clang
 import org.gradle.nativeplatform.toolchain.Gcc
@@ -19,15 +17,15 @@ typealias OSFamily = org.gradle.nativeplatform.OperatingSystemFamily
 fun MinimalExternalModuleDependency.dependencyNotation() =
     "${module.group}:${module.name}:${versionConstraint.requiredVersion}"
 
-fun JniLibraryDependencies.jvmLibImplementation(notation: Provider<MinimalExternalModuleDependency>) {
+fun JavaNativeInterfaceLibraryComponentDependencies.jvmLibImplementation(notation: Provider<MinimalExternalModuleDependency>) {
     jvmImplementation(notation.map { it.dependencyNotation() }.get())
 }
 
-fun JniLibraryDependencies.nativeLibImplementation(notation: Provider<MinimalExternalModuleDependency>) {
+fun JavaNativeInterfaceLibraryComponentDependencies.nativeLibImplementation(notation: Provider<MinimalExternalModuleDependency>) {
     nativeImplementation(notation.map { it.dependencyNotation() }.get())
 }
 
-fun JniLibraryDependencies.nativeLibImplementation(
+fun JavaNativeInterfaceLibraryComponentDependencies.nativeLibImplementation(
     notation: Provider<MinimalExternalModuleDependency>,
     action: Action<in ModuleDependency>
 ) {
