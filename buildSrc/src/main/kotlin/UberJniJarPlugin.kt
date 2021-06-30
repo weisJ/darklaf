@@ -1,13 +1,11 @@
-import dev.nokee.platform.jni.JarBinary
 import dev.nokee.platform.jni.JniJarBinary
-import dev.nokee.platform.jni.JniLibraryExtension
+import dev.nokee.platform.jni.JavaNativeInterfaceLibrary
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.file.FileTree
 import org.gradle.api.provider.Provider
 import org.gradle.jvm.tasks.Jar
-import org.gradle.nativeplatform.tasks.LinkSharedLibrary
 
 class UberJniJarPlugin : Plugin<Project> {
 
@@ -20,7 +18,7 @@ class UberJniJarPlugin : Plugin<Project> {
     private fun configure(task: Jar) {
         val project = task.project
         val logger = task.logger
-        val library = project.extensions.getByType(JniLibraryExtension::class.java)
+        val library = project.extensions.getByType(JavaNativeInterfaceLibrary::class.java)
 
         // Prevent variants from being published.
         val targetMachines = library.targetMachines.forUseAtConfigurationTime().get()
