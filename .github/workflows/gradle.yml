@@ -58,6 +58,9 @@ jobs:
   macos:
     name: macOS (Java 11)
     runs-on: macos-latest
+    permissions:
+      contents: read
+      packages: read
     steps:
       - uses: actions/checkout@v2
         with:
@@ -77,6 +80,8 @@ jobs:
           wrapper-cache-enabled: true
           dependencies-cache-enabled: true
           configuration-cache-enabled: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload Test Results
         uses: actions/upload-artifact@v1
         if: ${{ always() }}
