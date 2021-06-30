@@ -32,7 +32,7 @@ import javax.swing.table.TableColumnModel;
 
 import com.github.weisj.darklaf.ui.table.DarkTableScrollPaneBorder;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 
 /** @author Jannis Weis */

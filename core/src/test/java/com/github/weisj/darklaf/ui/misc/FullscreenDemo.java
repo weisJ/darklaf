@@ -29,7 +29,7 @@ import java.awt.event.MouseListener;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.ui.ComponentDemo;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 public class FullscreenDemo implements ComponentDemo {
 

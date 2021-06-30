@@ -39,9 +39,9 @@ import com.github.weisj.darklaf.focus.FocusParentHelper;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.panel.DarkPanelUI;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.Actions;
 import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListener, TabFramePopupUI {
 

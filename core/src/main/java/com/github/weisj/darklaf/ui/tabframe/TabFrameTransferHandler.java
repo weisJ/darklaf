@@ -35,8 +35,8 @@ import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabFramePopup;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
 import com.github.weisj.darklaf.components.tabframe.TabFrameUI;
+import com.github.weisj.darklaf.ui.util.DnDUtil;
 import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.DnDUtil;
 
 /** @author Jannis Weis */
 public class TabFrameTransferHandler extends TransferHandler implements DropTargetListener, SwingConstants {

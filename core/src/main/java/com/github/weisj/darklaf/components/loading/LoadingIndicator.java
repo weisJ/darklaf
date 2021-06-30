@@ -24,9 +24,9 @@ package com.github.weisj.darklaf.components.loading;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.components.RotatableIconAnimator;
-import com.github.weisj.darklaf.icons.EmptyIcon;
-import com.github.weisj.darklaf.icons.RotatableIcon;
-import com.github.weisj.darklaf.icons.TwoIcon;
+import com.github.weisj.darklaf.properties.icons.EmptyIcon;
+import com.github.weisj.darklaf.properties.icons.RotatableIcon;
+import com.github.weisj.darklaf.properties.icons.TwoIcon;
 
 /** Label that functions as an loading indicator. */
 public class LoadingIndicator extends JLabel {

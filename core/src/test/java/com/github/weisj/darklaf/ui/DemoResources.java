@@ -23,7 +23,7 @@ package com.github.weisj.darklaf.ui;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 public final class DemoResources {
     public static final String LOREM_IPSUM =

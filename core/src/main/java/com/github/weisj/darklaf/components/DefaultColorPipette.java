@@ -28,10 +28,10 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.icons.EmptyIcon;
+import com.github.weisj.darklaf.properties.icons.EmptyIcon;
 import com.github.weisj.darklaf.ui.colorchooser.ColorListener;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.TimerUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.TimerUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 

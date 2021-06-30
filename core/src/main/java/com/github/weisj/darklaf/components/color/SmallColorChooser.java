@@ -32,16 +32,16 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.*;
 
-import com.github.weisj.darklaf.color.DarkColorModel;
-import com.github.weisj.darklaf.color.DarkColorModelHSB;
-import com.github.weisj.darklaf.color.DarkColorModelHSL;
-import com.github.weisj.darklaf.color.DarkColorModelRGB;
 import com.github.weisj.darklaf.components.DefaultColorPipette;
 import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.components.border.MarginBorderWrapper;
 import com.github.weisj.darklaf.components.chooser.ChooserComponent;
 import com.github.weisj.darklaf.layout.LayoutHelper;
 import com.github.weisj.darklaf.listener.UpdateDocumentListener;
+import com.github.weisj.darklaf.properties.color.DarkColorModel;
+import com.github.weisj.darklaf.properties.color.DarkColorModelHSB;
+import com.github.weisj.darklaf.properties.color.DarkColorModelHSL;
+import com.github.weisj.darklaf.properties.color.DarkColorModelRGB;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.colorchooser.ColorPipette;
 import com.github.weisj.darklaf.ui.colorchooser.ColorPreviewComponent;
@@ -49,8 +49,8 @@ import com.github.weisj.darklaf.ui.colorchooser.ColorTriangle;
 import com.github.weisj.darklaf.ui.colorchooser.ColorValueFormatter;
 import com.github.weisj.darklaf.ui.slider.DarkSliderUI;
 import com.github.weisj.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.ColorUtil;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
 public class SmallColorChooser extends JPanel implements ChooserComponent<Color> {

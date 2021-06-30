@@ -24,7 +24,7 @@ package com.github.weisj.darklaf.task;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.util.ResourceUtil;
+import com.github.weisj.darklaf.ui.util.ResourceUtil;
 
 public class ResourceBundleInitTask implements DefaultsInitTask {
 

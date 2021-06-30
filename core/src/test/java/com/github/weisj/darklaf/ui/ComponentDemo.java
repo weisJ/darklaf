@@ -36,7 +36,7 @@ import javax.swing.event.MenuListener;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.graphics.StringPainter;
-import com.github.weisj.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.settings.ThemeSettingsMenuItem;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.event.ThemeInstalledListener;

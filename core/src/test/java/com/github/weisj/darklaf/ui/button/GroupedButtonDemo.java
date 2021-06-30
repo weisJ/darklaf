@@ -25,8 +25,8 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoPanel;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.AlignmentExt;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class GroupedButtonDemo implements ComponentDemo {
 

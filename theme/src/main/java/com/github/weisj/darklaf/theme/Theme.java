@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.text.html.StyleSheet;
 
-import com.github.weisj.darklaf.PropertyLoader;
+import com.github.weisj.darklaf.properties.PropertyLoader;
 import com.github.weisj.darklaf.theme.info.*;
 import com.github.weisj.darklaf.theme.laf.RenamedTheme;
 import com.github.weisj.darklaf.util.LogUtil;

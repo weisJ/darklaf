@@ -34,7 +34,7 @@ import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.ui.cell.ComponentBasedTreeCellRenderer;
 import com.github.weisj.darklaf.ui.cell.DarkBooleanCellRenderer;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererTristateButton;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class DarkTreeCellRendererDelegate extends TreeCellRendererDelegate implements TreeRendererSupport {
