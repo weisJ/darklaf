@@ -68,10 +68,17 @@ jobs:
           configuration-cache-enabled: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload artifact
+      - name: Upload x86-64 artifact
         uses: actions/upload-artifact@v1
         with:
           name: macos-x86-64
-          path: macos/build/libs/main/libdarklaf-macos.dylib
-      - name: Print library information
-        run: otool -l macos/build/libs/main/libdarklaf-macos.dylib
+          path: macos/build/libs/main/x86-64/libdarklaf-macos.dylib
+      - name: Upload arm64 artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: macos-arm64
+          path: macos/build/libs/main/arm64/libdarklaf-macos.dylib
+      - name: Print x86-64 library information
+        run: otool -l macos/build/libs/main/x86-64/libdarklaf-macos.dylib && file macos/build/libs/main/x86-64/libdarklaf-macos.dylib
+      - name: Print arm64 library information
+        run: otool -l macos/build/libs/main/arm64/libdarklaf-macos.dylib && file macos/build/libs/main/arm64/libdarklaf-macos.dylib

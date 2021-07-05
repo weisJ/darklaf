@@ -27,7 +27,9 @@ import com.github.weisj.darklaf.util.SystemInfo;
 
 public class MacOSLibrary extends AbstractLibrary {
 
-    private static final String PATH = "/com/github/weisj/darklaf/platform/darklaf-macos/macos-x86-64/";
+    private static final String PATH = "/com/github/weisj/darklaf/platform/darklaf-macos/";
+    private static final String x86_64_PATH = "macos-x86-64/";
+    private static final String arm64_PATH = "macos-arm64/";
     private static final String DLL_NAME = "libdarklaf-macos.dylib";
     private static final MacOSLibrary instance = new MacOSLibrary();
 
@@ -39,8 +41,28 @@ public class MacOSLibrary extends AbstractLibrary {
         super(PATH, DLL_NAME, LogUtil.getLogger(MacOSLibrary.class));
     }
 
+    private String getArm64Path() {
+        return super.getPath() + arm64_PATH;
+    }
+
+    private String getX64Path() {
+        return super.getPath() + x86_64_PATH;
+    }
+
+
+    @Override
+    protected String getPath() {
+        if (SystemInfo.isX86Compatible && SystemInfo.isX64) {
+            return getX64Path();
+        } else if (SystemInfo.isM1) {
+            return getArm64Path();
+        } else {
+            throw new IllegalStateException("Unsupported arch");
+        }
+    }
+
     @Override
     protected boolean canLoad() {
-        return (SystemInfo.isX86Compatible && SystemInfo.isX64) && SystemInfo.isMacOSYosemite;
+        return ((SystemInfo.isX86Compatible && SystemInfo.isX64) || SystemInfo.isM1) && SystemInfo.isMacOSYosemite;
     }
 }
