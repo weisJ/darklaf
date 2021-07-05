@@ -15,8 +15,8 @@ dependencies {
 repositories {
     mavenCentral()
     gradlePluginPortal()
-    maven { url = uri("https://dl.bintray.com/nokeedev/distributions") }
-    maven { url = uri("https://dl.bintray.com/nokeedev/distributions-snapshots") }
+    maven { url = uri("https://repo.nokee.dev/release") }
+    maven { url = uri("https://repo.nokee.dev/snapshot") }
 }
 
 gradlePlugin {
@@ -28,6 +28,10 @@ gradlePlugin {
         create("use-prebuilt-binaries") {
             id = "use-prebuilt-binaries"
             implementationClass = "UsePrebuiltBinariesWhenUnbuildablePlugin"
+        }
+        create("apple-m1-toolchain") {
+            id = "apple-m1-toolchain"
+            implementationClass = "AppleM1ToolChainRule"
         }
     }
 }
