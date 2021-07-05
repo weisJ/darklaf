@@ -56,7 +56,7 @@ public class WindowsLibrary extends AbstractLibrary {
         } else if (SystemInfo.isX64) {
             return getX64Path();
         } else {
-            return super.getPath();
+            throw new IllegalStateException("Unsupported arch");
         }
     }
 
