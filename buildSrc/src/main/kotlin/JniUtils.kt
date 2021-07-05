@@ -32,10 +32,6 @@ fun JavaNativeInterfaceLibraryComponentDependencies.nativeLibImplementation(
     nativeImplementation(notation.map { it.dependencyNotation() }.get(), action)
 }
 
-fun ModuleDependencyCapabilitiesHandler.requireLibCapability(notation: Provider<MinimalExternalModuleDependency>) {
-    requireCapabilities(notation.get().dependencyNotation())
-}
-
 val TargetMachine.variantName: String
     get() = "$osFamily-$architectureString"
 
@@ -48,7 +44,7 @@ val TargetMachine.osFamily: String
     }
 
 val TargetMachine.architectureString: String
-    get() = if (architecture.is32Bit) MachineArchitecture.X86 else MachineArchitecture.X86_64
+    get() = architecture.name
 
 val TargetMachine.targetsHost: Boolean
     get() {
