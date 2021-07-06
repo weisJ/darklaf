@@ -43,10 +43,13 @@ open class DownloadPrebuiltBinariesTask @Inject constructor(
     private val prebuiltDirectoryPath = "${project.buildDir}/$PRE_BUILD_PATH/$variantName"
 
     private val cacheFile: File by lazy {
-        val cachePath = "${project.buildDir}/$PRE_BUILD_PATH/$VERSION_INFO_FILE_NAME"
-        fileOf(cachePath).also { it.writeText("{}") }
+        val cachePath = "${project.buildDir}/$PRE_BUILD_PATH/$variantName/$VERSION_INFO_FILE_NAME"
+        fileOf(cachePath) {
+            it.writeText("{}")
+        }
     }
     private val cache: Json by lazy { LOCK.read { cacheFile.readText().toJson() } }
+    private fun cacheOf(branch: String?): Json = if (branch != null) (cache[branch] as? Json) ?: mapOf() else cache
 
     private val prebuiltBinary: File? by lazy { fetchBinaryFile() }
 
@@ -74,13 +77,24 @@ open class DownloadPrebuiltBinariesTask @Inject constructor(
     }
 
     private fun fetchBinaryFile(): File? {
-        val run = workflowURL.getJson().latestRun
-            ?: return fetchFailed("Could not get latest run")
+        val branches = githubArtifactSpec.branches
+        return if (branches.isEmpty()) {
+            fetchBinaryFileForBranch(null)
+        } else {
+            branches.asSequence().mapNotNull {
+                fetchBinaryFileForBranch(it)
+            }.firstOrNull()
+        }
+    }
+
+    private fun fetchBinaryFileForBranch(branch: String?): File? {
+        val run = workflowURL.getJson().latestRunForBranch(branch)
+            ?: return fetchFailed("Could not get latest run from branch $branch")
         val timeStamp = run["created_at"]
-        val cachedPathTimeStamp = cache["timeStamp"]
+        val cachedPathTimeStamp = cacheOf(branch)["timeStamp"]
         infoLog("Latest artifact for variant '$variantName' is from $timeStamp")
         if (timeStamp == cachedPathTimeStamp) {
-            val cachedFile = File(cache["path"].toString())
+            val cachedFile = File(cacheOf(branch)["path"].toString())
             if (cachedFile.exists()) {
                 warnLog("Reusing previously downloaded binary ${cachedFile.absolutePath}")
                 return cachedFile
@@ -97,8 +111,13 @@ open class DownloadPrebuiltBinariesTask @Inject constructor(
         if (artifact != null) {
             LOCK.write {
                 val mutableCache = cache.toMutableMap()
-                mutableCache["timeStamp"] = timeStamp ?: ""
-                mutableCache["path"] = artifact.absolutePath
+                val branchCache = if (branch != null) {
+                    val bCache = mutableMapOf<String, Any>()
+                    mutableCache[branch] = bCache
+                    bCache
+                } else mutableCache
+                branchCache["timeStamp"] = timeStamp ?: ""
+                branchCache["path"] = artifact.absolutePath
                 cacheFile.writeText(JsonOutput.prettyPrint(JsonOutput.toJson(mutableCache)))
             }
         }
@@ -115,20 +134,16 @@ open class DownloadPrebuiltBinariesTask @Inject constructor(
         }
     }
 
-    private val Json.latestRun: Json?
-        get() {
-            val runs = this["workflow_runs"] as? List<Json> ?: return null
-            val candidates = runs.filter {
-                val completed = "completed" == it["status"]
-                val success = "success" == it["conclusion"]
-                completed && success
-            }
-            val branches = githubArtifactSpec.branches
-            if (branches.isEmpty()) return candidates.firstOrNull()
-            return branches.asSequence().mapNotNull { branch ->
-                candidates.find { branch == it["head_branch"] }
-            }.firstOrNull()
+    private fun Json.latestRunForBranch(branch: String?): Json? {
+        val runs = this["workflow_runs"] as? List<Json> ?: return null
+        val candidates = runs.asSequence().filter {
+            val completed = "completed" == it["status"]
+            val success = "success" == it["conclusion"]
+            completed && success
         }
+        if (branch == null) return candidates.firstOrNull()
+        return candidates.find { branch == it["head_branch"] }
+    }
 
     private fun URL.getJson(): Json = fetch { connection ->
         connection.inputStream.bufferedReader().use { it.readText() }.toJson()
@@ -161,11 +176,12 @@ open class DownloadPrebuiltBinariesTask @Inject constructor(
 
     private fun directoryOf(fileName: String) = File(fileName).also { it.mkdirs() }
 
-    private fun fileOf(fileName: String): File {
+    private fun fileOf(fileName: String, init: (File) -> Unit = {}): File {
         val file = File(fileName)
         if (!file.exists()) {
             file.parentFile.mkdirs()
             file.createNewFile()
+            init(file)
         }
         return file
     }
@@ -198,6 +214,7 @@ open class DownloadPrebuiltBinariesTask @Inject constructor(
     private fun <T> ReadWriteLock.write(action: () -> T): T = writeLock().use(action)
 
     private fun ZipFile.unzip(directory: File): Sequence<File> {
+        infoLog("Unzipping ${this.name} to $directory")
         return entries().asSequence()
             .map { it as ZipEntry }
             .filter { !it.isDirectory }
