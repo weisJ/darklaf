@@ -30,7 +30,7 @@ jobs:
       - name: Publish
         if: steps.check.outputs.triggered == 'true'
         env:
-          PROPS_RELEASE: "-Prc=1 -Pgh -Prelease=false -PskipJavadoc -PskipAutostyle -PfailIfLibraryMissing -PsnapshotName=${{ github.head_ref }}"
+          PROPS_RELEASE: "-Prc=1 -Pgh -Prelease=false -PskipJavadoc -PskipAutostyle -PfailIfLibraryMissing -PuseBranchSnapshotName=true"
           PROPS_GIT: "-PghGitSourceUsername=${{ secrets.GH_GIT_USERNAME }} -PghGitSourcePassword=${{ secrets.GITHUB_TOKEN }}"
           PROPS_NEXUS: "-PghNexusUsername=${{ secrets.GH_NEXUS_USERNAME }} -PghNexusPassword=${{ secrets.GH_NEXUS_PASSWORD }}"
           PROPS_SIGNING: "-PuseInMemoryKey=true -Psigning.inMemoryKey=${{ secrets.IN_MEMORY_KEY }} -Psigning.password=${{ secrets.SIGNING_PASSWORD }}"
