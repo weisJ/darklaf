@@ -29,7 +29,9 @@ jobs:
           java-version: 8
       - name: Extract branch name
         shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        run: echo "##[set-output name=branch;]$(echo ${REF#refs/heads/})"
+        env:
+          REF: ${{ pull_request.head.ref  }}
         id: extract_branch
       - name: Publish
         if: steps.check.outputs.triggered == 'true'
