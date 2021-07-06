@@ -14,7 +14,6 @@ plugins {
     id("com.github.vlsi.crlf")
     id("com.github.vlsi.gradle-extensions")
     id("com.github.vlsi.stage-vote-release")
-    id("org.ajoberstar.grgit")
 }
 
 val skipJavadoc by props()
@@ -22,12 +21,7 @@ val enableMavenLocal by props(false)
 val enableGradleMetadata by props()
 val skipAutostyle by props(false)
 val isRelease = project.stringProperty("release").toBool()
-val snapshotName = if (project.props.bool("useBranchSnapshotName")) {
-    println("Using branch as snapshotName ${System.getenv("GITHUB_HEAD_REF")} (${grgit.branch.current()?.name ?: ""})")
-    System.getenv("GITHUB_HEAD_REF") ?: grgit.branch.current()?.name
-} else {
-    project.stringProperty("snapshotName")
-} ?: ""
+val snapshotName by props("")
 
 val String.v: String get() = rootProject.extra["$this.version"] as String
 val projectVersion = "darklaf".v
