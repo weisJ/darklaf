@@ -46,16 +46,16 @@ jobs:
             ````kotlin
             repositories {
                 maven {
-                    url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+                    url = uri(\"https://oss.sonatype.org/content/repositories/snapshots/\")
                 }
             }
 
             configurations.all {
-                resolutionStrategy.cacheChangingModulesFor(0, "seconds")
+                resolutionStrategy.cacheChangingModulesFor(0, \"seconds\")
             }
 
             dependencies {
-                implementation("com.github.weisj:darklaf-core-${{ github.head_ref }}:latest.integration")
+                implementation(\"com.github.weisj:darklaf-core-${{ github.head_ref }}:latest.integration\")
             }
             ````" }'
         run: |
