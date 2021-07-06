@@ -31,7 +31,7 @@ jobs:
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${REF#refs/heads/})"
         env:
-          REF: ${{ pull_request.head.ref  }}
+          REF: ${{ github.event.pull_request.head.ref  }}
         id: extract_branch
       - name: Publish
         if: steps.check.outputs.triggered == 'true'
