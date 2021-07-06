@@ -1,0 +1,61 @@
+name: Build branch SNAPSHOT
+
+on:
+  pull_request_target:
+    types: [opened]
+  issue_comment:
+    types: [created]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: khan/pull-request-comment-trigger@master
+        id: check
+        with:
+          trigger: '!buildSnapshot'
+          prefix_only: true
+          reaction: rocket
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+      - uses: actions/checkout@v2
+        if: steps.check.outputs.triggered == 'true'
+        with:
+          fetch-depth: 10
+      - name: Set up JDK 8
+        if: steps.check.outputs.triggered == 'true'
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - name: Publish
+        if: steps.check.outputs.triggered == 'true'
+        env:
+          PROPS_RELEASE: "-Prc=1 -Pgh -Prelease=false -PskipJavadoc -PskipAutostyle -PfailIfLibraryMissing -PsnapshotName={{ GITHUB_HEAD_REF }}"
+          PROPS_GIT: "-PghGitSourceUsername=${{ secrets.GH_GIT_USERNAME }} -PghGitSourcePassword=${{ secrets.GITHUB_TOKEN }}"
+          PROPS_NEXUS: "-PghNexusUsername=${{ secrets.GH_NEXUS_USERNAME }} -PghNexusPassword=${{ secrets.GH_NEXUS_PASSWORD }}"
+          PROPS_SIGNING: "-PuseInMemoryKey=true -Psigning.inMemoryKey=${{ secrets.IN_MEMORY_KEY }} -Psigning.password=${{ secrets.SIGNING_PASSWORD }}"
+          PROPS_GITHUB: "-PgithubAccessToken=${{ secrets.GITHUB_TOKEN }}"
+        run: ./gradlew prepareVote $(echo $PROPS_RELEASE $PROPS_GIT $PROPS_NEXUS $PROPS_SIGNING $PROPS_GITHUB) -x test
+      - uses: mshick/add-pr-comment@v1
+        if: steps.check.outputs.triggered == 'true'
+        with:
+          message: |
+            This PR has been deployed as a snasphot version. Try it out using:
+            ````kotlin
+            repositories {
+                maven {
+                    url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+                }
+            }
+
+            configurations.all {
+                resolutionStrategy.cacheChangingModulesFor(0, "seconds")
+            }
+
+            dependencies {
+                implementation("com.github.weisj:darklaf-core-{{ GITHUB_HEAD_REF }}:latest.integration")
+            }
+            ````
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token-user-login: 'github-actions[bot]'
+          allow-repeats: false
