@@ -42,22 +42,7 @@ jobs:
           URL: ${{ github.event.issue.comments_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COMMENT_CONTENT: |
-            '{ "body": "This PR has been deployed as a snasphot version. Try it out using:
-            ````kotlin
-            repositories {
-                maven {
-                    url = uri(\"https://oss.sonatype.org/content/repositories/snapshots/\")
-                }
-            }
-
-            configurations.all {
-                resolutionStrategy.cacheChangingModulesFor(0, \"seconds\")
-            }
-
-            dependencies {
-                implementation(\"com.github.weisj:darklaf-core-${{ github.head_ref }}:latest.integration\")
-            }
-            ````" }'
+            '{ "body": "This PR has been deployed as a snasphot version. Try it out using:\r\n````kotlin\r\nrepositories {\r\n    maven {\r\n        url = uri(\"https:\/\/oss.sonatype.org\/content\/repositories\/snapshots\/\")\r\n    }\r\n}\r\n\r\nconfigurations.all {\r\n    resolutionStrategy.cacheChangingModulesFor(0, \\\"seconds\\\")\r\n}\r\n\r\ndependencies {\r\n    implementation(\"com.github.weisj:darklaf-core-${{ env.GITHUB_HEAD_REF }}:latest.integration\")\r\n}\r\n````" }'
         run: |
           curl \
             -X POST \
