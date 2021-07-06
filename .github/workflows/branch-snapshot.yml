@@ -1,7 +1,7 @@
 name: Build branch SNAPSHOT
 
 on:
-  pull_request:
+  pull_request_target:
     types: [opened]
   issue_comment:
     types: [created]
@@ -27,26 +27,49 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 8
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
       - name: Publish
         if: steps.check.outputs.triggered == 'true'
         env:
-          PROPS_RELEASE: "-Prc=1 -Pgh -Prelease=false -PskipJavadoc -PskipAutostyle -PfailIfLibraryMissing -PuseBranchSnapshotName=true"
+          PROPS_RELEASE: "-Prc=1 -Pgh -Prelease=false -PskipJavadoc -PskipAutostyle -PfailIfLibraryMissing -snapshotName=${{ steps.extract_branch.outputs.branch }}"
           PROPS_GIT: "-PghGitSourceUsername=${{ secrets.GH_GIT_USERNAME }} -PghGitSourcePassword=${{ secrets.GITHUB_TOKEN }}"
           PROPS_NEXUS: "-PghNexusUsername=${{ secrets.GH_NEXUS_USERNAME }} -PghNexusPassword=${{ secrets.GH_NEXUS_PASSWORD }}"
           PROPS_SIGNING: "-PuseInMemoryKey=true -Psigning.inMemoryKey=${{ secrets.IN_MEMORY_KEY }} -Psigning.password=${{ secrets.SIGNING_PASSWORD }}"
           PROPS_GITHUB: "-PgithubAccessToken=${{ secrets.GITHUB_TOKEN }}"
         run: ./gradlew prepareVote $(echo $PROPS_RELEASE $PROPS_GIT $PROPS_NEXUS $PROPS_SIGNING $PROPS_GITHUB) -x test
-      - name: Add comment to PR
+      - name: Find Comment
         if: steps.check.outputs.triggered == 'true'
-        env:
-          URL: ${{ github.event.issue.comments_url }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COMMENT_CONTENT: |
-            '{ "body": "This PR has been deployed as a snasphot version. Try it out using:\r\n````kotlin\r\nrepositories {\r\n    maven {\r\n        url = uri(\"https:\/\/oss.sonatype.org\/content\/repositories\/snapshots\/\")\r\n    }\r\n}\r\n\r\nconfigurations.all {\r\n    resolutionStrategy.cacheChangingModulesFor(0, \\\"seconds\\\")\r\n}\r\n\r\ndependencies {\r\n    implementation(\"com.github.weisj:darklaf-core-${{ env.GITHUB_HEAD_REF }}:latest.integration\")\r\n}\r\n````" }'
-        run: |
-          curl \
-            -X POST \
-            $URL \
-            -H "Content-Type: application/json" \
-            -H "Authorization: token $GITHUB_TOKEN" \
-            --data $COMMENT_CONTENT
+        uses: peter-evans/find-comment@v1
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: "[Snapshot Created]"
+      - name: Create comment
+        if: steps.check.outputs.triggered == 'true'
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            [Snapshot Created]
+            This PR has been deployed as a snasphot version. Try it out using:
+              ````kotlin
+              repositories {
+              maven {
+              url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+              }
+            }
+
+              configurations.all {
+              resolutionStrategy.cacheChangingModulesFor(0, \"seconds\")
+            }
+
+              dependencies {
+              implementation("com.github.weisj:darklaf-core-${{ env.GITHUB_HEAD_REF }}:latest.integration")
+            }
+            ````
+          edit-mode: replace
