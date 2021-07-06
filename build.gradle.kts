@@ -14,6 +14,7 @@ plugins {
     id("com.github.vlsi.crlf")
     id("com.github.vlsi.gradle-extensions")
     id("com.github.vlsi.stage-vote-release")
+    id("org.ajoberstar.grgit")
 }
 
 val skipJavadoc by props()
@@ -118,7 +119,8 @@ allprojects {
                 repository = "darklaf",
                 workflow = "libs.yml"
             ) {
-                branches = listOf("master", "v$projectVersion", projectVersion)
+                val currentBranch = System.getenv("GITHUB_HEAD_REF") ?: grgit.branch.current()?.name
+                branches = listOfNotNull(currentBranch, "master", "v$projectVersion", projectVersion)
                 accessToken = githubAccessToken
                 manualDownloadUrl =
                     "https://github.com/weisJ/darklaf/actions?query=workflow%3A%22Build+Native+Libraries%22+is%3Asuccess+branch%3Amaster"
