@@ -5,10 +5,15 @@ on:
     paths:
       - '**.cpp'
       - '**.mm'
+      - 'windows/build.gradle.kts'
+      - 'macos/build.gradle.kts'
+      - 'buildSrc/**'
   pull_request:
     paths:
       - '**.cpp'
       - '**.mm'
+      - 'windows/build.gradle.kts'
+      - 'macos/build.gradle.kts'
   release:
     types:
       - published
