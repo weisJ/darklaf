@@ -42,7 +42,7 @@ jobs:
           URL: ${{ github.event.issue.comments_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COMMENT_CONTENT: |
-            This PR has been deployed as a snasphot version. Try it out using:
+            '{ "body": "This PR has been deployed as a snasphot version. Try it out using:
             ````kotlin
             repositories {
                 maven {
@@ -57,11 +57,11 @@ jobs:
             dependencies {
                 implementation("com.github.weisj:darklaf-core-${{ github.head_ref }}:latest.integration")
             }
-            ````
+            ````" }'
         run: |
           curl \
             -X POST \
             $URL \
             -H "Content-Type: application/json" \
             -H "Authorization: token $GITHUB_TOKEN" \
-            --data '{ "body": "$COMMENT_CONTENT" }'
+            --data $COMMENT_CONTENT
