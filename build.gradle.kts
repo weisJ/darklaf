@@ -23,6 +23,7 @@ val enableGradleMetadata by props()
 val skipAutostyle by props(false)
 val isRelease = project.stringProperty("release").toBool()
 val snapshotName = if (project.props.bool("useBranchSnapshotName")) {
+    println("Using branch as snashotName ${System.getenv("GITHUB_HEAD_REF")} (${grgit.branch.current()?.name ?: ""})")
     System.getenv("GITHUB_HEAD_REF") ?: grgit.branch.current()?.name
 } else {
     project.stringProperty("snapshotName")
