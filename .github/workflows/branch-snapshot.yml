@@ -2,48 +2,40 @@ name: Build branch SNAPSHOT
 
 on:
   pull_request_target:
-    types: [opened]
-  issue_comment:
-    types: [created]
+    types: [labeled]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: khan/pull-request-comment-trigger@master
-        id: check
-        with:
-          trigger: '!buildSnapshot'
-          prefix_only: true
-          reaction: rocket
-        env:
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
       - uses: actions/checkout@v2
-        if: steps.check.outputs.triggered == 'true'
+        if: contains(github.event.pull_request.labels.*.name, 'published to test')
         with:
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 10
       - name: Set up JDK 8
-        if: steps.check.outputs.triggered == 'true'
+        if: contains(github.event.pull_request.labels.*.name, 'published to test')
         uses: actions/setup-java@v1
         with:
           java-version: 8
       - name: Extract branch name
+        if: contains(github.event.pull_request.labels.*.name, 'published to test')
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${REF#refs/heads/})"
         env:
-          REF: ${{ github.event.pull_request.head.ref  }}
+          REF: ${{ github.event.pull_request.head.ref }}
         id: extract_branch
       - name: Publish
-        if: steps.check.outputs.triggered == 'true'
+        if: contains(github.event.pull_request.labels.*.name, 'published to test')
         env:
-          PROPS_RELEASE: "-Prc=1 -Pgh -Prelease=false -PskipJavadoc -PskipAutostyle -PfailIfLibraryMissing -snapshotName=${{ steps.extract_branch.outputs.branch }}"
+          PROPS_RELEASE: "-Prc=1 -Pgh -Prelease=false -PskipJavadoc -PskipAutostyle -PfailIfLibraryMissing -PsnapshotName=${{ steps.extract_branch.outputs.branch }}"
           PROPS_GIT: "-PghGitSourceUsername=${{ secrets.GH_GIT_USERNAME }} -PghGitSourcePassword=${{ secrets.GITHUB_TOKEN }}"
           PROPS_NEXUS: "-PghNexusUsername=${{ secrets.GH_NEXUS_USERNAME }} -PghNexusPassword=${{ secrets.GH_NEXUS_PASSWORD }}"
           PROPS_SIGNING: "-PuseInMemoryKey=true -Psigning.inMemoryKey=${{ secrets.IN_MEMORY_KEY }} -Psigning.password=${{ secrets.SIGNING_PASSWORD }}"
           PROPS_GITHUB: "-PgithubAccessToken=${{ secrets.GITHUB_TOKEN }}"
         run: ./gradlew prepareVote $(echo $PROPS_RELEASE $PROPS_GIT $PROPS_NEXUS $PROPS_SIGNING $PROPS_GITHUB) -x test
       - name: Find Comment
-        if: steps.check.outputs.triggered == 'true'
+        if: contains(github.event.pull_request.labels.*.name, 'published to test')
         uses: peter-evans/find-comment@v1
         id: fc
         with:
@@ -51,7 +43,7 @@ jobs:
           comment-author: 'github-actions[bot]'
           body-includes: "[Snapshot Created]"
       - name: Create comment
-        if: steps.check.outputs.triggered == 'true'
+        if: contains(github.event.pull_request.labels.*.name, 'published to test')
         uses: peter-evans/create-or-update-comment@v1
         with:
           comment-id: ${{ steps.fc.outputs.comment-id }}
