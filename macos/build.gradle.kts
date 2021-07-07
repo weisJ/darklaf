@@ -51,8 +51,9 @@ library {
                     // The custom JNF framework specified @rpath for searching. As we aren't actually linking
                     // with the dynamic library of the framework we specifically have to add the system framework
                     // search paths accordingly.
-                    "-rpath", "/System/Library/Frameworks/JavaVM.framework/Versions/A/Frameworks/",
-                    "-rpath", "/System/Library/Frameworks/"
+                    "-rpath", "/System/Library/Frameworks/JavaVM.framework/Versions/A/Frameworks",
+                    "-rpath", "/System/Library/Frameworks",
+                    "-rpath", "@executable_path/../lib"
                 )
             }
         }
