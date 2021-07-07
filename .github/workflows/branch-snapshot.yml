@@ -51,19 +51,19 @@ jobs:
           body: |
             [Snapshot Created]
             This PR has been deployed as a snasphot version. Try it out using:
-              ````kotlin
-              repositories {
-              maven {
-              url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
-              }
+            ````kotlin
+            repositories {
+                maven {
+                    url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+                }
             }
 
-              configurations.all {
-              resolutionStrategy.cacheChangingModulesFor(0, \"seconds\")
+            configurations.all {
+                resolutionStrategy.cacheChangingModulesFor(0, \"seconds\")
             }
 
-              dependencies {
-              implementation("com.github.weisj:darklaf-core-${{ env.GITHUB_HEAD_REF }}:latest.integration")
+            dependencies {
+                implementation("com.github.weisj:darklaf-core-${{ steps.extract_branch.outputs.branch }}:latest.integration")
             }
             ````
           edit-mode: replace
