@@ -25,6 +25,7 @@ import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.plaf.RootPaneUI;
@@ -37,6 +38,8 @@ import com.github.weisj.darklaf.util.*;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
 public class DarkPopupFactory extends PopupFactory {
+
+    private static final Logger LOGGER = LogUtil.getLogger(DarkPopupFactory.class);
 
     public static final String KEY_NO_DECORATION = "JPopupFactory.noDecorations";
     public static final String KEY_FOCUSABLE_POPUP = "JPopupFactory.focusablePopup";
@@ -63,7 +66,9 @@ public class DarkPopupFactory extends PopupFactory {
         PopupType type = getPopupType(popup);
         boolean forceHeavy = type != PopupType.HEAVY_WEIGHT
                 && PropertyUtil.getBooleanProperty(contents, KEY_FORCE_HEAVYWEIGHT);
+        LOGGER.fine("Received popup of type " + type + "  but requested a heavy weight popup.");
         if (forceHeavy) {
+            LOGGER.fine("Forcing heavy weight popup");
             // Heavy weight owner forces a heavyweight popup.
             Window targetWindow = DarkUIUtil.getWindow(owner);
             popup = super.getPopup(getHeavyWeightParent(targetWindow), contents, x, y);
@@ -109,6 +114,7 @@ public class DarkPopupFactory extends PopupFactory {
         } else if (type == PopupType.HEAVY_WEIGHT) {
             Window window = SwingUtilities.getWindowAncestor(contents);
             if (window != null) {
+                LOGGER.fine(() -> "Configuring popup for " + contents);
                 boolean isFocusable = PropertyUtil.getBooleanProperty(contents, KEY_FOCUSABLE_POPUP);
                 boolean startHidden = PropertyUtil.getBooleanProperty(contents, KEY_START_HIDDEN);
                 setupHeavyWeightWindow(window, contents, isFocusable, startHidden);
@@ -121,6 +127,7 @@ public class DarkPopupFactory extends PopupFactory {
             final boolean isFocusable, final boolean startHidden) {
         boolean noDecorations = PropertyUtil.getBooleanProperty(contents, KEY_NO_DECORATION);
         boolean opaque = PropertyUtil.getBooleanProperty(contents, KEY_OPAQUE);
+        LOGGER.fine("Popup config [noDecorations: " + noDecorations + ", opaque: " + opaque + "]");
         JRootPane rootPane = window instanceof RootPaneContainer ? ((RootPaneContainer) window).getRootPane() : null;
         if (rootPane != null && contents instanceof Container) {
             JPanel contentPane = new JPanel(new BorderLayout());
@@ -151,6 +158,7 @@ public class DarkPopupFactory extends PopupFactory {
          */
         if (!opaque) {
             boolean doubleBufferHint = PropertyUtil.getBooleanProperty(content, KEY_DOUBLE_BUFFERED);
+            LOGGER.fine("Content wants to be double buffered = " + doubleBufferHint);
             linuxOpacityFix(rootPane, doubleBufferHint);
         }
 
@@ -166,6 +174,7 @@ public class DarkPopupFactory extends PopupFactory {
 
     private void linuxOpacityFix(final JRootPane rootPane, final boolean doubleBufferHint) {
         boolean useDoubleBuffering = doubleBufferHint && canApplyRootPaneFix();
+        LOGGER.fine("Content can use double buffering = " + useDoubleBuffering);
 
         // See: https://bugs.java.com/bugdatabase/view_bug.do?bug_id=6848852
         rootPane.setDoubleBuffered(useDoubleBuffering);
@@ -179,6 +188,7 @@ public class DarkPopupFactory extends PopupFactory {
             // setUseTrueDoubleBuffering(false). On some Linux window managers (e.g. Gnome) this results
             // in windows not being transparent if requested.
             if (canApplyRootPaneFix()) {
+                LOGGER.fine("Applying linux double buffer fix");
                 try {
                     Method method = JRootPane.class.getDeclaredMethod("setUseTrueDoubleBuffering", boolean.class);
                     method.setAccessible(true);
@@ -208,6 +218,7 @@ public class DarkPopupFactory extends PopupFactory {
 
     protected void setupFocusableWindowState(final boolean isFocusable, final Window window) {
         if (isFocusable && !window.getFocusableWindowState()) {
+            LOGGER.fine("Window isn't focusable but needs to be. Disposing the window");
             window.dispose();
             window.setFocusableWindowState(true);
         }
@@ -232,6 +243,7 @@ public class DarkPopupFactory extends PopupFactory {
 
     protected void setupWindowOpacity(final boolean startHidden, final Window window) {
         boolean translucencySupported = GraphicsUtil.supportsTransparency(window);
+        LOGGER.fine("Window supports opacity (translucency + per pixel translucency) = " + translucencySupported);
         if (startHidden && translucencySupported) {
             try {
                 window.setOpacity(0);
