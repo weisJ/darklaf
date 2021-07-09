@@ -21,6 +21,8 @@
  */
 package com.github.weisj.darklaf.platform;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -57,7 +59,7 @@ public abstract class AbstractLibrary {
         try {
             String path = getLibraryPath();
             if (path != null && !path.isEmpty()) {
-                NativeUtil.loadLibraryFromJar(getLibraryPath());
+                NativeUtil.loadLibraryFromJarWithExtraResources(getLibraryPath(), getResourcePaths());
                 loaded = true;
                 info("Loaded " + getLibraryName() + ".");
             }
@@ -65,6 +67,10 @@ public abstract class AbstractLibrary {
             // Library not found, SecurityManager prevents library loading etc.
             error("Could not load library " + getLibraryName() + ".", e);
         }
+    }
+
+    protected List<NativeUtil.Resource> getResourcePaths() {
+        return Collections.emptyList();
     }
 
     public String getLibraryPath() {

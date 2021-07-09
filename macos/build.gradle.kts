@@ -20,6 +20,28 @@ repositories {
     }
 }
 
+val jnfConfig: Configuration by configurations.creating {
+    attributes {
+        attribute(Attribute.of("dev.nokee.architecture", String::class.java), "arm64")
+    }
+}
+
+dependencies {
+    jnfConfig("com.github.weisj:java-native-foundation:1.0.0")
+}
+
+val nativeResourcePath = "com/github/weisj/darklaf/platform/${project.name}"
+
+tasks.jar {
+    jnfConfig.asFileTree.forEach {
+        from(zipTree(it)) {
+            into("$nativeResourcePath/JavaNativeFoundation.framework")
+            include("Versions/A/JavaNativeFoundation*")
+            exclude("**/*.tbd")
+        }
+    }
+}
+
 library {
     dependencies {
         jvmImplementation(projects.darklafTheme)
@@ -34,7 +56,7 @@ library {
 
     targetMachines.addAll(machines.macOS.x86_64, machines.macOS.architecture("arm64"))
     variants.configureEach {
-        resourcePath.set("com/github/weisj/darklaf/platform/${project.name}/${targetMachine.variantName}")
+        resourcePath.set("$nativeResourcePath/${targetMachine.variantName}")
         sharedLibrary {
             val isArm = targetMachine.architectureString == "arm64"
             val minOs = if (isArm) "11" else "10.10"
@@ -51,9 +73,11 @@ library {
                     // The custom JNF framework specified @rpath for searching. As we aren't actually linking
                     // with the dynamic library of the framework we specifically have to add the system framework
                     // search paths accordingly.
+                    // -- Search paths for x86-64 based macs --
                     "-rpath", "/System/Library/Frameworks/JavaVM.framework/Versions/A/Frameworks",
                     "-rpath", "/System/Library/Frameworks",
-                    "-rpath", "@executable_path/../lib"
+                    // -- Search path for arm based macs. We load our drop in replacement --
+                    "-rpath", "@loader_path"
                 )
             }
         }

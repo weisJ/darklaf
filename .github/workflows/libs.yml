@@ -23,6 +23,9 @@ jobs:
   windows:
     name: Windows (Java 11)
     runs-on: windows-latest
+    permissions:
+      contents: read
+      packages: read
     steps:
       - uses: actions/checkout@v2
         with:
@@ -52,6 +55,9 @@ jobs:
   macOS:
     name: macOS (Java 11)
     runs-on: macos-latest
+    permissions:
+      contents: read
+      packages: read
     steps:
       - uses: actions/checkout@v2
         with:
