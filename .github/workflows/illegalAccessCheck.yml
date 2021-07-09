@@ -11,6 +11,9 @@ jobs:
   windows:
     name: Windows (Java 16)
     runs-on: windows-latest
+    permissions:
+      contents: read
+      packages: read
     steps:
       - uses: actions/checkout@v2
         with:
@@ -26,6 +29,8 @@ jobs:
           wrapper-cache-enabled: true
           dependencies-cache-enabled: true
           configuration-cache-enabled: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload Test Results
         uses: actions/upload-artifact@v1
         if: ${{ always() }}
@@ -36,6 +41,9 @@ jobs:
   linux:
     name: Linux (Java 16)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
     steps:
       - uses: actions/checkout@v2
         with:
@@ -47,6 +55,7 @@ jobs:
       - name: Build & Test
         env:
           PROPS_GITHUB: "-PgithubAccessToken=${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: xvfb-run -a -server-num=1 --server-args="-screen 0 2000x3000x16" ./gradlew build test -PskipAutostyle -PverboseTest=true -PfailIfLibraryMissing=true $(echo $PROPS_GITHUB) --no-daemon
       - name: Upload Test Results
         if: ${{ always() }}
@@ -58,6 +67,9 @@ jobs:
   macos:
     name: macOS (Java 16)
     runs-on: macos-latest
+    permissions:
+      contents: read
+      packages: read
     steps:
       - uses: actions/checkout@v2
         with:

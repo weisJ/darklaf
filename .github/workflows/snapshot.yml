@@ -15,6 +15,9 @@ jobs:
   gradle:
     name: Publish nightly snapshot
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
     steps:
       - uses: actions/checkout@v2
         with:
@@ -30,4 +33,5 @@ jobs:
           PROPS_NEXUS: "-PghNexusUsername=${{ secrets.GH_NEXUS_USERNAME }} -PghNexusPassword=${{ secrets.GH_NEXUS_PASSWORD }}"
           PROPS_SIGNING: "-PuseInMemoryKey=true -Psigning.inMemoryKey=${{ secrets.IN_MEMORY_KEY }} -Psigning.password=${{ secrets.SIGNING_PASSWORD }}"
           PROPS_GITHUB: "-PgithubAccessToken=${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew prepareVote $(echo $PROPS_RELEASE $PROPS_GIT $PROPS_NEXUS $PROPS_SIGNING $PROPS_GITHUB) --info -x test

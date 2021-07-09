@@ -26,6 +26,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * A simple library class which helps with loading dynamic libraries stored in the JAR archive.
@@ -50,6 +53,62 @@ public final class NativeUtil {
 
     private NativeUtil() {}
 
+    public static class Resource {
+        public final String filePath;
+        public final String destinationDirectoryPath;
+
+        public Resource(final String filePath, final String destinationDirectoryPath) {
+            this.filePath = filePath;
+            this.destinationDirectoryPath = destinationDirectoryPath;
+        }
+    }
+
+    /**
+     * Loads library from current JAR archive
+     *
+     * <p>
+     * The file from JAR is copied into system temporary directory and then loaded. The temporary file
+     * is deleted after exiting. Method uses String as filename because the pathname is "abstract", not
+     * system-dependent.
+     *
+     * @param path The path of file inside JAR as absolute path (beginning with '/'), e.g.
+     *        /package/File.ext
+     * @throws IOException If temporary file creation or read/write operation fails
+     * @throws IllegalArgumentException If source file (param path) does not exist
+     * @throws IllegalArgumentException If the path is not absolute or if the filename is shorter than
+     *         three characters (restriction of
+     *         {@link File#createTempFile(java.lang.String, java.lang.String)}).
+     * @throws FileNotFoundException If the file could not be found inside the JAR.
+     */
+    public static void loadLibraryFromJarWithExtraResources(final String path, final List<Resource> resources)
+            throws IOException {
+        List<Path> resourcePaths = extractResources(resources);
+        try {
+            loadLibraryFromJar(path);
+        } finally {
+            resourcePaths.forEach(NativeUtil::releaseResource);
+        }
+    }
+
+    private static List<Path> extractResources(final List<Resource> resources) throws IOException {
+        List<Path> paths = new ArrayList<>(resources.size());
+        Path tempDir = getTemporaryDirectory();
+        for (Resource resource : resources) {
+            String filename = getFileNameFromPath(resource.filePath);
+            Path destinationDir = tempDir.resolve(resource.destinationDirectoryPath);
+            Path destinationPath = destinationDir.resolve(Objects.requireNonNull(filename));
+            try {
+                Files.createDirectories(destinationDir);
+                extractFile(resource.filePath, tempDir, destinationPath);
+            } catch (final IOException e) {
+                paths.forEach(NativeUtil::delete);
+                throw e;
+            }
+            paths.add(tempDir.resolve(Objects.requireNonNull(filename)));
+        }
+        return paths;
+    }
+
     /**
      * Loads library from current JAR archive
      *
@@ -68,14 +127,7 @@ public final class NativeUtil {
      * @throws FileNotFoundException If the file could not be found inside the JAR.
      */
     public static void loadLibraryFromJar(final String path) throws IOException {
-
-        if (null == path || !path.startsWith("/")) {
-            throw new IllegalArgumentException("The path has to be absolute (start with '/').");
-        }
-
-        // Obtain filename from path
-        String[] parts = path.split("/");
-        String filename = (parts.length > 1) ? parts[parts.length - 1] : null;
+        String filename = getFileNameFromPath(path);
 
         // Check if the filename is okay
         if (filename == null || filename.length() < MIN_PREFIX_LENGTH) {
@@ -83,32 +135,57 @@ public final class NativeUtil {
         }
 
         // Prepare temporary file
-        if (temporaryDir == null) {
-            temporaryDir = createTempDirectory(NATIVE_FOLDER_PATH_PREFIX);
-            temporaryDir.toFile().deleteOnExit();
-        }
+        Path tempDir = getTemporaryDirectory();
+        Path temp = tempDir.resolve(filename);
 
-        Path temp = temporaryDir.resolve(filename);
-
-        try (InputStream is = NativeUtil.class.getResourceAsStream(path)) {
-            if (is == null) throw new FileNotFoundException("File " + path + " was not found inside JAR.");
-            if (!temporaryDir.toFile().canWrite()) throw new IOException("Can't write to temporary directory.");
-            Files.copy(is, temp.toAbsolutePath(), StandardCopyOption.REPLACE_EXISTING);
-        } catch (final IOException e) {
-            delete(temp);
-            throw e;
-        }
+        extractFile(path, tempDir, temp);
 
         try {
             System.load(temp.toAbsolutePath().toString());
         } finally {
-            if (isPosixCompliant()) {
-                // Assume POSIX compliant file system, can be deleted after loading
-                delete(temp);
-            } else {
-                // Assume non-POSIX, and don't delete until last file descriptor closed
-                temp.toFile().deleteOnExit();
-            }
+            releaseResource(temp);
+        }
+    }
+
+    private static void extractFile(final String path, final Path destinationDir, final Path destinationPath)
+            throws IOException {
+        try (InputStream is = NativeUtil.class.getResourceAsStream(path)) {
+            if (is == null) throw new FileNotFoundException("File " + path + " was not found inside JAR.");
+            if (!destinationDir.toFile().canWrite()) throw new IOException("Can't write to temporary directory.");
+            Files.copy(is, destinationPath.toAbsolutePath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (final IOException e) {
+            delete(destinationPath);
+            throw e;
+        }
+    }
+
+    private static String getFileNameFromPath(final String path) {
+        checkPath(path);
+        String[] parts = path.split("/");
+        return (parts.length > 1) ? parts[parts.length - 1] : null;
+    }
+
+    private static void checkPath(final String path) {
+        if (null == path || !path.startsWith("/")) {
+            throw new IllegalArgumentException("The path has to be absolute (start with '/').");
+        }
+    }
+
+    private static Path getTemporaryDirectory() throws IOException {
+        if (temporaryDir == null) {
+            temporaryDir = createTempDirectory(NATIVE_FOLDER_PATH_PREFIX);
+            temporaryDir.toFile().deleteOnExit();
+        }
+        return temporaryDir;
+    }
+
+    private static void releaseResource(final Path path) {
+        if (isPosixCompliant()) {
+            // Assume POSIX compliant file system, can be deleted after loading
+            delete(path);
+        } else {
+            // Assume non-POSIX, and don't delete until last file descriptor closed
+            path.toFile().deleteOnExit();
         }
     }
 

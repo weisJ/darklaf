@@ -21,7 +21,11 @@
  */
 package com.github.weisj.darklaf.platform.macos;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.github.weisj.darklaf.platform.AbstractLibrary;
+import com.github.weisj.darklaf.platform.NativeUtil;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
@@ -31,6 +35,9 @@ public class MacOSLibrary extends AbstractLibrary {
     private static final String x86_64_PATH = "macos-x86-64/";
     private static final String arm64_PATH = "macos-arm64/";
     private static final String DLL_NAME = "libdarklaf-macos.dylib";
+
+    private static final String FRAMEWORK_TARGET_PATH = "JavaNativeFoundation.framework/Versions/A/";
+    private static final String FRAMEWORK_PATH = PATH + FRAMEWORK_TARGET_PATH + "JavaNativeFoundation";
     private static final MacOSLibrary instance = new MacOSLibrary();
 
     public static MacOSLibrary get() {
@@ -59,6 +66,12 @@ public class MacOSLibrary extends AbstractLibrary {
         } else {
             throw new IllegalStateException("Unsupported arch");
         }
+    }
+
+    @Override
+    protected List<NativeUtil.Resource> getResourcePaths() {
+        return Collections.singletonList(
+                new NativeUtil.Resource(FRAMEWORK_PATH, FRAMEWORK_TARGET_PATH));
     }
 
     @Override
