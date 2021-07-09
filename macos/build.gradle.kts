@@ -49,8 +49,8 @@ library {
         jvmImplementation(projects.darklafUtils)
         jvmImplementation(projects.darklafPlatformBase)
         jvmImplementation(projects.darklafPropertyLoader)
-        // nativeLibImplementation(libs.macos.appKit)
-        // nativeLibImplementation(libs.macos.cocoa)
+        nativeLibImplementation(libs.macos.appKit)
+        nativeLibImplementation(libs.macos.cocoa)
         nativeLibImplementation(libs.macos.javaNativeFoundation)
     }
 
@@ -68,15 +68,17 @@ library {
             linkTask.configure {
                 linkerArgs.addAll(
                     "-lobjc", "-mmacosx-version-min=$minOs",
-                    "-framework", "AppKit",
-                    "-framework", "Cocoa",
+                    // "-framework", "AppKit",
+                    // "-framework", "Cocoa",
                     // The custom JNF framework specified @rpath for searching. As we aren't actually linking
                     // with the dynamic library of the framework we specifically have to add the system framework
                     // search paths accordingly.
-                    // -- Search paths for x86-64 based macs --
-                    "-rpath", "/System/Library/Frameworks/JavaVM.framework/Versions/A/Frameworks",
+                    // First try any system provided framework (this will fail on arm64):
                     "-rpath", "/System/Library/Frameworks",
-                    // -- Search path for arm based macs. We load our drop in replacement --
+                    "-rpath", "/System/Library/Frameworks/JavaVM.framework/Versions/A/Frameworks",
+                    // Then try the jdk provided framework:
+                    "-rpath", "@executable_path/../lib",
+                    // Lastly use our bundled drop-in replacement:
                     "-rpath", "@loader_path"
                 )
             }
