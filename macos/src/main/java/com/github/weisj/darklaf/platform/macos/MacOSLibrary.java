@@ -36,7 +36,7 @@ public class MacOSLibrary extends AbstractLibrary {
     private static final String arm64_PATH = "macos-arm64/";
     private static final String DLL_NAME = "libdarklaf-macos.dylib";
 
-    private static final String FRAMEWORK_TARGET_PATH = "JavaNativeFoundation.framework/Versions/A/";
+    private static final String FRAMEWORK_TARGET_PATH = "JavaNativeFoundation.framework/";
     private static final String FRAMEWORK_PATH = PATH + FRAMEWORK_TARGET_PATH + "JavaNativeFoundation";
     private static final MacOSLibrary instance = new MacOSLibrary();
 

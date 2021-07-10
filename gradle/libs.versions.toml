@@ -11,7 +11,7 @@ lGoodDatePicker = "11.0.2"
 swingDsl = "latest.integration"
 nullabilityAnnotations = "16.0.2"
 macOSFramework = "latest.release"
-javaNativeFoundation = "1.0.0"
+javaNativeFoundation = "1.1.0"
 
 [libraries]
 jna = { module = "net.java.dev.jna:jna", version.ref = "jna" }

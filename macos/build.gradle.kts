@@ -27,7 +27,7 @@ val jnfConfig: Configuration by configurations.creating {
 }
 
 dependencies {
-    jnfConfig("com.github.weisj:java-native-foundation:1.0.0")
+    jnfConfig("com.github.weisj:java-native-foundation:1.1.0")
 }
 
 val nativeResourcePath = "com/github/weisj/darklaf/platform/${project.name}"
@@ -36,7 +36,7 @@ tasks.jar {
     jnfConfig.asFileTree.forEach {
         from(zipTree(it)) {
             into("$nativeResourcePath/JavaNativeFoundation.framework")
-            include("Versions/A/JavaNativeFoundation*")
+            include("JavaNativeFoundation*")
             exclude("**/*.tbd")
         }
     }
@@ -66,6 +66,9 @@ library {
                 optimizedBinary()
             }
             linkTask.configure {
+                val systemFrameworks = "/System/Library/Frameworks"
+                val current = "Versions/Current"
+                val jnfName = "JavaNativeFoundation.framework"
                 linkerArgs.addAll(
                     "-lobjc", "-mmacosx-version-min=$minOs",
                     // "-framework", "AppKit",
@@ -74,12 +77,14 @@ library {
                     // with the dynamic library of the framework we specifically have to add the system framework
                     // search paths accordingly.
                     // First try any system provided framework (this will fail on arm64):
-                    "-rpath", "/System/Library/Frameworks",
-                    "-rpath", "/System/Library/Frameworks/JavaVM.framework/Versions/A/Frameworks",
-                    // Then try the jdk provided framework:
-                    "-rpath", "@executable_path/../lib",
+                    "-rpath", "$systemFrameworks/$jnfName/$current",
+                    "-rpath", "$systemFrameworks/JavaVM.framework/$current/Frameworks/$jnfName/$current",
+                    // Then try the jdk provided framework (folder layout may vary. We check multiple possibilities):
+                    "-rpath", "@executable_path/../lib/$jnfName",
+                    "-rpath", "@executable_path/../lib/$jnfName/$current/",
+                    "-rpath", "@executable_path/../lib/$jnfName/Versions/A/",
                     // Lastly use our bundled drop-in replacement:
-                    "-rpath", "@loader_path"
+                    "-rpath", "@loader_path/$jnfName"
                 )
             }
         }
