@@ -77,7 +77,8 @@ class AppleM1ToolChainRule : RuleSource() {
         }
     }
 
-    private class ConfigureCompilerArgumentsAction(
+    private
+    class ConfigureCompilerArgumentsAction(
         private val compilerMetadata: CompilerMetadataProvider,
         private val sdkPath: SdkPathProvider
     ) : Action<MutableList<String>> {
@@ -96,7 +97,7 @@ class AppleM1ToolChainRule : RuleSource() {
             args.addAll(listOfNotNull("-target", "arm64-apple-macos11", "-isysroot", sdkPath.get()))
             args.addAll(compilerMetadata.get().systemLibraries.includeDirs
                 .asSequence()
-                .flatMap { listOf("-system", it.absolutePath) })
+                .flatMap { listOf("-isystem", it.absolutePath) })
             args.addAll(listOf("-F", sdkPath.get() + "/System/Library/Frameworks"))
         }
     }
@@ -124,9 +125,20 @@ class AppleM1ToolChainRule : RuleSource() {
         override fun execute(platform: GccPlatformToolChain) {
             metadataProvider = GccMetadataProvider.forClang(execActionFactory)
             platform.getcCompiler().withArguments(forCCompiler(platform.getcCompiler()))
-            platform.cppCompiler.withArguments(forCppCompiler(platform.cppCompiler))
+            listOf(
+                platform.getcCompiler(),
+                platform.cppCompiler,
+                platform.objcCompiler,
+                platform.objcppCompiler
+            ).forEach {
+                it.configureCompilerArgs()
+            }
             platform.linker.withArguments(forLinker(platform.linker))
             configureCompilerProbeArguments(platform)
+        }
+
+        private fun GccCommandLineToolConfiguration.configureCompilerArgs() {
+            withArguments(forCppCompiler(this))
         }
 
         private fun forCCompiler(cCompiler: GccCommandLineToolConfiguration): Action<MutableList<String>> {
