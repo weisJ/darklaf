@@ -1,4 +1,4 @@
-import com.github.vlsi.gradle.properties.dsl.stringProperty
+
 
 plugins {
     java
@@ -9,17 +9,6 @@ plugins {
     `apple-m1-toolchain`
 }
 
-repositories {
-    maven {
-        name = "GitHubPackages"
-        url = uri("https://maven.pkg.github.com/weisj/JavaNativeFoundation")
-        credentials {
-            username = project.stringProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
-            password = project.stringProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
-        }
-    }
-}
-
 val jnfConfig: Configuration by configurations.creating {
     attributes {
         attribute(Attribute.of("dev.nokee.architecture", String::class.java), "arm64")
@@ -27,7 +16,7 @@ val jnfConfig: Configuration by configurations.creating {
 }
 
 dependencies {
-    jnfConfig("com.github.weisj:java-native-foundation:1.1.0")
+    jnfConfig(libs.macos.javaNativeFoundation)
 }
 
 val nativeResourcePath = "com/github/weisj/darklaf/platform/${project.name}"
