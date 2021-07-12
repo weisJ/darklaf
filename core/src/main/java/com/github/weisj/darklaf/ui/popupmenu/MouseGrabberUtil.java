@@ -30,7 +30,7 @@ import java.security.PrivilegedAction;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 public final class MouseGrabberUtil {
 

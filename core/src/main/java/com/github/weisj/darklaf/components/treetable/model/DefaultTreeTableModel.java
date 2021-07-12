@@ -21,7 +21,7 @@
  */
 package com.github.weisj.darklaf.components.treetable.model;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 public class DefaultTreeTableModel extends AbstractTreeTableModel {
 

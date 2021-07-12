@@ -32,8 +32,8 @@ import java.util.function.Supplier;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
-import com.github.weisj.darklaf.icons.EmptyIcon;
-import com.github.weisj.darklaf.icons.SolidColorIcon;
+import com.github.weisj.darklaf.properties.icons.EmptyIcon;
+import com.github.weisj.darklaf.properties.icons.SolidColorIcon;
 import com.github.weisj.darklaf.transfer.TransferUtil;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
 import com.github.weisj.darklaf.util.Pair;

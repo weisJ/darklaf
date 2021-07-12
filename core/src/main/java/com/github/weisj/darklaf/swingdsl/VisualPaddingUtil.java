@@ -27,7 +27,7 @@ import javax.swing.JComponent;
 import javax.swing.border.Border;
 import javax.swing.plaf.InsetsUIResource;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.swingdsl.visualpadding.VisualPaddingProvider;
 

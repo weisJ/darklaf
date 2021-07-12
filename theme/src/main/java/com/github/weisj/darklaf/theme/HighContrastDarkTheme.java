@@ -25,8 +25,8 @@ import java.util.Properties;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.annotations.SynthesiseLaf;
+import com.github.weisj.darklaf.properties.PropertyLoader;
 import com.github.weisj.darklaf.theme.info.ColorToneRule;
 import com.github.weisj.darklaf.theme.info.ContrastRule;
 import com.github.weisj.darklaf.theme.info.PresetIconRule;

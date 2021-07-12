@@ -29,7 +29,6 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.plaf.basic.ComboPopup;
@@ -41,7 +40,7 @@ import com.github.weisj.darklaf.ui.DividedWidgetPainter;
 import com.github.weisj.darklaf.ui.list.DarkDefaultListCellRenderer;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
@@ -166,10 +165,6 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
     protected ComboBoxEditor createEditor() {
         final ComboBoxEditor comboBoxEditor = super.createEditor();
         Component comp = comboBoxEditor.getEditorComponent();
-        if (comp instanceof JTextField) {
-            ((JTextField) comp).setColumns(0);
-            ((JTextField) comp).setBorder(new LineBorder(Color.RED));
-        }
         comp.addKeyListener(new KeyAdapter() {
 
             @Override

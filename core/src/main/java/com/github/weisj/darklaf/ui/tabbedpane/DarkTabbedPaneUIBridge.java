@@ -40,10 +40,10 @@ import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
 
 import com.github.weisj.darklaf.ui.UIAction;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.LazyActionMap;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.LazyActionMap;
+import com.github.weisj.darklaf.ui.util.SwingUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
-import com.github.weisj.darklaf.util.SwingUtil;
 
 /**
  * A Basic L&amp;F implementation of TabbedPaneUI.

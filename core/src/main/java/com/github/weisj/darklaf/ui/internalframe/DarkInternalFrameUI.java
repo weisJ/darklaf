@@ -29,7 +29,7 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 /** @author Jannis Weis */
 public class DarkInternalFrameUI extends BasicInternalFrameUI implements PropertyChangeListener {

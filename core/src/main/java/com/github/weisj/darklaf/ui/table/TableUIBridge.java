@@ -38,9 +38,9 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 
 import com.github.weisj.darklaf.ui.DragRecognitionSupport;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.SwingUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
-import com.github.weisj.darklaf.util.SwingUtil;
 
 /** The type Table ui bridge. */
 public abstract class TableUIBridge extends BasicTableUI {

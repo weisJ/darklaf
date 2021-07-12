@@ -36,7 +36,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.DocumentFilter;
 
-import com.github.weisj.darklaf.color.DarkColorModel;
+import com.github.weisj.darklaf.properties.color.DarkColorModel;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
 
 /** @author Jannis Weis */

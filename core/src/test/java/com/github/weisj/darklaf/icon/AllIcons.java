@@ -32,9 +32,9 @@ import javax.swing.event.ListDataListener;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.icons.IconLoader;
-import com.github.weisj.darklaf.icons.ThemedSVGIcon;
 import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
+import com.github.weisj.darklaf.properties.icons.IconLoader;
+import com.github.weisj.darklaf.properties.icons.ThemedSVGIcon;
 import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.util.ClassFinder;
 import com.github.weisj.darklaf.util.Instantiable;

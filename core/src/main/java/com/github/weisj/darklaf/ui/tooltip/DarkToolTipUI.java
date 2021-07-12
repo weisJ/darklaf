@@ -33,13 +33,13 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicToolTipUI;
 import javax.swing.text.View;
 
-import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.graphics.*;
+import com.github.weisj.darklaf.properties.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
-import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;

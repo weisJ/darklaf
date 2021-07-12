@@ -43,10 +43,10 @@ import com.github.weisj.darklaf.ui.table.renderer.DarkColorTableCellRendererEdit
 import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellEditorDelegate;
 import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellRenderer;
 import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellRendererDelegate;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.SwingUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
-import com.github.weisj.darklaf.util.SwingUtil;
 
 /** @author Jannis Weis */
 public class DarkTableUI extends DarkTableUIBridge implements TableConstants, HasRendererPane {
@@ -308,9 +308,6 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
 
         // Move to the where the cell has been dragged.
         vacatedColumnRect.x += dist;
-
-        g.setColor(Color.RED);
-        PaintUtil.drawRect(g, vacatedColumnRect);
 
         boolean ltr = table.getComponentOrientation().isLeftToRight();
 

@@ -34,7 +34,7 @@ import java.util.function.Supplier;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.icons.IconUtil;
+import com.github.weisj.darklaf.properties.icons.IconUtil;
 import com.github.weisj.darklaf.util.Pair;
 
 public final class TransferUtil {

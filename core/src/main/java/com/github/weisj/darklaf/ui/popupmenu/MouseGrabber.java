@@ -33,9 +33,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.SwingUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
-import com.github.weisj.darklaf.util.SwingUtil;
 
 public class MouseGrabber implements ChangeListener, AWTEventListener, ComponentListener, WindowListener {
 
@@ -71,7 +71,7 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
         }
         grabbedWindow = DarkUIUtil.getWindow(invoker);
         if (grabbedWindow != null) {
-            if (tk.getClass().getName().equals("SunToolkit")) {
+            if (SwingUtil.isSunToolkit(tk)) {
                 SwingUtil.grab(tk, grabbedWindow);
             } else {
                 grabbedWindow.addComponentListener(this);
@@ -98,7 +98,7 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
     protected void realUngrabWindow() {
         Toolkit tk = Toolkit.getDefaultToolkit();
         if (grabbedWindow != null) {
-            if (tk.getClass().getName().equals("SunToolkit")) {
+            if (SwingUtil.isSunToolkit(tk)) {
                 SwingUtil.ungrab(tk, grabbedWindow);
             } else {
                 grabbedWindow.removeComponentListener(this);

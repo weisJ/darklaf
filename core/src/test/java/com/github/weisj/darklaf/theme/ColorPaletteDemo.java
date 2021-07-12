@@ -24,8 +24,8 @@ package com.github.weisj.darklaf.theme;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.graphics.ThemedColor;
-import com.github.weisj.darklaf.icons.SolidColorIcon;
 import com.github.weisj.darklaf.layout.LayoutHelper;
+import com.github.weisj.darklaf.properties.icons.SolidColorIcon;
 import com.github.weisj.darklaf.ui.ComponentDemo;
 
 public class ColorPaletteDemo implements ComponentDemo {

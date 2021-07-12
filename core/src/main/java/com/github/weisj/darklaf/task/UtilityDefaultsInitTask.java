@@ -26,8 +26,8 @@ import java.util.function.Supplier;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
-import com.github.weisj.darklaf.icons.AwareIconStyle;
-import com.github.weisj.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.properties.icons.AwareIconStyle;
+import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.swingdsl.DarklafComponentFactory;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.cell.CellUtil;

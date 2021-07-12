@@ -29,7 +29,7 @@ import java.awt.event.WindowListener;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.icons.SolidColorIcon;
+import com.github.weisj.darklaf.properties.icons.SolidColorIcon;
 import com.github.weisj.darklaf.theme.Theme;
 
 public class PreferenceChangeDemo implements ComponentDemo {

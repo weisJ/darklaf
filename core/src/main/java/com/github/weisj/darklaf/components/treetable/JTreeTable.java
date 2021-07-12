@@ -35,7 +35,7 @@ import com.github.weisj.darklaf.components.treetable.model.DefaultTreeTableSelec
 import com.github.weisj.darklaf.components.treetable.model.TreeTableModel;
 import com.github.weisj.darklaf.ui.cell.hint.CellHintPopupListener;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class JTreeTable extends JTable implements TreeSelectionListener {

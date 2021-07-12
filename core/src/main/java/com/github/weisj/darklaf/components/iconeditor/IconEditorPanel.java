@@ -31,7 +31,6 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.components.ComponentHelper;
 import com.github.weisj.darklaf.components.DynamicUI;
 import com.github.weisj.darklaf.components.border.DarkBorders;
@@ -40,10 +39,11 @@ import com.github.weisj.darklaf.components.color.QuickColorChooser;
 import com.github.weisj.darklaf.components.popup.AttachedPopupComponent;
 import com.github.weisj.darklaf.components.popup.SharedComponent;
 import com.github.weisj.darklaf.components.renderer.SimpleListCellRenderer;
-import com.github.weisj.darklaf.icons.*;
 import com.github.weisj.darklaf.layout.LayoutHelper;
+import com.github.weisj.darklaf.properties.PropertyLoader;
+import com.github.weisj.darklaf.properties.icons.*;
 import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.Pair;
 
 public class IconEditorPanel extends JPanel {

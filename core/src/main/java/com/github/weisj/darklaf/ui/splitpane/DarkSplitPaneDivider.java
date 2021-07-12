@@ -27,7 +27,7 @@ import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 
-import com.github.weisj.darklaf.icons.EmptyIcon;
+import com.github.weisj.darklaf.properties.icons.EmptyIcon;
 
 /** @author Jannis Weis */
 public class DarkSplitPaneDivider extends BasicSplitPaneDivider {

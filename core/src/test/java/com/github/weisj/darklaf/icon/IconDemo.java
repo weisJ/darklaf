@@ -27,14 +27,14 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.color.QuickColorChooser;
-import com.github.weisj.darklaf.icons.IconLoader;
-import com.github.weisj.darklaf.icons.UIAwareIcon;
 import com.github.weisj.darklaf.layout.LayoutHelper;
+import com.github.weisj.darklaf.properties.icons.IconLoader;
+import com.github.weisj.darklaf.properties.icons.UIAwareIcon;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.event.ThemeInstalledListener;
 import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoPanel;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 public class IconDemo implements ComponentDemo {
 

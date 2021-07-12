@@ -25,7 +25,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 
 import com.github.weisj.darklaf.components.tristate.TristateState;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 public class TristateTreeNode extends DefaultMutableTreeNode implements LabeledTreeNode {
 
