@@ -31,7 +31,9 @@ import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
-import java.lang.reflect.Method;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.util.logging.Logger;
 
 import javax.swing.JComponent;
@@ -62,10 +64,12 @@ public final class SwingUtil {
 
     private static boolean swingInteropAvailable;
     private static Class<?> swingInteropClass;
-    private static final LazyValue<Method> grabMethod = new LazyValue<>(
-            Lambdas.orDefault(() -> swingInteropClass.getMethod("grab", Toolkit.class, Window.class), null));
-    private static final LazyValue<Method> ungrabMethod = new LazyValue<>(
-            Lambdas.orDefault(() -> swingInteropClass.getMethod("ungrab", Toolkit.class, Window.class), null));
+    private static final LazyValue<MethodHandle> grabMethod = new LazyValue<>(
+            Lambdas.orDefault(() -> MethodHandles.lookup().findStatic(swingInteropClass, "grab",
+                    MethodType.methodType(void.class, Toolkit.class, Window.class)), null));
+    private static final LazyValue<MethodHandle> ungrabMethod = new LazyValue<>(
+            Lambdas.orDefault(() -> MethodHandles.lookup().findStatic(swingInteropClass, "ungrab",
+                    MethodType.methodType(void.class, Toolkit.class, Window.class)), null));
 
     static {
         try {
@@ -93,7 +97,7 @@ public final class SwingUtil {
     public static void grab(final Toolkit toolkit, final Window window) {
         if (swingInteropAvailable) {
             try {
-                grabMethod.get().invoke(null, toolkit, window);
+                grabMethod.get().invokeExact(toolkit, window);
             } catch (Throwable ignored) {
             }
         } else {
@@ -106,7 +110,7 @@ public final class SwingUtil {
     public static void ungrab(final Toolkit toolkit, final Window window) {
         if (swingInteropAvailable) {
             try {
-                ungrabMethod.get().invoke(null, toolkit, window);
+                ungrabMethod.get().invokeExact(toolkit, window);
             } catch (Throwable ignored) {
             }
         } else {
