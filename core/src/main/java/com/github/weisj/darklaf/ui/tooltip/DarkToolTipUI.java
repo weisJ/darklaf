@@ -134,7 +134,7 @@ public class DarkToolTipUI extends BasicToolTipUI
 
     @Override
     public void update(final Graphics g, final JComponent c) {
-        if (style.isOpqaue()) {
+        if (style.isOpaque()) {
             g.setColor(c.getBackground());
         } else {
             // Erase background completely.
@@ -376,7 +376,7 @@ public class DarkToolTipUI extends BasicToolTipUI
         ToolTipStyle tooltipStyle = ToolTipStyle.parse(toolTip.getClientProperty(KEY_STYLE));
         if (style == null) style = tooltipStyle;
         if (style == null) style = ToolTipStyle.parse(UIManager.get("ToolTip.defaultStyle"));
-        if (style.isOpqaue() && !GraphicsUtil.supportsTransparency()) style = ToolTipStyle.PLAIN;
+        if (style.isOpaque() && !GraphicsUtil.supportsTransparency()) style = ToolTipStyle.PLAIN;
         if (style != tooltipStyle) {
             toolTip.putClientProperty(KEY_STYLE, style);
         }
@@ -389,7 +389,7 @@ public class DarkToolTipUI extends BasicToolTipUI
              *
              * See https://bugs.openjdk.java.net/browse/JDK-8215980?attachmentOrder=desc
              */
-            toolTip.putClientProperty(DarkPopupFactory.KEY_OPAQUE, style.isOpqaue());
+            toolTip.putClientProperty(DarkPopupFactory.KEY_OPAQUE, style.isOpaque());
         }
     }
 

@@ -29,11 +29,11 @@ public enum ToolTipStyle implements ToolTipConstants {
     PLAIN(false, true);
 
     protected final boolean supportsPointer;
-    protected final boolean opqaue;
+    protected final boolean opaque;
 
     ToolTipStyle(final boolean supportsPointer, final boolean opqaue) {
         this.supportsPointer = supportsPointer;
-        this.opqaue = opqaue;
+        this.opaque = opqaue;
     }
 
     public static ToolTipStyle parse(final Object style) {
@@ -56,7 +56,7 @@ public enum ToolTipStyle implements ToolTipConstants {
         return supportsPointer;
     }
 
-    public boolean isOpqaue() {
-        return opqaue;
+    public boolean isOpaque() {
+        return opaque;
     }
 }
