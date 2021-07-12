@@ -154,7 +154,7 @@ class ParserTest {
             if (isValidColor(insets.left)) continue;
             if (isValidColor(insets.right)) continue;
             if (isValidColor(insets.bottom)) continue;
-            if (isValidColor(insets.right)) continue;
+            if (isValidColor(insets.top)) continue;
             Assertions.assertEquals(insets, parse("test.insets",
                     insets.top + "," + insets.left + "," + insets.bottom + "," + insets.right));
             Assertions.assertEquals(insets, parse("testInsets",
