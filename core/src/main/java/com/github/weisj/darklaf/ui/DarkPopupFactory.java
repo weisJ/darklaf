@@ -126,7 +126,7 @@ public class DarkPopupFactory extends PopupFactory {
     protected void setupHeavyWeightWindow(final Window window, final Component contents,
             final boolean isFocusable, final boolean startHidden) {
         boolean noDecorations = PropertyUtil.getBooleanProperty(contents, KEY_NO_DECORATION);
-        boolean opaque = PropertyUtil.getBooleanProperty(contents, KEY_OPAQUE);
+        boolean opaque = PropertyUtil.getBooleanProperty(contents, KEY_OPAQUE, true);
         LOGGER.fine("Popup config [noDecorations: " + noDecorations + ", opaque: " + opaque + "]");
         JRootPane rootPane = window instanceof RootPaneContainer ? ((RootPaneContainer) window).getRootPane() : null;
         if (rootPane != null && contents instanceof Container) {
