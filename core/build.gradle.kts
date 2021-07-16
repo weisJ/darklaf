@@ -8,17 +8,11 @@ plugins {
     id("com.github.vlsi.crlf")
 }
 
-configure<ModuleInfoExtension> {
-    version = JavaVersion.VERSION_11
-    extraArgs = listOf(
-        "--add-exports", "java.desktop/sun.awt=darklaf.core"
-    )
-}
-
 dependencies {
     api(projects.darklafTheme)
     api(projects.darklafPropertyLoader)
     api(projects.darklafUtils)
+    implementation(projects.darklafCompatibility)
     implementation(projects.darklafNativeUtils)
     implementation(projects.darklafPlatformBase)
     implementation(projects.darklafWindows)

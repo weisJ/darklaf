@@ -28,10 +28,9 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicMenuItemUI;
 
+import com.github.weisj.darklaf.compatibility.MenuItemLayoutHelper;
 import com.github.weisj.darklaf.ui.UIAction;
-import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.ui.util.LazyActionMap;
-import com.intellij.util.ui.MenuItemLayoutHelper;
 
 /**
  * @author Konstantin Bulenkov
@@ -65,7 +64,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI implements MenuItemUI {
 
     @Override
     public void uninstallUI(JComponent c) {
-        MenuItemLayoutHelper.clearUsedParentClientProperties(menuItem);
+        MenuItemLayoutHelper.uninstall(menuItem);
         super.uninstallUI(c);
     }
 
@@ -137,9 +136,8 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI implements MenuItemUI {
             final String acceleratorDelimiter, final Font acceleratorFont, final String propertyPrefix,
             final Icon checkIcon, final Icon arrowIcon,
             final int defaultTextIconGap, final JMenuItem mi, final Rectangle viewRect) {
-        return new MenuItemLayoutHelper(mi, checkIcon, arrowIcon, viewRect, defaultTextIconGap, acceleratorDelimiter,
-                mi.getComponentOrientation().isLeftToRight(), mi.getFont(), acceleratorFont,
-                MenuItemLayoutHelper.useCheckAndArrow(mi), propertyPrefix);
+        return MenuItemLayoutHelper.create(mi, checkIcon, arrowIcon, viewRect, defaultTextIconGap, acceleratorDelimiter,
+                mi.getComponentOrientation().isLeftToRight(), mi.getFont(), acceleratorFont, propertyPrefix);
     }
 
     @Override

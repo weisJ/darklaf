@@ -60,9 +60,9 @@ public class UIUtilities {
     private static final int LO_SURROGATE_END = 0xDFFF;
 
     private static final int CACHE_SIZE = 6;
-    private static final UIUtilities.LSBCacheEntry[] fontCache = new UIUtilities.LSBCacheEntry[CACHE_SIZE];
+    private static final LSBCacheEntry[] fontCache = new LSBCacheEntry[CACHE_SIZE];
     private static int nextIndex;
-    private static UIUtilities.LSBCacheEntry searchKey;
+    private static LSBCacheEntry searchKey;
     private static final FontRenderContext DEFAULT_FRC = new FontRenderContext(null, false, false);
 
     private static final StringBuilder SKIP_CLICK_COUNT = new StringBuilder("skipClickCount");
@@ -167,9 +167,9 @@ public class UIUtilities {
             FontRenderContext frc = getFontRenderContext(c, fm);
             Font font = fm.getFont();
             synchronized (UIUtilities.class) {
-                UIUtilities.LSBCacheEntry entry = null;
+                LSBCacheEntry entry = null;
                 if (searchKey == null) {
-                    searchKey = new UIUtilities.LSBCacheEntry(frc, font);
+                    searchKey = new LSBCacheEntry(frc, font);
                 } else {
                     searchKey.reset(frc, font);
                 }
@@ -448,10 +448,10 @@ public class UIUtilities {
         public boolean equals(Object entry) {
             if (entry == this) {
                 return true;
-            } else if (!(entry instanceof UIUtilities.LSBCacheEntry)) {
+            } else if (!(entry instanceof LSBCacheEntry)) {
                 return false;
             } else {
-                UIUtilities.LSBCacheEntry oEntry = (UIUtilities.LSBCacheEntry) entry;
+                LSBCacheEntry oEntry = (LSBCacheEntry) entry;
                 return this.font.equals(oEntry.font) && this.frc.equals(oEntry.frc);
             }
         }

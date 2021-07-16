@@ -25,7 +25,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.util.SwingUtil;
+import com.github.weisj.darklaf.compatibility.SwingUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 

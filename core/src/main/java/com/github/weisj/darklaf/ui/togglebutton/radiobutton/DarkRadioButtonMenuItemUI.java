@@ -26,11 +26,11 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 
+import com.github.weisj.darklaf.compatibility.MenuItemLayoutHelper;
 import com.github.weisj.darklaf.listener.MouseClickListener;
 import com.github.weisj.darklaf.ui.menu.DarkMenuItemUIBase;
 import com.github.weisj.darklaf.ui.menu.MenuItemLayoutDelegate;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonMenuItemConstants;
-import com.intellij.util.ui.MenuItemLayoutHelper;
 
 /** @author Jannis Weis */
 public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements ToggleButtonMenuItemConstants {
@@ -91,7 +91,7 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements Tog
 
     @Override
     public void paintCheckIcon(final Graphics g2, final JMenuItem mi, final MenuItemLayoutHelper lh,
-            final MenuItemLayoutHelper.LayoutResult lr, final Color foreground) {
+            final MenuItemLayoutHelper.MILayoutResult lr, final Color foreground) {
         Rectangle rect = lr.getCheckRect();
         if (mi.getIcon() == null) {
             rect.y = lr.getIconRect().y;
