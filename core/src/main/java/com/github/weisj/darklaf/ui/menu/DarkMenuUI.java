@@ -30,8 +30,8 @@ import javax.swing.event.MouseInputListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicMenuUI;
 
+import com.github.weisj.darklaf.compatibility.MenuItemLayoutHelper;
 import com.github.weisj.darklaf.listener.MouseInputDelegate;
-import com.intellij.util.ui.MenuItemLayoutHelper;
 
 public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
 
@@ -53,7 +53,7 @@ public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
 
     @Override
     public void uninstallUI(JComponent c) {
-        MenuItemLayoutHelper.clearUsedParentClientProperties(menuItem);
+        MenuItemLayoutHelper.uninstall(menuItem);
         super.uninstallUI(c);
     }
 

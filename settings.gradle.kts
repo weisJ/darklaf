@@ -20,6 +20,7 @@ include(
     "annotations-processor",
     "native-utils",
     "core",
+    "compatibility",
     "theme",
     "property-loader",
     "utils",

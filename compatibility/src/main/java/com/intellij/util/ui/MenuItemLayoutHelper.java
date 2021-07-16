@@ -28,7 +28,6 @@
 package com.intellij.util.ui;
 
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Rectangle;
@@ -48,7 +47,7 @@ import javax.swing.text.View;
 import com.github.weisj.darklaf.util.Types;
 
 @SuppressWarnings("unused")
-public class MenuItemLayoutHelper {
+public class MenuItemLayoutHelper implements com.github.weisj.darklaf.compatibility.MenuItemLayoutHelper {
     public static final StringUIClientPropertyKey MAX_ARROW_WIDTH = new StringUIClientPropertyKey("maxArrowWidth");
     public static final StringUIClientPropertyKey MAX_CHECK_WIDTH = new StringUIClientPropertyKey("maxCheckWidth");
     public static final StringUIClientPropertyKey MAX_ICON_WIDTH = new StringUIClientPropertyKey("maxIconWidth");
@@ -81,12 +80,12 @@ public class MenuItemLayoutHelper {
     private int minTextOffset;
     private int leftTextExtraWidth;
     private Rectangle viewRect;
-    private MenuItemLayoutHelper.RectSize iconSize;
-    private MenuItemLayoutHelper.RectSize textSize;
-    private MenuItemLayoutHelper.RectSize accSize;
-    private MenuItemLayoutHelper.RectSize checkSize;
-    private MenuItemLayoutHelper.RectSize arrowSize;
-    private MenuItemLayoutHelper.RectSize labelSize;
+    private RectSize iconSize;
+    private RectSize textSize;
+    private RectSize accSize;
+    private RectSize checkSize;
+    private RectSize arrowSize;
+    private RectSize labelSize;
 
     protected MenuItemLayoutHelper() {}
 
@@ -124,12 +123,12 @@ public class MenuItemLayoutHelper {
         this.minTextOffset = this.getMinTextOffset(propertyPrefix);
         this.htmlView = (View) mi.getClientProperty("html");
         this.viewRect = viewRect;
-        this.iconSize = new MenuItemLayoutHelper.RectSize();
-        this.textSize = new MenuItemLayoutHelper.RectSize();
-        this.accSize = new MenuItemLayoutHelper.RectSize();
-        this.checkSize = new MenuItemLayoutHelper.RectSize();
-        this.arrowSize = new MenuItemLayoutHelper.RectSize();
-        this.labelSize = new MenuItemLayoutHelper.RectSize();
+        this.iconSize = new RectSize();
+        this.textSize = new RectSize();
+        this.accSize = new RectSize();
+        this.checkSize = new RectSize();
+        this.arrowSize = new RectSize();
+        this.labelSize = new RectSize();
         this.calcExtraWidths();
         this.calcWidthsAndHeights();
         this.setOriginalWidths();
@@ -303,7 +302,7 @@ public class MenuItemLayoutHelper {
 
     }
 
-    protected void calcMaxWidth(MenuItemLayoutHelper.RectSize rs, Object key) {
+    protected void calcMaxWidth(RectSize rs, Object key) {
         rs.maxWidth = this.calcMaxValue(key, rs.width);
     }
 
@@ -374,8 +373,8 @@ public class MenuItemLayoutHelper {
         }
     }
 
-    public MenuItemLayoutHelper.LayoutResult layoutMenuItem() {
-        MenuItemLayoutHelper.LayoutResult lr = this.createLayoutResult();
+    public LayoutResult layoutMenuItem() {
+        LayoutResult lr = this.createLayoutResult();
         this.prepareForLayout(lr);
         if (this.isColumnLayout()) {
             if (this.isLeftToRight()) {
@@ -393,8 +392,8 @@ public class MenuItemLayoutHelper {
         return lr;
     }
 
-    private MenuItemLayoutHelper.LayoutResult createLayoutResult() {
-        return new MenuItemLayoutHelper.LayoutResult(new Rectangle(this.iconSize.width, this.iconSize.height),
+    private LayoutResult createLayoutResult() {
+        return new LayoutResult(new Rectangle(this.iconSize.width, this.iconSize.height),
                 new Rectangle(this.textSize.width, this.textSize.height),
                 new Rectangle(this.accSize.width, this.accSize.height),
                 new Rectangle(this.checkSize.width, this.checkSize.height),
@@ -402,21 +401,21 @@ public class MenuItemLayoutHelper {
                 new Rectangle(this.labelSize.width, this.labelSize.height));
     }
 
-    public MenuItemLayoutHelper.ColumnAlignment getLTRColumnAlignment() {
-        return MenuItemLayoutHelper.ColumnAlignment.LEFT_ALIGNMENT;
+    public ColumnAlignment getLTRColumnAlignment() {
+        return ColumnAlignment.LEFT_ALIGNMENT;
     }
 
-    public MenuItemLayoutHelper.ColumnAlignment getRTLColumnAlignment() {
-        return MenuItemLayoutHelper.ColumnAlignment.RIGHT_ALIGNMENT;
+    public ColumnAlignment getRTLColumnAlignment() {
+        return ColumnAlignment.RIGHT_ALIGNMENT;
     }
 
-    protected void prepareForLayout(MenuItemLayoutHelper.LayoutResult lr) {
+    protected void prepareForLayout(LayoutResult lr) {
         lr.checkRect.width = this.checkSize.maxWidth;
         lr.accRect.width = this.accSize.maxWidth;
         lr.arrowRect.width = this.arrowSize.maxWidth;
     }
 
-    private void alignAccCheckAndArrowVertically(MenuItemLayoutHelper.LayoutResult lr) {
+    private void alignAccCheckAndArrowVertically(LayoutResult lr) {
         lr.accRect.y =
                 (int) ((float) lr.labelRect.y + (float) lr.labelRect.height / 2.0F - (float) lr.accRect.height / 2.0F);
         this.fixVerticalAlignment(lr, lr.accRect);
@@ -431,7 +430,7 @@ public class MenuItemLayoutHelper {
 
     }
 
-    private void fixVerticalAlignment(MenuItemLayoutHelper.LayoutResult lr, Rectangle r) {
+    private void fixVerticalAlignment(LayoutResult lr, Rectangle r) {
         int delta = 0;
         if (r.y < this.viewRect.y) {
             delta = this.viewRect.y - r.y;
@@ -456,8 +455,7 @@ public class MenuItemLayoutHelper {
 
     }
 
-    private void doLTRColumnLayout(MenuItemLayoutHelper.LayoutResult lr,
-            MenuItemLayoutHelper.ColumnAlignment alignment) {
+    private void doLTRColumnLayout(LayoutResult lr, ColumnAlignment alignment) {
         lr.iconRect.width = this.iconSize.maxWidth;
         lr.textRect.width = this.textSize.maxWidth;
         this.calcXPositionsLTR(this.viewRect.x, this.leadingGap, this.gap, lr.checkRect, lr.iconRect, lr.textRect);
@@ -482,8 +480,7 @@ public class MenuItemLayoutHelper {
         lr.setLabelRect(lr.textRect.union(lr.iconRect));
     }
 
-    private void doLTRComplexLayout(MenuItemLayoutHelper.LayoutResult lr,
-            MenuItemLayoutHelper.ColumnAlignment alignment) {
+    private void doLTRComplexLayout(LayoutResult lr, ColumnAlignment alignment) {
         lr.labelRect.width = this.labelSize.maxWidth;
         this.calcXPositionsLTR(this.viewRect.x, this.leadingGap, this.gap, lr.checkRect, lr.labelRect);
         Rectangle var10000;
@@ -505,8 +502,7 @@ public class MenuItemLayoutHelper {
         this.layoutIconAndTextInLabelRect(lr);
     }
 
-    private void doRTLColumnLayout(MenuItemLayoutHelper.LayoutResult lr,
-            MenuItemLayoutHelper.ColumnAlignment alignment) {
+    private void doRTLColumnLayout(LayoutResult lr, ColumnAlignment alignment) {
         lr.iconRect.width = this.iconSize.maxWidth;
         lr.textRect.width = this.textSize.maxWidth;
         this.calcXPositionsRTL(this.viewRect.x + this.viewRect.width, this.leadingGap, this.gap, lr.checkRect,
@@ -531,8 +527,7 @@ public class MenuItemLayoutHelper {
         lr.setLabelRect(lr.textRect.union(lr.iconRect));
     }
 
-    private void doRTLComplexLayout(MenuItemLayoutHelper.LayoutResult lr,
-            MenuItemLayoutHelper.ColumnAlignment alignment) {
+    private void doRTLComplexLayout(LayoutResult lr, ColumnAlignment alignment) {
         lr.labelRect.width = this.labelSize.maxWidth;
         this.calcXPositionsRTL(this.viewRect.x + this.viewRect.width, this.leadingGap, this.gap, lr.checkRect,
                 lr.labelRect);
@@ -554,7 +549,7 @@ public class MenuItemLayoutHelper {
         this.layoutIconAndTextInLabelRect(lr);
     }
 
-    private void alignRects(MenuItemLayoutHelper.LayoutResult lr, MenuItemLayoutHelper.ColumnAlignment alignment) {
+    private void alignRects(LayoutResult lr, ColumnAlignment alignment) {
         this.alignRect(lr.checkRect, alignment.getCheckAlignment(), this.checkSize.getOrigWidth());
         this.alignRect(lr.iconRect, alignment.getIconAlignment(), this.iconSize.getOrigWidth());
         this.alignRect(lr.textRect, alignment.getTextAlignment(), this.textSize.getOrigWidth());
@@ -570,7 +565,7 @@ public class MenuItemLayoutHelper {
         rect.width = origWidth;
     }
 
-    protected void layoutIconAndTextInLabelRect(MenuItemLayoutHelper.LayoutResult lr) {
+    protected void layoutIconAndTextInLabelRect(LayoutResult lr) {
         lr.setTextRect(new Rectangle());
         lr.setIconRect(new Rectangle());
         SwingUtilities.layoutCompoundLabel(this.mi, this.fm, this.text, this.icon, this.verticalAlignment,
@@ -602,7 +597,7 @@ public class MenuItemLayoutHelper {
 
     }
 
-    private void calcTextAndIconYPositions(MenuItemLayoutHelper.LayoutResult lr) {
+    private void calcTextAndIconYPositions(LayoutResult lr) {
         if (this.verticalAlignment == 1) {
             lr.textRect.y = (int) ((float) this.viewRect.y + (float) lr.labelRect.height / 2.0F
                     - (float) lr.textRect.height / 2.0F);
@@ -622,7 +617,7 @@ public class MenuItemLayoutHelper {
 
     }
 
-    private void calcLabelYPosition(MenuItemLayoutHelper.LayoutResult lr) {
+    private void calcLabelYPosition(LayoutResult lr) {
         if (this.verticalAlignment == 1) {
             lr.labelRect.y = this.viewRect.y;
         } else if (this.verticalAlignment == 0) {
@@ -668,23 +663,6 @@ public class MenuItemLayoutHelper {
         }
 
         return maxValue;
-    }
-
-    public static Rectangle createMaxRect() {
-        return new Rectangle(0, 0, 2147483647, 2147483647);
-    }
-
-    public static void addMaxWidth(MenuItemLayoutHelper.RectSize size, int gap, Dimension result) {
-        if (size.maxWidth > 0) {
-            result.width += size.maxWidth + gap;
-        }
-
-    }
-
-    public static void addWidth(int width, int gap, Dimension result) {
-        if (width > 0) {
-            result.width += width + gap;
-        }
     }
 
     public JMenuItem getMenuItem() {
@@ -787,27 +765,27 @@ public class MenuItemLayoutHelper {
         return this.viewRect;
     }
 
-    public MenuItemLayoutHelper.RectSize getIconSize() {
+    public RectSize getIconSize() {
         return this.iconSize;
     }
 
-    public MenuItemLayoutHelper.RectSize getTextSize() {
+    public RectSize getTextSize() {
         return this.textSize;
     }
 
-    public MenuItemLayoutHelper.RectSize getAccSize() {
+    public RectSize getAccSize() {
         return this.accSize;
     }
 
-    public MenuItemLayoutHelper.RectSize getCheckSize() {
+    public RectSize getCheckSize() {
         return this.checkSize;
     }
 
-    public MenuItemLayoutHelper.RectSize getArrowSize() {
+    public RectSize getArrowSize() {
         return this.arrowSize;
     }
 
-    public MenuItemLayoutHelper.RectSize getLabelSize() {
+    public RectSize getLabelSize() {
         return this.labelSize;
     }
 
@@ -911,27 +889,27 @@ public class MenuItemLayoutHelper {
         this.viewRect = viewRect;
     }
 
-    protected void setIconSize(MenuItemLayoutHelper.RectSize iconSize) {
+    protected void setIconSize(RectSize iconSize) {
         this.iconSize = iconSize;
     }
 
-    protected void setTextSize(MenuItemLayoutHelper.RectSize textSize) {
+    protected void setTextSize(RectSize textSize) {
         this.textSize = textSize;
     }
 
-    protected void setAccSize(MenuItemLayoutHelper.RectSize accSize) {
+    protected void setAccSize(RectSize accSize) {
         this.accSize = accSize;
     }
 
-    protected void setCheckSize(MenuItemLayoutHelper.RectSize checkSize) {
+    protected void setCheckSize(RectSize checkSize) {
         this.checkSize = checkSize;
     }
 
-    protected void setArrowSize(MenuItemLayoutHelper.RectSize arrowSize) {
+    protected void setArrowSize(RectSize arrowSize) {
         this.arrowSize = arrowSize;
     }
 
-    protected void setLabelSize(MenuItemLayoutHelper.RectSize labelSize) {
+    protected void setLabelSize(RectSize labelSize) {
         this.labelSize = labelSize;
     }
 
@@ -943,7 +921,7 @@ public class MenuItemLayoutHelper {
         return !(menuItem instanceof JMenu) || !((JMenu) menuItem).isTopLevelMenu();
     }
 
-    public static class RectSize {
+    public static class RectSize implements MIRectSize {
         private int width;
         private int height;
         private int origWidth;
@@ -1001,10 +979,8 @@ public class MenuItemLayoutHelper {
         private final int textAlignment;
         private final int accAlignment;
         private final int arrowAlignment;
-        public static final MenuItemLayoutHelper.ColumnAlignment LEFT_ALIGNMENT =
-                new MenuItemLayoutHelper.ColumnAlignment(2, 2, 2, 2, 2);
-        public static final MenuItemLayoutHelper.ColumnAlignment RIGHT_ALIGNMENT =
-                new MenuItemLayoutHelper.ColumnAlignment(4, 4, 4, 4, 4);
+        public static final ColumnAlignment LEFT_ALIGNMENT = new ColumnAlignment(2, 2, 2, 2, 2);
+        public static final ColumnAlignment RIGHT_ALIGNMENT = new ColumnAlignment(4, 4, 4, 4, 4);
 
         public ColumnAlignment(int checkAlignment, int iconAlignment, int textAlignment, int accAlignment,
                 int arrowAlignment) {
@@ -1036,7 +1012,7 @@ public class MenuItemLayoutHelper {
         }
     }
 
-    public static class LayoutResult {
+    public static class LayoutResult implements MILayoutResult {
         private Rectangle iconRect;
         private Rectangle textRect;
         private Rectangle accRect;

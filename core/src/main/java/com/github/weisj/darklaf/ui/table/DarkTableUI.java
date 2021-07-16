@@ -32,6 +32,7 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.table.*;
 
+import com.github.weisj.darklaf.compatibility.SwingUtil;
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.HasRendererPane;
@@ -44,7 +45,6 @@ import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellEditorDelegate;
 import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellRenderer;
 import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellRendererDelegate;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
-import com.github.weisj.darklaf.ui.util.SwingUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
