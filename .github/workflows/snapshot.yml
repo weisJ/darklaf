@@ -29,7 +29,7 @@ jobs:
       - name: Publish
         env:
           PROPS_RELEASE: "-Prc=1 -Pgh -Prelease=false -PskipJavadoc -PskipAutostyle -PfailIfLibraryMissing"
-          PROPS_GIT: "-PghGitSourceUsername=${{ secrets.GH_GIT_USERNAME }} -PghGitSourcePassword=${{ secrets.GITHUB_TOKEN }}"
+          PROPS_GIT: "-PghGitSourceUsername=${{ secrets.GH_GIT_USERNAME }} -PghGitSourcePassword=${{ secrets.RELEASE_TOKEN }}"
           PROPS_NEXUS: "-PghNexusUsername=${{ secrets.GH_NEXUS_USERNAME }} -PghNexusPassword=${{ secrets.GH_NEXUS_PASSWORD }}"
           PROPS_SIGNING: "-PuseInMemoryKey=true -Psigning.inMemoryKey=${{ secrets.IN_MEMORY_KEY }} -Psigning.password=${{ secrets.SIGNING_PASSWORD }}"
           PROPS_GITHUB: "-PgithubAccessToken=${{ secrets.GITHUB_TOKEN }}"
