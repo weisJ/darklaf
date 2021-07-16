@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.platform;
+package com.github.weisj.darklaf.nativeutil;
 
 import java.io.File;
 import java.io.FileNotFoundException;

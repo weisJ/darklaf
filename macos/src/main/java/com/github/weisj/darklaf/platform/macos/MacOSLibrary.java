@@ -24,8 +24,8 @@ package com.github.weisj.darklaf.platform.macos;
 import java.util.Collections;
 import java.util.List;
 
-import com.github.weisj.darklaf.platform.AbstractLibrary;
-import com.github.weisj.darklaf.platform.NativeUtil;
+import com.github.weisj.darklaf.nativeutil.AbstractLibrary;
+import com.github.weisj.darklaf.nativeutil.NativeUtil;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
