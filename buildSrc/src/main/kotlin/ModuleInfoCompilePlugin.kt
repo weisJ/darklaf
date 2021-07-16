@@ -16,10 +16,10 @@ open class ModuleInfoExtension {
 class ModuleInfoCompilePlugin : Plugin<Project> {
 
     override fun apply(target: Project) = target.run {
+        val infoExtension = target.extensions.create("moduleInfo", ModuleInfoExtension::class.java)
+        if (project.findProperty("skipModuleInfo") in listOf("", "true")) return@run
         val moduleInfoFile = file("src/main/module/module-info.java")
         if (moduleInfoFile.exists()) {
-            val infoExtension = target.extensions.create("moduleInfo", ModuleInfoExtension::class.java)
-
             val compileJava = tasks.named<JavaCompile>("compileJava")
             val compileModuleInfoJava by tasks.registering(JavaCompile::class) {
                 val javaCompile = compileJava.get()
