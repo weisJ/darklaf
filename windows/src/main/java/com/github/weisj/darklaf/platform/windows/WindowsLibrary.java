@@ -21,7 +21,7 @@
  */
 package com.github.weisj.darklaf.platform.windows;
 
-import com.github.weisj.darklaf.platform.AbstractLibrary;
+import com.github.weisj.darklaf.nativeutil.AbstractLibrary;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
