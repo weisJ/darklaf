@@ -20,7 +20,7 @@ jobs:
         if: contains(github.event.pull_request.labels.*.name, 'published to test')
         uses: actions/setup-java@v1
         with:
-          java-version: 8
+          java-version: 11
       - name: Extract branch name
         if: contains(github.event.pull_request.labels.*.name, 'published to test')
         shell: bash
