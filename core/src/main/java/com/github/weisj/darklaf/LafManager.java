@@ -116,7 +116,7 @@ public final class LafManager {
     public static void setDecorationsEnabled(final boolean enabled) {
         boolean isEnabled = isDecorationsEnabled();
         DecorationsHandler.getSharedInstance().setDecorationsEnabled(enabled);
-        if (isEnabled != enabled) {
+        if (isEnabled != enabled && LafManager.isInstalled()) {
             updateLaf();
         }
     }
