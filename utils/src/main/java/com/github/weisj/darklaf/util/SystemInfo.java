@@ -56,6 +56,7 @@ public final class SystemInfo {
     public static final boolean isM1;
 
     public static final boolean isJava9OrGreater;
+    public static final boolean isJava16OrGreater;
 
     protected static final String _OS_NAME;
 
@@ -91,6 +92,7 @@ public final class SystemInfo {
         isWindows7 = isWindows10 || (isWindows && isOsVersionAtLeast("6.1"));
         isWindowsVista = isWindows7 || (isWindows && isOsVersionAtLeast("6.0"));
         isJava9OrGreater = isJavaVersionAtLeast("9");
+        isJava16OrGreater = isJava9OrGreater && isJavaVersionAtLeast("16");
     }
 
     public static String getOsName() {

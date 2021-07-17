@@ -1,25 +1,44 @@
+/*
+ * Copyright (c) 2009, Piet Blok
+ * All rights reserved.
+ * <p>
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * <p>
+ * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer in the documentation and/or other materials provided
+ * with the distribution.
+ * Neither the name of the copyright holder nor the names of the
+ * contributors may be used to endorse or promote products derived
+ * from this software without specific prior written permission.
+ * <p>
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package org.pbjar.jxlayer.plaf.ext;
 
-/*
- * Copyright (c) 2009, Piet Blok All rights reserved. <p> Redistribution and use in source and
- * binary forms, with or without modification, are permitted provided that the following conditions
- * are met: <p> * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer. * Redistributions in binary form must reproduce the
- * above copyright notice, this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution. * Neither the name of the copyright holder
- * nor the names of the contributors may be used to endorse or promote products derived from this
- * software without specific prior written permission. <p> THIS SOFTWARE IS PROVIDED BY THE
- * COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
- * NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
- * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.LayoutManager;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
@@ -27,23 +46,37 @@ import java.beans.PropertyChangeListener;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JLayer;
+import javax.swing.RepaintManager;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.LayerUI;
 import javax.swing.text.GlyphView.GlyphPainter;
 import javax.swing.text.JTextComponent;
 
-import com.github.weisj.darklaf.util.LogUtil;
-import com.github.weisj.darklaf.util.SystemInfo;
-
-import org.pbjar.jxlayer.plaf.ext.transform.*;
+import org.pbjar.jxlayer.plaf.ext.transform.DefaultTransformModel;
+import org.pbjar.jxlayer.plaf.ext.transform.TransformLayout;
+import org.pbjar.jxlayer.plaf.ext.transform.TransformModel;
+import org.pbjar.jxlayer.plaf.ext.transform.TransformRPMAnnotation;
+import org.pbjar.jxlayer.plaf.ext.transform.TransformRPMFallBack;
+import org.pbjar.jxlayer.plaf.ext.transform.TransformUtils;
 import org.pbjar.jxlayer.repaint.RepaintManagerProvider;
 import org.pbjar.jxlayer.repaint.RepaintManagerUtils;
 import org.pbjar.jxlayer.repaint.WrappedRepaintManager;
+
+import com.github.weisj.darklaf.util.LogUtil;
+import com.github.weisj.darklaf.util.PropertyUtil;
+import com.github.weisj.darklaf.util.SystemInfo;
 
 /**
  * This class provides for all necessary functionality when using transformations in a
@@ -98,6 +131,8 @@ import org.pbjar.jxlayer.repaint.WrappedRepaintManager;
  */
 public class TransformUI extends MouseEventUI<JComponent> {
 
+    public static final String BUFFERED_REPAINT_FLAG = "darklaf.useBufferedRepaintManager";
+    private static final String EXPORTS_FLAG = "--add-exports java.desktop/com.sun.java.swing=ALL-UNNAMED";
     private static final LayoutManager transformLayout = new TransformLayout();
     private static final String KEY_VIEW = "view";
     private static final boolean delegatePossible;
@@ -108,8 +143,11 @@ public class TransformUI extends MouseEventUI<JComponent> {
 
     static {
         boolean value;
+        boolean bufferFlag = PropertyUtil.getSystemFlag(BUFFERED_REPAINT_FLAG, false);
         try {
-            if (!SystemInfo.isJava9OrGreater) {
+            // Use leaner java version restriction than in other places due to the effect it has.
+            // When using a version < 16 then illegal access has to be declared explicitly.
+            if (!SystemInfo.isJava16OrGreater || bufferFlag) {
                 Class<?> swingUtilities3 = Class.forName("com.sun.java.swing.SwingUtilities3");
                 setDelegateRepaintManagerMethod = MethodHandles.lookup().findStatic(
                         swingUtilities3, "setDelegateRepaintManager",
@@ -119,11 +157,15 @@ public class TransformUI extends MouseEventUI<JComponent> {
                 value = false;
             }
         } catch (Throwable t) {
+            if (bufferFlag) {
+                LOGGER.log(Level.SEVERE, "For " + BUFFERED_REPAINT_FLAG + " to work you need to start with " + EXPORTS_FLAG, t);
+            }
             value = false;
         }
         delegatePossible = value;
         LOGGER.info("Java " + System.getProperty("java.version") + " " + System.getProperty("java.vm.version")
-                + (delegatePossible ? ": RepaintManager delegate facility for JavaFX will be used."
+                + (delegatePossible
+                        ? ": RepaintManager delegate facility for JavaFX will be used."
                         : ": RepaintManager.setCurrentManager() will be used."));
     }
 
@@ -275,6 +317,13 @@ public class TransformUI extends MouseEventUI<JComponent> {
         setLayoutManager(transformLayout);
         setView(installedLayer.getView());
         if (!delegatePossible) {
+            String warningMessage =
+                "Using a fallback method for the TransformUI repaint manager. This will result in flickering during resizing\n"
+                + "Consider adding\n"
+                + "       -D" + BUFFERED_REPAINT_FLAG + "=true\n"
+                + "       " + EXPORTS_FLAG + "\n"
+                + "to your startup parameters or providing a fix for this issue";
+            LOGGER.warning(warningMessage);
             RepaintManagerUtils.ensureRepaintManagerSet(installedLayer, rpmProvider);
         }
     }
