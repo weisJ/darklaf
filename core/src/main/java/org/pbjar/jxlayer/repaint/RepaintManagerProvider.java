@@ -32,8 +32,6 @@ package org.pbjar.jxlayer.repaint;
 
 import javax.swing.*;
 
-import org.jdesktop.swingx.ForwardingRepaintManager;
-
 /**
  * To be implemented by classes that provide for a custom RepaintManager.
  *
@@ -42,16 +40,6 @@ import org.jdesktop.swingx.ForwardingRepaintManager;
  */
 public interface RepaintManagerProvider {
     /**
-     * Get the class of a {@link RepaintManager} that extends {@link ForwardingRepaintManager}.
-     * <p>
-     * <b>Note:</b> the class must provide for a public constructor that takes a delegate {@link
-     * RepaintManager} as its only argument.
-     *
-     * @return a class object
-     */
-    Class<? extends ForwardingRepaintManager> getForwardingRepaintManagerClass();
-
-    /**
      * Get the class of a {@link RepaintManager} that extends {@link WrappedRepaintManager}.
      * <p>
      * <b>Note:</b> the class must provide for a public constructor that takes a delegate {@link
@@ -59,13 +47,13 @@ public interface RepaintManagerProvider {
      *
      * @return a class object
      */
-    Class<? extends WrappedRepaintManager> getWrappedRepaintManagerClass();
+    WrappedRepaintManager createWrappedRepaintManager(final RepaintManager delegate);
 
     /**
      * Checks whether or not the argument class is a {@link RepaintManager} class that will do the required job.
      *
-     * @param  rpm a {@link RepaintManager} class
+     * @param  rpm a {@link RepaintManager}
      * @return     {@code true} if the argument class will do the required job, {@code false} otherwise
      */
-    boolean isAdequate(Class<? extends RepaintManager> rpm);
+    boolean isAdequate(final RepaintManager rpm);
 }

@@ -36,16 +36,15 @@ import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.*;
+import javax.swing.plaf.LayerUI;
 
-import org.jdesktop.jxlayer.JXLayer;
-import org.jdesktop.jxlayer.plaf.LayerUI;
 import org.pbjar.jxlayer.plaf.ext.TransformUI;
 
 /**
- * A specialized layout manager for {@link JXLayer} in combination with the {@link TransformUI}.
+ * A specialized layout manager for {@link JLayer} in combination with the {@link TransformUI}.
  * <p>
  * It extends {@link DefaultLayerLayout} and, as long as no enabled {@link TransformUI} is set to
- * {@link JXLayer}, will act exactly the same as its super class.
+ * {@link JLayer}, will act exactly the same as its super class.
  * <p>
  * However, when the above conditions are all true, its behavior becomes different:
  * <ol>
@@ -56,14 +55,14 @@ import org.pbjar.jxlayer.plaf.ext.TransformUI;
  * parts of the inner area not covered by the view.
  * <li>The preferred size will first be computed by the super implementation. Then, before
  * returning, the calculated size will be transformed with the {@link AffineTransform}
- * returned by {@link TransformUI#getPreferredTransform(Dimension, JXLayer)};
+ * returned by {@link TransformUI#getPreferredTransform(Dimension, JLayer)};
  * <li>The minimum size will first be computed by the super implementation. Then, before
  * returning, the calculated size will be transformed with the {@link AffineTransform}
- * returned by {@link TransformUI#getPreferredTransform(Dimension, JXLayer)};
+ * returned by {@link TransformUI#getPreferredTransform(Dimension, JLayer)};
  * </ol>
  *
- * @see JXLayer#getView()
- * @see JXLayer#getGlassPane()
+ * @see JLayer#getView()
+ * @see JLayer#getGlassPane()
  * @see TransformUI
  */
 public class TransformLayout extends DefaultLayerLayout {
@@ -92,7 +91,7 @@ public class TransformLayout extends DefaultLayerLayout {
      */
     @Override
     public void layoutContainer(final Container parent) {
-        JXLayer<?> layer = (JXLayer<?>) parent;
+        JLayer<?> layer = (JLayer<?>) parent;
         LayerUI<?> layerUI = layer.getUI();
         if (layerUI instanceof TransformUI) {
             JComponent view = (JComponent) layer.getView();
@@ -118,7 +117,7 @@ public class TransformLayout extends DefaultLayerLayout {
 
     @SuppressWarnings("unchecked")
     private Dimension transform(final Container parent, final Dimension size) {
-        JXLayer<JComponent> layer = (JXLayer<JComponent>) parent;
+        JLayer<JComponent> layer = (JLayer<JComponent>) parent;
         LayerUI<?> ui = layer.getUI();
         if (ui instanceof TransformUI) {
             TransformUI transformUI = (TransformUI) ui;

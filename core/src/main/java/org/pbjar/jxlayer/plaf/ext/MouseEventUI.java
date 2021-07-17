@@ -39,38 +39,21 @@ import java.awt.geom.NoninvertibleTransformException;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
-
-import org.jdesktop.jxlayer.JXLayer;
-import org.jdesktop.jxlayer.plaf.AbstractLayerUI;
-import org.jdesktop.jxlayer.plaf.LayerUI;
+import javax.swing.plaf.LayerUI;
 
 /**
- * This class provides for {@link MouseEvent} re-dispatching. It may be used to set a tool tip on {@link JXLayer}'s
+ * This class provides for {@link MouseEvent} re-dispatching. It may be used to set a tool tip on {@link JLayer}'s
  * glass pane and still have the child components receive {@link MouseEvent}s.
  * <p>
  * <b>Note:</b> A {@link MouseEventUI} instance cannot be shared and can be set
- * to a single {@link JXLayer} instance only.
+ * to a single {@link JLayer} instance only.
  */
 public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
-
-    static {
-        /*
-         * The instantiating of a JInternalFrame before a MouseEventUI is set to
-         * a JXLayer containing a JDesktopPane that has no JInternalFrames set,
-         * prevents the failing of re dispatched MouseEvents.
-         *
-         * This is a work around a problem that I don't really understand.
-         * Please see
-         * http://forums.java.net/jive/thread.jspa?threadID=66763&tstart=0 for a
-         * discussion on this problem.
-         */
-        new JInternalFrame();
-    }
 
     private Component lastEnteredTarget, lastPressedTarget;
     private boolean dispatchingMode = false;
 
-    private JXLayer<? extends V> installedLayer;
+    private JLayer<? extends V> installedLayer;
 
     /**
      * Overridden to override the {@link LayerUI} implementation that only consults the view.
@@ -85,7 +68,7 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
 
     /**
      * Overridden to check if this {@link LayerUI} has not been installed already, and to set the argument {@code
-     * component} as the installed {@link JXLayer}.
+     * component} as the installed {@link JLayer}.
      *
      * @throws IllegalStateException when this {@link LayerUI} has been installed already
      * @see                          #getInstalledLayer()
@@ -98,11 +81,11 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
             throw new IllegalStateException(this.getClass().getName()
                                             + " cannot be shared between multiple layers");
         }
-        installedLayer = (JXLayer<? extends V>) component;
+        installedLayer = (JLayer<? extends V>) component;
     }
 
     /**
-     * Overridden to remove the installed {@link JXLayer}.
+     * Overridden to remove the installed {@link JLayer}.
      */
     @Override
     public void uninstallUI(final JComponent c) {
@@ -125,7 +108,7 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
      * components according to their bounds.
      */
     @Override
-    public void eventDispatched(final AWTEvent event, final JXLayer<? extends V> layer) {
+    public void eventDispatched(final AWTEvent event, final JLayer<? extends V> layer) {
         if (event instanceof MouseEvent) {
             MouseEvent mouseEvent = (MouseEvent) event;
             if (!dispatchingMode) {
@@ -159,7 +142,7 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
      */
     @Override
     protected void processMouseWheelEvent(final MouseWheelEvent event,
-                                          final JXLayer<? extends V> jxlayer) {
+                                          final JLayer<? extends V> jxlayer) {
         /*
          * Only process an event if it is not already consumed. This may be the
          * case if this LayerUI is contained in a wrapped hierarchy.
@@ -192,7 +175,7 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         }
     }
 
-    private Point calculateTargetPoint(final JXLayer<? extends V> layer,
+    private Point calculateTargetPoint(final JLayer<? extends V> layer,
                                        final MouseEvent mouseEvent) {
         Point point = mouseEvent.getPoint();
         SwingUtilities.convertPointToScreen(point, mouseEvent.getComponent());
@@ -233,7 +216,7 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         }
     }
 
-    private void generateEnterExitEvents(final JXLayer<? extends V> layer,
+    private void generateEnterExitEvents(final JLayer<? extends V> layer,
                                          final MouseEvent originalEvent, final Component newTarget,
                                          final Point realPoint) {
         if (lastEnteredTarget != newTarget) {
@@ -316,7 +299,7 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         }
     }
 
-    private Component getTarget(final JXLayer<? extends V> layer, final Point targetPoint) {
+    private Component getTarget(final JLayer<? extends V> layer, final Point targetPoint) {
         Component view = layer.getView();
         if (view == null) {
             return null;
@@ -328,7 +311,7 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
 
     @SuppressWarnings("Duplicates")
     private void redispatch(final MouseEvent originalEvent,
-                            final JXLayer<? extends V> layer) {
+                            final JLayer<? extends V> layer) {
         if (layer.getView() != null) {
             if (originalEvent.getComponent() != layer.getGlassPane()) {
                 originalEvent.consume();
@@ -376,18 +359,18 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
     }
 
     private void redispatchMouseWheelEvent(final MouseWheelEvent mouseWheelEvent,
-                                           final Component target, final JXLayer<? extends V> layer) {
+                                           final Component target, final JLayer<? extends V> layer) {
         MouseWheelEvent newEvent = this.transformMouseWheelEvent(mouseWheelEvent, target, layer);
         processMouseWheelEvent(newEvent, layer);
     }
 
-    private MouseEvent transformMouseEvent(final JXLayer<? extends V> layer,
+    private MouseEvent transformMouseEvent(final JLayer<? extends V> layer,
                                            final MouseEvent mouseEvent, final Component target, final Point realPoint) {
         return transformMouseEvent(layer, mouseEvent, target, realPoint,
                                    mouseEvent.getID());
     }
 
-    private MouseEvent transformMouseEvent(final JXLayer<? extends V> layer,
+    private MouseEvent transformMouseEvent(final JLayer<? extends V> layer,
                                            final MouseEvent mouseEvent, final Component target, final Point targetPoint,
                                            final int id) {
         if (target == null) {
@@ -409,7 +392,7 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
     }
 
     private MouseWheelEvent transformMouseWheelEvent(final MouseWheelEvent mouseWheelEvent, final Component t,
-                                                     final JXLayer<? extends V> layer) {
+                                                     final JLayer<? extends V> layer) {
         Component target = t;
         if (target == null) {
             target = layer;
@@ -420,7 +403,7 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
                                      point, target);
     }
 
-    private Point transformPoint(final JXLayer<? extends V> layer, final Point point) {
+    private Point transformPoint(final JLayer<? extends V> layer, final Point point) {
         AffineTransform transform = this.getTransform(layer);
         if (transform != null) {
             try {
@@ -432,7 +415,7 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
         return point;
     }
 
-    protected JXLayer<? extends V> getInstalledLayer() {
+    protected JLayer<? extends V> getInstalledLayer() {
         return installedLayer;
     }
 }

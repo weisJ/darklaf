@@ -1,33 +1,5 @@
 package org.pbjar.jxlayer.plaf.ext.transform;
 
-/*
- * Copyright (c) 2009, Piet Blok All rights reserved.
- * <p>
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- * <p>
- * * Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer. * Redistributions in
- * binary form must reproduce the above copyright notice, this list of
- * conditions and the following disclaimer in the documentation and/or other
- * materials provided with the distribution. * Neither the name of the copyright
- * holder nor the names of the contributors may be used to endorse or promote
- * products derived from this software without specific prior written
- * permission.
- * <p>
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- */
-
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
@@ -41,8 +13,6 @@ import java.util.function.Function;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import org.jdesktop.jxlayer.JXLayer;
 
 /**
  * This is an implementation of {@link TransformModel} with methods to explicitly set transformation values.
@@ -75,7 +45,7 @@ public class DefaultTransformModel implements TransformModel {
     }
 
     @Override
-    public AffineTransform getPreferredTransform(final Dimension size, final JXLayer<?> layer) {
+    public AffineTransform getPreferredTransform(final Dimension size, final JLayer<?> layer) {
         Point2D p = getRotationCenter(size);
         double centerX = p.getX();
         double centerY = p.getY();
@@ -171,7 +141,7 @@ public class DefaultTransformModel implements TransformModel {
      * The scale is primarily used to calculate a preferred size. Unless {@code
      * ScaleToPreferredSize} is set to {@code true} (see {@link #setScaleToPreferredSize(boolean)} and {@link
      * #isScaleToPreferredSize()}), actual scaling itself is calculated such that the view occupies as much space as
-     * possible on the {@link JXLayer}.
+     * possible on the {@link JLayer}.
      * <p>
      * The default value is 1.
      *
@@ -191,8 +161,9 @@ public class DefaultTransformModel implements TransformModel {
      *
      * @return the currently active {@link AffineTransform}
      */
+    @SuppressWarnings("SuspiciousNameCombination")
     @Override
-    public AffineTransform getTransform(final JXLayer<? extends JComponent> layer) {
+    public AffineTransform getTransform(final JLayer<? extends JComponent> layer) {
         JComponent view = layer == null ? null : layer.getView();
         /*
          * Set the current actual program values in addition to the user options.
@@ -392,10 +363,10 @@ public class DefaultTransformModel implements TransformModel {
      * The default value is {@code false}.
      * <p>
      * When {@code true}, the view is scaled according to the preferred scale, regardless of the
-     * size of the {@link JXLayer}.
+     * size of the {@link JLayer}.
      * <p>
      * When {@code false}, the view is scaled to occupy as much as possible of the size of the
-     * {@link JXLayer}.
+     * {@link JLayer}.
      *
      * @return {@code true} if scale to preferred size, {@code false} otherwise
      * @see    #setScaleToPreferredSize(boolean)
@@ -410,10 +381,10 @@ public class DefaultTransformModel implements TransformModel {
      * The default value is {@code false}.
      * <p>
      * When {@code true}, the view is scaled according to the preferred scale, regardless of the
-     * size of the {@link JXLayer}.
+     * size of the {@link JLayer}.
      * <p>
      * When {@code false}, the view is scaled to occupy as much as possible of the size of the
-     * {@link JXLayer}.
+     * {@link JLayer}.
      *
      * @param newValue the new value
      * @see            #isScaleToPreferredSize()

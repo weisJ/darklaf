@@ -31,7 +31,6 @@ import java.util.TooManyListenersException;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 
-import org.jdesktop.jxlayer.JXLayer;
 import org.pbjar.jxlayer.plaf.ext.transform.DefaultTransformModel;
 import org.pbjar.jxlayer.plaf.ext.transform.TransformUtils;
 
@@ -52,8 +51,8 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
     protected static final TabFrameTransferHandler TRANSFER_HANDLER = new TabFrameTransferHandler.UIResource();
     private final Rectangle calcRect = new Rectangle();
 
-    private JXLayer<JComponent> rotatePaneLeft;
-    private JXLayer<JComponent> rotatePaneRight;
+    private JLayer<JComponent> rotatePaneLeft;
+    private JLayer<JComponent> rotatePaneRight;
     private JTabFrame tabFrame;
     private JComponent dropComponentTop;
     private JComponent dropComponentBottom;
@@ -119,12 +118,12 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
         DefaultTransformModel rightTransformModel = new DefaultTransformModel();
         rightTransformModel.setQuadrantRotation(1);
         rightTransformModel.setScaleToPreferredSize(true);
-        rotatePaneRight = TransformUtils.createTransformJXLayer(tabFrame.getRightTabContainer(), rightTransformModel);
+        rotatePaneRight = TransformUtils.createTransformJLayer(tabFrame.getRightTabContainer(), rightTransformModel);
 
         DefaultTransformModel leftTransformModel = new DefaultTransformModel();
         leftTransformModel.setQuadrantRotation(3);
         leftTransformModel.setScaleToPreferredSize(true);
-        rotatePaneLeft = TransformUtils.createTransformJXLayer(tabFrame.getLeftTabContainer(), leftTransformModel);
+        rotatePaneLeft = TransformUtils.createTransformJLayer(tabFrame.getLeftTabContainer(), leftTransformModel);
 
         tabFrame.add(tabFrame.getTopTabContainer());
         tabFrame.add(tabFrame.getBottomTabContainer());
