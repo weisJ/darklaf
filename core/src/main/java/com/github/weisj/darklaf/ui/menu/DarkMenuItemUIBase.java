@@ -29,7 +29,6 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicMenuItemUI;
 
 import com.github.weisj.darklaf.ui.UIAction;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyActionMap;
 import com.intellij.util.ui.MenuItemLayoutHelper;
 
@@ -90,16 +89,6 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI implements MenuItemUI {
             final Icon arrowIcon, final Color background,
             final Color foreground, final int defaultTextIconGap) {
         paintMenuItemImpl(g, c, checkIcon, arrowIcon, background, foreground, defaultTextIconGap);
-    }
-
-    protected static MenuItemLayoutHelper getMenuItemLayoutHelperWrapper(final Icon checkIcon, final Icon arrowIcon,
-            final int defaultTextIconGap, final JMenuItem mi, final Rectangle viewRect) {
-        MenuItemUI ui = DarkUIUtil.getUIOfType(mi.getUI(), MenuItemUI.class);
-        if (ui != null) {
-            return ui.getMenuItemLayoutHelper(checkIcon, arrowIcon, defaultTextIconGap, mi, viewRect);
-        }
-        return getMenuItemLayoutHelperImpl("", mi.getFont(), "MenuItem",
-                checkIcon, arrowIcon, defaultTextIconGap, mi, viewRect);
     }
 
     public MenuItemLayoutHelper getMenuItemLayoutHelper(final Icon checkIcon, final Icon arrowIcon,
