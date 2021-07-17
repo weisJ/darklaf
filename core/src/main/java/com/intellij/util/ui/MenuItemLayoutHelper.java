@@ -45,6 +45,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.text.View;
 
+import com.github.weisj.darklaf.util.Types;
+
 @SuppressWarnings("unused")
 public class MenuItemLayoutHelper {
     public static final StringUIClientPropertyKey MAX_ARROW_WIDTH = new StringUIClientPropertyKey("maxArrowWidth");
@@ -177,13 +179,12 @@ public class MenuItemLayoutHelper {
 
     private Icon getIcon(String propertyPrefix) {
         Icon icon = null;
-        MenuItemCheckIconFactory iconFactory =
-                (MenuItemCheckIconFactory) UIManager.get(propertyPrefix + ".checkIconFactory");
+        MenuItemCheckIconFactory iconFactory = Types.safeCast(
+                UIManager.get(propertyPrefix + ".checkIconFactory"), MenuItemCheckIconFactory.class);
         if (!this.isColumnLayout || !this.useCheckAndArrow || iconFactory == null
                 || !iconFactory.isCompatible(this.checkIcon, propertyPrefix)) {
             icon = this.mi.getIcon();
         }
-
         return icon;
     }
 
