@@ -231,7 +231,7 @@ public final class PropertyUtil {
         if (defaultValue) {
             return !PropertyValue.FALSE.equals(System.getProperty(key));
         } else {
-            return !PropertyValue.TRUE.equals(System.getProperty(key));
+            return PropertyValue.TRUE.equals(System.getProperty(key));
         }
     }
 }
