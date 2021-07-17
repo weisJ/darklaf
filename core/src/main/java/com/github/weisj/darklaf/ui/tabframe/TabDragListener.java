@@ -27,8 +27,6 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.*;
 
-import org.jdesktop.jxlayer.JXLayer;
-
 import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
 import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.SwingXUtil;
@@ -61,8 +59,8 @@ public class TabDragListener extends MouseAdapter {
         TransferHandler th = tabComponent.getTabFrame().getTransferHandler();
         if (th != null && tabComponent.getTabFrame().isDndEnabled()) {
             Point p = e.getPoint();
-            JXLayer<? extends JComponent> layer =
-                    DarkUIUtil.getParentOfType(JXLayer.class, tabComponent.getComponent(), 3);
+            JLayer<? extends JComponent> layer =
+                    DarkUIUtil.getParentOfType(JLayer.class, tabComponent.getComponent(), 3);
             p = SwingXUtil.convertPointToParent(tabComponent.getComponent(), layer, p);
             p = SwingUtilities.convertPoint(layer != null ? layer : tabComponent.getComponent().getParent(), p,
                     tabComponent.getTabFrame());

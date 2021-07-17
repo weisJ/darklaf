@@ -36,7 +36,6 @@ import java.awt.geom.AffineTransform;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 
-import org.jdesktop.jxlayer.JXLayer;
 import org.pbjar.jxlayer.plaf.ext.TransformUI;
 
 /**
@@ -63,19 +62,19 @@ public interface TransformModel {
      * transformations. If the {@code size} argument is {@code null} a value of (0,0) is used for the anchor.
      *
      * @param  size  a {@link Dimension} instance to be used for an anchor or {@code null}
-     * @param  layer the {@link JXLayer}.
+     * @param  layer the {@link JLayer}.
      * @return       a {@link AffineTransform} instance or {@code null}
      */
-    AffineTransform getPreferredTransform(Dimension size, JXLayer<?> layer);
+    AffineTransform getPreferredTransform(Dimension size, JLayer<?> layer);
 
     /**
      * Get a {@link AffineTransform}. This method will typically be invoked by programs that are about to prepare a
      * {@link Graphics} object.
      *
-     * @param  layer the {@link JXLayer}
+     * @param  layer the {@link JLayer}
      * @return       a {@link AffineTransform} or {@code null}
      */
-    AffineTransform getTransform(JXLayer<? extends JComponent> layer);
+    AffineTransform getTransform(JLayer<? extends JComponent> layer);
 
     /**
      * Remove a {@link ChangeListener}.

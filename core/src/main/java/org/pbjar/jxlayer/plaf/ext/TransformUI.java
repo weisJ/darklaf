@@ -24,23 +24,22 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeListener;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.util.*;
 import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeListener;
+import javax.swing.plaf.LayerUI;
 import javax.swing.text.GlyphView.GlyphPainter;
 import javax.swing.text.JTextComponent;
 
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
-import org.jdesktop.jxlayer.JXLayer;
-import org.jdesktop.jxlayer.plaf.AbstractBufferedLayerUI;
-import org.jdesktop.jxlayer.plaf.LayerUI;
-import org.jdesktop.swingx.ForwardingRepaintManager;
+
 import org.pbjar.jxlayer.plaf.ext.transform.*;
 import org.pbjar.jxlayer.repaint.RepaintManagerProvider;
 import org.pbjar.jxlayer.repaint.RepaintManagerUtils;
@@ -57,20 +56,15 @@ import org.pbjar.jxlayer.repaint.WrappedRepaintManager;
  * their bounds as set by layout managers (component space). So, mouse events must always be
  * redirected to the intended recipients.
  * <li>When enabled, this implementation sets a different {@link LayoutManager} to be used by
- * {@link JXLayer}. Instead of setting the size of the view to {@link JXLayer}'s inner area, it sets
+ * {@link JLayer}. Instead of setting the size of the view to {@link JLayer}'s inner area, it sets
  * the size of the view to the view's <em>preferred</em> size and centers it in the inner area.
- * Also, when calculating the preferred size of {@link JXLayer}, it transforms the normally
+ * Also, when calculating the preferred size of {@link JLayer}, it transforms the normally
  * calculated size with the {@link AffineTransform} returned from
- * {@link #getPreferredTransform(Dimension, JXLayer)}.
+ * {@link #getPreferredTransform(Dimension, JLayer)}.
  * <li>This implementation allocates a fresh {@link BufferedImage} the size of the clip area, each
- * time that the {@link #paint(Graphics, JComponent)} method is invoked. This is different from the
- * implementation of {@link AbstractBufferedLayerUI}, that maintains a cached image, the size of the
- * view. An important reason to not follow the {@link AbstractBufferedLayerUI} strategy is that,
- * when applying scaling transformations with a large scaling factor, a {@link OutOfMemoryError} may
- * be thrown because it will try to allocate a buffer of an extreme size, even if not all of its
- * contents will actually be visible on the screen.
+ * time that the {@link #paint(Graphics, JComponent)} method is invoked.
  * <li>Rather than configuring the screen graphics object, the image's graphics object is configured
- * through {@link #configureGraphics(Graphics2D, JXLayer)}.
+ * through {@link #configureGraphics(Graphics2D, JLayer)}.
  * <li>Regardless of whether or not the view is opaque, a background color is painted. It is
  * obtained from the first component upwards in the hierarchy starting with the view, that is
  * opaque. If an opaque component is not found, the background color of the layer is used. Painting
@@ -84,21 +78,21 @@ import org.pbjar.jxlayer.repaint.WrappedRepaintManager;
  * <ol>
  * <li>In Java versions <b>before Java 6u10</b>, this implementation employs a custom
  * {@link RepaintManager} in order to have descendant's repaint requests propagated up to the
- * {@link JXLayer} ancestor. This {@link RepaintManager} will work well with and without other
- * {@link RepaintManager} that are either subclasses of the {@link WrappedRepaintManager} or
- * SwingX's {@link ForwardingRepaintManager}. Other {@link RepaintManager}s may cause conflicts.
+ * {@link JLayer} ancestor. This {@link RepaintManager} will work well with and without other
+ * {@link RepaintManager} that are subclasses of the {@link WrappedRepaintManager}. Other
+ * {@link RepaintManager}s may cause conflicts.
  * <p>
  * In Java versions <b>6u10 or higher</b>, an attempt will be made to use the new RepaintManager
  * delegate facility that has been designed for JavaFX.
- * <li>Transformations will be applied on the whole of the content of the {@link JXLayer}. The
- * result is that {@link Border}s and other content within {@link JXLayer}'s insets will generally
- * either be invisible, or will be rendered in a very undesirable way. If you want a {@link Border}
- * to be transformed together with {@link JXLayer}'s view, that border should be set on the view
- * instead. On the other hand, if you want the {@link Border} not to be transformed, that border
- * must be set on {@link JXLayer}'s parent.
+ * <li>Transformations will be applied on the whole of the content of the {@link JLayer}. The result
+ * is that {@link Border}s and other content within {@link JLayer}'s insets will generally either be
+ * invisible, or will be rendered in a very undesirable way. If you want a {@link Border} to be
+ * transformed together with {@link JLayer}'s view, that border should be set on the view instead.
+ * On the other hand, if you want the {@link Border} not to be transformed, that border must be set
+ * on {@link JLayer}'s parent.
  * </ol>
  * <b>Note:</b> A {@link TransformUI} instance cannot be shared and can be set to a single
- * {@link JXLayer} instance only.
+ * {@link JLayer} instance only.
  *
  * @author Piet Blok
  */
@@ -110,16 +104,16 @@ public class TransformUI extends MouseEventUI<JComponent> {
     private static final RepaintManager wrappedManager = new TransformRepaintManager();
     private static final Logger LOGGER = LogUtil.getDetachedLogger(TransformUI.class);
 
-    private static Class<?> swingUtilities3;
-    private static Method setDelegateRepaintManagerMethod;
+    private static MethodHandle setDelegateRepaintManagerMethod;
 
     static {
         boolean value;
         try {
             if (!SystemInfo.isJava9OrGreater) {
-                swingUtilities3 = Class.forName("com.sun.java.swing.SwingUtilities3");
-                setDelegateRepaintManagerMethod =
-                        swingUtilities3.getMethod("setDelegateRepaintManager", JComponent.class, RepaintManager.class);
+                Class<?> swingUtilities3 = Class.forName("com.sun.java.swing.SwingUtilities3");
+                setDelegateRepaintManagerMethod = MethodHandles.lookup().findStatic(
+                        swingUtilities3, "setDelegateRepaintManager",
+                        MethodType.methodType(void.class, JComponent.class, RepaintManager.class));
                 value = true;
             } else {
                 value = false;
@@ -137,18 +131,13 @@ public class TransformUI extends MouseEventUI<JComponent> {
     private final RepaintManagerProvider rpmProvider = new RepaintManagerProvider() {
 
         @Override
-        public Class<? extends ForwardingRepaintManager> getForwardingRepaintManagerClass() {
-            return TransformRPMSwingX.class;
+        public WrappedRepaintManager createWrappedRepaintManager(final RepaintManager delegate) {
+            return new TransformRPMFallBack(delegate);
         }
 
         @Override
-        public Class<? extends WrappedRepaintManager> getWrappedRepaintManagerClass() {
-            return TransformRPMFallBack.class;
-        }
-
-        @Override
-        public boolean isAdequate(final Class<? extends RepaintManager> manager) {
-            return manager.isAnnotationPresent(TransformRPMAnnotation.class);
+        public boolean isAdequate(final RepaintManager manager) {
+            return manager.getClass().isAnnotationPresent(TransformRPMAnnotation.class);
         }
     };
     private final Map<RenderingHints.Key, Object> renderingHints = new HashMap<>();
@@ -177,7 +166,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
     }
 
     private void revalidateLayer() {
-        JXLayer<? extends JComponent> installedLayer = this.getInstalledLayer();
+        JLayer<? extends JComponent> installedLayer = this.getInstalledLayer();
         if (installedLayer != null) {
             installedLayer.revalidate();
             installedLayer.repaint();
@@ -186,8 +175,8 @@ public class TransformUI extends MouseEventUI<JComponent> {
 
     /**
      * {@link JTextComponent} and its descendants have some caret position problems when used inside a
-     * transformed {@link JXLayer}. When you plan to use {@link JTextComponent}(s) inside the hierarchy
-     * of a transformed {@link JXLayer}, call this method in an early stage, before instantiating any
+     * transformed {@link JLayer}. When you plan to use {@link JTextComponent}(s) inside the hierarchy
+     * of a transformed {@link JLayer}, call this method in an early stage, before instantiating any
      * {@link JTextComponent}.
      * <p>
      * It executes the following method:
@@ -263,10 +252,10 @@ public class TransformUI extends MouseEventUI<JComponent> {
      * set. Otherwise {@code null} will be returned.
      *
      * @param size a {@link Dimension} instance to be used for an anchor or {@code null}
-     * @param layer the {@link JXLayer}.
+     * @param layer the {@link JLayer}.
      * @return a {@link AffineTransform} instance or {@code null}
      */
-    public AffineTransform getPreferredTransform(final Dimension size, final JXLayer<? extends JComponent> layer) {
+    public AffineTransform getPreferredTransform(final Dimension size, final JLayer<? extends JComponent> layer) {
         return this.transformModel != null ? this.transformModel.getPreferredTransform(size, layer)
                 : new AffineTransform();
     }
@@ -280,10 +269,10 @@ public class TransformUI extends MouseEventUI<JComponent> {
     @Override
     public void installUI(final JComponent component) {
         super.installUI(component);
-        JXLayer<? extends JComponent> installedLayer = this.getInstalledLayer();
+        JLayer<? extends JComponent> installedLayer = this.getInstalledLayer();
         originalLayout = installedLayer.getLayout();
         installedLayer.addPropertyChangeListener(KEY_VIEW, this.viewChangeListener);
-        installedLayer.setLayout(transformLayout);
+        setLayoutManager(transformLayout);
         setView(installedLayer.getView());
         if (!delegatePossible) {
             RepaintManagerUtils.ensureRepaintManagerSet(installedLayer, rpmProvider);
@@ -297,7 +286,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
      */
     @Override
     public void uninstallUI(final JComponent c) {
-        JXLayer<? extends JComponent> installedLayer = this.getInstalledLayer();
+        JLayer<? extends JComponent> installedLayer = this.getInstalledLayer();
         Objects.requireNonNull(installedLayer)
                 .removePropertyChangeListener(KEY_VIEW, this.viewChangeListener);
         installedLayer.setLayout(originalLayout);
@@ -309,8 +298,8 @@ public class TransformUI extends MouseEventUI<JComponent> {
         if (delegatePossible) {
             if (this.view != null) {
                 try {
-                    setDelegateRepaintManagerMethod.invoke(null, this.view, null);
-                } catch (IllegalAccessException | InvocationTargetException ignored) {
+                    setDelegateRepaintManagerMethod.invokeExact(this.view, null);
+                } catch (Throwable ignored) {
                 }
             }
         }
@@ -318,8 +307,8 @@ public class TransformUI extends MouseEventUI<JComponent> {
         if (delegatePossible) {
             if (this.view != null) {
                 try {
-                    setDelegateRepaintManagerMethod.invoke(null, this.view, wrappedManager);
-                } catch (IllegalAccessException | InvocationTargetException ignored) {
+                    setDelegateRepaintManagerMethod.invokeExact(this.view, wrappedManager);
+                } catch (Throwable ignored) {
                 }
             }
         }
@@ -345,7 +334,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
      * @param layer the layer
      * @return the argument rectangle if no {@link AffineTransform} is available, else a new rectangle
      */
-    public final Rectangle transform(final Rectangle rect, final JXLayer<? extends JComponent> layer) {
+    public final Rectangle transform(final Rectangle rect, final JLayer<? extends JComponent> layer) {
         AffineTransform at = getTransform(layer);
         if (at == null) {
             return rect;
@@ -359,22 +348,11 @@ public class TransformUI extends MouseEventUI<JComponent> {
     /**
      * Mark {@link TransformUI} as dirty if the LookAndFeel was changed.
      *
-     * @param layer the {@link JXLayer} this {@link TransformUI} is set to
+     * @param layer the {@link JLayer} this {@link TransformUI} is set to
      */
     @Override
-    public void updateUI(final JXLayer<? extends JComponent> layer) {
+    public void updateUI(final JLayer<? extends JComponent> layer) {
         setDirty(true);
-    }
-
-    /*
-     * Get the most suitable background color.
-     */
-    private Color getBackgroundColor(final JXLayer<? extends JComponent> layer) {
-        Container colorProvider = layer.getView() == null ? layer : layer.getView();
-        while (colorProvider != null && !colorProvider.isOpaque()) {
-            colorProvider = colorProvider.getParent();
-        }
-        return colorProvider == null ? SystemColor.desktop : colorProvider.getBackground();
     }
 
     /**
@@ -400,12 +378,12 @@ public class TransformUI extends MouseEventUI<JComponent> {
     }
 
     /**
-     * If the view of the {@link JXLayer} is (partly) obscured by its parent (this is the case when the
-     * size of the view (in component space) is larger than the size of the {@link JXLayer}), the
+     * If the view of the {@link JLayer} is (partly) obscured by its parent (this is the case when the
+     * size of the view (in component space) is larger than the size of the {@link JLayer}), the
      * obscured parts will not be painted by the super implementation. Therefore, only under this
      * condition, a special painting technique is executed:
      * <ol>
-     * <li>All descendants of the {@link JXLayer} are temporarily set to non double buffered.
+     * <li>All descendants of the {@link JLayer} are temporarily set to non double buffered.
      * <li>The graphics object is translated for the X and Y coordinates of the view.
      * <li>The view is painted.
      * <li>The original double buffered property is restored for all descendants.
@@ -418,7 +396,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
      * @see #paint(Graphics, JComponent)
      */
     @Override
-    protected final void paintLayer(final Graphics2D g2, final JXLayer<? extends JComponent> layer) {
+    protected final void paintLayer(final Graphics2D g2, final JLayer<? extends JComponent> layer) {
         JComponent view = layer.getView();
         if (view != null) {
             if (view.getX() < 0 || view.getY() < 0) {
@@ -442,7 +420,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
      * set. Otherwise {@code null} will be returned.
      */
     @Override
-    protected final AffineTransform getTransform(final JXLayer<? extends JComponent> layer) {
+    protected final AffineTransform getTransform(final JLayer<? extends JComponent> layer) {
         return transformModel != null ? transformModel.getTransform(layer)
                 : new AffineTransform();
     }
@@ -456,39 +434,39 @@ public class TransformUI extends MouseEventUI<JComponent> {
      * @see #addRenderingHint(RenderingHints.Key, Object)
      */
     @Override
-    protected Map<RenderingHints.Key, Object> getRenderingHints(final JXLayer<? extends JComponent> layer) {
+    protected Map<RenderingHints.Key, Object> getRenderingHints(final JLayer<? extends JComponent> layer) {
         return renderingHints;
     }
 
     /**
-     * A delegate {@link RepaintManager} that can be set on the view of a {@link JXLayer} in Java
+     * A delegate {@link RepaintManager} that can be set on the view of a {@link JLayer} in Java
      * versions starting with Java 6u10.
      * <p>
      * For older Java versions, {@link RepaintManager#setCurrentManager(RepaintManager)} will be used
-     * with either {@link TransformRPMFallBack} or {@link TransformRPMSwingX}.
+     * with {@link TransformRPMFallBack}.
      */
     protected static final class TransformRepaintManager extends RepaintManager {
 
         private TransformRepaintManager() {}
 
         /**
-         * Finds the JXLayer ancestor and have ancestor marked invalid via the current
+         * Finds the JLayer ancestor and have ancestor marked invalid via the current
          * {@link RepaintManager}.
          */
         @Override
         public void addInvalidComponent(final JComponent invalidComponent) {
-            JXLayer<? extends JComponent> layer = findJXLayer(invalidComponent);
+            JLayer<? extends JComponent> layer = TransformUtils.findTransformJLayer(invalidComponent);
             RepaintManager.currentManager(layer).addInvalidComponent(layer);
         }
 
         /**
-         * Finds the JXLayer ancestor and have the ancestor marked as dirty with the transformed rectangle
+         * Finds the JLayer ancestor and have the ancestor marked as dirty with the transformed rectangle
          * via the current {@link RepaintManager}.
          */
         @Override
         public void addDirtyRegion(final JComponent c, final int x, final int y, final int w, final int h) {
             if (c.isShowing()) {
-                JXLayer<? extends JComponent> layer = findJXLayer(c);
+                JLayer<? extends JComponent> layer = Objects.requireNonNull(TransformUtils.findTransformJLayer(c));
                 TransformUI ui = (TransformUI) layer.getUI();
                 Point point = c.getLocationOnScreen();
                 SwingUtilities.convertPointFromScreen(point, layer);
@@ -500,26 +478,6 @@ public class TransformUI extends MouseEventUI<JComponent> {
                         transformPortRegion.width,
                         transformPortRegion.height);
             }
-        }
-
-        /**
-         * Find the ancestor {@link JXLayer} instance.
-         *
-         * @param c a component
-         * @return the ancestor {@link JXLayer} instance
-         */
-        @SuppressWarnings("unchecked")
-        private JXLayer<? extends JComponent> findJXLayer(final JComponent c) {
-            JXLayer<?> layer = (JXLayer<?>) SwingUtilities.getAncestorOfClass(JXLayer.class, c);
-            if (layer != null) {
-                LayerUI<?> layerUI = layer.getUI();
-                if (layerUI instanceof TransformUI) {
-                    return (JXLayer<? extends JComponent>) layer;
-                } else {
-                    return findJXLayer(layer);
-                }
-            }
-            throw new Error("No parent JXLayer with TransformUI found");
         }
     }
 }

@@ -30,15 +30,15 @@
  */
 package org.pbjar.jxlayer.plaf.ext.transform;
 
-import org.jdesktop.jxlayer.JXLayer;
 import org.pbjar.jxlayer.plaf.ext.TransformUI;
 
 import javax.swing.*;
+import javax.swing.plaf.LayerUI;
 import java.awt.*;
 import java.util.Map;
 
 /**
- * Some convenience methods to create a populated transforming {@link JXLayer}.
+ * Some convenience methods to create a populated transforming {@link JLayer}.
  *
  * @author Piet Blok
  */
@@ -47,64 +47,83 @@ public final class TransformUtils {
     private TransformUtils() {}
 
     /**
-     * Create a Transform JXLayer.
+     * Create a Transform JLayer.
      *
      * @param  component the component.
-     * @return           the JXLayer.
+     * @return           the JLayer.
      */
-    public static JXLayer<JComponent> createTransformJXLayer(final JComponent component) {
-        return createTransformJXLayer(component, 1.0, null);
+    public static JLayer<JComponent> createTransformJLayer(final JComponent component) {
+        return createTransformJLayer(component, 1.0, null);
     }
 
     /**
-     * Create a Transform JXLayer.
+     * Create a Transform JLayer.
      *
      * @param  component the component.
      * @param  scale     the scaling
      * @param  hints     the rendering hints.
-     * @return           the JXLayer.
+     * @return           the JLayer.
      */
-    public static JXLayer<JComponent> createTransformJXLayer(final JComponent component, final double scale,
-                                                             final Map<RenderingHints.Key, Object> hints) {
+    public static JLayer<JComponent> createTransformJLayer(final JComponent component, final double scale,
+                                                           final Map<RenderingHints.Key, Object> hints) {
         DefaultTransformModel model = new DefaultTransformModel();
         model.setScale(scale);
-        return createTransformJXLayer(component, model, hints);
+        return createTransformJLayer(component, model, hints);
     }
 
     /**
-     * Create a Transform JXLayer.
+     * Create a Transform JLayer.
      *
      * @param  component the component.
      * @param  model     the transform model.
      * @param  hints     the rendering hints.
-     * @return           the JXLayer.
+     * @return           the JLayer.
      */
-    public static JXLayer<JComponent> createTransformJXLayer(final JComponent component, final TransformModel model,
-                                                             final Map<RenderingHints.Key, Object> hints) {
+    public static JLayer<JComponent> createTransformJLayer(final JComponent component, final TransformModel model,
+                                                           final Map<RenderingHints.Key, Object> hints) {
         TransformUI ui = new TransformUI(model);
         ui.setRenderingHints(hints);
-        return new JXLayer<>(component, ui);
+        return new JLayer<>(component, ui);
     }
 
     /**
-     * Create a Transform JXLayer.
+     * Create a Transform JLayer.
      *
      * @param  component the component.
      * @param  scale     the scaling
-     * @return           the JXLayer.
+     * @return           the JLayer.
      */
-    public static JXLayer<JComponent> createTransformJXLayer(final JComponent component, final double scale) {
-        return createTransformJXLayer(component, scale, null);
+    public static JLayer<JComponent> createTransformJLayer(final JComponent component, final double scale) {
+        return createTransformJLayer(component, scale, null);
     }
 
     /**
-     * Create a Transform JXLayer.
+     * Create a Transform JLayer.
      *
      * @param  component the component.
      * @param  model     the transform model.
-     * @return           the JXLayer.
+     * @return           the JLayer.
      */
-    public static JXLayer<JComponent> createTransformJXLayer(final JComponent component, final TransformModel model) {
-        return createTransformJXLayer(component, model, null);
+    public static JLayer<JComponent> createTransformJLayer(final JComponent component, final TransformModel model) {
+        return createTransformJLayer(component, model, null);
+    }
+
+    /**
+     * Find the first ancestor {@link JLayer} with an enabled {@link TransformUI}.
+     *
+     * @param aComponent some component
+     * @return a {@link JLayer} instance or {@code null}
+     */
+    @SuppressWarnings("unchecked")
+    public static JLayer<? extends JComponent> findTransformJLayer(final JComponent aComponent) {
+        JLayer<?> layer = (JLayer<?>) SwingUtilities.getAncestorOfClass(JLayer.class, aComponent);
+        if (layer != null) {
+            LayerUI<?> ui = ((JLayer<?>) layer).getUI();
+            if (ui instanceof TransformUI) {
+                return (JLayer<? extends JComponent>) layer;
+            }
+            return findTransformJLayer(layer);
+        }
+        return null;
     }
 }

@@ -31,13 +31,12 @@ package org.pbjar.jxlayer.plaf.ext.transform;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import javax.swing.JLayer;
 import java.awt.*;
 import java.io.Serializable;
 
-import org.jdesktop.jxlayer.JXLayer;
-
 /**
- * A copy of the private static inner class in JXLayer.
+ * A copy of the private static inner class in JLayer.
  *
  * @author Piet Blok
  */
@@ -56,7 +55,7 @@ public class DefaultLayerLayout implements LayoutManager, Serializable {
      * {@inheritDoc}
      */
     public Dimension preferredLayoutSize(final Container parent) {
-        JXLayer<?> layer = (JXLayer<?>) parent;
+        JLayer<?> layer = (JLayer<?>) parent;
         Insets insets = layer.getInsets();
         Dimension ret = new Dimension(insets.left + insets.right, insets.top + insets.bottom);
         Component view = layer.getView();
@@ -74,7 +73,7 @@ public class DefaultLayerLayout implements LayoutManager, Serializable {
      * {@inheritDoc}
      */
     public Dimension minimumLayoutSize(final Container parent) {
-        JXLayer<?> layer = (JXLayer<?>) parent;
+        JLayer<?> layer = (JLayer<?>) parent;
         Insets insets = layer.getInsets();
         Dimension ret = new Dimension(insets.left + insets.right, insets.top + insets.bottom);
         Component view = layer.getView();
@@ -94,7 +93,7 @@ public class DefaultLayerLayout implements LayoutManager, Serializable {
      * {@inheritDoc}
      */
     public void layoutContainer(final Container parent) {
-        JXLayer<?> layer = (JXLayer<?>) parent;
+        JLayer<?> layer = (JLayer<?>) parent;
         Component view = layer.getView();
         Component glassPane = layer.getGlassPane();
         if (view != null) {

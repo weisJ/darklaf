@@ -1,32 +1,20 @@
 /*
- * Copyright (c) 2009, Piet Blok
- * All rights reserved.
- * <p>
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * <p>
- * Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- * Redistributions in binary form must reproduce the above
- * copyright notice, this list of conditions and the following
- * disclaimer in the documentation and/or other materials provided
- * with the distribution.
- * Neither the name of the copyright holder nor the names of the
- * contributors may be used to endorse or promote products derived
- * from this software without specific prior written permission.
- * <p>
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Copyright (c) 2009, Piet Blok All rights reserved. <p> Redistribution and use in source and
+ * binary forms, with or without modification, are permitted provided that the following conditions
+ * are met: <p> Redistributions of source code must retain the above copyright notice, this list of
+ * conditions and the following disclaimer. Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution. Neither the name of the copyright holder
+ * nor the names of the contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission. <p> THIS SOFTWARE IS PROVIDED BY THE
+ * COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+ * NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+ * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.pbjar.jxlayer.repaint;
 
@@ -34,13 +22,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.logging.Logger;
 
 import javax.swing.*;
-
-import org.jdesktop.swingx.ForwardingRepaintManager;
-
-import com.github.weisj.darklaf.util.LogUtil;
 
 /**
  * Utility class that ensures that a correct {@link RepaintManager} is set.
@@ -49,17 +32,11 @@ import com.github.weisj.darklaf.util.LogUtil;
  */
 public final class RepaintManagerUtils {
 
-    private static final Logger LOGGER = LogUtil.getDetachedLogger(RepaintManagerUtils.class);
-    /**
-     * Indicates the availability of SwingX on the class path.
-     */
-    private static final boolean swingX = isSwingXAvailable();
-
     private RepaintManagerUtils() {}
 
     /**
-     * Create and return an {@link Action} that will display the delegate structure of the current {@link
-     * RepaintManager}.
+     * Create and return an {@link Action} that will display the delegate structure of the current
+     * {@link RepaintManager}.
      *
      * @return an {@link Action} object
      */
@@ -68,21 +45,11 @@ public final class RepaintManagerUtils {
     }
 
     /**
-     * Ensure that a specific {@link RepaintManager} is set according to the requirements of the {@link
-     * RepaintManagerProvider}.
-     *
-     * @param c        a component from which the current repaint manager can be obtained.
-     * @param provider the provider
-     */
-    public static void ensureRepaintManagerSet(final Component c, final RepaintManagerProvider provider) {
-        ensureImpl(RepaintManager.currentManager(c), provider);
-    }
-
-    /**
      * The actual implementation of ensure.
      *
      * @param delegate a delegate RepaintManager
-     * @param provider the provider that provides for the type and implementation of a delegated RepaintManager
+     * @param provider the provider that provides for the type and implementation of a delegated
+     *        RepaintManager
      */
     private static void ensureImpl(final RepaintManager delegate, final RepaintManagerProvider provider) {
         /*
@@ -90,60 +57,25 @@ public final class RepaintManagerUtils {
          */
         RepaintManager manager = delegate;
 
-        while (!provider.isAdequate(manager.getClass())) {
-            if (swingX) {
-                if (manager instanceof ForwardingRepaintManager) {
-                    manager = ((ForwardingRepaintManager) manager).getDelegateManager();
-                } else {
-                    RepaintManager.setCurrentManager(createManager(provider.getForwardingRepaintManagerClass(),
-                                                                   delegate));
-                    break;
-                }
+        while (!provider.isAdequate(manager)) {
+            if (manager instanceof WrappedRepaintManager) {
+                manager = ((WrappedRepaintManager) manager).getDelegateManager();
             } else {
-                if (manager instanceof WrappedRepaintManager) {
-                    manager = ((WrappedRepaintManager) manager).getDelegateManager();
-                } else {
-                    RepaintManager.setCurrentManager(createManager(provider.getWrappedRepaintManagerClass(), delegate));
-                    break;
-                }
+                RepaintManager.setCurrentManager(provider.createWrappedRepaintManager(delegate));
+                break;
             }
         }
     }
 
-    private static RepaintManager createManager(final Class<? extends RepaintManager> clazz,
-                                                final RepaintManager delegate) {
-        try {
-            return clazz.getConstructor(RepaintManager.class).newInstance(delegate);
-        } catch (Throwable t) {
-            throw new RuntimeException("Cannot instantiate " + clazz.getName(), t);
-        }
-    }
-
     /**
-     * Ensure that a specific {@link RepaintManager} is set according to the requirements of the {@link
-     * RepaintManagerProvider}.
+     * Ensure that a specific {@link RepaintManager} is set according to the requirements of the
+     * {@link RepaintManagerProvider}.
      *
-     * @param c        a component from which the current repaint manager can be obtained.
+     * @param c a component from which the current repaint manager can be obtained.
      * @param provider the provider
      */
     public static void ensureRepaintManagerSet(final JComponent c, final RepaintManagerProvider provider) {
         ensureImpl(RepaintManager.currentManager(c), provider);
-    }
-
-    /**
-     * Detect the availability of the ForwardingRepaintManager class.
-     *
-     * @return {@code} true if available, {@code false} otherwise
-     */
-    private static boolean isSwingXAvailable() {
-        try {
-            Class<?> clazz = ForwardingRepaintManager.class;
-            LOGGER.info("SwingX is available");
-            return clazz != null;
-        } catch (Throwable t) {
-            LOGGER.info("SwingX is not available");
-            return false;
-        }
     }
 
     private static class DisplayAction extends AbstractAction {
@@ -186,12 +118,6 @@ public final class RepaintManagerUtils {
             RepaintManager delegate;
             if (rp instanceof WrappedRepaintManager) {
                 delegate = ((WrappedRepaintManager) rp).getDelegateManager();
-            } else if (swingX) {
-                if (rp instanceof ForwardingRepaintManager) {
-                    delegate = ((ForwardingRepaintManager) rp).getDelegateManager();
-                } else {
-                    delegate = null;
-                }
             } else {
                 delegate = null;
             }

@@ -26,12 +26,11 @@ import java.awt.geom.AffineTransform;
 
 import javax.swing.*;
 
-import org.jdesktop.jxlayer.JXLayer;
 import org.pbjar.jxlayer.plaf.ext.TransformUI;
 
 public final class SwingXUtil {
 
-    public static <T extends JComponent> Point convertPointToParent(final Component source, final JXLayer<T> layer,
+    public static <T extends JComponent> Point convertPointToParent(final Component source, final JLayer<T> layer,
             final Point p) {
         if (layer != null && layer.getUI() instanceof TransformUI) {
             TransformUI ui = (TransformUI) layer.getUI();

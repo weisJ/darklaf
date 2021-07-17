@@ -26,7 +26,6 @@ import java.awt.geom.AffineTransform;
 
 import javax.swing.*;
 
-import org.jdesktop.jxlayer.JXLayer;
 import org.pbjar.jxlayer.plaf.ext.TransformUI;
 
 import com.github.weisj.darklaf.util.DarkUIUtil;
@@ -52,7 +51,7 @@ public class JXPopupMenu extends JPopupMenu {
     public void show(final Component invoker, final int x, final int y) {
         Point p = new Point(x, y);
         if (invoker != null) {
-            JXLayer<? extends JComponent> layer = DarkUIUtil.getParentOfType(JXLayer.class, invoker);
+            JLayer<? extends JComponent> layer = DarkUIUtil.getParentOfType(JLayer.class, invoker);
             if (layer != null && layer.getUI() instanceof TransformUI) {
                 TransformUI ui = (TransformUI) layer.getUI();
                 p = SwingUtilities.convertPoint(invoker, p, layer);
