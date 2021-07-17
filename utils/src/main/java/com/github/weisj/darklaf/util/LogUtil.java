@@ -48,6 +48,8 @@ public final class LogUtil {
     public static Logger getDetachedLogger(final Class<?> clazz) {
         Logger logger = getLogger(clazz);
         logger.setParent(PARENT);
+        logger.setUseParentHandlers(false);
+        logger.addHandler(LOG_HANDLER);
         return logger;
     }
 
