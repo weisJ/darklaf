@@ -64,7 +64,7 @@ public final class IconColorMapper {
         try {
             loadColors(diagram, defaults, contextDefaults);
         } catch (final SVGElementException e) {
-            LOGGER.log(Level.SEVERE, "Failed patching colors. " + e.getMessage(), e.getStackTrace());
+            LOGGER.log(Level.SEVERE, "Failed patching colors. " + e.getMessage(), e);
         }
     }
 
@@ -121,15 +121,24 @@ public final class IconColorMapper {
                 }
 
                 Color c = resolveColor(id, getFallbacks(colorFallbacks), FALLBACK_COLOR, defaults, contextDefaults);
-                Pair<LinearGradient, Runnable> result =
+                float finalOpacity1 = opacity1;
+                float finalOpacity2 = opacity2;
+                LOGGER.finest(() -> "Color: " + c + " opacity1: " + finalOpacity1 + " opacity2: " + finalOpacity2);
+                ColorResult result =
                         createColor(c, id, opacityKey, new StyleAttribute[] {colorFallbacks, opacityFallbacks},
-                                opacity1, opacity2);
-                LinearGradient gradient = result.getFirst();
-                Runnable finalizer = result.getSecond();
-                themedDefs.loaderAddChild(null, gradient);
-                finalizer.run();
+                                finalOpacity2, opacity2);
+                themedDefs.loaderAddChild(null, result.gradient);
+                result.finalizer.run();
+                int resultRGB = result.gradient.getStopColors()[0].getRGB();
+                int expectedRGB = result.color.getRGB();
+                if (expectedRGB != resultRGB) {
+                    throw new IllegalStateException("Color not applied. Expected " + result.color + " but received "
+                            + result.gradient.getStopColors()[0] + " (rgb " + expectedRGB + " != " + resultRGB + ")");
+                }
+                LOGGER.finest(() -> Arrays.toString(result.gradient.getStopColors()));
             }
         }
+        LOGGER.fine("Patching done");
     }
 
     public static float getOpacity(final LinearGradient gradient, final Map<Object, Object> propertyMap,
@@ -215,7 +224,19 @@ public final class IconColorMapper {
         return attribute.getStringValue();
     }
 
-    private static Pair<LinearGradient, Runnable> createColor(final Color c, final String name, final String opacityKey,
+    private static class ColorResult {
+        private final LinearGradient gradient;
+        private final Runnable finalizer;
+        private final Color color;
+
+        private ColorResult(LinearGradient gradient, Runnable finalizer, Color color) {
+            this.gradient = gradient;
+            this.finalizer = finalizer;
+            this.color = color;
+        }
+    }
+
+    private static ColorResult createColor(final Color c, final String name, final String opacityKey,
             final StyleAttribute[] extraAttributes, final float opacity1, final float opacity2)
             throws SVGElementException {
         LinearGradient grad = new LinearGradient();
@@ -230,10 +251,10 @@ public final class IconColorMapper {
                 }
             }
         }
-        return new Pair<>(grad, () -> {
-            Stop stop1 = new Stop();
-            Stop stop2 = new Stop();
+        return new ColorResult(grad, () -> {
             String color = toHexString(c);
+            BuildableStop stop1 = new BuildableStop(color);
+            BuildableStop stop2 = new BuildableStop(color);
             try {
                 stop1.addAttribute("stop-color", AnimationElement.AT_XML, color);
                 stop1.addAttribute("offset", AnimationElement.AT_XML, "0");
@@ -247,10 +268,35 @@ public final class IconColorMapper {
                 }
                 grad.loaderAddChild(null, stop1);
                 grad.loaderAddChild(null, stop2);
+                stop1.build();
+                stop2.build();
             } catch (final SVGException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
-        });
+        }, ColorUtil.toAlpha(c, opacity1));
+    }
+
+    private static class BuildableStop extends Stop {
+
+        private final String color;
+
+        private BuildableStop(final String color) {
+            this.color = color;
+        }
+
+        @Override
+        public boolean getStyle(StyleAttribute attrib, boolean recursive, boolean evalAnimation) throws SVGException {
+            if ("stop-color".equals(attrib.getName())) {
+                attrib.setStringValue(color);
+                return true;
+            }
+            return super.getStyle(attrib, recursive, evalAnimation);
+        }
+
+        @Override
+        protected void build() throws SVGException {
+            super.build();
+        }
     }
 
     public static Map<Object, Object> getProperties(final SVGIcon svgIcon) {

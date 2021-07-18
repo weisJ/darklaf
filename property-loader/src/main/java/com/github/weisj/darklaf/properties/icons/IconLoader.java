@@ -385,10 +385,15 @@ public final class IconLoader {
     private Supplier<URI> createURISupplier(final String path) {
         return () -> {
             try {
-                return Objects.requireNonNull(getResource(path).toURI());
+                URL url = getResource(path);
+                if (url.getPath().startsWith("file:///")) {
+                    return new URI(url.toString().replace("file:///", "file:/"));
+                } else {
+                    return Objects.requireNonNull(url.toURI());
+                }
             } catch (NullPointerException | URISyntaxException e) {
-                LOGGER.log(Level.SEVERE, "Exception while loading '" + path + "'" + ". Resolving from " + parentClass,
-                        e.getStackTrace());
+                LOGGER.log(Level.SEVERE,
+                        "Exception while loading '" + path + "'" + ". Resolving from " + parentClass, e);
             }
             return null;
         };
