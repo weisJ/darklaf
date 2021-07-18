@@ -41,6 +41,10 @@ fun JavaForkOptions.patchTestExecParams() {
     val patchFiles = sourceSets.test.get().output.classesDirs +
         sourceSets.test.get().resources.sourceDirectories +
         sourceSets.main.get().resources.sourceDirectories
+    val resourceDir = sourceSets.test.get().resources.sourceDirectories.singleFile
+    val testPackages = sourceSets.test.get().resources.asSequence().map { it.parentFile }.toSet().asSequence().map {
+        it.relativeTo(resourceDir).toPath().joinToString(separator = ".")
+    }.filter { it.isNotEmpty() }
     jvmArgs(
         "--module-path", (sourceSets.test.get().runtimeClasspath - patchFiles).asPath,
         "--patch-module", "darklaf.core=${patchFiles.asPath}",
@@ -55,6 +59,11 @@ fun JavaForkOptions.patchTestExecParams() {
     jvmArgs(
         "--add-opens", "darklaf.core/com.github.weisj.darklaf.core.test=org.junit.platform.commons"
     )
+    testPackages.forEach {
+        jvmArgs(
+            "--add-opens", "darklaf.core/$it=darklaf.properties"
+        )
+    }
 }
 
 tasks.test {
