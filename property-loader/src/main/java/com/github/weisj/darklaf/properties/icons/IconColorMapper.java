@@ -44,7 +44,7 @@ import com.kitfox.svg.xml.StyleAttribute;
 
 /** @author Jannis Weis */
 public final class IconColorMapper {
-    private static final String INLINE_VALUE_PREFIX = "#";
+    private static final String INLINE_VALUE_PREFIX = "%";
     private static final Logger LOGGER = LogUtil.getLogger(IconLoader.class);
     private static final Color FALLBACK_COLOR = Color.RED;
 
@@ -129,8 +129,8 @@ public final class IconColorMapper {
                                 finalOpacity2, opacity2);
                 themedDefs.loaderAddChild(null, result.gradient);
                 result.finalizer.run();
-                int resultRGB = result.gradient.getStopColors()[0].getRGB();
-                int expectedRGB = result.color.getRGB();
+                int resultRGB = ColorUtil.rgbNoAlpha(result.gradient.getStopColors()[0]);
+                int expectedRGB = ColorUtil.rgbNoAlpha(result.color);
                 if (expectedRGB != resultRGB) {
                     throw new IllegalStateException("Color not applied. Expected " + result.color + " but received "
                             + result.gradient.getStopColors()[0] + " (rgb " + expectedRGB + " != " + resultRGB + ")");

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
     <defs id="colors">
-        <linearGradient id="menuIconEnabled" fallback="Label.foreground" opacity="navigationIconOpacity" opacity-fallback="#100">
+        <linearGradient id="menuIconEnabled" fallback="Label.foreground" opacity="navigationIconOpacity" opacity-fallback="%100">
             <stop offset="0" stop-color="#7F8B91" stop-opacity=".5"/>
             <stop offset="1" stop-color="#7F8B91" stop-opacity=".5"/>
         </linearGradient>

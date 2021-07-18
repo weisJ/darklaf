@@ -115,6 +115,13 @@ public final class ColorUtil {
         return toAlpha(color, 255);
     }
 
+    public static int rgbNoAlpha(final Color color) {
+        return ((0) << 24) |
+               ((color.getRed() & 0xFF) << 16) |
+               ((color.getGreen() & 0xFF) << 8) |
+               ((color.getBlue() & 0xFF));
+    }
+
     /**
      * Calculate the perceived brightness of a color.
      *

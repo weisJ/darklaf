@@ -4,7 +4,7 @@
             <stop offset="0" stop-color="#AFB1B3"/>
             <stop offset="1" stop-color="#AFB1B3"/>
         </linearGradient>
-        <linearGradient id="informationIconColor" fallback="#0000FF">
+        <linearGradient id="informationIconColor" fallback="%#0000FF">
             <stop offset="0" stop-color="#3592C4"/>
             <stop offset="1" stop-color="#3592C4"/>
         </linearGradient>
