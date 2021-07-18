@@ -43,6 +43,7 @@ public class DarkLaf extends ThemedLookAndFeel {
     public static final String SYSTEM_PROPERTY_PREFIX = "darklaf.";
     public static final String ALLOW_NATIVE_CODE_FLAG = DarkLaf.SYSTEM_PROPERTY_PREFIX + "allowNativeCode";
     private static final Logger LOGGER = LogUtil.getLogger(DarkLaf.class);
+
     /*
      * All tasks for initializing the ui defaults in order of execution.
      */
@@ -100,7 +101,7 @@ public class DarkLaf extends ThemedLookAndFeel {
                     UIManager.setLookAndFeel(systemLafClassName);
                     baseLaf = currentOrFallback(UIManager.getLookAndFeel());
                 } catch (final Exception e) {
-                    LOGGER.log(Level.SEVERE, e.getMessage(), e.getStackTrace());
+                    LOGGER.log(Level.SEVERE, e.getMessage(), e);
                     throw new IllegalStateException("Could not load base LaF class." + e.getMessage());
                 }
             }

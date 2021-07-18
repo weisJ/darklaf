@@ -132,7 +132,7 @@ import com.github.weisj.darklaf.util.SystemInfo;
 public class TransformUI extends MouseEventUI<JComponent> {
 
     public static final String BUFFERED_REPAINT_FLAG = "darklaf.useBufferedRepaintManager";
-    private static final String EXPORTS_FLAG = "--add-exports java.desktop/com.sun.java.swing=ALL-UNNAMED";
+    private static final String EXPORTS_FLAG = "--add-exports java.desktop/com.sun.java.swing=darklaf.core";
     private static final LayoutManager transformLayout = new TransformLayout();
     private static final String KEY_VIEW = "view";
     private static final boolean delegatePossible;

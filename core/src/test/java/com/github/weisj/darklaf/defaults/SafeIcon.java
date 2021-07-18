@@ -44,9 +44,9 @@ import javax.swing.*;
  * http://tips4java.wordpress.com/2008/12/18/icon-table-cell-renderer
  *
  * <p>
- * The base idea is to instantiate a component of the type expected by the com.github.weisj.icon,
- * let it paint into the graphics of a bufferedImage and create an ImageIcon from it. In subsequent
- * calls the ImageIcon is used.
+ * The base idea is to instantiate a component of the type expected by the icon, let it paint into
+ * the graphics of a bufferedImage and create an ImageIcon from it. In subsequent calls the
+ * ImageIcon is used.
  */
 final class SafeIcon implements Icon {
     private final Icon wrappee;

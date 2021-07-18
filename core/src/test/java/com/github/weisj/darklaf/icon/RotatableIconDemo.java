@@ -33,7 +33,6 @@ import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.DemoResources;
 import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.Pair;
 
 public class RotatableIconDemo implements ComponentDemo {
 
@@ -96,7 +95,7 @@ public class RotatableIconDemo implements ComponentDemo {
         controls = panel.addControls(new BorderLayout());
 
         AtomicReference<Icon> nextIcon = new AtomicReference<>(rotateIcon.getIcon());
-        JList<Pair<String, ? extends Icon>> list = AllIcons.createIconJList(size);
+        JList<AllIcons.NamedIcon<? extends Icon>> list = AllIcons.createIconJList(size);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.addListSelectionListener(e -> nextIcon.set(list.getSelectedValue().getSecond()));
         controls.add(new OverlayScrollPane(list));

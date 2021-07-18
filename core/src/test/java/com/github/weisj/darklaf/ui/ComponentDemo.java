@@ -120,7 +120,10 @@ public interface ComponentDemo {
 
             window.setVisible(true);
             window.setLocationRelativeTo(null);
-            windowRef.set(window);
+            synchronized (windowRef) {
+                windowRef.set(window);
+                windowRef.notifyAll();
+            }
         });
         return windowRef;
     }

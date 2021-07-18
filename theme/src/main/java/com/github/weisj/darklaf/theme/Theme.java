@@ -33,6 +33,7 @@ import javax.swing.*;
 import javax.swing.text.html.StyleSheet;
 
 import com.github.weisj.darklaf.properties.PropertyLoader;
+import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.theme.info.*;
 import com.github.weisj.darklaf.theme.laf.RenamedTheme;
 import com.github.weisj.darklaf.util.LogUtil;
@@ -123,9 +124,11 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme>, Ser
      *
      * @param properties the properties to load the values into.
      * @param currentDefaults the current ui defaults.
+     * @param iconLoader the icon loader.
      */
-    public void loadDefaults(final Properties properties, final UIDefaults currentDefaults) {
-        PropertyLoader.putProperties(loadPropertyFile("defaults"), properties, currentDefaults);
+    public void loadDefaults(final Properties properties, final UIDefaults currentDefaults,
+            final IconLoader iconLoader) {
+        PropertyLoader.putProperties(loadPropertyFile("defaults"), properties, currentDefaults, iconLoader);
     }
 
     /**
@@ -139,7 +142,8 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme>, Ser
      * @param properties the properties to load the values into.
      * @param currentDefaults the current ui defaults.
      */
-    public void customizeGlobals(final Properties properties, final UIDefaults currentDefaults) {}
+    public void customizeGlobals(final Properties properties, final UIDefaults currentDefaults,
+            final IconLoader iconLoader) {}
 
     /**
      * Customize the icon defaults.
@@ -152,7 +156,8 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme>, Ser
      * @param properties the properties to load the value into.
      * @param currentDefaults the current ui defaults.
      */
-    public void customizeIconTheme(final Properties properties, final UIDefaults currentDefaults) {}
+    public void customizeIconTheme(final Properties properties, final UIDefaults currentDefaults,
+            final IconLoader iconLoader) {}
 
     /**
      * Load the general properties file for the icon themes.
@@ -164,8 +169,10 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme>, Ser
      *
      * @param properties the properties to load the value into.
      * @param currentDefaults the current ui defaults.
+     * @param iconLoader the icon loader.
      */
-    public void loadIconTheme(final Properties properties, final UIDefaults currentDefaults) {
+    public void loadIconTheme(final Properties properties, final UIDefaults currentDefaults,
+            final IconLoader iconLoader) {
         PresetIconRule iconTheme = getPresetIconRule();
         Properties props;
         switch (iconTheme) {
@@ -179,7 +186,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme>, Ser
             default:
                 props = loadPropertyFile("icons");
         }
-        PropertyLoader.putProperties(props, properties, currentDefaults);
+        PropertyLoader.putProperties(props, properties, currentDefaults, iconLoader);
     }
 
     /**
@@ -192,7 +199,8 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme>, Ser
      * @param properties the properties to load the values into.
      * @param currentDefaults the current ui defaults.
      */
-    public void customizePlatformProperties(final Properties properties, final UIDefaults currentDefaults) {}
+    public void customizePlatformProperties(final Properties properties, final UIDefaults currentDefaults,
+            final IconLoader iconLoader) {}
 
     /**
      * Customize the ui defaults.
@@ -204,7 +212,8 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme>, Ser
      * @param properties the properties to load the values into.
      * @param currentDefaults the current ui defaults.
      */
-    public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults) {}
+    public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults,
+            final IconLoader iconLoader) {}
 
     /**
      * The preset icon theme.
@@ -224,10 +233,11 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme>, Ser
      * @param propertySuffix the property suffix.
      * @param properties the properties to load into.
      * @param currentDefaults the current ui defaults.
+     * @param iconLoader the icon loader.
      */
     protected final void loadCustomProperties(final String propertySuffix, final Properties properties,
-            final UIDefaults currentDefaults) {
-        PropertyLoader.putProperties(loadPropertyFile(propertySuffix), properties, currentDefaults);
+            final UIDefaults currentDefaults, final IconLoader iconLoader) {
+        PropertyLoader.putProperties(loadPropertyFile(propertySuffix), properties, currentDefaults, iconLoader);
     }
 
     /**
@@ -269,7 +279,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme>, Ser
             }
             properties.load(stream);
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Could not load " + name + ". " + e.getMessage(), e.getStackTrace());
+            LOGGER.log(Level.SEVERE, "Could not load " + name + ". " + e.getMessage(), e);
         }
         return properties;
     }

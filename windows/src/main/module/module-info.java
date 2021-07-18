@@ -22,7 +22,7 @@
  * SOFTWARE.
  *
  */
-module darklaf.platform.windows {
+open module darklaf.platform.windows {
     requires transitive darklaf.platform.base;
     requires transitive darklaf.theme;
 

@@ -261,6 +261,7 @@ public final class LafManager {
      * @param theme the theme to register.
      */
     public static void registerTheme(final Theme theme) {
+        LOGGER.fine("Registering " + theme);
         registeredThemes.add(theme);
     }
 

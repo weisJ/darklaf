@@ -22,16 +22,28 @@
  * SOFTWARE.
  *
  */
-module darklaf.theme {
+open module darklaf.theme {
     requires transitive java.desktop;
 
-    requires darklaf.annotations;
-    requires com.google.auto.service;
     requires darklaf.utils;
     requires darklaf.properties;
+
+    requires static darklaf.annotations;
+    requires static com.google.auto.service;
 
     exports com.github.weisj.darklaf.theme;
     exports com.github.weisj.darklaf.theme.info;
     exports com.github.weisj.darklaf.theme.event;
     exports com.github.weisj.darklaf.theme.laf;
+
+    uses com.github.weisj.darklaf.theme.laf.SynthesisedThemedLaf.ThemedLafProvider;
+
+    provides com.github.weisj.darklaf.theme.Theme with
+        com.github.weisj.darklaf.theme.IntelliJTheme,
+        com.github.weisj.darklaf.theme.DarculaTheme,
+        com.github.weisj.darklaf.theme.OneDarkTheme,
+        com.github.weisj.darklaf.theme.HighContrastLightTheme,
+        com.github.weisj.darklaf.theme.HighContrastDarkTheme,
+        com.github.weisj.darklaf.theme.SolarizedLightTheme,
+        com.github.weisj.darklaf.theme.SolarizedDarkTheme;
 }

@@ -27,6 +27,7 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.annotations.SynthesiseLaf;
 import com.github.weisj.darklaf.properties.PropertyLoader;
+import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.theme.info.ColorToneRule;
 import com.github.weisj.darklaf.theme.info.ContrastRule;
 import com.github.weisj.darklaf.theme.info.PresetIconRule;
@@ -72,22 +73,25 @@ public class HighContrastDarkTheme extends Theme {
     }
 
     @Override
-    public void loadIconTheme(Properties properties, UIDefaults currentDefaults) {
+    public void loadIconTheme(final Properties properties, final UIDefaults currentDefaults,
+            final IconLoader iconLoader) {
         // First load base theme
-        super.loadIconTheme(properties, currentDefaults);
+        super.loadIconTheme(properties, currentDefaults, iconLoader);
         // Then customize using our own values.
-        PropertyLoader.putProperties(loadPropertyFile("icons"), properties, currentDefaults);
+        PropertyLoader.putProperties(loadPropertyFile("icons"), properties, currentDefaults, iconLoader);
     }
 
     @Override
-    public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults) {
-        super.customizeUIProperties(properties, currentDefaults);
-        loadCustomProperties("ui", properties, currentDefaults);
+    public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults,
+            final IconLoader iconLoader) {
+        super.customizeUIProperties(properties, currentDefaults, iconLoader);
+        loadCustomProperties("ui", properties, currentDefaults, iconLoader);
     }
 
     @Override
-    public void customizePlatformProperties(final Properties properties, final UIDefaults currentDefaults) {
-        super.customizePlatformProperties(properties, currentDefaults);
-        loadCustomProperties("platform", properties, currentDefaults);
+    public void customizePlatformProperties(final Properties properties, final UIDefaults currentDefaults,
+            final IconLoader iconLoader) {
+        super.customizePlatformProperties(properties, currentDefaults, iconLoader);
+        loadCustomProperties("platform", properties, currentDefaults, iconLoader);
     }
 }

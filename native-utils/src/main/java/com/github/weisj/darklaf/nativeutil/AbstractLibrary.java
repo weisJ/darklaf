@@ -59,7 +59,12 @@ public abstract class AbstractLibrary {
         try {
             String path = getLibraryPath();
             if (path != null && !path.isEmpty()) {
-                NativeUtil.loadLibraryFromJarWithExtraResources(getLibraryPath(), getResourcePaths());
+                List<NativeUtil.Resource> resources = getResourcePaths();
+                if (resources == null || resources.isEmpty()) {
+                    NativeUtil.loadLibraryFromJar(getClass(), path);
+                } else {
+                    NativeUtil.loadLibraryFromJarWithExtraResources(getClass(), path, resources);
+                }
                 loaded = true;
                 info("Loaded " + getLibraryName() + ".");
             }

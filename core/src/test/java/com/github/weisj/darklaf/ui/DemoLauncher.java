@@ -29,10 +29,9 @@ import java.util.stream.Collectors;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.DelicateDemo;
-import com.github.weisj.darklaf.util.ClassFinder;
-import com.github.weisj.darklaf.util.Instantiable;
-
+import com.github.weisj.darklaf.core.test.DelicateDemo;
+import com.github.weisj.darklaf.core.test.util.ClassFinder;
+import com.github.weisj.darklaf.core.test.util.Instantiable;
 
 public class DemoLauncher implements ComponentDemo {
 

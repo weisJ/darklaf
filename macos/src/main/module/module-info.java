@@ -22,7 +22,7 @@
  * SOFTWARE.
  *
  */
-module darklaf.platform.macos {
+open module darklaf.platform.macos {
     requires transitive darklaf.platform.base;
     requires transitive darklaf.theme;
 

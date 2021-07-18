@@ -26,6 +26,7 @@ import java.util.Properties;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.annotations.SynthesiseLaf;
+import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.theme.info.ColorToneRule;
 import com.github.weisj.darklaf.theme.info.PresetIconRule;
 import com.google.auto.service.AutoService;
@@ -76,8 +77,9 @@ public class DarculaTheme extends Theme {
     }
 
     @Override
-    public void loadIconTheme(final Properties properties, final UIDefaults currentDefaults) {
-        super.loadIconTheme(properties, currentDefaults);
-        loadCustomProperties("icons", properties, currentDefaults);
+    public void loadIconTheme(final Properties properties, final UIDefaults currentDefaults,
+            final IconLoader iconLoader) {
+        super.loadIconTheme(properties, currentDefaults, iconLoader);
+        loadCustomProperties("icons", properties, currentDefaults, iconLoader);
     }
 }

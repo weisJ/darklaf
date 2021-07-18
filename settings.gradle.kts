@@ -21,6 +21,7 @@ include(
     "native-utils",
     "core",
     "compatibility",
+    "iconset",
     "theme",
     "property-loader",
     "utils",

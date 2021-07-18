@@ -38,6 +38,7 @@ import com.github.weisj.darklaf.properties.PropertyLoader;
 import com.github.weisj.darklaf.properties.uiresource.DarkFontUIResource;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.FontSizeRule;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.FontUtil;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -49,7 +50,7 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     private static final Logger LOGGER = LogUtil.getLogger(FontDefaultsInitTask.class);
     private static final String SWING_AA_KEY = "swing.aatext";
     private static final String SWING_AA_DEFAULT_VALUE = "true";
-    private static final String FONT_PROPERTY_PATH = "properties/";
+    private static final String FONT_PROPERTY_PATH = "";
     private static final String FONT_SIZE_DEFAULTS_NAME = "font_sizes";
     private static final String FONT_DEFAULTS_NAME = "font";
     private static final String KERNING_ALLOW_LIST = "kerning.allowList";
@@ -176,9 +177,9 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     private void loadFontProperties(final UIDefaults defaults) {
         Properties fontSizeProps =
                 PropertyLoader.loadProperties(DarkLaf.class, FONT_SIZE_DEFAULTS_NAME, FONT_PROPERTY_PATH);
-        PropertyLoader.putProperties(fontSizeProps, defaults);
+        PropertyLoader.putProperties(fontSizeProps, defaults, DarkUIUtil.ICON_LOADER);
         Properties fontProps = PropertyLoader.loadProperties(DarkLaf.class, FONT_DEFAULTS_NAME, FONT_PROPERTY_PATH);
-        PropertyLoader.putProperties(fontProps, defaults);
+        PropertyLoader.putProperties(fontProps, defaults, DarkUIUtil.ICON_LOADER);
     }
 
     private void patchOSFonts(final UIDefaults defaults, final Function<Map.Entry<Object, Font>, Font> mapper) {

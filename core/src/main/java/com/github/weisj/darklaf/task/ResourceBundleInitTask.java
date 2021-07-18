@@ -33,9 +33,9 @@ public class ResourceBundleInitTask implements DefaultsInitTask {
      */
     private static final String PLAF_BUNDLE_NAME = "com.sun.swing.internal.plaf.basic.resources.basic";
     private static final String METAL_BUNDLE_NAME = "com.sun.swing.internal.plaf.metal.resources.metal";
-    private static final String DARKLAF_BUNDLE_NAME = ResourceUtil.getBundleName("darklaf");
-    private static final String SETTING_BUNDLE_NAME = ResourceUtil.getBundleName("theme_settings");
-    private static final String TAB_FRAME_BUNDLE_NAME = ResourceUtil.getBundleName("tabFrame");
+    private static final String DARKLAF_BUNDLE_NAME = ResourceUtil.getBundleName("task/darklaf");
+    private static final String SETTING_BUNDLE_NAME = ResourceUtil.getBundleName("task/theme_settings");
+    private static final String TAB_FRAME_BUNDLE_NAME = ResourceUtil.getBundleName("task/tabFrame");
 
     @Override
     public void run(final Theme currentTheme, final UIDefaults defaults) {

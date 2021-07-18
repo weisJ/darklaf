@@ -198,4 +198,12 @@ public final class StringUtil {
         }
         return builder.toString();
     }
+
+    public static String orEmpty(final String str) {
+        return str != null ? str : "";
+    }
+
+    public static String orEmpty(final Object obj) {
+        return obj != null ? orEmpty(obj.toString()) : "";
+    }
 }

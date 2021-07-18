@@ -371,19 +371,19 @@ public class ThemeSettings implements ThemePreferenceListener {
 
     protected Component createButtonPanel() {
         Locale l = Locale.getDefault();
-        JButton ok = new DefaultButton(UIManager.getString("dialog_ok", l));
+        JButton ok = new DefaultButton(UIManager.getString("settings.dialog_ok", l));
         ok.setDefaultCapable(true);
         ok.addActionListener(e -> {
             apply();
             dialog.dispatchEvent(new WindowEvent(dialog, WindowEvent.WINDOW_CLOSING));
         });
 
-        JButton cancel = new JButton(UIManager.getString("dialog_cancel", l));
+        JButton cancel = new JButton(UIManager.getString("settings.dialog_cancel", l));
         cancel.addActionListener(e -> {
             revert();
             dialog.dispatchEvent(new WindowEvent(dialog, WindowEvent.WINDOW_CLOSING));
         });
-        JButton apply = new JButton(UIManager.getString("dialog_apply", l));
+        JButton apply = new JButton(UIManager.getString("settings.dialog_apply", l));
         apply.addActionListener(e -> apply());
 
         Box box = Box.createHorizontalBox();
@@ -531,7 +531,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * @return the title
      */
     public String getTitle() {
-        return UIManager.getString("title", Locale.getDefault());
+        return UIManager.getString("settings.title", Locale.getDefault());
     }
 
     @Override
