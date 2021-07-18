@@ -30,6 +30,7 @@ import com.github.weisj.darklaf.util.Lambdas;
 
 public final class ClassFinder {
 
+    @SuppressWarnings("unchecked")
     public static <T> List<Instantiable<T>> getInstancesOfType(final Class<T> type, final String... packages) {
         try (ResourceWalker walker = ResourceWalker.walkResources(packages)) {
             return walker.stream()
@@ -41,7 +42,7 @@ public final class ClassFinder {
                     .filter(type::isAssignableFrom)
                     .filter(cls -> !cls.isInterface())
                     .filter(cls -> !Modifier.isAbstract(cls.getModifiers()))
-                    .map(c -> new Instantiable<T>((Class<T>) c))
+                    .map(c -> new Instantiable<>((Class<T>) c))
                     .collect(Collectors.toList());
         }
     }
