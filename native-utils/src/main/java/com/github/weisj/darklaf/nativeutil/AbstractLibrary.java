@@ -61,9 +61,9 @@ public abstract class AbstractLibrary {
             if (path != null && !path.isEmpty()) {
                 List<NativeUtil.Resource> resources = getResourcePaths();
                 if (resources == null || resources.isEmpty()) {
-                    NativeUtil.loadLibraryFromJar(getClass(), path);
+                    NativeUtil.loadLibraryFromJar(getLoaderClass(), path);
                 } else {
-                    NativeUtil.loadLibraryFromJarWithExtraResources(getClass(), path, resources);
+                    NativeUtil.loadLibraryFromJarWithExtraResources(getLoaderClass(), path, resources);
                 }
                 loaded = true;
                 info("Loaded " + getLibraryName() + ".");
@@ -73,6 +73,8 @@ public abstract class AbstractLibrary {
             error("Could not load library " + getLibraryName() + ".", e);
         }
     }
+
+    protected abstract Class<?> getLoaderClass();
 
     protected List<NativeUtil.Resource> getResourcePaths() {
         return Collections.emptyList();

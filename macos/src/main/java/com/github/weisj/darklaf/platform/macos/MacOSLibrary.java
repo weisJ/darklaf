@@ -48,14 +48,18 @@ public class MacOSLibrary extends AbstractLibrary {
         super(PATH, DLL_NAME, LogUtil.getLogger(MacOSLibrary.class));
     }
 
-    private String getArm64Path() {
+    protected String getArm64Path() {
         return super.getPath() + arm64_PATH;
     }
 
-    private String getX64Path() {
+    protected String getX64Path() {
         return super.getPath() + x86_64_PATH;
     }
 
+    @Override
+    final protected Class<?> getLoaderClass() {
+        return MacOSLibrary.class;
+    }
 
     @Override
     protected String getPath() {
