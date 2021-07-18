@@ -22,12 +22,14 @@
 package com.github.weisj.darklaf.icon;
 
 import java.awt.*;
+import java.util.stream.Collectors;
 
 import javax.swing.*;
 
 import com.github.weisj.darklaf.components.iconeditor.IconEditor;
 import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoPanel;
+import com.github.weisj.darklaf.util.Pair;
 
 public class IconEditorDemo implements ComponentDemo {
 
@@ -37,7 +39,11 @@ public class IconEditorDemo implements ComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        IconEditor editor = new IconEditor(AllIcons.loadIcons(16, false));
+        IconEditor editor = new IconEditor(
+                AllIcons.loadIcons(16, false)
+                        .stream()
+                        .map(p -> new Pair<>(p.getFirst(), p.getSecond()))
+                        .collect(Collectors.toList()));
         DemoPanel panel = new DemoPanel(editor, new BorderLayout(), 0);
         JPanel controls = panel.addControls();
         controls.add(new JCheckBox("Show add/remove controls") {

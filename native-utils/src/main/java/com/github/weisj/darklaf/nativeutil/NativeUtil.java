@@ -71,6 +71,7 @@ public final class NativeUtil {
      * is deleted after exiting. Method uses String as filename because the pathname is "abstract", not
      * system-dependent.
      *
+     * @param loaderClass the class to use for loading.
      * @param path The path of file inside JAR as absolute path (beginning with '/'), e.g.
      *        /package/File.ext
      * @throws IOException If temporary file creation or read/write operation fails
@@ -80,17 +81,19 @@ public final class NativeUtil {
      *         {@link File#createTempFile(java.lang.String, java.lang.String)}).
      * @throws FileNotFoundException If the file could not be found inside the JAR.
      */
-    public static void loadLibraryFromJarWithExtraResources(final String path, final List<Resource> resources)
+    public static void loadLibraryFromJarWithExtraResources(final Class<?> loaderClass, final String path,
+            final List<Resource> resources)
             throws IOException {
-        List<Path> resourcePaths = extractResources(resources);
+        List<Path> resourcePaths = extractResources(loaderClass, resources);
         try {
-            loadLibraryFromJar(path);
+            loadLibraryFromJar(loaderClass, path);
         } finally {
             resourcePaths.forEach(NativeUtil::releaseResource);
         }
     }
 
-    private static List<Path> extractResources(final List<Resource> resources) throws IOException {
+    private static List<Path> extractResources(final Class<?> caller, final List<Resource> resources)
+            throws IOException {
         List<Path> paths = new ArrayList<>(resources.size());
         Path tempDir = getTemporaryDirectory();
         for (Resource resource : resources) {
@@ -99,7 +102,7 @@ public final class NativeUtil {
             Path destinationPath = destinationDir.resolve(Objects.requireNonNull(filename));
             try {
                 Files.createDirectories(destinationDir);
-                extractFile(resource.filePath, tempDir, destinationPath);
+                extractFile(caller, resource.filePath, tempDir, destinationPath);
             } catch (final IOException e) {
                 paths.forEach(NativeUtil::delete);
                 throw e;
@@ -117,6 +120,7 @@ public final class NativeUtil {
      * is deleted after exiting. Method uses String as filename because the pathname is "abstract", not
      * system-dependent.
      *
+     * @param loaderClass the class to use for loading.
      * @param path The path of file inside JAR as absolute path (beginning with '/'), e.g.
      *        /package/File.ext
      * @throws IOException If temporary file creation or read/write operation fails
@@ -126,7 +130,7 @@ public final class NativeUtil {
      *         {@link File#createTempFile(java.lang.String, java.lang.String)}).
      * @throws FileNotFoundException If the file could not be found inside the JAR.
      */
-    public static void loadLibraryFromJar(final String path) throws IOException {
+    public static void loadLibraryFromJar(final Class<?> loaderClass, final String path) throws IOException {
         String filename = getFileNameFromPath(path);
 
         // Check if the filename is okay
@@ -138,7 +142,7 @@ public final class NativeUtil {
         Path tempDir = getTemporaryDirectory();
         Path temp = tempDir.resolve(filename);
 
-        extractFile(path, tempDir, temp);
+        extractFile(loaderClass, path, tempDir, temp);
 
         try {
             System.load(temp.toAbsolutePath().toString());
@@ -147,9 +151,10 @@ public final class NativeUtil {
         }
     }
 
-    private static void extractFile(final String path, final Path destinationDir, final Path destinationPath)
+    private static void extractFile(final Class<?> loaderClass, final String path, final Path destinationDir,
+            final Path destinationPath)
             throws IOException {
-        try (InputStream is = NativeUtil.class.getResourceAsStream(path)) {
+        try (InputStream is = loaderClass.getResourceAsStream(path)) {
             if (is == null) throw new FileNotFoundException("File " + path + " was not found inside JAR.");
             if (!destinationDir.toFile().canWrite()) throw new IOException("Can't write to temporary directory.");
             Files.copy(is, destinationPath.toAbsolutePath(), StandardCopyOption.REPLACE_EXISTING);

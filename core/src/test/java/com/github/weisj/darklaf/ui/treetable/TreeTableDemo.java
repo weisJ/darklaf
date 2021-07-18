@@ -27,9 +27,9 @@ import java.util.Random;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.DelicateDemo;
 import com.github.weisj.darklaf.components.treetable.JTreeTable;
 import com.github.weisj.darklaf.components.treetable.model.*;
+import com.github.weisj.darklaf.core.test.DelicateDemo;
 import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoPanel;
 

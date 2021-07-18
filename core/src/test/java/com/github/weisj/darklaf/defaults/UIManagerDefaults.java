@@ -316,8 +316,7 @@ public class UIManagerDefaults implements ItemListener, ComponentDemo {
     }
 
     /*
-     * Some rows containing icons, may need to be sized taller to fully display the
-     * com.github.weisj.icon.
+     * Some rows containing icons, may need to be sized taller to fully display the icon.
      */
     private void updateRowHeights() {
         try {

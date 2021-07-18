@@ -38,12 +38,10 @@ import com.github.weisj.darklaf.properties.parser.ParserContext;
 import com.github.weisj.darklaf.util.*;
 
 /**
- * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
 public final class PropertyLoader {
     private static final Logger LOGGER = LogUtil.getLogger(PropertyLoader.class);
-    private static final IconLoader ICON_LOADER = IconLoader.get(IconLoader.class);
 
     private static final char REFERENCE_PREFIX = '%';
 
@@ -53,23 +51,14 @@ public final class PropertyLoader {
         try (InputStream stream = clazz.getResourceAsStream(p)) {
             properties.load(stream);
         } catch (IOException | NullPointerException e) {
-            LOGGER.log(Level.SEVERE, "Could not load " + p + " " + e.getMessage(), e.getStackTrace());
+            LOGGER.log(Level.SEVERE, "Could not load " + p + " " + e.getMessage(), e);
         }
         return properties;
     }
 
     public static void putProperties(final Properties properties, final Properties accumulator,
-            final UIDefaults currentDefaults) {
-        putProperties(properties, accumulator, currentDefaults, ICON_LOADER);
-    }
-
-    public static void putProperties(final Properties properties, final Properties accumulator,
             final UIDefaults currentDefaults, final IconLoader iconLoader) {
         putProperties(properties, properties.stringPropertyNames(), accumulator, currentDefaults, iconLoader);
-    }
-
-    public static void putProperties(final Properties properties, final UIDefaults defaults) {
-        putProperties(properties, defaults, ICON_LOADER);
     }
 
     public static void putProperties(final Properties properties, final UIDefaults defaults,

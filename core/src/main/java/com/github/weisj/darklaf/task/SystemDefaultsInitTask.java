@@ -28,10 +28,11 @@ import javax.swing.*;
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.properties.PropertyLoader;
 import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 public class SystemDefaultsInitTask implements DefaultsInitTask {
 
-    private static final String OVERWRITES_PATH = "properties/";
+    private static final String OVERWRITES_PATH = "";
     private static final String OVERWRITES_NAME = "overwrites";
 
     @Override
@@ -44,6 +45,6 @@ public class SystemDefaultsInitTask implements DefaultsInitTask {
         overwrites.values().removeIf(v -> System.getProperty(DarkLaf.SYSTEM_PROPERTY_PREFIX + v.toString()) == null);
         overwrites.entrySet()
                 .forEach(e -> e.setValue(System.getProperty(DarkLaf.SYSTEM_PROPERTY_PREFIX + e.getValue().toString())));
-        PropertyLoader.putProperties(overwrites, defaults);
+        PropertyLoader.putProperties(overwrites, defaults, DarkUIUtil.ICON_LOADER);
     }
 }

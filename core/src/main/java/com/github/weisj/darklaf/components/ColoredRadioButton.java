@@ -29,6 +29,7 @@ import javax.swing.plaf.ComponentUI;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.iconset.IconSet;
 import com.github.weisj.darklaf.properties.PropertyLoader;
 import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.properties.icons.StateIcon;
@@ -193,14 +194,14 @@ public class ColoredRadioButton extends JRadioButton {
             Theme theme = LafManager.getInstalledTheme();
             Properties props = new Properties();
             UIDefaults defaults = UIManager.getLookAndFeelDefaults();
-            theme.loadDefaults(props, defaults);
+            theme.loadDefaults(props, defaults, DarkUIUtil.ICON_LOADER);
             Color accentCol = color == DEFAULT_COLOR ? (Color) props.get("widgetFillDefault") : color;
             Color focusCol = focusColor == DEFAULT_COLOR ? accentCol : focusColor;
             adjustment.applyColors(theme, props, accentCol, null);
-            PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, "radioButton", "properties/ui/"),
-                    props, defaults);
-            PropertyLoader.putProperties(
-                    PropertyLoader.loadProperties(DarkLaf.class, "radioButton", "properties/icons/"), props, defaults);
+            PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, "radioButton", "ui/"),
+                    props, defaults, DarkUIUtil.ICON_LOADER);
+            PropertyLoader.putProperties(PropertyLoader.loadProperties(IconSet.class, "radioButton", ""),
+                    props, defaults, DarkUIUtil.ICON_LOADER);
             propertyMap = new Properties();
             for (String prop : PROPERTIES) {
                 propertyMap.put(prop, props.get(prop));

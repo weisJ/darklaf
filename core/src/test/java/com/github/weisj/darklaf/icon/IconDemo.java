@@ -60,12 +60,12 @@ public class IconDemo implements ComponentDemo {
         Icon themedIcon = iconLoader.getIcon("themed_icon.svg", 16, 16, true);
         Icon imageIcon = iconLoader.getIcon("image_icon.png");
 
-        iconPanel.add(new JLabel("Aware image com.github.weisj.icon", uiAwareImageIcon, JLabel.LEFT));
-        iconPanel.add(new JLabel("Aware image com.github.weisj.icon (dual)", uiAwareImageIconDual, JLabel.LEFT));
-        iconPanel.add(new JLabel("Aware svg com.github.weisj.icon", uiAwareIcon, JLabel.LEFT));
-        iconPanel.add(new JLabel("Aware svg com.github.weisj.icon (dual)", uiAwareIconDual, JLabel.LEFT));
-        iconPanel.add(new JLabel("Themed com.github.weisj.icon", themedIcon, JLabel.LEFT));
-        iconPanel.add(new JLabel("Image com.github.weisj.icon", imageIcon, JLabel.LEFT));
+        iconPanel.add(new JLabel("Aware image icon", uiAwareImageIcon, JLabel.LEFT));
+        iconPanel.add(new JLabel("Aware image icon (dual)", uiAwareImageIconDual, JLabel.LEFT));
+        iconPanel.add(new JLabel("Aware svg icon", uiAwareIcon, JLabel.LEFT));
+        iconPanel.add(new JLabel("Aware svg icon (dual)", uiAwareIconDual, JLabel.LEFT));
+        iconPanel.add(new JLabel("Themed icon", themedIcon, JLabel.LEFT));
+        iconPanel.add(new JLabel("Image icon", imageIcon, JLabel.LEFT));
 
         DemoPanel panel = new DemoPanel(iconPanel, new BorderLayout(), 0);
         JPanel controlPanel = panel.addControls();
@@ -78,7 +78,7 @@ public class IconDemo implements ComponentDemo {
             }
         });
         controlPanel
-                .add(new QuickColorChooser("Themed com.github.weisj.icon color", UIManager.getColor("TestIcon.color"),
+                .add(new QuickColorChooser("Themed icon color", UIManager.getColor("TestIcon.color"),
                         this::updateThemedIconColor));
 
         return panel;

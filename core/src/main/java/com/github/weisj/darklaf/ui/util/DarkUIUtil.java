@@ -42,6 +42,7 @@ import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreeCellRenderer;
 
 import com.github.weisj.darklaf.focus.FocusParentHelper;
+import com.github.weisj.darklaf.iconset.IconSet;
 import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.ui.cell.CellRenderer;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
@@ -55,7 +56,7 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 public final class DarkUIUtil {
 
     private static final int CELL_SEARCH_DEPTH = 3;
-    public static final IconLoader ICON_LOADER = IconLoader.get(IconLoader.class);
+    public static final IconLoader ICON_LOADER = IconSet.ICON_LOADER;
     private static final Rectangle iconRect = new Rectangle();
     private static final Rectangle textRect = new Rectangle();
 

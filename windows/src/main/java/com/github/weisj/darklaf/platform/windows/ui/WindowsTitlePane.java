@@ -43,6 +43,7 @@ import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.Scale;
+import com.github.weisj.darklaf.util.StringUtil;
 
 /** @author Jannis Weis */
 public class WindowsTitlePane extends CustomTitlePane {
@@ -243,13 +244,13 @@ public class WindowsTitlePane extends CustomTitlePane {
         if (window != null) {
             if (!installDecorations()) return;
             if (window instanceof Frame) {
-                titleLabel.setText(((Frame) window).getTitle());
+                titleLabel.setText(StringUtil.orEmpty(((Frame) window).getTitle()));
                 setState(((Frame) window).getExtendedState());
             } else {
                 setState(0);
             }
             if (window instanceof Dialog) {
-                titleLabel.setText(((Dialog) window).getTitle());
+                titleLabel.setText(StringUtil.orEmpty(((Dialog) window).getTitle()));
             }
             determineColors();
             setActive(window.isActive());
@@ -938,7 +939,7 @@ public class WindowsTitlePane extends CustomTitlePane {
                     getRootPane().repaint();
                 }
             } else if (PropertyKey.TITLE.equals(name)) {
-                titleLabel.setText(pce.getNewValue() == null ? "" : pce.getNewValue().toString());
+                titleLabel.setText(StringUtil.orEmpty(pce.getNewValue()));
                 doLayout();
                 repaint();
             } else if (PropertyKey.COMPONENT_ORIENTATION.equals(name)) {

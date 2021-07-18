@@ -13,6 +13,7 @@ dependencies {
     api(projects.darklafPropertyLoader)
     api(projects.darklafUtils)
     implementation(projects.darklafCompatibility)
+    implementation(projects.darklafIconset)
     implementation(projects.darklafNativeUtils)
     implementation(projects.darklafPlatformBase)
     implementation(projects.darklafWindows)
@@ -42,7 +43,8 @@ tasks.test {
         workingDir.mkdirs()
     }
     useJUnitPlatform()
-    val verboseTest by props(false)
+    patchTestExecParams()
+    val verboseTest by props(true)
     if (!verboseTest) {
         exclude("**/DemoTest*")
     }
@@ -72,7 +74,7 @@ val makeDocumentation by tasks.registering(JavaExec::class) {
 
     workingDir = File(project.rootDir, "build")
     workingDir.mkdirs()
-    main = "com.github.weisj.darklaf.documentation.CreateUITable"
+    main = "com.github.weisj.darklaf.core.documentation.CreateUITable"
     classpath(sourceSets.main.get().runtimeClasspath, sourceSets.test.get().runtimeClasspath)
 }
 
@@ -90,7 +92,8 @@ abstract class DemoTask : JavaExec() {
 
 val runDemo by tasks.registering(DemoTask::class) {
     group = LifecycleBasePlugin.VERIFICATION_GROUP
-    description = "Launches demo (e.g. com.github.weisj.darklaf.ui.table.TableDemo, com.github.weisj.darklaf.ui.button.ButtonDemo, ...)"
+    description =
+        "Launches demo (e.g. com.github.weisj.darklaf.ui.table.TableDemo, com.github.weisj.darklaf.ui.button.ButtonDemo, ...)"
 
     classpath(sourceSets.test.map { it.runtimeClasspath })
 

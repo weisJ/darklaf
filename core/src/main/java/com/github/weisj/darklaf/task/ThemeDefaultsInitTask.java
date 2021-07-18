@@ -29,9 +29,11 @@ import java.util.Properties;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.DarkLaf;
+import com.github.weisj.darklaf.iconset.IconSet;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.properties.PropertyLoader;
 import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
@@ -63,7 +65,7 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
 
     private void loadThemeDefaults(final Theme currentTheme, final UIDefaults defaults) {
         Properties uiProps = new Properties();
-        currentTheme.loadDefaults(uiProps, defaults);
+        currentTheme.loadDefaults(uiProps, defaults, DarkUIUtil.ICON_LOADER);
 
         backupAccentColors(uiProps);
 
@@ -108,10 +110,10 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
     }
 
     private void initGlobals(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {
-        PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, "globals", "properties/"), uiProps,
-                defaults);
+        PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, "globals", ""),
+                uiProps, defaults, DarkUIUtil.ICON_LOADER);
 
-        currentTheme.customizeGlobals(uiProps, defaults);
+        currentTheme.customizeGlobals(uiProps, defaults, DarkUIUtil.ICON_LOADER);
         installGlobals(uiProps, defaults);
     }
 
@@ -132,26 +134,26 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
 
     private void initUIProperties(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {
         for (String property : UI_PROPERTIES) {
-            PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, property, "properties/ui/"),
-                    uiProps, defaults);
+            PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, property, "ui/"),
+                    uiProps, defaults, DarkUIUtil.ICON_LOADER);
         }
-        currentTheme.customizeUIProperties(uiProps, defaults);
+        currentTheme.customizeUIProperties(uiProps, defaults, DarkUIUtil.ICON_LOADER);
     }
 
     private void initIconTheme(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {
-        currentTheme.loadIconTheme(uiProps, defaults);
+        currentTheme.loadIconTheme(uiProps, defaults, DarkUIUtil.ICON_LOADER);
         for (String property : ICON_PROPERTIES) {
-            PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, property, "properties/icons/"),
-                    uiProps, defaults);
+            PropertyLoader.putProperties(PropertyLoader.loadProperties(IconSet.class, property, ""),
+                    uiProps, defaults, DarkUIUtil.ICON_LOADER);
         }
-        currentTheme.customizeIconTheme(uiProps, defaults);
+        currentTheme.customizeIconTheme(uiProps, defaults, DarkUIUtil.ICON_LOADER);
     }
 
     private void initPlatformProperties(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {
         PropertyLoader.putProperties(
-                PropertyLoader.loadProperties(DarkLaf.class, SystemInfo.getOsName(), "properties/platform/"), uiProps,
-                defaults);
-        currentTheme.customizePlatformProperties(uiProps, defaults);
+                PropertyLoader.loadProperties(DarkLaf.class, SystemInfo.getOsName(), "platform/"),
+                uiProps, defaults, DarkUIUtil.ICON_LOADER);
+        currentTheme.customizePlatformProperties(uiProps, defaults, DarkUIUtil.ICON_LOADER);
     }
 
     private void adjustPlatformSpecifics(final Properties uiProps) {

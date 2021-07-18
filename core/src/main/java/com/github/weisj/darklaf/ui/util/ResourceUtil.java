@@ -21,15 +21,11 @@
  */
 package com.github.weisj.darklaf.ui.util;
 
-import java.awt.*;
-
 import com.github.weisj.darklaf.DarkLaf;
 
 public final class ResourceUtil {
 
-    private static final String BUNDLE_DIR = "bundles";
-
     public static String getBundleName(final String name) {
-        return DarkLaf.class.getPackage().getName() + "." + BUNDLE_DIR + "." + name;
+        return DarkLaf.class.getPackage().getName() + "." + name.replace('/', '.');
     }
 }
