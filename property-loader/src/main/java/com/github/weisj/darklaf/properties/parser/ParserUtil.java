@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -46,7 +47,7 @@ final class ParserUtil implements Delimiters {
     }
 
     static void warning(final String message) {
-        LOGGER.warning(message);
+        LOGGER.log(Level.WARNING, message, new RuntimeException(message));
     }
 
     static ParseResult apply(final PropertyParser parser, final ParseResult p, final ParserContext c) {
