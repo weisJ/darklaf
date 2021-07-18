@@ -40,6 +40,7 @@ import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -73,6 +74,11 @@ class CustomTitleBarTest extends AbstractImageTest implements NonThreadSafeTest 
             d.put("Windows.TitlePane.background", TITLE_BAR_COLOR);
             d.put("Windows.TitlePane.inactiveBackground", TITLE_BAR_COLOR);
         }));
+    }
+
+    @AfterAll
+    static void tearDown() {
+        TestUtils.runOnSwingThreadNotThrowing(() -> LafManager.getUserInitTasks().clear());
     }
 
     @BeforeEach
