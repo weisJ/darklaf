@@ -28,6 +28,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.SwingUtilities;
 
+import com.github.weisj.darklaf.util.Lambdas;
 import org.junit.jupiter.api.Assertions;
 
 import com.github.weisj.darklaf.LafManager;
@@ -45,8 +46,12 @@ final class TestUtils {
     }
 
     static void ensureLafInstalled(final Theme theme) {
+        ensureLafInstalled(theme, false);
+    }
+
+    static void ensureLafInstalled(final Theme theme, final boolean alwaysInstall) {
         synchronized (lock) {
-            if (!LafManager.isInstalled() || !LafManager.getInstalledTheme().equals(theme)) {
+            if (alwaysInstall || !LafManager.isInstalled() || !LafManager.getInstalledTheme().equals(theme)) {
                 runOnSwingThreadNotThrowing(() -> LafManager.install(theme));
             }
         }
@@ -71,7 +76,7 @@ final class TestUtils {
         }
     }
 
-    static void runOnSwingThreadNotThrowing(final Runnable action) {
+    static void runOnSwingThreadNotThrowing(final Lambdas.CheckedRunnable<? extends Exception> action) {
         AtomicReference<Exception> exceptionRef = new AtomicReference<>();
         try {
             SwingUtilities.invokeAndWait(() -> {

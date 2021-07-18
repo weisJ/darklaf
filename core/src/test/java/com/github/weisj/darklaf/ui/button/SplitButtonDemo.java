@@ -26,9 +26,11 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.components.button.JSplitButton;
+import com.github.weisj.darklaf.core.test.DarklafOnly;
 import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoResources;
 
+@DarklafOnly
 public class SplitButtonDemo extends ButtonDemo {
 
     public static void main(final String[] args) {
