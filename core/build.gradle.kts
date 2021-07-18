@@ -37,6 +37,26 @@ dependencies {
     annotationProcessor(libs.autoservice.processor)
 }
 
+fun JavaForkOptions.patchTestExecParams() {
+    val patchFiles = sourceSets.test.get().output.classesDirs +
+        sourceSets.test.get().resources.sourceDirectories +
+        sourceSets.main.get().resources.sourceDirectories
+    jvmArgs(
+        "--module-path", (sourceSets.test.get().runtimeClasspath - patchFiles).asPath,
+        "--patch-module", "darklaf.core=${patchFiles.asPath}",
+        "--add-modules", "ALL-MODULE-PATH",
+        "--add-reads", "darklaf.core=org.junit.jupiter.api"
+    )
+    jvmArgs(
+        "--add-exports", "java.desktop/com.sun.java.swing=darklaf.core",
+        "--add-exports", "org.junit.platform.commons/org.junit.platform.commons.util=ALL-UNNAMED",
+        "--add-exports", "org.junit.platform.commons/org.junit.platform.commons.logging=ALL-UNNAMED",
+    )
+    jvmArgs(
+        "--add-opens", "darklaf.core/com.github.weisj.darklaf.core.test=org.junit.platform.commons"
+    )
+}
+
 tasks.test {
     doFirst {
         workingDir = File(project.rootDir, "build/test_results")
@@ -95,7 +115,8 @@ val runDemo by tasks.registering(DemoTask::class) {
     description =
         "Launches demo (e.g. com.github.weisj.darklaf.ui.table.TableDemo, com.github.weisj.darklaf.ui.button.ButtonDemo, ...)"
 
-    classpath(sourceSets.test.map { it.runtimeClasspath })
+    dependsOn(tasks.compileJava, tasks.compileTestJava)
+    patchTestExecParams()
 
     // Pass the property to the demo
     // By default JavaExec is executed in its own JVM with its own properties
