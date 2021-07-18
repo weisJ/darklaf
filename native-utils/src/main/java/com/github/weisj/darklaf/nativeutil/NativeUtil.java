@@ -157,7 +157,10 @@ public final class NativeUtil {
         try (InputStream is = loaderClass.getResourceAsStream(path)) {
             if (is == null) throw new FileNotFoundException("File " + path + " was not found inside JAR.");
             if (!destinationDir.toFile().canWrite()) throw new IOException("Can't write to temporary directory.");
-            Files.copy(is, destinationPath.toAbsolutePath(), StandardCopyOption.REPLACE_EXISTING);
+            if (!Files.exists(destinationPath)) {
+                // Otherwise the file is already existent and most probably loaded.
+                Files.copy(is, destinationPath.toAbsolutePath(), StandardCopyOption.REPLACE_EXISTING);
+            }
         } catch (final IOException e) {
             delete(destinationPath);
             throw e;

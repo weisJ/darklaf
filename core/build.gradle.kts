@@ -73,7 +73,7 @@ tasks.test {
     }
     useJUnitPlatform()
     patchTestExecParams()
-    val verboseTest by props(true)
+    val verboseTest by props(false)
     if (!verboseTest) {
         exclude("**/DemoTest*")
     }

@@ -41,11 +41,16 @@ public class WindowsLibrary extends AbstractLibrary {
         super(PATH, DLL_NAME, LogUtil.getLogger(WindowsLibrary.class));
     }
 
-    public String getX86Path() {
+    @Override
+    final protected Class<?> getLoaderClass() {
+        return WindowsLibrary.class;
+    }
+
+    protected String getX86Path() {
         return super.getPath() + x86_PATH;
     }
 
-    public String getX64Path() {
+    protected String getX64Path() {
         return super.getPath() + x86_64_PATH;
     }
 

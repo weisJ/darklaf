@@ -25,12 +25,11 @@ jobs:
       - name: Build & Test
         uses: eskatos/gradle-command-action@v1
         with:
-          arguments: build test -PskipAutostyle --no-daemon
+          arguments: build test -PskipAutostyle -PgithubAccessToken=${{ secrets.GITHUB_TOKEN }} --no-daemon
           wrapper-cache-enabled: true
           dependencies-cache-enabled: true
           configuration-cache-enabled: true
         env:
-          PROPS_GITHUB: "-PgithubAccessToken=${{ secrets.GITHUB_TOKEN }}"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload Test Results
         uses: actions/upload-artifact@v1
@@ -102,12 +101,11 @@ jobs:
       - name: Build & Test
         uses: eskatos/gradle-command-action@v1
         with:
-          arguments: build test -PskipAutostyle --no-daemon
+          arguments: build test -PskipAutostyle -PgithubAccessToken=${{ secrets.GITHUB_TOKEN }} --no-daemon
           wrapper-cache-enabled: true
           dependencies-cache-enabled: true
           configuration-cache-enabled: true
         env:
-          PROPS_GITHUB: "-PgithubAccessToken=${{ secrets.GITHUB_TOKEN }}"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload Test Results
         uses: actions/upload-artifact@v1
