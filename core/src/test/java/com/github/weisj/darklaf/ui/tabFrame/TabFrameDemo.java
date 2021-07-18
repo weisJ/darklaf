@@ -26,6 +26,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 
+import com.github.weisj.darklaf.core.test.DarklafOnly;
 import org.pbjar.jxlayer.plaf.ext.TransformUI;
 
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
@@ -40,6 +41,7 @@ import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.PropertyValue;
 import com.github.weisj.darklaf.util.StringUtil;
 
+@DarklafOnly
 public class TabFrameDemo implements ComponentDemo {
 
     public static void main(final String[] args) {

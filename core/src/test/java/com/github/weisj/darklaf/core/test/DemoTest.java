@@ -25,9 +25,12 @@ package com.github.weisj.darklaf.core.test;
 import java.awt.Robot;
 import java.awt.Window;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -37,6 +40,8 @@ import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.DemoLauncher;
 import com.github.weisj.darklaf.util.Lambdas;
 import com.github.weisj.darklaf.util.LogUtil;
+
+import javax.swing.UIManager;
 
 class DemoTest implements NonThreadSafeTest {
 
@@ -58,28 +63,46 @@ class DemoTest implements NonThreadSafeTest {
         List<DemoLauncher.DemoEntry> demos = new DemoLauncher().getDemoClasses();
         int count = demos.size();
         int index = 0;
-        for (DemoLauncher.DemoEntry demo : demos) {
-            TestUtils.ensureLafInstalled(theme);
-            LOGGER.warning("Running: " + (++index) + "/" + count + " " + demo);
-            if (demo.isDelicate()) {
-                LOGGER.warning("Skipping");
-                continue;
-            }
-            AtomicReference<Window> windowRef = demo.start(Level.WARNING);
-            if (robot != null) robot.waitForIdle();
-            try {
-                synchronized (windowRef) {
-                    while (windowRef.get() == null) {
-                        windowRef.wait();
-                    }
+        Map<Boolean, List<DemoLauncher.DemoEntry>> groupedDemos = demos.stream()
+                .collect(Collectors.groupingBy(DemoLauncher.DemoEntry::isDarklafOnly, Collectors.toList()));
+        for (DemoLauncher.DemoEntry demo : groupedDemos.get(false)) {
+            runDemo(theme, robot, count, index, demo);
+            index++;
+        }
+        for (DemoLauncher.DemoEntry demo : groupedDemos.get(true)) {
+            runDemo(theme, robot, count, index, demo);
+            index++;
+        }
+    }
+
+    private void runDemo(Theme theme, Robot robot, int count, int index, DemoLauncher.DemoEntry demo) {
+        TestUtils.ensureLafInstalled(theme, true);
+        LOGGER.warning("Running: " + (index) + "/" + count + " " + demo);
+        if (demo.isDelicate()) {
+            LOGGER.warning("Skipping");
+            return;
+        }
+        AtomicReference<Window> windowRef = demo.start(Level.WARNING);
+        if (robot != null) robot.waitForIdle();
+        try {
+            synchronized (windowRef) {
+                while (windowRef.get() == null) {
+                    windowRef.wait();
                 }
-            } catch (InterruptedException ignored) {
             }
+        } catch (InterruptedException ignored) {
+        }
+        TestUtils.runOnSwingThreadNotThrowing(
+                () -> Assertions.assertNotNull(windowRef.get()));
+        if (!demo.isDarklafOnly()) {
             TestUtils.runOnSwingThreadNotThrowing(() -> {
-                Assertions.assertNotNull(windowRef.get());
-                TestUtils.closeWindow(windowRef.get());
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                LafManager.updateLaf();
+                LafManager.install(theme);
             });
         }
+        TestUtils.runOnSwingThreadNotThrowing(
+                () -> TestUtils.closeWindow(windowRef.get()));
     }
 
 }

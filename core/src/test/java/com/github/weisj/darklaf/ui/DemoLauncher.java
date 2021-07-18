@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.core.test.DarklafOnly;
 import com.github.weisj.darklaf.core.test.DelicateDemo;
 import com.github.weisj.darklaf.core.test.util.ClassFinder;
 import com.github.weisj.darklaf.core.test.util.Instantiable;
@@ -55,7 +56,9 @@ public class DemoLauncher implements ComponentDemo {
         demoClasses = ClassFinder.getInstancesOfType(demoType, packages).stream()
                 .filter(i -> !DemoLauncher.class.isAssignableFrom(i.getType()))
                 .map(DemoEntry::new)
-                .sorted(Comparator.comparing(DemoEntry::toString)).collect(Collectors.toList());
+                .distinct()
+                .sorted(Comparator.comparing(DemoEntry::toString))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -99,6 +102,27 @@ public class DemoLauncher implements ComponentDemo {
 
         public boolean isDelicate() {
             return demo.getType().getAnnotation(DelicateDemo.class) != null;
+        }
+
+        public boolean isDarklafOnly() {
+            return demo.getType().getAnnotation(DarklafOnly.class) != null;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof DemoEntry)) {
+                return false;
+            }
+            DemoEntry demoEntry = (DemoEntry) o;
+            return demo.getType().equals(demoEntry.demo.getType());
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(demo.getType());
         }
     }
 }
