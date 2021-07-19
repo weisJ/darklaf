@@ -40,13 +40,22 @@ public abstract class BaseComponentDemo implements ComponentDemo, DemoExecutionS
         return componentLazyValue.get();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public JComponent getContentPane() {
         JComponent component = getComponent();
         if (component instanceof DemoPanel) return component;
         init();
 
+        DemoPanel demoPanel = new DemoPanel(component);
+        if (!demoSpecList.isEmpty()) {
+            setupControls(component, demoPanel);
+        }
+
+        return demoPanel;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setupControls(final JComponent component, final DemoPanel demoPanel) {
         final Runnable updateComponent = () -> {
             if (!DEBUG) {
                 component.invalidate();
@@ -59,7 +68,6 @@ public abstract class BaseComponentDemo implements ComponentDemo, DemoExecutionS
             }
         };
 
-        DemoPanel demoPanel = new DemoPanel(component);
         JComponent controls = demoPanel.addControls();
         for (DemoSpec<?> demoSpec : demoSpecList) {
             if (demoSpec instanceof SpacerSpec) {
@@ -95,8 +103,6 @@ public abstract class BaseComponentDemo implements ComponentDemo, DemoExecutionS
                 controls.add(comboBox);
             }
         }
-
-        return demoPanel;
     }
 
     protected final void booleanSpec(final String key) {
