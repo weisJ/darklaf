@@ -24,6 +24,8 @@
  */
 #include "Decorations.h"
 #include "com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows.h"
+#include <jawt.h>
+#include <jawt_md.h>
 
 #ifndef WM_NCUAHDRAWCAPTION
 #define WM_NCUAHDRAWCAPTION (0x00AE)
@@ -458,4 +460,64 @@ JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_restore(JNIEnv*, jclass, jlong hwnd) {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     ShowWindow(handle, SW_RESTORE);
+}
+
+HMODULE _hAWT = 0;
+
+JNIEXPORT jlong JNICALL
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_getWindowHWND(JNIEnv *env, jclass, jobject window) {
+    HWND hWnd = 0;
+    typedef jboolean (JNICALL *PJAWT_GETAWT)(JNIEnv*, JAWT*);
+    JAWT awt;
+    JAWT_DrawingSurface* ds;
+    JAWT_DrawingSurfaceInfo* dsi;
+    JAWT_Win32DrawingSurfaceInfo* dsi_win;
+    jboolean result;
+    jint lock;
+
+    //Load AWT Library
+    if(!_hAWT) {
+        _hAWT = LoadLibrary("jawt.dll");
+    }
+    if (!_hAWT) {
+        return -7;
+    }
+
+    PJAWT_GETAWT JAWT_GetAWT = (PJAWT_GETAWT)GetProcAddress(_hAWT, "JAWT_GetAWT");
+    if (!JAWT_GetAWT) {
+        return -6;
+    }
+
+    awt.version = JAWT_VERSION_1_4; // Init here with JAWT_VERSION_1_3 or JAWT_VERSION_1_4
+    //Get AWT API Interface
+    result = JAWT_GetAWT(env, &awt);
+    if (result == JNI_FALSE) {
+        return -5;
+    }
+
+    ds = awt.GetDrawingSurface(env, window);
+    if (ds == NULL) {
+        return -4;
+    }
+
+    lock = ds->Lock(ds);
+    if((lock & JAWT_LOCK_ERROR) == 0) {
+        dsi = ds->GetDrawingSurfaceInfo(ds);
+        if(dsi) {
+            dsi_win = (JAWT_Win32DrawingSurfaceInfo*)dsi->platformInfo;
+            if(dsi_win) {
+                hWnd = dsi_win->hwnd;
+            } else {
+                hWnd = (HWND) -1;
+            }
+            ds->FreeDrawingSurfaceInfo(dsi);
+        } else {
+            hWnd = (HWND) -2;
+        }
+        ds->Unlock(ds);
+    } else {
+        hWnd = (HWND) -3;
+    }
+    awt.FreeDrawingSurface(ds);
+    return reinterpret_cast<jlong>(hWnd);
 }
