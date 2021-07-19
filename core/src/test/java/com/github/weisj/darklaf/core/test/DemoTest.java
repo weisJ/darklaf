@@ -26,6 +26,7 @@ import java.awt.Robot;
 import java.awt.Window;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,6 +65,7 @@ class DemoTest implements NonThreadSafeTest {
         int count = demos.size();
         int index = 0;
         Map<Boolean, List<DemoLauncher.DemoEntry>> groupedDemos = demos.stream()
+                .filter(Objects::nonNull)
                 .collect(Collectors.groupingBy(DemoLauncher.DemoEntry::isDarklafOnly, Collectors.toList()));
         for (DemoLauncher.DemoEntry demo : groupedDemos.get(false)) {
             runDemo(theme, robot, count, index, demo);
@@ -75,7 +77,8 @@ class DemoTest implements NonThreadSafeTest {
         }
     }
 
-    private void runDemo(Theme theme, Robot robot, int count, int index, DemoLauncher.DemoEntry demo) {
+    private void runDemo(final Theme theme, final Robot robot, final int count, final int index,
+            final DemoLauncher.DemoEntry demo) {
         TestUtils.ensureLafInstalled(theme, true);
         LOGGER.warning("Running: " + (index) + "/" + count + " " + demo);
         if (demo.isDelicate()) {
