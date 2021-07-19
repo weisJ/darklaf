@@ -38,9 +38,10 @@ dependencies {
 }
 
 fun JavaForkOptions.patchTestExecParams() {
+    if (!JavaVersion.current().isJava9Compatible || props.bool("skipModuleInfo")) return
     val patchFiles = sourceSets.test.get().output.classesDirs +
-        sourceSets.test.get().resources.sourceDirectories +
-        sourceSets.main.get().resources.sourceDirectories
+            sourceSets.test.get().resources.sourceDirectories +
+            sourceSets.main.get().resources.sourceDirectories
     val resourceDir = sourceSets.test.get().resources.sourceDirectories.singleFile
     val testPackages = sourceSets.test.get().resources.asSequence().map { it.parentFile }.toSet().asSequence().map {
         it.relativeTo(resourceDir).toPath().joinToString(separator = ".")
