@@ -36,6 +36,10 @@ import com.github.weisj.darklaf.color.ColorUtil;
 
 public final class PropertyUtil {
 
+    public static boolean canOverwrite(final Object o) {
+        return o == null || o instanceof UIResource;
+    }
+
     public static void installSystemProperty(final String key, final String value) {
         String current = System.getProperty(key);
         if (current == null) {
@@ -56,7 +60,7 @@ public final class PropertyUtil {
     public static void installBorder(final JComponent component, final Border border) {
         if (component == null) return;
         Border b = component.getBorder();
-        if (b == null || b instanceof UIResource) {
+        if (canOverwrite(b)) {
             component.setBorder(border);
         }
     }
@@ -64,7 +68,7 @@ public final class PropertyUtil {
     public static void installFont(final Component component, final Font font) {
         if (component == null) return;
         Font f = component.getFont();
-        if (f == null || f instanceof UIResource) {
+        if (canOverwrite(f)) {
             component.setFont(font);
         }
     }
@@ -76,7 +80,7 @@ public final class PropertyUtil {
     public static void installProperty(final JComponent c, final String key, final Object value) {
         if (c == null) return;
         Object current = c.getClientProperty(key);
-        if (current == null || current instanceof UIResource) {
+        if (canOverwrite(current)) {
             c.putClientProperty(key, value);
         }
     }

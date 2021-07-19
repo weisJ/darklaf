@@ -26,6 +26,7 @@ import java.awt.*;
 import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.util.ColorWrapper;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /** @author Jannis Weis */
 public final class ColorUtil {
@@ -95,7 +96,7 @@ public final class ColorUtil {
     }
 
     public static boolean canOverwriteColor(final Color c) {
-        return c == null || c instanceof UIResource || c instanceof NonUIResourceOverwritableColorWrapper;
+        return PropertyUtil.canOverwrite(c) || c instanceof NonUIResourceOverwritableColorWrapper;
     }
 
     public static Color stripUIResource(final Color c, final boolean canOverwrite) {

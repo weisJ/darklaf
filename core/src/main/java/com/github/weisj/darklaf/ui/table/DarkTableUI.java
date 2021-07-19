@@ -60,8 +60,21 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
 
     protected CellHintPopupListener<JTable, ?> popupListener;
 
-    protected DarkTableCellRendererDelegate rendererDelegate;
+    private TableCellRenderer cellRenderer;
+    private DarkColorTableCellRendererEditor colorRendererEditor;
     private TableCellRenderer booleanCellRenderer;
+    private TableCellEditor cellEditor;
+
+
+    private TableCellRenderer oldObjectRenderer;
+    private TableCellRenderer oldBooleanRenderer;
+    private TableCellRenderer oldColorRenderer;
+
+    private TableCellEditor oldObjectEditor;
+    private TableCellEditor oldBooleanEditor;
+    private TableCellEditor oldColorEditor;
+
+    protected DarkTableCellRendererDelegate rendererDelegate;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkTableUI();
@@ -113,13 +126,19 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
         // viewport.
         table.setFillsViewportHeight(true);
 
-        setupRendererComponents(table);
+        installRenderers(table);
 
         borderColor = UIManager.getColor("TableHeader.borderColor");
         selectionBackground = UIManager.getColor("Table.backgroundSelected");
         selectionBackgroundNoFocus = UIManager.getColor("Table.backgroundSelectedNoFocus");
         rendererPane = createCellRendererPane();
         table.setSurrendersFocusOnKeystroke(true);
+    }
+
+    @Override
+    public void uninstallUI(JComponent c) {
+        uninstallRenderers(table);
+        super.uninstallUI(c);
     }
 
     @Override
@@ -150,20 +169,77 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
         return new DarkCellRendererPane();
     }
 
-    protected void setupRendererComponents(final JTable table) {
+    private TableCellEditor installEditor(final JTable table, final Class<?> type,
+            final TableCellEditor renderer) {
+        TableCellEditor oldRenderer = table.getDefaultEditor(type);
+        if (PropertyUtil.canOverwrite(oldRenderer)) {
+            table.setDefaultEditor(type, renderer);
+        }
+        return oldRenderer;
+    }
+
+    private TableCellRenderer installRenderer(final JTable table, final Class<?> type,
+            final TableCellRenderer renderer) {
+        TableCellRenderer oldRenderer = table.getDefaultRenderer(type);
+        if (PropertyUtil.canOverwrite(oldRenderer)) {
+            table.setDefaultRenderer(type, renderer);
+        }
+        return oldRenderer;
+    }
+
+    private void installRenderers(final JTable table) {
         booleanCellRenderer = new DarkBooleanCellRenderer(true);
-        TableCellRenderer cellRenderer = new DarkTableCellRenderer();
-        TableCellEditor cellEditor = new DarkTableCellEditorDelegate();
-        DarkColorTableCellRendererEditor colorRendererEditor = new DarkColorTableCellRendererEditor();
+        cellRenderer = new DarkTableCellRenderer();
+        cellEditor = new DarkTableCellEditorDelegate();
+        colorRendererEditor = new DarkColorTableCellRendererEditor();
 
-        table.setDefaultRenderer(Object.class, cellRenderer);
-        table.setDefaultRenderer(Boolean.class, booleanCellRenderer);
-        table.setDefaultRenderer(Color.class, colorRendererEditor);
+        oldObjectRenderer = installRenderer(table, Object.class, cellRenderer);
+        oldBooleanRenderer = installRenderer(table, Boolean.class, booleanCellRenderer);
+        oldColorRenderer = installRenderer(table, Color.class, colorRendererEditor);
 
-        table.setDefaultEditor(Object.class, cellEditor);
-        table.setDefaultEditor(Number.class, cellEditor);
-        table.setDefaultEditor(Boolean.class, cellEditor);
-        table.setDefaultEditor(Color.class, colorRendererEditor);
+        oldObjectEditor = installEditor(table, Object.class, cellEditor);
+        oldBooleanEditor = installEditor(table, Boolean.class, cellEditor);
+        oldColorEditor = installEditor(table, Color.class, colorRendererEditor);
+    }
+
+    private void uninstallRenderers(final JTable table) {
+        if (table.getDefaultRenderer(Object.class) == cellRenderer) {
+            table.setDefaultRenderer(Object.class, oldObjectRenderer);
+            if (oldObjectRenderer instanceof JComponent) {
+                ((JComponent) oldObjectRenderer).updateUI();
+            }
+        }
+        if (table.getDefaultRenderer(Boolean.class) == booleanCellRenderer) {
+            table.setDefaultRenderer(Boolean.class, oldBooleanRenderer);
+            if (oldBooleanRenderer instanceof JComponent) {
+                ((JComponent) oldBooleanRenderer).updateUI();
+            }
+        }
+        if (table.getDefaultRenderer(Color.class) == colorRendererEditor) {
+            table.setDefaultRenderer(Color.class, null);
+        }
+
+        if (table.getDefaultEditor(Object.class) == cellEditor) {
+            table.setDefaultEditor(Object.class, oldObjectEditor);
+            if (oldObjectEditor instanceof DefaultCellEditor) {
+                Component comp = ((DefaultCellEditor) oldObjectEditor).getComponent();
+                if (comp instanceof JComponent) {
+                    ((JComponent) comp).updateUI();
+                }
+            }
+        }
+        if (table.getDefaultEditor(Boolean.class) == cellEditor) {
+            table.setDefaultEditor(Boolean.class, oldBooleanEditor);
+            if (oldBooleanEditor instanceof DefaultCellEditor) {
+                Component comp = ((DefaultCellEditor) oldBooleanEditor).getComponent();
+                if (comp instanceof JComponent) {
+                    ((JComponent) comp).updateUI();
+                }
+            }
+        }
+        if (table.getDefaultEditor(Color.class) == colorRendererEditor) {
+            table.setDefaultEditor(Color.class, null);
+        }
     }
 
     @Override
