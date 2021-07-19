@@ -33,6 +33,9 @@ import java.util.logging.Logger;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import com.github.weisj.darklaf.ui.demo.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoSpec;
+import com.github.weisj.darklaf.util.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -42,11 +45,13 @@ import com.github.weisj.darklaf.ui.DemoLauncher;
 import com.github.weisj.darklaf.util.Lambdas;
 import com.github.weisj.darklaf.util.LogUtil;
 
+import javax.swing.JComponent;
 import javax.swing.UIManager;
 
 class DemoTest implements NonThreadSafeTest {
 
     private static final Logger LOGGER = LogUtil.getLogger(DemoTest.class);
+    private static final boolean EXTENSIVE = false;
 
     @Test
     void runningDemosDoesNotThrow() {
@@ -86,7 +91,9 @@ class DemoTest implements NonThreadSafeTest {
             return;
         }
         try {
-            AtomicReference<Window> windowRef = demo.start(Level.WARNING);
+            Pair<AtomicReference<Window>, ComponentDemo> startedDemo = demo.start(Level.WARNING);
+            AtomicReference<Window> windowRef = startedDemo.getFirst();
+            ComponentDemo componentDemo = startedDemo.getSecond();
             if (robot != null) robot.waitForIdle();
             synchronized (windowRef) {
                 while (windowRef.get() == null) {
@@ -95,6 +102,9 @@ class DemoTest implements NonThreadSafeTest {
             }
             TestUtils.runOnSwingThreadNotThrowing(
                     () -> Assertions.assertNotNull(windowRef.get()));
+            TestUtils.runOnSwingThreadNotThrowing(
+                    () -> testConfigurations(componentDemo));
+
             if (!demo.isDarklafOnly()) {
                 TestUtils.runOnSwingThreadNotThrowing(() -> {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -106,6 +116,22 @@ class DemoTest implements NonThreadSafeTest {
                     () -> TestUtils.closeWindow(windowRef.get()));
         } catch (final Exception e) {
             Assertions.fail(e);
+        }
+    }
+
+    private void testConfigurations(final ComponentDemo demo) {
+        if (!EXTENSIVE) return;
+        final List<DemoSpec<?>> specs = demo.getSpecs();
+        testConfigurations(demo.getComponent(), specs, 0);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void testConfigurations(final JComponent c, final List<DemoSpec<?>> specs, final int index) {
+        if (index >= specs.size()) return;
+        DemoSpec<Object> spec = (DemoSpec<Object>) specs.get(index);
+        for (Object possibleValue : spec.getPossibleValues()) {
+            spec.set(c, possibleValue);
+            testConfigurations(c, specs, index + 1);
         }
     }
 
