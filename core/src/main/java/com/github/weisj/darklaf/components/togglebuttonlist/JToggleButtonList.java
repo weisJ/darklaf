@@ -89,20 +89,31 @@ public class JToggleButtonList extends JList<JToggleButton> {
     }
 
     public void addToggleButton(final int index, final JToggleButton item) {
-        gettogglebuttonModel().add(index, item);
+        getToggleButtonModel().add(index, item);
     }
 
     public boolean isSelected(final int index) {
-        return gettogglebuttonModel().get(index).isSelected();
+        return getToggleButtonModel().get(index).isSelected();
     }
 
     public void setSelected(final int index, final boolean selected) {
-        gettogglebuttonModel().get(index).setSelected(selected);
+        getToggleButtonModel().get(index).setSelected(selected);
         repaint(getCellBounds(index, index));
     }
 
-    private DefaultListModel<JToggleButton> gettogglebuttonModel() {
+    private DefaultListModel<JToggleButton> getToggleButtonModel() {
         return ((DefaultListModel<JToggleButton>) getModel());
+    }
+
+    @Override
+    public void updateUI() {
+        super.updateUI();
+        if (getModel() instanceof DefaultListModel) {
+            DefaultListModel<JToggleButton> model = getToggleButtonModel();
+            for (int i = 0; i < model.getSize(); i++) {
+                model.get(i).updateUI();
+            }
+        }
     }
 
     /**
