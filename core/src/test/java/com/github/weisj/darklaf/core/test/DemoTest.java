@@ -85,27 +85,28 @@ class DemoTest implements NonThreadSafeTest {
             LOGGER.warning("Skipping");
             return;
         }
-        AtomicReference<Window> windowRef = demo.start(Level.WARNING);
-        if (robot != null) robot.waitForIdle();
         try {
+            AtomicReference<Window> windowRef = demo.start(Level.WARNING);
+            if (robot != null) robot.waitForIdle();
             synchronized (windowRef) {
                 while (windowRef.get() == null) {
                     windowRef.wait();
                 }
             }
-        } catch (InterruptedException ignored) {
+            TestUtils.runOnSwingThreadNotThrowing(
+                    () -> Assertions.assertNotNull(windowRef.get()));
+            if (!demo.isDarklafOnly()) {
+                TestUtils.runOnSwingThreadNotThrowing(() -> {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                    LafManager.updateLaf();
+                    LafManager.install(theme);
+                });
+            }
+            TestUtils.runOnSwingThreadNotThrowing(
+                    () -> TestUtils.closeWindow(windowRef.get()));
+        } catch (final Exception e) {
+            Assertions.fail(e);
         }
-        TestUtils.runOnSwingThreadNotThrowing(
-                () -> Assertions.assertNotNull(windowRef.get()));
-        if (!demo.isDarklafOnly()) {
-            TestUtils.runOnSwingThreadNotThrowing(() -> {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                LafManager.updateLaf();
-                LafManager.install(theme);
-            });
-        }
-        TestUtils.runOnSwingThreadNotThrowing(
-                () -> TestUtils.closeWindow(windowRef.get()));
     }
 
 }
