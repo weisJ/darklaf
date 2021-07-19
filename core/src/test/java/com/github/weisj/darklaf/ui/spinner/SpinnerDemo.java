@@ -25,13 +25,14 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.DemoPanel;
 
-public class SpinnerDemo implements ComponentDemo {
+public class SpinnerDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new SpinnerDemo());
+        DemoExecutor.showDemo(new SpinnerDemo());
     }
 
     @Override
@@ -81,7 +82,7 @@ public class SpinnerDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Spinner Demo";
     }
 }

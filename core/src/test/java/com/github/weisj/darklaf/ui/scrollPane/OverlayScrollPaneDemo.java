@@ -27,13 +27,14 @@ import java.util.Random;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.DemoPanel;
 
-public class OverlayScrollPaneDemo implements ComponentDemo {
+public class OverlayScrollPaneDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new OverlayScrollPaneDemo());
+        DemoExecutor.showDemo(new OverlayScrollPaneDemo());
     }
 
     @Override
@@ -72,7 +73,7 @@ public class OverlayScrollPaneDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "OverlayScrollPane Demo";
     }
 }

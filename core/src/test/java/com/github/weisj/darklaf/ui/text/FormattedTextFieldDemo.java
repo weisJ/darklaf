@@ -25,12 +25,13 @@ import java.text.NumberFormat;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
 public class FormattedTextFieldDemo extends TextFieldDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new FormattedTextFieldDemo());
+        DemoExecutor.showDemo(new FormattedTextFieldDemo());
     }
 
     @Override
@@ -46,7 +47,7 @@ public class FormattedTextFieldDemo extends TextFieldDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "FormattedTextField Demo";
     }
 }

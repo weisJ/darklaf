@@ -23,13 +23,13 @@ package com.github.weisj.darklaf.ui.button;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoResources;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
 public class ButtonDemo extends AbstractButtonDemo<JButton> {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new ButtonDemo());
+        DemoExecutor.showDemo(new ButtonDemo());
     }
 
     @Override
@@ -41,22 +41,18 @@ public class ButtonDemo extends AbstractButtonDemo<JButton> {
     }
 
     @Override
-    protected void addCheckBoxControls(final JPanel controlPanel, final JButton button) {
-        controlPanel.add(new JCheckBox("default") {
-            {
-                setSelected(button.isDefaultButton());
-                addActionListener(e -> {
-                    JRootPane rootPane = SwingUtilities.getRootPane(button);
-                    rootPane.setDefaultButton(isSelected() ? button : null);
-                    button.getParent().doLayout();
-                    button.getParent().repaint();
-                });
-            }
-        });
+    protected void initBaseControls() {
+        booleanSpec("default", (c, b) -> {
+            JRootPane rootPane = SwingUtilities.getRootPane(c);
+            rootPane.setDefaultButton(b ? c : null);
+            if (c.getParent() == null) return;
+            c.getParent().doLayout();
+            c.getParent().repaint();
+        }, JButton::isDefaultButton);
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Button Demo";
     }
 }

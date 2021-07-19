@@ -22,17 +22,20 @@
 package com.github.weisj.darklaf.ui.radioButton;
 
 import java.awt.*;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
 
-public class RadioButtonDemo implements ComponentDemo {
+public class RadioButtonDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new RadioButtonDemo());
+        DemoExecutor.showDemo(new RadioButtonDemo());
     }
 
     @Override
@@ -76,18 +79,16 @@ public class RadioButtonDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "RadioButton Demo";
     }
 
     @Override
-    public JMenuBar createMenuBar() {
-        JMenuBar menuBar = ComponentDemo.super.createMenuBar();
-        menuBar.add(new JMenu("Demo") {
+    public List<JMenu> createMenus() {
+        return Collections.singletonList(new JMenu("Demo") {
             {
                 add(new JRadioButtonMenuItem("RadioButton menu item"));
             }
         });
-        return menuBar;
     }
 }

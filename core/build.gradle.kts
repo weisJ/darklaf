@@ -23,6 +23,8 @@ dependencies {
 
     compileOnly(libs.nullabilityAnnotations)
     compileOnly(libs.swingx)
+    compileOnly(libs.autoservice.annotations)
+    annotationProcessor(libs.autoservice.processor)
 
     testImplementation(libs.jna)
     testImplementation(libs.svgSalamander)
@@ -32,9 +34,7 @@ dependencies {
     testImplementation(libs.test.lGoodDatePicker)
     testImplementation(libs.test.junit.api)
     testRuntimeOnly(libs.test.junit.engine)
-
-    compileOnly(libs.autoservice.annotations)
-    annotationProcessor(libs.autoservice.processor)
+    testCompileOnly(libs.nullabilityAnnotations)
 }
 
 fun JavaForkOptions.patchTestExecParams() {

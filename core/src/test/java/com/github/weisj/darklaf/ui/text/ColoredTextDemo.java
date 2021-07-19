@@ -32,12 +32,13 @@ import javax.swing.text.StyledDocument;
 
 import com.github.weisj.darklaf.listener.InsertDocumentListener;
 import com.github.weisj.darklaf.properties.color.DarkColorModelHSB;
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
 public class ColoredTextDemo extends TextPaneDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new ColoredTextDemo());
+        DemoExecutor.showDemo(new ColoredTextDemo());
     }
 
     @Override
@@ -57,7 +58,7 @@ public class ColoredTextDemo extends TextPaneDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Colored Text Demo";
     }
 }

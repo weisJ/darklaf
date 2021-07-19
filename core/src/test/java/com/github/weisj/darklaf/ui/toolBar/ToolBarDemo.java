@@ -27,16 +27,17 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
-public class ToolBarDemo implements ActionListener, ComponentDemo {
+public class ToolBarDemo extends BaseComponentDemo implements ActionListener {
     private static final String PREVIOUS = "previous";
     private static final String UP = "up";
     private static final String NEXT = "next";
     private JTextArea textArea;
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new ToolBarDemo());
+        DemoExecutor.showDemo(new ToolBarDemo());
     }
 
     @Override
@@ -95,7 +96,7 @@ public class ToolBarDemo implements ActionListener, ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "ToolBar Demo";
     }
 }

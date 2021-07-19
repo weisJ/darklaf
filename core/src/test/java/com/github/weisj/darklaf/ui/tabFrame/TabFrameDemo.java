@@ -34,7 +34,8 @@ import com.github.weisj.darklaf.components.tabframe.TabbedPopup;
 import com.github.weisj.darklaf.components.text.NonWrappingTextPane;
 import com.github.weisj.darklaf.components.text.NumberedTextComponent;
 import com.github.weisj.darklaf.components.text.NumberingPane;
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.DemoResources;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.Alignment;
@@ -42,15 +43,16 @@ import com.github.weisj.darklaf.util.PropertyValue;
 import com.github.weisj.darklaf.util.StringUtil;
 
 @DarklafOnly
-public class TabFrameDemo implements ComponentDemo {
+public class TabFrameDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
         System.setProperty(TransformUI.BUFFERED_REPAINT_FLAG, PropertyValue.TRUE);
-        ComponentDemo.showDemo(new TabFrameDemo());
+        DemoExecutor.showDemo(new TabFrameDemo());
     }
 
+
     @Override
-    public Dimension getDisplayDimension() {
+    public Dimension getWindowSize() {
         return new Dimension(1000, 500);
     }
 
@@ -114,7 +116,7 @@ public class TabFrameDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "TabFrame Demo";
     }
 }

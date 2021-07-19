@@ -22,16 +22,19 @@
 package com.github.weisj.darklaf.ui.popupMenu;
 
 import java.awt.*;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.DemoResources;
 
-public class PopupMenuDemo implements ComponentDemo {
+public class PopupMenuDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new PopupMenuDemo());
+        DemoExecutor.showDemo(new PopupMenuDemo());
     }
 
     @Override
@@ -125,27 +128,26 @@ public class PopupMenuDemo implements ComponentDemo {
     }
 
     @Override
-    public JMenuBar createMenuBar() {
-        JMenuBar menuBar = ComponentDemo.super.createMenuBar();
-        menuBar.add(new JMenu("CheckBoxes") {
-            {
-                for (int i = 0; i < 10; i++) {
-                    add(new JCheckBoxMenuItem("Item " + i));
-                }
-            }
-        });
-        menuBar.add(new JMenu("Many Items") {
-            {
-                for (int i = 0; i < 70; i++) {
-                    add(new JMenuItem("Item " + i));
-                }
-            }
-        });
-        return menuBar;
+    public List<JMenu> createMenus() {
+        return Arrays.asList(
+                new JMenu("CheckBoxes") {
+                    {
+                        for (int i = 0; i < 10; i++) {
+                            add(new JCheckBoxMenuItem("Item " + i));
+                        }
+                    }
+                },
+                new JMenu("Many Items") {
+                    {
+                        for (int i = 0; i < 70; i++) {
+                            add(new JMenuItem("Item " + i));
+                        }
+                    }
+                });
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "PopupMenu Demo";
     }
 }

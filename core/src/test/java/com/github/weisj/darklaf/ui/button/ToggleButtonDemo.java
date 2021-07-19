@@ -23,30 +23,25 @@ package com.github.weisj.darklaf.ui.button;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.DemoResources;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 
+import java.util.Arrays;
+
 public class ToggleButtonDemo extends AbstractButtonDemo<JToggleButton> {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new ToggleButtonDemo());
+        DemoExecutor.showDemo(new ToggleButtonDemo());
     }
 
     @Override
-    protected void addControls(final DemoPanel panel, final JToggleButton button) {
-        super.addControls(panel, button);
-        JPanel controlPanel = panel.addControls();
-        controlPanel.add(new JLabel(ToggleButtonConstants.KEY_VARIANT + ":"));
-        controlPanel.add(new JComboBox<String>() {
-            {
-                addItem(ToggleButtonConstants.VARIANT_SLIDER);
-                addItem("none");
-                setSelectedItem("none");
-                addItemListener(e -> button.putClientProperty("JToggleButton.variant", e.getItem()));
-            }
-        });
+    protected void init() {
+        spacer();
+        spec(ToggleButtonConstants.KEY_VARIANT,
+                Arrays.asList("none", ToggleButtonConstants.VARIANT_SLIDER));
     }
 
     @Override
@@ -56,7 +51,7 @@ public class ToggleButtonDemo extends AbstractButtonDemo<JToggleButton> {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "ToggleButton Demo";
     }
 }

@@ -33,11 +33,14 @@ import com.github.weisj.darklaf.core.test.DarklafOnly;
 import com.github.weisj.darklaf.core.test.DelicateDemo;
 import com.github.weisj.darklaf.core.test.util.ClassFinder;
 import com.github.weisj.darklaf.core.test.util.Instantiable;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
-public class DemoLauncher implements ComponentDemo {
+public class DemoLauncher extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new DemoLauncher());
+        DemoExecutor.showDemo(new DemoLauncher());
     }
 
     List<DemoEntry> demoClasses;
@@ -75,7 +78,7 @@ public class DemoLauncher implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Demo Launcher";
     }
 
@@ -92,7 +95,7 @@ public class DemoLauncher implements ComponentDemo {
         }
 
         public AtomicReference<Window> start(final Level logLevel) {
-            return ComponentDemo.showDemo(demo.instantiate(), true, logLevel);
+            return DemoExecutor.showDemo(demo.instantiate(), true, logLevel);
         }
 
         @Override

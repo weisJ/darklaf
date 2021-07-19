@@ -26,13 +26,15 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutionSpec;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
 public final class ColorChooserDemo {
 
     public static void main(final String[] args) {
         SwingUtilities.invokeLater(() -> {
-            LafManager.install(ComponentDemo.getTheme());
+            LafManager.install(DemoExecutor.getPreferredTheme());
             /*
              * In newer versions of the JDK you can control whether the transparency slider is visible or not.
              */

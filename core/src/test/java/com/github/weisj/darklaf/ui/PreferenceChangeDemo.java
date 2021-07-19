@@ -31,12 +31,14 @@ import javax.swing.*;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.properties.icons.SolidColorIcon;
 import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
-public class PreferenceChangeDemo implements ComponentDemo {
+public class PreferenceChangeDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
         LafManager.enabledPreferenceChangeReporting(false);
-        ComponentDemo.showDemo(new PreferenceChangeDemo());
+        DemoExecutor.showDemo(new PreferenceChangeDemo());
     }
 
     @Override
@@ -82,27 +84,22 @@ public class PreferenceChangeDemo implements ComponentDemo {
     }
 
     @Override
-    public WindowListener createWindowListener() {
-        return new WindowAdapter() {
+    public void configureWindow(final Window window) {
+        window.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(final WindowEvent e) {
                 LafManager.enabledPreferenceChangeReporting(false);
             }
-        };
+        });
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Preference Change Demo";
     }
 
     @Override
-    public Theme createTheme() {
+    public Theme getTheme() {
         return LafManager.themeForPreferredStyle(LafManager.getPreferredThemeStyle());
-    }
-
-    @Override
-    public JMenuBar createMenuBar() {
-        return null;
     }
 }

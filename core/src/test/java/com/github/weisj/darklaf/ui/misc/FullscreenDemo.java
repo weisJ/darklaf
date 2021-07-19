@@ -28,13 +28,14 @@ import java.awt.event.MouseListener;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
-public class FullscreenDemo implements ComponentDemo {
+public class FullscreenDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new FullscreenDemo());
+        DemoExecutor.showDemo(new FullscreenDemo());
     }
 
     @Override
@@ -69,7 +70,7 @@ public class FullscreenDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Fullscreen Demo";
     }
 }

@@ -25,61 +25,44 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.components.help.HelpButton;
 import com.github.weisj.darklaf.components.help.HelpMenuItem;
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.DemoPanel;
 
-public class HelpButtonDemo implements ComponentDemo {
+import java.awt.ComponentOrientation;
+import java.util.Collections;
+import java.util.List;
+
+public class HelpButtonDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new HelpButtonDemo());
+        DemoExecutor.showDemo(new HelpButtonDemo());
     }
 
     @Override
     public JComponent createComponent() {
-        HelpButton button = new HelpButton();
-
-        DemoPanel panel = new DemoPanel(button);
-        JPanel controlPanel = panel.addControls();
-        controlPanel.add(new JCheckBox("enabled") {
-            {
-                setSelected(button.isEnabled());
-                addActionListener(e -> button.setEnabled(isSelected()));
-            }
-        });
-        controlPanel.add(new JCheckBox("focusable") {
-            {
-                setSelected(button.isFocusable());
-                addActionListener(e -> button.setFocusable(isSelected()));
-            }
-        });
-        controlPanel.add(new JCheckBox("Rollover") {
-            {
-                setSelected(button.isRolloverEnabled());
-                addActionListener(e -> button.setRolloverEnabled(isSelected()));
-            }
-        });
-        controlPanel.add(new JCheckBox("Colored Icon") {
-            {
-                setSelected(button.isUseColoredIcon());
-                addActionListener(e -> button.setUseColoredIcon(isSelected()));
-            }
-        });
-        return panel;
+        return new HelpButton();
     }
 
     @Override
-    public JMenuBar createMenuBar() {
-        JMenuBar menuBar = ComponentDemo.super.createMenuBar();
-        menuBar.add(new JMenu("Help") {
+    protected void init() {
+        booleanSpec("enabled", JComponent::setEnabled, JComponent::isEnabled);
+        booleanSpec("focusable", JComponent::setFocusable, JComponent::isFocusable);
+        booleanSpec("Rollover", AbstractButton::setRolloverEnabled, AbstractButton::isRolloverEnabled);
+        booleanSpec("ColoredIcon", HelpButton::setUseColoredIcon, HelpButton::isUseColoredIcon);
+    }
+
+    @Override
+    public List<JMenu> createMenus() {
+        return Collections.singletonList(new JMenu("Help") {
             {
                 add(new HelpMenuItem("View Help"));
             }
         });
-        return menuBar;
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Help Button Demo";
     }
 }

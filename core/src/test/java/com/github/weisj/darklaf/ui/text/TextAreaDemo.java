@@ -25,12 +25,13 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
 public class TextAreaDemo extends TextComponentDemo<JTextArea> {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new TextAreaDemo());
+        DemoExecutor.showDemo(new TextAreaDemo());
     }
 
     @Override
@@ -41,7 +42,7 @@ public class TextAreaDemo extends TextComponentDemo<JTextArea> {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "TextArea Demo";
     }
 }

@@ -72,7 +72,9 @@ import com.github.weisj.darklaf.theme.info.AccentColorRule;
 import com.github.weisj.darklaf.theme.info.ColorToneRule;
 import com.github.weisj.darklaf.theme.info.ContrastRule;
 import com.github.weisj.darklaf.theme.info.FontSizeRule;
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutionSpec;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.button.ButtonConstants;
 import com.github.weisj.darklaf.ui.table.TableConstants;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
@@ -84,7 +86,7 @@ public class ThemeEditor extends JPanel {
 
     public static void main(final String[] args) {
         SwingUtilities.invokeLater(() -> {
-            LafManager.install(ComponentDemo.getTheme().derive(
+            LafManager.install(DemoExecutor.getPreferredTheme().derive(
                     FontSizeRule.getDefault(),
                     AccentColorRule.getDefault()));
             JFrame frame = new JFrame("Theme Editor");

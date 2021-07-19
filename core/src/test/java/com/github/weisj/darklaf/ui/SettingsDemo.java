@@ -27,11 +27,13 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.components.DefaultButton;
 import com.github.weisj.darklaf.settings.ThemeSettings;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
-public class SettingsDemo implements ComponentDemo {
+public class SettingsDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new SettingsDemo());
+        DemoExecutor.showDemo(new SettingsDemo());
     }
 
     @Override
@@ -64,12 +66,12 @@ public class SettingsDemo implements ComponentDemo {
     }
 
     @Override
-    public JMenuBar createMenuBar() {
-        return null;
+    public boolean hasMenuBar() {
+        return false;
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Settings Demo";
     }
 }

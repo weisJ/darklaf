@@ -26,14 +26,15 @@ import java.util.Optional;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.util.AlignmentExt;
 
-public class GridButtonsDemo implements ComponentDemo {
+public class GridButtonsDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new GridButtonsDemo());
+        DemoExecutor.showDemo(new GridButtonsDemo());
     }
 
     @Override
@@ -106,7 +107,7 @@ public class GridButtonsDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Grouped Button Demo";
     }
 }

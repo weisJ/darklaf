@@ -28,15 +28,16 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.components.iconeditor.IconEditor;
 import com.github.weisj.darklaf.core.test.DarklafOnly;
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.util.Pair;
 
 @DarklafOnly
-public class IconEditorDemo implements ComponentDemo {
+public class IconEditorDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new IconEditorDemo());
+        DemoExecutor.showDemo(new IconEditorDemo());
     }
 
     @Override
@@ -58,7 +59,7 @@ public class IconEditorDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Icon Editor Demo";
     }
 
