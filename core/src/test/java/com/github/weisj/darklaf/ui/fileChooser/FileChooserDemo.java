@@ -26,14 +26,15 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 public final class FileChooserDemo {
 
     public static void main(final String[] args) {
         SwingUtilities.invokeLater(() -> {
-            LafManager.install(ComponentDemo.getTheme());
+            LafManager.install(DemoExecutor.getPreferredTheme());
             JFileChooser chooser = new JFileChooser(System.getProperty("user.home"));
             chooser.addChoosableFileFilter(new FileNameExtensionFilter("Test Filter", ".svg"));
             chooser.setMultiSelectionEnabled(true);

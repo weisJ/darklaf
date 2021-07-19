@@ -28,12 +28,13 @@ import javax.swing.JLabel;
 import com.github.weisj.darklaf.graphics.ThemedColor;
 import com.github.weisj.darklaf.layout.LayoutHelper;
 import com.github.weisj.darklaf.properties.icons.SolidColorIcon;
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
-public class ColorPaletteDemo implements ComponentDemo {
+public class ColorPaletteDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new ColorPaletteDemo());
+        DemoExecutor.showDemo(new ColorPaletteDemo());
     }
 
     @Override
@@ -75,7 +76,7 @@ public class ColorPaletteDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Color Palette";
     }
 }

@@ -32,14 +32,15 @@ import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.properties.icons.UIAwareIcon;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.event.ThemeInstalledListener;
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
-public class IconDemo implements ComponentDemo {
+public class IconDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new IconDemo());
+        DemoExecutor.showDemo(new IconDemo());
     }
 
     private JPanel iconPanel;
@@ -96,7 +97,7 @@ public class IconDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Icon Demo";
     }
 }

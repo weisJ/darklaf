@@ -28,14 +28,15 @@ import javax.swing.*;
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.components.tree.TristateTreeNode;
 import com.github.weisj.darklaf.components.tristate.TristateState;
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.util.StringUtil;
 
-public class CheckBoxTreeDemo implements ComponentDemo {
+public class CheckBoxTreeDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new CheckBoxTreeDemo());
+        DemoExecutor.showDemo(new CheckBoxTreeDemo());
     }
 
     @Override
@@ -56,7 +57,7 @@ public class CheckBoxTreeDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Checkbox Tree Demo";
     }
 }

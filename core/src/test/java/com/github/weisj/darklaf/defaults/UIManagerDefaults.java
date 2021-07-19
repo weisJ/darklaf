@@ -39,10 +39,11 @@ import javax.swing.table.DefaultTableModel;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.properties.icons.IconLoader;
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.table.renderer.DarkColorTableCellRendererEditor;
 
-public class UIManagerDefaults implements ItemListener, ComponentDemo {
+public class UIManagerDefaults extends BaseComponentDemo implements ItemListener {
     private static final String[] COLUMN_NAMES = {"Key", "Value", "Sample"};
     private static String selectedItem;
     private final TreeMap<String, TreeMap<String, Object>> items = new TreeMap<>();
@@ -52,7 +53,7 @@ public class UIManagerDefaults implements ItemListener, ComponentDemo {
     private JTable table;
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new UIManagerDefaults());
+        DemoExecutor.showDemo(new UIManagerDefaults());
     }
 
     @Override
@@ -66,7 +67,7 @@ public class UIManagerDefaults implements ItemListener, ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "UIManager Defaults";
     }
 

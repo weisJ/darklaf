@@ -24,14 +24,15 @@ package com.github.weisj.darklaf.ui.label;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.components.loading.LoadingIndicator;
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.DemoResources;
 
 public class LoadIndicatorDemo extends LabelDemoBase<LoadingIndicator> {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new LoadIndicatorDemo());
+        DemoExecutor.showDemo(new LoadIndicatorDemo());
     }
 
     @Override
@@ -51,7 +52,7 @@ public class LoadIndicatorDemo extends LabelDemoBase<LoadingIndicator> {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Load Indicator Demo";
     }
 }

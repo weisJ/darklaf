@@ -39,16 +39,17 @@ import com.github.weisj.darklaf.core.test.util.ResourceWalker;
 import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
 import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.properties.icons.ThemedSVGIcon;
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.util.Lambdas;
 import com.github.weisj.darklaf.util.Pair;
 
-public class AllIcons implements ComponentDemo {
+public class AllIcons extends BaseComponentDemo {
 
     private static final int ICON_SIZE = 50;
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new AllIcons());
+        DemoExecutor.showDemo(new AllIcons());
     }
 
     public AllIcons() {
@@ -135,7 +136,7 @@ public class AllIcons implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "All Icons";
     }
 

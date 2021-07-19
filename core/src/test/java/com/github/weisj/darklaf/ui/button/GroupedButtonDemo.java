@@ -23,15 +23,16 @@ package com.github.weisj.darklaf.ui.button;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.AlignmentExt;
 
-public class GroupedButtonDemo implements ComponentDemo {
+public class GroupedButtonDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new GroupedButtonDemo());
+        DemoExecutor.showDemo(new GroupedButtonDemo());
     }
 
     @Override
@@ -72,7 +73,7 @@ public class GroupedButtonDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Grouped Button Demo";
     }
 }

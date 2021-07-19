@@ -30,7 +30,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
 /*
  * DialogDemo.java requires these files: CustomDialog.java images/middle.gif
@@ -76,7 +77,7 @@ public class DialogDemo extends JPanel {
     public static void main(final String[] args) {
         // Schedule a job for the event-dispatching thread:
         // creating and showing this application's GUI.
-        LafManager.install(ComponentDemo.getTheme());
+        LafManager.install(DemoExecutor.getPreferredTheme());
         javax.swing.SwingUtilities.invokeLater(DialogDemo::createAndShowGUI);
     }
 

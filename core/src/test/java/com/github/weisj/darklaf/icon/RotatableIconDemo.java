@@ -29,15 +29,16 @@ import javax.swing.*;
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.properties.icons.DarkSVGIcon;
 import com.github.weisj.darklaf.properties.icons.RotatableIcon;
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.DemoResources;
 import com.github.weisj.darklaf.util.Alignment;
 
-public class RotatableIconDemo implements ComponentDemo {
+public class RotatableIconDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new RotatableIconDemo());
+        DemoExecutor.showDemo(new RotatableIconDemo());
     }
 
     @Override
@@ -114,7 +115,7 @@ public class RotatableIconDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "RotatableIcon Demo";
     }
 }

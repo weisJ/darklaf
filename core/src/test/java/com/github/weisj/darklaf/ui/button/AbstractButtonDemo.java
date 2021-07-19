@@ -26,151 +26,63 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.components.color.QuickColorChooser;
-import com.github.weisj.darklaf.ui.ComponentDemo;
-import com.github.weisj.darklaf.ui.DemoPanel;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.util.AlignmentExt;
 
-public abstract class AbstractButtonDemo<T extends AbstractButton> implements ComponentDemo {
+public abstract class AbstractButtonDemo<T extends AbstractButton> extends BaseComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        T button = createButton();
-        DemoPanel panel = new DemoPanel(button);
-        addControls(panel, button);
-        return panel;
+        return createButton();
     }
 
-    protected void addCheckBoxControls(final JPanel controlPanel, final T button) {}
+    @SuppressWarnings("unchecked")
+    protected T getButton() {
+        return (T) getComponent();
+    }
+
+    @Override
+    protected void init() {
+        booleanSpec("enabled", JComponent::setEnabled, JComponent::isEnabled);
+        booleanSpec("focusable", JComponent::setFocusable, JComponent::isFocusable);
+        binaryOptionSpec("LeftToRight",
+                JComponent::setComponentOrientation, JComponent::getComponentOrientation,
+                ComponentOrientation.LEFT_TO_RIGHT, ComponentOrientation.RIGHT_TO_LEFT);
+        booleanSpec("Rollover", AbstractButton::setRolloverEnabled, AbstractButton::isRolloverEnabled);
+        booleanSpec("Content Area filled", AbstractButton::setContentAreaFilled, AbstractButton::isContentAreaFilled);
+        booleanSpec("Border painted", AbstractButton::setBorderPainted, AbstractButton::isBorderPainted);
+        booleanSpec("Focus painted", AbstractButton::setFocusPainted, AbstractButton::isFocusPainted);
+        initBaseControls();
+        spacer();
+        booleanSpec(DarkButtonUI.KEY_SQUARE);
+        booleanSpec(DarkButtonUI.KEY_ROUND);
+        booleanSpec(DarkButtonUI.KEY_THIN);
+        booleanSpec(DarkButtonUI.KEY_ALT_ARC);
+        booleanSpec("Button.defaultButtonFollowsFocus",
+                (c, b) -> UIManager.put("Button.defaultButtonFollowsFocus", b),
+                (c) -> UIManager.getBoolean("Button.defaultButtonFollowsFocus"));
+        spacer();
+        customControls(cp -> {
+            cp.add(new QuickColorChooser(DarkButtonUI.KEY_HOVER_COLOR, Color.BLACK,
+                    (b, c) -> getButton().putClientProperty(DarkButtonUI.KEY_HOVER_COLOR, b ? c : null)));
+            cp.add(new QuickColorChooser(DarkButtonUI.KEY_CLICK_COLOR, Color.BLACK,
+                    (b, c) -> getButton().putClientProperty(DarkButtonUI.KEY_CLICK_COLOR, b ? c : null)));
+        });
+        spacer();
+        binaryOptionSpec("Text enabled",
+                AbstractButton::setText, AbstractButton::getText,
+                "Test Button", null);
+        binaryOptionSpec("Icon enabled",
+                AbstractButton::setIcon, AbstractButton::getIcon,
+                ((AbstractButton) getComponent()).getIcon(), null);
+        spec(DarkButtonUI.KEY_VARIANT,
+                DarkButtonUI.VARIANT_NONE,
+                DarkButtonUI.VARIANT_BORDERLESS,
+                DarkButtonUI.VARIANT_BORDERLESS_RECTANGULAR);
+        enumSpecWithNone(DarkButtonUI.KEY_CORNER, AlignmentExt.class);
+    }
+
+    protected void initBaseControls() {}
 
     protected abstract T createButton();
-
-    protected void addControls(final DemoPanel panel, final T button) {
-        JPanel controlPanel = panel.addControls();
-        controlPanel.add(new JCheckBox("enabled") {
-            {
-                setSelected(button.isEnabled());
-                addActionListener(e -> button.setEnabled(isSelected()));
-            }
-        });
-        controlPanel.add(new JCheckBox("focusable") {
-            {
-                setSelected(button.isFocusable());
-                addActionListener(e -> button.setFocusable(isSelected()));
-            }
-        });
-        controlPanel.add(new JCheckBox("LeftToRight") {
-            {
-                setSelected(button.getComponentOrientation().isLeftToRight());
-                addActionListener(e -> button.setComponentOrientation(
-                        isSelected() ? ComponentOrientation.LEFT_TO_RIGHT : ComponentOrientation.RIGHT_TO_LEFT));
-            }
-        });
-        controlPanel.add(new JCheckBox("Rollover") {
-            {
-                setSelected(button.isRolloverEnabled());
-                addActionListener(e -> button.setRolloverEnabled(isSelected()));
-            }
-        });
-        controlPanel.add(new JCheckBox(DarkButtonUI.KEY_SQUARE) {
-            {
-                setSelected(false);
-                addActionListener(e -> button.putClientProperty(DarkButtonUI.KEY_SQUARE, isSelected()));
-            }
-        });
-        controlPanel.add(new JCheckBox(DarkButtonUI.KEY_ROUND) {
-            {
-                setSelected(false);
-                addActionListener(e -> button.putClientProperty(DarkButtonUI.KEY_ROUND, isSelected()));
-            }
-        });
-        controlPanel.add(new JCheckBox(DarkButtonUI.KEY_THIN) {
-            {
-                setSelected(false);
-                addActionListener(e -> button.putClientProperty(DarkButtonUI.KEY_THIN, isSelected()));
-            }
-        });
-        controlPanel.add(new JCheckBox(DarkButtonUI.KEY_ALT_ARC) {
-            {
-                setSelected(false);
-                addActionListener(e -> button.putClientProperty(DarkButtonUI.KEY_ALT_ARC, isSelected()));
-            }
-        });
-        controlPanel.add(new JCheckBox("Content area filled") {
-            {
-                setSelected(button.isContentAreaFilled());
-                addActionListener(e -> button.setContentAreaFilled(isSelected()));
-            }
-        });
-        controlPanel.add(new JCheckBox("Border painted") {
-            {
-                setSelected(button.isBorderPainted());
-                addActionListener(e -> button.setBorderPainted(isSelected()));
-            }
-        });
-        controlPanel.add(new JCheckBox("Focus Painted") {
-            {
-                setSelected(button.isFocusPainted());
-                addActionListener(e -> button.setFocusPainted(isSelected()));
-            }
-        });
-        controlPanel.add(new JCheckBox("Button.defaultButtonFollowsFocus") {
-            {
-                setSelected(UIManager.getBoolean("Button.defaultButtonFollowsFocus"));
-                addActionListener(e -> UIManager.put("Button.defaultButtonFollowsFocus", isSelected()));
-            }
-        });
-        addCheckBoxControls(controlPanel, button);
-
-        controlPanel = panel.addControls();
-        controlPanel.add(new JCheckBox("Text enabled") {
-            {
-                setSelected(true);
-                addActionListener(e -> button.setText(isSelected() ? "Test Button" : null));
-            }
-        });
-        controlPanel.add(new JCheckBox("Icon enabled") {
-            final Icon icon = button.getIcon();
-
-            {
-                setEnabled(icon != null);
-                setSelected(icon != null);
-                addActionListener(e -> button.setIcon(isSelected() ? icon : null));
-            }
-        });
-
-        controlPanel = panel.addControls();
-        controlPanel.add(new QuickColorChooser(DarkButtonUI.KEY_HOVER_COLOR, Color.BLACK,
-                (b, c) -> button.putClientProperty(DarkButtonUI.KEY_HOVER_COLOR, b ? c : null)));
-        controlPanel.add(new QuickColorChooser(DarkButtonUI.KEY_CLICK_COLOR, Color.BLACK,
-                (b, c) -> button.putClientProperty(DarkButtonUI.KEY_CLICK_COLOR, b ? c : null)));
-
-        controlPanel = panel.addControls();
-        controlPanel.add(new JLabel(DarkButtonUI.KEY_VARIANT + ":"));
-        controlPanel.add(new JComboBox<String>() {
-            {
-                addItem(DarkButtonUI.VARIANT_NONE);
-                addItem(DarkButtonUI.VARIANT_BORDERLESS);
-                addItem(DarkButtonUI.VARIANT_BORDERLESS_RECTANGULAR);
-                setSelectedItem(DarkButtonUI.VARIANT_NONE);
-                addItemListener(e -> button.putClientProperty(DarkButtonUI.KEY_VARIANT, e.getItem()));
-            }
-        });
-        controlPanel.add(new JLabel(DarkButtonUI.KEY_CORNER + ":"));
-        controlPanel.add(new JComboBox<String>() {
-            {
-                addItem("None");
-                for (AlignmentExt a : AlignmentExt.values()) {
-                    addItem(a.name());
-                }
-                setSelectedItem("None");
-                addItemListener(e -> {
-                    if ("None".equals(e.getItem())) {
-                        button.putClientProperty(DarkButtonUI.KEY_CORNER, null);
-                    } else {
-                        button.putClientProperty(DarkButtonUI.KEY_CORNER, AlignmentExt.valueOf(e.getItem().toString()));
-                    }
-                });
-            }
-        });
-    }
 }

@@ -30,15 +30,16 @@ import javax.swing.filechooser.FileSystemView;
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.components.filetree.FileTree;
 import com.github.weisj.darklaf.core.test.DelicateDemo;
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.button.ButtonConstants;
 
 @DelicateDemo(reason = "Deprecated")
-public class FileTreeDemo implements ComponentDemo {
+public class FileTreeDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new FileTreeDemo());
+        DemoExecutor.showDemo(new FileTreeDemo());
     }
 
     @Override
@@ -75,7 +76,7 @@ public class FileTreeDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "File Tree Demo";
     }
 

@@ -27,14 +27,15 @@ import java.util.Map;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-public final class ListDemo implements ComponentDemo {
+public final class ListDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new ListDemo());
+        DemoExecutor.showDemo(new ListDemo());
     }
 
     @Override
@@ -100,7 +101,7 @@ public final class ListDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "List Demo";
     }
 }
