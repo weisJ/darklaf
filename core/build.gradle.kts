@@ -21,6 +21,7 @@ dependencies {
     compileOnly(libs.nullabilityAnnotations)
     compileOnly(libs.swingx)
 
+    testImplementation(libs.jna)
     testImplementation(libs.svgSalamander)
     testImplementation(libs.bundles.test.miglayout)
     testImplementation(libs.swingx)

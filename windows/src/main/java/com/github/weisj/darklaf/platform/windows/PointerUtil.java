@@ -25,8 +25,6 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import com.sun.jna.Native;
-
 public final class PointerUtil {
 
     /**
@@ -37,6 +35,6 @@ public final class PointerUtil {
      */
     public static long getHWND(final Component component) {
         Window window = component instanceof Window ? (Window) component : SwingUtilities.getWindowAncestor(component);
-        return Native.getWindowID(window);
+        return JNIDecorationsWindows.getWindowHWND(window); // Native.getWindowID(window);
     }
 }

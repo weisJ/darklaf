@@ -1,3 +1,5 @@
+
+
 plugins {
     java
     id("dev.nokee.jni-library")
@@ -13,7 +15,6 @@ library {
         jvmImplementation(projects.darklafPlatformBase)
         jvmImplementation(projects.darklafTheme)
         jvmImplementation(projects.darklafPropertyLoader)
-        jvmLibImplementation(libs.jna)
     }
 
     targetMachines.addAll(machines.windows.x86, machines.windows.x86_64)
