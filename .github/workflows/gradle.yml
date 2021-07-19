@@ -37,6 +37,12 @@ jobs:
         with:
           name: windows-test-results
           path: build/test_results
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v1
+        if: ${{ always() }}
+        with:
+          name: windows-test-report
+          path: core/build/reports
 
   linux8:
     name: Linux (Java 8)
@@ -56,7 +62,13 @@ jobs:
         env:
           PROPS_GITHUB: "-PgithubAccessToken=${{ secrets.GITHUB_TOKEN }}"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew build -x test -PskipAutostyle -PskipModuleInfo -PfailIfLibraryMissing=true $(echo $PROPS_GITHUB) --no-daemon
+        run: xvfb-run -a -server-num=1 --server-args="-screen 0 2000x3000x16" ./gradlew build test -PskipAutostyle -PskipModuleInfo -PfailIfLibraryMissing=true $(echo $PROPS_GITHUB) --no-daemon
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v1
+        if: ${{ always() }}
+        with:
+          name: linux-8-test-report
+          path: core/build/reports
 
   linux:
     name: Linux (Java 11)
@@ -81,8 +93,14 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@v1
         with:
-          name: linux-test-results
+          name: linux-11-test-results
           path: build/test_results
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v1
+        if: ${{ always() }}
+        with:
+          name: linux-11-test-report
+          path: core/build/reports
 
   macos:
     name: macOS (Java 11)
@@ -113,3 +131,9 @@ jobs:
         with:
           name: macOS-test-results
           path: build/test_results
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v1
+        if: ${{ always() }}
+        with:
+          name: macOS-test-report
+          path: core/build/reports
