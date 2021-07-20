@@ -82,6 +82,11 @@ public abstract class AbstractButtonDemo<T extends AbstractButton> extends BaseC
         enumSpecWithNone(DarkButtonUI.KEY_CORNER, AlignmentExt.class);
     }
 
+    @Override
+    protected boolean supportsSpec() {
+        return true;
+    }
+
     protected void initBaseControls() {}
 
     protected abstract T createButton();

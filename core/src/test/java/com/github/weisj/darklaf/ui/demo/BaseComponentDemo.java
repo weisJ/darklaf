@@ -43,7 +43,7 @@ public abstract class BaseComponentDemo implements ComponentDemo, DemoExecutionS
     @Override
     public JComponent getContentPane() {
         JComponent component = getComponent();
-        if (component instanceof DemoPanel) return component;
+        if (!supportsSpec()) return component;
         init();
 
         DemoPanel demoPanel = new DemoPanel(component);
@@ -154,6 +154,10 @@ public abstract class BaseComponentDemo implements ComponentDemo, DemoExecutionS
 
     protected final void spacer() {
         addSpec(new SpacerSpec());
+    }
+
+    protected boolean supportsSpec() {
+        return false;
     }
 
     @Override
