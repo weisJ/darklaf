@@ -65,7 +65,7 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
             window.addNotify();
         }
         long hwnd = PointerUtil.getHWND(window);
-        if (hwnd != 0) {
+        if (hwnd > 0) {
             JNIDecorationsWindows.installPopupMenuDecorations(hwnd);
             if (window instanceof RootPaneContainer) {
                 JRootPane rootPane = ((RootPaneContainer) window).getRootPane();
