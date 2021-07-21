@@ -30,10 +30,10 @@ import javax.swing.filechooser.FileSystemView;
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.components.filetree.FileTree;
 import com.github.weisj.darklaf.core.test.DelicateDemo;
-import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
-import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.button.ButtonConstants;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
 @DelicateDemo(reason = "Deprecated")
 public class FileTreeDemo extends BaseComponentDemo {

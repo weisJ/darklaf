@@ -26,8 +26,6 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
-import com.github.weisj.darklaf.ui.demo.DemoExecutionSpec;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
 public final class ColorChooserDemo {

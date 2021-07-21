@@ -30,7 +30,6 @@ import javax.swing.*;
 import javax.swing.border.Border;
 
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
 /*

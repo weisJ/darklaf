@@ -36,7 +36,6 @@ import com.github.weisj.darklaf.core.test.util.Instantiable;
 import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.demo.ComponentDemo;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
-import com.github.weisj.darklaf.util.LazyValue;
 import com.github.weisj.darklaf.util.Pair;
 
 public class DemoLauncher extends BaseComponentDemo {

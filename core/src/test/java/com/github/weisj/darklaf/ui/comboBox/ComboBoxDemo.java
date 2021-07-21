@@ -25,10 +25,10 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
-import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.combobox.ComboBoxConstants;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.util.PropertyKey;
 
 public class ComboBoxDemo extends BaseComponentDemo {

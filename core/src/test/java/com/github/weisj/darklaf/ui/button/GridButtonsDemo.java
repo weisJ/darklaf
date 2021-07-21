@@ -26,9 +26,9 @@ import java.util.Optional;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
-import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.util.AlignmentExt;
 
 public class GridButtonsDemo extends BaseComponentDemo {

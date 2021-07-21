@@ -27,9 +27,9 @@ import java.util.List;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
-import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
 
 public class CheckBoxDemo extends BaseComponentDemo {

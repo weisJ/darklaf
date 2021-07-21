@@ -26,7 +26,6 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 
-import com.github.weisj.darklaf.core.test.DarklafOnly;
 import org.pbjar.jxlayer.plaf.ext.TransformUI;
 
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
@@ -34,9 +33,10 @@ import com.github.weisj.darklaf.components.tabframe.TabbedPopup;
 import com.github.weisj.darklaf.components.text.NonWrappingTextPane;
 import com.github.weisj.darklaf.components.text.NumberedTextComponent;
 import com.github.weisj.darklaf.components.text.NumberingPane;
+import com.github.weisj.darklaf.core.test.DarklafOnly;
+import com.github.weisj.darklaf.ui.DemoResources;
 import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
-import com.github.weisj.darklaf.ui.DemoResources;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.PropertyValue;

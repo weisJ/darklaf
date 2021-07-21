@@ -25,9 +25,9 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
-import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 

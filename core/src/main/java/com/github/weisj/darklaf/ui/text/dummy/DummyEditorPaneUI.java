@@ -59,12 +59,12 @@ public class DummyEditorPaneUI extends BasicEditorPaneUI implements DummyTextUIM
     public void uninstallUI(final JTextComponent editor) {
         try {
             super.uninstallUI(editor);
-        } catch (UninstallBlockedException ignored) {}
+        } catch (UninstallBlockedException ignored) {
+        }
     }
 
     @Override
-    protected void uninstallKeyboardActions() {
-    }
+    protected void uninstallKeyboardActions() {}
 
     @Override
     protected void uninstallListeners() {
@@ -72,5 +72,6 @@ public class DummyEditorPaneUI extends BasicEditorPaneUI implements DummyTextUIM
         throw new UninstallBlockedException();
     }
 
-    private static class UninstallBlockedException extends RuntimeException {}
+    private static class UninstallBlockedException extends RuntimeException {
+    }
 }

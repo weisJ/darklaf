@@ -31,9 +31,9 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableModel;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
-import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellEditor;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;

@@ -23,9 +23,9 @@ package com.github.weisj.darklaf.ui.font;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.ui.DemoResources;
 import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
-import com.github.weisj.darklaf.ui.DemoResources;
 
 public class FallbackFontDemo extends BaseComponentDemo {
 

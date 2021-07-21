@@ -27,8 +27,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,9 +35,9 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
 import com.github.weisj.darklaf.components.border.DarkBorders;
+import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
-import com.github.weisj.darklaf.ui.DemoPanel;
 
 public class InternalFrameDemo extends BaseComponentDemo implements ActionListener {
 

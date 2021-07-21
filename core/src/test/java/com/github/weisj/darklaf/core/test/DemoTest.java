@@ -30,23 +30,22 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import com.github.weisj.darklaf.ui.demo.ComponentDemo;
-import com.github.weisj.darklaf.ui.demo.DemoSpec;
-import com.github.weisj.darklaf.util.Pair;
+import javax.swing.JComponent;
+import javax.swing.UIManager;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.DemoLauncher;
+import com.github.weisj.darklaf.ui.demo.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoSpec;
 import com.github.weisj.darklaf.util.Lambdas;
 import com.github.weisj.darklaf.util.LogUtil;
-
-import javax.swing.JComponent;
-import javax.swing.UIManager;
+import com.github.weisj.darklaf.util.Pair;
 
 class DemoTest implements NonThreadSafeTest {
 

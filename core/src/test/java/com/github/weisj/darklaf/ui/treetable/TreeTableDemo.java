@@ -30,9 +30,9 @@ import javax.swing.*;
 import com.github.weisj.darklaf.components.treetable.JTreeTable;
 import com.github.weisj.darklaf.components.treetable.model.*;
 import com.github.weisj.darklaf.core.test.DelicateDemo;
+import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
-import com.github.weisj.darklaf.ui.DemoPanel;
 
 @DelicateDemo
 public class TreeTableDemo extends BaseComponentDemo {

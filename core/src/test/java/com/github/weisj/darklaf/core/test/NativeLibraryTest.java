@@ -21,16 +21,16 @@
  */
 package com.github.weisj.darklaf.core.test;
 
-import com.github.weisj.darklaf.nativeutil.NativeUtil;
+import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
+import com.github.weisj.darklaf.nativeutil.NativeUtil;
 import com.github.weisj.darklaf.platform.macos.MacOSLibrary;
 import com.github.weisj.darklaf.platform.windows.WindowsLibrary;
-
-import java.util.List;
 
 /**
  * Note: These test aren't located in their respective subprojects to ensure they are run using the

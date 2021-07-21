@@ -26,9 +26,9 @@ import java.util.Collections;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.ui.DemoResources;
 import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
-import com.github.weisj.darklaf.ui.DemoResources;
 
 public class KerningDemo extends BaseComponentDemo {
 
