@@ -182,7 +182,11 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
 
     private void patchOSFonts(final UIDefaults defaults, final Function<Map.Entry<Object, Font>, Font> mapper) {
         PropertyLoader.replacePropertyEntriesOfType(Font.class, defaults,
-                e -> Font.DIALOG.equals(e.getValue().getName()), mapper);
+                e -> isDefaultFont(e.getValue()), mapper);
+    }
+
+    private boolean isDefaultFont(final Font font) {
+        return Font.DIALOG.equals(font.getFamily());
     }
 
     private Font mapMacOSFont(final Map.Entry<Object, Font> entry) {
