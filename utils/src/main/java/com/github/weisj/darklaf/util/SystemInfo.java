@@ -31,6 +31,7 @@ public final class SystemInfo {
     public static final String OS_NAME = System.getProperty("os.name");
     public static final String OS_VERSION = System.getProperty("os.version").toLowerCase(Locale.ENGLISH);
     public static final String JAVA_VERSION = System.getProperty("java.version");
+    public static final String JAVA_HOME = System.getProperty("java.home");
     public static final String JAVA_RUNTIME_VERSION = System.getProperty("java.runtime.version");
 
     public static final boolean isWindows;

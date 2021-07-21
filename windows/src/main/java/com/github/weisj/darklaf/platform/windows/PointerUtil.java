@@ -22,10 +22,16 @@
 package com.github.weisj.darklaf.platform.windows;
 
 import java.awt.*;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.util.LogUtil;
+import com.github.weisj.darklaf.util.SystemInfo;
+
 public final class PointerUtil {
+
+    private static final Logger LOGGER = LogUtil.getLogger(PointerUtil.class);
 
     /**
      * Get the window handle for the window the given component descends from.
@@ -34,7 +40,16 @@ public final class PointerUtil {
      * @return the handle.
      */
     public static long getHWND(final Component component) {
-        Window window = component instanceof Window ? (Window) component : SwingUtilities.getWindowAncestor(component);
-        return JNIDecorationsWindows.getWindowHWND(window); // Native.getWindowID(window);
+        Window window = component instanceof Window
+                ? (Window) component
+                : SwingUtilities.getWindowAncestor(component);
+        String javaLibPath = SystemInfo.JAVA_HOME != null
+                ? SystemInfo.JAVA_HOME + "/bin/jawt.dll"
+                : "jawt.dll";
+        long hwnd = JNIDecorationsWindows.getWindowHWND(window, javaLibPath);
+        if (hwnd < 0) {
+            LOGGER.severe("Couldn't get HWND of window (errorCode =" + hwnd + ")." + component);
+        }
+        return hwnd;
     }
 }

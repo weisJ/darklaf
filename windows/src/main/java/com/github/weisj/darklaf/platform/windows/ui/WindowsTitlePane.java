@@ -276,7 +276,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         if (!window.isDisplayable()) return false;
         if (window instanceof Dialog || window instanceof Frame) {
             windowHandle = PointerUtil.getHWND(window);
-            if (windowHandle != 0) {
+            if (windowHandle > 0) {
                 LOGGER.fine("Installing decorations for window " + windowHandle);
                 if (!JNIDecorationsWindows.installDecorations(windowHandle)) {
                     LOGGER.fine("Already installed.");

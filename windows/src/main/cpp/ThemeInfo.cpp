@@ -49,7 +49,7 @@ constexpr auto HIGH_CONTRAST_DEFAULT_VALUE = false;
 constexpr auto FONT_SCALE_DEFAULT_VALUE = 100;
 constexpr auto ACCENT_COLOR_DEFAULT_VALUE = 0;
 
-void ModifyFlags(DWORD &flags) {
+static void ModifyFlags(DWORD &flags) {
 #ifdef _WIN64
     flags |= RRF_SUBKEY_WOW6464KEY;
 #else
@@ -57,7 +57,7 @@ void ModifyFlags(DWORD &flags) {
 #endif
 }
 
-DWORD RegGetDword(HKEY hKey, const LPCSTR subKey, const LPCSTR value) {
+static DWORD RegGetDword(HKEY hKey, const LPCSTR subKey, const LPCSTR value) {
     DWORD data {};
     DWORD dataSize = sizeof(data);
     DWORD flags = RRF_RT_REG_DWORD;
@@ -68,7 +68,7 @@ DWORD RegGetDword(HKEY hKey, const LPCSTR subKey, const LPCSTR value) {
     return data;
 }
 
-std::string RegGetString(HKEY hKey, const LPCSTR subKey, const LPCSTR value) {
+static std::string RegGetString(HKEY hKey, const LPCSTR subKey, const LPCSTR value) {
     DWORD dataSize {};
     DWORD flags = RRF_RT_REG_SZ;
     ModifyFlags(flags);
@@ -84,7 +84,7 @@ std::string RegGetString(HKEY hKey, const LPCSTR subKey, const LPCSTR value) {
     return data;
 }
 
-bool IsHighContrastMode() {
+static bool IsHighContrastMode() {
     HIGHCONTRAST info = { 0, 0, 0 };
     info.cbSize = sizeof(HIGHCONTRAST);
     BOOL ok = SystemParametersInfo(SPI_GETHIGHCONTRAST, 0, &info, 0);
@@ -94,7 +94,7 @@ bool IsHighContrastMode() {
     return HIGH_CONTRAST_DEFAULT_VALUE;
 }
 
-bool IsDarkMode() {
+static bool IsDarkMode() {
     try {
         bool appsUseDark = (0 == RegGetDword(HKEY_CURRENT_USER, DARK_MODE_PATH, DARK_MODE_KEY));
         bool isHighContrast = IsHighContrastMode();
@@ -107,7 +107,7 @@ bool IsDarkMode() {
     }
 }
 
-unsigned int GetTextScaleFactor() {
+static unsigned int GetTextScaleFactor() {
     try {
         return RegGetDword(HKEY_CURRENT_USER, FONT_SCALE_PATH, FONT_SCALE_KEY);
     } catch (LONG) {
@@ -115,7 +115,7 @@ unsigned int GetTextScaleFactor() {
     }
 }
 
-bool RegisterRegistryEvent(const LPCSTR subKey, HANDLE event) {
+static bool RegisterRegistryEvent(const LPCSTR subKey, HANDLE event) {
     HKEY hKey;
     REGSAM flags = KEY_NOTIFY;
     ModifyFlags(flags);
@@ -128,7 +128,7 @@ bool RegisterRegistryEvent(const LPCSTR subKey, HANDLE event) {
     }
 }
 
-int GetAccentColor() {
+static int GetAccentColor() {
     try {
         return RegGetDword(HKEY_CURRENT_USER, ACCENT_COLOR_PATH, ACCENT_COLOR_KEY);
     } catch (LONG) {

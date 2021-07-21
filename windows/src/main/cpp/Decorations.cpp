@@ -24,8 +24,6 @@
  */
 #include "Decorations.h"
 #include "com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows.h"
-#include <jawt.h>
-#include <jawt_md.h>
 
 #ifndef WM_NCUAHDRAWCAPTION
 #define WM_NCUAHDRAWCAPTION (0x00AE)
@@ -36,13 +34,13 @@
 
 std::map<HWND, WindowWrapper*> wrapper_map = std::map<HWND, WindowWrapper*>();
 
-bool Maximized(HWND hwnd) {
+static bool Maximized(HWND hwnd) {
     WINDOWPLACEMENT placement;
     if (!GetWindowPlacement(hwnd, &placement)) return false;
     return placement.showCmd == SW_MAXIMIZE;
 }
 
-bool IsLeftMousePressed(WindowWrapper *wrapper) {
+static bool IsLeftMousePressed(WindowWrapper *wrapper) {
     if (wrapper->left_pressed) return true;
     if (GetSystemMetrics (SM_SWAPBUTTON)) {
         return GetAsyncKeyState(VK_RBUTTON) < 0;
@@ -51,7 +49,7 @@ bool IsLeftMousePressed(WindowWrapper *wrapper) {
     }
 }
 
-LRESULT HandleHitTest(WindowWrapper *wrapper, int x, int y) {
+static LRESULT HandleHitTest(WindowWrapper *wrapper, int x, int y) {
     if (wrapper->popup_menu) return HTCLIENT;
 
     POINT ptMouse = { x, y };
@@ -124,7 +122,7 @@ LRESULT HandleHitTest(WindowWrapper *wrapper, int x, int y) {
 // @formatter:on
 }
 
-void UpdateRegion(WindowWrapper *wrapper) {
+static void UpdateRegion(WindowWrapper *wrapper) {
     if (wrapper->popup_menu) return;
     RECT old_rgn = wrapper->rgn;
 
@@ -161,7 +159,7 @@ void UpdateRegion(WindowWrapper *wrapper) {
     else SetWindowRgn(wrapper->window, CreateRectRgnIndirect(&wrapper->rgn), TRUE);
 }
 
-bool AutoHideTaskbar(UINT edge, RECT mon) {
+static bool AutoHideTaskbar(UINT edge, RECT mon) {
     APPBARDATA data;
     data.cbSize = sizeof(APPBARDATA);
     data.uEdge = edge;
@@ -169,23 +167,10 @@ bool AutoHideTaskbar(UINT edge, RECT mon) {
     return SHAppBarMessage(ABM_GETAUTOHIDEBAREX, &data);
 }
 
-void AdjustMaximizedClientArea(HWND window, RECT &rect) {
-    if (!Maximized(window)) return;
-
-    HMONITOR monitor = MonitorFromWindow(window, MONITOR_DEFAULTTOPRIMARY);
-    if (!monitor) return;
-
-    MONITORINFO monitor_info {};
-    monitor_info.cbSize = sizeof(MONITORINFO);
-    if (!GetMonitorInfo(monitor, &monitor_info)) return;
-
-    rect = monitor_info.rcWork;
-}
-
 /**
  * Adjust the maximized frame size to respect auto hiding taskbars.
  */
-void HandleNCCalcSize(WindowWrapper *wrapper, WPARAM wparam, LPARAM lparam) {
+static void HandleNCCalcSize(WindowWrapper *wrapper, WPARAM wparam, LPARAM lparam) {
     union {
         LPARAM lparam;
         RECT *rect;
@@ -245,7 +230,7 @@ void HandleNCCalcSize(WindowWrapper *wrapper, WPARAM wparam, LPARAM lparam) {
     }
 }
 
-void HandleWindowPosChanged(WindowWrapper *wrapper, const WINDOWPOS *pos) {
+static void HandleWindowPosChanged(WindowWrapper *wrapper, const WINDOWPOS *pos) {
     RECT client;
     GetClientRect(wrapper->window, &client);
     LONG old_width = wrapper->width;
@@ -257,7 +242,7 @@ void HandleWindowPosChanged(WindowWrapper *wrapper, const WINDOWPOS *pos) {
     if (client_changed || (pos->flags & SWP_FRAMECHANGED)) UpdateRegion(wrapper);
 }
 
-void PaintBackground(HWND hwnd, WPARAM wParam, WindowWrapper *wrapper) {
+static void PaintBackground(HWND hwnd, WPARAM wParam, WindowWrapper *wrapper) {
     HDC hdc = reinterpret_cast<HDC>(wParam);
     RECT clientRect;
     GetClientRect(hwnd, &clientRect);
@@ -268,7 +253,7 @@ void PaintBackground(HWND hwnd, WPARAM wParam, WindowWrapper *wrapper) {
  * Extend the client area into the frame. Leaves a the margin at the top to make sure windows still recognizes the
  * window to have a size frame. Otherwise no shadow is drawn.
  */
-void ExtendClientFrame(HWND handle) {
+static void ExtendClientFrame(HWND handle) {
     MARGINS margins = { 0, 0, 1, 0 };
     DwmExtendFrameIntoClientArea(handle, &margins);
 }
@@ -276,13 +261,13 @@ void ExtendClientFrame(HWND handle) {
 /**
  * Make sure windows recognizes the window to be resizable. Necessary for shadows and aero-snap.
  */
-void SetupWindowStyle(HWND handle) {
+static void SetupWindowStyle(HWND handle) {
     auto style = GetWindowLongPtr(handle, GWL_STYLE);
     style |= WS_THICKFRAME;
     SetWindowLongPtr(handle, GWL_STYLE, style);
 }
 
-bool InstallDecorations(HWND handle, bool is_popup) {
+static bool InstallDecorations(HWND handle, bool is_popup) {
     // Prevent multiple installations overriding the real window procedure.
     auto it = wrapper_map.find(handle);
     if (it != wrapper_map.end()) return false;
@@ -305,7 +290,7 @@ bool InstallDecorations(HWND handle, bool is_popup) {
     return true;
 }
 
-void UninstallDecorations(WindowWrapper *wrapper, bool decorated) {
+static void UninstallDecorations(WindowWrapper *wrapper, bool decorated) {
     HWND handle = wrapper->window;
 
     // Restore old window procedure.
@@ -460,64 +445,4 @@ JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_restore(JNIEnv*, jclass, jlong hwnd) {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     ShowWindow(handle, SW_RESTORE);
-}
-
-HMODULE _hAWT = 0;
-
-JNIEXPORT jlong JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_getWindowHWND(JNIEnv *env, jclass, jobject window) {
-    HWND hWnd = 0;
-    typedef jboolean (JNICALL *PJAWT_GETAWT)(JNIEnv*, JAWT*);
-    JAWT awt;
-    JAWT_DrawingSurface* ds;
-    JAWT_DrawingSurfaceInfo* dsi;
-    JAWT_Win32DrawingSurfaceInfo* dsi_win;
-    jboolean result;
-    jint lock;
-
-    //Load AWT Library
-    if(!_hAWT) {
-        _hAWT = LoadLibrary("jawt.dll");
-    }
-    if (!_hAWT) {
-        return -7;
-    }
-
-    PJAWT_GETAWT JAWT_GetAWT = (PJAWT_GETAWT)GetProcAddress(_hAWT, "JAWT_GetAWT");
-    if (!JAWT_GetAWT) {
-        return -6;
-    }
-
-    awt.version = JAWT_VERSION_1_4; // Init here with JAWT_VERSION_1_3 or JAWT_VERSION_1_4
-    //Get AWT API Interface
-    result = JAWT_GetAWT(env, &awt);
-    if (result == JNI_FALSE) {
-        return -5;
-    }
-
-    ds = awt.GetDrawingSurface(env, window);
-    if (ds == NULL) {
-        return -4;
-    }
-
-    lock = ds->Lock(ds);
-    if((lock & JAWT_LOCK_ERROR) == 0) {
-        dsi = ds->GetDrawingSurfaceInfo(ds);
-        if(dsi) {
-            dsi_win = (JAWT_Win32DrawingSurfaceInfo*)dsi->platformInfo;
-            if(dsi_win) {
-                hWnd = dsi_win->hwnd;
-            } else {
-                hWnd = (HWND) -1;
-            }
-            ds->FreeDrawingSurfaceInfo(dsi);
-        } else {
-            hWnd = (HWND) -2;
-        }
-        ds->Unlock(ds);
-    } else {
-        hWnd = (HWND) -3;
-    }
-    awt.FreeDrawingSurface(ds);
-    return reinterpret_cast<jlong>(hWnd);
 }
