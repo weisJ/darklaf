@@ -26,7 +26,6 @@ import java.util.logging.Logger;
 import com.github.weisj.darklaf.components.ClosableTabbedPane;
 import com.github.weisj.darklaf.components.TabEvent;
 import com.github.weisj.darklaf.components.TabListener;
-import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.util.LogUtil;
 

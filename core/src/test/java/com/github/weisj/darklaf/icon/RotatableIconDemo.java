@@ -29,10 +29,10 @@ import javax.swing.*;
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.properties.icons.DarkSVGIcon;
 import com.github.weisj.darklaf.properties.icons.RotatableIcon;
-import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
-import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.DemoResources;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.util.Alignment;
 
 public class RotatableIconDemo extends BaseComponentDemo {

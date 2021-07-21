@@ -20,7 +20,7 @@ plugins {
 val skipJavadoc by props()
 val enableMavenLocal by props(false)
 val enableGradleMetadata by props()
-val skipAutostyle by props(true)
+val skipAutostyle by props(false)
 val isRelease = project.stringProperty("release").toBool()
 val snapshotName by props("")
 

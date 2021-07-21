@@ -28,12 +28,12 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.SwingUtilities;
 
-import com.github.weisj.darklaf.util.Lambdas;
 import org.junit.jupiter.api.Assertions;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.IntelliJTheme;
 import com.github.weisj.darklaf.theme.Theme;
+import com.github.weisj.darklaf.util.Lambdas;
 
 final class TestUtils {
 

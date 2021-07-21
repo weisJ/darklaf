@@ -28,9 +28,9 @@ import javax.swing.*;
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.components.tree.TristateTreeNode;
 import com.github.weisj.darklaf.components.tristate.TristateState;
+import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
-import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.util.StringUtil;
 
 public class CheckBoxTreeDemo extends BaseComponentDemo {

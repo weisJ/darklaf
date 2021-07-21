@@ -28,11 +28,8 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.components.button.JSplitButton;
 import com.github.weisj.darklaf.core.test.DarklafOnly;
-import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
-import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.DemoResources;
-import com.github.weisj.darklaf.ui.demo.DemoSpec;
-import com.kitfox.svg.A;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
 @DarklafOnly
 public class SplitButtonDemo extends ButtonDemo {

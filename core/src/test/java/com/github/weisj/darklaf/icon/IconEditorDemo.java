@@ -28,9 +28,9 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.components.iconeditor.IconEditor;
 import com.github.weisj.darklaf.core.test.DarklafOnly;
+import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
-import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.util.Pair;
 
 @DarklafOnly

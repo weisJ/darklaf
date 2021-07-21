@@ -24,10 +24,9 @@ package com.github.weisj.darklaf.ui.label;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.components.loading.LoadingIndicator;
-import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
-import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.DemoResources;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
 public class LoadIndicatorDemo extends LabelDemoBase<LoadingIndicator> {
 

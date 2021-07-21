@@ -23,7 +23,6 @@ package com.github.weisj.darklaf.ui.text;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
 public class TextPaneDemo extends TextComponentDemo<JTextPane> {

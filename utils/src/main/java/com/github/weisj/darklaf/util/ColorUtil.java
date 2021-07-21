@@ -25,8 +25,6 @@ import java.awt.*;
 
 import javax.swing.plaf.UIResource;
 
-import com.github.weisj.darklaf.util.ColorWrapper;
-import com.github.weisj.darklaf.util.PropertyUtil;
 
 /** @author Jannis Weis */
 public final class ColorUtil {
@@ -117,9 +115,9 @@ public final class ColorUtil {
 
     public static int rgbNoAlpha(final Color color) {
         return ((0) << 24) |
-               ((color.getRed() & 0xFF) << 16) |
-               ((color.getGreen() & 0xFF) << 8) |
-               ((color.getBlue() & 0xFF));
+                ((color.getRed() & 0xFF) << 16) |
+                ((color.getGreen() & 0xFF) << 8) |
+                ((color.getBlue() & 0xFF));
     }
 
     /**

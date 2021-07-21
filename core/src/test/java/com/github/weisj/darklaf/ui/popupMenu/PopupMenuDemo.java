@@ -27,9 +27,9 @@ import java.util.List;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.ui.DemoResources;
 import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
-import com.github.weisj.darklaf.ui.DemoResources;
 
 public class PopupMenuDemo extends BaseComponentDemo {
 

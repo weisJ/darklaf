@@ -21,17 +21,15 @@
  */
 package com.github.weisj.darklaf.ui.button;
 
+import java.util.Collections;
+import java.util.List;
+
 import javax.swing.*;
 
 import com.github.weisj.darklaf.components.help.HelpButton;
 import com.github.weisj.darklaf.components.help.HelpMenuItem;
 import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
-import com.github.weisj.darklaf.ui.DemoPanel;
-
-import java.awt.ComponentOrientation;
-import java.util.Collections;
-import java.util.List;
 
 public class HelpButtonDemo extends BaseComponentDemo {
 

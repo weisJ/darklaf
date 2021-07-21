@@ -21,15 +21,13 @@
  */
 package com.github.weisj.darklaf.ui.button;
 
+import java.util.Arrays;
+
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
-import com.github.weisj.darklaf.ui.demo.DemoExecutor;
-import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.DemoResources;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
-
-import java.util.Arrays;
 
 public class ToggleButtonDemo extends AbstractButtonDemo<JToggleButton> {
 

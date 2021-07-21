@@ -30,9 +30,9 @@ import javax.swing.*;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.graphics.ThemedColor;
 import com.github.weisj.darklaf.theme.event.ThemeInstalledListener;
+import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
-import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.splitpane.DividerStyle;
 import com.github.weisj.darklaf.ui.splitpane.SplitPaneConstants;
 
