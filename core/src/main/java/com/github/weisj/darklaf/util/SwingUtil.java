@@ -45,8 +45,6 @@ import javax.swing.plaf.synth.SynthContext;
 import javax.swing.plaf.synth.SynthGraphicsUtils;
 import javax.swing.plaf.synth.SynthStyle;
 
-import sun.swing.SwingUtilities2;
-
 import com.intellij.util.ui.UIUtilities;
 
 public final class SwingUtil {
@@ -101,7 +99,7 @@ public final class SwingUtil {
 
     public static void drawStringUnderlineCharAt(final JComponent c, final Graphics g,
             final String text, final int underlinedIndex, final int x, final int y) {
-        FontMetrics fm = SwingUtilities2.getFontMetrics(c, g);
+        FontMetrics fm = c.getFontMetrics(g.getFont());
         int adjustedY = y - fm.getAscent();
         SYNTH_GRAPHICS_UTILS.paintText(createSynthContext(c), g, text, x, adjustedY, underlinedIndex);
     }
