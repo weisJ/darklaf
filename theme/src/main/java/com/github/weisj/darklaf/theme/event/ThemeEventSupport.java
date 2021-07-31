@@ -43,10 +43,8 @@ public class ThemeEventSupport<E extends ThemeEvent, T extends ThemeEventListene
     }
 
     public void dispatchEvent(final E event, final BiConsumer<T, E> consumer) {
-        for (T listener : listenerList) {
-            if (listener != null) {
-                consumer.accept(listener, event);
-            }
-        }
+        listenerList.forEach(listener -> {
+            if (listener != null) consumer.accept(listener, event);
+        });
     }
 }
