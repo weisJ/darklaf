@@ -173,7 +173,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
     private final RepaintManagerProvider rpmProvider = new RepaintManagerProvider() {
 
         @Override
-        public WrappedRepaintManager createWrappedRepaintManager(final RepaintManager delegate) {
+        public RepaintManager createWrappedRepaintManager(final RepaintManager delegate) {
             return new TransformRPMFallBack(delegate);
         }
 

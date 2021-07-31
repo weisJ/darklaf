@@ -47,7 +47,7 @@ public interface RepaintManagerProvider {
      *
      * @return a class object
      */
-    WrappedRepaintManager createWrappedRepaintManager(final RepaintManager delegate);
+    RepaintManager createWrappedRepaintManager(final RepaintManager delegate);
 
     /**
      * Checks whether or not the argument class is a {@link RepaintManager} class that will do the required job.
