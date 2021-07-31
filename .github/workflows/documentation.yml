@@ -1,8 +1,6 @@
 name: Documentation
 on:
   push:
-    branches:
-      - 'master'
     paths:
       - '**.properties'
       - '**/CreateUITable.java'
@@ -24,11 +22,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Setup XCode
-        uses: maxim-lobanov/setup-xcode@v1
-        if: runner.os == 'macOS'
-        with:
-          xcode-version: '12.1'
       - name: Build documentation
         uses: eskatos/gradle-command-action@v1
         with:
