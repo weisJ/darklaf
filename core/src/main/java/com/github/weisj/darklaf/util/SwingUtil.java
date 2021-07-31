@@ -21,6 +21,7 @@
  */
 package com.github.weisj.darklaf.util;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -37,12 +38,22 @@ import javax.swing.JList;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.plaf.synth.ColorType;
+import javax.swing.plaf.synth.Region;
+import javax.swing.plaf.synth.SynthConstants;
+import javax.swing.plaf.synth.SynthContext;
+import javax.swing.plaf.synth.SynthGraphicsUtils;
+import javax.swing.plaf.synth.SynthStyle;
+
+import sun.swing.SwingUtilities2;
 
 import com.intellij.util.ui.UIUtilities;
 
 public final class SwingUtil {
 
     private static final Logger LOGGER = LogUtil.getLogger(SwingUtil.class);
+    private static final PaintSynthStyle PAINT_STYLE = new PaintSynthStyle();
+    private static final SynthGraphicsUtils SYNTH_GRAPHICS_UTILS = new SynthGraphicsUtils();
 
     private SwingUtil() {}
 
@@ -88,13 +99,15 @@ public final class SwingUtil {
         }
     }
 
-    public static void drawStringUnderlineCharAt(JComponent c, Graphics g,
-            String text, int underlinedIndex, int x, int y) {
-        UIUtilities.drawStringUnderlineCharAt(c, g, text, underlinedIndex, x, y);
+    public static void drawStringUnderlineCharAt(final JComponent c, final Graphics g,
+            final String text, final int underlinedIndex, final int x, final int y) {
+        FontMetrics fm = SwingUtilities2.getFontMetrics(c, g);
+        int adjustedY = y - fm.getAscent();
+        SYNTH_GRAPHICS_UTILS.paintText(createSynthContext(c), g, text, x, adjustedY, underlinedIndex);
     }
 
     public static void drawString(final JComponent c, final Graphics g, final String text, int x, int y) {
-        UIUtilities.drawString(c, g, text, x, y);
+        drawStringUnderlineCharAt(c, g, text, -1, x, y);
     }
 
     public static void setSkipClickCount(final Component comp, int count) {
@@ -163,5 +176,22 @@ public final class SwingUtil {
 
     public static int loc2IndexFileList(final JList<?> list, final Point point) {
         return UIUtilities.loc2IndexFileList(list, point);
+    }
+
+    private static SynthContext createSynthContext(final JComponent c) {
+        return new SynthContext(c, Region.LABEL, PAINT_STYLE, SynthConstants.DEFAULT);
+    }
+
+    private static class PaintSynthStyle extends SynthStyle {
+
+        @Override
+        protected Color getColorForState(SynthContext context, ColorType type) {
+            return null;
+        }
+
+        @Override
+        protected Font getFontForState(SynthContext context) {
+            return null;
+        }
     }
 }

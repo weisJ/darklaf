@@ -21,29 +21,20 @@
  */
 package com.intellij.util.ui;
 
-import static java.awt.RenderingHints.KEY_TEXT_ANTIALIASING;
-import static java.awt.RenderingHints.KEY_TEXT_LCD_CONTRAST;
-
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FocusTraversalPolicy;
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.PrintGraphics;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.Shape;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
-import java.awt.font.TextHitInfo;
 import java.awt.font.TextLayout;
-import java.awt.print.PrinterGraphics;
 import java.text.AttributedString;
 import java.text.BreakIterator;
 import java.util.HashMap;
@@ -274,144 +265,6 @@ public class UIUtilities {
         }
     }
 
-    public static void drawString(JComponent c, Graphics g, String text, int x, int y) {
-        // All non-editable widgets that draw strings call into this
-        // methods. By non-editable that means widgets like JLabel, JButton
-        // but NOT JTextComponents.
-        if (text == null || text.length() <= 0) { // no need to paint empty strings
-            return;
-        }
-        if (isPrinting(g)) {
-            Graphics2D g2d = getGraphics2D(g);
-            if (g2d != null) {
-                /*
-                 * The printed text must scale linearly with the UI. Calculate the width on screen, obtain a
-                 * TextLayout with advances for the printer graphics FRC, and then justify it to fit in the screen
-                 * width. This distributes the spacing more evenly than directly laying out to the screen advances.
-                 */
-                String trimmedText = trimTrailingSpaces(text);
-                if (!trimmedText.isEmpty()) {
-                    float screenWidth = (float) g2d.getFont()
-                            .getStringBounds(trimmedText, getFontRenderContext(c)).getWidth();
-                    TextLayout layout = createTextLayout(
-                            c, text, g2d.getFont(), g2d.getFontRenderContext());
-
-                    // If text fits the screenWidth, then do not need to justify
-                    if (stringWidth(c, g2d.getFontMetrics(), trimmedText) > screenWidth) {
-                        layout = layout.getJustifiedLayout(screenWidth);
-                    }
-                    layout.draw(g2d, x, y);
-                }
-                return;
-            }
-        }
-
-        // If we get here we're not printing
-        if (g instanceof Graphics2D) {
-            Graphics2D g2 = (Graphics2D) g;
-            boolean needsTextLayout = ((c != null) &&
-                    (c.getClientProperty(TextAttribute.NUMERIC_SHAPING) != null));
-
-            if (needsTextLayout) {
-                synchronized (charsBufferLock) {
-                    int length = syncCharsBuffer(text);
-                    needsTextLayout = isComplexLayout(charsBuffer, 0, length);
-                }
-            }
-
-            Object aaHint = (c == null) ? null : c.getClientProperty(KEY_TEXT_ANTIALIASING);
-            if (aaHint != null) {
-                Object oldContrast = null;
-                Object oldAAValue = g2.getRenderingHint(KEY_TEXT_ANTIALIASING);
-                if (aaHint != oldAAValue) {
-                    g2.setRenderingHint(KEY_TEXT_ANTIALIASING, aaHint);
-                } else {
-                    oldAAValue = null;
-                }
-
-                Object lcdContrastHint = c.getClientProperty(KEY_TEXT_LCD_CONTRAST);
-                if (lcdContrastHint != null) {
-                    oldContrast = g2.getRenderingHint(KEY_TEXT_LCD_CONTRAST);
-                    if (lcdContrastHint.equals(oldContrast)) {
-                        oldContrast = null;
-                    } else {
-                        g2.setRenderingHint(KEY_TEXT_LCD_CONTRAST, lcdContrastHint);
-                    }
-                }
-
-                if (needsTextLayout) {
-                    TextLayout layout = createTextLayout(
-                            c, text, g2.getFont(), g2.getFontRenderContext());
-                    layout.draw(g2, x, y);
-                } else {
-                    g2.drawString(text, x, y);
-                }
-
-                if (oldAAValue != null) {
-                    g2.setRenderingHint(KEY_TEXT_ANTIALIASING, oldAAValue);
-                }
-                if (oldContrast != null) {
-                    g2.setRenderingHint(KEY_TEXT_LCD_CONTRAST, oldContrast);
-                }
-                return;
-            }
-
-            if (needsTextLayout) {
-                TextLayout layout = createTextLayout(
-                        c, text, g2.getFont(), g2.getFontRenderContext());
-                layout.draw(g2, x, y);
-                return;
-            }
-        }
-        g.drawString(text, x, y);
-    }
-
-    public static void drawStringUnderlineCharAt(JComponent c, Graphics g, String text, int underlinedIndex, int x,
-            int y) {
-        if (text != null && text.length() > 0) {
-            drawString(c, g, text, x, y);
-            int textLength = text.length();
-            if (underlinedIndex >= 0 && underlinedIndex < textLength) {
-                int underlineRectHeight = 1;
-                int underlineRectX = 0;
-                int underlineRectWidth = 0;
-                boolean isPrinting = isPrinting(g);
-                boolean needsTextLayout = isPrinting;
-                if (!isPrinting) {
-                    synchronized (charsBufferLock) {
-                        syncCharsBuffer(text);
-                        needsTextLayout = isComplexLayout(charsBuffer, 0, textLength);
-                    }
-                }
-
-                if (!needsTextLayout) {
-                    FontMetrics fm = g.getFontMetrics();
-                    underlineRectX = x + stringWidth(c, fm, text.substring(0, underlinedIndex));
-                    underlineRectWidth = fm.charWidth(text.charAt(underlinedIndex));
-                } else {
-                    Graphics2D g2d = getGraphics2D(g);
-                    if (g2d != null) {
-                        TextLayout layout = createTextLayout(c, text, g2d.getFont(), g2d.getFontRenderContext());
-                        if (isPrinting) {
-                            float screenWidth = (float) g2d.getFont().getStringBounds(text, DEFAULT_FRC).getWidth();
-                            layout = layout.getJustifiedLayout(screenWidth);
-                        }
-
-                        TextHitInfo leading = TextHitInfo.leading(underlinedIndex);
-                        TextHitInfo trailing = TextHitInfo.trailing(underlinedIndex);
-                        Shape shape = layout.getVisualHighlightShape(leading, trailing);
-                        Rectangle rect = shape.getBounds();
-                        underlineRectX = x + rect.x;
-                        underlineRectWidth = rect.width;
-                    }
-                }
-
-                g.fillRect(underlineRectX, y + 1, underlineRectWidth, underlineRectHeight);
-            }
-
-        }
-    }
-
     private static TextLayout createTextLayout(JComponent c, String s, Font f, FontRenderContext frc) {
         Object shaper = c == null ? null : c.getClientProperty(TextAttribute.NUMERIC_SHAPING);
         if (shaper == null) {
@@ -424,14 +277,6 @@ public class UIUtilities {
         }
     }
 
-    public static Graphics2D getGraphics2D(Graphics g) {
-        if (g instanceof Graphics2D) {
-            return (Graphics2D) g;
-        } else {
-            return null;
-        }
-    }
-
     public static FontRenderContext getFontRenderContext(Component c) {
         return c == null ? DEFAULT_FRC : c.getFontMetrics(c.getFont()).getFontRenderContext();
     }
@@ -440,18 +285,6 @@ public class UIUtilities {
         assert fm != null || c != null;
 
         return fm != null ? fm.getFontRenderContext() : getFontRenderContext(c);
-    }
-
-    static boolean isPrinting(Graphics g) {
-        return g instanceof PrinterGraphics || g instanceof PrintGraphics;
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    private static String trimTrailingSpaces(String s) {
-        int i;
-        for (i = s.length() - 1; i >= 0 && Character.isWhitespace(s.charAt(i)); --i) {
-        }
-        return s.substring(0, i + 1);
     }
 
     public static void setLeadAnchorWithoutSelection(final ListSelectionModel model, int lead, int anchor) {
