@@ -76,6 +76,7 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     private static final String MAC_OS_CATALINA_FONT_NAME_FALLBACK = "Helvetica Neue";
     private static final String MAC_OS_FONT_NAME = ".SF NS Text";
     private static final String WINDOWS_10_FONT_NAME = "Segoe UI";
+    private static final String WINDOWS_10_MONO_FONT_NAME = "Consolas";
 
     @Override
     public void run(final Theme currentTheme, final UIDefaults defaults) {
@@ -182,15 +183,21 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
 
     private void patchOSFonts(final UIDefaults defaults, final Function<Map.Entry<Object, Font>, Font> mapper) {
         PropertyLoader.replacePropertyEntriesOfType(Font.class, defaults,
-                e -> isDefaultFont(e.getValue()), mapper);
+                e -> isDefaultFont(e.getValue()) || isMonospaceDefault(e.getValue()), mapper);
     }
 
     private boolean isDefaultFont(final Font font) {
         return Font.DIALOG.equals(font.getFamily());
     }
 
+    private boolean isMonospaceDefault(final Font font) {
+        return Font.MONOSPACED.equals(font.getFamily());
+    }
+
     private Font mapMacOSFont(final Map.Entry<Object, Font> entry) {
         Font font = entry.getValue();
+        if (isMonospaceDefault(font)) return font;
+
         String fontName = SystemInfo.isMacOSCatalina
                 ? MAC_OS_CATALINA_FONT_NAME_FALLBACK
                 : MAC_OS_FONT_NAME;
@@ -205,7 +212,10 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     private Font mapWindowsFont(final Map.Entry<Object, Font> entry) {
         Font font = entry.getValue();
         if (!SystemInfo.isWindowsVista) return font;
-        Font windowsFont = FontUtil.createFont(WINDOWS_10_FONT_NAME, font.getStyle(), font.getSize());
+        String fontName = isMonospaceDefault(font)
+                ? WINDOWS_10_MONO_FONT_NAME
+                : WINDOWS_10_FONT_NAME;
+        Font windowsFont = FontUtil.createFont(fontName, font.getStyle(), font.getSize());
         if (font instanceof UIResource) {
             windowsFont = new DarkFontUIResource(windowsFont);
         }

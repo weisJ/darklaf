@@ -21,6 +21,7 @@
  */
 package com.github.weisj.darklaf.components.text;
 
+import java.awt.Font;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,6 +44,11 @@ public class NumberingPane extends JComponent {
         iconMap = new HashMap<>();
         listenerMap = new HashMap<>();
         updateUI();
+    }
+
+    @Override
+    public void setFont(Font font) {
+        super.setFont(font);
     }
 
     @Override

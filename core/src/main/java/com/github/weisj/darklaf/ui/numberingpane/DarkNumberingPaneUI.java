@@ -36,6 +36,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.UIResource;
 import javax.swing.text.*;
 
 import com.github.weisj.darklaf.components.text.IconListener;
@@ -190,7 +191,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
         GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         g.setColor(numberingPane.getForeground());
 
-        Font font = getNumberingFont(numberingPane.getTextComponent(), g);
+        Font font = getNumberingFont(numberingPane.getTextComponent(), g, numberingPane.getFont());
         g.setFont(font);
         FontMetrics fm = numberingPane.getFontMetrics(font);
 
@@ -201,7 +202,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
                 String numberStr = String.valueOf(i);
                 Rectangle lineRect = textComponent.modelToView(off);
                 g.setColor(lineRect.y == yCur ? foregroundHighlight : numberingPane.getForeground());
-                g.drawString(numberStr, width - OUTER_PAD - fm.stringWidth(numberStr),
+                g.drawString(numberStr, width - OUTER_PAD - fm.stringWidth(numberStr) - maxIconWidth,
                         lineRect.y + lineRect.height - descent);
             } catch (final BadLocationException ignored) {
             }
@@ -209,12 +210,15 @@ public class DarkNumberingPaneUI extends ComponentUI {
         config.restore();
     }
 
-    private Font getNumberingFont(final JComponent c, final Graphics g) {
-        Font font = c.getFont();
-        if (font != null) {
-            float newSize = (float) font.getSize() - 1;
+    private Font getNumberingFont(final JComponent c, final Graphics g, final Font f) {
+        Font baseFont = c.getFont();
+        Font font = f;
+        if (font instanceof UIResource) {
+            int newSize = baseFont.getSize() - 1;
             if (newSize > 0) {
-                font = font.deriveFont(newSize);
+                font = font.deriveFont((float) newSize);
+            } else {
+                font = font.deriveFont(baseFont.getSize2D());
             }
         } else {
             font = g.getFont();
@@ -355,9 +359,6 @@ public class DarkNumberingPaneUI extends ComponentUI {
                         ((Caret) newCaret).addChangeListener(currentLinePainter);
                     }
                 }
-            } else if (PropertyKey.FONT.equals(key)) {
-                Font font = textComponent.getFont();
-                numberingPane.setFont(font.deriveFont(Math.max(font.getSize() - 1, 1.0f)));
             } else if (NumberingPane.KEY_EDITOR.equals(key)) {
                 Object newPane = evt.getNewValue();
                 if (textComponent != null) {
@@ -378,8 +379,6 @@ public class DarkNumberingPaneUI extends ComponentUI {
                     }
                     textComponent.addPropertyChangeListener(getPropertyChangeListener());
                     textComponent.getCaret().addChangeListener(getChangeListener());
-                    Font font = textComponent.getFont();
-                    numberingPane.setFont(font.deriveFont(Math.max(font.getSize() - 1, 1.0f)));
                     oldBackground = textComponent.getBackground();
                     textComponent.setBackground(UIManager.getColor("NumberingPane.textBackground"));
                 }
