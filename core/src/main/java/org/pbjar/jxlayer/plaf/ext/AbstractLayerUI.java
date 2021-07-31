@@ -1,32 +1,24 @@
 /*
- * Copyright (c) 2006-2009, Alexander Potochkin
- * All rights reserved.
+ * Copyright (c) 2006-2009, Alexander Potochkin All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
+ * Redistribution and use in source and binary forms, with or without modification, are permitted
+ * provided that the following conditions are met:
  *
- *   * Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *   * Redistributions in binary form must reproduce the above
- *     copyright notice, this list of conditions and the following
- *     disclaimer in the documentation and/or other materials provided
- *     with the distribution.
- *   * Neither the name of the JXLayer project nor the names of its
- *     contributors may be used to endorse or promote products derived
- *     from this software without specific prior written permission.
+ * * Redistributions of source code must retain the above copyright notice, this list of conditions
+ * and the following disclaimer. * Redistributions in binary form must reproduce the above copyright
+ * notice, this list of conditions and the following disclaimer in the documentation and/or other
+ * materials provided with the distribution. * Neither the name of the JXLayer project nor the names
+ * of its contributors may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+ * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.pbjar.jxlayer.plaf.ext;
 
@@ -38,71 +30,68 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
+import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.beans.PropertyChangeEvent;
 
 /**
- * The {@code AbstractLayerUI} provided default implementation for most
- * of the abstract methods in the {@link LayerUI} class.
- * It takes care of the management of {@code LayerItemListener}s and
- * defines the hook method to configure the {@code Graphics2D} instance
- * specified in the {@link #paint(Graphics,JComponent)} method.
- * It also provides convenient methods named
+ * The {@code AbstractLayerUI} provided default implementation for most of the abstract methods in
+ * the {@link LayerUI} class. It takes care of the management of {@code LayerItemListener}s and
+ * defines the hook method to configure the {@code Graphics2D} instance specified in the
+ * {@link #paint(Graphics,JComponent)} method. It also provides convenient methods named
  * {@code process<eventType>Event} to process the given class of event.
  * <p/>
- * If state of the {@code AbstractLayerUI} is changed, call {@link #setDirty(boolean)}
- * with {@code true} as the parameter, it will repaint all {@code JLayer}s
- * connected with this {@code AbstractLayerUI}
+ * If state of the {@code AbstractLayerUI} is changed, call {@link #setDirty(boolean)} with
+ * {@code true} as the parameter, it will repaint all {@code JLayer}s connected with this
+ * {@code AbstractLayerUI}
  *
  * @see JLayer#setUI(LayerUI)
  */
 public abstract class AbstractLayerUI<V extends JComponent>
-    extends LayerUI<V> {
+        extends LayerUI<V> {
     private static final Map<RenderingHints.Key, Object> emptyRenderingHintMap =
-        Collections.unmodifiableMap(new HashMap<>(0));
+            Collections.unmodifiableMap(new HashMap<>(0));
 
     private boolean dirty;
     private LayoutManager layoutManager;
+    private JComponent installedComponent;
+    private final PropertyChangeListener dirtyListener = e -> {
+        if (installedComponent != null && (!"dirty".equals(e.getPropertyName())
+            || e.getNewValue() == Boolean.TRUE)) {
+            installedComponent.repaint();
+        }
+    };
 
-    public void installUI(JComponent c) {
+    public void installUI(final JComponent c) {
         super.installUI(c);
+        installedComponent = c;
+        addPropertyChangeListener(dirtyListener);
         ((JLayer<?>) c).setLayerEventMask(getLayerEventMask());
     }
 
-    public void uninstallUI(JComponent c) {
+    public void uninstallUI(final JComponent c) {
         super.uninstallUI(c);
         ((JLayer<?>) c).setLayerEventMask(0);
+        removePropertyChangeListener(dirtyListener);
+        installedComponent = null;
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public void handlePropertyChangeEvent(PropertyChangeEvent evt, JLayer<? extends V> l) {
-        if (!"dirty".equals(evt.getPropertyName())
-            || evt.getNewValue() == Boolean.TRUE) {
-            l.repaint();
-        }
-    }
-
-    /**
-     * Returns the "dirty bit".
-     * If {@code true}, then the {@code AbstractLayerUI} is considered dirty
+     * Returns the "dirty bit". If {@code true}, then the {@code AbstractLayerUI} is considered dirty
      * and in need of being repainted.
      *
-     * @return {@code true} if the {@code AbstractLayerUI} state has changed
-     *         and the {@link JLayer}s it is set to need to be repainted.
+     * @return {@code true} if the {@code AbstractLayerUI} state has changed and the {@link JLayer}s it
+     *         is set to need to be repainted.
      */
     protected boolean isDirty() {
         return dirty;
     }
 
     /**
-     * Sets the "dirty bit".
-     * If {@code isDirty} is {@code true}, then the {@code AbstractLayerUI}
-     * is considered dirty and it triggers the repainting
-     * of the {@link JLayer}s this {@code AbstractLayerUI} it is set to.
+     * Sets the "dirty bit". If {@code isDirty} is {@code true}, then the {@code AbstractLayerUI} is
+     * considered dirty and it triggers the repainting of the {@link JLayer}s this
+     * {@code AbstractLayerUI} it is set to.
      *
      * @param isDirty whether this {@code AbstractLayerUI} is dirty or not.
      */
@@ -115,13 +104,12 @@ public abstract class AbstractLayerUI<V extends JComponent>
     /**
      * {@inheritDoc}
      * <p/>
-     * <b>Note:</b> It is rarely necessary to override this method, for
-     * custom painting override {@link #paintLayer(Graphics2D,JLayer)} instead
+     * <b>Note:</b> It is rarely necessary to override this method, for custom painting override
+     * {@link #paintLayer(Graphics2D,JLayer)} instead
      * <p/>
      * This method configures the passed {@code Graphics} with help of the
-     * {@link #configureGraphics(Graphics2D,JLayer)} method,
-     * then calls {@code paintLayer(Graphics2D,JLayer)}
-     * and resets the "dirty bit" at the end.
+     * {@link #configureGraphics(Graphics2D,JLayer)} method, then calls
+     * {@code paintLayer(Graphics2D,JLayer)} and resets the "dirty bit" at the end.
      *
      * @see #configureGraphics(Graphics2D,JLayer)
      * @see #paintLayer(Graphics2D,JLayer)
@@ -140,8 +128,7 @@ public abstract class AbstractLayerUI<V extends JComponent>
     }
 
     /**
-     * Subclasses should implement this method
-     * and perform custom painting operations here.
+     * Subclasses should implement this method and perform custom painting operations here.
      * <p/>
      * The default implementation paints the passed {@code JLayer} as is.
      *
@@ -153,11 +140,9 @@ public abstract class AbstractLayerUI<V extends JComponent>
     }
 
     /**
-     * This method is called by the {@link #paint} method prior to
-     * any drawing operations to configure the {@code Graphics2D} object.
-     * The default implementation sets the {@link Composite}, the clip,
-     * {@link AffineTransform} and rendering hints
-     * obtained from the corresponding hook methods.
+     * This method is called by the {@link #paint} method prior to any drawing operations to configure
+     * the {@code Graphics2D} object. The default implementation sets the {@link Composite}, the clip,
+     * {@link AffineTransform} and rendering hints obtained from the corresponding hook methods.
      *
      * @param g2 the {@code Graphics2D} object to configure
      * @param l the {@code JLayer} being painted
@@ -192,8 +177,8 @@ public abstract class AbstractLayerUI<V extends JComponent>
     }
 
     /**
-     * Returns the {@link Composite} to be used during painting of this {@code JLayer},
-     * the default implementation returns {@code null}.
+     * Returns the {@link Composite} to be used during painting of this {@code JLayer}, the default
+     * implementation returns {@code null}.
      *
      * @param l the {@code JLayer} being painted
      *
@@ -204,8 +189,8 @@ public abstract class AbstractLayerUI<V extends JComponent>
     }
 
     /**
-     * Returns the {@link AffineTransform} to be used during painting of this {@code JLayer},
-     * the default implementation returns {@code null}.
+     * Returns the {@link AffineTransform} to be used during painting of this {@code JLayer}, the
+     * default implementation returns {@code null}.
      *
      * @param l the {@code JLayer} being painted
      *
@@ -216,8 +201,8 @@ public abstract class AbstractLayerUI<V extends JComponent>
     }
 
     /**
-     * Returns the {@link Shape} to be used as the clip during painting of this {@code JLayer},
-     * the default implementation returns {@code null}.
+     * Returns the {@link Shape} to be used as the clip during painting of this {@code JLayer}, the
+     * default implementation returns {@code null}.
      *
      * @param l the {@code JLayer} being painted
      *
@@ -228,8 +213,8 @@ public abstract class AbstractLayerUI<V extends JComponent>
     }
 
     /**
-     * Returns the map of rendering hints to be used during painting of this {@code JLayer},
-     * the default implementation returns the empty unmodifiable map.
+     * Returns the map of rendering hints to be used during painting of this {@code JLayer}, the default
+     * implementation returns the empty unmodifiable map.
      *
      * @param l the {@code JLayer} being painted
      *
@@ -278,24 +263,22 @@ public abstract class AbstractLayerUI<V extends JComponent>
     }
 
     /**
-     * By default only mouse, mouse motion, mouse wheel, keyboard and focus events are supported,
-     * if you need to catch any other type of events,
-     * override this method to return the different mask
+     * By default only mouse, mouse motion, mouse wheel, keyboard and focus events are supported, if you
+     * need to catch any other type of events, override this method to return the different mask
      *
      * @see JLayer#setLayerEventMask(long)
      */
     public long getLayerEventMask() {
         return AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK
-               | AWTEvent.MOUSE_WHEEL_EVENT_MASK
-               | AWTEvent.KEY_EVENT_MASK | AWTEvent.FOCUS_EVENT_MASK;
+                | AWTEvent.MOUSE_WHEEL_EVENT_MASK
+                | AWTEvent.KEY_EVENT_MASK | AWTEvent.FOCUS_EVENT_MASK;
     }
 
     /**
      * {@inheritDoc}
      * <p/>
-     * This method calls the appropriate
-     * {@code process<eventType>Event}
-     * method for the given class of event.
+     * This method calls the appropriate {@code process<eventType>Event} method for the given class of
+     * event.
      */
     @Override
     public void eventDispatched(AWTEvent e, JLayer<? extends V> l) {
@@ -324,52 +307,42 @@ public abstract class AbstractLayerUI<V extends JComponent>
     }
 
     /**
-     * Processes {@code FocusEvent} occurring on the {@link JLayer}
-     * or any of its subcomponents.
+     * Processes {@code FocusEvent} occurring on the {@link JLayer} or any of its subcomponents.
      *
      * @param e the {@code FocusEvent} to be processed
      * @param l the layer this LayerUI is set to
      */
-    protected void processFocusEvent(FocusEvent e, JLayer<? extends V> l) {
-    }
+    protected void processFocusEvent(FocusEvent e, JLayer<? extends V> l) {}
 
     /**
-     * Processes {@code MouseEvent} occurring on the {@link JLayer}
-     * or any of its subcomponents.
+     * Processes {@code MouseEvent} occurring on the {@link JLayer} or any of its subcomponents.
      *
      * @param e the {@code MouseEvent} to be processed
      * @param l the layer this LayerUI is set to
      */
-    protected void processMouseEvent(MouseEvent e, JLayer<? extends V> l) {
-    }
+    protected void processMouseEvent(MouseEvent e, JLayer<? extends V> l) {}
 
     /**
-     * Processes mouse motion events occurring on the {@link JLayer}
-     * or any of its subcomponents.
+     * Processes mouse motion events occurring on the {@link JLayer} or any of its subcomponents.
      *
      * @param e the {@code MouseEvent} to be processed
      * @param l the layer this LayerUI is set to
      */
-    protected void processMouseMotionEvent(MouseEvent e, JLayer<? extends V> l) {
-    }
+    protected void processMouseMotionEvent(MouseEvent e, JLayer<? extends V> l) {}
 
     /**
-     * Processes {@code MouseWheelEvent} occurring on the {@link JLayer}
-     * or any of its subcomponents.
+     * Processes {@code MouseWheelEvent} occurring on the {@link JLayer} or any of its subcomponents.
      *
      * @param e the {@code MouseWheelEvent} to be processed
      * @param l the layer this LayerUI is set to
      */
-    protected void processMouseWheelEvent(MouseWheelEvent e, JLayer<? extends V> l) {
-    }
+    protected void processMouseWheelEvent(MouseWheelEvent e, JLayer<? extends V> l) {}
 
     /**
-     * Processes {@code KeyEvent} occurring on the {@link JLayer}
-     * or any of its subcomponents.
+     * Processes {@code KeyEvent} occurring on the {@link JLayer} or any of its subcomponents.
      *
      * @param e the {@code KeyEvent} to be processed
      * @param l the layer this LayerUI is set to
      */
-    protected void processKeyEvent(KeyEvent e, JLayer<? extends V> l) {
-    }
+    protected void processKeyEvent(KeyEvent e, JLayer<? extends V> l) {}
 }
