@@ -182,6 +182,7 @@ Here is a list of things that currently are not finished or need refinement. Thi
 - [BoofVC](https://github.com/lessthanoptimal/BoofCV)
 - [threadtear](https://github.com/GraxCode/threadtear)
 - [HO](https://github.com/akasolace/HO)
+- [Bytecode viewer](https://github.com/Konloch/bytecode-viewer)
 
 Please send me your project, and I'll add it here.
 
