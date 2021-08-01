@@ -71,15 +71,18 @@ module darklaf.core {
     exports com.github.weisj.darklaf.components.togglebuttonlist;
     exports com.github.weisj.darklaf.components.tooltip;
     exports com.github.weisj.darklaf.components.tree;
+    exports com.github.weisj.darklaf.components.tristate;
 
     exports com.github.weisj.darklaf.focus;
     exports com.github.weisj.darklaf.graphics;
     exports com.github.weisj.darklaf.listener;
     exports com.github.weisj.darklaf.settings;
     exports com.github.weisj.darklaf.task;
+    exports com.github.weisj.darklaf.layout;
 
     exports com.github.weisj.darklaf.ui;
     exports com.github.weisj.darklaf.ui.button;
+    exports com.github.weisj.darklaf.ui.cell;
     exports com.github.weisj.darklaf.ui.colorchooser;
     exports com.github.weisj.darklaf.ui.combobox;
     exports com.github.weisj.darklaf.ui.list;
@@ -89,7 +92,9 @@ module darklaf.core {
     exports com.github.weisj.darklaf.ui.slider;
     exports com.github.weisj.darklaf.ui.spinner;
     exports com.github.weisj.darklaf.ui.splitpane;
+    exports com.github.weisj.darklaf.ui.tabbedpane;
     exports com.github.weisj.darklaf.ui.table;
+    exports com.github.weisj.darklaf.ui.table.renderer;
     exports com.github.weisj.darklaf.ui.text;
     exports com.github.weisj.darklaf.ui.togglebutton;
     exports com.github.weisj.darklaf.ui.toolbar;
