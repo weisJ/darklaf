@@ -24,7 +24,10 @@ package com.github.weisj.darklaf.core.test;
 import java.awt.Window;
 import java.awt.event.WindowEvent;
 import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.SwingUtilities;
 
@@ -39,7 +42,7 @@ final class TestUtils {
 
     private TestUtils() {}
 
-    private static final Object lock = new Object();
+    private static final Lock LOCK = new ReentrantLock();
 
     static void ensureLafInstalled() {
         ensureLafInstalled(new IntelliJTheme());
@@ -50,42 +53,32 @@ final class TestUtils {
     }
 
     static void ensureLafInstalled(final Theme theme, final boolean alwaysInstall) {
-        synchronized (lock) {
-            if (alwaysInstall || !LafManager.isInstalled() || !LafManager.getInstalledTheme().equals(theme)) {
-                runOnSwingThreadNotThrowing(() -> LafManager.install(theme));
-            }
-        }
-    }
-
-    static void runOnThreadNotThrowing(final Runnable action) {
-        AtomicReference<Exception> exceptionRef = new AtomicReference<>();
         try {
-            new Thread(() -> {
-                try {
-                    action.run();
-                } catch (final Exception e) {
-                    exceptionRef.set(e);
+            if (LOCK.tryLock(200, TimeUnit.MILLISECONDS)) {
+                if (alwaysInstall || !LafManager.isInstalled() || !LafManager.getInstalledTheme().equals(theme)) {
+                    runOnSwingThreadNotThrowing(() -> LafManager.install(theme));
                 }
-            }).start();
-        } catch (final Exception e) {
-            e.printStackTrace();
-            Assertions.fail(e.getMessage(), e);
-        }
-        if (exceptionRef.get() != null) {
-            Assertions.fail(exceptionRef.get().getMessage(), exceptionRef.get());
+            }
+        } catch (InterruptedException e) {
+            Assertions.fail(e);
         }
     }
 
     static void runOnSwingThreadNotThrowing(final Lambdas.CheckedRunnable<? extends Exception> action) {
         AtomicReference<Exception> exceptionRef = new AtomicReference<>();
         try {
-            SwingUtilities.invokeAndWait(() -> {
+            Runnable task = () -> {
                 try {
                     action.run();
                 } catch (final Exception e) {
                     exceptionRef.set(e);
                 }
-            });
+            };
+            if (SwingUtilities.isEventDispatchThread()) {
+                task.run();
+            } else {
+                SwingUtilities.invokeAndWait(task);
+            }
         } catch (final InterruptedException e) {
             e.printStackTrace();
             Assertions.fail(e.getMessage(), e);
