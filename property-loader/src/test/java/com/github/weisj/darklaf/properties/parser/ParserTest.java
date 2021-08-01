@@ -86,15 +86,6 @@ class ParserTest {
     }
 
     @Test
-    void testColorLegacy() {
-        Random r = new Random();
-        for (int i = 0; i < 100; i++) {
-            Color c = new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256));
-            Assertions.assertEquals(c, parse("key", ColorUtil.toHex(c)));
-        }
-    }
-
-    @Test
     void testReferences() {
         Assertions.assertEquals("key", Parser.parse(new ParseResult("%key", "value"), context).key);
 
@@ -126,10 +117,6 @@ class ParserTest {
         for (int i = 0; i < 100; i++) {
             int w = r.nextInt();
             int h = r.nextInt();
-            // While legacy declarations are supported these may be a valid color value.
-            // and parse incorrectly.
-            if (isValidColor(w)) continue;
-            if (isValidColor(h)) continue;
             Assertions.assertEquals(new Dimension(w, h), parse("test.size", w + "," + h));
             Assertions.assertEquals(new Dimension(w, h), parse("testSize", w + "," + h));
         }
@@ -139,22 +126,11 @@ class ParserTest {
         Assertions.assertEquals(dim, parse("key.size", "%key.width," + dim.height));
     }
 
-    private boolean isValidColor(final int value) {
-        return ColorUtil.fromHex(String.valueOf(value), null) != null;
-    }
-
     @Test
     void testInsets() {
         Random r = new Random();
         for (int i = 0; i < 100; i++) {
             Insets insets = new Insets(r.nextInt(), r.nextInt(), r.nextInt(), r.nextInt());
-
-            // While legacy declarations are supported these may be a valid color value
-            // hence parse incorrectly.
-            if (isValidColor(insets.left)) continue;
-            if (isValidColor(insets.right)) continue;
-            if (isValidColor(insets.bottom)) continue;
-            if (isValidColor(insets.top)) continue;
             Assertions.assertEquals(insets, parse("test.insets",
                     insets.top + "," + insets.left + "," + insets.bottom + "," + insets.right));
             Assertions.assertEquals(insets, parse("testInsets",
