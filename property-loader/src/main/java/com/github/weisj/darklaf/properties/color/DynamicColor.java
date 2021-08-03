@@ -47,6 +47,10 @@ public class DynamicColor extends ColorWrapper {
         this.key = key;
     }
 
+    public String getKey() {
+        return key;
+    }
+
     protected boolean isColorSet() {
         return super.getColor() != DEFAULT_COLOR;
     }

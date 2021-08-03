@@ -29,6 +29,7 @@ import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.properties.icons.AwareIconStyle;
 import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.swingdsl.DarklafComponentFactory;
+import com.github.weisj.darklaf.theme.ColorPalette;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.swingdsl.laf.ComponentFactory;
@@ -59,6 +60,8 @@ public class UtilityDefaultsInitTask implements DefaultsInitTask {
         IconLoader.updateAwareStyle(Theme.isDark(currentTheme) ? AwareIconStyle.DARK : AwareIconStyle.LIGHT);
         IconLoader.updateThemeStatus(new Object());
         IconLoader.reloadFrameIcons();
+
+        ColorPalette.invalidatePalette();
 
         // Support for external libraries.
         defaults.put(ComponentFactory.COMPONENT_FACTORY_PROVIDER_KEY,

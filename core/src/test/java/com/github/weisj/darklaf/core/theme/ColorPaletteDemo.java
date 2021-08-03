@@ -21,13 +21,18 @@
  */
 package com.github.weisj.darklaf.core.theme;
 
+import java.awt.Color;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
-import com.github.weisj.darklaf.graphics.ThemedColor;
 import com.github.weisj.darklaf.layout.LayoutHelper;
+import com.github.weisj.darklaf.properties.color.DynamicColor;
 import com.github.weisj.darklaf.properties.icons.SolidColorIcon;
+import com.github.weisj.darklaf.theme.ColorPalette;
 import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
@@ -42,30 +47,29 @@ public class ColorPaletteDemo extends BaseComponentDemo {
         JComponent comp = Box.createVerticalBox();
         comp.add(Box.createVerticalStrut(5));
 
-        String[] names = {
-                "palette.yellow",
-                "palette.orange",
-                "palette.red",
-                "palette.pink",
-                "palette.purple",
-                "palette.indigo",
-                "palette.blue",
-                "palette.teal",
-                "palette.cyan",
-                "palette.green",
-                "palette.lime",
-                "palette.forest",
-                "palette.brown",
-                "palette.gray",
-        };
-
         {
             JComponent p = Box.createVerticalBox();
             p.setBorder(LayoutHelper.createEmptyContainerBorder());
 
-            for (String name : names) {
+            List<Color> palette = Arrays.asList(
+                    ColorPalette.YELLOW,
+                    ColorPalette.ORANGE,
+                    ColorPalette.RED,
+                    ColorPalette.PINK,
+                    ColorPalette.PURPLE,
+                    ColorPalette.INDIGO,
+                    ColorPalette.BLUE,
+                    ColorPalette.TEAL,
+                    ColorPalette.CYAN,
+                    ColorPalette.GREEN,
+                    ColorPalette.LIME,
+                    ColorPalette.FOREST,
+                    ColorPalette.BROWN,
+                    ColorPalette.GRAY);
+
+            for (Color color : palette) {
                 p.add(Box.createVerticalStrut(5));
-                p.add(new JLabel(name, new SolidColorIcon(new ThemedColor(name), 32, 32), JLabel.LEFT));
+                p.add(new JLabel(((DynamicColor) color).getKey(), new SolidColorIcon(color, 32, 32), JLabel.LEFT));
             }
 
             comp.add(p);
