@@ -25,3 +25,23 @@ fun Jar.includeLicenses() {
 tasks.jar {
     includeLicenses()
 }
+
+val generateIconAccessor by tasks.registering {
+    doFirst {
+        sourceSets.main.configure {
+            val propertyFile = project.file("iconAccessorSpec.properties")
+            val allIconsName = "AllIcons"
+            val generatedDir = project.buildDir.resolve("generated/iconAccessor")
+            generatedDir.mkdirs()
+            generatedDir.resolve("$allIconsName.java").apply {
+                createNewFile()
+                writeText(createIconAccessor(propertyFile, allIconsName))
+            }
+            java.srcDir(generatedDir)
+        }
+    }
+}
+
+tasks.compileJava.configure {
+    dependsOn(generateIconAccessor)
+}
