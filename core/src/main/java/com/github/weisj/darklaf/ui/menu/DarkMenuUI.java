@@ -38,6 +38,7 @@ public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
     protected int acceleratorTextOffset;
     protected boolean useEvenHeight;
     protected Icon arrowIconHover;
+    protected Icon arrowIconDisabled;
     protected JMenu menu;
     protected MouseListener mouseListener;
 
@@ -107,6 +108,7 @@ public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
         acceleratorForeground = UIManager.getColor("Menu.foreground");
         acceleratorSelectionForeground = UIManager.getColor("Menu.selectionForeground");
         arrowIconHover = UIManager.getIcon("Menu.arrowHover.icon");
+        arrowIconDisabled = UIManager.getIcon("Menu.arrowDisabled.icon");
         useEvenHeight = !Boolean.TRUE.equals(UIManager.get(getPropertyPrefix() + ".evenHeight"));
         acceleratorTextOffset = UIManager.getInt(getPropertyPrefix() + ".acceleratorTextOffset");
     }
@@ -123,6 +125,8 @@ public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
     }
 
     protected Icon getArrowIcon() {
+        if (!menuItem.isEnabled())
+            return arrowIconDisabled;
         boolean hover =
                 menuItem.getModel().isArmed() || (menuItem instanceof JMenu && menuItem.getModel().isSelected());
         return hover ? arrowIconHover : arrowIcon;
