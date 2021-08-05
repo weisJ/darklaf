@@ -171,7 +171,7 @@ public interface MenuItemUI {
         ButtonModel model = menuItem.getModel();
         FontMetrics fm = SwingUtil.getFontMetrics(menuItem, g);
         int mnemIndex = menuItem.getDisplayedMnemonicIndex();
-        if (!model.isEnabled()) {
+        if (!model.isEnabled() || !menuItem.isEnabled()) {
             g.setColor(getDisabledForeground());
         } else {
             if (model.isArmed() || (menuItem instanceof JMenu && model.isSelected())) {
@@ -197,7 +197,7 @@ public interface MenuItemUI {
 
     default Color getAcceleratorForeground(final AbstractButton b) {
         ButtonModel model = b.getModel();
-        if (!model.isEnabled()) return getDisabledForeground();
+        if (!model.isEnabled() || !b.isEnabled()) return getDisabledForeground();
         if (model.isArmed() || (b instanceof JMenu && model.isSelected())) {
             return getAcceleratorSelectionForeground();
         } else {
