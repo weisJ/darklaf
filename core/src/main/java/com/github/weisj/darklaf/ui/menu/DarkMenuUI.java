@@ -64,11 +64,14 @@ public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
 
             @Override
             public void mouseEntered(final MouseEvent e) {
-                MenuSelectionManager manager = MenuSelectionManager.defaultManager();
-                MenuElement[] selectedPath = manager.getSelectedPath();
-                for (MenuElement element : selectedPath) {
-                    if (element.equals(menu)) {
-                        return;
+                 if (!menu.isTopLevelMenu()) {
+                    // Don't close the open menu path if this menu is part of it.
+                    MenuSelectionManager manager = MenuSelectionManager.defaultManager();
+                    MenuElement[] selectedPath = manager.getSelectedPath();
+                    for (MenuElement element : selectedPath) {
+                        if (element.equals(menu)) {
+                            return;
+                        }
                     }
                 }
                 super.mouseEntered(e);
