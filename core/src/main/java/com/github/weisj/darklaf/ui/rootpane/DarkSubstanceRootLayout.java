@@ -47,6 +47,11 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
 
     public void addLayoutComponent(final Component comp, final Object constraints) {}
 
+
+    private boolean hasValidMenuBar(final JRootPane root) {
+        return root.getJMenuBar() != null && root.getJMenuBar().getParent() == root.getLayeredPane();
+    }
+
     public Dimension preferredLayoutSize(final Container parent) {
         Dimension cpd, mbd, tpd;
         int cpWidth = 0;
@@ -72,7 +77,7 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
             cpHeight = cpd.height;
         }
 
-        if (root.getJMenuBar() != null) {
+        if (hasValidMenuBar(root)) {
             mbd = root.getJMenuBar().getPreferredSize();
             if (mbd != null) {
                 mbWidth = mbd.width;
@@ -116,7 +121,7 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
             cpHeight = cpd.height;
         }
 
-        if (root.getJMenuBar() != null) {
+        if (hasValidMenuBar(root)) {
             mbd = root.getJMenuBar().getMinimumSize();
             if (mbd != null) {
                 mbWidth = mbd.width;
@@ -176,7 +181,7 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
                 nextY += tpHeight;
             }
         }
-        if (root.getJMenuBar() != null) {
+        if (hasValidMenuBar(root)) {
             Dimension mbd = root.getJMenuBar().getPreferredSize();
             root.getJMenuBar().setBounds(x, nextY, w, mbd.height);
             nextY += mbd.height;
@@ -205,7 +210,7 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
             }
         }
 
-        if (root.getJMenuBar() != null) {
+        if (hasValidMenuBar(root)) {
             mbd = root.getJMenuBar().getMaximumSize();
             if (mbd != null) {
                 mbWidth = mbd.width;
