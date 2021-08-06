@@ -145,8 +145,8 @@ public class ThemeEditor extends JPanel {
 
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-        tabbedPane.addTab("Theme com.github.weisj.defaults", createTable(themeDefaults, false));
-        tabbedPane.addTab("Icon com.github.weisj.defaults", createTable(iconDefaults, false));
+        tabbedPane.addTab("Theme default", createTable(themeDefaults, false));
+        tabbedPane.addTab("Icon default", createTable(iconDefaults, false));
         tabbedPane.addTab("UI customs", createTable(uiDefaults, true));
         tabbedPane.addTab("Global customs", createTable(globalDefaults, true));
         tabbedPane.addTab("Platform customs", createTable(platformDefaults, true));
@@ -281,8 +281,8 @@ public class ThemeEditor extends JPanel {
             Font font = FontUtil.createFont(Font.MONOSPACED, Font.BOLD, 13);
             return new TextIcon("42", new ThemedColor("menuIconEnabled"), font, 16, 16);
         }).get()),
-        BOOLEAN("Add Boolean", false, DarkUIUtil.ICON_LOADER.getIcon("control/checkboxSelectedFocused.svg", true)),
-        STRING("Add String", "", IconLoader.get().getIcon("icon/word.svg", true));
+        BOOLEAN("Add Boolean", false, DarkUIUtil.ICON_LOADER.getIcon("control/checkBoxSelectedFocused.svg", true)),
+        STRING("Add String", "", IconLoader.get(ThemeEditor.class).getIcon("word.svg", true));
 
         private final String s;
         private final Object defaultValue;

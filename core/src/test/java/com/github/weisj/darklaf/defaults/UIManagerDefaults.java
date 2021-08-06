@@ -294,7 +294,7 @@ public class UIManagerDefaults extends BaseComponentDemo implements ItemListener
         model = new DefaultTableModel(COLUMN_NAMES, 0);
         final Map<String, Object> attributes = items.get(itemName);
         for (final Object o : attributes.keySet()) {
-            final String attribute = (String) o;
+            final String attribute = o.toString();
             Object value = attributes.get(attribute);
             final Vector<Object> row = new Vector<>(3);
             row.add(attribute);
@@ -303,7 +303,7 @@ public class UIManagerDefaults extends BaseComponentDemo implements ItemListener
                 if (value instanceof Icon) {
                     value = new SafeIcon((Icon) value);
                 } else if (value instanceof String && value.toString().endsWith(".wav")) {
-                    value = IconLoader.get().getIcon("icon/sound.svg", 24, 24);
+                    value = IconLoader.get(UIManagerDefaults.class).getIcon("icon/sound.svg", 24, 24);
                 }
                 row.add(value);
             } else {
