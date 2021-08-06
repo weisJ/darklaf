@@ -11,9 +11,9 @@ plugins {
 dependencies {
     api(projects.darklafTheme)
     api(projects.darklafPropertyLoader)
+    api(projects.darklafIconset)
     api(projects.darklafUtils)
     implementation(projects.darklafCompatibility)
-    implementation(projects.darklafIconset)
     implementation(projects.darklafNativeUtils)
     implementation(projects.darklafPlatformBase)
     implementation(projects.darklafWindows)
