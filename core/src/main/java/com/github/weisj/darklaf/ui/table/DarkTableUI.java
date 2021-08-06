@@ -71,6 +71,7 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
     private TableCellRenderer oldColorRenderer;
 
     private TableCellEditor oldObjectEditor;
+    private TableCellEditor oldNumberEditor;
     private TableCellEditor oldBooleanEditor;
     private TableCellEditor oldColorEditor;
 
@@ -172,7 +173,8 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
     private TableCellEditor installEditor(final JTable table, final Class<?> type,
             final TableCellEditor renderer) {
         TableCellEditor oldRenderer = table.getDefaultEditor(type);
-        if (PropertyUtil.canOverwrite(oldRenderer)) {
+        if (PropertyUtil.canOverwrite(oldRenderer)
+                || Objects.equals(oldRenderer.getClass().getEnclosingClass(), JTable.class)) {
             table.setDefaultEditor(type, renderer);
         }
         return oldRenderer;
@@ -198,6 +200,7 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
         oldColorRenderer = installRenderer(table, Color.class, colorRendererEditor);
 
         oldObjectEditor = installEditor(table, Object.class, cellEditor);
+        oldNumberEditor = installEditor(table, Number.class, cellEditor);
         oldBooleanEditor = installEditor(table, Boolean.class, cellEditor);
         oldColorEditor = installEditor(table, Color.class, colorRendererEditor);
     }
@@ -219,26 +222,23 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
             table.setDefaultRenderer(Color.class, null);
         }
 
-        if (table.getDefaultEditor(Object.class) == cellEditor) {
-            table.setDefaultEditor(Object.class, oldObjectEditor);
-            if (oldObjectEditor instanceof DefaultCellEditor) {
-                Component comp = ((DefaultCellEditor) oldObjectEditor).getComponent();
-                if (comp instanceof JComponent) {
-                    ((JComponent) comp).updateUI();
-                }
-            }
-        }
-        if (table.getDefaultEditor(Boolean.class) == cellEditor) {
-            table.setDefaultEditor(Boolean.class, oldBooleanEditor);
-            if (oldBooleanEditor instanceof DefaultCellEditor) {
-                Component comp = ((DefaultCellEditor) oldBooleanEditor).getComponent();
-                if (comp instanceof JComponent) {
-                    ((JComponent) comp).updateUI();
-                }
-            }
-        }
+        uninstallEditor(Object.class, oldObjectEditor, cellEditor);
+        uninstallEditor(Number.class, oldNumberEditor, cellEditor);
+        uninstallEditor(Boolean.class, oldBooleanEditor, cellEditor);
         if (table.getDefaultEditor(Color.class) == colorRendererEditor) {
             table.setDefaultEditor(Color.class, null);
+        }
+    }
+
+    private void uninstallEditor(final Class<?> type, final TableCellEditor old, final TableCellEditor current) {
+        if (table.getDefaultEditor(type) == current) {
+            table.setDefaultEditor(type, old);
+            if (old instanceof DefaultCellEditor) {
+                Component comp = ((DefaultCellEditor) old).getComponent();
+                if (comp instanceof JComponent) {
+                    ((JComponent) comp).updateUI();
+                }
+            }
         }
     }
 
