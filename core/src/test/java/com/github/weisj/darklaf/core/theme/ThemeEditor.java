@@ -60,6 +60,7 @@ import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.components.button.JSplitButton;
 import com.github.weisj.darklaf.defaults.UIManagerDefaults;
 import com.github.weisj.darklaf.graphics.ThemedColor;
+import com.github.weisj.darklaf.iconset.AllIcons;
 import com.github.weisj.darklaf.layout.LayoutHelper;
 import com.github.weisj.darklaf.properties.icons.DerivableIcon;
 import com.github.weisj.darklaf.properties.icons.IconLoader;
@@ -276,7 +277,7 @@ public class ThemeEditor extends JPanel {
     }
 
     enum EntryType {
-        COLOR("Add Color", Color.BLACK, DarkUIUtil.ICON_LOADER.getIcon("menu/colorChooser.svg")),
+        COLOR("Add Color", Color.BLACK, AllIcons.Misc.ColorWheel.get()),
         INTEGER("Add Integer", 0, ((Supplier<Icon>) () -> {
             Font font = FontUtil.createFont(Font.MONOSPACED, Font.BOLD, 13);
             return new TextIcon("42", new ThemedColor("menuIconEnabled"), font, 16, 16);
