@@ -30,7 +30,6 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicPopupMenuUI;
 
-import com.github.weisj.darklaf.components.ScrollPopupMenu;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -90,7 +89,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
     }
 
     private PopupMenuContainer getPopupMenuContainer() {
-        if (popupMenuContainer == null && !(popupMenu instanceof ScrollPopupMenu)) {
+        if (popupMenuContainer == null) {
             popupMenuContainer = new PopupMenuContainer();
         }
         return popupMenuContainer;
