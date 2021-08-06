@@ -33,9 +33,11 @@ import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import com.github.weisj.darklaf.compatibility.SwingUtil;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.components.uiresource.JButtonUIResource;
+import com.github.weisj.darklaf.focus.FocusParentHelper;
 import com.github.weisj.darklaf.properties.icons.ToggleIcon;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.tooltip.DarkToolTipUI;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 /** @author Jannis Weis */
 public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane implements PropertyChangeListener {
@@ -130,6 +132,16 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
 
         buttonMarginPad = UIManager.getInt("InternalFrameTitlePane.buttonPad");
         minHeight = UIManager.getInt("InternalFrameTitlePane.minimumHeight");
+
+        frame.putClientProperty(FocusParentHelper.KEY_FOCUS_PARENT, frame);
+    }
+
+    @Override
+    protected void uninstallDefaults() {
+        super.uninstallDefaults();
+        if (frame.getClientProperty(FocusParentHelper.KEY_FOCUS_PARENT) == frame) {
+            frame.putClientProperty(FocusParentHelper.KEY_FOCUS_PARENT, null);
+        }
     }
 
     @Override
@@ -221,7 +233,11 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
     }
 
     protected Color getTitleBackground() {
-        return frame.isSelected() ? selectedTitleColor : notSelectedTitleColor;
+        return isSelected() ? selectedTitleColor : notSelectedTitleColor;
+    }
+
+    private boolean isSelected() {
+        return frame.isSelected() && DarkUIUtil.hasFocus(frame);
     }
 
     private JButton createButton(final Action action) {
