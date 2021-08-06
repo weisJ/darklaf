@@ -28,7 +28,6 @@ import java.util.Objects;
 import java.util.logging.Logger;
 
 import javax.swing.*;
-import javax.swing.plaf.RootPaneUI;
 
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.properties.uiresource.DarkColorUIResource;
@@ -50,6 +49,10 @@ public class DarkPopupFactory extends PopupFactory {
     public static final String KEY_DOUBLE_BUFFERED = "JPopupFactory.doubleBuffered";
 
     private HeavyWeightParent heavyWeightParent;
+
+    public static Popup createNoOpPopup() {
+        return new NoOpPopup();
+    }
 
     @Override
     public Popup getPopup(final Component owner, final Component contents, final int x, final int y)
@@ -308,38 +311,11 @@ public class DarkPopupFactory extends PopupFactory {
         HEAVY_WEIGHT
     }
 
-    private static class WrapperRootPane extends JRootPane implements RootPaneContainer {
+    private static class NoOpPopup extends Popup {
+        @Override
+        public void show() {}
 
         @Override
-        public void updateUI() {
-            setUI(new RootPaneUI() {});
-        }
-
-        @Override
-        public boolean isOpaque() {
-            return false;
-        }
-
-        @Override
-        public JRootPane getRootPane() {
-            return this;
-        }
-
-        @Override
-        protected void paintComponent(final Graphics g) {}
-
-        @Override
-        public void doLayout() {
-            int w = getWidth();
-            int h = getHeight();
-            layout(getLayeredPane(), w, h);
-            layout(getGlassPane(), w, h);
-            layout(getContentPane(), w, h);
-        }
-
-        private void layout(final Component c, final int w, final int h) {
-            c.setBounds(0, 0, w, h);
-            c.doLayout();
-        }
+        public void hide() {}
     }
 }

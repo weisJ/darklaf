@@ -117,6 +117,9 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
 
     @Override
     public Popup getPopup(final JPopupMenu popup, final int x, final int y) {
+        if (popup.getComponentCount() == 0) {
+            return DarkPopupFactory.createNoOpPopup();
+        }
         PopupMenuContainer container = getPopupMenuContainer();
         if (container == null) return super.getPopup(popup, x, y);
         Dimension constraintSize = getConstraintSizes(popup, new Point(x, y));
