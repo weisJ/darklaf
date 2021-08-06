@@ -51,6 +51,18 @@ public interface MenuItemUI {
 
     String getPropertyPrefix();
 
+    default Color getForeground(final JMenuItem item) {
+        boolean enabled = item.isEnabled();
+        boolean armed = item.isArmed()
+                || (item instanceof JMenu && item.isSelected())
+                || (item.isRolloverEnabled() && item.getModel().isRollover());
+        if (enabled) {
+            return armed ? getSelectionForeground() : item.getForeground();
+        } else {
+            return getDisabledForeground();
+        }
+    }
+
     Color getDisabledForeground();
 
     Color getSelectionForeground();
@@ -59,13 +71,26 @@ public interface MenuItemUI {
 
     Color getAcceleratorForeground();
 
+    default Color getBackground(final JMenuItem item) {
+        boolean enabled = item.isEnabled();
+        boolean armed = item.isArmed() || (item instanceof JMenu && item.isSelected());
+        if (enabled) {
+            return armed ? getSelectionBackground() : item.getBackground();
+        } else {
+            return getDisabledBackground();
+        }
+    }
+
+    Color getSelectionBackground();
+
+    Color getDisabledBackground();
+
     int getAcceleratorTextOffset();
 
     boolean isUseEvenHeight();
 
     default void paintMenuItemImpl(final Graphics g, final JComponent c, final Icon checkIcon,
-            final Icon arrowIcon,
-            final Color background, final Color foreground, final int defaultTextIconGap) {
+            final Icon arrowIcon, final int defaultTextIconGap) {
         // Save original graphics font and color
         GraphicsContext context = new GraphicsContext(g);
 
@@ -77,6 +102,9 @@ public interface MenuItemUI {
 
         MenuItemLayoutHelper lh = getMenuItemLayoutHelper(checkIcon, arrowIcon, defaultTextIconGap, mi, viewRect);
         MenuItemLayoutHelper.MILayoutResult lr = lh.layoutMenuItem();
+
+        Color background = getBackground(mi);
+        Color foreground = getForeground(mi);
 
         paintBackgroundImpl(g, mi, background);
         context.restore();
@@ -94,24 +122,16 @@ public interface MenuItemUI {
     }
 
     default void paintBackgroundImpl(final Graphics g, final JMenuItem menuItem, final Color bgColor) {
-        ButtonModel model = menuItem.getModel();
-        Color oldColor = g.getColor();
         int menuWidth = menuItem.getWidth();
         int menuHeight = menuItem.getHeight() + 1;
 
+        boolean armed = menuItem.isArmed()
+                || (menuItem instanceof JMenu && menuItem.isSelected())
+                || (menuItem.isRolloverEnabled() && menuItem.getModel().isRollover());
         boolean parentOpaque = menuItem.getParent().isOpaque();
-        if (menuItem.isOpaque() && parentOpaque) {
-            if (model.isArmed() || (menuItem instanceof JMenu && model.isSelected())) {
-                g.setColor(bgColor);
-            } else {
-                g.setColor(menuItem.getBackground());
-            }
-            g.fillRect(0, 0, menuWidth, menuHeight);
-            g.setColor(oldColor);
-        } else if (model.isArmed() || (menuItem instanceof JMenu && model.isSelected())) {
+        if (armed || (menuItem.isOpaque() && parentOpaque)) {
             g.setColor(bgColor);
             g.fillRect(0, 0, menuWidth, menuHeight);
-            g.setColor(oldColor);
         }
     }
 

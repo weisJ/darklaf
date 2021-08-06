@@ -130,6 +130,28 @@ public class PopupMenuDemo extends BaseComponentDemo {
     @Override
     public List<JMenu> createMenus() {
         return Arrays.asList(
+                new JMenu("Disabled Menus") {
+                    {
+                        add(new JMenu("No Items"));
+                        add(new JMenu("Menu") {
+                            {
+                                add(new JMenuItem());
+                                add(new JMenuItem());
+                            }
+
+                            @Override
+                            public boolean isEnabled() {
+                                return false;
+                            }
+                        });
+                        add(new JMenuItem("Item") {
+                            @Override
+                            public boolean isEnabled() {
+                                return false;
+                            }
+                        });
+                    }
+                },
                 new JMenu("CheckBoxes") {
                     {
                         for (int i = 0; i < 10; i++) {

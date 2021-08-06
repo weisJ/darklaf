@@ -86,15 +86,25 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI implements MenuItemUI {
 
     @Override
     protected void paintMenuItem(final Graphics g, final JComponent c, final Icon checkIcon,
-            final Icon arrowIcon, final Color background,
-            final Color foreground, final int defaultTextIconGap) {
-        paintMenuItemImpl(g, c, checkIcon, arrowIcon, background, foreground, defaultTextIconGap);
+            final Icon arrowIcon, final Color selectionBackground,
+            final Color selectionForeground, final int defaultTextIconGap) {
+        paintMenuItemImpl(g, c, checkIcon, arrowIcon, defaultTextIconGap);
     }
 
     public MenuItemLayoutHelper getMenuItemLayoutHelper(final Icon checkIcon, final Icon arrowIcon,
             final int defaultTextIconGap, final JMenuItem mi, final Rectangle viewRect) {
         return getMenuItemLayoutHelperImpl(acceleratorDelimiter, acceleratorFont, getPropertyPrefix(), checkIcon,
                 arrowIcon, defaultTextIconGap, mi, viewRect);
+    }
+
+    @Override
+    public Color getSelectionBackground() {
+        return selectionBackground;
+    }
+
+    @Override
+    public Color getDisabledBackground() {
+        return menuItem.getBackground();
     }
 
     @Override

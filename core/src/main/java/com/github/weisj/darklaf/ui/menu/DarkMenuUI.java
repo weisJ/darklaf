@@ -23,7 +23,6 @@ package com.github.weisj.darklaf.ui.menu;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
@@ -40,7 +39,6 @@ public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
     protected Icon arrowIconHover;
     protected Icon arrowIconDisabled;
     protected JMenu menu;
-    protected MouseListener mouseListener;
 
     public static ComponentUI createUI(final JComponent x) {
         return new DarkMenuUI();
@@ -96,12 +94,6 @@ public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
     }
 
     @Override
-    protected void uninstallListeners() {
-        super.uninstallListeners();
-        menu.removeMouseListener(mouseListener);
-    }
-
-    @Override
     protected void installDefaults() {
         super.installDefaults();
         acceleratorFont = UIManager.getFont("Menu.font");
@@ -114,8 +106,7 @@ public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
     }
 
     public void paint(final Graphics g, final JComponent c) {
-        paintMenuItemImpl(g, c, checkIcon, getArrowIcon(), selectionBackground,
-                isSelected(c) ? selectionForeground : c.getForeground(), defaultTextIconGap);
+        paintMenuItemImpl(g, c, checkIcon, getArrowIcon(), defaultTextIconGap);
     }
 
     @Override
@@ -132,11 +123,6 @@ public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
         return hover ? arrowIconHover : arrowIcon;
     }
 
-    protected boolean isSelected(final JComponent menuItem) {
-        if (!(menuItem instanceof JMenuItem)) return false;
-        return menuItem.isEnabled() && ((JMenuItem) menuItem).isArmed();
-    }
-
     @Override
     public MenuItemLayoutHelper getMenuItemLayoutHelper(Icon checkIcon, Icon arrowIcon, int defaultTextIconGap,
             JMenuItem mi, Rectangle viewRect) {
@@ -147,6 +133,16 @@ public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
     @Override
     public String getPropertyPrefix() {
         return super.getPropertyPrefix();
+    }
+
+    @Override
+    public Color getDisabledBackground() {
+        return menu.getBackground();
+    }
+
+    @Override
+    public Color getSelectionBackground() {
+        return selectionBackground;
     }
 
     @Override
@@ -178,4 +174,5 @@ public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
     public boolean isUseEvenHeight() {
         return useEvenHeight;
     }
+
 }
