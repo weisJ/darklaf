@@ -42,6 +42,7 @@ import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
+import com.github.weisj.swingdsl.inspector.InspectorKt;
 
 public final class DemoExecutor {
 
@@ -62,6 +63,7 @@ public final class DemoExecutor {
     }
 
     public static AtomicReference<Window> showDemo(final ComponentDemo demo, final boolean asDialog) {
+        InspectorKt.installInspector();
         LafManager.enabledPreferenceChangeReporting(false);
         LafManager.addThemePreferenceChangeListener(LafManager::installTheme);
         AtomicReference<Window> windowRef = new AtomicReference<>();

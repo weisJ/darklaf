@@ -26,10 +26,11 @@ dependencies {
     compileOnly(libs.autoservice.annotations)
     annotationProcessor(libs.autoservice.processor)
 
-    testImplementation(libs.jna)
     testImplementation(libs.svgSalamander)
     testImplementation(libs.bundles.test.miglayout)
     testImplementation(libs.swingx)
+    testImplementation(libs.test.swingDslInspector)
+    testImplementation(libs.test.jna)
     testImplementation(libs.test.rsyntaxtextarea)
     testImplementation(libs.test.lGoodDatePicker)
     testImplementation(libs.test.junit.api)

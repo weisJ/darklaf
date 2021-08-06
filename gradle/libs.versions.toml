@@ -14,7 +14,6 @@ macOSFramework = "latest.release"
 javaNativeFoundation = "1.1.1"
 
 [libraries]
-jna = { module = "net.java.dev.jna:jna", version.ref = "jna" }
 jxlayer = { module = "org.swinglabs:jxlayer", version.ref = "jxlayer" }
 swingx = { module = "org.swinglabs:swingx", version.ref = "swingx" }
 svgSalamander = { module = "com.formdev:svgSalamander", version.ref = "svgSalamander" }
@@ -38,6 +37,8 @@ test-miglayout-core = { module = "com.miglayout:miglayout-core", version.ref = "
 test-miglayout-swing = { module = "com.miglayout:miglayout-swing", version.ref = "miglayout" }
 test-lGoodDatePicker = { module = "com.github.lgooddatepicker:LGoodDatePicker", version.ref = "lGoodDatePicker" }
 test-rsyntaxtextarea = { module = "com.fifesoft:rsyntaxtextarea", version.ref = "rsyntaxtextarea" }
+test-swingDslInspector = { module = "com.github.weisj:swing-extensions-inspector", version = "latest.integration" }
+test-jna = { module = "net.java.dev.jna:jna", version.ref = "jna" }
 
 [bundles]
 test-miglayout = ["test-miglayout-core", "test-miglayout-swing"]
