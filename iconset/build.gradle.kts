@@ -27,17 +27,19 @@ tasks.jar {
 }
 
 val generateIconAccessor by tasks.registering {
+    val generatedDir = project.buildDir.resolve("generated/iconAccessor")
+    sourceSets.main.configure {
+        java.srcDir(generatedDir)
+    }
     doFirst {
         sourceSets.main.configure {
             val propertyFile = project.file("iconAccessorSpec.properties")
             val allIconsName = "AllIcons"
-            val generatedDir = project.buildDir.resolve("generated/iconAccessor")
             generatedDir.mkdirs()
             generatedDir.resolve("$allIconsName.java").apply {
                 createNewFile()
                 writeText(createIconAccessor(propertyFile, allIconsName))
             }
-            java.srcDir(generatedDir)
         }
     }
 }
