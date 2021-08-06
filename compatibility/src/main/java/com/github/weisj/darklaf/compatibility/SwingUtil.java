@@ -21,6 +21,7 @@
  */
 package com.github.weisj.darklaf.compatibility;
 
+import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -82,7 +83,11 @@ public final class SwingUtil {
     }
 
     public static boolean isSunToolkit(final Toolkit toolkit) {
-        return isInstanceOf(toolkit.getClass(), "sun.awt.SunToolkit");
+        return toolkit != null && isInstanceOf(toolkit.getClass(), "sun.awt.SunToolkit");
+    }
+
+    public static boolean isUngrabEvent(final AWTEvent event) {
+        return event != null && isInstanceOf(event.getClass(), "sun.awt.UngrabEvent");
     }
 
     private static boolean isInstanceOf(final Class<?> cls, final String type) {

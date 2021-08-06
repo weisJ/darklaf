@@ -148,7 +148,7 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
     }
 
     public void eventDispatched(final AWTEvent ev) {
-        if (ev != null && ev.getClass().getName().equals("UngrabEvent")) {
+        if (SwingUtil.isUngrabEvent(ev)) {
             // Popup should be canceled in case of ungrab event
             cancelPopupMenu();
             return;
