@@ -215,14 +215,14 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
 
         Color bg = getBackground(c);
         Color spinBg = getArrowBackground(c);
-        boolean isCellEditor = SpinnerConstants.isTreeOrTableCellEditor(c);
 
         if (editorComponent != null) {
             PropertyUtil.installBackground(editorComponent, bg);
             bg = editorComponent.getBackground();
         }
 
-        DividedWidgetPainter.paintBackground((Graphics2D) g, c, arc, arrowBounds, bg, spinBg, isCellEditor);
+        DividedWidgetPainter.paintBackground((Graphics2D) g, c, arc, arrowBounds, bg, spinBg,
+                SpinnerConstants.getBorderType(c));
     }
 
     protected Color getBackground(final JComponent c) {

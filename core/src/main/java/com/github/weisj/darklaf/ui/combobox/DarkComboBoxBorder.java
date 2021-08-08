@@ -28,9 +28,7 @@ import javax.swing.border.Border;
 import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 
-import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.DividedWidgetPainter;
-import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.swingdsl.visualpadding.VisualPaddingProvider;
 
 public class DarkComboBoxBorder implements Border, UIResource, VisualPaddingProvider {
@@ -60,9 +58,6 @@ public class DarkComboBoxBorder implements Border, UIResource, VisualPaddingProv
             return;
         }
 
-        final boolean isTableCellEditor = ComboBoxConstants.isTableCellEditor(comboBox);
-        final boolean isTreeCellEditor = ComboBoxConstants.isTreeCellEditor(comboBox);
-
         ui.checkFocus();
         Graphics2D g = (Graphics2D) g2;
         g.translate(x, y);
@@ -70,7 +65,7 @@ public class DarkComboBoxBorder implements Border, UIResource, VisualPaddingProv
         Color borderColor = getBorderColor(c);
         int dividerLocation = getDividerLocation(comboBox);
         DividedWidgetPainter.paintBorder(g, comboBox, width, height, arcSize, borderSize, dividerLocation,
-                isTableCellEditor, isTreeCellEditor, ui.getHasFocus(), borderColor, focusBorderColor);
+                ComboBoxConstants.getBorderType(c), ui.getHasFocus(), borderColor, focusBorderColor);
 
         g.translate(-x, -y);
     }
@@ -85,28 +80,16 @@ public class DarkComboBoxBorder implements Border, UIResource, VisualPaddingProv
         return -1;
     }
 
-    protected void paintCellBorder(final Component c, final int width, final int height,
-            final boolean isTableCellEditor, final Graphics2D g, final Color borderColor) {
-        g.setColor(borderColor);
-        Component parent = c.getParent();
-        if (isTableCellEditor && parent instanceof JTable) {
-            JTable table = ((JTable) parent);
-            CellUtil.paintTableEditorBorder(g, c, table, width, height);
-        } else {
-            PaintUtil.drawRect(g, 0, 0, width, height, 1);
-        }
-    }
-
     protected Color getBorderColor(final Component c) {
         return c.isEnabled() ? borderColor : inactiveBorderColor;
     }
 
     @Override
     public Insets getBorderInsets(final Component c) {
-        if (ComboBoxConstants.isTreeOrTableCellEditor(c)) {
-            return new InsetsUIResource(0, 0, 0, 0);
+        if (ComboBoxConstants.getBorderType(c) == DividedWidgetPainter.WidgetBorderType.Default) {
+            return new InsetsUIResource(borderSize, borderSize, borderSize, borderSize);
         }
-        return new InsetsUIResource(borderSize, borderSize, borderSize, borderSize);
+        return new InsetsUIResource(0, 0, 0, 0);
     }
 
     @Override

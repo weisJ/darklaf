@@ -65,11 +65,9 @@ public class DarkSpinnerBorder implements Border, UIResource, VisualPaddingProvi
         g.translate(x, y);
 
         if (c instanceof JComponent) {
-            boolean tableCellEditor = SpinnerConstants.isTableCellEditor(c);
-            boolean treeCellEditor = !tableCellEditor && SpinnerConstants.isTreeCellEditor(c);
             int dividerLocation = getDividerLocation(c);
             DividedWidgetPainter.paintBorder(g, (JComponent) c, width, height, arc, borderSize, dividerLocation,
-                    tableCellEditor, treeCellEditor, DarkUIUtil.hasFocus(c), borderColor, focusBorderColor);
+                    SpinnerConstants.getBorderType(c), DarkUIUtil.hasFocus(c), borderColor, focusBorderColor);
         }
 
         g.translate(-x, -y);
@@ -96,10 +94,10 @@ public class DarkSpinnerBorder implements Border, UIResource, VisualPaddingProvi
 
     @Override
     public Insets getBorderInsets(final Component c) {
-        if (SpinnerConstants.isTreeOrTableCellEditor(c)) {
-            return new InsetsUIResource(0, 0, 0, 0);
+        if (SpinnerConstants.getBorderType(c) == DividedWidgetPainter.WidgetBorderType.Default) {
+            return new InsetsUIResource(borderSize, borderSize, borderSize, borderSize);
         }
-        return new InsetsUIResource(borderSize, borderSize, borderSize, borderSize);
+        return new InsetsUIResource(0, 0, 0, 0);
     }
 
     @Override

@@ -25,6 +25,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.ui.DividedWidgetPainter;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -48,6 +49,11 @@ public interface SpinnerConstants {
 
     static boolean isTreeCellEditor(final Component c) {
         return PropertyUtil.getBooleanProperty(c, KEY_IS_TREE_EDITOR);
+    }
+
+    static DividedWidgetPainter.WidgetBorderType getBorderType(final Component c) {
+        boolean isTableEditor = isTableCellEditor(c);
+        return DividedWidgetPainter.getBorderType(c, isTableEditor, !isTableEditor && isTreeCellEditor(c));
     }
 
     static boolean isTableCellEditor(final Component c) {

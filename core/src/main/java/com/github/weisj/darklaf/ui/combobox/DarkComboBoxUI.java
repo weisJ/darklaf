@@ -231,13 +231,13 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
             g.fillRect(0, 0, c.getWidth(), c.getHeight());
             return;
         }
-        boolean isCellEditor = ComboBoxConstants.isTreeOrTableCellEditor(c);
         Color rendererBg = currentValueRenderer != null ? currentValueRenderer.getBackground() : null;
         Color bg = PropertyUtil.chooseColor(rendererBg, getBackground(comboBox));
 
         Color splitBg = getArrowBackground(comboBox);
         Rectangle arrowRect = comboBox.isEditable() ? arrowButton.getBounds() : null;
-        DividedWidgetPainter.paintBackground((Graphics2D) g, c, arcSize, arrowRect, bg, splitBg, isCellEditor);
+        DividedWidgetPainter.paintBackground((Graphics2D) g, c, arcSize, arrowRect, bg, splitBg,
+                ComboBoxConstants.getBorderType(c));
     }
 
     protected Color getBackground(final JComponent c) {
