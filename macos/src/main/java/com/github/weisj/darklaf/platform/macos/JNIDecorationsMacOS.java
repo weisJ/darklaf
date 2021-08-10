@@ -35,7 +35,8 @@ public final class JNIDecorationsMacOS {
 
     public static native void installDecorations(final long hwnd);
 
-    public static native void uninstallDecorations(final long hwnd);
+    public static native void uninstallDecorations(final long hwnd,
+            final boolean fullSizeContent, final boolean transparentTitleBar);
 
     public static native void setTitleEnabled(final long hwnd, final boolean enabled);
 

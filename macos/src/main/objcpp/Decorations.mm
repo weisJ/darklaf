@@ -145,12 +145,17 @@ JNF_COCOA_EXIT(env);
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_uninstallDecorations(JNIEnv *env, jclass obj, jlong hwnd) {
+Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_uninstallDecorations(JNIEnv *env, jclass obj, jlong hwnd,
+    jboolean fullSizeContent, jboolean transparentTitleBar) {
 JNF_COCOA_ENTER(env);
     NSWindow *nsWindow = OBJC(hwnd);
     [JNFRunLoop performOnMainThreadWaiting:YES withBlock:^{
-        nsWindow.styleMask &= ~NSWindowStyleMaskFullSizeContentView;
-        nsWindow.titlebarAppearsTransparent = NO;
+        if (fullSizeContent) {
+            nsWindow.styleMask |= NSWindowStyleMaskFullSizeContentView;
+        } else {
+            nsWindow.styleMask &= ~NSWindowStyleMaskFullSizeContentView;
+        }
+        nsWindow.titlebarAppearsTransparent = transparentTitleBar ? YES : NO;
         [nsWindow contentView].needsDisplay = YES;
     }];
 JNF_COCOA_EXIT(env);
