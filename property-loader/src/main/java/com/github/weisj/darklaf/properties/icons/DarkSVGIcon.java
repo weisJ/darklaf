@@ -49,7 +49,8 @@ import com.kitfox.svg.xml.StyleAttribute;
  * @since 2019
  */
 public class DarkSVGIcon
-        implements DerivableIcon<DarkSVGIcon>, RotateIcon, Serializable, ImageSource, VisualPaddingProvider {
+        implements DerivableIcon<DarkSVGIcon>, IconLoader.CacheableIcon, RotateIcon, Serializable, ImageSource,
+        VisualPaddingProvider {
 
     private static final Logger LOGGER = LogUtil.getLogger(DarkSVGIcon.class);
 
@@ -119,8 +120,13 @@ public class DarkSVGIcon
         this.loaded = parent.loaded;
     }
 
-    void setIconKey(final IconLoader.IconKey iconKey) {
-        this.iconKey = iconKey;
+    @Override
+    public void setCacheKey(final IconLoader.IconKey key) {
+        this.iconKey = key;
+    }
+
+    IconLoader.IconKey getCacheKey() {
+        return iconKey;
     }
 
     @Override

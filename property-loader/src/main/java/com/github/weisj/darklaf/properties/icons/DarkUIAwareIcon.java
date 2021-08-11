@@ -34,7 +34,7 @@ import javax.swing.plaf.UIResource;
  * @author Jannis Weis
  * @since 2019
  */
-public class DarkUIAwareIcon implements UIAwareIcon, UIResource, Serializable {
+public class DarkUIAwareIcon implements UIAwareIcon, UIResource, IconLoader.CacheableIcon, Serializable {
 
     private final DarkUIAwareIcon dual;
     protected final String darkKey;
@@ -45,6 +45,8 @@ public class DarkUIAwareIcon implements UIAwareIcon, UIResource, Serializable {
     protected transient boolean loaded;
     protected transient Icon icon;
     private AwareIconStyle currentStyle;
+
+    private IconLoader.IconKey cacheKey;
 
     /**
      * Create new ui aware icon.
@@ -131,5 +133,14 @@ public class DarkUIAwareIcon implements UIAwareIcon, UIResource, Serializable {
 
     public DarkUIAwareIcon getDual() {
         return dual;
+    }
+
+    @Override
+    public void setCacheKey(final IconLoader.IconKey key) {
+        this.cacheKey = key;
+    }
+
+    IconLoader.IconKey getCacheKey() {
+        return cacheKey;
     }
 }

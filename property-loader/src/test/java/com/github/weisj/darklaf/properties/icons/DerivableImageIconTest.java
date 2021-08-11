@@ -27,9 +27,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class DerivableImageIconTest {
+
+    @BeforeEach
+    void clearCache() {
+        IconLoader.get(DerivableImageIconTest.class).clearCache();
+    }
 
     @Test
     public void testCache() {
@@ -42,8 +48,8 @@ class DerivableImageIconTest {
             imageSet.add(img);
         }
         Assertions.assertEquals(1, imageSet.size());
-
         imageSet.clear();
+
         icon = icon.derive(50, 50);
         for (int i = 0; i < 100; i++) {
             icon = icon.derive(50, 50);
@@ -58,6 +64,35 @@ class DerivableImageIconTest {
             imageSet.add(icon.getOriginal());
         }
         Assertions.assertEquals(1, imageSet.size());
+    }
+
+    @Test
+    void testKeyIsUpdatedOnLoad() {
+        IconLoader loader = IconLoader.get(DerivableImageIconTest.class);
+        DerivableImageIcon icon = (DerivableImageIcon) loader.getIcon("image_icon.png");
+        Assertions.assertNotNull(icon.getCacheKey());
+        IconLoader.IconKey key = icon.getCacheKey();
+        Assertions.assertTrue(key.w < 0);
+        Assertions.assertTrue(key.h < 0);
+
+        Image image = icon.getImage();
+        Assertions.assertNotNull(icon);
+
+        Assertions.assertEquals(image.getWidth(null), key.w);
+        Assertions.assertEquals(image.getHeight(null), key.h);
+
+        Assertions.assertSame(icon, loader.getIcon("image_icon.png"));
+        Assertions.assertSame(icon, loader.getIcon("image_icon.png", key.w, key.h));
+    }
+
+    @Test
+    void testDeriveReturnsSelf() {
+        IconLoader loader = IconLoader.get(DerivableImageIconTest.class);
+        DerivableImageIcon icon = (DerivableImageIcon) loader.getIcon("image_icon.png", -1, -1);
+        Assertions.assertSame(icon, icon.derive(-1, -1));
+        Image img = icon.getImage();
+        Assertions.assertNotNull(img);
+        Assertions.assertSame(icon, icon.derive(img.getWidth(null), img.getHeight(null)));
     }
 
     @Test

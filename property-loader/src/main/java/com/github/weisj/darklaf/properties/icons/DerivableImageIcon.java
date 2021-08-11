@@ -34,7 +34,8 @@ import javax.swing.*;
 import com.github.weisj.darklaf.util.LazyValue;
 import com.github.weisj.darklaf.util.LogUtil;
 
-public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, ImageSource, Accessible {
+public class DerivableImageIcon
+        implements DerivableIcon<DerivableImageIcon>, IconLoader.CacheableIcon, ImageSource, Accessible {
 
     private static final Logger LOGGER = LogUtil.getLogger(DerivableImageIcon.class);
     private static final int DEFAULT_SCALING_MODE = Image.SCALE_DEFAULT;
@@ -47,6 +48,7 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Im
     private final LazyImageValue image;
     private String description;
     private AccessibleContext accessibleContext;
+    private IconLoader.IconKey iconKey;
 
     /**
      * Create a new derivable image icon.
@@ -244,7 +246,24 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Im
 
     @Override
     public DerivableImageIcon derive(final int width, final int height) {
+        if (sameIconRequested(width, height)) return this;
         return new DerivableImageIcon(this, width, height);
+    }
+
+    private boolean sameIconRequested(final int width, final int height) {
+        if (this.width == width && this.height == height) return true;
+        if (width < 0 && height < 0) {
+            // Original image size is requested.
+            if (this.width < 0 && this.height < 0) return true;
+            // We have a size specified. Check if it matches the original.
+            if (original.isInitialized()) {
+                // If the original isn't loaded don't force it to.
+                Image img = original.get();
+                return this.width == img.getWidth(null)
+                        && this.height == img.getHeight(null);
+            }
+        }
+        return false;
     }
 
     @Override
@@ -304,6 +323,10 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Im
         if (originalImage != null && (width < 0 || height < 0)) {
             if (width < 0) width = originalImage.getWidth(null);
             if (height < 0) height = originalImage.getHeight(null);
+            if (iconKey != null) {
+                if (width >= 0) iconKey.w = width;
+                if (height >= 0) iconKey.h = height;
+            }
         }
     }
 
@@ -352,6 +375,19 @@ public class DerivableImageIcon implements DerivableIcon<DerivableImageIcon>, Im
     @Override
     public Image createImage(final Dimension size) {
         return getOriginal().getScaledInstance(size.width, size.height, scalingMode);
+    }
+
+    @Override
+    public void setCacheKey(final IconLoader.IconKey key) {
+        this.iconKey = key;
+        if (iconKey != null && width >= 0 && height >= 0) {
+            iconKey.w = width;
+            iconKey.h = height;
+        }
+    }
+
+    IconLoader.IconKey getCacheKey() {
+        return iconKey;
     }
 
     protected static class AccessibleDerivableImageIcon extends AccessibleContext implements AccessibleIcon {

@@ -37,6 +37,7 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.util.LazyValue;
 import com.github.weisj.darklaf.util.LogUtil;
+import com.github.weisj.darklaf.util.cache.SoftCache;
 
 /** @author Jannis Weis */
 public final class IconLoader {
@@ -53,8 +54,8 @@ public final class IconLoader {
     private final Class<?> parentClass;
 
     private boolean cacheEnabled = true;
-    private final Map<IconKey, DarkUIAwareIcon> awareIconMap = new HashMap<>();
-    private final Map<IconKey, Icon> iconMap = new HashMap<>();
+    private final SoftCache<IconKey, DarkUIAwareIcon> awareIconCache = new SoftCache<>();
+    private final SoftCache<IconKey, CacheableIcon> iconCache = new SoftCache<>();
 
     static {
         UIManager.addPropertyChangeListener(e -> {
@@ -64,6 +65,24 @@ public final class IconLoader {
                 updateThemeStatus(new Object());
             }
         });
+    }
+
+    /**
+     * Returns the current size of the cache.
+     *
+     * @return the size of the cache.
+     */
+    public int cacheSize() {
+        return awareIconCache.size() + iconCache.size();
+    }
+
+    /**
+     * Returns whether the cache is currently empty.
+     *
+     * @return true if the cache is empty.
+     */
+    public boolean isCacheEmpty() {
+        return awareIconCache.isEmpty() && iconCache.isEmpty();
     }
 
     private IconLoader(final Class<?> parentClass) {
@@ -102,6 +121,14 @@ public final class IconLoader {
      */
     public void setCacheEnabled(final boolean cacheEnabled) {
         this.cacheEnabled = cacheEnabled;
+    }
+
+    /**
+     * Clears the icon cache.
+     */
+    public void clearCache() {
+        awareIconCache.clear();
+        iconCache.clear();
     }
 
     /**
@@ -203,11 +230,12 @@ public final class IconLoader {
      */
     public DarkUIAwareIcon getUIAwareIcon(final String path, final int w, final int h) {
         IconKey key = new IconKey(path, w, h);
-        if (isCacheEnabled() && awareIconMap.containsKey(key)) {
-            return awareIconMap.get(key);
+        DarkUIAwareIcon icon = null;
+        if (isCacheEnabled() && ((icon = awareIconCache.get(key)) != null)) {
+            return icon;
         } else {
-            DarkUIAwareIcon icon = createUIAwareIcon(path, w, h);
-            cache(awareIconMap, key, icon);
+            icon = createUIAwareIcon(path, w, h);
+            cache(awareIconCache, key, icon);
             return icon;
         }
     }
@@ -281,29 +309,31 @@ public final class IconLoader {
         IconKey key = new IconKey(path, w, h);
 
         if (isCacheEnabled()) {
-            if (iconMap.containsKey(key)) {
-                return iconMap.get(key);
-            } else if (awareIconMap.containsKey(key)) {
-                return awareIconMap.get(key);
+            CacheableIcon icon;
+            if ((icon = iconCache.get(key)) != null) {
+                return icon;
+            } else if ((icon = awareIconCache.get(key)) != null) {
+                return icon;
             }
-            Icon icon = getWildcardIcon(iconMap, key, w, h);
+            icon = getWildcardIcon(iconCache, key, w, h);
             if (icon != null) return icon;
         }
 
         // Icon not found or caching is disabled.
-        Icon icon = isSVGIcon(path)
-                ? loadSVGIcon(path, w, h, themed, null, key)
+        CacheableIcon icon = isSVGIcon(path)
+                ? loadSVGIconInternal(path, w, h, themed, null)
                 : new DerivableImageIcon(new LazyImageIconSupplier(path, key, parentClass), w, h);
-        cache(iconMap, key, icon);
+        cache(iconCache, key, icon);
         return icon;
     }
 
-    private Icon getWildcardIcon(final Map<IconKey, Icon> iconMap, final IconKey iconKey, final int w, final int h) {
+    private CacheableIcon getWildcardIcon(final SoftCache<IconKey, CacheableIcon> iconMap,
+            final IconKey iconKey, final int w, final int h) {
         iconKey.isWildcardEnabled = true;
-        Icon icon = iconMap.get(iconKey);
+        CacheableIcon icon = iconMap.get(iconKey);
         if (icon instanceof DerivableIcon) {
             @SuppressWarnings("unchecked")
-            Icon derived = ((DerivableIcon<Icon>) icon).derive(w, h);
+            CacheableIcon derived = (CacheableIcon) ((DerivableIcon<Icon>) icon).derive(w, h);
             iconKey.isWildcardEnabled = false;
             cache(iconMap, iconKey, derived);
             return derived;
@@ -312,7 +342,7 @@ public final class IconLoader {
         return null;
     }
 
-    private <T extends Icon> void cache(final Map<IconKey, T> iconMap, final IconKey key, final T icon) {
+    private <T extends CacheableIcon> void cache(final SoftCache<IconKey, T> iconMap, final IconKey key, final T icon) {
         if (cacheEnabled) {
             iconMap.put(key, icon);
         }
@@ -362,11 +392,11 @@ public final class IconLoader {
      */
     public Icon loadSVGIcon(final String path, final int w, final int h, final boolean themed,
             final Map<Object, Object> propertyMap) {
-        return loadSVGIcon(path, w, h, themed, propertyMap, null);
+        return loadSVGIconInternal(path, w, h, themed, propertyMap);
     }
 
-    private Icon loadSVGIcon(final String path, final int w, final int h, final boolean themed,
-            final Map<Object, Object> propertyMap, final IconKey iconKey) {
+    private CacheableIcon loadSVGIconInternal(final String path, final int w, final int h, final boolean themed,
+            final Map<Object, Object> propertyMap) {
         Supplier<URI> uriSupplier = createURISupplier(path);
         DarkSVGIcon svgIcon;
         if (themed) {
@@ -378,7 +408,6 @@ public final class IconLoader {
         } else {
             svgIcon = new DarkSVGIcon(createURISupplier(path), w, h);
         }
-        svgIcon.setIconKey(iconKey);
         return svgIcon;
     }
 
@@ -464,6 +493,9 @@ public final class IconLoader {
 
     private boolean isSVGIcon(final String path) {
         return path != null && path.endsWith(".svg");
+    }
+
+    public interface CacheableIcon extends Icon, SoftCache.Cacheable<IconKey> {
     }
 
     protected static final class IconKey {
