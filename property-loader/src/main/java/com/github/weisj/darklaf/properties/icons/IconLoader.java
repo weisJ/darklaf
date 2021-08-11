@@ -306,25 +306,27 @@ public final class IconLoader {
     }
 
     private Icon getIconImpl(final String path, final int w, final int h, final boolean themed) {
-        IconKey key = new IconKey(path, w, h);
+        synchronized (this) {
+            IconKey key = new IconKey(path, w, h);
 
-        if (isCacheEnabled()) {
-            CacheableIcon icon;
-            if ((icon = iconCache.get(key)) != null) {
-                return icon;
-            } else if ((icon = awareIconCache.get(key)) != null) {
-                return icon;
+            if (isCacheEnabled()) {
+                CacheableIcon icon;
+                if ((icon = iconCache.get(key)) != null) {
+                    return icon;
+                } else if ((icon = awareIconCache.get(key)) != null) {
+                    return icon;
+                }
+                icon = getWildcardIcon(iconCache, key, w, h);
+                if (icon != null) return icon;
             }
-            icon = getWildcardIcon(iconCache, key, w, h);
-            if (icon != null) return icon;
-        }
 
-        // Icon not found or caching is disabled.
-        CacheableIcon icon = isSVGIcon(path)
-                ? loadSVGIconInternal(path, w, h, themed, null)
-                : new DerivableImageIcon(new LazyImageIconSupplier(path, key, parentClass), w, h);
-        cache(iconCache, key, icon);
-        return icon;
+            // Icon not found or caching is disabled.
+            CacheableIcon icon = isSVGIcon(path)
+                    ? loadSVGIconInternal(path, w, h, themed, null)
+                    : new DerivableImageIcon(new LazyImageIconSupplier(path, key, parentClass), w, h);
+            cache(iconCache, key, icon);
+            return icon;
+        }
     }
 
     private CacheableIcon getWildcardIcon(final SoftCache<IconKey, CacheableIcon> iconMap,

@@ -25,11 +25,19 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 import com.kitfox.svg.app.beans.SVGIcon;
 
+@ResourceLock(value = "IconLoader")
 class SVGImageTest {
+
+    @BeforeEach
+    void clearCache() {
+        IconLoader.get(SVGImageTest.class).clearCache();
+    }
 
     @Test
     void testDeriveWithSameSize() {

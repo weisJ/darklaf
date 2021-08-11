@@ -28,12 +28,20 @@ import java.util.function.Supplier;
 import javax.swing.Icon;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 
-@Timeout(value = 5)
+@Timeout(value = 40)
+@ResourceLock(value = "IconLoader")
 class IconLoaderCacheTest {
+
+    @BeforeEach
+    void clearCache() {
+        IconLoader.get(IconLoaderCacheTest.class).clearCache();
+    }
 
     @Test
     void testClearCacheClearsCache() {
@@ -67,7 +75,7 @@ class IconLoaderCacheTest {
 
         hardReferences.clear();
 
-        waitForGarbageCollection(() -> !loader.isCacheEmpty());
+        waitForGarbageCollection(() -> loader.cacheSize() == count);
     }
 
     @SuppressWarnings({"unused"})
