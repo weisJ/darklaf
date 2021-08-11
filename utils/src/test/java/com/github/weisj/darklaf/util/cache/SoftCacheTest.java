@@ -45,9 +45,10 @@ class SoftCacheTest {
         Assertions.assertEquals(count, hardReferences.size());
         Assertions.assertEquals(count, cache.size());
 
+        int cacheSize = cache.size();
         hardReferences.clear();
 
-        waitForGarbageCollection(() -> !cache.isEmpty());
+        waitForGarbageCollection(() -> cache.size() == cacheSize);
     }
 
     @SuppressWarnings({"unused"})
