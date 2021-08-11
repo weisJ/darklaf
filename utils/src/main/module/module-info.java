@@ -29,6 +29,7 @@ module darklaf.utils {
     requires static annotations;
 
     exports com.github.weisj.darklaf.util;
+    exports com.github.weisj.darklaf.util.cache;
     exports com.github.weisj.darklaf.util.graphics;
     exports com.github.weisj.darklaf.util.value;
 }
