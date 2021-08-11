@@ -29,8 +29,10 @@ import javax.swing.Icon;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 
+@Timeout(value = 5)
 class IconLoaderCacheTest {
 
     @Test
