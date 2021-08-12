@@ -24,5 +24,9 @@ package com.github.weisj.darklaf.iconset;
 import com.github.weisj.darklaf.properties.icons.IconLoader;
 
 public class IconSet {
-    public static final IconLoader ICON_LOADER = IconLoader.get(IconSet.class);
+    private static final IconLoader ICON_LOADER = IconLoader.get(IconSet.class);
+
+    public static IconLoader iconLoader() {
+        return ICON_LOADER;
+    }
 }

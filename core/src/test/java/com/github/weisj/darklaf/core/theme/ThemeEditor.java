@@ -282,7 +282,7 @@ public class ThemeEditor extends JPanel {
             Font font = FontUtil.createFont(Font.MONOSPACED, Font.BOLD, 13);
             return new TextIcon("42", new ThemedColor("menuIconEnabled"), font, 16, 16);
         }).get()),
-        BOOLEAN("Add Boolean", false, DarkUIUtil.ICON_LOADER.getIcon("control/checkBoxSelectedFocused.svg", true)),
+        BOOLEAN("Add Boolean", false, DarkUIUtil.iconLoader().getIcon("control/checkBoxSelectedFocused.svg", true)),
         STRING("Add String", "", IconLoader.get(ThemeEditor.class).getIcon("word.svg", true));
 
         private final String s;
@@ -339,7 +339,7 @@ public class ThemeEditor extends JPanel {
 
         OverlayIcon overlayIcon =
                 new OverlayIcon(
-                        DarkUIUtil.ICON_LOADER.getIcon("navigation/add.svg", true),
+                        AllIcons.Action.Add.get(),
                         lastSelection.get().getIcon().derive(8, 8),
                         Alignment.SOUTH_EAST);
         JSplitButton addButton = new JSplitButton(overlayIcon);
@@ -361,8 +361,8 @@ public class ThemeEditor extends JPanel {
         addButton.putClientProperty(ButtonConstants.KEY_THIN, true);
 
         JButton deleteButton = ComponentHelper.createIconOnlyButton(
-                DarkUIUtil.ICON_LOADER.getIcon("menu/delete.svg"),
-                DarkUIUtil.ICON_LOADER.getIcon("menu/deleteDisabled.svg"));
+                AllIcons.Action.Delete.get(),
+                AllIcons.Action.Delete.disabled());
         deleteButton.setToolTipText("Remove selected entry");
         deleteButton.setEnabled(table.getSelectedRow() >= 0);
 

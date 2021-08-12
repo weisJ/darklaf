@@ -31,7 +31,7 @@ import javax.swing.UIManager;
 import org.jetbrains.annotations.NotNull;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.ui.util.DarkUIUtil;
+import com.github.weisj.darklaf.iconset.AllIcons;
 import com.github.weisj.swingdsl.laf.ComponentFactoryDelegate;
 import com.github.weisj.swingdsl.laf.DefaultComponentFactory;
 import com.github.weisj.swingdsl.laf.DefaultWrappedComponent;
@@ -74,16 +74,12 @@ public class DarklafComponentFactory extends ComponentFactoryDelegate {
 
     @Override
     public @NotNull StateValue<Icon> getExpandedIcon() {
-        return new StateValue<>(
-                DarkUIUtil.ICON_LOADER.getIcon("navigation/arrow/thick/arrowDown.svg"),
-                DarkUIUtil.ICON_LOADER.getIcon("navigation/arrow/thick/arrowDownDisabled.svg"));
+        return new StateValue<>(AllIcons.Arrow.Thick.Down.get(), AllIcons.Arrow.Thick.Down.disabled());
     }
 
     @Override
     public @NotNull StateValue<Icon> getCollapsedIcon() {
-        return new StateValue<>(
-                DarkUIUtil.ICON_LOADER.getIcon("navigation/arrow/thick/arrowRight.svg"),
-                DarkUIUtil.ICON_LOADER.getIcon("navigation/arrow/thick/arrowRightDisabled.svg"));
+        return new StateValue<>(AllIcons.Arrow.Thick.Right.get(), AllIcons.Arrow.Thick.Right.disabled());
     }
 
     @Override

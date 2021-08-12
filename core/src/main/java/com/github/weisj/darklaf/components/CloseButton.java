@@ -25,8 +25,8 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.iconset.AllIcons;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
-import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 public class CloseButton extends JButton {
 
@@ -43,15 +43,15 @@ public class CloseButton extends JButton {
         setContentAreaFilled(false);
 
         Icon icon = UIManager.getIcon("CloseButton.closeIcon");
-        if (icon == null) icon = DarkUIUtil.ICON_LOADER.getIcon("navigation/close.svg", true);
+        if (icon == null) icon = AllIcons.Navigation.Close.get();
         setIcon(icon);
 
         icon = UIManager.getIcon("CloseButton.closeDisabledIcon");
-        if (icon == null) icon = DarkUIUtil.ICON_LOADER.getIcon("navigation/closeDisabled.svg", true);
+        if (icon == null) icon = AllIcons.Navigation.Close.disabled();
         setDisabledIcon(icon);
 
         icon = UIManager.getIcon("CloseButton.closeHoverIcon");
-        if (icon == null) icon = DarkUIUtil.ICON_LOADER.getIcon("navigation/closeHovered.svg", true);
+        if (icon == null) icon = AllIcons.Navigation.Close.hovered();
         setRolloverIcon(icon);
     }
 }

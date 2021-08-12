@@ -35,6 +35,7 @@ import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.properties.PropertyLoader;
+import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.properties.uiresource.DarkFontUIResource;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.FontSizeRule;
@@ -175,11 +176,12 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     }
 
     private void loadFontProperties(final UIDefaults defaults) {
+        IconLoader iconLoader = DarkUIUtil.iconLoader();
         Properties fontSizeProps =
                 PropertyLoader.loadProperties(DarkLaf.class, FONT_SIZE_DEFAULTS_NAME, FONT_PROPERTY_PATH);
-        PropertyLoader.putProperties(fontSizeProps, defaults, DarkUIUtil.ICON_LOADER);
+        PropertyLoader.putProperties(fontSizeProps, defaults, iconLoader);
         Properties fontProps = PropertyLoader.loadProperties(DarkLaf.class, FONT_DEFAULTS_NAME, FONT_PROPERTY_PATH);
-        PropertyLoader.putProperties(fontProps, defaults, DarkUIUtil.ICON_LOADER);
+        PropertyLoader.putProperties(fontProps, defaults, iconLoader);
     }
 
     private void patchOSFonts(final UIDefaults defaults, final Function<Map.Entry<Object, Font>, Font> mapper) {

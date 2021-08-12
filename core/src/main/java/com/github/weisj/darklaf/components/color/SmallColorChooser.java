@@ -208,7 +208,7 @@ public class SmallColorChooser extends JPanel implements ChooserComponent<Color>
 
     private JButton createPipetteButton() {
         Icon pipetteIcon = UIManager.getIcon("ColorChooser.pipette.icon");
-        if (pipetteIcon == null) pipetteIcon = DarkUIUtil.ICON_LOADER.getIcon("misc/pipette.svg", true);
+        if (pipetteIcon == null) pipetteIcon = DarkUIUtil.iconLoader().getIcon("misc/pipette.svg", true);
         Icon pipetteHoverIcon = UIManager.getIcon("ColorChooser.pipetteRollover.icon");
         JButton pipetteButton = new JButton();
         DefaultColorPipette defaultPipette = new DefaultColorPipette(this, (c, o) -> setColor(pipetteButton,

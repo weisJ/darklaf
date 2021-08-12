@@ -56,7 +56,11 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 public final class DarkUIUtil {
 
     private static final int CELL_SEARCH_DEPTH = 3;
-    public static final IconLoader ICON_LOADER = IconSet.ICON_LOADER;
+
+    public static IconLoader iconLoader() {
+        return IconSet.iconLoader();
+    }
+
     private static final Rectangle iconRect = new Rectangle();
     private static final Rectangle textRect = new Rectangle();
 

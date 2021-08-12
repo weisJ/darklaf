@@ -38,6 +38,7 @@ import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.components.border.DarkBorders;
 import com.github.weisj.darklaf.components.button.JSplitButton;
 import com.github.weisj.darklaf.components.renderer.SimpleListCellRenderer;
+import com.github.weisj.darklaf.iconset.AllIcons;
 import com.github.weisj.darklaf.layout.HorizontalLayout;
 import com.github.weisj.darklaf.layout.LayoutHelper;
 import com.github.weisj.darklaf.properties.icons.CustomThemedIcon;
@@ -47,7 +48,6 @@ import com.github.weisj.darklaf.properties.icons.ThemedIcon;
 import com.github.weisj.darklaf.properties.icons.ThemedSVGIcon;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.button.ButtonConstants;
-import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.Actions;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.Pair;
@@ -115,12 +115,12 @@ public class IconEditor extends JPanel {
         plusComp = new JPanel(new GridBagLayout());
         int addIconSize = Math.min(Math.max(32, displayIconSize / 2), 50);
         JSplitButton addEditorButton = ComponentHelper.createIconOnlySplitButton(
-                DarkUIUtil.ICON_LOADER.getIcon("navigation/add.svg", addIconSize, addIconSize, true));
+                AllIcons.Action.Add.get(addIconSize, addIconSize));
         int overlaySize = (2 * addIconSize) / 3;
         addEditorButton.setOverlayDropDownIcon(
-                DarkUIUtil.ICON_LOADER.getIcon("indicator/dropdown.svg", overlaySize, overlaySize, true));
+                AllIcons.Overlay.Arrow.Dropdown.get(overlaySize, overlaySize));
         addEditorButton.setOverlayDropDownDisabledIcon(
-                DarkUIUtil.ICON_LOADER.getIcon("indicator/dropdownDisabled.svg", overlaySize, overlaySize, true));
+                AllIcons.Overlay.Arrow.Dropdown.disabled(overlaySize, overlaySize));
         addEditorButton.putClientProperty(ButtonConstants.KEY_ARC_MULTIPLIER, 3);
         JPopupMenu menu = addEditorButton.getActionMenu();
 

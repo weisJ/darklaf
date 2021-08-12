@@ -57,7 +57,7 @@ public abstract class ColorAdjustmentTask implements DefaultsAdjustmentTask {
 
     protected void adjust(final String listKey, final Properties listProperties, final Consumer<Map<?, ?>> action) {
         ParseResult p = Parser.parse(Parser.createParseResult(listKey, listProperties.getProperty(listKey)),
-                new ParserContext(listProperties, DEFAULTS, DarkUIUtil.ICON_LOADER));
+                new ParserContext(listProperties, DEFAULTS, DarkUIUtil.iconLoader()));
         Object obj = p.result;
         if (obj instanceof Map<?, ?>) {
             action.accept((Map<?, ?>) obj);

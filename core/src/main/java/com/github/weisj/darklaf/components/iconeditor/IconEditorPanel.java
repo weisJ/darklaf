@@ -39,6 +39,7 @@ import com.github.weisj.darklaf.components.color.QuickColorChooser;
 import com.github.weisj.darklaf.components.popup.AttachedPopupComponent;
 import com.github.weisj.darklaf.components.popup.SharedComponent;
 import com.github.weisj.darklaf.components.renderer.SimpleListCellRenderer;
+import com.github.weisj.darklaf.iconset.AllIcons;
 import com.github.weisj.darklaf.layout.LayoutHelper;
 import com.github.weisj.darklaf.properties.PropertyLoader;
 import com.github.weisj.darklaf.properties.icons.*;
@@ -79,14 +80,14 @@ public class IconEditorPanel extends JPanel {
         valuePanel.setBorder(LayoutHelper.createEmptyContainerBorder());
 
         reset = DynamicUI.withLocalizedTooltip(ComponentHelper.createIconOnlyButton(
-                DarkUIUtil.ICON_LOADER.getIcon("misc/revert.svg", true),
-                DarkUIUtil.ICON_LOADER.getIcon("misc/revertDisabled.svg", true)),
+                AllIcons.Action.Revert.get(),
+                AllIcons.Action.Revert.disabled()),
                 "Actions.revert");
         reset.addActionListener(e -> restore());
 
         save = DynamicUI.withLocalizedTooltip(ComponentHelper.createIconOnlyButton(
-                DarkUIUtil.ICON_LOADER.getIcon("menu/save.svg", true),
-                DarkUIUtil.ICON_LOADER.getIcon("menu/saveDisabled.svg", true)),
+                AllIcons.Action.Save.get(),
+                AllIcons.Action.Save.disabled()),
                 "Actions.save");
         save.addActionListener(e -> save());
 
@@ -223,8 +224,8 @@ public class IconEditorPanel extends JPanel {
 
     private JButton createPaletteButton() {
         return DynamicUI.withLocalizedTooltip(ComponentHelper.createIconOnlyButton(
-                DarkUIUtil.ICON_LOADER.getIcon("misc/palette.svg", true),
-                DarkUIUtil.ICON_LOADER.getIcon("misc/paletteDisabled.svg", true)),
+                AllIcons.Misc.Palette.get(),
+                AllIcons.Misc.Palette.disabled()),
                 "Actions.predefinedValues");
     }
 
@@ -377,7 +378,7 @@ public class IconEditorPanel extends JPanel {
                     }.getDefaults();
                 }
                 Properties props = new Properties();
-                theme.loadIconTheme(props, defaults, DarkUIUtil.ICON_LOADER);
+                theme.loadIconTheme(props, defaults, DarkUIUtil.iconLoader());
                 props.entrySet().forEach(e -> e.setValue(defaults.get(e.getKey())));
                 return new ThemeIconDefaults(defaults, props);
             });

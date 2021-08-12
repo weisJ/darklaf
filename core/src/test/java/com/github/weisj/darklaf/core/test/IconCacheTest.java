@@ -31,18 +31,20 @@ import org.junit.jupiter.api.Timeout;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.iconset.IconSet;
+import com.github.weisj.darklaf.properties.icons.IconLoader;
 
 @Timeout(value = 40)
 class IconCacheTest implements NonThreadSafeTest {
 
     @Test
     void testIconCacheGetsReleased() {
-        IconSet.ICON_LOADER.clearCache();
+        IconLoader iconLoader = IconSet.iconLoader();
+        iconLoader.clearCache();
         UIDefaults defaults = new DarkLaf().getDefaults();
-        Assertions.assertFalse(IconSet.ICON_LOADER.isCacheEmpty());
-        int size = IconSet.ICON_LOADER.cacheSize();
+        Assertions.assertFalse(iconLoader.isCacheEmpty());
+        int size = iconLoader.cacheSize();
         defaults.clear();
-        waitForGarbageCollection(() -> IconSet.ICON_LOADER.cacheSize() == size);
+        waitForGarbageCollection(() -> iconLoader.cacheSize() == size);
     }
 
     @SuppressWarnings({"unused"})

@@ -35,11 +35,11 @@ fun createIconAccessor(propertyFile: File, className: String): String {
     fun createAccessor(prop: Property): String =
         """
         public static Icon ${prop.name ?: "get"}() {
-            return IconSet.ICON_LOADER.getIcon("${prop.path}", true);
+            return IconSet.iconLoader().getIcon("${prop.path}", true);
         }
 
         public static Icon ${prop.name ?: "get"}(final int width, final int height) {
-            return IconSet.ICON_LOADER.getIcon("${prop.path}", width, height, true);
+            return IconSet.iconLoader().getIcon("${prop.path}", width, height, true);
         }
         """.trimIndent()
 
