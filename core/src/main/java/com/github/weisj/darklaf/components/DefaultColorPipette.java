@@ -176,7 +176,7 @@ public class DefaultColorPipette extends ColorPipetteBase {
 
     protected Icon getPipetteIcon() {
         Icon icon = UIManager.getIcon("ColorChooser.pipette.icon");
-        if (icon == null) icon = DarkUIUtil.iconLoader().getIcon("misc/pipette.svg", true);
+        if (icon == null) icon = DarkUIUtil.iconResolver().getIcon("misc/pipette.svg", true);
         if (icon == null) icon = EmptyIcon.create(0);
         return icon;
     }

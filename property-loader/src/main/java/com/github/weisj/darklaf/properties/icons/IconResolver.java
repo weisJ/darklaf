@@ -19,21 +19,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.properties.parser;
+package com.github.weisj.darklaf.properties.icons;
 
-import java.util.Map;
+import javax.swing.Icon;
 
-import com.github.weisj.darklaf.properties.icons.IconResolver;
+import org.jetbrains.annotations.NotNull;
 
-public class ParserContext {
-    public final Map<Object, Object> accumulator;
-    public final Map<Object, Object> defaults;
-    public final IconResolver iconResolver;
+/**
+ * Responsible for resolving icons.
+ */
+public interface IconResolver {
 
-    public ParserContext(final Map<Object, Object> accumulator, final Map<Object, Object> defaults,
-            final IconResolver iconResolver) {
-        this.accumulator = accumulator;
-        this.defaults = defaults;
-        this.iconResolver = iconResolver;
-    }
+    @NotNull
+    Icon getIcon(final @NotNull String path);
+
+    @NotNull
+    Icon getIcon(final @NotNull String path, final boolean themed);
+
+    @NotNull
+    Icon getIcon(final @NotNull String path, final int width, final int height);
+
+    @NotNull
+    Icon getIcon(final @NotNull String path, final int width, final int height, final boolean themed);
+
+    @NotNull
+    UIAwareIcon getUIAwareIcon(final @NotNull String path);
+
+    @NotNull
+    UIAwareIcon getUIAwareIcon(final @NotNull String path, final int width, final int height);
 }

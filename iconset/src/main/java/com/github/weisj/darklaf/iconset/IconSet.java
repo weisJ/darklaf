@@ -22,11 +22,12 @@
 package com.github.weisj.darklaf.iconset;
 
 import com.github.weisj.darklaf.properties.icons.IconLoader;
+import com.github.weisj.darklaf.properties.icons.IconResolver;
 
 public class IconSet {
     private static final IconLoader ICON_LOADER = IconLoader.get(IconSet.class);
 
-    public static IconLoader iconLoader() {
+    public static IconResolver iconLoader() {
         return ICON_LOADER;
     }
 }

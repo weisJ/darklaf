@@ -25,7 +25,7 @@ import java.util.Properties;
 
 import javax.swing.UIDefaults;
 
-import com.github.weisj.darklaf.properties.icons.IconLoader;
+import com.github.weisj.darklaf.properties.icons.IconResolver;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.ColorToneRule;
 import com.github.weisj.darklaf.theme.info.PresetIconRule;
@@ -35,33 +35,33 @@ public class MyCustomTheme extends Theme {
 
     @Override
     public void customizeGlobals(final Properties properties, final UIDefaults currentDefaults,
-            final IconLoader iconLoader) {
-        super.customizeGlobals(properties, currentDefaults, iconLoader);
+            final IconResolver iconResolver) {
+        super.customizeGlobals(properties, currentDefaults, iconResolver);
         /*
          * Properties in the globals file should have a 'globals.' to be applied globally.
          */
-        loadCustomProperties("globals", properties, currentDefaults, iconLoader);
+        loadCustomProperties("globals", properties, currentDefaults, iconResolver);
     }
 
     @Override
     public void customizePlatformProperties(final Properties properties, final UIDefaults currentDefaults,
-            final IconLoader iconLoader) {
-        super.customizePlatformProperties(properties, currentDefaults, iconLoader);
+            final IconResolver iconResolver) {
+        super.customizePlatformProperties(properties, currentDefaults, iconResolver);
         /*
          * Loading this file (and having it present) is optional.
          */
         final String osSuffix = SystemInfo.isMac ? "mac" : SystemInfo.isWindows ? "windows" : "linux";
-        loadCustomProperties(osSuffix, properties, currentDefaults, iconLoader);
+        loadCustomProperties(osSuffix, properties, currentDefaults, iconResolver);
     }
 
     @Override
     public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults,
-            final IconLoader iconLoader) {
-        super.customizeUIProperties(properties, currentDefaults, iconLoader);
+            final IconResolver iconResolver) {
+        super.customizeUIProperties(properties, currentDefaults, iconResolver);
         /*
          * Loading this file (and having it present) is optional.
          */
-        loadCustomProperties("ui", properties, currentDefaults, iconLoader);
+        loadCustomProperties("ui", properties, currentDefaults, iconResolver);
     }
 
     @Override

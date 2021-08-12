@@ -26,7 +26,7 @@ import java.util.Properties;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.annotations.SynthesiseLaf;
-import com.github.weisj.darklaf.properties.icons.IconLoader;
+import com.github.weisj.darklaf.properties.icons.IconResolver;
 import com.github.weisj.darklaf.theme.info.ColorToneRule;
 import com.github.weisj.darklaf.theme.info.PresetIconRule;
 import com.google.auto.service.AutoService;
@@ -68,16 +68,16 @@ public class IntelliJTheme extends Theme {
 
     @Override
     public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults,
-            final IconLoader iconLoader) {
-        super.customizeUIProperties(properties, currentDefaults, iconLoader);
-        loadCustomProperties("ui", properties, currentDefaults, iconLoader);
+            final IconResolver iconResolver) {
+        super.customizeUIProperties(properties, currentDefaults, iconResolver);
+        loadCustomProperties("ui", properties, currentDefaults, iconResolver);
     }
 
     @Override
     public void loadIconTheme(final Properties properties, final UIDefaults currentDefaults,
-            final IconLoader iconLoader) {
-        super.loadIconTheme(properties, currentDefaults, iconLoader);
-        loadCustomProperties("icons", properties, currentDefaults, iconLoader);
+            final IconResolver iconResolver) {
+        super.loadIconTheme(properties, currentDefaults, iconResolver);
+        loadCustomProperties("icons", properties, currentDefaults, iconResolver);
     }
 
     @Override

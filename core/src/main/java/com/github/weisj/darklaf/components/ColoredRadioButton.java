@@ -190,18 +190,19 @@ public class ColoredRadioButton extends JRadioButton {
             }
             this.patchedColor = color;
             this.patchedFocusColor = focusColor;
-            IconLoader loader = DarkUIUtil.iconLoader();
+            IconLoader iconLoader = DarkUIUtil.radioButtonLoader();
+
             Theme theme = LafManager.getInstalledTheme();
             Properties props = new Properties();
             UIDefaults defaults = UIManager.getLookAndFeelDefaults();
-            theme.loadDefaults(props, defaults, loader);
+            theme.loadDefaults(props, defaults, iconLoader);
             Color accentCol = color == DEFAULT_COLOR ? (Color) props.get("widgetFillDefault") : color;
             Color focusCol = focusColor == DEFAULT_COLOR ? accentCol : focusColor;
             adjustment.applyColors(theme, props, accentCol, null);
             PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, "radioButton", "ui/"),
-                    props, defaults, loader);
+                    props, defaults, iconLoader);
             PropertyLoader.putProperties(PropertyLoader.loadProperties(IconSet.class, "radioButton", ""),
-                    props, defaults, loader);
+                    props, defaults, iconLoader);
             propertyMap = new Properties();
             for (String prop : PROPERTIES) {
                 propertyMap.put(prop, props.get(prop));
@@ -221,12 +222,12 @@ public class ColoredRadioButton extends JRadioButton {
             }
 
             stateIcon = new StateIcon(new Icon[] {
-                    load(loader, "control/radio.svg"),
-                    load(loader, "control/radioDisabled.svg"),
-                    load(loader, "control/radioFocused.svg"),
-                    load(loader, "control/radioSelected.svg"),
-                    load(loader, "control/radioSelectedDisabled.svg"),
-                    load(loader, "control/radioSelectedFocused.svg")});
+                    load(iconLoader, "control/radio.svg"),
+                    load(iconLoader, "control/radioDisabled.svg"),
+                    load(iconLoader, "control/radioFocused.svg"),
+                    load(iconLoader, "control/radioSelected.svg"),
+                    load(iconLoader, "control/radioSelectedDisabled.svg"),
+                    load(iconLoader, "control/radioSelectedFocused.svg")});
             patched = true;
         }
 

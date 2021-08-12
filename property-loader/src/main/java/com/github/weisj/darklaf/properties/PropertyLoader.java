@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.properties.icons.IconLoader;
+import com.github.weisj.darklaf.properties.icons.IconResolver;
 import com.github.weisj.darklaf.properties.parser.ParseResult;
 import com.github.weisj.darklaf.properties.parser.Parser;
 import com.github.weisj.darklaf.properties.parser.ParserContext;
@@ -57,18 +57,18 @@ public final class PropertyLoader {
     }
 
     public static void putProperties(final Properties properties, final Properties accumulator,
-            final UIDefaults currentDefaults, final IconLoader iconLoader) {
-        putProperties(properties, properties.stringPropertyNames(), accumulator, currentDefaults, iconLoader);
+            final UIDefaults currentDefaults, final IconResolver iconResolver) {
+        putProperties(properties, properties.stringPropertyNames(), accumulator, currentDefaults, iconResolver);
     }
 
     public static void putProperties(final Properties properties, final UIDefaults defaults,
-            final IconLoader iconLoader) {
-        putProperties(properties, properties.stringPropertyNames(), defaults, defaults, iconLoader);
+            final IconResolver iconResolver) {
+        putProperties(properties, properties.stringPropertyNames(), defaults, defaults, iconResolver);
     }
 
     public static void putProperties(final Map<Object, Object> properties, final Set<String> keys,
-            final Map<Object, Object> accumulator, final UIDefaults currentDefaults, final IconLoader iconLoader) {
-        ParserContext context = new ParserContext(accumulator, currentDefaults, iconLoader);
+            final Map<Object, Object> accumulator, final UIDefaults currentDefaults, final IconResolver iconResolver) {
+        ParserContext context = new ParserContext(accumulator, currentDefaults, iconResolver);
         for (final String key : keys) {
             final String value = properties.get(key).toString();
             ParseResult parseResult = Parser.parse(Parser.createParseResult(key, value), context);

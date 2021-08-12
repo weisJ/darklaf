@@ -33,7 +33,7 @@ import javax.swing.*;
 import javax.swing.text.html.StyleSheet;
 
 import com.github.weisj.darklaf.properties.PropertyLoader;
-import com.github.weisj.darklaf.properties.icons.IconLoader;
+import com.github.weisj.darklaf.properties.icons.IconResolver;
 import com.github.weisj.darklaf.theme.info.*;
 import com.github.weisj.darklaf.theme.laf.RenamedTheme;
 import com.github.weisj.darklaf.util.LogUtil;
@@ -124,11 +124,11 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme>, Ser
      *
      * @param properties the properties to load the values into.
      * @param currentDefaults the current ui defaults.
-     * @param iconLoader the icon loader.
+     * @param iconResolver the icon resolver.
      */
     public void loadDefaults(final Properties properties, final UIDefaults currentDefaults,
-            final IconLoader iconLoader) {
-        PropertyLoader.putProperties(loadPropertyFile("defaults"), properties, currentDefaults, iconLoader);
+            final IconResolver iconResolver) {
+        PropertyLoader.putProperties(loadPropertyFile("defaults"), properties, currentDefaults, iconResolver);
     }
 
     /**
@@ -143,7 +143,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme>, Ser
      * @param currentDefaults the current ui defaults.
      */
     public void customizeGlobals(final Properties properties, final UIDefaults currentDefaults,
-            final IconLoader iconLoader) {}
+            final IconResolver iconResolver) {}
 
     /**
      * Customize the icon defaults.
@@ -157,7 +157,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme>, Ser
      * @param currentDefaults the current ui defaults.
      */
     public void customizeIconTheme(final Properties properties, final UIDefaults currentDefaults,
-            final IconLoader iconLoader) {}
+            final IconResolver iconResolver) {}
 
     /**
      * Load the general properties file for the icon themes.
@@ -169,10 +169,10 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme>, Ser
      *
      * @param properties the properties to load the value into.
      * @param currentDefaults the current ui defaults.
-     * @param iconLoader the icon loader.
+     * @param iconResolver the icon resolver.
      */
     public void loadIconTheme(final Properties properties, final UIDefaults currentDefaults,
-            final IconLoader iconLoader) {
+            final IconResolver iconResolver) {
         PresetIconRule iconTheme = getPresetIconRule();
         Properties props;
         switch (iconTheme) {
@@ -186,7 +186,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme>, Ser
             default:
                 props = loadPropertyFile("icons");
         }
-        PropertyLoader.putProperties(props, properties, currentDefaults, iconLoader);
+        PropertyLoader.putProperties(props, properties, currentDefaults, iconResolver);
     }
 
     /**
@@ -200,7 +200,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme>, Ser
      * @param currentDefaults the current ui defaults.
      */
     public void customizePlatformProperties(final Properties properties, final UIDefaults currentDefaults,
-            final IconLoader iconLoader) {}
+            final IconResolver iconResolver) {}
 
     /**
      * Customize the ui defaults.
@@ -213,7 +213,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme>, Ser
      * @param currentDefaults the current ui defaults.
      */
     public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults,
-            final IconLoader iconLoader) {}
+            final IconResolver iconResolver) {}
 
     /**
      * The preset icon theme.
@@ -233,11 +233,11 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme>, Ser
      * @param propertySuffix the property suffix.
      * @param properties the properties to load into.
      * @param currentDefaults the current ui defaults.
-     * @param iconLoader the icon loader.
+     * @param iconResolver the icon resolver.
      */
     protected final void loadCustomProperties(final String propertySuffix, final Properties properties,
-            final UIDefaults currentDefaults, final IconLoader iconLoader) {
-        PropertyLoader.putProperties(loadPropertyFile(propertySuffix), properties, currentDefaults, iconLoader);
+            final UIDefaults currentDefaults, final IconResolver iconResolver) {
+        PropertyLoader.putProperties(loadPropertyFile(propertySuffix), properties, currentDefaults, iconResolver);
     }
 
     /**

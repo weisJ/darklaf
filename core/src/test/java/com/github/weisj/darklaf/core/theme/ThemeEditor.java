@@ -64,6 +64,7 @@ import com.github.weisj.darklaf.iconset.AllIcons;
 import com.github.weisj.darklaf.layout.LayoutHelper;
 import com.github.weisj.darklaf.properties.icons.DerivableIcon;
 import com.github.weisj.darklaf.properties.icons.IconLoader;
+import com.github.weisj.darklaf.properties.icons.IconResolver;
 import com.github.weisj.darklaf.properties.icons.OverlayIcon;
 import com.github.weisj.darklaf.properties.icons.TextIcon;
 import com.github.weisj.darklaf.properties.uiresource.DarkColorUIResource;
@@ -171,8 +172,8 @@ public class ThemeEditor extends JPanel {
 
             @Override
             public void loadDefaults(final Properties properties, final UIDefaults currentDefaults,
-                    final IconLoader iconLoader) {
-                super.loadDefaults(properties, currentDefaults, iconLoader);
+                    final IconResolver iconResolver) {
+                super.loadDefaults(properties, currentDefaults, iconResolver);
                 putAll(properties, themeDefaults);
                 properties.put(KEY_DARK, darkToggle.isSelected());
                 properties.put(KEY_HIGH_CONTRAST, contrastToggle.isSelected());
@@ -180,25 +181,25 @@ public class ThemeEditor extends JPanel {
 
             @Override
             public void customizeGlobals(final Properties properties, final UIDefaults currentDefaults,
-                    final IconLoader iconLoader) {
+                    final IconResolver iconResolver) {
                 properties.putAll(globalDefaults);
             }
 
             @Override
             public void customizePlatformProperties(final Properties properties, final UIDefaults currentDefaults,
-                    final IconLoader iconLoader) {
+                    final IconResolver iconResolver) {
                 properties.putAll(platformDefaults);
             }
 
             @Override
             public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults,
-                    final IconLoader iconLoader) {
+                    final IconResolver iconResolver) {
                 properties.putAll(uiDefaults);
             }
 
             @Override
             public void customizeIconTheme(final Properties properties, final UIDefaults currentDefaults,
-                    final IconLoader iconLoader) {
+                    final IconResolver iconResolver) {
                 properties.putAll(iconDefaults);
             }
         };
@@ -221,25 +222,25 @@ public class ThemeEditor extends JPanel {
 
                 @Override
                 public void customizeGlobals(final Properties properties, final UIDefaults currentDefaults,
-                        final IconLoader iconLoader) {
+                        final IconResolver iconResolver) {
                     RecordingProperties props = new RecordingProperties(properties);
-                    super.customizeGlobals(props, currentDefaults, iconLoader);
+                    super.customizeGlobals(props, currentDefaults, iconResolver);
                     putAll(globalDefaults, props.getRecording());
                 }
 
                 @Override
                 public void customizePlatformProperties(final Properties properties, final UIDefaults currentDefaults,
-                        final IconLoader iconLoader) {
+                        final IconResolver iconResolver) {
                     RecordingProperties props = new RecordingProperties(properties);
-                    super.customizePlatformProperties(props, currentDefaults, iconLoader);
+                    super.customizePlatformProperties(props, currentDefaults, iconResolver);
                     putAll(platformDefaults, props.getRecording());
                 }
 
                 @Override
                 public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults,
-                        final IconLoader iconLoader) {
+                        final IconResolver iconResolver) {
                     RecordingProperties props = new RecordingProperties(properties);
-                    super.customizeUIProperties(props, currentDefaults, iconLoader);
+                    super.customizeUIProperties(props, currentDefaults, iconResolver);
                     putAll(uiDefaults, props.getRecording());
                 }
             };
@@ -282,7 +283,7 @@ public class ThemeEditor extends JPanel {
             Font font = FontUtil.createFont(Font.MONOSPACED, Font.BOLD, 13);
             return new TextIcon("42", new ThemedColor("menuIconEnabled"), font, 16, 16);
         }).get()),
-        BOOLEAN("Add Boolean", false, DarkUIUtil.iconLoader().getIcon("control/checkBoxSelectedFocused.svg", true)),
+        BOOLEAN("Add Boolean", false, DarkUIUtil.iconResolver().getIcon("control/checkBoxSelectedFocused.svg", true)),
         STRING("Add String", "", IconLoader.get(ThemeEditor.class).getIcon("word.svg", true));
 
         private final String s;

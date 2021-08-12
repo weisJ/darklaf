@@ -29,6 +29,9 @@ import java.util.WeakHashMap;
 
 import javax.swing.*;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 import com.github.weisj.darklaf.util.ImageUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.Scale;
@@ -49,6 +52,7 @@ public final class IconUtil {
         return windowIconSet.size();
     }
 
+    @Contract("null,_ -> null")
     public static Image createFrameIcon(final Icon icon, final Window c) {
         if (icon == null) return null;
         if (c != null) {
@@ -103,7 +107,7 @@ public final class IconUtil {
         }
     }
 
-    public static Icon createDerivedIcon(final Icon icon, final int w, final int h) {
+    public static @NotNull Icon createDerivedIcon(final @NotNull Icon icon, final int w, final int h) {
         int iconWidth = icon.getIconWidth();
         int iconHeight = icon.getIconHeight();
         if (iconHeight == h && iconWidth == w) return icon;

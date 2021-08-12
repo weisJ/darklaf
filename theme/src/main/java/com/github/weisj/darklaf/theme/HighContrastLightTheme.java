@@ -27,7 +27,7 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.annotations.SynthesiseLaf;
 import com.github.weisj.darklaf.properties.PropertyLoader;
-import com.github.weisj.darklaf.properties.icons.IconLoader;
+import com.github.weisj.darklaf.properties.icons.IconResolver;
 import com.github.weisj.darklaf.theme.info.ColorToneRule;
 import com.github.weisj.darklaf.theme.info.ContrastRule;
 import com.github.weisj.darklaf.theme.info.PresetIconRule;
@@ -74,24 +74,24 @@ public class HighContrastLightTheme extends Theme {
 
     @Override
     public void loadIconTheme(final Properties properties, final UIDefaults currentDefaults,
-            final IconLoader iconLoader) {
+            final IconResolver iconResolver) {
         // First load base theme
-        super.loadIconTheme(properties, currentDefaults, iconLoader);
+        super.loadIconTheme(properties, currentDefaults, iconResolver);
         // Then customize using our own values.
-        PropertyLoader.putProperties(loadPropertyFile("icons"), properties, currentDefaults, iconLoader);
+        PropertyLoader.putProperties(loadPropertyFile("icons"), properties, currentDefaults, iconResolver);
     }
 
     @Override
     public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults,
-            final IconLoader iconLoader) {
-        super.customizeUIProperties(properties, currentDefaults, iconLoader);
-        loadCustomProperties("ui", properties, currentDefaults, iconLoader);
+            final IconResolver iconResolver) {
+        super.customizeUIProperties(properties, currentDefaults, iconResolver);
+        loadCustomProperties("ui", properties, currentDefaults, iconResolver);
     }
 
     @Override
     public void customizePlatformProperties(final Properties properties, final UIDefaults currentDefaults,
-            final IconLoader iconLoader) {
-        super.customizePlatformProperties(properties, currentDefaults, iconLoader);
-        loadCustomProperties("platform", properties, currentDefaults, iconLoader);
+            final IconResolver iconResolver) {
+        super.customizePlatformProperties(properties, currentDefaults, iconResolver);
+        loadCustomProperties("platform", properties, currentDefaults, iconResolver);
     }
 }

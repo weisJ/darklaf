@@ -38,7 +38,7 @@ class IconCacheTest implements NonThreadSafeTest {
 
     @Test
     void testIconCacheGetsReleased() {
-        IconLoader iconLoader = IconSet.iconLoader();
+        IconLoader iconLoader = (IconLoader) IconSet.iconLoader();
         iconLoader.clearCache();
         UIDefaults defaults = new DarkLaf().getDefaults();
         Assertions.assertFalse(iconLoader.isCacheEmpty());

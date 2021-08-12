@@ -35,12 +35,16 @@ import java.util.logging.Logger;
 
 import javax.swing.*;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import com.github.weisj.darklaf.util.LazyValue;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.cache.SoftCache;
 
 /** @author Jannis Weis */
-public final class IconLoader {
+public final class IconLoader implements IconResolver {
     private static final Logger LOGGER = LogUtil.getLogger(IconLoader.class);
     private static final Map<Class<?>, IconLoader> iconLoaderMap = new HashMap<>();
     private static final LazyValue<IconLoader> instance = new LazyValue<>(() -> get(null));
@@ -51,7 +55,7 @@ public final class IconLoader {
     // Infer size by default.
     private static final int DEFAULT_WIDTH_SVG = -1;
     private static final int DEFAULT_HEIGHT_SVG = -1;
-    private final Class<?> parentClass;
+    private final @Nullable Class<?> parentClass;
 
     private boolean cacheEnabled = true;
     private final SoftCache<IconKey, DarkUIAwareIcon> awareIconCache = new SoftCache<>();
@@ -85,7 +89,7 @@ public final class IconLoader {
         return awareIconCache.isEmpty() && iconCache.isEmpty();
     }
 
-    private IconLoader(final Class<?> parentClass) {
+    private IconLoader(final @Nullable Class<?> parentClass) {
         this.parentClass = parentClass;
         iconLoaderMap.put(parentClass, this);
     }
@@ -95,7 +99,7 @@ public final class IconLoader {
      *
      * @return the default icon loader.
      */
-    public static IconLoader get() {
+    public static @NotNull IconLoader get() {
         return instance.get();
     }
 
@@ -104,7 +108,7 @@ public final class IconLoader {
      *
      * @return the default icon loader.
      */
-    public static IconLoader get(final Class<?> parentClass) {
+    public static @NotNull IconLoader get(final @Nullable Class<?> parentClass) {
         if (iconLoaderMap.containsKey(parentClass)) {
             return iconLoaderMap.get(parentClass);
         } else {
@@ -195,31 +199,9 @@ public final class IconLoader {
      * @param path the path to the icon resource described as above.
      * @return the icon.
      */
-    public DarkUIAwareIcon getUIAwareIcon(final String path) {
+    @Override
+    public @NotNull DarkUIAwareIcon getUIAwareIcon(final @NotNull String path) {
         return getUIAwareIcon(path, getDefaultWidth(path), getDefaultHeight(path));
-    }
-
-    /**
-     * Creates a new {@link UIAwareIcon} which is loaded lazily through the given supplier.
-     *
-     * @param lightIconSupplier the supplier for the light icon.
-     * @param darkIconSupplier the supplier for the dark icon.
-     * @return the {@link UIAwareIcon}
-     */
-    public UIAwareIcon createUIAwareIcon(final IconSupplier<Icon> lightIconSupplier,
-            final IconSupplier<Icon> darkIconSupplier) {
-        return new LazyUIAwareIcon(lightIconSupplier, darkIconSupplier);
-    }
-
-    /**
-     * Creates a new {@link UIAwareIcon} from the given icon.
-     *
-     * @param light the light version of the icon.
-     * @param dark the dark version of the icon.
-     * @return the {@link UIAwareIcon}.
-     */
-    public UIAwareIcon createUIAwareIcon(final Icon light, final Icon dark) {
-        return new SimpleUIAwareIcon(light, dark);
     }
 
     /**
@@ -231,7 +213,8 @@ public final class IconLoader {
      * @param h the icon height.
      * @return the icon.
      */
-    public DarkUIAwareIcon getUIAwareIcon(final String path, final int w, final int h) {
+    @Override
+    public @NotNull DarkUIAwareIcon getUIAwareIcon(final @NotNull String path, final int w, final int h) {
         IconKey key = new IconKey(path, w, h);
         DarkUIAwareIcon icon;
         if (!isCacheEnabled() || ((icon = awareIconCache.get(key)) == null)) {
@@ -241,10 +224,33 @@ public final class IconLoader {
         return icon;
     }
 
+    /**
+     * Creates a new {@link UIAwareIcon} which is loaded lazily through the given supplier.
+     *
+     * @param lightIconSupplier the supplier for the light icon.
+     * @param darkIconSupplier the supplier for the dark icon.
+     * @return the {@link UIAwareIcon}
+     */
+    public @NotNull UIAwareIcon createUIAwareIcon(final IconSupplier<Icon> lightIconSupplier,
+            final IconSupplier<Icon> darkIconSupplier) {
+        return new LazyUIAwareIcon(lightIconSupplier, darkIconSupplier);
+    }
+
+    /**
+     * Creates a new {@link UIAwareIcon} from the given icon.
+     *
+     * @param light the light version of the icon.
+     * @param dark the dark version of the icon.
+     * @return the {@link UIAwareIcon}.
+     */
+    public @NotNull UIAwareIcon createUIAwareIcon(final Icon light, final Icon dark) {
+        return new SimpleUIAwareIcon(light, dark);
+    }
+
     /*
      * Helper method to create the icons.
      */
-    protected DarkUIAwareIcon createUIAwareIcon(final String name, final int w, final int h) {
+    protected @NotNull DarkUIAwareIcon createUIAwareIcon(final @NotNull String name, final int w, final int h) {
         return new DarkUIAwareIcon("dark/" + name, "light/" + name, w, h, parentClass);
     }
 
@@ -257,7 +263,8 @@ public final class IconLoader {
      * @param path the path to the icon with respect to the IconLoader resource root.
      * @return the icon.
      */
-    public Icon getIcon(final String path) {
+    @Override
+    public @NotNull Icon getIcon(final @NotNull String path) {
         return getIcon(path, getDefaultWidth(path), getDefaultHeight(path));
     }
 
@@ -271,7 +278,8 @@ public final class IconLoader {
      * @param themed determines whether the icon is themed. This only has an effect on svg icons.
      * @return the icon.
      */
-    public Icon getIcon(final String path, final boolean themed) {
+    @Override
+    public @NotNull Icon getIcon(final @NotNull String path, final boolean themed) {
         return getIcon(path, getDefaultWidth(path), getDefaultHeight(path), themed);
     }
 
@@ -286,7 +294,8 @@ public final class IconLoader {
      * @param h the icon height.
      * @return the icon.
      */
-    public Icon getIcon(final String path, final int w, final int h) {
+    @Override
+    public @NotNull Icon getIcon(final @NotNull String path, final int w, final int h) {
         return getIcon(path, w, h, false);
     }
 
@@ -302,11 +311,13 @@ public final class IconLoader {
      * @param themed determines whether the icon is themed. This only has an effect on svg icons.
      * @return the icon.
      */
-    public Icon getIcon(final String path, final int w, final int h, final boolean themed) {
+    @Override
+    public @NotNull Icon getIcon(final @NotNull String path, final int w, final int h, final boolean themed) {
         return getIconImpl(path, w, h, themed);
     }
 
-    private Icon getIconImpl(final String path, final int w, final int h, final boolean themed) {
+    @NotNull
+    private Icon getIconImpl(final @NotNull String path, final int w, final int h, final boolean themed) {
         synchronized (this) {
             IconKey key = new IconKey(path, w, h);
 
@@ -330,7 +341,7 @@ public final class IconLoader {
         }
     }
 
-    private CacheableIcon getWildcardIcon(final SoftCache<IconKey, CacheableIcon> iconMap,
+    private @Nullable CacheableIcon getWildcardIcon(final SoftCache<IconKey, CacheableIcon> iconMap,
             final IconKey iconKey, final int w, final int h) {
         iconKey.isWildcardEnabled = true;
         CacheableIcon icon = iconMap.get(iconKey);
@@ -361,7 +372,7 @@ public final class IconLoader {
      * @param themed determines whether the icon is themed. This only has an effect on svg icons.
      * @return the icon.
      */
-    public Icon loadSVGIcon(final String path, final boolean themed) {
+    public @NotNull Icon loadSVGIcon(final @NotNull String path, final boolean themed) {
         return loadSVGIcon(path, DEFAULT_WIDTH_SVG, DEFAULT_HEIGHT_SVG, themed);
     }
 
@@ -376,7 +387,7 @@ public final class IconLoader {
      * @param themed determines whether the icon is themed. This only has an effect on svg icons.
      * @return the icon.
      */
-    public Icon loadSVGIcon(final String path, final int w, final int h, final boolean themed) {
+    public @NotNull Icon loadSVGIcon(final @NotNull String path, final int w, final int h, final boolean themed) {
         return loadSVGIcon(path, w, h, themed, null);
     }
 
@@ -393,7 +404,7 @@ public final class IconLoader {
      *        will be used.
      * @return the icon.
      */
-    public Icon loadSVGIcon(final String path, final int w, final int h, final boolean themed,
+    public @NotNull Icon loadSVGIcon(final @NotNull String path, final int w, final int h, final boolean themed,
             final Map<Object, Object> propertyMap) {
         return loadSVGIconInternal(path, w, h, themed, propertyMap);
     }
@@ -439,7 +450,8 @@ public final class IconLoader {
      *        {@link ImageIcon#setDescription(String)}
      * @return the ImageIcon.
      */
-    ImageIcon createImageIcon(final String path, final String description) {
+    @Nullable
+    ImageIcon createImageIcon(final @NotNull String path, final String description) {
         URL imgURL = getResource(path);
         if (imgURL != null) {
             return new ImageIcon(imgURL, description);
@@ -458,7 +470,8 @@ public final class IconLoader {
      * @param window the window.
      * @return the converted {@link Image}.
      */
-    public static Image createFrameIcon(final Icon icon, final Window window) {
+    @Contract("null,_ -> null")
+    public static Image createFrameIcon(final @Nullable Icon icon, final Window window) {
         return IconUtil.createFrameIcon(icon, window);
     }
 
@@ -472,11 +485,11 @@ public final class IconLoader {
      * @param h the new height.
      * @return the derived icon.
      */
-    public static Icon createDerivedIcon(final Icon icon, final int w, final int h) {
+    public static @NotNull Icon createDerivedIcon(final @NotNull Icon icon, final int w, final int h) {
         return IconUtil.createDerivedIcon(icon, w, h);
     }
 
-    protected URL getResource(final String name) {
+    private URL getResource(final String name) {
         if (parentClass != null) {
             return parentClass.getResource(name);
         } else {
@@ -501,7 +514,7 @@ public final class IconLoader {
     public interface CacheableIcon extends Icon, SoftCache.Cacheable<IconKey> {
     }
 
-    protected static final class IconKey {
+    static final class IconKey {
         final String path;
         int w;
         int h;
@@ -526,7 +539,7 @@ public final class IconLoader {
             IconKey iconKey = (IconKey) o;
 
             if (iconKey.isWildcardEnabled || this.isWildcardEnabled) {
-                // Math any size.
+                // Match any size.
                 return Objects.equals(path, iconKey.path);
             }
             if (w != iconKey.w) return false;

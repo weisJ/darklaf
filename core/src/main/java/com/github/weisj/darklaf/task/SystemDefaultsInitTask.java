@@ -45,6 +45,6 @@ public class SystemDefaultsInitTask implements DefaultsInitTask {
         overwrites.values().removeIf(v -> System.getProperty(DarkLaf.SYSTEM_PROPERTY_PREFIX + v.toString()) == null);
         overwrites.entrySet()
                 .forEach(e -> e.setValue(System.getProperty(DarkLaf.SYSTEM_PROPERTY_PREFIX + e.getValue().toString())));
-        PropertyLoader.putProperties(overwrites, defaults, DarkUIUtil.iconLoader());
+        PropertyLoader.putProperties(overwrites, defaults, DarkUIUtil.iconResolver());
     }
 }

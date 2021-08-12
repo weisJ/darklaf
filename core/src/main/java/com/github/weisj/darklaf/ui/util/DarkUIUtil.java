@@ -44,6 +44,7 @@ import javax.swing.tree.TreeCellRenderer;
 import com.github.weisj.darklaf.focus.FocusParentHelper;
 import com.github.weisj.darklaf.iconset.IconSet;
 import com.github.weisj.darklaf.properties.icons.IconLoader;
+import com.github.weisj.darklaf.properties.icons.IconResolver;
 import com.github.weisj.darklaf.ui.cell.CellRenderer;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
 import com.github.weisj.darklaf.ui.table.header.DarkTableHeaderRendererPane;
@@ -57,8 +58,17 @@ public final class DarkUIUtil {
 
     private static final int CELL_SEARCH_DEPTH = 3;
 
-    public static IconLoader iconLoader() {
+    public static IconResolver iconResolver() {
         return IconSet.iconLoader();
+    }
+
+    /**
+     * Only exists for {@link com.github.weisj.darklaf.components.ColoredRadioButton}
+     *
+     * @return the icon loader housing the radio button icons.
+     */
+    public static IconLoader radioButtonLoader() {
+        return IconLoader.get(IconSet.class);
     }
 
     private static final Rectangle iconRect = new Rectangle();

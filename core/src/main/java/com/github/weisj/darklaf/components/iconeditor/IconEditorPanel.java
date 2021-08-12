@@ -378,7 +378,7 @@ public class IconEditorPanel extends JPanel {
                     }.getDefaults();
                 }
                 Properties props = new Properties();
-                theme.loadIconTheme(props, defaults, DarkUIUtil.iconLoader());
+                theme.loadIconTheme(props, defaults, DarkUIUtil.iconResolver());
                 props.entrySet().forEach(e -> e.setValue(defaults.get(e.getKey())));
                 return new ThemeIconDefaults(defaults, props);
             });

@@ -27,9 +27,9 @@ import java.util.List;
 
 import javax.swing.Icon;
 
-import com.github.weisj.darklaf.properties.icons.DarkUIAwareIcon;
 import com.github.weisj.darklaf.properties.icons.EmptyIcon;
 import com.github.weisj.darklaf.properties.icons.StateIcon;
+import com.github.weisj.darklaf.properties.icons.UIAwareIcon;
 
 public class IconParser extends KeyFilteredParser implements Delimiters {
 
@@ -81,16 +81,16 @@ public class IconParser extends KeyFilteredParser implements Delimiters {
         if (ICON_EMPTY.equals(parseResult.value)) {
             icon = EmptyIcon.create(dim.width, dim.height);
         } else if (themed) {
-            icon = context.iconLoader.getIcon(parseResult.value, dim.width, dim.height, true);
+            icon = context.iconResolver.getIcon(parseResult.value, dim.width, dim.height, true);
         } else if (dual || aware) {
-            DarkUIAwareIcon awareIcon = context.iconLoader.getUIAwareIcon(parseResult.value, dim.width, dim.height);
+            UIAwareIcon awareIcon = context.iconResolver.getUIAwareIcon(parseResult.value, dim.width, dim.height);
             if (dual) {
                 icon = awareIcon.getDual();
             } else {
                 icon = awareIcon;
             }
         } else {
-            icon = context.iconLoader.getIcon(parseResult.value, dim.width, dim.height);
+            icon = context.iconResolver.getIcon(parseResult.value, dim.width, dim.height);
         }
         return ParserUtil.setNonNull(parseResult, icon);
     }
