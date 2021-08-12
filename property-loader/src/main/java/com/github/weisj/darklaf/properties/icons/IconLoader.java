@@ -233,14 +233,12 @@ public final class IconLoader {
      */
     public DarkUIAwareIcon getUIAwareIcon(final String path, final int w, final int h) {
         IconKey key = new IconKey(path, w, h);
-        DarkUIAwareIcon icon = null;
-        if (isCacheEnabled() && ((icon = awareIconCache.get(key)) != null)) {
-            return icon;
-        } else {
+        DarkUIAwareIcon icon;
+        if (!isCacheEnabled() || ((icon = awareIconCache.get(key)) == null)) {
             icon = createUIAwareIcon(path, w, h);
             cache(awareIconCache, key, icon);
-            return icon;
         }
+        return icon;
     }
 
     /*
