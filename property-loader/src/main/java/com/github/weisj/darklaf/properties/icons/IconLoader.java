@@ -121,6 +121,9 @@ public final class IconLoader {
      */
     public void setCacheEnabled(final boolean cacheEnabled) {
         this.cacheEnabled = cacheEnabled;
+        if (!cacheEnabled) {
+            clearCache();
+        }
     }
 
     /**
