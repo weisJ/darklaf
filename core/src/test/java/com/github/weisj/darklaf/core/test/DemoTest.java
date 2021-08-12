@@ -94,11 +94,7 @@ class DemoTest implements NonThreadSafeTest {
             AtomicReference<Window> windowRef = startedDemo.getFirst();
             ComponentDemo componentDemo = startedDemo.getSecond();
             if (robot != null) robot.waitForIdle();
-            synchronized (windowRef) {
-                while (windowRef.get() == null) {
-                    windowRef.wait();
-                }
-            }
+            Assertions.assertNotNull(windowRef.get());
             TestUtils.runOnSwingThreadNotThrowing(
                     () -> Assertions.assertNotNull(windowRef.get()));
             TestUtils.runOnSwingThreadNotThrowing(
