@@ -337,7 +337,7 @@ public final class IconColorMapper {
         Set<Object> seen = new HashSet<>();
         Object currentKey = key;
         int max = fallbacks != null ? fallbacks.length : 0;
-        for (int i = -1; i < max; i++) {
+        outer: for (int i = -1; i < max; i++) {
             currentKey = i < 0 ? key : fallbacks[i];
             int retryCount = 5;
             if (i >= 0 && currentKey instanceof String && ((String) currentKey).startsWith(INLINE_VALUE_PREFIX)) {
@@ -358,10 +358,18 @@ public final class IconColorMapper {
                 if (obj instanceof String && obj.toString().startsWith(refPrefix)) {
                     currentKey = obj.toString().substring(refPrefix.length());
                     obj = null;
+                } else {
+                    if (type.isInstance(obj)) {
+                        // We found the value
+                        break outer;
+                    } else {
+                        // Further search won't find anything.
+                        // The value doesn't explicitly reference other keys.
+                        continue outer;
+                    }
                 }
                 retryCount--;
-            } while (!(type.isInstance(obj)) && retryCount > 0);
-            if (retryCount > 0) break;
+            } while (retryCount > 0);
         }
         return new Pair<>(currentKey, type.cast(obj));
     }
