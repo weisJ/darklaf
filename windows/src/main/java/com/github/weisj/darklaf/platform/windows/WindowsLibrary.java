@@ -27,10 +27,9 @@ import com.github.weisj.darklaf.util.SystemInfo;
 
 public class WindowsLibrary extends AbstractLibrary {
 
-    private static final String PATH = "/com/github/weisj/darklaf/platform/darklaf-windows/";
-    private static final String DLL_NAME = "darklaf-windows.dll";
-    private static final String x86_PATH = "windows-x86/";
-    private static final String x86_64_PATH = "windows-x86-64/";
+    private static final String PATH = "/com/github/weisj/darklaf/platform/darklaf-windows";
+    private static final String x86_PATH = PATH + "/darklaf-windows-x86.dll";
+    private static final String x86_64_PATH = PATH + "/darklaf-windows-x86-64.dll";
     private static final WindowsLibrary library = new WindowsLibrary();
 
     public static WindowsLibrary get() {
@@ -38,7 +37,7 @@ public class WindowsLibrary extends AbstractLibrary {
     }
 
     protected WindowsLibrary() {
-        super(PATH, DLL_NAME, LogUtil.getLogger(WindowsLibrary.class));
+        super("darklaf-windows", LogUtil.getLogger(WindowsLibrary.class));
     }
 
     @Override
@@ -47,15 +46,15 @@ public class WindowsLibrary extends AbstractLibrary {
     }
 
     protected String getX86Path() {
-        return super.getPath() + x86_PATH;
+        return x86_PATH;
     }
 
     protected String getX64Path() {
-        return super.getPath() + x86_64_PATH;
+        return x86_64_PATH;
     }
 
     @Override
-    protected String getPath() {
+    public String getLibraryPath() {
         if (SystemInfo.isX86) {
             return getX86Path();
         } else if (SystemInfo.isX64) {

@@ -42,19 +42,19 @@ class NativeLibraryTest {
     void testLibrariesArePackages() {
         TestWindowsLibrary windowsLibrary = new TestWindowsLibrary();
         Assertions.assertNotNull(WindowsLibrary.class.getResource(
-                windowsLibrary.getX64Path() + windowsLibrary.getLibraryName()),
+                windowsLibrary.getX64Path()),
                 "x64 library doesn't exist");
         Assertions.assertNotNull(WindowsLibrary.class.getResource(
-                windowsLibrary.getX86Path() + windowsLibrary.getLibraryName()),
+                windowsLibrary.getX86Path()),
                 "x86 library doesn't exist");
         checkResourcesExists(WindowsLibrary.class, windowsLibrary.getResourcePaths());
 
         TestMacOsLibrary macOSLibrary = new TestMacOsLibrary();
         Assertions.assertNotNull(MacOSLibrary.class.getResource(
-                macOSLibrary.getX64Path() + macOSLibrary.getLibraryName()),
+                macOSLibrary.getX64Path()),
                 "x86-64 macOS library doesn't exist");
         Assertions.assertNotNull(MacOSLibrary.class.getResource(
-                macOSLibrary.getArm64Path() + macOSLibrary.getLibraryName()),
+                macOSLibrary.getArm64Path()),
                 "arm64 macOS library doesn't exist");
         checkResourcesExists(MacOSLibrary.class, macOSLibrary.getResourcePaths());
     }

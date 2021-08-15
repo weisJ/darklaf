@@ -1,11 +1,14 @@
 import dev.nokee.platform.jni.JniJarBinary
 import dev.nokee.platform.jni.JavaNativeInterfaceLibrary
+import dev.nokee.runtime.nativebase.TargetMachine
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.file.CopySpec
 import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.file.FileTree
 import org.gradle.api.provider.Provider
 import org.gradle.jvm.tasks.Jar
+import java.io.File
 
 class UberJniJarPlugin : Plugin<Project> {
 
@@ -44,12 +47,23 @@ class UberJniJarPlugin : Plugin<Project> {
                 // nativeRuntimeFiles will be populated in this case due to using pre-build binaries.
                 task.from(targetVariant.map { it.nativeRuntimeFiles }) {
                     into(targetVariant.map { it.resourcePath })
+                    renameLibrary(project, target)
                 }
             } else {
-                task.from(targetVariant.map { it.sharedLibrary.linkTask.map { linkTask -> linkTask.linkedFile } }) {
+                val linkFile = targetVariant.flatMap {
+                    it.sharedLibrary.linkTask.flatMap { linkTask -> linkTask.linkedFile }
+                }
+                task.from(linkFile) {
                     into(targetVariant.map { it.resourcePath })
+                    renameLibrary(project, target)
                 }
             }
+        }
+    }
+
+    private fun CopySpec.renameLibrary(project: Project, target: TargetMachine) {
+        rename {
+            libraryFileNameFor("${project.name}-${target.architectureString}", target.operatingSystemFamily)
         }
     }
 

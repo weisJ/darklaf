@@ -58,10 +58,14 @@ val TargetMachine.targetsHost: Boolean
         }
     }
 
-fun libraryFileNameFor(project: Project, osFamily: OperatingSystemFamily): String = when {
-    osFamily.isWindows -> "${project.name}.dll"
-    osFamily.isLinux -> "lib${project.name}.so"
-    osFamily.isMacOS -> "lib${project.name}.dylib"
+fun libraryFileNameFor(project: Project, osFamily: OperatingSystemFamily): String =
+    libraryFileNameFor(project.name, osFamily)
+
+
+fun libraryFileNameFor(name : String, osFamily: OperatingSystemFamily): String = when {
+    osFamily.isWindows -> "$name.dll"
+    osFamily.isLinux -> "lib$name.so"
+    osFamily.isMacOS -> "lib$name.dylib"
     else -> throw GradleException("Unknown operating system family '${osFamily}'.")
 }
 

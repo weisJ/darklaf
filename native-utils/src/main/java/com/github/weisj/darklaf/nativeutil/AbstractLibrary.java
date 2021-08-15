@@ -26,21 +26,20 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 public abstract class AbstractLibrary {
 
+    private final String name;
     protected final Logger logger;
-    private final String path;
-    private final String libraryName;
     private boolean loaded;
     private boolean attemptedLoad;
 
-    public AbstractLibrary(final String path, final String libraryName) {
-        this(path, libraryName, Logger.getLogger(libraryName));
+    public AbstractLibrary(final String name) {
+        this(name, Logger.getLogger(name));
     }
 
-    public AbstractLibrary(final String path, final String libraryName, final Logger logger) {
-        this.path = path;
-        this.libraryName = libraryName;
+    public AbstractLibrary(final String name, final Logger logger) {
+        this.name = name;
         this.logger = logger;
     }
 
@@ -66,11 +65,11 @@ public abstract class AbstractLibrary {
                     NativeUtil.loadLibraryFromJarWithExtraResources(getLoaderClass(), path, resources);
                 }
                 loaded = true;
-                info("Loaded " + getLibraryName() + ".");
+                info("Loaded " + name + " at " + path + ".");
             }
         } catch (final Throwable e) {
             // Library not found, SecurityManager prevents library loading etc.
-            error("Could not load library " + getLibraryName() + ".", e);
+            error("Could not load library " + name + ".", e);
         }
     }
 
@@ -80,17 +79,7 @@ public abstract class AbstractLibrary {
         return Collections.emptyList();
     }
 
-    public String getLibraryPath() {
-        return getPath() + getLibraryName();
-    }
-
-    protected String getPath() {
-        return path;
-    }
-
-    public String getLibraryName() {
-        return libraryName;
-    }
+    public abstract String getLibraryPath();
 
     protected abstract boolean canLoad();
 
