@@ -29,6 +29,7 @@ import javax.swing.Icon;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.parallel.ResourceLock;
@@ -54,11 +55,13 @@ class IconLoaderCacheTest {
     }
 
     @Test
+    @Disabled("Flaky")
     void cacheReleasesImageIcon() {
         testCacheIsReleasedForIcon(500, "image_icon.png");
     }
 
     @Test
+    @Disabled("Flaky")
     void cacheReleasesSVGIcon() {
         testCacheIsReleasedForIcon(600, "svg_icon.svg");
     }

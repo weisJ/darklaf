@@ -26,6 +26,7 @@ import java.util.function.Supplier;
 import javax.swing.UIDefaults;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
@@ -34,6 +35,7 @@ import com.github.weisj.darklaf.iconset.IconSet;
 import com.github.weisj.darklaf.properties.icons.IconLoader;
 
 @Timeout(value = 40)
+@Disabled("Flaky")
 class IconCacheTest implements NonThreadSafeTest {
 
     @Test
