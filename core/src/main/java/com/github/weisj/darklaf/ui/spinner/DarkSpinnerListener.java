@@ -42,6 +42,18 @@ public class DarkSpinnerListener extends MouseAdapter
         this.ui = ui;
     }
 
+    public void install() {
+        spinner.addMouseListener(this);
+        spinner.addMouseWheelListener(this);
+        spinner.addPropertyChangeListener(this);
+    }
+
+    public void uninstall() {
+        spinner.removeMouseListener(this);
+        spinner.removeMouseWheelListener(this);
+        spinner.removePropertyChangeListener(this);
+    }
+
     @Override
     public void mousePressed(final MouseEvent e) {
         super.mousePressed(e);

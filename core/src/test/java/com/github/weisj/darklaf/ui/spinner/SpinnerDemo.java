@@ -41,7 +41,7 @@ public class SpinnerDemo extends BaseComponentDemo {
 
     @Override
     public JComponent createComponent() {
-        JSpinner spinner = new JSpinner() {
+        JSpinner spinner = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1)) {
 
             @Override
             public void updateUI() {
