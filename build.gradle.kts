@@ -7,6 +7,7 @@ import com.github.vlsi.gradle.properties.dsl.stringProperty
 import com.github.vlsi.gradle.properties.dsl.toBool
 import com.github.vlsi.gradle.publishing.dsl.simplifyXml
 import com.github.vlsi.gradle.publishing.dsl.versionFromResolution
+import net.ltgt.gradle.errorprone.errorprone
 
 plugins {
     idea
@@ -15,11 +16,13 @@ plugins {
     id("com.github.vlsi.gradle-extensions")
     id("com.github.vlsi.stage-vote-release")
     id("org.ajoberstar.grgit")
+    id("net.ltgt.errorprone") apply false
 }
 
 val skipJavadoc by props()
 val enableMavenLocal by props(false)
 val enableGradleMetadata by props()
+val enableErrorProne by props()
 val skipAutostyle by props(false)
 val isRelease = project.stringProperty("release").toBool()
 val snapshotName by props("")
@@ -209,6 +212,24 @@ allprojects {
                     project.stringProperty("signing.inMemoryKey")?.replace("#", "\n"),
                     project.stringProperty("signing.password")
                 )
+            }
+        }
+
+        if (enableErrorProne) {
+            apply(plugin = "net.ltgt.errorprone")
+            dependencies {
+                "errorprone"(libs.tools.errorprone.core)
+                "annotationProcessor"(libs.tools.errorprone.guava)
+            }
+            tasks.withType<JavaCompile>().configureEach {
+                options.compilerArgs.addAll(listOf("-Xmaxerrs", "10000", "-Xmaxwarns", "10000"))
+                options.errorprone {
+                    errorproneArgs.add("-XepExcludedPaths:.*/javacc/.*")
+                    disableWarningsInGeneratedCode.set(true)
+                    disable(
+                        "StringSplitter"
+                    )
+                }
             }
         }
 
