@@ -26,7 +26,11 @@ import java.awt.*;
 import javax.swing.plaf.UIResource;
 
 
-/** @author Jannis Weis */
+/**
+ * Utility class for handling colors.
+ *
+ * @author Jannis Weis
+ */
 public final class ColorUtil {
 
     public static Color blendColors(final Color color1, final Color color2, final double percent) {
@@ -45,7 +49,7 @@ public final class ColorUtil {
 
     private static int shift(final int colorComponent, final double d) {
         int n = (int) Math.round((double) colorComponent * d);
-        return n > 255 ? 255 : (Math.max(n, 0));
+        return n > 255 ? 255 : Math.max(n, 0);
     }
 
     public static Color toAlpha(final Color color, final double alpha) {
@@ -114,10 +118,9 @@ public final class ColorUtil {
     }
 
     public static int rgbNoAlpha(final Color color) {
-        return ((0) << 24) |
-                ((color.getRed() & 0xFF) << 16) |
+        return ((color.getRed() & 0xFF) << 16) |
                 ((color.getGreen() & 0xFF) << 8) |
-                ((color.getBlue() & 0xFF));
+                (color.getBlue() & 0xFF);
     }
 
     /**

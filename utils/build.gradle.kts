@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
     compileOnly(libs.nullabilityAnnotations)
+    compileOnly(libs.tools.errorprone.annotations)
 
     testImplementation(libs.test.junit.api)
     testRuntimeOnly(libs.test.junit.engine)

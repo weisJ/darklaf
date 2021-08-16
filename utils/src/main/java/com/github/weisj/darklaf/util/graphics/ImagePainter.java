@@ -58,9 +58,6 @@ public final class ImagePainter {
         drawImage(g, image, dstBounds, null, null, observer);
     }
 
-    /**
-     * @see #drawImage(Graphics, Image, Rectangle, Rectangle, BufferedImageOp, ImageObserver)
-     */
     public static void drawImage(final Graphics g,
             final Image image,
             final Rectangle dstBounds,
@@ -109,8 +106,8 @@ public final class ImagePainter {
             scaleX = scaledImage.getScaleX();
             scaleY = scaledImage.getScaleY();
 
-            userWidth /= scaleX;
-            userHeight /= scaleY;
+            userWidth = (int) (userWidth / scaleX);
+            userHeight = (int) (userHeight / scaleY);
 
             AffineTransform tx = ((Graphics2D) g).getTransform();
             if (scaleX == tx.getScaleX() && scaleY == tx.getScaleY()) {

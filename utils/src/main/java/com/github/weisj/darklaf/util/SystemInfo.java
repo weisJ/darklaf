@@ -24,7 +24,12 @@ package com.github.weisj.darklaf.util;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-/** @author Konstantin Bulenkov */
+/**
+ * Provides basic information about the host jvm and operating system
+ *
+ * @author Konstantin Bulenkov
+ * @author Jannis Weis
+ */
 public final class SystemInfo {
     public static final String X86 = "32";
     public static final String X64 = "64";
@@ -59,7 +64,7 @@ public final class SystemInfo {
     public static final boolean isJava9OrGreater;
     public static final boolean isJava16OrGreater;
 
-    protected static final String _OS_NAME;
+    private static final String _OS_NAME;
 
     public static final boolean isMacOSMojave;
     public static final boolean isMacOSCatalina;
@@ -121,7 +126,7 @@ public final class SystemInfo {
                 String p2 = part2[idx];
                 int cmp;
                 if (p1.matches("\\d+") && p2.matches("\\d+")) {
-                    cmp = (Integer.valueOf(p1)).compareTo(Integer.valueOf(p2));
+                    cmp = Integer.valueOf(p1).compareTo(Integer.valueOf(p2));
                 } else {
                     cmp = part1[idx].compareTo(part2[idx]);
                 }

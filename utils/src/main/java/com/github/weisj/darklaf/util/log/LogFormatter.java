@@ -21,10 +21,13 @@
  */
 package com.github.weisj.darklaf.util.log;
 
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Collections;
-import java.util.Date;
 import java.util.IdentityHashMap;
+import java.util.Locale;
 import java.util.Set;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
@@ -33,6 +36,8 @@ import java.util.logging.LogRecord;
 import com.github.weisj.darklaf.util.StringUtil;
 
 /**
+ * The default log formatter for darklaf loggers.
+ *
  * @author Jannis Weis
  */
 public class LogFormatter extends Formatter {
@@ -47,6 +52,11 @@ public class LogFormatter extends Formatter {
     public static final String ANSI_WHITE = "\u001B[37m";
     public static final String ANSI_BOLD_ON = "\u001B[01m";
     public static final String ANSI_BOLD_OFF = "\u001B[2m";
+
+    private final DateTimeFormatter dateTimeFormatter =
+            DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
+                    .withLocale(Locale.UK)
+                    .withZone(ZoneId.systemDefault());
 
     @Override
     public String format(final LogRecord record) {
@@ -171,15 +181,13 @@ public class LogFormatter extends Formatter {
     }
 
     private String calculateDateString(final long milliseconds) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = new Date(milliseconds);
-        return dateFormat.format(date);
+        return dateTimeFormatter.format(Instant.ofEpochMilli(milliseconds));
     }
 
     private String getMessageColor(final LogRecord record) {
-        if (record.getLevel() == Level.SEVERE) {
+        if (record.getLevel().intValue() >= Level.SEVERE.intValue()) {
             return ANSI_RED;
-        } else if (record.getLevel() == Level.WARNING) {
+        } else if (record.getLevel().intValue() >= Level.WARNING.intValue()) {
             return ANSI_YELLOW;
         } else {
             return ANSI_BLACK;

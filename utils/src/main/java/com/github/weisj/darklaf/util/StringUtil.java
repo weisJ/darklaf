@@ -26,6 +26,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * Provides some additional utility functions for handling {@link String}s.
+ *
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
@@ -71,15 +73,15 @@ public final class StringUtil {
         }
     }
 
-    public static List<String> split(final String s, final String separator) {
+    public static Iterable<String> split(final String s, final String separator) {
         return split(s, separator, true);
     }
 
-    public static List<String> split(final String s, final String separator, final boolean excludeSeparator) {
+    public static Iterable<String> split(final String s, final String separator, final boolean excludeSeparator) {
         return split(s, separator, excludeSeparator, true);
     }
 
-    public static List<String> split(final String s, final String separator, final boolean excludeSeparator,
+    public static Iterable<String> split(final String s, final String separator, final boolean excludeSeparator,
             final boolean excludeEmptyStrings) {
         if (separator.isEmpty()) {
             return Collections.singletonList(s);
@@ -90,7 +92,7 @@ public final class StringUtil {
             while (true) {
                 int index = s.indexOf(separator, pos);
                 if (index == -1) {
-                    if (pos < s.length() || !excludeEmptyStrings && pos == s.length()) {
+                    if (pos < s.length() || (!excludeEmptyStrings && pos == s.length())) {
                         result.add(s.substring(pos));
                     }
 
@@ -105,25 +107,6 @@ public final class StringUtil {
 
                 pos = nextPos;
             }
-        }
-    }
-
-    public static int indexOfIgnoreCase(final String where, final char what, int fromIndex) {
-        int sourceCount = where.length();
-        if (fromIndex >= sourceCount) {
-            return -1;
-        } else {
-            if (fromIndex < 0) {
-                fromIndex = 0;
-            }
-
-            for (int i = fromIndex; i < sourceCount; ++i) {
-                if (charsEqualIgnoreCase(where.charAt(i), what)) {
-                    return i;
-                }
-            }
-
-            return -1;
         }
     }
 
