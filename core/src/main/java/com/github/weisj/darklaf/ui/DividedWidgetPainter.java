@@ -134,7 +134,7 @@ public final class DividedWidgetPainter {
         Table {
             @Override
             Insets lineInsets() {
-                return null;
+                return new Insets(1, 1, 1, 1);
             }
         },
         Rect {
