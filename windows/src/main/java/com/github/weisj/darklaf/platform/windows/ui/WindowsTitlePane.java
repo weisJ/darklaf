@@ -45,7 +45,11 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.Scale;
 import com.github.weisj.darklaf.util.StringUtil;
 
-/** @author Jannis Weis */
+/**
+ * Swing implementation of the native windows titlebar.
+ *
+ * @author Jannis Weis
+ */
 public class WindowsTitlePane extends CustomTitlePane {
     public static final String KEY_RESIZABLE = "resizable";
     public static final String KEY_STATE = "state";
@@ -173,6 +177,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         }
     }
 
+    @Override
     public void install() {
         if (window != null) {
             if (!installDecorations()) return;
@@ -422,6 +427,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         }
     }
 
+    @Override
     public void paintComponent(final Graphics g) {
         if (getFrame() != null) {
             setState(getFrame().getExtendedState());
@@ -454,6 +460,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         return getDecorationStyle() != JRootPane.NONE && menuBarStealer.hasMenuBar();
     }
 
+    @Override
     public JRootPane getRootPane() {
         return rootPane;
     }
@@ -493,7 +500,7 @@ public class WindowsTitlePane extends CustomTitlePane {
                     LookAndFeel.uninstallBorder(rootPane);
                 } else {
                     Border border = rootPane.getBorder();
-                    if (oldBorder != null && border == null || border instanceof UIResource) {
+                    if (oldBorder != null && (border == null || border instanceof UIResource)) {
                         rootPane.setBorder(oldBorder);
                     }
                 }
@@ -620,6 +627,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         return bimage;
     }
 
+    @SuppressWarnings("EmptyCatch")
     private void ensureImageLoaded(final Component c, final Image img) {
         MediaTracker tracker = new MediaTracker(c);
         tracker.addImage(img, 0);
@@ -634,6 +642,7 @@ public class WindowsTitlePane extends CustomTitlePane {
             super(UIManager.getString("Actions.close", getLocale()), closeIcon);
         }
 
+        @Override
         public void actionPerformed(final ActionEvent e) {
             close();
         }
@@ -644,6 +653,7 @@ public class WindowsTitlePane extends CustomTitlePane {
             super(UIManager.getString("Actions.minimize", getLocale()), minimizeIcon);
         }
 
+        @Override
         public void actionPerformed(final ActionEvent e) {
             minimize();
         }
@@ -654,6 +664,7 @@ public class WindowsTitlePane extends CustomTitlePane {
             super(UIManager.getString("Actions.maximize", getLocale()), maximizeIcon);
         }
 
+        @Override
         public void actionPerformed(final ActionEvent e) {
             maximize();
         }
@@ -664,6 +675,7 @@ public class WindowsTitlePane extends CustomTitlePane {
             super(UIManager.getString("Actions.restore", getLocale()), restoreIcon);
         }
 
+        @Override
         public void actionPerformed(final ActionEvent e) {
             restore();
         }
@@ -740,8 +752,10 @@ public class WindowsTitlePane extends CustomTitlePane {
     }
 
     private class TitlePaneLayout implements LayoutManager {
+        @Override
         public void addLayoutComponent(final String name, final Component c) {}
 
+        @Override
         public void removeLayoutComponent(final Component c) {}
 
         @Override
@@ -749,10 +763,12 @@ public class WindowsTitlePane extends CustomTitlePane {
             return getPreferredSize();
         }
 
+        @Override
         public Dimension minimumLayoutSize(final Container c) {
             return preferredLayoutSize(c);
         }
 
+        @Override
         public void layoutContainer(final Container c) {
             if (hideTitleBar()) return;
             boolean leftToRight = isLeftToRight(window);
@@ -884,10 +900,12 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     protected class WindowHandler extends WindowAdapter {
 
+        @Override
         public void windowActivated(final WindowEvent ev) {
             setActive(true);
         }
 
+        @Override
         public void windowDeactivated(final WindowEvent ev) {
             setActive(false);
         }
