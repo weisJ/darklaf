@@ -126,6 +126,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellToggleBu
             putClientProperty(ToggleButtonConstants.KEY_IS_TABLE_EDITOR, true);
         }
 
+        @Override
         public void setHasFocus(final boolean hasFocus) {
             this.hasFocus = hasFocus;
         }
@@ -153,6 +154,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellToggleBu
             putClientProperty(ToggleButtonConstants.KEY_IS_TABLE_EDITOR, true);
         }
 
+        @Override
         public void setHasFocus(final boolean hasFocus) {
             this.hasFocus = hasFocus;
         }

@@ -50,6 +50,7 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
         this.ui = ui;
     }
 
+    @Override
     public void propertyChange(final PropertyChangeEvent e) {
         JTabbedPane pane = (JTabbedPane) e.getSource();
         String name = e.getPropertyName();
@@ -132,6 +133,7 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
     //
     // ChangeListener
     //
+    @Override
     public void stateChanged(final ChangeEvent e) {
         JTabbedPane tabPane = (JTabbedPane) e.getSource();
         tabPane.revalidate();
@@ -151,8 +153,10 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
     //
     // MouseListener
     //
+    @Override
     public void mouseClicked(final MouseEvent e) {}
 
+    @Override
     public void mousePressed(final MouseEvent e) {
         if (!ui.tabPane.isEnabled()) {
             return;
@@ -173,12 +177,15 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
         }
     }
 
+    @Override
     public void mouseReleased(final MouseEvent e) {}
 
+    @Override
     public void mouseEntered(final MouseEvent e) {
         ui.setRolloverTab(e.getX(), e.getY());
     }
 
+    @Override
     public void mouseExited(final MouseEvent e) {
         ui.setRolloverTab(-1);
     }
@@ -186,8 +193,10 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
     //
     // MouseMotionListener
     //
+    @Override
     public void mouseDragged(final MouseEvent e) {}
 
+    @Override
     public void mouseMoved(final MouseEvent e) {
         ui.setRolloverTab(e.getX(), e.getY());
     }
@@ -195,10 +204,12 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
     //
     // FocusListener
     //
+    @Override
     public void focusGained(final FocusEvent e) {
         ui.setFocusIndex(ui.tabPane.getSelectedIndex(), true);
     }
 
+    @Override
     public void focusLost(final FocusEvent e) {
         ui.repaintTab(ui.focusIndex);
     }
@@ -228,6 +239,7 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
      * When we have added a way to listen for tab additions and changes to tab text, this code should be
      * removed and replaced by something which uses that.
      */
+    @Override
     public void componentAdded(final ContainerEvent e) {
         JTabbedPane tp = (JTabbedPane) e.getContainer();
         Component child = e.getChild();
@@ -238,6 +250,7 @@ public class TabbedPaneHandler implements ChangeListener, ContainerListener, Foc
         updateHtmlViews(tp.indexOfComponent(child), true);
     }
 
+    @Override
     public void componentRemoved(final ContainerEvent e) {
         JTabbedPane tp = (JTabbedPane) e.getContainer();
         Component child = e.getChild();

@@ -115,6 +115,7 @@ public class DarkToolBarUI extends BasicToolBarUI {
                     } else {
                         if (ancestor != null) {
                             ancestor.addWindowListener(new WindowAdapter() {
+                                @Override
                                 public void windowOpened(final WindowEvent e) {
                                     ((Window) floatingTB).setVisible(true);
                                     ancestor.removeWindowListener(this);
@@ -357,6 +358,7 @@ public class DarkToolBarUI extends BasicToolBarUI {
         timer.stop();
     }
 
+    @Override
     public void paint(final Graphics g, final JComponent c) {
         g.setColor(background);
         g.fillRect(0, 0, c.getWidth(), c.getHeight());

@@ -201,6 +201,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         return comboBoxEditor;
     }
 
+    @Override
     protected JButton createArrowButton() {
         JButton button = ArrowButton.createUpDownArrow(comboBox,
                 new ComboIcon(comboBox, UIManager.getIcon("ComboBox.arrowEditable.icon"),

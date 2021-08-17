@@ -78,6 +78,7 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
         return handler;
     }
 
+    @Override
     protected void paintImpl(final Graphics g, final JComponent c) {
         switch (layoutOrientation) {
             case JList.VERTICAL_WRAP:

@@ -118,6 +118,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
         visualPaddingListener = null;
     }
 
+    @Override
     protected LayoutManager createLayout() {
         return new DarkSpinnerLayout();
     }

@@ -80,6 +80,7 @@ public final class ArrowButton implements SwingConstants {
                 paintTriangle(g, x, y, 0, direction, parent.isEnabled());
             }
 
+            @Override
             public Icon getIcon() {
                 return isEnabled() ? activeIcon : inactiveIcon;
             }

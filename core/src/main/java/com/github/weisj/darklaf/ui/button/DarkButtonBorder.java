@@ -247,6 +247,7 @@ public class DarkButtonBorder implements Border, UIResource, VisualPaddingProvid
         return c.hasFocus();
     }
 
+    @Override
     public boolean isBorderOpaque() {
         return false;
     }
@@ -263,6 +264,7 @@ public class DarkButtonBorder implements Border, UIResource, VisualPaddingProvid
         }
     }
 
+    @Override
     public Insets getBorderInsets(final Component c) {
         if (ButtonConstants.isBorderlessVariant(c)) {
             return new InsetsUIResource(0, 0, 0, 0);

@@ -91,6 +91,7 @@ public class DarkTextBorder implements Border, UIResource, VisualPaddingProvider
         return borderSize;
     }
 
+    @Override
     public void paintBorder(final Component c, final Graphics g2, final int x, final int y, final int width,
             final int height) {
         boolean editable = !(c instanceof JTextComponent) || ((JTextComponent) c).isEditable();

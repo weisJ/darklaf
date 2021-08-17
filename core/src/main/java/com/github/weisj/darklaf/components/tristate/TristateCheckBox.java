@@ -55,6 +55,7 @@ public class TristateCheckBox extends JCheckBox {
         return (TristateButtonModel) super.getModel();
     }
 
+    @Override
     public String getUIClassID() {
         if (LafManager.isInstalled()) {
             return "TristateCheckBoxUI";

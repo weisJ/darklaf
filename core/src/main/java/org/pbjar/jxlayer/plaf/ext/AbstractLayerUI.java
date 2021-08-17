@@ -63,6 +63,7 @@ public abstract class AbstractLayerUI<V extends JComponent>
         }
     };
 
+    @Override
     public void installUI(final JComponent c) {
         super.installUI(c);
         installedComponent = c;
@@ -70,6 +71,7 @@ public abstract class AbstractLayerUI<V extends JComponent>
         ((JLayer<?>) c).setLayerEventMask(getLayerEventMask());
     }
 
+    @Override
     public void uninstallUI(final JComponent c) {
         super.uninstallUI(c);
         ((JLayer<?>) c).setLayerEventMask(0);
@@ -115,6 +117,7 @@ public abstract class AbstractLayerUI<V extends JComponent>
      * @see #paintLayer(Graphics2D,JLayer)
      * @see #setDirty(boolean)
      */
+    @Override
     @SuppressWarnings("unchecked")
     public void paint(Graphics g, JComponent c) {
         if (g instanceof Graphics2D) {
@@ -312,6 +315,7 @@ public abstract class AbstractLayerUI<V extends JComponent>
      * @param e the {@code FocusEvent} to be processed
      * @param l the layer this LayerUI is set to
      */
+    @Override
     protected void processFocusEvent(FocusEvent e, JLayer<? extends V> l) {}
 
     /**
@@ -320,6 +324,7 @@ public abstract class AbstractLayerUI<V extends JComponent>
      * @param e the {@code MouseEvent} to be processed
      * @param l the layer this LayerUI is set to
      */
+    @Override
     protected void processMouseEvent(MouseEvent e, JLayer<? extends V> l) {}
 
     /**
@@ -328,6 +333,7 @@ public abstract class AbstractLayerUI<V extends JComponent>
      * @param e the {@code MouseEvent} to be processed
      * @param l the layer this LayerUI is set to
      */
+    @Override
     protected void processMouseMotionEvent(MouseEvent e, JLayer<? extends V> l) {}
 
     /**
@@ -336,6 +342,7 @@ public abstract class AbstractLayerUI<V extends JComponent>
      * @param e the {@code MouseWheelEvent} to be processed
      * @param l the layer this LayerUI is set to
      */
+    @Override
     protected void processMouseWheelEvent(MouseWheelEvent e, JLayer<? extends V> l) {}
 
     /**
@@ -344,5 +351,6 @@ public abstract class AbstractLayerUI<V extends JComponent>
      * @param e the {@code KeyEvent} to be processed
      * @param l the layer this LayerUI is set to
      */
+    @Override
     protected void processKeyEvent(KeyEvent e, JLayer<? extends V> l) {}
 }

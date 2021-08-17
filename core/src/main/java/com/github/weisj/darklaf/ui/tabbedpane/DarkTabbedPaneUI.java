@@ -381,6 +381,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         }
     }
 
+    @Override
     protected boolean shouldRotateTabRuns(final int tabPlacement) {
         return PropertyUtil.getBooleanProperty(tabPane, KEY_ROTATE_TAB_RUNS);
     }
@@ -436,6 +437,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         tabPane.repaint();
     }
 
+    @Override
     protected Insets getContentBorderInsets(final int tabPlacement) {
         Insets insets = (Insets) super.getContentBorderInsets(tabPlacement).clone();
         if (northComp != null) {

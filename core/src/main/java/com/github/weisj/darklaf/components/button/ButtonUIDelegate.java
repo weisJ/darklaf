@@ -36,14 +36,17 @@ public class ButtonUIDelegate extends ButtonUI {
         this.delegate = delegate;
     }
 
+    @Override
     public void installUI(final JComponent c) {
         delegate.installUI(c);
     }
 
+    @Override
     public void uninstallUI(final JComponent c) {
         delegate.uninstallUI(c);
     }
 
+    @Override
     public void update(final Graphics g, final JComponent c) {
         if (c.isOpaque()) {
             g.setColor(c.getBackground());
@@ -57,30 +60,37 @@ public class ButtonUIDelegate extends ButtonUI {
         delegate.paint(g, c);
     }
 
+    @Override
     public Dimension getPreferredSize(final JComponent c) {
         return delegate.getPreferredSize(c);
     }
 
+    @Override
     public Dimension getMinimumSize(final JComponent c) {
         return delegate.getMinimumSize(c);
     }
 
+    @Override
     public Dimension getMaximumSize(final JComponent c) {
         return delegate.getMaximumSize(c);
     }
 
+    @Override
     public boolean contains(final JComponent c, final int x, final int y) {
         return delegate.contains(c, x, y);
     }
 
+    @Override
     public int getBaseline(final JComponent c, final int width, final int height) {
         return delegate.getBaseline(c, width, height);
     }
 
+    @Override
     public int getAccessibleChildrenCount(final JComponent c) {
         return delegate.getAccessibleChildrenCount(c);
     }
 
+    @Override
     public Accessible getAccessibleChild(final JComponent c, final int i) {
         return delegate.getAccessibleChild(c, i);
     }

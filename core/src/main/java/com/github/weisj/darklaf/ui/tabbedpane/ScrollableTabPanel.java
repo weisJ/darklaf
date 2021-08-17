@@ -40,11 +40,13 @@ public class ScrollableTabPanel extends JPanel implements UIResource {
         setBackground(bgColor);
     }
 
+    @Override
     public void paintComponent(final Graphics g) {
         super.paintComponent(g);
         ui.paintTabArea(g, ui.tabPane.getTabPlacement(), ui.tabPane.getSelectedIndex());
     }
 
+    @Override
     public void doLayout() {
         if (getComponentCount() > 0) {
             Component child = getComponent(0);

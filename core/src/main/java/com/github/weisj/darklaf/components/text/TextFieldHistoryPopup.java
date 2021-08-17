@@ -51,6 +51,7 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
         textField.addSearchListener(this);
         setCapacity(capacity);
         this.history = Collections.newSetFromMap(new LinkedHashMap<String, Boolean>() {
+            @Override
             protected boolean removeEldestEntry(final Map.Entry<String, Boolean> eldest) {
                 return size() > capacity;
             }

@@ -240,6 +240,7 @@ public abstract class DarkTableUIBridge extends TableUIBridge {
         rendererPane.removeAll();
     }
 
+    @Override
     @Deprecated
     protected final void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column) {}
 

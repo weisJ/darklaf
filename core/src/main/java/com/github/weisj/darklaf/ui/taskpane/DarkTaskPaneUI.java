@@ -102,6 +102,7 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
             this.color = color;
         }
 
+        @Override
         public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width,
                 final int height) {
             Rectangle clip = g.getClip().getBounds();
@@ -120,10 +121,12 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
             g.setClip(clip);
         }
 
+        @Override
         public Insets getBorderInsets(final Component c) {
             return new Insets(0, 1, 1, 1);
         }
 
+        @Override
         public boolean isBorderOpaque() {
             return true;
         }

@@ -31,12 +31,14 @@ import javax.swing.*;
 class RecentSwatchPanel extends SwatchPanel {
     private Color defaultRecentColor;
 
+    @Override
     protected void initValues() {
         swatchSize = UIManager.getDimension("ColorChooser.swatchesRecentSwatchSize", getLocale());
         numSwatches = new Dimension(30, 5);
         gap = new Dimension(1, 1);
     }
 
+    @Override
     protected void initColors() {
         defaultRecentColor = UIManager.getColor("ColorChooser.swatchesDefaultRecentColor");
         int numColors = numSwatches.width * numSwatches.height;

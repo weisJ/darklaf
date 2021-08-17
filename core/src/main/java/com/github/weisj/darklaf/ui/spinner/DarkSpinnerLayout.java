@@ -43,6 +43,7 @@ public class DarkSpinnerLayout implements LayoutManager {
         arrowButtonInsets = UIManager.getInsets("Spinner.arrowButtonInsets");
     }
 
+    @Override
     public void addLayoutComponent(final String name, final Component c) {
         if ("Next".equals(name)) {
             nextButton = c;
@@ -53,6 +54,7 @@ public class DarkSpinnerLayout implements LayoutManager {
         }
     }
 
+    @Override
     public void removeLayoutComponent(final Component c) {
         if (c == nextButton) {
             nextButton = null;
@@ -67,6 +69,7 @@ public class DarkSpinnerLayout implements LayoutManager {
         return (c == null) ? new Dimension() : c.getPreferredSize();
     }
 
+    @Override
     public Dimension preferredLayoutSize(final Container parent) {
         Dimension nextD = preferredSize(nextButton);
         Dimension previousD = preferredSize(previousButton);
@@ -98,6 +101,7 @@ public class DarkSpinnerLayout implements LayoutManager {
         }
     }
 
+    @Override
     public Dimension minimumLayoutSize(final Container parent) {
         return preferredLayoutSize(parent);
     }
@@ -108,6 +112,7 @@ public class DarkSpinnerLayout implements LayoutManager {
         }
     }
 
+    @Override
     public void layoutContainer(final Container parent) {
         int width = parent.getWidth();
         int height = parent.getHeight();

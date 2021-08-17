@@ -98,10 +98,12 @@ public class DarkTableCellEditor extends DefaultCellEditor {
         spinner.putClientProperty(SpinnerConstants.KEY_IS_TABLE_EDITOR, Boolean.TRUE);
         setClickCountToStart(2);
         delegate = new EditorDelegate() {
+            @Override
             public Object getCellEditorValue() {
                 return spinner.getValue();
             }
 
+            @Override
             public void setValue(final Object value) {
                 try {
                     SpinnerModel model = spinner.getModel();
@@ -128,6 +130,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
                 }
             }
 
+            @Override
             public boolean shouldSelectCell(final EventObject anEvent) {
                 if (anEvent instanceof MouseEvent) {
                     MouseEvent e = (MouseEvent) anEvent;
@@ -147,10 +150,12 @@ public class DarkTableCellEditor extends DefaultCellEditor {
         super(dummyCheckBox);
         editorComponent = toggleButton;
         delegate = new EditorDelegate() {
+            @Override
             public Object getCellEditorValue() {
                 return toggleButton.isSelected();
             }
 
+            @Override
             public void setValue(final Object value) {
                 boolean selected = false;
                 if (value instanceof Boolean) {

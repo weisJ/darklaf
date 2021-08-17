@@ -79,6 +79,7 @@ public class ToolBarDemo extends BaseComponentDemo implements ActionListener {
         return button;
     }
 
+    @Override
     public void actionPerformed(final ActionEvent e) {
         String cmd = e.getActionCommand();
         String description = null;

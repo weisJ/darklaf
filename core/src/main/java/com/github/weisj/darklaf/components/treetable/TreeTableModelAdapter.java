@@ -40,6 +40,7 @@ public class TreeTableModelAdapter extends AbstractTableModel {
         this.treeTableModel = treeTableModel;
 
         tree.addTreeExpansionListener(new TreeExpansionListener() {
+            @Override
             public void treeExpanded(final TreeExpansionEvent event) {
                 TreePath path = event.getPath();
                 int start = tree.getRowForPath(path);
@@ -49,6 +50,7 @@ public class TreeTableModelAdapter extends AbstractTableModel {
                 tree.setSelectionRow(selection);
             }
 
+            @Override
             public void treeCollapsed(final TreeExpansionEvent event) {
                 TreePath path = event.getPath();
                 int start = tree.getRowForPath(path);
@@ -60,18 +62,22 @@ public class TreeTableModelAdapter extends AbstractTableModel {
         });
     }
 
+    @Override
     public int getColumnCount() {
         return treeTableModel.getColumnCount();
     }
 
+    @Override
     public String getColumnName(final int column) {
         return treeTableModel.getColumnName(column);
     }
 
+    @Override
     public Class<?> getColumnClass(final int column) {
         return treeTableModel.getColumnClass(column);
     }
 
+    @Override
     public int getRowCount() {
         return tree.getRowCount();
     }
@@ -81,14 +87,17 @@ public class TreeTableModelAdapter extends AbstractTableModel {
         return treePath.getLastPathComponent();
     }
 
+    @Override
     public Object getValueAt(final int row, final int column) {
         return treeTableModel.getValueAt(nodeForRow(row), column);
     }
 
+    @Override
     public boolean isCellEditable(final int row, final int column) {
         return treeTableModel.isCellEditable(nodeForRow(row), column);
     }
 
+    @Override
     public void setValueAt(final Object value, final int row, final int column) {
         treeTableModel.setValueAt(value, nodeForRow(row), column);
     }

@@ -201,6 +201,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
         }
     }
 
+    @Override
     public final Dimension getPreferredSize(final JComponent c) {
         if (!c.isEnabled()) {
             return new Dimension(0, 0);

@@ -43,6 +43,7 @@ public class SampleRenderer extends JLabel implements TableCellRenderer {
         setOpaque(true);
     }
 
+    @Override
     public Component getTableCellRendererComponent(final JTable table, final Object sample, final boolean isSelected,
             final boolean hasFocus, final int row, final int column) {
         setBackground(null);
@@ -69,6 +70,7 @@ public class SampleRenderer extends JLabel implements TableCellRenderer {
      * Some icons are painted using inner classes and are not meant to be shared by other items. This
      * code will catch the ClassCastException that is thrown.
      */
+    @Override
     public void paint(final Graphics g) {
         try {
             super.paint(g);

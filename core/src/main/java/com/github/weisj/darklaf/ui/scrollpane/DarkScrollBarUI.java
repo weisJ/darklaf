@@ -128,6 +128,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
         scrollBarListener = null;
     }
 
+    @Override
     protected void paintTrack(final Graphics g, final JComponent c, final Rectangle bounds) {
         if (c.isOpaque()) {
             g.setColor(scrollbar.getBackground());
@@ -140,6 +141,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
         g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
     }
 
+    @Override
     protected void paintThumb(final Graphics g, final JComponent c, final Rectangle thumbBounds) {
         if (!thumbBounds.isEmpty() && scrollbar.isEnabled()) {
             paintMaxiThumb((Graphics2D) g, thumbBounds);

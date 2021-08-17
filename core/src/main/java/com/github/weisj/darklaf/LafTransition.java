@@ -85,6 +85,7 @@ class LafTransition {
             doPaint();
         }
 
+        @Override
         void runTransition() {
             animator.resume();
         }

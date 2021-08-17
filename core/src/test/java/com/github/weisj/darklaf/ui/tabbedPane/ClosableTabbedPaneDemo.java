@@ -37,6 +37,7 @@ public class ClosableTabbedPaneDemo extends AbstractTabbedPaneDemo<ClosableTabbe
         DemoExecutor.showDemo(new ClosableTabbedPaneDemo());
     }
 
+    @Override
     protected ClosableTabbedPane createTabbedPane() {
         ClosableTabbedPane tabbedPane = new ClosableTabbedPane();
         tabbedPane.addTabListener(this);

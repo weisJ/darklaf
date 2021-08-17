@@ -31,6 +31,7 @@ public class TabbedPaneDemo extends AbstractTabbedPaneDemo<JTabbedPane> {
         DemoExecutor.showDemo(new TabbedPaneDemo());
     }
 
+    @Override
     protected JTabbedPane createTabbedPane() {
         return new JTabbedPane();
     }

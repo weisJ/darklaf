@@ -33,6 +33,7 @@ public class DarkToggleButtonKeyHandler implements KeyListener {
     // This listener checks if the key event is a focus traversal key event
     // on a radio button, consume the event if so and move the focus
     // to next/previous component
+    @Override
     public void keyPressed(final KeyEvent e) {
         AWTKeyStroke stroke = AWTKeyStroke.getAWTKeyStrokeForEvent(e);
         if (stroke != null && e.getSource() instanceof AbstractButton) {
@@ -63,7 +64,9 @@ public class DarkToggleButtonKeyHandler implements KeyListener {
         return keys != null && keys.contains(stroke);
     }
 
+    @Override
     public void keyReleased(final KeyEvent e) {}
 
+    @Override
     public void keyTyped(final KeyEvent e) {}
 }

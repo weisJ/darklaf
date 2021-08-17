@@ -86,6 +86,7 @@ public class ToggleButtonFocusNavigationActions {
             super("Previous");
         }
 
+        @Override
         public void actionPerformed(final ActionEvent e) {
             selectToggleButton(e, false);
         }
@@ -96,6 +97,7 @@ public class ToggleButtonFocusNavigationActions {
             super("Next");
         }
 
+        @Override
         public void actionPerformed(final ActionEvent e) {
             selectToggleButton(e, true);
         }

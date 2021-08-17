@@ -32,6 +32,7 @@ public class LabelDemo extends LabelDemoBase<JLabel> {
         DemoExecutor.showDemo(new LabelDemo());
     }
 
+    @Override
     protected JLabel createLabel() {
         return new JLabel("Test Label", DemoResources.FOLDER_ICON, JLabel.LEFT);
     }

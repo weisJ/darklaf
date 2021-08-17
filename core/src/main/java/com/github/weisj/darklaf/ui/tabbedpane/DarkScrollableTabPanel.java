@@ -42,6 +42,7 @@ class DarkScrollableTabPanel extends ScrollableTabPanel {
         }
     }
 
+    @Override
     public void doLayout() {
         if (getComponentCount() > 0) {
             for (int i = 0; i < getComponentCount(); i++) {

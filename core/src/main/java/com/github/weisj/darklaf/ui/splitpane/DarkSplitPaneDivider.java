@@ -93,6 +93,7 @@ public class DarkSplitPaneDivider extends BasicSplitPaneDivider {
             setFocusPainted(false);
         }
 
+        @Override
         @SuppressWarnings("deprecation")
         public boolean isFocusTraversable() {
             return false;

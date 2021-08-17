@@ -221,6 +221,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      * Paint the rows that intersect the Graphics objects clipRect. This method calls paintCell as
      * necessary. Subclasses may want to override these methods.
      */
+    @Override
     public void paint(final Graphics g, final JComponent c) {
         Shape clip = g.getClip();
         paintImpl(g, c);
@@ -236,6 +237,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      * @see javax.swing.JComponent#getBaseline(int, int)
      * @since 1.6
      */
+    @Override
     public int getBaseline(final JComponent c, final int width, final int height) {
         int rowHeight = list.getFixedCellHeight();
         UIDefaults lafDefaults = UIManager.getLookAndFeelDefaults();
@@ -273,6 +275,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      * @see javax.swing.JComponent#getBaseline(int, int)
      * @since 1.6
      */
+    @Override
     public Component.BaselineResizeBehavior getBaselineResizeBehavior(final JComponent c) {
         return Component.BaselineResizeBehavior.CONSTANT_ASCENT;
     }
@@ -325,6 +328,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      * @param c The JList component.
      * @return The total size of the list.
      */
+    @Override
     public Dimension getPreferredSize(final JComponent c) {
         maybeUpdateLayoutState();
 
@@ -356,6 +360,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      *
      * @see JList#ensureIndexIsVisible
      */
+    @Override
     protected void selectPreviousIndex() {
         int s = list.getSelectedIndex();
         if (s > 0) {
@@ -370,6 +375,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      *
      * @see JList#ensureIndexIsVisible
      */
+    @Override
     protected void selectNextIndex() {
         int s = list.getSelectedIndex();
         if ((s + 1) < list.getModel().getSize()) {
@@ -400,6 +406,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      *
      * @see #installUI
      */
+    @Override
     protected void installKeyboardActions() {
         InputMap inputMap = getInputMap(JComponent.WHEN_FOCUSED);
         SwingUtilities.replaceUIInputMap(list, JComponent.WHEN_FOCUSED, inputMap);
@@ -413,6 +420,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      *
      * @see #installUI
      */
+    @Override
     protected void uninstallKeyboardActions() {
         SwingUtilities.replaceUIActionMap(list, null);
         SwingUtilities.replaceUIInputMap(list, JComponent.WHEN_FOCUSED, null);
@@ -425,6 +433,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      * @see #installUI
      * @see #uninstallListeners
      */
+    @Override
     protected void installListeners() {
         TransferHandler th = list.getTransferHandler();
         if (th == null || th instanceof UIResource) {
@@ -467,6 +476,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      * @see #uninstallUI
      * @see #installListeners
      */
+    @Override
     protected void uninstallListeners() {
         list.removeFocusListener(focusListener);
         list.removeMouseListener(mouseInputListener);
@@ -501,6 +511,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      * @see #installUI
      * @see CellRendererPane
      */
+    @Override
     protected void installDefaults() {
         list.setLayout(null);
 
@@ -540,6 +551,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      * @see #uninstallUI
      * @see CellRendererPane
      */
+    @Override
     protected void uninstallDefaults() {
         LookAndFeel.uninstallBorder(list);
         if (list.getFont() instanceof UIResource) {
@@ -573,6 +585,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      * @see #installListeners
      * @see #installKeyboardActions
      */
+    @Override
     public void installUI(final JComponent c) {
         @SuppressWarnings("unchecked")
         JList<Object> tmp = (JList<Object>) c;
@@ -653,6 +666,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      * @see #uninstallKeyboardActions
      * @see #uninstallDefaults
      */
+    @Override
     public void uninstallUI(final JComponent c) {
         uninstallListeners();
         uninstallDefaults();
@@ -673,12 +687,14 @@ public abstract class DarkListUIBridge extends BasicListUI {
      *
      * @throws NullPointerException {@inheritDoc}
      */
+    @Override
     public int locationToIndex(final JList list, final Point location) {
         maybeUpdateLayoutState();
         return convertLocationToModel(location.x, location.y);
     }
 
     /** {@inheritDoc} */
+    @Override
     public Point indexToLocation(final JList list, final int index) {
         maybeUpdateLayoutState();
         Rectangle rect = getCellBounds(list, index, index);
@@ -690,6 +706,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
     }
 
     /** {@inheritDoc} */
+    @Override
     public Rectangle getCellBounds(final JList list, final int index1, final int index2) {
         maybeUpdateLayoutState();
 
@@ -738,6 +755,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      * @see #convertRowToY
      * @see #updateLayoutState
      */
+    @Override
     protected int getRowHeight(final int row) {
         return getHeight(0, row);
     }
@@ -751,6 +769,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      * @see #getRowHeight
      * @see #updateLayoutState
      */
+    @Override
     protected int convertYToRow(final int y0) {
         return convertLocationToRow(0, y0, false);
     }
@@ -764,6 +783,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      * @see #getRowHeight
      * @see #updateLayoutState
      */
+    @Override
     protected int convertRowToY(final int row) {
         if (row >= getRowCount(0) || row < 0) {
             return -1;
@@ -780,6 +800,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      *
      * @see #updateLayoutState
      */
+    @Override
     protected void maybeUpdateLayoutState() {
         if (updateLayoutStateNeeded != 0) {
             updateLayoutState();
@@ -793,6 +814,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      *
      * @see #maybeUpdateLayoutState
      */
+    @Override
     protected void updateLayoutState() {
         /*
          * If both JList fixedCellWidth and fixedCellHeight have been set, then initialize cellWidth and
@@ -877,6 +899,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      * @see MouseInputHandler
      * @see #installUI
      */
+    @Override
     protected MouseInputListener createMouseInputListener() {
         return getHandler();
     }
@@ -886,6 +909,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      *
      * @return an instance of {@code FocusListener}
      */
+    @Override
     protected FocusListener createFocusListener() {
         return getHandler();
     }
@@ -913,6 +937,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      * @see ListSelectionHandler
      * @see #installUI
      */
+    @Override
     protected ListSelectionListener createListSelectionListener() {
         return getHandler();
     }
@@ -940,6 +965,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      * @see JList#getModel
      * @see #installUI
      */
+    @Override
     protected ListDataListener createListDataListener() {
         return getHandler();
     }
@@ -969,6 +995,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      * @see PropertyChangeListener
      * @see #installUI
      */
+    @Override
     protected PropertyChangeListener createPropertyChangeListener() {
         return getHandler();
     }
@@ -1469,6 +1496,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
     @SuppressWarnings("serial") // Superclass is a JDK-implementation class
     static class ListTransferHandler extends TransferHandler implements UIResource {
 
+        @Override
         public int getSourceActions(final JComponent c) {
             return COPY;
         }
@@ -1480,6 +1508,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
          *        sharing of TransferHandlers by multiple components.
          * @return The representation of the data to be transfered.
          */
+        @Override
         @SuppressWarnings("deprecation")
         protected Transferable createTransferable(final JComponent c) {
             if (c instanceof JList) {
@@ -1561,6 +1590,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
             super(name);
         }
 
+        @Override
         public void actionPerformed(final ActionEvent e) {
             String name = getName();
             @SuppressWarnings("unchecked")
@@ -2019,6 +2049,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
          * @param c the c
          * @return the boolean
          */
+        @Override
         public boolean accept(final Object c) {
             Object name = getName();
             if (name == SELECT_PREVIOUS_COLUMN_CHANGE_LEAD || name == SELECT_NEXT_COLUMN_CHANGE_LEAD
@@ -2048,10 +2079,12 @@ public abstract class DarkListUIBridge extends BasicListUI {
         /*
          * The focusGained() focusLost() methods run when the JList focus changes.
          */
+        @Override
         public void focusGained(final FocusEvent e) {
             getHandler().focusGained(e);
         }
 
+        @Override
         public void focusLost(final FocusEvent e) {
             getHandler().focusLost(e);
         }
@@ -2075,30 +2108,37 @@ public abstract class DarkListUIBridge extends BasicListUI {
      */
     @SuppressWarnings("serial") // Same-version serialization only
     public class MouseInputHandler implements MouseInputListener {
+        @Override
         public void mouseClicked(final MouseEvent e) {
             getHandler().mouseClicked(e);
         }
 
+        @Override
         public void mousePressed(final MouseEvent e) {
             getHandler().mousePressed(e);
         }
 
+        @Override
         public void mouseReleased(final MouseEvent e) {
             getHandler().mouseReleased(e);
         }
 
+        @Override
         public void mouseEntered(final MouseEvent e) {
             getHandler().mouseEntered(e);
         }
 
+        @Override
         public void mouseExited(final MouseEvent e) {
             getHandler().mouseExited(e);
         }
 
+        @Override
         public void mouseDragged(final MouseEvent e) {
             getHandler().mouseDragged(e);
         }
 
+        @Override
         public void mouseMoved(final MouseEvent e) {
             getHandler().mouseMoved(e);
         }
@@ -2121,6 +2161,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      */
     @SuppressWarnings("serial") // Same-version serialization only
     public class ListSelectionHandler implements ListSelectionListener {
+        @Override
         public void valueChanged(final ListSelectionEvent e) {
             getHandler().valueChanged(e);
         }
@@ -2144,14 +2185,17 @@ public abstract class DarkListUIBridge extends BasicListUI {
      */
     @SuppressWarnings("serial") // Same-version serialization only
     public class ListDataHandler implements ListDataListener {
+        @Override
         public void intervalAdded(final ListDataEvent e) {
             getHandler().intervalAdded(e);
         }
 
+        @Override
         public void intervalRemoved(final ListDataEvent e) {
             getHandler().intervalRemoved(e);
         }
 
+        @Override
         public void contentsChanged(final ListDataEvent e) {
             getHandler().contentsChanged(e);
         }
@@ -2176,6 +2220,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
      */
     @SuppressWarnings("serial") // Same-version serialization only
     public class PropertyChangeHandler implements PropertyChangeListener {
+        @Override
         public void propertyChange(final PropertyChangeEvent e) {
             getHandler().propertyChange(e);
         }
@@ -2209,6 +2254,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
          * next object that starts with the same letter until another key is pressed, then it is treated as
          * the prefix with appropriate number of the same letters followed by first typed another letter.
          */
+        @Override
         public void keyTyped(final KeyEvent e) {
             JList<?> src = (JList<?>) e.getSource();
             ListModel<?> model = src.getModel();
@@ -2263,6 +2309,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
          * Checks to see if the key event is a navigation key to prevent dispatching these keys for the
          * first letter navigation.
          */
+        @Override
         public void keyPressed(final KeyEvent e) {
             if (isNavigationKey(e)) {
                 prefix = "";
@@ -2275,6 +2322,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
          * Invoked when a key has been released. See the class description for {@link KeyEvent} for a
          * definition of a key released event.
          */
+        @Override
         public void keyReleased(final KeyEvent e) {}
 
         /**
@@ -2295,6 +2343,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
         //
         // PropertyChangeListener
         //
+        @Override
         public void propertyChange(final PropertyChangeEvent e) {
             String propertyName = e.getPropertyName();
 
@@ -2401,6 +2450,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
         //
         // ListDataListener
         //
+        @Override
         public void intervalAdded(final ListDataEvent e) {
             updateLayoutStateNeeded = modelChanged;
 
@@ -2421,6 +2471,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
             redrawList();
         }
 
+        @Override
         public void intervalRemoved(final ListDataEvent e) {
             updateLayoutStateNeeded = modelChanged;
 
@@ -2439,6 +2490,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
             redrawList();
         }
 
+        @Override
         public void contentsChanged(final ListDataEvent e) {
             updateLayoutStateNeeded = modelChanged;
             redrawList();
@@ -2447,6 +2499,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
         //
         // ListSelectionListener
         //
+        @Override
         public void valueChanged(final ListSelectionEvent e) {
             maybeUpdateLayoutState();
 
@@ -2464,8 +2517,10 @@ public abstract class DarkListUIBridge extends BasicListUI {
         //
         // MouseListener
         //
+        @Override
         public void mouseClicked(final MouseEvent e) {}
 
+        @Override
         public void mousePressed(final MouseEvent e) {
             if (SwingUtil.shouldIgnore(e, list)) {
                 return;
@@ -2559,6 +2614,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
             }
         }
 
+        @Override
         public void mouseReleased(final MouseEvent e) {
             if (SwingUtil.shouldIgnore(e, list)) {
                 return;
@@ -2577,10 +2633,13 @@ public abstract class DarkListUIBridge extends BasicListUI {
             }
         }
 
+        @Override
         public void mouseEntered(final MouseEvent e) {}
 
+        @Override
         public void mouseExited(final MouseEvent e) {}
 
+        @Override
         public void dragStarting(final MouseEvent me) {
             if (DarkUIUtil.isMenuShortcutKeyDown(me)) {
                 int row = SwingUtil.loc2IndexFileList(list, me.getPoint());
@@ -2588,6 +2647,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
             }
         }
 
+        @Override
         public void mouseDragged(final MouseEvent e) {
             if (SwingUtil.shouldIgnore(e, list)) {
                 return;
@@ -2616,8 +2676,10 @@ public abstract class DarkListUIBridge extends BasicListUI {
             }
         }
 
+        @Override
         public void mouseMoved(final MouseEvent e) {}
 
+        @Override
         public void focusGained(final FocusEvent e) {
             repaintCellFocus();
         }
@@ -2639,6 +2701,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
             }
         }
 
+        @Override
         public void focusLost(final FocusEvent e) {
             repaintCellFocus();
         }

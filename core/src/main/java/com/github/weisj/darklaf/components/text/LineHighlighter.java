@@ -56,6 +56,7 @@ public class LineHighlighter implements Highlighter.HighlightPainter, ChangeList
         this.color = color;
     }
 
+    @Override
     public void paint(final Graphics g, final int p0, final int p1, final Shape bounds, final JTextComponent c) {
         try {
             Rectangle r = c.modelToView(c.getCaretPosition());

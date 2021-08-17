@@ -104,41 +104,49 @@ public class LazyActionMap extends ActionMapUIResource {
         }
     }
 
+    @Override
     public void setParent(final ActionMap map) {
         loadIfNecessary();
         super.setParent(map);
     }
 
+    @Override
     public void put(final Object key, final Action action) {
         loadIfNecessary();
         super.put(key, action);
     }
 
+    @Override
     public Action get(final Object key) {
         loadIfNecessary();
         return super.get(key);
     }
 
+    @Override
     public void remove(final Object key) {
         loadIfNecessary();
         super.remove(key);
     }
 
+    @Override
     public void clear() {
         loadIfNecessary();
         super.clear();
     }
 
+    @Override
     public Object[] keys() {
         loadIfNecessary();
         return super.keys();
     }
 
+    @Override
     public int size() {
         loadIfNecessary();
         return super.size();
     }
 
+    @Override
     public Object[] allKeys() {
         loadIfNecessary();
         return super.allKeys();

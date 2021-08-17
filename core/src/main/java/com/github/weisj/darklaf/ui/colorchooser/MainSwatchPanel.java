@@ -28,12 +28,14 @@ import javax.swing.*;
 /** @author Jannis Weis */
 class MainSwatchPanel extends SwatchPanel {
 
+    @Override
     protected void initValues() {
         swatchSize = UIManager.getDimension("ColorChooser.swatchesSwatchSize", getLocale());
         numSwatches = new Dimension(30, 15);
         gap = new Dimension(1, 1);
     }
 
+    @Override
     protected void initColors() {
         int[] rawValues = initRawValues();
         int numColors = rawValues.length / 3;

@@ -165,6 +165,7 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
         setButtonIcons();
     }
 
+    @Override
     protected void addSystemMenuItems(final JMenu systemMenu) {
         JMenuItem mi = systemMenu.add(restoreAction);
         mi.setMnemonic(getButtonMnemonic("restore"));
@@ -309,14 +310,18 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
     }
 
     protected class DarkTitlePaneLayout implements LayoutManager {
+        @Override
         public void addLayoutComponent(final String name, final Component c) {}
 
+        @Override
         public void removeLayoutComponent(final Component c) {}
 
+        @Override
         public Dimension preferredLayoutSize(final Container c) {
             return minimumLayoutSize(c);
         }
 
+        @Override
         public Dimension minimumLayoutSize(final Container c) {
             int width = 2 * PAD;
             int height;
@@ -383,6 +388,7 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
             return useExternalMenuBar;
         }
 
+        @Override
         public void layoutContainer(final Container c) {
             boolean useExternalMenuBar = useExternalMenuBar();
 

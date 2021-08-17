@@ -489,6 +489,7 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
         return false;
     }
 
+    @Override
     protected void paintCell(final Graphics g, final Rectangle r, final int row, final int column, final int cMin,
             final int cMax) {
         // if (true) return;

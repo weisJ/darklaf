@@ -93,6 +93,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
         return getUI(tabFrame).getDropPosition(tabFrame, p);
     }
 
+    @Override
     public void exportAsDrag(final JComponent comp, final InputEvent e, final int a) {
         int srcActions = getSourceActions(comp);
         int action = a;
@@ -315,6 +316,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
         }
 
         /** register this DragGestureRecognizer's Listeners with the Component */
+        @Override
         protected void registerListeners() {}
 
         /**
@@ -323,6 +325,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
          * <p>
          * subclasses must override this method
          */
+        @Override
         protected void unregisterListeners() {}
     }
 
@@ -388,6 +391,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
         // --- DragGestureListener methods -----------------------------------
 
         /** a Drag gesture has been recognized */
+        @Override
         public void dragGestureRecognized(final DragGestureEvent dge) {
             JComponent c = (JComponent) dge.getComponent();
             TabFrameTransferHandler th = (TabFrameTransferHandler) c.getTransferHandler();
@@ -414,17 +418,22 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
         // --- DragSourceListener methods -----------------------------------
 
         /** as the hotspot enters a platform dependent drop site */
+        @Override
         public void dragEnter(final DragSourceDragEvent dsde) {}
 
         /** as the hotspot moves over a platform dependent drop site */
+        @Override
         public void dragOver(final DragSourceDragEvent dsde) {}
 
+        @Override
         public void dropActionChanged(final DragSourceDragEvent dsde) {}
 
         /** as the hotspot exits a platform dependent drop site */
+        @Override
         public void dragExit(final DragSourceEvent dsde) {}
 
         /** as the operation completes */
+        @Override
         public void dragDropEnd(final DragSourceDropEvent dsde) {
             DragSourceContext dsc = dsde.getDragSourceContext();
             JComponent c = (JComponent) dsc.getComponent();

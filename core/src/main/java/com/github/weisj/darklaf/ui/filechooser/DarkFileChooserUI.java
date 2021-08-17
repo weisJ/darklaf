@@ -354,6 +354,7 @@ public class DarkFileChooserUI extends MetalFileChooserUI {
         private static final String MIME_TEXT = "text/";
         private static final String MIME_IMAGE = "image/";
 
+        @Override
         public Icon getIcon(final File f) {
             Icon icon = getCachedIcon(f);
             if (icon != null) {
@@ -401,6 +402,7 @@ public class DarkFileChooserUI extends MetalFileChooserUI {
                     tf.removeAncestorListener(editorAncestorListener);
                     tf.addAncestorListener(editorAncestorListener);
                     setDelegate(new DarkTableCellEditor(tf) {
+                        @Override
                         public Component getTableCellEditorComponent(JTable table, Object value,
                                 boolean isSelected, int row, int column) {
                             Object realValue = value instanceof File ? getFileChooser().getName((File) value) : value;

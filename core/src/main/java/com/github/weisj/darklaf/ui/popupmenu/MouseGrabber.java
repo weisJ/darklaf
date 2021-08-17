@@ -108,6 +108,7 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
         }
     }
 
+    @Override
     public void stateChanged(final ChangeEvent e) {
         MenuSelectionManager msm = MenuSelectionManager.defaultManager();
         MenuElement[] p = msm.getSelectedPath();
@@ -147,6 +148,7 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
         }
     }
 
+    @Override
     public void eventDispatched(final AWTEvent ev) {
         if (SwingUtil.isUngrabEvent(ev)) {
             // Popup should be canceled in case of ungrab event
@@ -259,40 +261,51 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
         return false;
     }
 
+    @Override
     public void componentResized(final ComponentEvent e) {
         cancelPopupMenu();
     }
 
+    @Override
     public void componentMoved(final ComponentEvent e) {
         cancelPopupMenu();
     }
 
+    @Override
     public void componentShown(final ComponentEvent e) {
         cancelPopupMenu();
     }
 
+    @Override
     public void componentHidden(final ComponentEvent e) {
         cancelPopupMenu();
     }
 
+    @Override
     public void windowOpened(final WindowEvent e) {}
 
+    @Override
     public void windowClosing(final WindowEvent e) {
         cancelPopupMenu();
     }
 
+    @Override
     public void windowClosed(final WindowEvent e) {
         cancelPopupMenu();
     }
 
+    @Override
     public void windowIconified(final WindowEvent e) {
         cancelPopupMenu();
     }
 
+    @Override
     public void windowDeiconified(final WindowEvent e) {}
 
+    @Override
     public void windowActivated(final WindowEvent e) {}
 
+    @Override
     public void windowDeactivated(final WindowEvent e) {
         cancelPopupMenu();
     }

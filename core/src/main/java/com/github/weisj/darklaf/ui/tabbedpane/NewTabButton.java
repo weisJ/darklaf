@@ -42,6 +42,7 @@ public class NewTabButton extends TabButtonContainer {
         });
     }
 
+    @Override
     protected JButton createButton() {
         JButton button = new JButtonUIResource();
         button.setIcon(ui.getNewTabIcon());

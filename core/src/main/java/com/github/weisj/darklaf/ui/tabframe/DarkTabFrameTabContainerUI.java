@@ -119,6 +119,7 @@ public class DarkTabFrameTabContainerUI extends DarkPanelUI implements PropertyC
         TabFrameUtil.uninstallAccelerator(tabFrame, tabContainer);
     }
 
+    @Override
     protected void installDefaults(final JPanel p) {
         super.installDefaults(p);
         tabContainer.setOpaque(true);

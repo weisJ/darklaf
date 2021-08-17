@@ -149,6 +149,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         this.transparencyEnabled = transparencyEnabled;
     }
 
+    @Override
     public void focusGained(final FocusEvent event) {
         Object source = event.getSource();
         if (source instanceof JFormattedTextField) {
@@ -161,6 +162,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         }
     }
 
+    @Override
     public void focusLost(final FocusEvent event) {
         SwingUtilities.invokeLater(() -> text.select(0, 0));
     }

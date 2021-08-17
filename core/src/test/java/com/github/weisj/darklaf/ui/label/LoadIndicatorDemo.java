@@ -46,6 +46,7 @@ public class LoadIndicatorDemo extends LabelDemoBase<LoadingIndicator> {
         return controls;
     }
 
+    @Override
     protected LoadingIndicator createLabel() {
         return new LoadingIndicator("Load Indicator", DemoResources.FOLDER_ICON, JLabel.LEFT);
     }

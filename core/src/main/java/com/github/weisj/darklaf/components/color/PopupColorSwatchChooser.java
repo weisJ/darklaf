@@ -92,6 +92,7 @@ public class PopupColorSwatchChooser extends SwatchPanel implements ChooserCompo
         if (callback != null) callback.accept(getSelectedColor());
     }
 
+    @Override
     protected void initValues() {
         swatchSize = UIManager.getDimension("ColorChooser.swatchesSwatchSize", getLocale());
         numSwatches = new Dimension(30, 15);
@@ -104,5 +105,6 @@ public class PopupColorSwatchChooser extends SwatchPanel implements ChooserCompo
         return tipText != null ? tipText : super.getToolTipText(e);
     }
 
+    @Override
     protected void initColors() {}
 }

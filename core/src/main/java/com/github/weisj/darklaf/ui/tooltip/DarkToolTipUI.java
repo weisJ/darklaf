@@ -235,6 +235,7 @@ public class DarkToolTipUI extends BasicToolTipUI
         return effectiveTipText;
     }
 
+    @Override
     public Dimension getPreferredSize(final JComponent c) {
         Font font = c.getFont();
         FontMetrics fm = c.getFontMetrics(font);

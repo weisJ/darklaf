@@ -245,6 +245,7 @@ public class DarkSliderUI extends BasicSliderUI {
         super.calculateLabelRect();
     }
 
+    @Override
     protected void calculateThumbLocation() {
         if (slider.getOrientation() == JSlider.HORIZONTAL) {
             int valuePosition = xPositionForValue(slider.getValue());
@@ -274,6 +275,7 @@ public class DarkSliderUI extends BasicSliderUI {
      *
      * @param direction the direction
      */
+    @Override
     public void scrollByBlock(final int direction) {
         // noinspection SynchronizeOnNonFinalField
         synchronized (slider) {
@@ -304,6 +306,7 @@ public class DarkSliderUI extends BasicSliderUI {
      *
      * @param direction the direction
      */
+    @Override
     public void scrollByUnit(final int direction) {
         // noinspection SynchronizeOnNonFinalField
         synchronized (slider) {
@@ -391,6 +394,7 @@ public class DarkSliderUI extends BasicSliderUI {
         return (int) (maxPrefWidth * (1f - adj));
     }
 
+    @Override
     public Dimension getPreferredHorizontalSize() {
         Dimension dim = super.getPreferredHorizontalSize();
         Rectangle rect = new Rectangle(0, 0, 0, 0);
@@ -811,6 +815,7 @@ public class DarkSliderUI extends BasicSliderUI {
     public class SnapTrackListener extends TrackListener {
         private int offset;
 
+        @Override
         public void mousePressed(final MouseEvent evt) {
             int pos = isHorizontal() ? evt.getX() : evt.getY();
             int loc = getLocationForValue(getSnappedValue(evt));

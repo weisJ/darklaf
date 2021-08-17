@@ -74,6 +74,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI implements MenuItemUI {
         LazyActionMap.installLazyActionMap(menuItem, DarkMenuItemUIBase.class, getPropertyPrefix() + ".actionMap");
     }
 
+    @Override
     public void paint(final Graphics g, final JComponent c) {
         paintMenuItem(g, c, checkIcon, arrowIcon, selectionBackground,
                 isSelected(c) ? selectionForeground : c.getForeground(), defaultTextIconGap);
@@ -91,6 +92,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI implements MenuItemUI {
         paintMenuItemImpl(g, c, checkIcon, arrowIcon, defaultTextIconGap);
     }
 
+    @Override
     public MenuItemLayoutHelper getMenuItemLayoutHelper(final Icon checkIcon, final Icon arrowIcon,
             final int defaultTextIconGap, final JMenuItem mi, final Rectangle viewRect) {
         return getMenuItemLayoutHelperImpl(acceleratorDelimiter, acceleratorFont, getPropertyPrefix(), checkIcon,
@@ -182,6 +184,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI implements MenuItemUI {
             super(key);
         }
 
+        @Override
         public void actionPerformed(final ActionEvent e) {
             JMenuItem mi = (JMenuItem) e.getSource();
             MenuSelectionManager.defaultManager().clearSelectedPath();

@@ -45,6 +45,7 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
     @Override
     public void removeLayoutComponent(final Component comp) {}
 
+    @Override
     public void addLayoutComponent(final Component comp, final Object constraints) {}
 
 
@@ -52,6 +53,7 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
         return root.getJMenuBar() != null && root.getJMenuBar().getParent() == root.getLayeredPane();
     }
 
+    @Override
     public Dimension preferredLayoutSize(final Container parent) {
         Dimension cpd, mbd, tpd;
         int cpWidth = 0;
@@ -98,6 +100,7 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
                 cpHeight + mbHeight + tpHeight + i.top + i.bottom);
     }
 
+    @Override
     public Dimension minimumLayoutSize(final Container parent) {
         Dimension cpd, mbd, tpd;
         int cpWidth = 0;
@@ -149,6 +152,7 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
         return null;
     }
 
+    @Override
     public void layoutContainer(final Container parent) {
         JRootPane root = (JRootPane) parent;
         Rectangle b = root.getBounds();
@@ -191,6 +195,7 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
         }
     }
 
+    @Override
     public Dimension maximumLayoutSize(final Container target) {
         Dimension cpd, mbd, tpd;
         int cpWidth = Integer.MAX_VALUE;
@@ -243,13 +248,16 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
         return new Dimension(maxWidth, maxHeight);
     }
 
+    @Override
     public float getLayoutAlignmentX(final Container target) {
         return 0.0f;
     }
 
+    @Override
     public float getLayoutAlignmentY(final Container target) {
         return 0.0f;
     }
 
+    @Override
     public void invalidateLayout(final Container target) {}
 }

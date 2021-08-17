@@ -108,6 +108,7 @@ public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
         acceleratorTextOffset = UIManager.getInt(getPropertyPrefix() + ".acceleratorTextOffset");
     }
 
+    @Override
     public void paint(final Graphics g, final JComponent c) {
         paintMenuItemImpl(g, c, checkIcon, getArrowIcon(), defaultTextIconGap);
     }

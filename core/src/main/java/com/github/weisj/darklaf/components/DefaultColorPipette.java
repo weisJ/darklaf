@@ -124,6 +124,7 @@ public class DefaultColorPipette extends ColorPipetteBase {
         return p;
     }
 
+    @Override
     protected void updatePipette(final boolean force) {
         Window pickerWindow = getPickerWindow();
         if (pickerWindow != null && pickerWindow.isShowing()) {

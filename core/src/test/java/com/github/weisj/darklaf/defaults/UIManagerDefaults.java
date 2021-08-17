@@ -272,6 +272,7 @@ public class UIManagerDefaults extends BaseComponentDemo implements ItemListener
     /*
      * Implement the ItemListener interface
      */
+    @Override
     public void itemStateChanged(final ItemEvent e) {
         final String itemName = (String) e.getItem();
         changeTableModel(itemName);

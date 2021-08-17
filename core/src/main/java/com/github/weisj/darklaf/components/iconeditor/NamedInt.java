@@ -43,6 +43,7 @@ class NamedInt implements Named {
         return Objects.equals(name, namedInt.name);
     }
 
+    @Override
     public String getName() {
         return name;
     }

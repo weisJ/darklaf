@@ -33,6 +33,7 @@ class NamedColor extends ColorWrapper implements Named {
         this.name = name;
     }
 
+    @Override
     public String getName() {
         return name;
     }

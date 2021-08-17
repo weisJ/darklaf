@@ -98,6 +98,7 @@ public class InternalFrameDemo extends BaseComponentDemo implements ActionListen
     }
 
     // React to menu selections.
+    @Override
     public void actionPerformed(final ActionEvent e) {
         if ("new".equals(e.getActionCommand())) {
             createFrame();

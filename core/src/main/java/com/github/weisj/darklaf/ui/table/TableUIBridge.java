@@ -120,6 +120,7 @@ public abstract class TableUIBridge extends BasicTableUI {
     // Factory methods for the Listeners
     //
 
+    @Override
     public void installUI(final JComponent c) {
         table = (JTable) c;
         super.installUI(c);
@@ -135,12 +136,14 @@ public abstract class TableUIBridge extends BasicTableUI {
      *
      * @see #installUI #installUI
      */
+    @Override
     protected void installDefaults() {
         super.installDefaults();
         isFileList = PropertyUtil.getBooleanProperty(table, DarkTableUI.KEY_IS_FILE_LIST);
     }
 
     /** Attaches listeners to the JTable. */
+    @Override
     protected void installListeners() {
         super.installListeners();
         mouseInputListener = createMouseInputListener();
@@ -158,6 +161,7 @@ public abstract class TableUIBridge extends BasicTableUI {
      *
      * @return the mouse listener for the {@code JTable}
      */
+    @Override
     protected MouseInputListener createMouseInputListener() {
         return getHandler();
     }
@@ -191,6 +195,7 @@ public abstract class TableUIBridge extends BasicTableUI {
         return null;
     }
 
+    @Override
     public void uninstallUI(final JComponent c) {
         uninstallDefaults();
         uninstallListeners();
@@ -202,6 +207,7 @@ public abstract class TableUIBridge extends BasicTableUI {
     }
 
     /** Uninstalls default properties. */
+    @Override
     protected void uninstallDefaults() {
         if (table.getTransferHandler() instanceof UIResource) {
             table.setTransferHandler(null);
@@ -211,6 +217,7 @@ public abstract class TableUIBridge extends BasicTableUI {
     // Uninstallation
 
     /** Unregisters listeners. */
+    @Override
     protected void uninstallListeners() {
         table.removeFocusListener(focusListener);
         table.removeKeyListener(keyListener);
@@ -227,18 +234,21 @@ public abstract class TableUIBridge extends BasicTableUI {
     }
 
     /** Unregisters keyboard actions. */
+    @Override
     protected void uninstallKeyboardActions() {
         SwingUtilities.replaceUIInputMap(table, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT, null);
         SwingUtilities.replaceUIActionMap(table, null);
     }
 
     /** Paint a representation of the <code>table</code> instance that was set in installUI(). */
+    @Override
     public abstract void paint(final Graphics g, final JComponent c);
 
     /**
      * Return the preferred size of the table. The preferred height is the row height times the number
      * of rows. The preferred width is the sum of the preferred widths of each column.
      */
+    @Override
     public Dimension getPreferredSize(final JComponent c) {
         long width = 0;
         Enumeration<TableColumn> enumeration = table.getColumnModel().getColumns();
@@ -253,6 +263,7 @@ public abstract class TableUIBridge extends BasicTableUI {
      * Return the minimum size of the table. The minimum height is the row height times the number of
      * rows. The minimum width is the sum of the minimum widths of each column.
      */
+    @Override
     public Dimension getMinimumSize(final JComponent c) {
         long width = 0;
         Enumeration<TableColumn> enumeration = table.getColumnModel().getColumns();
@@ -267,6 +278,7 @@ public abstract class TableUIBridge extends BasicTableUI {
      * Return the maximum size of the table. The maximum height is the row heighttimes the number of
      * rows. The maximum width is the sum of the maximum widths of each column.
      */
+    @Override
     public Dimension getMaximumSize(final JComponent c) {
         long width = 0;
         Enumeration<TableColumn> enumeration = table.getColumnModel().getColumns();
@@ -289,6 +301,7 @@ public abstract class TableUIBridge extends BasicTableUI {
      * @see javax.swing.JComponent#getBaseline(int, int)
      * @since 1.6
      */
+    @Override
     public int getBaseline(final JComponent c, final int width, final int height) {
         super.getBaseline(c, width, height);
         UIDefaults lafDefaults = UIManager.getLookAndFeelDefaults();
@@ -310,6 +323,7 @@ public abstract class TableUIBridge extends BasicTableUI {
      * @see javax.swing.JComponent#getBaseline(int, int)
      * @since 1.6
      */
+    @Override
     public Component.BaselineResizeBehavior getBaselineResizeBehavior(final JComponent c) {
         super.getBaselineResizeBehavior(c);
         return Component.BaselineResizeBehavior.CONSTANT_ASCENT;
@@ -567,8 +581,10 @@ public abstract class TableUIBridge extends BasicTableUI {
             if (keyListener != null) keyListener.keyTyped(e);
         }
 
+        @Override
         public void mouseClicked(final MouseEvent e) {}
 
+        @Override
         public void mousePressed(final MouseEvent e) {
             if (SwingUtil.shouldIgnore(e, table)) {
                 return;
@@ -603,6 +619,7 @@ public abstract class TableUIBridge extends BasicTableUI {
             }
         }
 
+        @Override
         public void mouseReleased(final MouseEvent e) {
             if (SwingUtil.shouldIgnore(e, table)) {
                 return;
@@ -787,8 +804,10 @@ public abstract class TableUIBridge extends BasicTableUI {
             adjustSelection(e);
         }
 
+        @Override
         public void mouseEntered(final MouseEvent e) {}
 
+        @Override
         public void mouseExited(final MouseEvent e) {}
 
         /**
@@ -825,6 +844,7 @@ public abstract class TableUIBridge extends BasicTableUI {
             table.getColumnModel().getSelectionModel().setValueIsAdjusting(flag);
         }
 
+        @Override
         public void valueChanged(final ListSelectionEvent e) {
             if (timer != null) {
                 timer.stop();
@@ -832,6 +852,7 @@ public abstract class TableUIBridge extends BasicTableUI {
             }
         }
 
+        @Override
         public void actionPerformed(final ActionEvent ae) {
             table.editCellAt(pressedRow, pressedCol, null);
             Component editorComponent = table.getEditorComponent();
@@ -840,6 +861,7 @@ public abstract class TableUIBridge extends BasicTableUI {
             }
         }
 
+        @Override
         public void dragStarting(final MouseEvent me) {
             dragStarted = true;
 
@@ -851,6 +873,7 @@ public abstract class TableUIBridge extends BasicTableUI {
             pressedEvent = null;
         }
 
+        @Override
         public void mouseDragged(final MouseEvent e) {
             if (SwingUtil.shouldIgnore(e, table)) {
                 return;
@@ -881,9 +904,11 @@ public abstract class TableUIBridge extends BasicTableUI {
             table.changeSelection(row, column, DarkUIUtil.isMenuShortcutKeyDown(e), true);
         }
 
+        @Override
         public void mouseMoved(final MouseEvent e) {}
 
         // PropertyChangeListener
+        @Override
         public void propertyChange(final PropertyChangeEvent event) {
             String changeName = event.getPropertyName();
             if (DarkTableUI.KEY_IS_FILE_LIST.equals(changeName)) {

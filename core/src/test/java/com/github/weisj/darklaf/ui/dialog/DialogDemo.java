@@ -165,6 +165,7 @@ public class DialogDemo extends JPanel {
                 dialog.setContentPane(optionPane);
                 dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
                 dialog.addWindowListener(new WindowAdapter() {
+                    @Override
                     public void windowClosing(final WindowEvent we) {
                         setLabel("Thwarted user attempt to close window.");
                     }

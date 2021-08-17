@@ -44,16 +44,19 @@ public class DefaultLayerLayout implements LayoutManager, Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void addLayoutComponent(final String name, final Component comp) {}
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void removeLayoutComponent(final Component comp) {}
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public Dimension preferredLayoutSize(final Container parent) {
         JLayer<?> layer = (JLayer<?>) parent;
         Insets insets = layer.getInsets();
@@ -72,6 +75,7 @@ public class DefaultLayerLayout implements LayoutManager, Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Dimension minimumLayoutSize(final Container parent) {
         JLayer<?> layer = (JLayer<?>) parent;
         Insets insets = layer.getInsets();
@@ -92,6 +96,7 @@ public class DefaultLayerLayout implements LayoutManager, Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void layoutContainer(final Container parent) {
         JLayer<?> layer = (JLayer<?>) parent;
         Component view = layer.getView();

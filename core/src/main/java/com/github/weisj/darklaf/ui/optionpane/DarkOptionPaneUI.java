@@ -52,6 +52,7 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
         return bottom;
     }
 
+    @Override
     protected boolean getSizeButtonsToSameWidth() {
         return UIManager.getBoolean("OptionPane.sameSizeButtons");
     }
@@ -102,6 +103,7 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
          *
          * @param newValue if the width of children should be synchronized
          */
+        @Override
         public void setSyncAllWidths(final boolean newValue) {
             syncAllWidths = newValue;
         }
@@ -111,6 +113,7 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
          *
          * @return if the width of children should be synchronized
          */
+        @Override
         public boolean getSyncAllWidths() {
             return syncAllWidths && !syncAllWidthOverwrite;
         }
@@ -120,6 +123,7 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
          *
          * @param newPadding the new padding
          */
+        @Override
         public void setPadding(final int newPadding) {
             this.padding = newPadding;
         }
@@ -129,6 +133,7 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
          *
          * @return the padding
          */
+        @Override
         public int getPadding() {
             return padding;
         }
@@ -138,6 +143,7 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
          *
          * @param newValue a new value
          */
+        @Override
         public void setCentersChildren(final boolean newValue) {
             centersChildren = newValue;
             useOrientation = false;
@@ -148,6 +154,7 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
          *
          * @return whether or not center children should be used
          */
+        @Override
         public boolean getCentersChildren() {
             return centersChildren;
         }
@@ -170,8 +177,10 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
             return SwingConstants.LEFT;
         }
 
+        @Override
         public void addLayoutComponent(final String string, final Component comp) {}
 
+        @Override
         public void layoutContainer(final Container container) {
             Component[] children = container.getComponents();
 
@@ -246,6 +255,7 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
             syncAllWidthOverwrite = false;
         }
 
+        @Override
         public Dimension minimumLayoutSize(final Container c) {
             if (c != null) {
                 Component[] children = c.getComponents();
@@ -284,10 +294,12 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
             return new Dimension(0, 0);
         }
 
+        @Override
         public Dimension preferredLayoutSize(final Container c) {
             return minimumLayoutSize(c);
         }
 
+        @Override
         public void removeLayoutComponent(final Component c) {}
     }
 }

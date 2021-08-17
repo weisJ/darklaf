@@ -116,6 +116,7 @@ public class TabbedPopup extends PanelPopup {
         super.setUI(ui);
     }
 
+    @Override
     public TabFrameTabbedPopupUI getPopupUI() {
         return (TabFrameTabbedPopupUI) super.getPopupUI();
     }
@@ -126,6 +127,7 @@ public class TabbedPopup extends PanelPopup {
      * @return the selected component.
      * @see #getTabbedPane()
      */
+    @Override
     public Component getContentPane() {
         return tabbedPane.getSelectedComponent();
     }
@@ -137,6 +139,7 @@ public class TabbedPopup extends PanelPopup {
      *
      * @param component the component to add.
      */
+    @Override
     public void setContentPane(final Component component) {
         if (component == null) return;
         if (getContentPanes().contains(component)) {

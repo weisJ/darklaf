@@ -152,6 +152,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         dashGapLength = UIManager.getInt("Tree.dash.gaplength");
     }
 
+    @Override
     protected CellRendererPane createCellRendererPane() {
         return new DarkCellRendererPane();
     }
@@ -618,6 +619,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         return true;
     }
 
+    @Override
     protected void ensureRowsAreVisible(int beginRow, int endRow) {
         if (tree != null && beginRow >= 0 && endRow < getRowCount(tree)) {
             boolean scrollVert = UIManager.getBoolean("Tree.scrollsHorizontallyAndVertically");

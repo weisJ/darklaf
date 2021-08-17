@@ -42,6 +42,7 @@ public class DarkPreviewPanel extends JPanel {
 
     private Color oldColor = null;
 
+    @Override
     public void paintComponent(final Graphics g) {
         if (oldColor == null) oldColor = getForeground();
 
@@ -59,6 +60,7 @@ public class DarkPreviewPanel extends JPanel {
         }
     }
 
+    @Override
     public Dimension getPreferredSize() {
         JComponent host = getColorChooser();
         if (host == null) {

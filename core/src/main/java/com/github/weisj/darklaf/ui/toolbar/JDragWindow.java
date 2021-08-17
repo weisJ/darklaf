@@ -65,12 +65,14 @@ public abstract class JDragWindow extends JWindow {
         this.offset = p;
     }
 
+    @Override
     public void paint(final Graphics g) {
         paintDragWindow(g);
         // Paint the children
         super.paint(g);
     }
 
+    @Override
     public Insets getInsets() {
         return new Insets(1, 1, 1, 1);
     }

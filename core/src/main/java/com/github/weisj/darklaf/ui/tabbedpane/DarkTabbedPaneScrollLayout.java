@@ -37,6 +37,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         this.ui = ui;
     }
 
+    @Override
     public void layoutContainer(final Container parent) {
         int tabPlacement = ui.tabPane.getTabPlacement();
         Insets insets = ui.tabPane.getInsets();

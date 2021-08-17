@@ -49,6 +49,7 @@ public class DarkSeparatorUI extends BasicSeparatorUI {
         if (insets == null) insets = new Insets(0, 0, 0, 0);
     }
 
+    @Override
     public void paint(final Graphics g, final JComponent c) {
         if (!(c instanceof JSeparator)) return;
         checkSize(c);
@@ -91,6 +92,7 @@ public class DarkSeparatorUI extends BasicSeparatorUI {
         resizeLock = false;
     }
 
+    @Override
     @SuppressWarnings("SuspiciousNameCombination")
     public Dimension getPreferredSize(final JComponent c) {
         if (c == null) return new Dimension(size);
@@ -101,10 +103,12 @@ public class DarkSeparatorUI extends BasicSeparatorUI {
         }
     }
 
+    @Override
     public Dimension getMinimumSize(final JComponent c) {
         return null;
     }
 
+    @Override
     public Dimension getMaximumSize(final JComponent c) {
         return null;
     }

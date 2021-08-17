@@ -36,6 +36,7 @@ public class DarkNonContinuousSplitPaneDivider extends Canvas {
         setBackground(UIManager.getColor("SplitPane.background"));
     }
 
+    @Override
     public void paint(final Graphics g) {
         g.setColor(getBackground());
         PaintUtil.fillRect(g, 0, 0, getWidth(), getHeight());

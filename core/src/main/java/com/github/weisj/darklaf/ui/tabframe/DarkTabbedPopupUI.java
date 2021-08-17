@@ -98,6 +98,7 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI implements TabFrameTabbe
         return tabbedPane;
     }
 
+    @Override
     public JTabbedPane createTabbedPane() {
         return new UIDelegateTabbedPane(null);
     }
@@ -207,6 +208,7 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI implements TabFrameTabbe
             return tabBorderColor;
         }
 
+        @Override
         public Color getTabBackgroundColor(final int tabIndex, final boolean isSelected, final boolean hover) {
             if (hasFocus()) {
                 if (isSelected) {

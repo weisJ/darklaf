@@ -212,6 +212,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         map.put(new Actions(Actions.SCROLL_BACKWARD));
     }
 
+    @Override
     public void installUI(final JComponent c) {
         this.tabPane = (JTabbedPane) c;
 
@@ -226,6 +227,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         installKeyboardActions();
     }
 
+    @Override
     public void uninstallUI(final JComponent c) {
         uninstallKeyboardActions();
         uninstallListeners();
@@ -312,13 +314,16 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         tabContainer = null;
     }
 
+    @Override
     public abstract void paint(final Graphics g, final JComponent c);
 
+    @Override
     public Dimension getMinimumSize(final JComponent c) {
         // Default to LayoutManager's minimumLayoutSize
         return null;
     }
 
+    @Override
     public Dimension getMaximumSize(final JComponent c) {
         // Default to LayoutManager's maximumLayoutSize
         return null;
@@ -332,6 +337,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * @see javax.swing.JComponent#getBaseline(int, int)
      * @since 1.6
      */
+    @Override
     public int getBaseline(final JComponent c, final int width, final int height) {
         super.getBaseline(c, width, height);
         int baseline = calculateBaselineIfNecessary();
@@ -360,6 +366,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * @see javax.swing.JComponent#getBaseline(int, int)
      * @since 1.6
      */
+    @Override
     public Component.BaselineResizeBehavior getBaselineResizeBehavior(final JComponent c) {
         super.getBaselineResizeBehavior(c);
         switch (tabPane.getTabPlacement()) {
@@ -1113,6 +1120,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     /**
      * Returns the tab index which intersects the specified point in the JTabbedPane's coordinate space.
      */
+    @Override
     public int tabForCoordinate(final JTabbedPane pane, final int x, final int y) {
         return tabForCoordinate(pane, x, y, true);
     }
@@ -1123,12 +1131,14 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * Returns the bounds of the specified tab index. The bounds are with respect to the JTabbedPane's
      * coordinate space.
      */
+    @Override
     public Rectangle getTabBounds(final JTabbedPane pane, final int i) {
         ensureCurrentLayout();
         Rectangle tabRect = new Rectangle();
         return getTabBounds(i, tabRect);
     }
 
+    @Override
     public int getTabRunCount(final JTabbedPane pane) {
         ensureCurrentLayout();
         return runCount;
@@ -2039,6 +2049,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             super(key);
         }
 
+        @Override
         public void actionPerformed(final ActionEvent e) {
             String key = getName();
             JTabbedPane pane = (JTabbedPane) e.getSource();
@@ -2112,6 +2123,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             setOpaque(false);
         }
 
+        @Override
         public void remove(final Component comp) {
             int index = tabPane.indexOfTabComponent(comp);
             super.remove(comp);
@@ -2120,6 +2132,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             }
         }
 
+        @Override
         public void doLayout() {
             // We layout tabComponents in JTabbedPane's layout manager
             // and use this method as a hook for repainting tabs
@@ -2143,6 +2156,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             }
         }
 
+        @Override
         public boolean isOptimizedDrawingEnabled() {
             return true;
         }

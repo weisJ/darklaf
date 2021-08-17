@@ -37,19 +37,24 @@ public abstract class TabbedPaneLayout implements LayoutManager {
         this.ui = ui;
     }
 
+    @Override
     public void addLayoutComponent(final String name, final Component comp) {}
 
+    @Override
     public void removeLayoutComponent(final Component comp) {}
 
+    @Override
     public Dimension preferredLayoutSize(final Container parent) {
         return calculateSize(false);
     }
 
+    @Override
     public Dimension minimumLayoutSize(final Container parent) {
         return calculateSize(true);
     }
 
     /** {@inheritDoc} */
+    @Override
     @SuppressWarnings("deprecation")
     public void layoutContainer(final Container parent) {
         /*

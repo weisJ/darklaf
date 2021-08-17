@@ -52,6 +52,7 @@ public class DefaultTreeTableCellRenderer extends JComponent implements TableCel
         }
     }
 
+    @Override
     public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
             final boolean hasFocus, final int row, final int column) {
         paintingRow = row;
@@ -68,6 +69,7 @@ public class DefaultTreeTableCellRenderer extends JComponent implements TableCel
         private boolean focus;
         private boolean selectable;
 
+        @Override
         public void setRowHeight(final int rowHeight) {
             if (rowHeight > 0) {
                 super.setRowHeight(rowHeight);
