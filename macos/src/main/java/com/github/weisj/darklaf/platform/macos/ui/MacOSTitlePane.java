@@ -98,6 +98,7 @@ public class MacOSTitlePane extends CustomTitlePane {
         return rootPane;
     }
 
+    @Override
     public void paintComponent(final Graphics g) {
         Window window = getWindow();
         boolean active = window == null || window.isActive();
@@ -119,6 +120,7 @@ public class MacOSTitlePane extends CustomTitlePane {
         return window;
     }
 
+    @Override
     public void install() {
         determineColors();
         JRootPane rootPane = getRootPane();
@@ -272,16 +274,19 @@ public class MacOSTitlePane extends CustomTitlePane {
 
     protected class WindowHandler extends WindowAdapter {
 
+        @Override
         public void windowActivated(final WindowEvent ev) {
             titleLabel.setForeground(activeForeground);
         }
 
+        @Override
         public void windowDeactivated(final WindowEvent ev) {
             titleLabel.setForeground(inactiveForeground);
         }
     }
 
     protected class PropertyChangeHandler implements PropertyChangeListener {
+        @Override
         public void propertyChange(final PropertyChangeEvent pce) {
             String name = pce.getPropertyName();
             if (PropertyKey.TITLE.equals(name)) {
