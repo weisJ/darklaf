@@ -25,7 +25,9 @@ import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.theme.laf.SynthesisedThemedLaf;
 import com.github.weisj.darklaf.theme.laf.ThemedLookAndFeel;
 import com.google.auto.service.AutoService;
+import com.google.errorprone.annotations.Immutable;
 
+@Immutable
 @AutoService(SynthesisedThemedLaf.ThemedLafProvider.class)
 public class ThemedDarkLafProvider implements SynthesisedThemedLaf.ThemedLafProvider {
     @Override

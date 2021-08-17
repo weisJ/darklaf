@@ -23,6 +23,7 @@ dependencies {
 
     compileOnly(libs.nullabilityAnnotations)
     compileOnly(libs.swingx)
+    compileOnly(libs.tools.errorprone.annotations)
     compileOnly(libs.autoservice.annotations)
     annotationProcessor(libs.autoservice.processor)
 
