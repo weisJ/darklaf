@@ -24,6 +24,7 @@
  */
 open module darklaf.iconset {
     requires darklaf.properties;
+    requires static java.annotation;
 
     exports com.github.weisj.darklaf.iconset;
 }

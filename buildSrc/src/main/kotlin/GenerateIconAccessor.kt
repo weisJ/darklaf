@@ -2,7 +2,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.util.*
 
-fun createIconAccessor(propertyFile: File, className: String): String {
+fun createIconAccessor(propertyFile: File, packageName : String, className: String): String {
     class Property(val name: String?, val path: String)
     class AccessorTreeNode(
         val nodes: MutableMap<String, AccessorTreeNode>,
@@ -51,6 +51,7 @@ fun createIconAccessor(propertyFile: File, className: String): String {
             createAccessorClass(it.key, it.value)
         }.replace("\n", "\n    ")
         return """
+            |@javax.annotation.Generated(value = {"GenerateIconAccessor"})
             |public ${if (topLevel) "" else "static "}final class ${name.capitalize()} {
             |    $properties
             |    $subNodes
@@ -59,7 +60,7 @@ fun createIconAccessor(propertyFile: File, className: String): String {
     }
 
     return """
-        |package com.github.weisj.darklaf.iconset;
+        |package $packageName;
         |
         |import javax.swing.Icon;
         |

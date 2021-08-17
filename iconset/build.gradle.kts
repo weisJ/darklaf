@@ -9,6 +9,7 @@ plugins {
 
 dependencies {
     api(projects.darklafPropertyLoader)
+    compileOnly(libs.javaxAnnotations)
 }
 
 fun Jar.includeLicenses() {
@@ -36,9 +37,11 @@ val generateIconAccessor by tasks.registering {
             val propertyFile = project.file("iconAccessorSpec.properties")
             val allIconsName = "AllIcons"
             generatedDir.mkdirs()
-            generatedDir.resolve("$allIconsName.java").apply {
+            val packageName = "com.github.weisj.darklaf.iconset"
+            generatedDir.resolve("${packageName.replace('.', '/')}/$allIconsName.java").apply {
+                parentFile.mkdirs()
                 createNewFile()
-                writeText(createIconAccessor(propertyFile, allIconsName))
+                writeText(createIconAccessor(propertyFile, packageName, allIconsName))
             }
         }
     }
