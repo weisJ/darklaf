@@ -23,9 +23,8 @@ package com.github.weisj.darklaf.theme.laf;
 
 import java.util.ServiceLoader;
 
-import javax.swing.*;
-
 import com.github.weisj.darklaf.theme.Theme;
+import com.google.errorprone.annotations.Immutable;
 
 public class SynthesisedThemedLaf extends DelegatingThemedLaf {
 
@@ -33,6 +32,7 @@ public class SynthesisedThemedLaf extends DelegatingThemedLaf {
         super(theme, BaseLafProvider.INSTANCE.createBaseLaf());
     }
 
+    @Immutable
     public interface ThemedLafProvider {
         ThemedLookAndFeel create();
     }

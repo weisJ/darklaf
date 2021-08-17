@@ -63,7 +63,7 @@ public class AccentColorRule implements Serializable {
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof AccentColorRule)) return false;
         AccentColorRule that = (AccentColorRule) o;
         if (!Objects.equals(accentColor, that.accentColor)) return false;
         return Objects.equals(selectionColor, that.selectionColor);

@@ -23,7 +23,6 @@ package com.github.weisj.darklaf.theme;
 
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.Comparator;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -38,8 +37,13 @@ import com.github.weisj.darklaf.theme.info.*;
 import com.github.weisj.darklaf.theme.laf.RenamedTheme;
 import com.github.weisj.darklaf.util.LogUtil;
 
-/** @author Jannis Weis */
-public abstract class Theme implements Comparable<Theme>, Comparator<Theme>, Serializable {
+/**
+ * A {@link Theme} is responsible for providing colors and customizing properties used by the
+ * darklaf look and feel.
+ *
+ * @author Jannis Weis
+ */
+public abstract class Theme implements Comparable<Theme>, Serializable {
     private static final Logger LOGGER = LogUtil.getLogger(Theme.class);
 
     private final FontSizeRule fontSizeRule;
@@ -451,12 +455,6 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme>, Ser
         return stringComp;
     }
 
-    @Override
-    public int compare(final Theme o1, final Theme o2) {
-        if (o1 == null) return -1;
-        return o1.compareTo(o2);
-    }
-
     public Class<? extends Theme> getThemeClass() {
         return getClass();
     }
@@ -471,7 +469,7 @@ public abstract class Theme implements Comparable<Theme>, Comparator<Theme>, Ser
     public int hashCode() {
         int result = fontSizeRule != null ? fontSizeRule.hashCode() : 0;
         result = 31 * result + (accentColorRule != null ? accentColorRule.hashCode() : 0);
-        result = 31 * result + (getThemeClass().hashCode());
+        result = 31 * result + getThemeClass().hashCode();
         return result;
     }
 

@@ -23,6 +23,7 @@ package com.github.weisj.darklaf.theme.event;
 
 public interface ThemePreferenceListener extends ThemeEventListener<ThemePreferenceChangeEvent> {
 
+    @Override
     default void onEvent(final ThemePreferenceChangeEvent event) {
         themePreferenceChanged(event);
     }

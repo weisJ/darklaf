@@ -31,7 +31,11 @@ import com.github.weisj.darklaf.theme.info.ColorToneRule;
 import com.github.weisj.darklaf.theme.info.PresetIconRule;
 import com.google.auto.service.AutoService;
 
-/** @author Jannis Weis */
+/**
+ * A theme following the default IntelliJ color scheme.
+ *
+ * @author Jannis Weis
+ */
 @AutoService(Theme.class)
 @SynthesiseLaf
 public class IntelliJTheme extends Theme {
