@@ -356,11 +356,11 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
 
     protected static final class HeaderButton extends JButton implements UIResource {
 
-        private final DarkPanelPopupUI ui;
+        private final DarkPanelPopupUI popupUI;
 
-        public HeaderButton(final Icon icon, final DarkPanelPopupUI ui) {
+        public HeaderButton(final Icon icon, final DarkPanelPopupUI popupUI) {
             super(icon);
-            this.ui = ui;
+            this.popupUI = popupUI;
             setName("headerButton");
             putClientProperty(DarkButtonUI.KEY_SQUARE, true);
             putClientProperty(DarkButtonUI.KEY_THIN, true);
@@ -377,9 +377,9 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
 
         public void setFocus(final boolean focus) {
             putClientProperty(DarkButtonUI.KEY_HOVER_COLOR,
-                    focus ? ui.headerButtonFocusHoverBackground : ui.headerButtonHoverBackground);
+                    focus ? popupUI.headerButtonFocusHoverBackground : popupUI.headerButtonHoverBackground);
             putClientProperty(DarkButtonUI.KEY_CLICK_COLOR,
-                    focus ? ui.headerButtonFocusClickBackground : ui.headerButtonClickBackground);
+                    focus ? popupUI.headerButtonFocusClickBackground : popupUI.headerButtonClickBackground);
         }
     }
 }

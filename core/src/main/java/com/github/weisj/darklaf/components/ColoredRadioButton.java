@@ -151,7 +151,6 @@ public class ColoredRadioButton extends JRadioButton {
 
         private Icon stateIcon;
         private Color color;
-        private Color focusColor;
 
         private Color patchedColor;
         private Color patchedFocusColor;

@@ -356,8 +356,8 @@ public class DarkToolTipUI extends BasicToolTipUI
         return style.supportsPointer();
     }
 
-    protected void updateTipText(final JToolTip tooltip) {
-        effectiveTipText = tooltip.getTipText();
+    protected void updateTipText(final JToolTip toolTip) {
+        effectiveTipText = toolTip.getTipText();
         if (effectiveTipText == null) effectiveTipText = "";
     }
 

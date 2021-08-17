@@ -27,11 +27,11 @@ import javax.swing.*;
 import javax.swing.plaf.UIResource;
 
 public class ScrollableTabPanel extends JPanel implements UIResource {
-    private final DarkTabbedPaneUIBridge ui;
+    private final DarkTabbedPaneUIBridge tabbedPaneUI;
 
     public ScrollableTabPanel(final DarkTabbedPaneUIBridge ui) {
         super(null);
-        this.ui = ui;
+        this.tabbedPaneUI = ui;
         setOpaque(ui.tabPane.isOpaque());
         Color bgColor = UIManager.getColor("TabbedPane.tabAreaBackground");
         if (bgColor == null) {
@@ -43,7 +43,7 @@ public class ScrollableTabPanel extends JPanel implements UIResource {
     @Override
     public void paintComponent(final Graphics g) {
         super.paintComponent(g);
-        ui.paintTabArea(g, ui.tabPane.getTabPlacement(), ui.tabPane.getSelectedIndex());
+        tabbedPaneUI.paintTabArea(g, tabbedPaneUI.tabPane.getTabPlacement(), tabbedPaneUI.tabPane.getSelectedIndex());
     }
 
     @Override

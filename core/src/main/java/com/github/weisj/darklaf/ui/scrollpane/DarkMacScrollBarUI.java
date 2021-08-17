@@ -105,7 +105,7 @@ public class DarkMacScrollBarUI extends DarkScrollBarUI {
         }
 
         @Override
-        protected boolean animateTrackOnScroll(final JScrollBar scrollBar) {
+        protected boolean animateTrackOnScroll(final JScrollBar scrollbar) {
             return ui.hideScrollBar;
         }
 

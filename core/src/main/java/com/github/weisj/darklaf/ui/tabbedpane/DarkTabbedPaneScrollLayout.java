@@ -30,20 +30,20 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
 
-    private final DarkTabbedPaneUI ui;
+    private final DarkTabbedPaneUI tabbedPaneUI;
 
-    public DarkTabbedPaneScrollLayout(final DarkTabbedPaneUI ui) {
-        super(ui);
-        this.ui = ui;
+    public DarkTabbedPaneScrollLayout(final DarkTabbedPaneUI tabbedPaneUI) {
+        super(tabbedPaneUI);
+        this.tabbedPaneUI = tabbedPaneUI;
     }
 
     @Override
     public void layoutContainer(final Container parent) {
-        int tabPlacement = ui.tabPane.getTabPlacement();
-        Insets insets = ui.tabPane.getInsets();
-        Insets tabAreaInsets = ui.getTabAreaInsets(tabPlacement);
-        int selectedIndex = ui.tabPane.getSelectedIndex();
-        Component visibleComponent = ui.getVisibleComponent();
+        int tabPlacement = tabbedPaneUI.tabPane.getTabPlacement();
+        Insets insets = tabbedPaneUI.tabPane.getInsets();
+        Insets tabAreaInsets = tabbedPaneUI.getTabAreaInsets(tabPlacement);
+        int selectedIndex = tabbedPaneUI.tabPane.getSelectedIndex();
+        Component visibleComponent = tabbedPaneUI.getVisibleComponent();
 
         calculateLayoutInfo();
 
@@ -51,14 +51,14 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         if (selectedIndex < 0) {
             if (visibleComponent != null) {
                 // The last tab was removed, so remove the component
-                ui.setVisibleComponent(null);
+                tabbedPaneUI.setVisibleComponent(null);
             }
         } else {
-            selectedComponent = ui.tabPane.getComponentAt(selectedIndex);
+            selectedComponent = tabbedPaneUI.tabPane.getComponentAt(selectedIndex);
         }
 
-        if (ui.tabPane.getTabCount() == 0) {
-            ui.scrollableTabSupport.hideMoreTabsButton();
+        if (tabbedPaneUI.tabPane.getTabCount() == 0) {
+            tabbedPaneUI.scrollableTabSupport.hideMoreTabsButton();
             return;
         }
 
@@ -79,18 +79,19 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
                     shouldChangeFocus = true;
                 }
             }
-            ui.setVisibleComponent(selectedComponent);
+            tabbedPaneUI.setVisibleComponent(selectedComponent);
         }
         int tx, ty, tw, th; // tab area bounds
         int cx, cy, cw, ch; // content area bounds
-        Insets contentInsets = ui.getContentBorderInsets(tabPlacement);
-        Rectangle bounds = ui.tabPane.getBounds();
-        int numChildren = ui.tabPane.getComponentCount();
+        Insets contentInsets = tabbedPaneUI.getContentBorderInsets(tabPlacement);
+        Rectangle bounds = tabbedPaneUI.tabPane.getBounds();
+        int numChildren = tabbedPaneUI.tabPane.getComponentCount();
 
         if (numChildren > 0) {
             switch (tabPlacement) {
                 case SwingConstants.LEFT:
-                    tw = ui.calculateTabAreaWidth(tabPlacement, ui.runCount, ui.maxTabWidth);
+                    tw = tabbedPaneUI.calculateTabAreaWidth(tabPlacement, tabbedPaneUI.runCount,
+                            tabbedPaneUI.maxTabWidth);
                     th = bounds.height - insets.top - insets.bottom - tabAreaInsets.top - tabAreaInsets.bottom;
                     tx = insets.left + tabAreaInsets.left;
                     ty = insets.top + tabAreaInsets.top;
@@ -102,7 +103,8 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
                     tw -= tabAreaInsets.left + tabAreaInsets.right;
                     break;
                 case SwingConstants.RIGHT:
-                    tw = ui.calculateTabAreaWidth(tabPlacement, ui.runCount, ui.maxTabWidth);
+                    tw = tabbedPaneUI.calculateTabAreaWidth(tabPlacement, tabbedPaneUI.runCount,
+                            tabbedPaneUI.maxTabWidth);
                     th = bounds.height - insets.top - insets.bottom - tabAreaInsets.top - tabAreaInsets.bottom;
                     tx = bounds.width - insets.right - tw + tabAreaInsets.left;
                     ty = insets.top + tabAreaInsets.top;
@@ -114,7 +116,8 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
                     break;
                 case SwingConstants.BOTTOM:
                     tw = bounds.width - insets.left - insets.right - tabAreaInsets.left - tabAreaInsets.right;
-                    th = ui.calculateTabAreaHeight(tabPlacement, ui.runCount, ui.maxTabHeight);
+                    th = tabbedPaneUI.calculateTabAreaHeight(tabPlacement, tabbedPaneUI.runCount,
+                            tabbedPaneUI.maxTabHeight);
                     tx = insets.left + tabAreaInsets.left;
                     ty = bounds.height - insets.bottom - th + tabAreaInsets.top;
                     cx = insets.left + contentInsets.left;
@@ -125,7 +128,8 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
                     break;
                 default:
                     tw = bounds.width - insets.left - insets.right - tabAreaInsets.left - tabAreaInsets.right;
-                    th = ui.calculateTabAreaHeight(tabPlacement, ui.runCount, ui.maxTabHeight);
+                    th = tabbedPaneUI.calculateTabAreaHeight(tabPlacement, tabbedPaneUI.runCount,
+                            tabbedPaneUI.maxTabHeight);
                     tx = insets.left + tabAreaInsets.left;
                     ty = insets.top + tabAreaInsets.top;
                     cx = insets.left + contentInsets.left;
@@ -135,69 +139,72 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
                     th -= tabAreaInsets.top + tabAreaInsets.bottom;
                     break;
             }
-            JComponent moreTabs = ui.scrollableTabSupport.moreTabsButton;
-            JComponent newTab = ui.scrollableTabSupport.newTabButton;
+            JComponent moreTabs = tabbedPaneUI.scrollableTabSupport.moreTabsButton;
+            JComponent newTab = tabbedPaneUI.scrollableTabSupport.newTabButton;
 
             for (int i = 0; i < numChildren; i++) {
-                Component child = ui.tabPane.getComponent(i);
+                Component child = tabbedPaneUI.tabPane.getComponent(i);
 
-                if (ui.tabScroller != null && child == ui.tabScroller.viewport) {
+                if (tabbedPaneUI.tabScroller != null && child == tabbedPaneUI.tabScroller.viewport) {
                     int vw = tw;
                     int vh = th;
                     Dimension butSize = moreTabs.isVisible() ? moreTabs.getPreferredSize() : new Dimension(0, 0);
-                    boolean showNewTabButton = newTab.isVisible() && newTab.getParent() == ui.tabPane;
+                    boolean showNewTabButton = newTab.isVisible() && newTab.getParent() == tabbedPaneUI.tabPane;
                     Dimension butSize2 = showNewTabButton ? newTab.getPreferredSize() : new Dimension(0, 0);
-                    boolean leftToRight = ui.tabPane.getComponentOrientation().isLeftToRight();
+                    boolean leftToRight = tabbedPaneUI.tabPane.getComponentOrientation().isLeftToRight();
                     if (tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT) {
                         vh = th - butSize.height - butSize2.height;
-                        moreTabs.setBounds(tx, ty + vh + butSize2.height, ui.maxTabWidth, butSize.height);
+                        moreTabs.setBounds(tx, ty + vh + butSize2.height, tabbedPaneUI.maxTabWidth, butSize.height);
                         if (showNewTabButton) {
-                            newTab.setBounds(tx, ty + vh, ui.maxTabWidth, butSize2.height);
+                            newTab.setBounds(tx, ty + vh, tabbedPaneUI.maxTabWidth, butSize2.height);
                         }
                     } else {
                         if (leftToRight) {
                             vw = tw - butSize.width - butSize2.width;
-                            moreTabs.setBounds(tx + vw + butSize2.width, ty, butSize.width, ui.maxTabHeight);
+                            moreTabs.setBounds(tx + vw + butSize2.width, ty, butSize.width, tabbedPaneUI.maxTabHeight);
                             if (showNewTabButton) {
-                                newTab.setBounds(tx + vw, ty, butSize2.width, ui.maxTabHeight);
+                                newTab.setBounds(tx + vw, ty, butSize2.width, tabbedPaneUI.maxTabHeight);
                             }
                         } else {
                             vw = tw - butSize.width - butSize2.width;
-                            moreTabs.setBounds(tx, ty, butSize.width, ui.maxTabHeight);
+                            moreTabs.setBounds(tx, ty, butSize.width, tabbedPaneUI.maxTabHeight);
                             if (showNewTabButton) {
-                                newTab.setBounds(tx + butSize.width, ty, butSize2.width, ui.maxTabHeight);
+                                newTab.setBounds(tx + butSize.width, ty, butSize2.width, tabbedPaneUI.maxTabHeight);
                             }
                             tx += butSize.width + butSize2.width;
                         }
                     }
                     child.setBounds(tx, ty, vw, vh);
                 } else {
-                    int tabHeight = ui.maxTabHeight + tabAreaInsets.top + tabAreaInsets.bottom;
-                    int tabWidth = ui.maxTabWidth + tabAreaInsets.left + tabAreaInsets.right;
+                    int tabHeight = tabbedPaneUI.maxTabHeight + tabAreaInsets.top + tabAreaInsets.bottom;
+                    int tabWidth = tabbedPaneUI.maxTabWidth + tabAreaInsets.left + tabAreaInsets.right;
                     int compHeight = ch;
                     int compY = cy;
-                    if (ui.northComp != null) {
-                        int nh = ui.northComp.getPreferredSize().height;
+                    if (tabbedPaneUI.northComp != null) {
+                        int nh = tabbedPaneUI.northComp.getPreferredSize().height;
                         compY -= nh;
                         compHeight += nh;
                     }
-                    if (ui.southComp != null) {
-                        compHeight += ui.southComp.getPreferredSize().height;
+                    if (tabbedPaneUI.southComp != null) {
+                        compHeight += tabbedPaneUI.southComp.getPreferredSize().height;
                     }
-                    if (child == ui.leadingComp && ui.leadingComp != null) {
-                        ui.layoutLeadingComponent(child, tabWidth, tabHeight, insets, tx, ty, tabPlacement);
-                    } else if (child == ui.trailingComp && ui.trailingComp != null) {
-                        ui.layoutTrailingComponent(child, tabWidth, tabHeight, insets, tx, ty, tw, th, tabPlacement);
-                    } else if (child == ui.northComp && ui.northComp != null) {
-                        ui.northComp.setBounds(cx, cy - ui.northComp.getPreferredSize().height, cw,
-                                ui.northComp.getPreferredSize().height);
-                    } else if (child == ui.southComp && ui.southComp != null) {
-                        ui.southComp.setBounds(cx, cy + ch, cw, ui.southComp.getPreferredSize().height);
-                    } else if (child == ui.eastComp && ui.eastComp != null) {
-                        ui.eastComp.setBounds(cx + cw, compY, ui.eastComp.getPreferredSize().width, compHeight);
-                    } else if (child == ui.westComp && ui.westComp != null) {
-                        ui.westComp.setBounds(cx - ui.westComp.getPreferredSize().width, compY,
-                                ui.westComp.getPreferredSize().width, compHeight);
+                    if (child == tabbedPaneUI.leadingComp && tabbedPaneUI.leadingComp != null) {
+                        tabbedPaneUI.layoutLeadingComponent(child, tabWidth, tabHeight, insets, tx, ty, tabPlacement);
+                    } else if (child == tabbedPaneUI.trailingComp && tabbedPaneUI.trailingComp != null) {
+                        tabbedPaneUI.layoutTrailingComponent(child, tabWidth, tabHeight, insets, tx, ty, tw, th,
+                                tabPlacement);
+                    } else if (child == tabbedPaneUI.northComp && tabbedPaneUI.northComp != null) {
+                        tabbedPaneUI.northComp.setBounds(cx, cy - tabbedPaneUI.northComp.getPreferredSize().height, cw,
+                                tabbedPaneUI.northComp.getPreferredSize().height);
+                    } else if (child == tabbedPaneUI.southComp && tabbedPaneUI.southComp != null) {
+                        tabbedPaneUI.southComp.setBounds(cx, cy + ch, cw,
+                                tabbedPaneUI.southComp.getPreferredSize().height);
+                    } else if (child == tabbedPaneUI.eastComp && tabbedPaneUI.eastComp != null) {
+                        tabbedPaneUI.eastComp.setBounds(cx + cw, compY, tabbedPaneUI.eastComp.getPreferredSize().width,
+                                compHeight);
+                    } else if (child == tabbedPaneUI.westComp && tabbedPaneUI.westComp != null) {
+                        tabbedPaneUI.westComp.setBounds(cx - tabbedPaneUI.westComp.getPreferredSize().width, compY,
+                                tabbedPaneUI.westComp.getPreferredSize().width, compHeight);
                     } else if (child != moreTabs && child != newTab && child != null) {
                         child.setBounds(cx, cy, cw, ch);
                     }
@@ -205,8 +212,8 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
             }
             layoutTabComponents();
             if (shouldChangeFocus) {
-                if (!ui.requestFocusForVisibleComponent()) {
-                    ui.tabPane.requestFocusInWindow();
+                if (!tabbedPaneUI.requestFocusForVisibleComponent()) {
+                    tabbedPaneUI.tabPane.requestFocusInWindow();
                 }
             }
         }
@@ -214,15 +221,15 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
 
     @Override
     protected void layoutTabComponents() {
-        ui.layoutTabComponents();
+        tabbedPaneUI.layoutTabComponents();
     }
 
     @Override
     protected Dimension calculateSize(final boolean minimum) {
-        int tabPlacement = ui.tabPane.getTabPlacement();
-        Insets insets = ui.tabPane.getInsets();
-        Insets contentInsets = ui.getContentBorderInsets(tabPlacement);
-        Insets tabAreaInsets = ui.getTabAreaInsets(tabPlacement);
+        int tabPlacement = tabbedPaneUI.tabPane.getTabPlacement();
+        Insets insets = tabbedPaneUI.tabPane.getInsets();
+        Insets contentInsets = tabbedPaneUI.getContentBorderInsets(tabPlacement);
+        Insets tabAreaInsets = tabbedPaneUI.getTabAreaInsets(tabPlacement);
 
         int height = 0;
         int width = 0;
@@ -232,8 +239,8 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         // Determine minimum size required to display largest
         // child in each dimension
         //
-        for (int i = 0; i < ui.tabPane.getTabCount(); i++) {
-            Component component = ui.tabPane.getComponentAt(i);
+        for (int i = 0; i < tabbedPaneUI.tabPane.getTabCount(); i++) {
+            Component component = tabbedPaneUI.tabPane.getComponentAt(i);
             if (component != null) {
                 Dimension size = minimum ? component.getMinimumSize() : component.getPreferredSize();
                 if (size != null) {
@@ -250,20 +257,21 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         // Calculate how much space the tabs will need, based on the
         // minimum size required to display largest child + content border
         //
-        if (ui.tabPane.getTabCount() > 0) {
-            if (!ui.isHorizontalTabPlacement()) {
-                int tabHeight = ui.calculateTabHeight(tabPlacement, ui.tabPane.getSelectedIndex(),
-                        ui.getFontMetrics().getHeight());
-                if (ui.scrollableTabSupport.moreTabsButton.isVisible()) {
-                    tabHeight += ui.scrollableTabSupport.moreTabsButton.getPreferredSize().height;
+        if (tabbedPaneUI.tabPane.getTabCount() > 0) {
+            if (!tabbedPaneUI.isHorizontalTabPlacement()) {
+                int tabHeight = tabbedPaneUI.calculateTabHeight(tabPlacement, tabbedPaneUI.tabPane.getSelectedIndex(),
+                        tabbedPaneUI.getFontMetrics().getHeight());
+                if (tabbedPaneUI.scrollableTabSupport.moreTabsButton.isVisible()) {
+                    tabHeight += tabbedPaneUI.scrollableTabSupport.moreTabsButton.getPreferredSize().height;
                 }
                 height = Math.max(height, tabHeight);
                 tabExtent = preferredTabAreaWidth(tabPlacement, height - tabAreaInsets.top - tabAreaInsets.bottom);
                 width += tabExtent;
             } else {
-                int tabWidth = ui.calculateTabWidth(tabPlacement, ui.tabPane.getSelectedIndex(), ui.getFontMetrics());
-                if (ui.scrollableTabSupport.moreTabsButton.isVisible()) {
-                    tabWidth += ui.scrollableTabSupport.moreTabsButton.getPreferredSize().width;
+                int tabWidth = tabbedPaneUI.calculateTabWidth(tabPlacement, tabbedPaneUI.tabPane.getSelectedIndex(),
+                        tabbedPaneUI.getFontMetrics());
+                if (tabbedPaneUI.scrollableTabSupport.moreTabsButton.isVisible()) {
+                    tabWidth += tabbedPaneUI.scrollableTabSupport.moreTabsButton.getPreferredSize().width;
                 }
                 width = Math.max(width, tabWidth);
                 tabExtent = preferredTabAreaHeight(tabPlacement, width - tabAreaInsets.left - tabAreaInsets.right);
@@ -277,7 +285,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
     @SuppressWarnings("SuspiciousNameCombination")
     @Override
     protected void calculateTabRects(final int tabPlacement, final int tabCount) {
-        if (ui.scrollShiftX != 0 || ui.scrollShiftY != 0) {
+        if (tabbedPaneUI.scrollShiftX != 0 || tabbedPaneUI.scrollShiftY != 0) {
             // We don't want to recalculate the tab rects because while scrolling all additional position
             // calculates shouldn't be taken into consideration.
             // This method will be called if there are custom tab components. If they are shifted the parent is
@@ -287,37 +295,39 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
             // calculated (with the shift applied) so there is no need to recalculate here.
             return;
         }
-        FontMetrics metrics = ui.getFontMetrics();
-        Dimension size = ui.tabPane.getSize();
-        Insets insets = ui.tabPane.getInsets();
-        Insets tabAreaInsets = ui.getTabAreaInsets(tabPlacement);
-        boolean verticalTabRuns = !ui.isHorizontalTabPlacement();
-        boolean leftToRight = ui.tabPane.getComponentOrientation().isLeftToRight();
+        FontMetrics metrics = tabbedPaneUI.getFontMetrics();
+        Dimension size = tabbedPaneUI.tabPane.getSize();
+        Insets insets = tabbedPaneUI.tabPane.getInsets();
+        Insets tabAreaInsets = tabbedPaneUI.getTabAreaInsets(tabPlacement);
+        boolean verticalTabRuns = !tabbedPaneUI.isHorizontalTabPlacement();
+        boolean leftToRight = tabbedPaneUI.tabPane.getComponentOrientation().isLeftToRight();
 
-        if (!ui.isHorizontalTabPlacement()) {
-            ui.maxTabWidth = ui.calculateMaxTabWidth(tabPlacement);
+        if (!tabbedPaneUI.isHorizontalTabPlacement()) {
+            tabbedPaneUI.maxTabWidth = tabbedPaneUI.calculateMaxTabWidth(tabPlacement);
         } else {
-            ui.maxTabHeight = ui.calculateMaxTabHeight(tabPlacement);
+            tabbedPaneUI.maxTabHeight = tabbedPaneUI.calculateMaxTabHeight(tabPlacement);
         }
 
-        ui.runCount = 0;
-        ui.selectedRun = -1;
+        tabbedPaneUI.runCount = 0;
+        tabbedPaneUI.selectedRun = -1;
 
         if (tabCount == 0) return;
 
-        ui.selectedRun = 0;
-        ui.runCount = 1;
+        tabbedPaneUI.selectedRun = 0;
+        tabbedPaneUI.runCount = 1;
 
-        int tabAreaWidth = Math.max(ui.calculateTabAreaWidth(tabPlacement, 0, 0), ui.maxTabWidth);
-        int tabAreaHeight = Math.max(ui.calculateTabAreaHeight(tabPlacement, 0, 0), ui.maxTabHeight);
+        int tabAreaWidth = Math.max(tabbedPaneUI.calculateTabAreaWidth(tabPlacement, 0, 0), tabbedPaneUI.maxTabWidth);
+        int tabAreaHeight =
+                Math.max(tabbedPaneUI.calculateTabAreaHeight(tabPlacement, 0, 0), tabbedPaneUI.maxTabHeight);
         Rectangle tabBounds = new Rectangle(0, 0, tabAreaWidth, tabAreaHeight);
         for (int i = 0; i < tabCount; i++) {
             calculateRect(i, tabBounds, metrics, verticalTabRuns, tabPlacement);
         }
 
-        JComponent tabsButton = ui.scrollableTabSupport.moreTabsButton;
+        JComponent tabsButton = tabbedPaneUI.scrollableTabSupport.moreTabsButton;
         Rectangle selectedBounds =
-                ui.tabPane.getSelectedIndex() > 0 ? new Rectangle(ui.rects[ui.tabPane.getSelectedIndex()])
+                tabbedPaneUI.tabPane.getSelectedIndex() > 0
+                        ? new Rectangle(tabbedPaneUI.rects[tabbedPaneUI.tabPane.getSelectedIndex()])
                         : new Rectangle(0, 0, 0, 0);
         if (!verticalTabRuns) {
             int rightMargin = size.width - (insets.right + tabAreaInsets.right + insets.left + tabAreaInsets.left);
@@ -325,27 +335,28 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
             int leftMargin = p.x;
             int returnAt = p.y;
 
-            ui.currentShiftXTmp = ui.currentShiftX;
+            tabbedPaneUI.currentShiftXTmp = tabbedPaneUI.currentShiftX;
             shiftTabsX(0, leftMargin, returnAt, tabCount, false);
-            if (!(ui.minVisible == ui.maxVisible && ui.minVisible == ui.tabPane.getSelectedIndex())) {
-                selectedBounds.x += ui.currentShiftXTmp;
+            if (!(tabbedPaneUI.minVisible == tabbedPaneUI.maxVisible
+                    && tabbedPaneUI.minVisible == tabbedPaneUI.tabPane.getSelectedIndex())) {
+                selectedBounds.x += tabbedPaneUI.currentShiftXTmp;
                 shiftBoundsToVisibleX(selectedBounds, leftMargin, returnAt, tabCount);
             }
             restoreHiddenTabsX(leftMargin, returnAt, tabCount);
 
-            if (ui.minVisible == 0 && ui.maxVisible == tabCount - 1
-                    && PropertyUtil.getBooleanProperty(ui.tabPane, DarkTabbedPaneUI.KEY_CENTER_TABS)) {
+            if (tabbedPaneUI.minVisible == 0 && tabbedPaneUI.maxVisible == tabCount - 1
+                    && PropertyUtil.getBooleanProperty(tabbedPaneUI.tabPane, DarkTabbedPaneUI.KEY_CENTER_TABS)) {
                 adjustForCenterX(leftMargin, returnAt, tabCount);
             }
 
-            if (tabsButton.isVisible() && ui.tabPane.getSelectedIndex() < ui.maxVisible) {
+            if (tabsButton.isVisible() && tabbedPaneUI.tabPane.getSelectedIndex() < tabbedPaneUI.maxVisible) {
                 // Shift again. Hiding the the tab button might reveal the last tab.
                 // Only do this if the last visible tab is not currently selected.
                 // Otherwise the selected tab forces the whole tab area the jump by the width of the tab
                 // button.
                 int margin = returnAt + tabsButton.getPreferredSize().width;
                 shiftTabsX(0, leftMargin, margin, tabCount, false);
-                if (ui.minVisible > 0 || ui.maxVisible < tabCount - 1) {
+                if (tabbedPaneUI.minVisible > 0 || tabbedPaneUI.maxVisible < tabCount - 1) {
                     // Tab button is still visible but may hide a further tab. restore visible bounds.
                     shiftTabsX(0, leftMargin, returnAt, tabCount, false);
                 }
@@ -354,22 +365,22 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
 
             layoutMoreTabsButton(tabCount);
 
-            commitShiftX(ui.currentShiftXTmp, tabCount);
-            ui.currentShiftX = ui.currentShiftXTmp;
+            commitShiftX(tabbedPaneUI.currentShiftXTmp, tabCount);
+            tabbedPaneUI.currentShiftX = tabbedPaneUI.currentShiftXTmp;
 
             if (!leftToRight) {
                 if (tabsButton.isVisible()) {
                     rightMargin -= tabsButton.getWidth();
                 }
-                JComponent newTabButton = ui.scrollableTabSupport.newTabButton;
-                if (newTabButton.isVisible() && newTabButton.getParent() == ui.tabPane) {
+                JComponent newTabButton = tabbedPaneUI.scrollableTabSupport.newTabButton;
+                if (newTabButton.isVisible() && newTabButton.getParent() == tabbedPaneUI.tabPane) {
                     rightMargin -= newTabButton.getWidth();
                 }
                 for (int i = 0; i < tabCount; i++) {
-                    ui.rects[i].x = rightMargin - ui.rects[i].x - ui.rects[i].width;
+                    tabbedPaneUI.rects[i].x = rightMargin - tabbedPaneUI.rects[i].x - tabbedPaneUI.rects[i].width;
                 }
             }
-            if (ui.scrollableTabSupport.newTabButton.isVisible()) {
+            if (tabbedPaneUI.scrollableTabSupport.newTabButton.isVisible()) {
                 layoutNewTabButton(true, leftToRight, leftMargin, rightMargin, tabCount);
             }
 
@@ -378,36 +389,37 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
             Point p = getMargins(tabPlacement);
             int topMargin = p.x;
             int returnAt = p.y;
-            ui.currentShiftYTmp = ui.currentShiftY;
+            tabbedPaneUI.currentShiftYTmp = tabbedPaneUI.currentShiftY;
             shiftTabsY(0, topMargin, returnAt, tabCount, false);
-            if (!(ui.minVisible == ui.maxVisible && ui.minVisible == ui.tabPane.getSelectedIndex())) {
-                selectedBounds.y += ui.currentShiftYTmp;
+            if (!(tabbedPaneUI.minVisible == tabbedPaneUI.maxVisible
+                    && tabbedPaneUI.minVisible == tabbedPaneUI.tabPane.getSelectedIndex())) {
+                selectedBounds.y += tabbedPaneUI.currentShiftYTmp;
                 shiftBoundsToVisibleY(selectedBounds, topMargin, returnAt, tabCount);
             }
             restoreHiddenTabsY(topMargin, returnAt, tabCount);
 
-            if (ui.minVisible == 0 && ui.maxVisible == tabCount - 1
-                    && PropertyUtil.getBooleanProperty(ui.tabPane, DarkTabbedPaneUI.KEY_CENTER_TABS)) {
+            if (tabbedPaneUI.minVisible == 0 && tabbedPaneUI.maxVisible == tabCount - 1
+                    && PropertyUtil.getBooleanProperty(tabbedPaneUI.tabPane, DarkTabbedPaneUI.KEY_CENTER_TABS)) {
                 adjustForCenterY(topMargin, returnAt, tabCount);
             }
 
-            if (tabsButton.isVisible() && ui.tabPane.getSelectedIndex() < ui.maxVisible) {
+            if (tabsButton.isVisible() && tabbedPaneUI.tabPane.getSelectedIndex() < tabbedPaneUI.maxVisible) {
                 shiftTabsY(0, topMargin, bottomMargin, tabCount, false);
-                if (ui.minVisible > 0 || ui.maxVisible < tabCount - 1) {
+                if (tabbedPaneUI.minVisible > 0 || tabbedPaneUI.maxVisible < tabCount - 1) {
                     shiftTabsY(0, topMargin, returnAt, tabCount, false);
                 }
             }
             adjustForDropY(topMargin, returnAt, tabCount);
 
             layoutMoreTabsButton(tabCount);
-            commitShiftY(ui.currentShiftYTmp, tabCount);
-            ui.currentShiftY = ui.currentShiftYTmp;
+            commitShiftY(tabbedPaneUI.currentShiftYTmp, tabCount);
+            tabbedPaneUI.currentShiftY = tabbedPaneUI.currentShiftYTmp;
 
-            if (ui.scrollableTabSupport.newTabButton.isVisible()) {
+            if (tabbedPaneUI.scrollableTabSupport.newTabButton.isVisible()) {
                 layoutNewTabButton(false, leftToRight, topMargin, bottomMargin, tabCount);
             }
         }
-        ui.tabScroller.tabPanel.setPreferredSize(tabBounds.getSize());
+        tabbedPaneUI.tabScroller.tabPanel.setPreferredSize(tabBounds.getSize());
     }
 
     @Override
@@ -416,39 +428,39 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
     }
 
     protected void adjustForCenterX(final int leftMargin, final int returnAt, final int tabCount) {
-        int shift = (returnAt - (ui.rects[tabCount - 1].x + ui.rects[tabCount - 1].width)) / 2;
+        int shift = (returnAt - (tabbedPaneUI.rects[tabCount - 1].x + tabbedPaneUI.rects[tabCount - 1].width)) / 2;
         shiftTabsX(shift, 0, returnAt, tabCount - 1, true);
     }
 
     protected void adjustForCenterY(final int topMargin, final int returnAt, final int tabCount) {
-        int shift = (returnAt - (ui.rects[tabCount - 1].y + ui.rects[tabCount - 1].height)) / 2;
+        int shift = (returnAt - (tabbedPaneUI.rects[tabCount - 1].y + tabbedPaneUI.rects[tabCount - 1].height)) / 2;
         shiftTabsY(shift, 0, returnAt, tabCount - 1, true);
     }
 
     @Override
     protected int preferredTabAreaWidth(final int tabPlacement, final int height) {
-        return ui.calculateMaxTabWidth(tabPlacement);
+        return tabbedPaneUI.calculateMaxTabWidth(tabPlacement);
     }
 
     @Override
     protected int preferredTabAreaHeight(final int tabPlacement, final int width) {
-        return ui.calculateMaxTabHeight(tabPlacement);
+        return tabbedPaneUI.calculateMaxTabHeight(tabPlacement);
     }
 
     @SuppressWarnings("SuspiciousNameCombination")
     protected Point getMargins(final int tabPlacement) {
-        Dimension size = ui.tabPane.getSize();
-        Insets insets = ui.tabPane.getInsets();
-        Insets tabAreaInsets = ui.getTabAreaInsets(tabPlacement);
-        JComponent tabsButton = ui.scrollableTabSupport.moreTabsButton;
-        JComponent newTabsButton = ui.scrollableTabSupport.newTabButton;
-        if (ui.isHorizontalTabPlacement()) {
+        Dimension size = tabbedPaneUI.tabPane.getSize();
+        Insets insets = tabbedPaneUI.tabPane.getInsets();
+        Insets tabAreaInsets = tabbedPaneUI.getTabAreaInsets(tabPlacement);
+        JComponent tabsButton = tabbedPaneUI.scrollableTabSupport.moreTabsButton;
+        JComponent newTabsButton = tabbedPaneUI.scrollableTabSupport.newTabButton;
+        if (tabbedPaneUI.isHorizontalTabPlacement()) {
             int leftMargin = 0;
             int returnAt = size.width - (insets.right + tabAreaInsets.right + insets.left + tabAreaInsets.left);
             if (tabsButton.isVisible()) {
                 returnAt -= tabsButton.getPreferredSize().width;
             }
-            if (newTabsButton.isVisible() && newTabsButton.getParent() == ui.tabPane) {
+            if (newTabsButton.isVisible() && newTabsButton.getParent() == tabbedPaneUI.tabPane) {
                 returnAt -= newTabsButton.getPreferredSize().width;
             }
             return new Point(leftMargin, returnAt);
@@ -458,7 +470,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
             if (tabsButton.isVisible()) {
                 returnAt -= tabsButton.getPreferredSize().height;
             }
-            if (newTabsButton.isVisible() && newTabsButton.getParent() == ui.tabPane) {
+            if (newTabsButton.isVisible() && newTabsButton.getParent() == tabbedPaneUI.tabPane) {
                 returnAt -= newTabsButton.getPreferredSize().height;
             }
             return new Point(topMargin, returnAt);
@@ -466,47 +478,50 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
     }
 
     protected void adjustForDropX(final int minX, final int maxX, final int tabCount) {
-        if (ui.dropSourceIndex >= 0 && ui.dropSourceIndex < ui.tabPane.getTabCount()) {
+        if (tabbedPaneUI.dropSourceIndex >= 0 && tabbedPaneUI.dropSourceIndex < tabbedPaneUI.tabPane.getTabCount()) {
             // Hide the source tab.
-            int shift = ui.rects[ui.dropSourceIndex].width;
-            ui.rects[ui.dropSourceIndex].setSize(0, 0);
-            commitShiftX(ui.dropSourceIndex + 1, tabCount - 1, -1 * shift, tabCount);
+            int shift = tabbedPaneUI.rects[tabbedPaneUI.dropSourceIndex].width;
+            tabbedPaneUI.rects[tabbedPaneUI.dropSourceIndex].setSize(0, 0);
+            commitShiftX(tabbedPaneUI.dropSourceIndex + 1, tabCount - 1, -1 * shift, tabCount);
         }
-        if (ui.sourceEqualsTarget && ui.dropTargetIndex >= 0 && ui.dropTargetIndex < ui.tabPane.getTabCount()) {
-            commitShiftX(ui.dropTargetIndex, tabCount - 1, ui.dropRect.width, tabCount);
+        if (tabbedPaneUI.sourceEqualsTarget && tabbedPaneUI.dropTargetIndex >= 0
+                && tabbedPaneUI.dropTargetIndex < tabbedPaneUI.tabPane.getTabCount()) {
+            commitShiftX(tabbedPaneUI.dropTargetIndex, tabCount - 1, tabbedPaneUI.dropRect.width, tabCount);
         }
         shiftTabsX(0, minX, maxX, tabCount, false);
     }
 
     protected void layoutNewTabButton(final boolean horizontal, final boolean leftToRight, final int minVal,
             final int maxVal, final int tabCount) {
-        JComponent button = ui.scrollableTabSupport.newTabButton;
+        JComponent button = tabbedPaneUI.scrollableTabSupport.newTabButton;
         Dimension buttonBounds = button.getPreferredSize();
         if (horizontal) {
             if (leftToRight) {
-                if (ui.rects[tabCount - 1].x + ui.rects[tabCount - 1].width + buttonBounds.width > maxVal) {
-                    if (button.getParent() != ui.tabPane) ui.tabPane.add(button);
+                if (tabbedPaneUI.rects[tabCount - 1].x + tabbedPaneUI.rects[tabCount - 1].width
+                        + buttonBounds.width > maxVal) {
+                    if (button.getParent() != tabbedPaneUI.tabPane) tabbedPaneUI.tabPane.add(button);
                 } else {
-                    if (button.getParent() != ui.scrollableTabSupport.tabPanel) {
-                        ui.scrollableTabSupport.tabPanel.add(button);
+                    if (button.getParent() != tabbedPaneUI.scrollableTabSupport.tabPanel) {
+                        tabbedPaneUI.scrollableTabSupport.tabPanel.add(button);
                     }
                 }
             } else {
-                int x = ui.rects[tabCount - 1].x;
+                int x = tabbedPaneUI.rects[tabCount - 1].x;
                 if (x - buttonBounds.width < minVal) {
-                    if (button.getParent() != ui.tabPane) ui.tabPane.add(button);
+                    if (button.getParent() != tabbedPaneUI.tabPane) tabbedPaneUI.tabPane.add(button);
                 } else {
-                    if (button.getParent() != ui.scrollableTabSupport.tabPanel) {
-                        ui.scrollableTabSupport.tabPanel.add(button);
+                    if (button.getParent() != tabbedPaneUI.scrollableTabSupport.tabPanel) {
+                        tabbedPaneUI.scrollableTabSupport.tabPanel.add(button);
                     }
                 }
             }
         } else {
-            if (ui.rects[tabCount - 1].y + ui.rects[tabCount - 1].height + buttonBounds.height > maxVal) {
-                if (button.getParent() != ui.tabPane) ui.tabPane.add(button);
+            if (tabbedPaneUI.rects[tabCount - 1].y + tabbedPaneUI.rects[tabCount - 1].height
+                    + buttonBounds.height > maxVal) {
+                if (button.getParent() != tabbedPaneUI.tabPane) tabbedPaneUI.tabPane.add(button);
             } else {
-                if (button.getParent() != ui.scrollableTabSupport.tabPanel) {
-                    ui.scrollableTabSupport.tabPanel.add(button);
+                if (button.getParent() != tabbedPaneUI.scrollableTabSupport.tabPanel) {
+                    tabbedPaneUI.scrollableTabSupport.tabPanel.add(button);
                 }
             }
         }
@@ -518,7 +533,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
 
     protected void commitShiftX(final int low, final int high, final int shift, final int tabCount) {
         for (int i = Math.max(low, 0); i <= Math.min(high, tabCount - 1); i++) {
-            ui.rects[i].x += shift;
+            tabbedPaneUI.rects[i].x += shift;
         }
     }
 
@@ -528,7 +543,7 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
 
     protected void commitShiftY(final int low, final int high, final int shift, final int tabCount) {
         for (int i = Math.max(low, 0); i <= Math.min(high, tabCount - 1); i++) {
-            ui.rects[i].y += shift;
+            tabbedPaneUI.rects[i].y += shift;
         }
     }
 
@@ -557,60 +572,65 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
 
     protected void calculateRect(final int i, final Rectangle tabBounds, final FontMetrics metrics,
             final boolean verticalTabRuns, final int tabPlacement) {
-        Rectangle rect = ui.rects[i];
+        Rectangle rect = tabbedPaneUI.rects[i];
         if (!verticalTabRuns) {
             if (i > 0) {
-                rect.x = ui.rects[i - 1].x + ui.rects[i - 1].width;
+                rect.x = tabbedPaneUI.rects[i - 1].x + tabbedPaneUI.rects[i - 1].width;
             } else {
-                ui.tabRuns[0] = 0;
-                ui.maxTabWidth = 0;
+                tabbedPaneUI.tabRuns[0] = 0;
+                tabbedPaneUI.maxTabWidth = 0;
                 rect.x = tabBounds.x;
             }
-            rect.width = ui.calculateTabWidth(tabPlacement, i, metrics);
+            rect.width = tabbedPaneUI.calculateTabWidth(tabPlacement, i, metrics);
             tabBounds.width = rect.x + rect.width;
-            ui.maxTabWidth = Math.max(ui.maxTabWidth, rect.width);
+            tabbedPaneUI.maxTabWidth = Math.max(tabbedPaneUI.maxTabWidth, rect.width);
             rect.height = tabBounds.height;
             rect.y = tabBounds.y + tabBounds.height - rect.height;
         } else {
             if (i > 0) {
-                rect.y = ui.rects[i - 1].y + ui.rects[i - 1].height;
+                rect.y = tabbedPaneUI.rects[i - 1].y + tabbedPaneUI.rects[i - 1].height;
             } else {
-                ui.tabRuns[0] = 0;
-                ui.maxTabHeight = 0;
+                tabbedPaneUI.tabRuns[0] = 0;
+                tabbedPaneUI.maxTabHeight = 0;
                 rect.y = tabBounds.y;
             }
-            rect.height = ui.calculateTabHeight(tabPlacement, i, metrics.getHeight());
+            rect.height = tabbedPaneUI.calculateTabHeight(tabPlacement, i, metrics.getHeight());
             tabBounds.height = rect.y + rect.height;
-            ui.maxTabHeight = Math.max(ui.maxTabHeight, rect.height);
+            tabbedPaneUI.maxTabHeight = Math.max(tabbedPaneUI.maxTabHeight, rect.height);
             rect.width = tabBounds.width;
             rect.x = tabBounds.x + tabBounds.width - rect.width;
         }
     }
 
     protected void restoreHiddenTabsX(final int minX, final int maxX, final int tabCount) {
-        if (ui.maxVisible < 0 || ui.maxVisible >= tabCount) return;
-        int space = Math.max(maxX - ui.rects[ui.maxVisible].x - ui.rects[ui.maxVisible].width - ui.currentShiftXTmp, 0);
-        int shift = Math.min(minX - ui.rects[0].x - ui.currentShiftXTmp, space);
+        if (tabbedPaneUI.maxVisible < 0 || tabbedPaneUI.maxVisible >= tabCount) return;
+        int space = Math.max(maxX - tabbedPaneUI.rects[tabbedPaneUI.maxVisible].x
+                - tabbedPaneUI.rects[tabbedPaneUI.maxVisible].width - tabbedPaneUI.currentShiftXTmp, 0);
+        int shift = Math.min(minX - tabbedPaneUI.rects[0].x - tabbedPaneUI.currentShiftXTmp, space);
         shiftTabsX(shift, minX, maxX, tabCount, true);
     }
 
     protected void restoreHiddenTabsY(final int minY, final int maxY, final int tabCount) {
-        if (ui.maxVisible < 0 || ui.maxVisible >= tabCount) return;
+        if (tabbedPaneUI.maxVisible < 0 || tabbedPaneUI.maxVisible >= tabCount) return;
         int space =
-                Math.max(maxY - ui.rects[ui.maxVisible].y - ui.rects[ui.maxVisible].height - ui.currentShiftYTmp, 0);
-        int shift = Math.min(minY - ui.rects[0].y - ui.currentShiftYTmp, space);
+                Math.max(
+                        maxY - tabbedPaneUI.rects[tabbedPaneUI.maxVisible].y
+                                - tabbedPaneUI.rects[tabbedPaneUI.maxVisible].height - tabbedPaneUI.currentShiftYTmp,
+                        0);
+        int shift = Math.min(minY - tabbedPaneUI.rects[0].y - tabbedPaneUI.currentShiftYTmp, space);
         shiftTabsY(shift, minY, maxY, tabCount, true);
     }
 
     protected void adjustForDropY(final int minY, final int maxY, final int tabCount) {
-        if (ui.dropSourceIndex >= 0 && ui.dropSourceIndex < ui.tabPane.getTabCount()) {
+        if (tabbedPaneUI.dropSourceIndex >= 0 && tabbedPaneUI.dropSourceIndex < tabbedPaneUI.tabPane.getTabCount()) {
             // Hide the source tab.
-            int shift = ui.rects[ui.dropSourceIndex].height;
-            ui.rects[ui.dropSourceIndex].setSize(0, 0);
-            commitShiftY(ui.dropSourceIndex + 1, tabCount - 1, -1 * shift, tabCount);
+            int shift = tabbedPaneUI.rects[tabbedPaneUI.dropSourceIndex].height;
+            tabbedPaneUI.rects[tabbedPaneUI.dropSourceIndex].setSize(0, 0);
+            commitShiftY(tabbedPaneUI.dropSourceIndex + 1, tabCount - 1, -1 * shift, tabCount);
         }
-        if (ui.sourceEqualsTarget && ui.dropTargetIndex >= 0 && ui.dropTargetIndex < ui.tabPane.getTabCount()) {
-            commitShiftY(ui.dropTargetIndex, tabCount - 1, ui.dropRect.height, tabCount);
+        if (tabbedPaneUI.sourceEqualsTarget && tabbedPaneUI.dropTargetIndex >= 0
+                && tabbedPaneUI.dropTargetIndex < tabbedPaneUI.tabPane.getTabCount()) {
+            commitShiftY(tabbedPaneUI.dropTargetIndex, tabCount - 1, tabbedPaneUI.dropRect.height, tabCount);
         }
         shiftTabsY(0, minY, maxY, tabCount, false);
     }
@@ -618,30 +638,31 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
     @SuppressWarnings("SuspiciousNameCombination")
     public void updateVisibleRange(final int tapPlacement) {
         Point p = getMargins(tapPlacement);
-        if (ui.isHorizontalTabPlacement()) {
-            shiftTabsX(0, p.x, p.y, ui.tabPane.getTabCount(), false);
+        if (tabbedPaneUI.isHorizontalTabPlacement()) {
+            shiftTabsX(0, p.x, p.y, tabbedPaneUI.tabPane.getTabCount(), false);
         } else {
-            shiftTabsY(0, p.x, p.y, ui.tabPane.getTabCount(), false);
+            shiftTabsY(0, p.x, p.y, tabbedPaneUI.tabPane.getTabCount(), false);
         }
     }
 
     protected void layoutMoreTabsButton(final int tabCount) {
-        final JComponent button = ui.scrollableTabSupport.moreTabsButton;
-        if (ui.minVisible > 0 || ui.maxVisible < tabCount - 1) {
-            if (ui.scrollableTabSupport.moreTabsButton.isVisible()) {
-                if (ui.minVisible != ui.minVisibleOld || ui.maxVisible != ui.maxVisibleOld
-                        || ui.oldTabCount != tabCount) {
-                    ui.scrollableTabSupport.showMoreTabsButton();
+        final JComponent button = tabbedPaneUI.scrollableTabSupport.moreTabsButton;
+        if (tabbedPaneUI.minVisible > 0 || tabbedPaneUI.maxVisible < tabCount - 1) {
+            if (tabbedPaneUI.scrollableTabSupport.moreTabsButton.isVisible()) {
+                if (tabbedPaneUI.minVisible != tabbedPaneUI.minVisibleOld
+                        || tabbedPaneUI.maxVisible != tabbedPaneUI.maxVisibleOld
+                        || tabbedPaneUI.oldTabCount != tabCount) {
+                    tabbedPaneUI.scrollableTabSupport.showMoreTabsButton();
                 }
             } else {
-                ui.scrollableTabSupport.showMoreTabsButton();
+                tabbedPaneUI.scrollableTabSupport.showMoreTabsButton();
             }
             // Update old values.
-            ui.minVisibleOld = ui.minVisible;
-            ui.maxVisibleOld = ui.maxVisible;
-            ui.oldTabCount = tabCount;
+            tabbedPaneUI.minVisibleOld = tabbedPaneUI.minVisible;
+            tabbedPaneUI.maxVisibleOld = tabbedPaneUI.maxVisible;
+            tabbedPaneUI.oldTabCount = tabCount;
         } else if (button.isVisible()) {
-            ui.scrollableTabSupport.hideMoreTabsButton();
+            tabbedPaneUI.scrollableTabSupport.hideMoreTabsButton();
         }
     }
 
@@ -659,9 +680,10 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
             final boolean updateShift, final boolean isX) {
         int min = -1;
         int max = -1;
-        int minStart = ui.minVisible < 0 || ui.minVisible >= tabCount ? 0 : ui.minVisible;
-        int maxStart = ui.maxVisible < 0 || ui.maxVisible >= tabCount ? tabCount - 1 : ui.maxVisible;
-        int currShift = isX ? ui.currentShiftXTmp + shift : ui.currentShiftYTmp + shift;
+        int minStart = tabbedPaneUI.minVisible < 0 || tabbedPaneUI.minVisible >= tabCount ? 0 : tabbedPaneUI.minVisible;
+        int maxStart = tabbedPaneUI.maxVisible < 0 || tabbedPaneUI.maxVisible >= tabCount ? tabCount - 1
+                : tabbedPaneUI.maxVisible;
+        int currShift = isX ? tabbedPaneUI.currentShiftXTmp + shift : tabbedPaneUI.currentShiftYTmp + shift;
         Function<Integer, Boolean> isVisible = isX ? i -> isVisibleX(i, currShift, minVal, returnAt)
                 : i -> isVisibleY(i, currShift, minVal, returnAt);
         if (isVisible.apply(minStart)) {
@@ -705,27 +727,27 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
                 }
             }
         }
-        ui.minVisible = min;
-        ui.maxVisible = max;
+        tabbedPaneUI.minVisible = min;
+        tabbedPaneUI.maxVisible = max;
 
         if (updateShift) {
             if (isX) {
-                ui.currentShiftXTmp += shift;
+                tabbedPaneUI.currentShiftXTmp += shift;
             } else {
-                ui.currentShiftYTmp += shift;
+                tabbedPaneUI.currentShiftYTmp += shift;
             }
         }
     }
 
     protected boolean isVisibleX(final int i, final int shift, final int minX, final int maxX) {
-        int begin = ui.rects[i].x + shift;
-        int end = begin + ui.rects[i].width;
+        int begin = tabbedPaneUI.rects[i].x + shift;
+        int end = begin + tabbedPaneUI.rects[i].width;
         return !(begin >= maxX || end < minX);
     }
 
     protected boolean isVisibleY(final int i, final int shift, final int minX, final int maxX) {
-        int begin = ui.rects[i].y + shift;
-        int end = begin + ui.rects[i].height;
+        int begin = tabbedPaneUI.rects[i].y + shift;
+        int end = begin + tabbedPaneUI.rects[i].height;
         return !(begin >= maxX || end < minX);
     }
 }

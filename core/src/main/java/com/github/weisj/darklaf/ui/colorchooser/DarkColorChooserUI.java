@@ -43,7 +43,7 @@ import com.github.weisj.darklaf.util.PropertyKey;
 /** @author Jannis Weis */
 public class DarkColorChooserUI extends BasicColorChooserUI {
 
-    private final PropertyChangeListener propertyChangeListener = e -> {
+    private final PropertyChangeListener layoutPropertyChangeListener = e -> {
         if (PropertyKey.ANCESTOR.equals(e.getPropertyName())) {
             JComponent pane = (JComponent) e.getNewValue();
             if (pane != null) {
@@ -97,14 +97,14 @@ public class DarkColorChooserUI extends BasicColorChooserUI {
     @Override
     protected void installListeners() {
         super.installListeners();
-        chooser.addPropertyChangeListener(propertyChangeListener);
+        chooser.addPropertyChangeListener(layoutPropertyChangeListener);
         chooser.addAncestorListener(ancestorListener);
     }
 
     @Override
     protected void uninstallListeners() {
         super.uninstallListeners();
-        chooser.removePropertyChangeListener(propertyChangeListener);
+        chooser.removePropertyChangeListener(layoutPropertyChangeListener);
         chooser.removeAncestorListener(ancestorListener);
     }
 }

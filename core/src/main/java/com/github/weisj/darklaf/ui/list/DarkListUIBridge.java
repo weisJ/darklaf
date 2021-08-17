@@ -103,16 +103,6 @@ public abstract class DarkListUIBridge extends BasicListUI {
     /** The constant defaultTransferHandler. */
     // Following ivars are used if the list is laying out horizontally
     protected static final TransferHandler defaultTransferHandler = new ListTransferHandler();
-    /** The instance of {@code JList}. */
-    protected JList<Object> list = null;
-    /** The instance of {@code CellRendererPane}. */
-    protected CellRendererPane rendererPane;
-    /** {@code FocusListener} that attached to {@code JList}. */
-    protected FocusListener focusListener;
-    /** {@code MouseInputListener} that attached to {@code JList}. */
-    protected MouseInputListener mouseInputListener;
-    /** {@code ListSelectionListener} that attached to {@code JList}. */
-    protected ListSelectionListener listSelectionListener;
 
     /*
      * The bits below define JList property changes that affect layout. When one of these properties
@@ -120,20 +110,8 @@ public abstract class DarkListUIBridge extends BasicListUI {
      * maybeUpdateLayoutState. Changes to the JLists model, e.g. the models length changed, are handled
      * similarly, see DataListener.
      */
-    /** {@code ListDataListener} that attached to {@code JList}. */
-    protected ListDataListener listDataListener;
-    /** {@code PropertyChangeListener} that attached to {@code JList}. */
-    protected PropertyChangeListener propertyChangeListener;
     /** The Handler. */
     protected Handler handler;
-    /** The array of cells' height */
-    protected int[] cellHeights = null;
-    /** The height of cell. */
-    protected int cellHeight = -1;
-    /** The width of cell. */
-    protected int cellWidth = -1;
-    /** The value represents changes to {@code JList} model. */
-    protected int updateLayoutStateNeeded = modelChanged;
     /**
      * Height of the list. When asked to paint, if the current size of the list differs, this will
      * update the layout state.

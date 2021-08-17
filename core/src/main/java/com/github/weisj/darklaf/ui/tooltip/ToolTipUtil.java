@@ -22,6 +22,7 @@
 package com.github.weisj.darklaf.ui.tooltip;
 
 import java.awt.*;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 
 import javax.swing.*;
@@ -99,9 +100,9 @@ public final class ToolTipUtil {
     }
 
     private static Point tryAlignments(final Alignment[] alignments, final ToolTipContext context, final Point p,
-                                       final Rectangle tooltipBounds, final Rectangle boundary, final Rectangle screenBoundary,
-                                       final BiConsumer<ToolTipContext, Alignment> setter, final boolean centerHorizontally,
-                                       final boolean centerVertically) {
+            final Rectangle tooltipBounds, final Rectangle boundary, final Rectangle screenBoundary,
+            final BiConsumer<ToolTipContext, Alignment> setter, final boolean centerHorizontally,
+            final boolean centerVertically) {
         Point pos = null;
         for (Alignment a : alignments) {
             if ((centerHorizontally || centerVertically) && a.isDiagonal()) {
@@ -124,9 +125,9 @@ public final class ToolTipUtil {
     }
 
     private static Point tryPosition(final Alignment a, final ToolTipContext context, final Point p,
-                                     final Rectangle tooltipBounds, final Rectangle boundary, final Rectangle screenBoundary,
-                                     final BiConsumer<ToolTipContext, Alignment> setter, final boolean centerHorizontally,
-                                     final boolean centerVertically) {
+            final Rectangle tooltipBounds, final Rectangle boundary, final Rectangle screenBoundary,
+            final BiConsumer<ToolTipContext, Alignment> setter, final boolean centerHorizontally,
+            final boolean centerVertically) {
         setter.accept(context, a);
         context.setCenterAlignment(a);
         context.updateToolTip();
@@ -139,8 +140,8 @@ public final class ToolTipUtil {
     }
 
     private static boolean fits(final Rectangle toolTipBounds, final Rectangle boundary,
-                                final Rectangle screenBoundary) {
-        if (boundary == screenBoundary) {
+            final Rectangle screenBoundary) {
+        if (Objects.equals(boundary, screenBoundary)) {
             return SwingUtilities.isRectangleContainingRectangle(boundary, toolTipBounds);
         }
         return SwingUtilities.isRectangleContainingRectangle(boundary, toolTipBounds)

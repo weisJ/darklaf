@@ -31,11 +31,11 @@ import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 public abstract class TabButtonContainer extends JPanel implements UIResource {
 
     protected final JButton button;
-    protected final DarkTabbedPaneUI ui;
+    protected final DarkTabbedPaneUI tabbedPaneUI;
     private final Insets borderInsets;
 
-    protected TabButtonContainer(final DarkTabbedPaneUI ui) {
-        this.ui = ui;
+    protected TabButtonContainer(final DarkTabbedPaneUI tabbedPaneUI) {
+        this.tabbedPaneUI = tabbedPaneUI;
         borderInsets = UIManager.getInsets("TabbedPane.tabArea.buttonInsets");
         button = createButton();
         add(button);
@@ -64,7 +64,7 @@ public abstract class TabButtonContainer extends JPanel implements UIResource {
     @Override
     protected void paintComponent(final Graphics g) {
         super.paintComponent(g);
-        ui.paintTabAreaBorder(g, ui.tabPane.getTabPlacement(), 0, 0, getWidth(), getHeight());
+        tabbedPaneUI.paintTabAreaBorder(g, tabbedPaneUI.tabPane.getTabPlacement(), 0, 0, getWidth(), getHeight());
     }
 
     @Override
@@ -74,7 +74,7 @@ public abstract class TabButtonContainer extends JPanel implements UIResource {
 
     @Override
     public Insets getInsets() {
-        if (ui.isHorizontalTabPlacement()) {
+        if (tabbedPaneUI.isHorizontalTabPlacement()) {
             return new Insets(0, borderInsets.left, 0, borderInsets.right);
         } else {
             return new Insets(borderInsets.top, 0, borderInsets.bottom, 0);

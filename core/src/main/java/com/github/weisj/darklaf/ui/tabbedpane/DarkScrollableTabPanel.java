@@ -27,18 +27,18 @@ class DarkScrollableTabPanel extends ScrollableTabPanel {
 
     protected final Rectangle iconRect = new Rectangle();
     protected final Rectangle textRect = new Rectangle();
-    private final DarkTabbedPaneUI ui;
+    private final DarkTabbedPaneUI tabbedPaneUI;
 
-    public DarkScrollableTabPanel(final DarkTabbedPaneUI ui) {
-        super(ui);
-        this.ui = ui;
+    public DarkScrollableTabPanel(final DarkTabbedPaneUI tabbedPaneUI) {
+        super(tabbedPaneUI);
+        this.tabbedPaneUI = tabbedPaneUI;
     }
 
     @Override
     public void paintComponent(final Graphics g) {
         super.paintComponent(g);
-        if (ui.drawDropRect) {
-            ui.paintDrop(g);
+        if (tabbedPaneUI.drawDropRect) {
+            tabbedPaneUI.paintDrop(g);
         }
     }
 
@@ -47,24 +47,25 @@ class DarkScrollableTabPanel extends ScrollableTabPanel {
         if (getComponentCount() > 0) {
             for (int i = 0; i < getComponentCount(); i++) {
                 Component child = getComponent(i);
-                if (child == ui.scrollableTabSupport.newTabButton) {
-                    boolean leftToRight = ui.tabPane.getComponentOrientation().isLeftToRight();
-                    int tabCount = ui.tabPane.getTabCount();
+                if (child == tabbedPaneUI.scrollableTabSupport.newTabButton) {
+                    boolean leftToRight = tabbedPaneUI.tabPane.getComponentOrientation().isLeftToRight();
+                    int tabCount = tabbedPaneUI.tabPane.getTabCount();
                     Dimension b = child.getPreferredSize();
                     if (tabCount > 0) {
-                        if (ui.isHorizontalTabPlacement()) {
-                            int off = ui.dropTargetIndex == tabCount ? ui.dropRect.width : 0;
+                        if (tabbedPaneUI.isHorizontalTabPlacement()) {
+                            int off = tabbedPaneUI.dropTargetIndex == tabCount ? tabbedPaneUI.dropRect.width : 0;
                             if (leftToRight) {
-                                int x = ui.rects[tabCount - 1].x + ui.rects[tabCount - 1].width + off;
-                                child.setBounds(x, 0, b.width, ui.maxTabHeight);
+                                int x = tabbedPaneUI.rects[tabCount - 1].x + tabbedPaneUI.rects[tabCount - 1].width
+                                        + off;
+                                child.setBounds(x, 0, b.width, tabbedPaneUI.maxTabHeight);
                             } else {
-                                int x = ui.rects[tabCount - 1].x - off;
-                                child.setBounds(x - b.width, 0, b.width, ui.maxTabHeight);
+                                int x = tabbedPaneUI.rects[tabCount - 1].x - off;
+                                child.setBounds(x - b.width, 0, b.width, tabbedPaneUI.maxTabHeight);
                             }
                         } else {
-                            int off = ui.dropTargetIndex == tabCount ? ui.dropRect.height : 0;
-                            int y = ui.rects[tabCount - 1].y + ui.rects[tabCount - 1].height + off;
-                            child.setBounds(0, y, ui.maxTabWidth, b.height);
+                            int off = tabbedPaneUI.dropTargetIndex == tabCount ? tabbedPaneUI.dropRect.height : 0;
+                            int y = tabbedPaneUI.rects[tabCount - 1].y + tabbedPaneUI.rects[tabCount - 1].height + off;
+                            child.setBounds(0, y, tabbedPaneUI.maxTabWidth, b.height);
                         }
                     }
                 } else {
@@ -77,10 +78,11 @@ class DarkScrollableTabPanel extends ScrollableTabPanel {
     @Override
     public void paint(final Graphics g) {
         super.paint(g);
-        if (ui.dragging && ui.tabPane.getTabCount() > 0) {
-            ui.paintTab(g, ui.tabPane.getTabPlacement(), ui.dragRect, ui.tabPane.getSelectedIndex(), iconRect,
+        if (tabbedPaneUI.dragging && tabbedPaneUI.tabPane.getTabCount() > 0) {
+            tabbedPaneUI.paintTab(g, tabbedPaneUI.tabPane.getTabPlacement(), tabbedPaneUI.dragRect,
+                    tabbedPaneUI.tabPane.getSelectedIndex(), iconRect,
                     textRect);
-            Component comp = ui.tabPane.getTabComponentAt(ui.dropSourceIndex);
+            Component comp = tabbedPaneUI.tabPane.getTabComponentAt(tabbedPaneUI.dropSourceIndex);
             if (comp != null) {
                 g.translate(comp.getX(), comp.getY());
                 comp.print(g);

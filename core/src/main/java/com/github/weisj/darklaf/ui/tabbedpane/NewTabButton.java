@@ -45,7 +45,7 @@ public class NewTabButton extends TabButtonContainer {
     @Override
     protected JButton createButton() {
         JButton button = new JButtonUIResource();
-        button.setIcon(ui.getNewTabIcon());
+        button.setIcon(tabbedPaneUI.getNewTabIcon());
         button.setFocusable(false);
         button.putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS);
         button.putClientProperty(DarkButtonUI.KEY_SQUARE, Boolean.TRUE);

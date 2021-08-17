@@ -52,7 +52,7 @@ public class DarkToolBarUI extends BasicToolBarUI {
 
     protected Container dockingSource;
     protected RootPaneContainer floatingToolBar;
-    protected DarkDragWindow dragWindow;
+    protected DarkDragWindow darkDragWindow;
     protected boolean floating;
     protected Point floatingPos = new Point();
 
@@ -74,11 +74,11 @@ public class DarkToolBarUI extends BasicToolBarUI {
         previewPanel.setToolBar(toolBar);
     }
 
-    protected DarkDragWindow getDragWindow() {
-        if (dragWindow == null) {
-            dragWindow = createDarkDragWindow(toolBar);
+    protected DarkDragWindow getDarkDragWindow() {
+        if (darkDragWindow == null) {
+            darkDragWindow = createDarkDragWindow(toolBar);
         }
-        return dragWindow;
+        return darkDragWindow;
     }
 
     @Override
@@ -98,7 +98,7 @@ public class DarkToolBarUI extends BasicToolBarUI {
 
             Window ancestor = SwingUtilities.getWindowAncestor(toolBar);
             if (ancestor != null) visible = ancestor.isVisible();
-            if (dragWindow != null) stopDrag();
+            if (darkDragWindow != null) stopDrag();
 
             floating = b;
             RootPaneContainer floatingTB = getFloatingToolBar();
@@ -231,7 +231,7 @@ public class DarkToolBarUI extends BasicToolBarUI {
 
     protected void dragTo() {
         if (toolBar.isFloatable()) {
-            DarkDragWindow dw = getDragWindow();
+            DarkDragWindow dw = getDarkDragWindow();
             Point offset = dw.getOffset();
             PointerInfo pointerInfo = MouseInfo.getPointerInfo();
             if (pointerInfo == null) return;
@@ -263,7 +263,7 @@ public class DarkToolBarUI extends BasicToolBarUI {
     @Override
     public void setOrientation(final int orientation) {
         toolBar.setOrientation(orientation);
-        if (dragWindow != null) dragWindow.setOrientation(orientation);
+        if (darkDragWindow != null) darkDragWindow.setOrientation(orientation);
     }
 
     protected int mapConstraintToOrientation(final String constraint) {
@@ -296,7 +296,7 @@ public class DarkToolBarUI extends BasicToolBarUI {
 
     protected void showDragWindow() {
         DarkUIUtil.getWindow(getFloatingToolBar().getRootPane()).setVisible(false);
-        DarkDragWindow dw = getDragWindow();
+        DarkDragWindow dw = getDarkDragWindow();
         dw.getContentPane().add(toolBar);
         dw.doLayout();
         updateDockingSource(dockingSource);
@@ -331,7 +331,7 @@ public class DarkToolBarUI extends BasicToolBarUI {
     protected void floatAt() {
         if (toolBar.isFloatable()) {
             try {
-                DarkDragWindow dw = getDragWindow();
+                DarkDragWindow dw = getDarkDragWindow();
                 Point offset = dw.getOffset();
                 Point global = MouseInfo.getPointerInfo().getLocation();
                 setFloatingLocation(global.x - offset.x, global.y - offset.y);
@@ -354,7 +354,7 @@ public class DarkToolBarUI extends BasicToolBarUI {
     }
 
     protected void stopDrag() {
-        getDragWindow().setVisible(false);
+        getDarkDragWindow().setVisible(false);
         timer.stop();
     }
 

@@ -813,13 +813,13 @@ public class DarkSliderUI extends BasicSliderUI {
     }
 
     public class SnapTrackListener extends TrackListener {
-        private int offset;
+        private int sliderOffset;
 
         @Override
         public void mousePressed(final MouseEvent evt) {
             int pos = isHorizontal() ? evt.getX() : evt.getY();
             int loc = getLocationForValue(getSnappedValue(evt));
-            offset = (loc < 0) ? 0 : pos - loc;
+            sliderOffset = (loc < 0) ? 0 : pos - loc;
             if (iconRect.contains(evt.getPoint())) return;
             super.mousePressed(evt);
         }
@@ -829,9 +829,9 @@ public class DarkSliderUI extends BasicSliderUI {
             if (slider.getSnapToTicks()) {
                 int pos = getLocationForValue(getSnappedValue(e));
                 if (isHorizontal()) {
-                    e.translatePoint(pos - e.getX() + offset, 0);
+                    e.translatePoint(pos - e.getX() + sliderOffset, 0);
                 } else {
-                    e.translatePoint(0, pos - e.getY() + offset);
+                    e.translatePoint(0, pos - e.getY() + sliderOffset);
                 }
             }
             super.mouseDragged(e);
