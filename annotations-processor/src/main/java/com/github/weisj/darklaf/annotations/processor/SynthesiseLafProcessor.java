@@ -76,7 +76,7 @@ public class SynthesiseLafProcessor extends AbstractProcessor {
                 writer.write(builder.toString());
                 writer.close();
             } catch (final IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException("Could not write class file " + synthesisedName, e);
             }
         }
         return false;
