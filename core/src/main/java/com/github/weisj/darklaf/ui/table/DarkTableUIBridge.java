@@ -91,7 +91,7 @@ public abstract class DarkTableUIBridge extends TableUIBridge {
         // from here, we aet DarkTableUI.KEY_IS_PRINT_MODE in TablePrintable#print and
         // access from here.
         Object printMode = table.getClientProperty(DarkTableUI.KEY_IS_PRINT_MODE);
-        if ((printMode == JTable.PrintMode.FIT_WIDTH)) {
+        if (printMode == JTable.PrintMode.FIT_WIDTH) {
             upperLeft = clip.getLocation();
             lowerRight = new Point(clip.x + clip.width - 1, clip.y + clip.height - 1);
         }

@@ -180,7 +180,7 @@ public abstract class Animator {
 
     private void paint() {
         int frame = forward ? currentFrame : totalFrames - currentFrame - 1;
-        paintNow(interpolator.interpolate(((float) frame) / totalFrames));
+        paintNow(interpolator.interpolate((float) frame / totalFrames));
     }
 
     private void animationDone() {
@@ -197,7 +197,7 @@ public abstract class Animator {
 
         if (startTime == -1) {
             startTime = System.currentTimeMillis();
-            stopTime = startTime + (((long) cycleDuration) * (totalFrames - currentFrame)) / totalFrames;
+            stopTime = startTime + ((long) cycleDuration * (totalFrames - currentFrame)) / totalFrames;
         }
 
         final double passedTime = System.currentTimeMillis() - startTime;

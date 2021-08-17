@@ -80,8 +80,8 @@ public class DarkPopupFactory extends PopupFactory {
         }
         if (type == PopupType.HEAVY_WEIGHT) {
             Window window = DarkUIUtil.getWindow(contents);
-            if ((owner != null && window != null)
-                    && !Objects.equals(window.getGraphicsConfiguration(), owner.getGraphicsConfiguration())) {
+            if (owner != null && window != null
+                && !Objects.equals(window.getGraphicsConfiguration(), owner.getGraphicsConfiguration())) {
                 /*
                  * Window uses incorrect graphics configuration. Setting the focusable window state will force the
                  * PopupFactory to dispose it and create a new window.
@@ -206,7 +206,7 @@ public class DarkPopupFactory extends PopupFactory {
 
     private void setUseDoubleBuffer(final Component c, final boolean enabled) {
         if (c instanceof JComponent) {
-            setUseDoubleBuffer(((JComponent) c), enabled);
+            setUseDoubleBuffer((JComponent) c, enabled);
         }
     }
 

@@ -632,7 +632,7 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
                 }
                 if (newVal instanceof Component) {
                     Container newUnwrapped = DarkUIUtil.getUnwrappedParent((Component) newVal);
-                    if ((newUnwrapped instanceof JScrollPane)) {
+                    if (newUnwrapped instanceof JScrollPane) {
                         LookAndFeel.installBorder((JComponent) newUnwrapped, "Table.scrollPaneBorder");
                     }
                 }

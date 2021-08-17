@@ -84,7 +84,7 @@ class DemoTest implements NonThreadSafeTest {
     private void runDemo(final Theme theme, final Robot robot, final int count, final int index,
             final DemoLauncher.DemoEntry demo) {
         TestUtils.ensureLafInstalled(theme, true);
-        LOGGER.warning("Running: " + (index) + "/" + count + " " + demo);
+        LOGGER.warning("Running: " + index + "/" + count + " " + demo);
         if (demo.isDelicate()) {
             LOGGER.warning("Skipping");
             return;

@@ -86,8 +86,8 @@ public final class DarkUIUtil {
         if (insets != null && rect != null) {
             rect.x += insets.left;
             rect.y += insets.top;
-            rect.width -= (insets.right + insets.left);
-            rect.height -= (insets.bottom + insets.top);
+            rect.width -= insets.right + insets.left;
+            rect.height -= insets.bottom + insets.top;
         }
         return rect;
     }
@@ -224,7 +224,7 @@ public final class DarkUIUtil {
         if (owner == null) {
             owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
         }
-        return (owner != null && isDescendingFrom(owner, c, focusParent));
+        return owner != null && isDescendingFrom(owner, c, focusParent);
     }
 
     private static boolean isDescendingFrom(final Component a, final Component b1, final Component b2) {
@@ -466,8 +466,8 @@ public final class DarkUIUtil {
             Insets screenInsets = Toolkit.getDefaultToolkit().getScreenInsets(gc);
             sBounds.x += screenInsets.left;
             sBounds.y += screenInsets.top;
-            sBounds.width -= (screenInsets.left + screenInsets.right);
-            sBounds.height -= (screenInsets.top + screenInsets.bottom);
+            sBounds.width -= screenInsets.left + screenInsets.right;
+            sBounds.height -= screenInsets.top + screenInsets.bottom;
         }
         return sBounds;
     }
@@ -487,7 +487,7 @@ public final class DarkUIUtil {
     }
 
     public static int setAltGraphMask(final int modifier) {
-        return (modifier | InputEvent.ALT_GRAPH_DOWN_MASK);
+        return modifier | InputEvent.ALT_GRAPH_DOWN_MASK;
     }
 
     public static boolean isScaleChanged(final PropertyChangeEvent ev) {

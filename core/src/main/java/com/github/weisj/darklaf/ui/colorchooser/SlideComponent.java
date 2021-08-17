@@ -88,7 +88,7 @@ class SlideComponent extends JComponent implements ColorListener {
             int pointerValue = this.pointerValue + units;
             pointerValue = Math.max(pointerValue, OFFSET);
             int size = this.vertical ? getHeight() : getWidth();
-            pointerValue = Math.min(pointerValue, (size - 12));
+            pointerValue = Math.min(pointerValue, size - 12);
 
             this.pointerValue = pointerValue;
             value = pointerValueToValue(this.pointerValue);
@@ -120,7 +120,7 @@ class SlideComponent extends JComponent implements ColorListener {
         int pointerValue = vertical ? e.getY() : e.getX();
         pointerValue = Math.max(pointerValue, OFFSET);
         int size = vertical ? getHeight() : getWidth();
-        pointerValue = Math.min(pointerValue, (size - 12));
+        pointerValue = Math.min(pointerValue, size - 12);
 
         this.pointerValue = pointerValue;
 
@@ -134,7 +134,7 @@ class SlideComponent extends JComponent implements ColorListener {
         pointerValue -= OFFSET;
         final int size = vertical ? getHeight() : getWidth();
         double proportion = (size - 23) / 255f;
-        return (int) Math.round((pointerValue / proportion));
+        return (int) Math.round(pointerValue / proportion);
     }
 
     private void fireValueChanged() {
@@ -288,9 +288,9 @@ class SlideComponent extends JComponent implements ColorListener {
 
         private static String formatValue(final int value, final Unit unit) {
             if (unit == PERCENT) {
-                return String.format("%d%s", (int) ((unit.getMax() / LEVEL.getMax() * value)), "%");
+                return String.format("%d%s", (int) (unit.getMax() / LEVEL.getMax() * value), "%");
             } else {
-                return String.format("%d", (int) (LEVEL.getMax() - ((unit.getMax() / LEVEL.getMax() * value))));
+                return String.format("%d", (int) (LEVEL.getMax() - (unit.getMax() / LEVEL.getMax() * value)));
             }
         }
 

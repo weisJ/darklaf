@@ -77,7 +77,7 @@ public class TabbedPaneUtil implements SwingConstants {
                         }
                     }
 
-                    Rectangle sb = (ui.scrollableTabLayoutEnabled()) ? tabBounds : EMPTY_RECT;
+                    Rectangle sb = ui.scrollableTabLayoutEnabled() ? tabBounds : EMPTY_RECT;
                     switch (tabbedPane.getTabPlacement()) {
                         case TOP:
                         case BOTTOM:

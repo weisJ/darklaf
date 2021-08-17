@@ -102,7 +102,7 @@ public class JToggleButtonList extends JList<JToggleButton> {
     }
 
     private DefaultListModel<JToggleButton> getToggleButtonModel() {
-        return ((DefaultListModel<JToggleButton>) getModel());
+        return (DefaultListModel<JToggleButton>) getModel();
     }
 
     @Override

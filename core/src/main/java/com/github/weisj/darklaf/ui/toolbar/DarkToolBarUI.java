@@ -193,7 +193,7 @@ public class DarkToolBarUI extends BasicToolBarUI {
             if (lm instanceof BorderLayout) {
                 BorderLayout blm = (BorderLayout) lm;
                 Component c = blm.getLayoutComponent(cont, constraint);
-                return (c == null || c == toolBar || c == previewPanel);
+                return c == null || c == toolBar || c == previewPanel;
             }
         }
         return true;
@@ -221,7 +221,7 @@ public class DarkToolBarUI extends BasicToolBarUI {
     @Override
     public boolean canDock(final Component c, final Point p) {
         String constraints = getDockingConstraint(c, p);
-        return (p != null && constraints != null);
+        return p != null && constraints != null;
     }
 
     @Override

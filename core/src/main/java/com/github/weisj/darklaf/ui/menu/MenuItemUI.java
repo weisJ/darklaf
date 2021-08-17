@@ -259,7 +259,7 @@ public interface MenuItemUI {
         result.width = lh.getLeadingGap();
         MenuItemLayoutHelper.addMaxWidth(lh.getCheckSize(), lh.getAfterCheckIconGap(), result);
         // Take into account minimal text offset.
-        if ((!lh.isTopLevelMenu()) && (lh.getMinTextOffset() > 0) && (result.width < lh.getMinTextOffset())) {
+        if (!lh.isTopLevelMenu() && (lh.getMinTextOffset() > 0) && (result.width < lh.getMinTextOffset())) {
             result.width = lh.getMinTextOffset();
         }
         int acceleratorTextOffset = getAcceleratorTextOffset();

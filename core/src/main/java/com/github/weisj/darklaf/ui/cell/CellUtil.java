@@ -353,7 +353,7 @@ public final class CellUtil {
         int row = index;
         boolean altRow = true;
         if ((layout == JList.VERTICAL_WRAP || layout == JList.HORIZONTAL_WRAP)
-                && (index >= 0 && index < parent.getModel().getSize())) {
+                && index >= 0 && index < parent.getModel().getSize()) {
             DarkListUI ui = DarkUIUtil.getUIOfType(parent.getUI(), DarkListUI.class);
             if (ui != null) {
                 row = ui.convertModelToRow(index);
@@ -463,8 +463,8 @@ public final class CellUtil {
     }
 
     private static boolean hasFocus(final Component cellComponent, final Component parentComponent) {
-        return parentComponent.hasFocus() || (DarkUIUtil.hasFocus(cellComponent)
-                || DarkUIUtil.getParentOfType(JPopupMenu.class, cellComponent, 4) != null);
+        return parentComponent.hasFocus() || DarkUIUtil.hasFocus(cellComponent)
+                || DarkUIUtil.getParentOfType(JPopupMenu.class, cellComponent, 4) != null;
     }
 
     public static void setSelectedFlag(final Component comp, final boolean selected) {

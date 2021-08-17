@@ -87,7 +87,7 @@ public final class DividedWidgetPainter {
             final Insets ins, final WidgetBorderType borderType) {
         Component parent = c.getParent();
         if (borderType == WidgetBorderType.Table && parent instanceof JTable) {
-            JTable table = ((JTable) parent);
+            JTable table = (JTable) parent;
             CellUtil.paintTableEditorBorder(g, c, table, width, height);
         } else {
             PaintUtil.drawRect(g, ins.left, ins.top, width - ins.left - ins.right, height - ins.top - ins.bottom,

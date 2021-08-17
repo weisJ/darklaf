@@ -186,8 +186,8 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
                     /*
                      * Changed here: Enable event consumption for specific sources through client property.
                      */
-                    if ((consumeEvent && !(src instanceof MenuElement)
-                            || PropertyUtil.getBooleanProperty(src, DarkPopupMenuUI.KEY_CONSUME_EVENT_ON_CLOSE))) {
+                    if (consumeEvent && !(src instanceof MenuElement)
+                            || PropertyUtil.getBooleanProperty(src, DarkPopupMenuUI.KEY_CONSUME_EVENT_ON_CLOSE)) {
                         me.consume();
                     }
                 }

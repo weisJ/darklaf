@@ -197,7 +197,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
 
     @Override
     protected Icon getIcon(final JLabel label) {
-        Icon icon = (tabComponent.isEnabled()) ? tabComponent.getIcon() : tabComponent.getDisabledIcon();
+        Icon icon = tabComponent.isEnabled() ? tabComponent.getIcon() : tabComponent.getDisabledIcon();
         if (icon == null) return null;
         rotatableIcon.setIcon(icon);
         if (rotatableIcon.getOrientation() == null) {

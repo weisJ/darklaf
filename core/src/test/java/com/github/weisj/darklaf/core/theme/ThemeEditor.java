@@ -308,7 +308,7 @@ public class ThemeEditor extends JPanel {
 
         public void addElement(final JTable table) {
             DefaultTableModel model = (DefaultTableModel) table.getModel();
-            model.addRow(new Object[] {"<" + name() + "_" + (entryCount++) + ">", defaultValue});
+            model.addRow(new Object[] {"<" + name() + "_" + entryCount++ + ">", defaultValue});
         }
     }
 

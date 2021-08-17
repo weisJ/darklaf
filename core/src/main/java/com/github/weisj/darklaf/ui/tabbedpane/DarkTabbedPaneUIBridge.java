@@ -391,7 +391,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * tabLayoutPolicy) to determine if scrollTabLayout is enabled.
      */
     protected boolean scrollableTabLayoutEnabled() {
-        return (tabPane.getLayout() instanceof TabbedPaneScrollLayout);
+        return tabPane.getLayout() instanceof TabbedPaneScrollLayout;
     }
 
     /**
@@ -425,7 +425,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         for (int i = runCount - 1; i >= 0; i--) {
             int start = tabRuns[i];
             int next = tabRuns[(i == runCount - 1) ? 0 : i + 1];
-            int end = (next != 0 ? next - 1 : tabCount - 1);
+            int end = next != 0 ? next - 1 : tabCount - 1;
             for (int j = start; j <= end; j++) {
                 if (j != selectedIndex && rects[j].intersects(clipRect)) {
                     paintTab(g, tabPlacement, rects, j, iconRect, textRect);
@@ -663,7 +663,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      */
     protected int getTabLabelShiftX(final int tabPlacement, final int tabIndex, final boolean isSelected) {
         Rectangle tabRect = rects[tabIndex];
-        String propKey = (isSelected ? "selectedLabelShift" : "labelShift");
+        String propKey = isSelected ? "selectedLabelShift" : "labelShift";
         int nudge = UIManager.getInt("TabbedPane." + propKey);
 
         switch (tabPlacement) {
@@ -688,8 +688,8 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      */
     protected int getTabLabelShiftY(final int tabPlacement, final int tabIndex, final boolean isSelected) {
         Rectangle tabRect = rects[tabIndex];
-        int nudge = (isSelected ? UIManager.getInt("TabbedPane.selectedLabelShift")
-                : UIManager.getInt("TabbedPane.labelShift"));
+        int nudge = isSelected ? UIManager.getInt("TabbedPane.selectedLabelShift")
+                : UIManager.getInt("TabbedPane.labelShift");
 
         switch (tabPlacement) {
             case BOTTOM:
@@ -1113,7 +1113,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                     return 1;
                 }
             default: // RIGHT|LEFT
-                return (maxTabHeight % 2);
+                return maxTabHeight % 2;
         }
     }
 
@@ -1238,7 +1238,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         if (runCount == 1) {
             return tabCount - 1;
         }
-        int nextRun = (run == runCount - 1 ? 0 : run + 1);
+        int nextRun = run == runCount - 1 ? 0 : run + 1;
         if (tabRuns[nextRun] == 0) {
             return tabCount - 1;
         }
@@ -1417,10 +1417,10 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     protected int calculateTabAreaHeight(final int tabPlacement, final int horizRunCount, final int maxTabHeight) {
         Insets tabAreaInsets = getTabAreaInsets(tabPlacement);
         int tabRunOverlay = getTabRunOverlay(tabPlacement);
-        return (horizRunCount > 0
+        return horizRunCount > 0
                 ? horizRunCount * (maxTabHeight - tabRunOverlay) + tabRunOverlay + tabAreaInsets.top
                         + tabAreaInsets.bottom
-                : 0);
+                : 0;
     }
 
     /**
@@ -1434,10 +1434,10 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     protected int calculateTabAreaWidth(final int tabPlacement, final int vertRunCount, final int maxTabWidth) {
         Insets tabAreaInsets = getTabAreaInsets(tabPlacement);
         int tabRunOverlay = getTabRunOverlay(tabPlacement);
-        return (vertRunCount > 0
+        return vertRunCount > 0
                 ? vertRunCount * (maxTabWidth - tabRunOverlay) + tabRunOverlay + tabAreaInsets.left
                         + tabAreaInsets.right
-                : 0);
+                : 0;
     }
 
     /**
@@ -1782,8 +1782,8 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         int tabCount = Math.min(rects.length, tabPane.getTabCount());
         int max = tabCount;
         int tabPlacement = tabPane.getTabPlacement();
-        boolean useX = (tabPlacement == TOP || tabPlacement == BOTTOM);
-        int want = (useX) ? x : y;
+        boolean useX = tabPlacement == TOP || tabPlacement == BOTTOM;
+        int want = useX ? x : y;
 
         while (min != max) {
             int current = (max + min) / 2;
@@ -1840,51 +1840,51 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         switch (tabPlacement) {
             case LEFT: {
                 if (run == 0) {
-                    offset = (forward ? -(calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth) - maxTabWidth)
-                            : -maxTabWidth);
+                    offset = forward ? -(calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth) - maxTabWidth)
+                            : -maxTabWidth;
 
                 } else if (run == runCount - 1) {
-                    offset = (forward ? maxTabWidth
-                            : calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth) - maxTabWidth);
+                    offset = forward ? maxTabWidth
+                            : calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth) - maxTabWidth;
                 } else {
-                    offset = (forward ? maxTabWidth : -maxTabWidth);
+                    offset = forward ? maxTabWidth : -maxTabWidth;
                 }
                 break;
             }
             case RIGHT: {
                 if (run == 0) {
-                    offset = (forward ? maxTabWidth
-                            : calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth) - maxTabWidth);
+                    offset = forward ? maxTabWidth
+                            : calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth) - maxTabWidth;
                 } else if (run == runCount - 1) {
-                    offset = (forward ? -(calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth) - maxTabWidth)
-                            : -maxTabWidth);
+                    offset = forward ? -(calculateTabAreaWidth(tabPlacement, runCount, maxTabWidth) - maxTabWidth)
+                            : -maxTabWidth;
                 } else {
-                    offset = (forward ? maxTabWidth : -maxTabWidth);
+                    offset = forward ? maxTabWidth : -maxTabWidth;
                 }
                 break;
             }
             case BOTTOM: {
                 if (run == 0) {
-                    offset = (forward ? maxTabHeight
-                            : calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight) - maxTabHeight);
+                    offset = forward ? maxTabHeight
+                            : calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight) - maxTabHeight;
                 } else if (run == runCount - 1) {
-                    offset = (forward ? -(calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight) - maxTabHeight)
-                            : -maxTabHeight);
+                    offset = forward ? -(calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight) - maxTabHeight)
+                            : -maxTabHeight;
                 } else {
-                    offset = (forward ? maxTabHeight : -maxTabHeight);
+                    offset = forward ? maxTabHeight : -maxTabHeight;
                 }
                 break;
             }
             case TOP:
             default: {
                 if (run == 0) {
-                    offset = (forward ? -(calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight) - maxTabHeight)
-                            : -maxTabHeight);
+                    offset = forward ? -(calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight) - maxTabHeight)
+                            : -maxTabHeight;
                 } else if (run == runCount - 1) {
-                    offset = (forward ? maxTabHeight
-                            : calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight) - maxTabHeight);
+                    offset = forward ? maxTabHeight
+                            : calculateTabAreaHeight(tabPlacement, runCount, maxTabHeight) - maxTabHeight;
                 } else {
-                    offset = (forward ? maxTabHeight : -maxTabHeight);
+                    offset = forward ? maxTabHeight : -maxTabHeight;
                 }
             }
         }
@@ -1898,8 +1898,8 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * @return the previous tab index
      */
     protected int getPreviousTabIndex(final int base) {
-        int tabIndex = (base - 1 >= 0 ? base - 1 : tabPane.getTabCount() - 1);
-        return (Math.max(tabIndex, 0));
+        int tabIndex = base - 1 >= 0 ? base - 1 : tabPane.getTabCount() - 1;
+        return Math.max(tabIndex, 0);
     }
 
     /**
@@ -1945,7 +1945,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         int currentRun = getRunForTab(tabCount, base);
         if (base == tabRuns[currentRun]) {
             int previous = tabRuns[getNextTabRun(currentRun)] - 1;
-            return (previous != -1 ? previous : tabCount - 1);
+            return previous != -1 ? previous : tabCount - 1;
         }
         return getPreviousTabIndex(base);
     }
@@ -1957,8 +1957,8 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * @return the previous tab run
      */
     protected int getPreviousTabRun(final int baseRun) {
-        int runIndex = (baseRun - 1 >= 0 ? baseRun - 1 : runCount - 1);
-        return (Math.max(runIndex, 0));
+        int runIndex = baseRun - 1 >= 0 ? baseRun - 1 : runCount - 1;
+        return Math.max(runIndex, 0);
     }
 
     /**
@@ -2094,7 +2094,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
                 if (command != null && command.length() > 0) {
                     int mnemonic = e.getActionCommand().charAt(0);
                     if (mnemonic >= 'a' && mnemonic <= 'z') {
-                        mnemonic -= ('a' - 'A');
+                        mnemonic -= 'a' - 'A';
                     }
                     Integer index = ui.mnemonicToIndexMap.get(mnemonic);
                     if (index != null && pane.isEnabledAt(index)) {

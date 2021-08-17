@@ -310,7 +310,7 @@ public class DarkSliderUI extends BasicSliderUI {
     public void scrollByUnit(final int direction) {
         // noinspection SynchronizeOnNonFinalField
         synchronized (slider) {
-            int delta = ((direction > 0) ? POSITIVE_SCROLL : NEGATIVE_SCROLL);
+            int delta = (direction > 0) ? POSITIVE_SCROLL : NEGATIVE_SCROLL;
 
             if (slider.getSnapToTicks()) {
                 delta *= getTickSpacing();
@@ -381,7 +381,7 @@ public class DarkSliderUI extends BasicSliderUI {
         Component minLabel = ltr ? getLowestValueLabel() : getHighestValueLabel();
         boolean adjustMin = PropertyUtil.getBooleanProperty(minLabel, KEY_MANUAL_LABEL_ALIGN);
         int minPrefWidth = minLabel.getPreferredSize().width;
-        float adj = (adjustMin ? minLabel.getAlignmentX() : Component.CENTER_ALIGNMENT);
+        float adj = adjustMin ? minLabel.getAlignmentX() : Component.CENTER_ALIGNMENT;
         return (int) (minPrefWidth * adj);
     }
 
@@ -390,7 +390,7 @@ public class DarkSliderUI extends BasicSliderUI {
         Component maxLabel = ltr ? getHighestValueLabel() : getLowestValueLabel();
         boolean adjustMax = PropertyUtil.getBooleanProperty(maxLabel, KEY_MANUAL_LABEL_ALIGN);
         int maxPrefWidth = maxLabel.getPreferredSize().width;
-        float adj = (adjustMax ? maxLabel.getAlignmentX() : Component.CENTER_ALIGNMENT);
+        float adj = adjustMax ? maxLabel.getAlignmentX() : Component.CENTER_ALIGNMENT;
         return (int) (maxPrefWidth * (1f - adj));
     }
 

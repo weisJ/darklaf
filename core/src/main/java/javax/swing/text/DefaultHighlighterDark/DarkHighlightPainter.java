@@ -193,7 +193,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
             // guarantee
             // everything is visible.
             if (lineExtension) {
-                if ((lastSelEnd != c.getSelectionEnd() || lastSelStart != c.getSelectionStart())) {
+                if (lastSelEnd != c.getSelectionEnd() || lastSelStart != c.getSelectionStart()) {
                     lastSelEnd = c.getSelectionEnd();
                     lastSelStart = c.getSelectionStart();
                     repaintCount = 1;

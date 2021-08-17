@@ -335,14 +335,14 @@ public class ThemeSettingsUI {
         fontSlider.setMaximum(FontSizePreset.HUGE.getPercentage());
         int tickSpacing = 25;
         Dictionary<Integer, JComponent> dict = fontSlider.createStandardLabels(tickSpacing);
-        JLabel min = ((JLabel) dict.get(fontSlider.getMinimum()));
+        JLabel min = (JLabel) dict.get(fontSlider.getMinimum());
         UIUpdater.registerComponent(min);
         DynamicUI.withDynamic(min,
                 c -> c.setText(UIManager.getString("settings.label_font_smaller", fontSlider.getLocale())));
         min.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         min.putClientProperty(DarkSliderUI.KEY_MANUAL_LABEL_ALIGN, true);
 
-        JLabel mid = ((JLabel) dict.get(fontSlider.getMinimum() + tickSpacing));
+        JLabel mid = (JLabel) dict.get(fontSlider.getMinimum() + tickSpacing);
         UIUpdater.registerComponent(mid);
         dict.remove(fontSlider.getMinimum() + tickSpacing);
         dict.put(FontSizePreset.NORMAL.getPercentage(), mid);
@@ -352,7 +352,7 @@ public class ThemeSettingsUI {
         mid.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         mid.setHorizontalTextPosition(JLabel.RIGHT);
 
-        JLabel max = ((JLabel) dict.get(fontSlider.getMaximum()));
+        JLabel max = (JLabel) dict.get(fontSlider.getMaximum());
         max.putClientProperty(DarkSliderUI.KEY_MANUAL_LABEL_ALIGN, true);
         DynamicUI.withDynamic(max,
                 c -> c.setText(UIManager.getString("settings.label_font_bigger", fontSlider.getLocale())));

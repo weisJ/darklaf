@@ -193,7 +193,7 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
                 int x = 0;
                 int xOffset = 0;
                 boolean ltr = container.getComponentOrientation().isLeftToRight();
-                boolean reverse = (ltr) == reverseButtons;
+                boolean reverse = ltr == reverseButtons;
 
                 for (Component child : children) {
                     Dimension pref = child.getPreferredSize();
@@ -237,7 +237,7 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
                 }
 
                 for (int counter = 0; counter < numChildren; counter++) {
-                    int index = (reverse) ? numChildren - counter - 1 : counter;
+                    int index = reverse ? numChildren - counter - 1 : counter;
                     Dimension pref = children[index].getPreferredSize();
 
                     if (getSyncAllWidths()) {
@@ -286,7 +286,7 @@ public class DarkOptionPaneUI extends BasicOptionPaneUI {
                             height = Math.max(height, aSize.height);
                             totalWidth += aSize.width;
                         }
-                        totalWidth += ((numChildren - 1) * padding);
+                        totalWidth += (numChildren - 1) * padding;
                         return new Dimension(extraWidth + totalWidth, extraHeight + height);
                     }
                 }

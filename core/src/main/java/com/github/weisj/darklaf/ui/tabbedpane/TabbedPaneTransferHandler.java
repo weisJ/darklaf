@@ -189,7 +189,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         if (c instanceof JTabbedPane) {
             TabbedPaneUI ui = ((JTabbedPane) c).getUI();
             if (ui instanceof DarkTabbedPaneUI) {
-                return ((DarkTabbedPaneUI) ui);
+                return (DarkTabbedPaneUI) ui;
             }
         }
         return null;

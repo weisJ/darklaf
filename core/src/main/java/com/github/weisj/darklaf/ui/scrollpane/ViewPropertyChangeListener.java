@@ -65,7 +65,7 @@ public class ViewPropertyChangeListener implements PropertyChangeListener {
                 }
                 Object newVal = e.getNewValue();
                 if (newVal instanceof JViewport) {
-                    currentViewport = ((JViewport) newVal);
+                    currentViewport = (JViewport) newVal;
                     currentViewport.addContainerListener(containerListener);
                 } else {
                     currentViewport = null;

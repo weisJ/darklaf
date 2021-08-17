@@ -72,7 +72,7 @@ public class DemoLauncher extends BaseComponentDemo {
         box.add(demos);
         JButton button = new JButton("Start");
         button.addActionListener(
-                e -> Optional.ofNullable(((DemoEntry) demos.getSelectedItem())).ifPresent(DemoEntry::start));
+                e -> Optional.ofNullable((DemoEntry) demos.getSelectedItem()).ifPresent(DemoEntry::start));
         box.add(Box.createHorizontalStrut(10));
         box.add(button);
         return new DemoPanel(box);

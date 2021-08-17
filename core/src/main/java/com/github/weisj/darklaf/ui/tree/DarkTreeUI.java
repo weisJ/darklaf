@@ -500,7 +500,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         if (y1 >= y2) {
             return;
         }
-        y1 += (y1 % 2);
+        y1 += y1 % 2;
         Graphics2D g2d = (Graphics2D) g;
         Stroke oldStroke = g2d.getStroke();
 

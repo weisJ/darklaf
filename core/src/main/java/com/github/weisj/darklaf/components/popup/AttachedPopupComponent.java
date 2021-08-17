@@ -147,8 +147,8 @@ public class AttachedPopupComponent extends JToolTip {
                     return;
                 }
             }
-            boolean doClose = event instanceof FocusEvent && (!(DarkUIUtil.hasFocus(attachedComp, (FocusEvent) event)
-                    || DarkUIUtil.hasFocus(attachedComp) || DarkUIUtil.hasFocus(parent, (FocusEvent) event)));
+            boolean doClose = event instanceof FocusEvent && !(DarkUIUtil.hasFocus(attachedComp, (FocusEvent) event)
+                                                               || DarkUIUtil.hasFocus(attachedComp) || DarkUIUtil.hasFocus(parent, (FocusEvent) event));
             if (!doClose) {
                 Point p = MouseInfo.getPointerInfo().getLocation();
                 Point p2 = new Point(p);

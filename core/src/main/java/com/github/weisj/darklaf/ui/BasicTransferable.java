@@ -84,9 +84,9 @@ public class BasicTransferable implements Transferable, UIResource {
     public DataFlavor[] getTransferDataFlavors() {
         DataFlavor[] richerFlavors = getRicherFlavors();
         int nRicher = (richerFlavors != null) ? richerFlavors.length : 0;
-        int nHTML = (isHTMLSupported()) ? htmlFlavors.length : 0;
-        int nPlain = (isPlainSupported()) ? plainFlavors.length : 0;
-        int nString = (isPlainSupported()) ? stringFlavors.length : 0;
+        int nHTML = isHTMLSupported() ? htmlFlavors.length : 0;
+        int nPlain = isPlainSupported() ? plainFlavors.length : 0;
+        int nString = isPlainSupported() ? stringFlavors.length : 0;
         int nFlavors = nRicher + nHTML + nPlain + nString;
         DataFlavor[] flavors = new DataFlavor[nFlavors];
 

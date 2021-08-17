@@ -161,7 +161,7 @@ public class TreeDemo extends BaseComponentDemo {
                     final boolean expanded, final boolean leaf, final int row, final boolean hasFocus) {
                 Component component =
                         super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-                component.setEnabled(tree.isEnabled() && (value != parent1 && value != child));
+                component.setEnabled(tree.isEnabled() && value != parent1 && value != child);
                 return component;
             }
         });

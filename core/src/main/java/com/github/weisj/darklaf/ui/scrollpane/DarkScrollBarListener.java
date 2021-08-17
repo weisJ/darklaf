@@ -247,7 +247,7 @@ public class DarkScrollBarListener<T extends DarkScrollBarUI> extends MouseAdapt
             fadeInAnimator.suspend();
             int startFrame = 0;
             if (currentAlpha < maxAlpha) {
-                startFrame = (int) ((1.0 - currentAlpha / maxAlpha) * (fadeOutAnimator.getTotalFrames()));
+                startFrame = (int) ((1.0 - currentAlpha / maxAlpha) * fadeOutAnimator.getTotalFrames());
             }
             fadeOutAnimator.resume(startFrame, fadeInRunning, scrollbar);
         }

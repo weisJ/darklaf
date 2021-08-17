@@ -407,7 +407,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                         flagYPoints[0] = r.y;
                         flagXPoints[1] = flagXPoints[0];
                         flagYPoints[1] = flagYPoints[0] + FLAG_SIZE;
-                        flagXPoints[2] = flagXPoints[0] + ((dotLtr) ? FLAG_SIZE : -FLAG_SIZE);
+                        flagXPoints[2] = flagXPoints[0] + (dotLtr ? FLAG_SIZE : -FLAG_SIZE);
                         flagYPoints[2] = flagYPoints[0];
                         g.fillPolygon(flagXPoints, flagYPoints, 3);
                     }
@@ -440,7 +440,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                 Element bidiElem = bidiRoot.getElement(index);
                 if (bidiElem.getEndOffset() >= p1) {
                     AttributeSet bidiAttrs = bidiElem.getAttributes();
-                    return ((StyleConstants.getBidiLevel(bidiAttrs) % 2) == 0);
+                    return (StyleConstants.getBidiLevel(bidiAttrs) % 2) == 0;
                 }
             }
         }

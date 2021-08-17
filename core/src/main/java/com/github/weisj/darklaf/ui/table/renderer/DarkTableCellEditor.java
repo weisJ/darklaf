@@ -117,7 +117,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
                     if (spinner.getValue() != null) {
                         Component editor = spinner.getEditor();
                         if (editor instanceof JSpinner.DefaultEditor) {
-                            JSpinner.DefaultEditor defaultEditor = ((JSpinner.DefaultEditor) editor);
+                            JSpinner.DefaultEditor defaultEditor = (JSpinner.DefaultEditor) editor;
                             JFormattedTextField.AbstractFormatter formatter =
                                     defaultEditor.getTextField().getFormatter();
                             if (formatter instanceof DefaultFormatter) {

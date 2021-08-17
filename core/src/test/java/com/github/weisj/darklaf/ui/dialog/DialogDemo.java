@@ -174,7 +174,7 @@ public class DialogDemo extends JPanel {
                     String prop = e12.getPropertyName();
 
                     if (dialog.isVisible() && (e12.getSource() == optionPane)
-                            && (JOptionPane.VALUE_PROPERTY.equals(prop))) {
+                            && JOptionPane.VALUE_PROPERTY.equals(prop)) {
                         // If you were going to check something
                         // before closing the window, you'd do
                         // it here.

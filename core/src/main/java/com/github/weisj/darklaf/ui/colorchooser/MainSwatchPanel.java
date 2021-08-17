@@ -42,7 +42,7 @@ class MainSwatchPanel extends SwatchPanel {
 
         colors = new Color[numColors];
         for (int i = 0; i < numColors; i++) {
-            colors[i] = new Color(rawValues[(i * 3)], rawValues[(i * 3) + 1], rawValues[(i * 3) + 2]);
+            colors[i] = new Color(rawValues[i * 3], rawValues[(i * 3) + 1], rawValues[(i * 3) + 2]);
         }
     }
 

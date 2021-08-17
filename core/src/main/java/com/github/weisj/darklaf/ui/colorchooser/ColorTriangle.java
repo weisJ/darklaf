@@ -485,7 +485,7 @@ public class ColorTriangle extends JComponent {
 
     protected Shape calculateTriangleShape(final double x, final double y, final int size, final int outerSize,
             final AffineTransform transform) {
-        double diameter = (size - 2 * outerSize);
+        double diameter = size - 2 * outerSize;
         double radius = diameter / 2.0;
         double sideLength = Math.cos(Math.PI / 6.0) * diameter;
         double height = (SQRT3 / 2.0) * sideLength;
@@ -605,7 +605,7 @@ public class ColorTriangle extends JComponent {
         }
 
         protected void setPixel(final WritableRaster raster, final int i, final int j, final int rgb) {
-            setPixel(raster, i, j, new int[] {(rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, (rgb) & 0xFF, 255});
+            setPixel(raster, i, j, new int[] {(rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, rgb & 0xFF, 255});
         }
 
         protected void setPixel(final WritableRaster raster, final int i, final int j, final int[] vals) {
@@ -620,7 +620,7 @@ public class ColorTriangle extends JComponent {
             WritableRaster raster = getColorModel().createCompatibleWritableRaster(w, h);
             for (int j = 0; j < h; j++) {
                 for (int i = 0; i < w; i++) {
-                    float hue = (float) ((getWheelHue(x + i, y + j, cx, cy)));
+                    float hue = (float) getWheelHue(x + i, y + j, cx, cy);
                     int rgb = Color.HSBtoRGB(hue, 1.0f, 1.0f);
                     setPixel(raster, i, j, rgb);
                 }
@@ -638,7 +638,7 @@ public class ColorTriangle extends JComponent {
             WritableRaster raster = getColorModel().createCompatibleWritableRaster(w, h);
             for (int j = 0; j < h; j++) {
                 for (int i = 0; i < w; i++) {
-                    dummy.setLocation((x + i), (y + j));
+                    dummy.setLocation(x + i, y + j);
                     try {
                         transform.inverseTransform(dummy, dummy);
                         triangleInverse.transform(dummy, dummy);

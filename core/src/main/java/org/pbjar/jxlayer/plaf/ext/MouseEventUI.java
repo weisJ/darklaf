@@ -350,7 +350,7 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
                 case MouseEvent.MOUSE_CLICKED :
                     newEvent = transformMouseEvent(layer, originalEvent, realTarget, realPoint);
                     break;
-                case (MouseEvent.MOUSE_WHEEL) :
+                case MouseEvent.MOUSE_WHEEL:
                     redispatchMouseWheelEvent((MouseWheelEvent) originalEvent, realTarget, layer);
                     break;
             }

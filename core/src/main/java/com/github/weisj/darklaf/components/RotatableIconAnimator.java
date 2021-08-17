@@ -55,7 +55,7 @@ public class RotatableIconAnimator extends Timer {
     }
 
     public void onAction(final ActionEvent e) {
-        icon.setRotation(Math.PI * 2 * (((double) frame) / frameCount));
+        icon.setRotation(Math.PI * 2 * ((double) frame / frameCount));
         repaint();
         frame = (frame + 1) % frameCount;
     }

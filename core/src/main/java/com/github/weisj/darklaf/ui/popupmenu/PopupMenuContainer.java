@@ -157,8 +157,8 @@ public class PopupMenuContainer extends JPanel {
     }
 
     public Dimension adjustSize(final Dimension size, final int maxWidth, final int maxHeight) {
-        boolean exceedsHorizontalSize = (maxHeight > 0 && size.height > maxHeight);
-        boolean exceedsVerticalSize = (maxWidth > 0 && size.width > maxWidth);
+        boolean exceedsHorizontalSize = maxHeight > 0 && size.height > maxHeight;
+        boolean exceedsVerticalSize = maxWidth > 0 && size.width > maxWidth;
         if (!exceedsHorizontalSize && !exceedsVerticalSize) {
             return size;
         } else {

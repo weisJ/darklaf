@@ -662,8 +662,8 @@ public class DarkTabbedPaneScrollLayout extends TabbedPaneScrollLayout {
         int minStart = ui.minVisible < 0 || ui.minVisible >= tabCount ? 0 : ui.minVisible;
         int maxStart = ui.maxVisible < 0 || ui.maxVisible >= tabCount ? tabCount - 1 : ui.maxVisible;
         int currShift = isX ? ui.currentShiftXTmp + shift : ui.currentShiftYTmp + shift;
-        Function<Integer, Boolean> isVisible = isX ? (i -> isVisibleX(i, currShift, minVal, returnAt))
-                : (i -> isVisibleY(i, currShift, minVal, returnAt));
+        Function<Integer, Boolean> isVisible = isX ? i -> isVisibleX(i, currShift, minVal, returnAt)
+                : i -> isVisibleY(i, currShift, minVal, returnAt);
         if (isVisible.apply(minStart)) {
             // Descent to find minimum.
             min = minStart;
