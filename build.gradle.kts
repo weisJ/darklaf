@@ -228,7 +228,8 @@ allprojects {
                     disableWarningsInGeneratedCode.set(true)
                     disable(
                         "StringSplitter",
-                        "InlineMeSuggester"
+                        "InlineMeSuggester",
+                        "MissingSummary"
                     )
                 }
             }
