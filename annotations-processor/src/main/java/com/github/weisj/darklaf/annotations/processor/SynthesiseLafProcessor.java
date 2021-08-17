@@ -64,6 +64,7 @@ public class SynthesiseLafProcessor extends AbstractProcessor {
             builder.append(" * @deprecated Auto-Generated class. Use LafManager.installTheme(Theme) instead.\n");
             builder.append(" */\n");
             builder.append("@Deprecated\n");
+            builder.append("@javax.annotation.Generated(value = {\"").append(getClass().getName()).append("\"})\n");
             builder.append("public class ").append(synthesisedClassName).append(" extends ").append(baseClassName);
             builder.append(" {\n\n");
             builder.append(IDENT).append("public ").append(synthesisedClassName).append("() {\n");
