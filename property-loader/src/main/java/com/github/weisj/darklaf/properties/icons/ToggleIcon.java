@@ -25,7 +25,11 @@ import java.awt.*;
 
 import javax.swing.*;
 
-/** @author Jannis Weis */
+/**
+ * Dual state icon, which has two visual appearances.
+ *
+ * @author Jannis Weis
+ */
 public class ToggleIcon implements Icon {
 
     private final Icon activeIcon;

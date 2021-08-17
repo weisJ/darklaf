@@ -372,6 +372,7 @@ public class DarkSVGIcon
     }
 
     @Override
+    @SuppressWarnings("EmptyCatch")
     public @NotNull Insets getVisualPaddings(@NotNull Component component) {
         SVGIcon icon = getSVGIcon();
         SVGRoot root = icon.getSvgUniverse().getDiagram(icon.getSvgURI()).getRoot();

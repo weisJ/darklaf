@@ -38,6 +38,8 @@ import com.github.weisj.darklaf.properties.parser.ParserContext;
 import com.github.weisj.darklaf.util.*;
 
 /**
+ * Utility class for loading and parsing the contents of .property files.
+ *
  * @author Jannis Weis
  */
 public final class PropertyLoader {

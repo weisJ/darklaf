@@ -27,7 +27,11 @@ import java.util.function.Supplier;
 import javax.swing.*;
 
 
-/** @author Jannis Weis */
+/**
+ * An {@link DarkSVGIcon}, which will patch dynamic color values defined in the svg file.
+ *
+ * @author Jannis Weis
+ */
 public class ThemedSVGIcon extends DarkSVGIcon implements ThemedIcon {
 
     private Object currentTheme;
@@ -61,6 +65,7 @@ public class ThemedSVGIcon extends DarkSVGIcon implements ThemedIcon {
     }
 
     @Override
+    @SuppressWarnings("ShortCircuitBoolean")
     protected boolean ensureLoaded(final boolean painting) {
         /*
          * Use non-short-circuiting operand here to ensure the colors are actually patched.

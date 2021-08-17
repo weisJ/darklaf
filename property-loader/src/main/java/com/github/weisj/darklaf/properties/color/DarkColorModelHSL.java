@@ -25,7 +25,11 @@ import java.awt.*;
 
 import com.github.weisj.darklaf.util.LazyValue;
 
-/** @author Jannis Weis */
+/**
+ * An HSL implementation of {@link DarkColorModel}
+ *
+ * @author Jannis Weis
+ */
 public class DarkColorModelHSL extends DarkColorModel {
 
     private static final int[] hsl = new int[3];

@@ -29,6 +29,8 @@ import javax.swing.*;
 import javax.swing.plaf.UIResource;
 
 /**
+ * An {@link Icon} implementation which doesn't paint anything. Common sizes of icons are cached.
+ *
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
@@ -58,21 +60,26 @@ public final class EmptyIcon implements Icon, UIResource {
         return icon == null ? new EmptyIcon(size, size) : icon;
     }
 
+    @Override
     public void paintIcon(final Component component, final Graphics g, final int i, final int j) {}
 
+    @Override
     public int getIconWidth() {
         return this.width;
     }
 
+    @Override
     public int getIconHeight() {
         return this.height;
     }
 
+    @Override
     public int hashCode() {
         int sum = this.width + this.height;
         return sum * (sum + 1) / 2 + this.width;
     }
 
+    @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;

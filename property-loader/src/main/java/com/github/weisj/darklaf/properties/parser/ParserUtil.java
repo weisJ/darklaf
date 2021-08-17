@@ -225,8 +225,8 @@ final class ParserUtil implements Delimiters {
         try {
             return Class.forName(value).getDeclaredConstructor().newInstance();
         } catch (final Exception ignored) {
+            return null;
         }
-        return null;
     }
 
     private static boolean isOpenDelimiter(final char c) {

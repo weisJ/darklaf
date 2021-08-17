@@ -44,6 +44,7 @@ public class LazyUIAwareIcon extends DefaultUIAwareIcon {
         return new LazyUIAwareIcon(this);
     }
 
+    @Override
     protected Icon loadLightIcon() {
         Icon icon;
         if (lightSupplier != null) {
@@ -56,6 +57,7 @@ public class LazyUIAwareIcon extends DefaultUIAwareIcon {
         return icon;
     }
 
+    @Override
     protected Icon loadDarkIcon() {
         Icon icon;
         if (darkSupplier != null) {

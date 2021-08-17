@@ -131,6 +131,7 @@ public class DarkUIAwareIcon implements UIAwareIcon, UIResource, IconLoader.Cach
         return icon.getIconHeight();
     }
 
+    @Override
     public DarkUIAwareIcon getDual() {
         return dual;
     }

@@ -91,7 +91,7 @@ public class FontParser extends KeyFilteredParser implements Delimiters {
         if (!(parts.get(1) instanceof Integer)) return fontStructureError(parseResult);
         if (!(parts.get(2) instanceof Integer)) return fontStructureError(parseResult);
         return ParserUtil.setNonNull(parseResult,
-                FontUtil.createFont((String) parts.get(0), (Integer) parts.get(1), (Integer) parts.get((2))));
+                FontUtil.createFont((String) parts.get(0), (Integer) parts.get(1), (Integer) parts.get(2)));
     }
 
     private ParseResult fontStructureError(final ParseResult parseResult) {

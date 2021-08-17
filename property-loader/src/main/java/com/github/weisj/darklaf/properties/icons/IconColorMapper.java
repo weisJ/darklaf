@@ -42,7 +42,11 @@ import com.kitfox.svg.animation.AnimationElement;
 import com.kitfox.svg.app.beans.SVGIcon;
 import com.kitfox.svg.xml.StyleAttribute;
 
-/** @author Jannis Weis */
+/**
+ * Utility class responsible for patching color definitions in svg icons.
+ *
+ * @author Jannis Weis
+ */
 public final class IconColorMapper {
     private static final String INLINE_VALUE_PREFIX = "%";
     private static final Logger LOGGER = LogUtil.getLogger(IconLoader.class);
@@ -149,7 +153,7 @@ public final class IconColorMapper {
 
     public static Color getColor(final LinearGradient gradient, final Map<Object, Object> propertyMap,
             final Map<Object, Object> contextDefaults) {
-        String id = (gradient).getId();
+        String id = gradient.getId();
         StyleAttribute fallbacks = getAttribute("fallback", gradient);
         return resolveColor(id, getFallbacks(fallbacks), FALLBACK_COLOR, propertyMap, contextDefaults);
     }

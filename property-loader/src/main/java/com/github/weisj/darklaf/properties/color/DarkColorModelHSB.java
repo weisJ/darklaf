@@ -25,7 +25,11 @@ import java.awt.*;
 
 import com.github.weisj.darklaf.util.LazyValue;
 
-/** @author Jannis Weis */
+/**
+ * An HSB implementation of {@link DarkColorModel}
+ *
+ * @author Jannis Weis
+ */
 public class DarkColorModelHSB extends DarkColorModel {
 
     private static final float[] hsvVals = new float[3];

@@ -52,7 +52,7 @@ public class DynamicColor extends ColorWrapper {
     }
 
     protected boolean isColorSet() {
-        return super.getColor() != DEFAULT_COLOR;
+        return !DEFAULT_COLOR.equals(super.getColor());
     }
 
     protected Object getCurrentDynamicKey() {

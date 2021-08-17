@@ -25,7 +25,11 @@ import java.awt.*;
 
 import com.github.weisj.darklaf.util.LazyValue;
 
-/** @author Jannis Weis */
+/**
+ * An CMYK implementation of {@link DarkColorModel}
+ *
+ * @author Jannis Weis
+ */
 public class DarkColorModelCMYK extends DarkColorModel {
 
     private static final int[] cmyk = new int[4];

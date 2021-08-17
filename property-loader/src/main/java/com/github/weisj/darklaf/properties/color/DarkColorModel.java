@@ -25,7 +25,12 @@ import java.awt.*;
 
 import javax.swing.*;
 
-/** @author Jannis Weis */
+/**
+ * A class that represents a specific color model, which provides descriptions for the individual
+ * components representing the color value.
+ *
+ * @author Jannis Weis
+ */
 public abstract class DarkColorModel {
 
     private final String prefix;

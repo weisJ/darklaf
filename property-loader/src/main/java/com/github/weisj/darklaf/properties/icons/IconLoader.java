@@ -43,7 +43,12 @@ import com.github.weisj.darklaf.util.LazyValue;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.cache.SoftCache;
 
-/** @author Jannis Weis */
+/**
+ * Default implementation of {@link IconResolver}, which provides some additional convenience
+ * methods for loading svg icons.
+ *
+ * @author Jannis Weis
+ */
 public final class IconLoader implements IconResolver {
     private static final Logger LOGGER = LogUtil.getLogger(IconLoader.class);
     private static final Map<Class<?>, IconLoader> iconLoaderMap = new HashMap<>();
@@ -250,7 +255,7 @@ public final class IconLoader implements IconResolver {
     /*
      * Helper method to create the icons.
      */
-    protected @NotNull DarkUIAwareIcon createUIAwareIcon(final @NotNull String name, final int w, final int h) {
+    private @NotNull DarkUIAwareIcon createUIAwareIcon(final @NotNull String name, final int w, final int h) {
         return new DarkUIAwareIcon("dark/" + name, "light/" + name, w, h, parentClass);
     }
 

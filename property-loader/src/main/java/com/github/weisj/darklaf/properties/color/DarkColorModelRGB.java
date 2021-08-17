@@ -37,10 +37,12 @@ public class DarkColorModelRGB extends DarkColorModel {
         super("rgb", "Red", "Green", "Blue");
     }
 
+    @Override
     public int getMinimum(final int index) {
         return 0;
     }
 
+    @Override
     public int getMaximum(final int index) {
         return 255;
     }
@@ -50,14 +52,17 @@ public class DarkColorModelRGB extends DarkColorModel {
         return "RGB";
     }
 
+    @Override
     public String[] getLabelDescriptorsBefore() {
         return new String[] {"R", "G", "B"};
     }
 
+    @Override
     public String[] getLabelDescriptorsAfter() {
         return new String[] {"", "", "", ""};
     }
 
+    @Override
     public int[] getValuesFromColor(final Color color) {
         return new int[] {color.getRed(), color.getGreen(), color.getBlue()};
     }
@@ -66,6 +71,7 @@ public class DarkColorModelRGB extends DarkColorModel {
         return new int[] {color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()};
     }
 
+    @Override
     public Color getColorFromValues(final int[] values) {
         return new Color(values[0], values[1], values[2]);
     }

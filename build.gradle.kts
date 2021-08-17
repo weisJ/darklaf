@@ -227,7 +227,8 @@ allprojects {
                     errorproneArgs.add("-XepExcludedPaths:.*/javacc/.*")
                     disableWarningsInGeneratedCode.set(true)
                     disable(
-                        "StringSplitter"
+                        "StringSplitter",
+                        "InlineMeSuggester"
                     )
                 }
             }
