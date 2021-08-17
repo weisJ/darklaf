@@ -445,6 +445,7 @@ public class UIUtilities {
             return lsb;
         }
 
+        @Override
         public boolean equals(Object entry) {
             if (entry == this) {
                 return true;
@@ -456,6 +457,7 @@ public class UIUtilities {
             }
         }
 
+        @Override
         public int hashCode() {
             int result = 17;
             if (this.font != null) {

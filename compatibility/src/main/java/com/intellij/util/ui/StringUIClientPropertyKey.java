@@ -34,6 +34,7 @@ public class StringUIClientPropertyKey implements UIClientPropertyKey {
         this.key = key;
     }
 
+    @Override
     public String toString() {
         return this.key;
     }

@@ -373,6 +373,7 @@ public class MenuItemLayoutHelper implements com.github.weisj.darklaf.compatibil
         }
     }
 
+    @Override
     public LayoutResult layoutMenuItem() {
         LayoutResult lr = this.createLayoutResult();
         this.prepareForLayout(lr);
@@ -631,7 +632,7 @@ public class MenuItemLayoutHelper implements com.github.weisj.darklaf.compatibil
 
     public static JComponent getMenuItemParent(JMenuItem menuItem) {
         Container parent = menuItem.getParent();
-        return !(parent instanceof JComponent) || menuItem instanceof JMenu && ((JMenu) menuItem).isTopLevelMenu()
+        return !(parent instanceof JComponent) || (menuItem instanceof JMenu && ((JMenu) menuItem).isTopLevelMenu())
                 ? null
                 : (JComponent) parent;
     }
@@ -665,6 +666,7 @@ public class MenuItemLayoutHelper implements com.github.weisj.darklaf.compatibil
         return maxValue;
     }
 
+    @Override
     public JMenuItem getMenuItem() {
         return this.mi;
     }
@@ -681,30 +683,37 @@ public class MenuItemLayoutHelper implements com.github.weisj.darklaf.compatibil
         return this.accFont;
     }
 
+    @Override
     public FontMetrics getFontMetrics() {
         return this.fm;
     }
 
+    @Override
     public FontMetrics getAccFontMetrics() {
         return this.accFm;
     }
 
+    @Override
     public Icon getIcon() {
         return this.icon;
     }
 
+    @Override
     public Icon getCheckIcon() {
         return this.checkIcon;
     }
 
+    @Override
     public Icon getArrowIcon() {
         return this.arrowIcon;
     }
 
+    @Override
     public String getText() {
         return this.text;
     }
 
+    @Override
     public String getAccText() {
         return this.accText;
     }
@@ -713,6 +722,7 @@ public class MenuItemLayoutHelper implements com.github.weisj.darklaf.compatibil
         return this.isColumnLayout;
     }
 
+    @Override
     public boolean useCheckAndArrow() {
         return this.useCheckAndArrow;
     }
@@ -721,10 +731,12 @@ public class MenuItemLayoutHelper implements com.github.weisj.darklaf.compatibil
         return this.isLeftToRight;
     }
 
+    @Override
     public boolean isTopLevelMenu() {
         return this.isTopLevelMenu;
     }
 
+    @Override
     public View getHtmlView() {
         return this.htmlView;
     }
@@ -745,46 +757,57 @@ public class MenuItemLayoutHelper implements com.github.weisj.darklaf.compatibil
         return this.horizontalTextPosition;
     }
 
+    @Override
     public int getGap() {
         return this.gap;
     }
 
+    @Override
     public int getLeadingGap() {
         return this.leadingGap;
     }
 
+    @Override
     public int getAfterCheckIconGap() {
         return this.afterCheckIconGap;
     }
 
+    @Override
     public int getMinTextOffset() {
         return this.minTextOffset;
     }
 
+    @Override
     public Rectangle getViewRect() {
         return this.viewRect;
     }
 
+    @Override
     public RectSize getIconSize() {
         return this.iconSize;
     }
 
+    @Override
     public RectSize getTextSize() {
         return this.textSize;
     }
 
+    @Override
     public RectSize getAccSize() {
         return this.accSize;
     }
 
+    @Override
     public RectSize getCheckSize() {
         return this.checkSize;
     }
 
+    @Override
     public RectSize getArrowSize() {
         return this.arrowSize;
     }
 
+    @Override
     public RectSize getLabelSize() {
         return this.labelSize;
     }
@@ -936,26 +959,32 @@ public class MenuItemLayoutHelper implements com.github.weisj.darklaf.compatibil
             this.maxWidth = maxWidth;
         }
 
+        @Override
         public int getWidth() {
             return this.width;
         }
 
+        @Override
         public int getHeight() {
             return this.height;
         }
 
+        @Override
         public int getOrigWidth() {
             return this.origWidth;
         }
 
+        @Override
         public int getMaxWidth() {
             return this.maxWidth;
         }
 
+        @Override
         public void setWidth(int width) {
             this.width = width;
         }
 
+        @Override
         public void setHeight(int height) {
             this.height = height;
         }
@@ -968,6 +997,7 @@ public class MenuItemLayoutHelper implements com.github.weisj.darklaf.compatibil
             this.maxWidth = maxWidth;
         }
 
+        @Override
         public String toString() {
             return "[w=" + this.width + ",h=" + this.height + ",ow=" + this.origWidth + ",mw=" + this.maxWidth + "]";
         }
@@ -1039,6 +1069,7 @@ public class MenuItemLayoutHelper implements com.github.weisj.darklaf.compatibil
             this.labelRect = labelRect;
         }
 
+        @Override
         public Rectangle getIconRect() {
             return this.iconRect;
         }
@@ -1047,6 +1078,7 @@ public class MenuItemLayoutHelper implements com.github.weisj.darklaf.compatibil
             this.iconRect = iconRect;
         }
 
+        @Override
         public Rectangle getTextRect() {
             return this.textRect;
         }
@@ -1055,6 +1087,7 @@ public class MenuItemLayoutHelper implements com.github.weisj.darklaf.compatibil
             this.textRect = textRect;
         }
 
+        @Override
         public Rectangle getAccRect() {
             return this.accRect;
         }
@@ -1063,6 +1096,7 @@ public class MenuItemLayoutHelper implements com.github.weisj.darklaf.compatibil
             this.accRect = accRect;
         }
 
+        @Override
         public Rectangle getCheckRect() {
             return this.checkRect;
         }
@@ -1071,6 +1105,7 @@ public class MenuItemLayoutHelper implements com.github.weisj.darklaf.compatibil
             this.checkRect = checkRect;
         }
 
+        @Override
         public Rectangle getArrowRect() {
             return this.arrowRect;
         }

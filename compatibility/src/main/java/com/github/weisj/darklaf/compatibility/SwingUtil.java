@@ -103,7 +103,8 @@ public final class SwingUtil {
         if (swingInteropAvailable) {
             try {
                 grabMethod.get().invokeExact(toolkit, window);
-            } catch (Throwable ignored) {
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
             }
         } else {
             if (toolkit instanceof sun.awt.SunToolkit) {
@@ -116,7 +117,8 @@ public final class SwingUtil {
         if (swingInteropAvailable) {
             try {
                 ungrabMethod.get().invokeExact(toolkit, window);
-            } catch (Throwable ignored) {
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
             }
         } else {
             if (toolkit instanceof sun.awt.SunToolkit) {
