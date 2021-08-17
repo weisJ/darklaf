@@ -356,7 +356,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
 
     protected static final class HeaderButton extends JButton implements UIResource {
 
-        protected final DarkPanelPopupUI ui;
+        private final DarkPanelPopupUI ui;
 
         public HeaderButton(final Icon icon, final DarkPanelPopupUI ui) {
             super(icon);

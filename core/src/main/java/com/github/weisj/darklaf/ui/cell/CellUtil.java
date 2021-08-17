@@ -462,7 +462,7 @@ public final class CellUtil {
         return c;
     }
 
-    protected static boolean hasFocus(final Component cellComponent, final Component parentComponent) {
+    private static boolean hasFocus(final Component cellComponent, final Component parentComponent) {
         return parentComponent.hasFocus() || (DarkUIUtil.hasFocus(cellComponent)
                 || DarkUIUtil.getParentOfType(JPopupMenu.class, cellComponent, 4) != null);
     }
@@ -497,11 +497,11 @@ public final class CellUtil {
         }
     }
 
-    protected static boolean isInWrapper(final Component c) {
+    private static boolean isInWrapper(final Component c) {
         return c.getParent() instanceof IconWrapper;
     }
 
-    protected static boolean isListEditor(final Component c) {
+    private static boolean isListEditor(final Component c) {
         return PropertyUtil.getBooleanProperty(c, DarkListUI.KEY_IS_LIST_EDITOR) && c.getParent() instanceof JList;
     }
 
@@ -538,7 +538,7 @@ public final class CellUtil {
         return ins;
     }
 
-    protected static boolean parentLTR(final Component c) {
+    private static boolean parentLTR(final Component c) {
         return c.getParent().getComponentOrientation().isLeftToRight();
     }
 

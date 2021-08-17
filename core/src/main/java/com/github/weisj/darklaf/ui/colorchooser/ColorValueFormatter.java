@@ -115,7 +115,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         this.text = text;
     }
 
-    protected void error() {
+    private void error() {
         text.putClientProperty(DarkTextUI.KEY_HAS_ERROR, true);
         text.repaint();
         errorTimer.restart();
@@ -230,7 +230,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         }
     }
 
-    protected void checkRange(final int value, final int min, final int max) throws ParseException {
+    private void checkRange(final int value, final int min, final int max) throws ParseException {
         if (value > max || value < min) {
             throw new ParseException("Value not in range [" + min + "," + max + "]", 0);
         }

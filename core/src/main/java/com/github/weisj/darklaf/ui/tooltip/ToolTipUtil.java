@@ -52,7 +52,7 @@ public final class ToolTipUtil {
         }
     }
 
-    protected static Point getBestPositionMatch(final ToolTipContext context, final Point p) {
+    private static Point getBestPositionMatch(final ToolTipContext context, final Point p) {
         if (!context.isBestFit()) {
             return context.getToolTipLocation(p, null);
         }
@@ -98,10 +98,10 @@ public final class ToolTipUtil {
         return pos;
     }
 
-    protected static Point tryAlignments(final Alignment[] alignments, final ToolTipContext context, final Point p,
-            final Rectangle tooltipBounds, final Rectangle boundary, final Rectangle screenBoundary,
-            final BiConsumer<ToolTipContext, Alignment> setter, final boolean centerHorizontally,
-            final boolean centerVertically) {
+    private static Point tryAlignments(final Alignment[] alignments, final ToolTipContext context, final Point p,
+                                       final Rectangle tooltipBounds, final Rectangle boundary, final Rectangle screenBoundary,
+                                       final BiConsumer<ToolTipContext, Alignment> setter, final boolean centerHorizontally,
+                                       final boolean centerVertically) {
         Point pos = null;
         for (Alignment a : alignments) {
             if ((centerHorizontally || centerVertically) && a.isDiagonal()) {
@@ -115,7 +115,7 @@ public final class ToolTipUtil {
         return pos;
     }
 
-    protected static Alignment[] getAlignments(final Alignment start) {
+    private static Alignment[] getAlignments(final Alignment start) {
         // Example with start == NORTH: [NORTH, SOUTH, EAST, WEST, NORTH_EAST, SOUTH_WEST, NORTH_WEST,
         // SOUTH_EAST]
         return new Alignment[] {start, start.opposite(), start.clockwise().clockwise(),
@@ -123,10 +123,10 @@ public final class ToolTipUtil {
                 start.anticlockwise(), start.anticlockwise().opposite()};
     }
 
-    protected static Point tryPosition(final Alignment a, final ToolTipContext context, final Point p,
-            final Rectangle tooltipBounds, final Rectangle boundary, final Rectangle screenBoundary,
-            final BiConsumer<ToolTipContext, Alignment> setter, final boolean centerHorizontally,
-            final boolean centerVertically) {
+    private static Point tryPosition(final Alignment a, final ToolTipContext context, final Point p,
+                                     final Rectangle tooltipBounds, final Rectangle boundary, final Rectangle screenBoundary,
+                                     final BiConsumer<ToolTipContext, Alignment> setter, final boolean centerHorizontally,
+                                     final boolean centerVertically) {
         setter.accept(context, a);
         context.setCenterAlignment(a);
         context.updateToolTip();
@@ -138,8 +138,8 @@ public final class ToolTipUtil {
         return pos;
     }
 
-    protected static boolean fits(final Rectangle toolTipBounds, final Rectangle boundary,
-            final Rectangle screenBoundary) {
+    private static boolean fits(final Rectangle toolTipBounds, final Rectangle boundary,
+                                final Rectangle screenBoundary) {
         if (boundary == screenBoundary) {
             return SwingUtilities.isRectangleContainingRectangle(boundary, toolTipBounds);
         }
@@ -147,7 +147,7 @@ public final class ToolTipUtil {
                 && SwingUtilities.isRectangleContainingRectangle(screenBoundary, toolTipBounds);
     }
 
-    protected static ToolTipContext getToolTipContext(final JToolTip tooltip) {
+    private static ToolTipContext getToolTipContext(final JToolTip tooltip) {
         Object context = tooltip.getClientProperty(DarkToolTipUI.KEY_CONTEXT);
         if (context instanceof ToolTipContext) {
             return (ToolTipContext) context;

@@ -97,8 +97,8 @@ public final class DarkBorders {
         return createDarkLineBorder(top, left, bottom, right);
     }
 
-    protected static DarkLineBorder createDarkLineBorder(final int top, final int left, final int bottom,
-            final int right) {
+    private static DarkLineBorder createDarkLineBorder(final int top, final int left, final int bottom,
+                                                       final int right) {
         return new DarkLineBorder(top, left, bottom, right, "border", Color::darker);
     }
 
