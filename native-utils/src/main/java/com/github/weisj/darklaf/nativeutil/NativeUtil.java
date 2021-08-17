@@ -29,6 +29,9 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 /**
  * A simple library class which helps with loading dynamic libraries stored in the JAR archive.
@@ -42,6 +45,7 @@ import java.util.Objects;
  */
 public final class NativeUtil {
 
+    private static final Logger LOGGER = Logger.getLogger(NativeUtil.class.getName());
     public static final String NATIVE_FOLDER_PATH_PREFIX = "nativeutils";
     /**
      * The minimum length a prefix for a file has to have according to
@@ -200,7 +204,8 @@ public final class NativeUtil {
     private static void delete(final Path path) {
         try {
             Files.deleteIfExists(path);
-        } catch (final IOException ignored) {
+        } catch (final IOException e) {
+            LOGGER.log(Level.WARNING, "Couldn't delete file " + path, e);
         }
     }
 

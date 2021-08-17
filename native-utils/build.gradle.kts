@@ -6,10 +6,6 @@ plugins {
     `module-info-compile`
 }
 
-dependencies {
-    implementation(projects.darklafUtils)
-}
-
 tasks.jar {
     CrLfSpec(LineEndings.LF).run {
         into("META-INF") {
