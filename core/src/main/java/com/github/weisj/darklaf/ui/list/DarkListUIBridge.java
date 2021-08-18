@@ -371,7 +371,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
             Font oldFont = list.getFont();
             if (oldFont == null || oldFont instanceof UIResource) {
                 Font newFont = UIManager.getFont(b ? "FileChooser.listFont" : "List.font");
-                if (newFont != null && newFont != oldFont) {
+                if (newFont != null && !Objects.equals(newFont, oldFont)) {
                     list.setFont(newFont);
                 }
             }
@@ -1918,6 +1918,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
                     list.setSelectionInterval(0, size - 1);
 
                     // this is done to restore the anchor and lead
+                    // Todo: Correct argument order?
                     SwingUtil.setLeadAnchorWithoutSelection(lsm, anchor, lead);
 
                     list.setValueIsAdjusting(false);

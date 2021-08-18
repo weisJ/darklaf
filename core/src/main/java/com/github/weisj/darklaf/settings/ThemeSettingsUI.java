@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 
 import javax.swing.JCheckBox;
@@ -427,7 +428,7 @@ public class ThemeSettingsUI {
 
         private Color getSelectedColor(final RadioColorChooser chooser) {
             Color c = chooser.getSelectedColor();
-            return c == chooser.getDefaultColor() ? null : c;
+            return Objects.equals(c, chooser.getDefaultColor()) ? null : c;
         }
 
         @Override

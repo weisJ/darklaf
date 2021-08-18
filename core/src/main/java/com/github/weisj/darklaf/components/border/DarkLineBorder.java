@@ -52,6 +52,10 @@ public class DarkLineBorder extends MutableLineBorder {
         g.fillRect(x + width - right, y, right, height - bottom);
     }
 
+    // We really want to compare the theme by reference.
+    // This is the same as LafManager does for determining if
+    // a theme needs to be updated.
+    @SuppressWarnings("ReferenceEquality")
     protected Color getColor(final Component c) {
         if (!LafManager.isInstalled()) {
             currentTheme = null;

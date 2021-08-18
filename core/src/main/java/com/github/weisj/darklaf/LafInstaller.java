@@ -87,6 +87,8 @@ final class LafInstaller {
     }
 
 
+    // Even for themes which are Objects#equals equal we want to dispatch an event.
+    @SuppressWarnings("ReferenceEquality")
     void notifyThemeChanged(final Theme oldTheme, final Theme newTheme) {
         if (oldTheme != newTheme) {
             eventSupport.dispatchEvent(new ThemeChangeEvent(oldTheme, newTheme), ThemeChangeListener::themeChanged);

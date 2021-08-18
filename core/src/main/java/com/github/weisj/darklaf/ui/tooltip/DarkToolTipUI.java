@@ -210,13 +210,14 @@ public class DarkToolTipUI extends BasicToolTipUI
         fadeAnimator.resume();
     }
 
+    // NO_TEXT is a reference quality sentinel value.
+    @SuppressWarnings({"ReferenceEquality", "StringEquality"})
     protected void paintText(final Graphics g, final JComponent c) {
         Dimension size = c.getSize();
 
         g.setColor(c.getForeground());
         String tipText = getTipText();
 
-        // noinspection StringEquality
         if (tipText != NO_TEXT) {
             Insets insets = c.getInsets();
             Rectangle paintTextR = new Rectangle(insets.left, insets.top, size.width - (insets.left + insets.right),

@@ -22,6 +22,7 @@
 package com.github.weisj.darklaf.components;
 
 import java.awt.*;
+import java.util.Objects;
 import java.util.Properties;
 
 import javax.swing.*;
@@ -177,14 +178,16 @@ public class ColoredRadioButton extends JRadioButton {
 
         @Override
         public void update(final Graphics g, final JComponent c) {
-            if (patchedColor != color || patchedFocusColor != focusColor) {
+            if (!Objects.equals(patchedColor, color) || Objects.equals(patchedFocusColor, focusColor)) {
                 patchColors(color, focusColor);
             }
             super.update(g, c);
         }
 
         private void patchColors(final Color color, final Color focusColor) {
-            if (color == null || (patched && patchedColor == color && patchedFocusColor == focusColor)) {
+            if (color == null
+                    || (patched && Objects.equals(patchedColor, color)
+                            && Objects.equals(patchedFocusColor, focusColor))) {
                 return;
             }
             this.patchedColor = color;
@@ -195,8 +198,8 @@ public class ColoredRadioButton extends JRadioButton {
             Properties props = new Properties();
             UIDefaults defaults = UIManager.getLookAndFeelDefaults();
             theme.loadDefaults(props, defaults, iconLoader);
-            Color accentCol = color == DEFAULT_COLOR ? (Color) props.get("widgetFillDefault") : color;
-            Color focusCol = focusColor == DEFAULT_COLOR ? accentCol : focusColor;
+            Color accentCol = DEFAULT_COLOR.equals(color) ? (Color) props.get("widgetFillDefault") : color;
+            Color focusCol = DEFAULT_COLOR.equals(focusColor) ? accentCol : focusColor;
             adjustment.applyColors(theme, props, accentCol, null);
             PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, "radioButton", "ui/"),
                     props, defaults, iconLoader);
@@ -209,7 +212,7 @@ public class ColoredRadioButton extends JRadioButton {
             for (String prop : COLOR_PROPERTIES) {
                 propertyMap.put(prop, accentCol);
             }
-            if (focusColor != DEFAULT_COLOR) {
+            if (!Objects.equals(focusCol, DEFAULT_COLOR)) {
                 for (String prop : FOCUS_COLOR_PROPERTIES) {
                     propertyMap.put(prop, focusCol);
                 }

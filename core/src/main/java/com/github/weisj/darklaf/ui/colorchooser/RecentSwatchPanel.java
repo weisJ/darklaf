@@ -52,7 +52,7 @@ class RecentSwatchPanel extends SwatchPanel {
     @Override
     public String getToolTipText(final MouseEvent e) {
         Color color = getColorForLocation(e.getX(), e.getY());
-        if (color == defaultRecentColor || color == null) return null;
+        if (color == null || color.equals(defaultRecentColor)) return null;
         return color.getRed() + ", " + color.getGreen() + ", " + color.getBlue();
     }
 
