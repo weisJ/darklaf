@@ -21,6 +21,9 @@
  */
 package com.github.weisj.darklaf.graphics;
 
+import com.google.errorprone.annotations.Immutable;
+
+@Immutable
 public enum DefaultInterpolator implements Interpolator {
     LINEAR(x -> x),
     EASE_IN_SINE(x -> (float) (1 - Math.cos((x * Math.PI) / 2))),

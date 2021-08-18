@@ -21,6 +21,8 @@
  */
 package com.github.weisj.darklaf.graphics;
 
+import com.google.errorprone.annotations.Immutable;
+
 /**
  * An interpolation function used for animation. The function should be a function
  *
@@ -29,6 +31,7 @@ package com.github.weisj.darklaf.graphics;
  * </pre>
  *
  */
+@Immutable
 public interface Interpolator {
 
     /**
