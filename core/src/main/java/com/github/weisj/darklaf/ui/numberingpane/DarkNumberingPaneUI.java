@@ -31,6 +31,8 @@ import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -44,12 +46,14 @@ import com.github.weisj.darklaf.components.text.IndexListener;
 import com.github.weisj.darklaf.components.text.LineHighlighter;
 import com.github.weisj.darklaf.components.text.NumberingPane;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
 public class DarkNumberingPaneUI extends ComponentUI {
 
+    private static final Logger LOGGER = LogUtil.getLogger(DarkNumberingPaneUI.class);
     protected static final int OUTER_PAD = 7;
     protected static final int PAD = 5;
     protected Handler handler;
@@ -204,7 +208,8 @@ public class DarkNumberingPaneUI extends ComponentUI {
                 g.setColor(lineRect.y == yCur ? foregroundHighlight : numberingPane.getForeground());
                 g.drawString(numberStr, width - OUTER_PAD - fm.stringWidth(numberStr) - maxIconWidth,
                         lineRect.y + lineRect.height - descent);
-            } catch (final BadLocationException ignored) {
+            } catch (final BadLocationException e) {
+                LOGGER.log(Level.SEVERE, "Painting numbering failed", e);
             }
         }
         config.restore();
@@ -237,7 +242,8 @@ public class DarkNumberingPaneUI extends ComponentUI {
                 int x = OUTER_PAD + PAD + textWidth;
                 int y = lineRect.y + (lineRect.height - h) / 2;
                 icon.getValue().paintIcon(numberingPane, g, x, y);
-            } catch (final BadLocationException ignored) {
+            } catch (final BadLocationException e) {
+                LOGGER.log(Level.SEVERE, "Painting icons failed", e);
             }
         }
     }
@@ -293,6 +299,7 @@ public class DarkNumberingPaneUI extends ComponentUI {
                             }
                         }
                     } catch (final BadLocationException ignored) {
+                        LOGGER.log(Level.SEVERE, "Handling mouse click failed", e);
                     }
                 }
                 IndexListener[] list = numberingPane.getIndexListeners();
@@ -375,7 +382,8 @@ public class DarkNumberingPaneUI extends ComponentUI {
                         currentHighlight = textComponent.getHighlighter().addHighlight(0, 0, currentLinePainter);
                         textComponent.getCaret().addChangeListener(currentLinePainter);
                         currentLinePainter.setComponent(textComponent);
-                    } catch (final BadLocationException ignored) {
+                    } catch (final BadLocationException e) {
+                        LOGGER.log(Level.SEVERE, "Setting highlight failed", e);
                     }
                     textComponent.addPropertyChangeListener(getPropertyChangeListener());
                     textComponent.getCaret().addChangeListener(getChangeListener());

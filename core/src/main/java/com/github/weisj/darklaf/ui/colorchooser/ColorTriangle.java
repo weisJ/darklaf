@@ -644,7 +644,8 @@ public class ColorTriangle extends JComponent {
                         triangleInverse.transform(dummy, dummy);
                         Point2D sv = getSaturationAndValue(dummy.getX(), dummy.getY());
                         setPixel(raster, i, j, getColorRGB(getHue(), sv.getX(), sv.getY()));
-                    } catch (final NoninvertibleTransformException ignored) {
+                    } catch (final NoninvertibleTransformException e) {
+                        throw new IllegalStateException(e);
                     }
                 }
             }

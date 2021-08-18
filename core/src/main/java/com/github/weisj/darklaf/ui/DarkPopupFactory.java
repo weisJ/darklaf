@@ -252,7 +252,9 @@ public class DarkPopupFactory extends PopupFactory {
         if (startHidden && translucencySupported) {
             try {
                 window.setOpacity(0);
-            } catch (final Exception ignored) {
+            } catch (final Exception e) {
+                // We shouldn't throw here as a popup failure shouldn't break the GUI.
+                LOGGER.log(Level.SEVERE, "We shouldn't be here: ", e);
             }
         }
     }

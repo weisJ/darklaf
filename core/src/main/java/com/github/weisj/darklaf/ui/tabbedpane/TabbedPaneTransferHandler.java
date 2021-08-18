@@ -63,6 +63,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
         try {
             tabFlavor = new DataFlavor(MIME_TYPE);
         } catch (final ClassNotFoundException ignored) {
+            LOGGER.severe("TabbedPane DnD isn't available. Couldn't find MimeType: " + MIME_TYPE);
         }
     }
 

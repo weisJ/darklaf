@@ -109,7 +109,8 @@ public class LineHighlighter implements Highlighter.HighlightPainter, ChangeList
                     }
                     lastView = currentView;
                 }
-            } catch (final BadLocationException ignored) {
+            } catch (final BadLocationException e) {
+                LOGGER.log(Level.SEVERE, "Resetting the highlight went wrong", e);
             }
         });
     }

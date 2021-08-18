@@ -66,6 +66,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
         try {
             tabFlavor = new DataFlavor(MIME_TYPE);
         } catch (final ClassNotFoundException ignored) {
+            LOGGER.severe("TabFrame DnD isn't available. Couldn't find MimeType: " + MIME_TYPE);
         }
         timer = new Timer(100, e -> {
             if (lastTabFrame != null) {

@@ -348,7 +348,8 @@ public class TransformUI extends MouseEventUI<JComponent> {
             if (this.view != null) {
                 try {
                     setDelegateRepaintManagerMethod.invokeExact(this.view, null);
-                } catch (Throwable ignored) {
+                } catch (Throwable e) {
+                    LOGGER.log(Level.SEVERE, "Setting delegate repaint manager failed", e);
                 }
             }
         }
@@ -357,7 +358,8 @@ public class TransformUI extends MouseEventUI<JComponent> {
             if (this.view != null) {
                 try {
                     setDelegateRepaintManagerMethod.invokeExact(this.view, wrappedManager);
-                } catch (Throwable ignored) {
+                } catch (Throwable e) {
+                    LOGGER.log(Level.SEVERE, "Setting delegate repaint manager failed", e);
                 }
             }
         }

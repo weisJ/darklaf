@@ -56,6 +56,7 @@ public class DummyEditorPaneUI extends BasicEditorPaneUI implements DummyTextUIM
     }
 
     @Override
+    @SuppressWarnings("EmptyCatch")
     public void uninstallUI(final JTextComponent editor) {
         try {
             super.uninstallUI(editor);

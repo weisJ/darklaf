@@ -70,10 +70,10 @@ public enum DividerStyle {
         try {
             return valueOf(obj.toString());
         } catch (final IllegalArgumentException ignored) {
+            for (DividerStyle s : values()) {
+                if (s.name.equalsIgnoreCase(obj.toString())) return s;
+            }
+            return null;
         }
-        for (DividerStyle s : values()) {
-            if (s.name.equalsIgnoreCase(obj.toString())) return s;
-        }
-        return null;
     }
 }

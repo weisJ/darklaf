@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -51,10 +53,12 @@ import com.github.weisj.darklaf.ui.slider.DarkSliderUI;
 import com.github.weisj.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.ColorUtil;
+import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
 public class SmallColorChooser extends JPanel implements ChooserComponent<Color> {
 
+    private static final Logger LOGGER = LogUtil.getLogger(SmallColorChooser.class);
     private static final DarkColorModel[] COLOR_MODELS = new DarkColorModel[] {DarkColorModelRGB.getInstance(),
             DarkColorModelHSB.getInstance(), DarkColorModelHSL.getInstance()};
 
@@ -134,7 +138,8 @@ public class SmallColorChooser extends JPanel implements ChooserComponent<Color>
                 int[] rgb = new int[] {Integer.valueOf(hexStr.substring(0, 2), 16),
                         Integer.valueOf(hexStr.substring(2, 4), 16), Integer.valueOf(hexStr.substring(4, 6), 16)};
                 setColor(hexField, DarkColorModelRGB.getInstance(), rgb);
-            } catch (NumberFormatException | IndexOutOfBoundsException ignore) {
+            } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                LOGGER.log(Level.SEVERE, "Setting color failed", e);
             }
         });
     }

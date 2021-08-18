@@ -331,7 +331,9 @@ public class DarkFileChooserUI extends MetalFileChooserUI {
             Component c = parent.getComponent(index);
             if (type.isInstance(c) && (layoutType == null || layoutType.isInstance(((JComponent) c).getLayout())))
                 return type.cast(c);
-        } catch (IndexOutOfBoundsException ignored) {
+        } catch (IndexOutOfBoundsException e) {
+            throw new IllegalArgumentException(
+                    "Invalid request: Parent=" + parent + ", index=" + index + ", layout=" + layoutType, e);
         }
         return null;
     }

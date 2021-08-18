@@ -28,6 +28,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.beans.PropertyChangeListener;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -36,10 +38,12 @@ import javax.swing.plaf.basic.BasicToolBarUI;
 
 import com.github.weisj.darklaf.listener.MouseResponder;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.LogUtil;
 
 /** @author Jannis Weis */
 public class DarkToolBarUI extends BasicToolBarUI {
 
+    private static final Logger LOGGER = LogUtil.getLogger(DarkToolBarUI.class);
     protected static final String KEY_PREFIX = "JToolBar.";
     public static final String KEY_USE_TOOL_BAR_BACKGROUND = KEY_PREFIX + "drag.useToolbarBackground";
     private static final Robot robot = createRobot();
@@ -348,7 +352,8 @@ public class DarkToolBarUI extends BasicToolBarUI {
                     setFloating(true, null);
                 }
                 dockingSource.remove(previewPanel);
-            } catch (final IllegalComponentStateException ignored) {
+            } catch (final IllegalComponentStateException e) {
+                LOGGER.log(Level.SEVERE, "Couldn't show docking indicator", e);
             }
         }
     }
