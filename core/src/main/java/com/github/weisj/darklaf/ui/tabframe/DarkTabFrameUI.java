@@ -149,7 +149,7 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
                 dropTarget.setActive(tabFrame.isDndEnabled());
             }
         } catch (final TooManyListenersException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Can't install DnD support. A valid drop target is already registered", e);
         }
     }
 

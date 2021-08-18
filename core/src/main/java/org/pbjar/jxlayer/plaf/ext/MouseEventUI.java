@@ -409,7 +409,7 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
             try {
                 transform.inverseTransform(point, point);
             } catch (NoninvertibleTransformException e) {
-                e.printStackTrace();
+                throw new IllegalArgumentException(e);
             }
         }
         return point;

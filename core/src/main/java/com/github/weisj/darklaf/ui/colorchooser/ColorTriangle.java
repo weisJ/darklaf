@@ -450,7 +450,7 @@ public class ColorTriangle extends JComponent {
             // For calculating pick location. MouseEvents already respect the ui scaling.
             triangleInverse = rotationTransform.createInverse();
         } catch (final NoninvertibleTransformException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Shouldn't happen", e);
         }
     }
 

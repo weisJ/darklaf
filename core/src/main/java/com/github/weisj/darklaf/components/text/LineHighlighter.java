@@ -22,6 +22,8 @@
 package com.github.weisj.darklaf.components.text;
 
 import java.awt.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -30,7 +32,10 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
 
+import com.github.weisj.darklaf.util.LogUtil;
+
 public class LineHighlighter implements Highlighter.HighlightPainter, ChangeListener {
+    private static final Logger LOGGER = LogUtil.getLogger(LineHighlighter.class);
     private JTextComponent component;
     private Color color;
     private Rectangle lastView;
@@ -67,7 +72,7 @@ public class LineHighlighter implements Highlighter.HighlightPainter, ChangeList
                 lastView = r;
             }
         } catch (final BadLocationException ble) {
-            ble.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Painting Line highlight went wrong", ble);
         }
     }
 

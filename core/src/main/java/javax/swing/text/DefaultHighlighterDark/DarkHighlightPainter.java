@@ -391,11 +391,9 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     private Rectangle getPosRect(final JTextComponent c, final int offset, final Position.Bias bias) {
         try {
             return c.getUI().modelToView(c, Math.max(0, Math.min(offset, c.getDocument().getLength())), bias);
-        } catch (final BadLocationException ignored) {
-        } catch (final IllegalArgumentException e) {
-            new RuntimeException("" + offset).printStackTrace();
+        } catch (final BadLocationException e) {
+            return new Rectangle(Integer.MIN_VALUE + 100, Integer.MIN_VALUE + 100, 0, 0);
         }
-        return new Rectangle(Integer.MIN_VALUE + 100, Integer.MIN_VALUE + 100, 0, 0);
     }
 
     private int getOffset(final JTextComponent c, final int x, final int y) {

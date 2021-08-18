@@ -126,7 +126,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
                         }
                     }
                 } catch (final ParseException e) {
-                    e.printStackTrace();
+                    throw new IllegalStateException(e);
                 }
             }
 

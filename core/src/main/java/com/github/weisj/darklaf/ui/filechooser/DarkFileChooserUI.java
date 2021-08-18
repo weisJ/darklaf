@@ -382,7 +382,7 @@ public class DarkFileChooserUI extends MetalFileChooserUI {
                             icon = textFileIcon;
                         }
                     } catch (final IOException e) {
-                        e.printStackTrace();
+                        icon = fileIcon;
                     }
                 }
             }

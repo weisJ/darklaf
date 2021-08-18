@@ -25,6 +25,7 @@ import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.*;
@@ -81,7 +82,7 @@ public class DarkPopupFactory extends PopupFactory {
         if (type == PopupType.HEAVY_WEIGHT) {
             Window window = DarkUIUtil.getWindow(contents);
             if (owner != null && window != null
-                && !Objects.equals(window.getGraphicsConfiguration(), owner.getGraphicsConfiguration())) {
+                    && !Objects.equals(window.getGraphicsConfiguration(), owner.getGraphicsConfiguration())) {
                 /*
                  * Window uses incorrect graphics configuration. Setting the focusable window state will force the
                  * PopupFactory to dispose it and create a new window.
@@ -198,7 +199,7 @@ public class DarkPopupFactory extends PopupFactory {
                     method.setAccessible(true);
                     method.invoke(rootPane, true);
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
+                    LOGGER.log(Level.SEVERE, "Couldn't apply fix for double buffering", e);
                 }
             }
         }

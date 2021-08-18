@@ -28,11 +28,14 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.plaf.TabbedPaneUI;
 
 import com.github.weisj.darklaf.ui.util.DnDUtil;
+import com.github.weisj.darklaf.util.LogUtil;
 
 /**
  * @author Robert Futrell
@@ -40,6 +43,7 @@ import com.github.weisj.darklaf.ui.util.DnDUtil;
  */
 public class TabbedPaneTransferHandler extends TransferHandler implements DropTargetListener, SwingConstants {
 
+    private static final Logger LOGGER = LogUtil.getLogger(TabbedPaneTransferHandler.class);
     private static final String MIME_TYPE = DataFlavor.javaJVMLocalObjectMimeType + ";class="
             + TabTransferData.class.getName();
     private static TabbedPaneDragGestureRecognizer recognizer = null;
@@ -116,7 +120,7 @@ public class TabbedPaneTransferHandler extends TransferHandler implements DropTa
                     ui.clearDropIndicator();
                 }
             } catch (final Exception e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, "Couldn't import tab", e);
             }
         }
         return successful;

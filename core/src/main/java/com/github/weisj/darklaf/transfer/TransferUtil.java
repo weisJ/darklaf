@@ -76,9 +76,8 @@ public final class TransferUtil {
                     // noinspection unchecked
                     return dragImageCreator.apply((T) t.getTransferData(flavor));
                 } catch (UnsupportedFlavorException | IOException e) {
-                    e.printStackTrace();
+                    return null;
                 }
-                return null;
             }
 
             @Override

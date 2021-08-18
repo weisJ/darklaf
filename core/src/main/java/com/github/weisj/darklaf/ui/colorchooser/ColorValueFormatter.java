@@ -136,7 +136,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
                     text.commitEdit();
                 }
             } catch (final ParseException e) {
-                e.printStackTrace();
+                throw new IllegalStateException("Shouldn't happen. Committed invalid value", e);
             }
         });
     }

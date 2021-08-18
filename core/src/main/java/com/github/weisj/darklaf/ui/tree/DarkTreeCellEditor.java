@@ -137,7 +137,7 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
                         spinner.setValue(value);
                     }
                 } catch (final ParseException e) {
-                    e.printStackTrace();
+                    throw new IllegalStateException(e);
                 }
             }
 

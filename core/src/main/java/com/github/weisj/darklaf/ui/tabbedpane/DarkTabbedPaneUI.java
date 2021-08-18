@@ -139,7 +139,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
                 target.setActive(dndEnabled);
             }
         } catch (final TooManyListenersException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Can't install DnD support. A valid drop target is already registered", e);
         }
     }
 

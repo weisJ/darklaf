@@ -26,6 +26,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
 import java.lang.reflect.Field;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.*;
@@ -226,7 +227,7 @@ public final class StringPainter {
                 return (BufferedImage) img;
             }
         } catch (final Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Couldn't retrieve Graphics backing image", e);
         }
         return null;
     }
