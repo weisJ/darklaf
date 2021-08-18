@@ -27,6 +27,10 @@ val skipAutostyle by props(false)
 val isRelease = project.stringProperty("release").toBool()
 val snapshotName by props("")
 
+if (isRelease && JavaVersion.current().isJava9Compatible) {
+    logger.error("Java 9 compatible compiler is needed for release builds")
+}
+
 val String.v: String get() = rootProject.extra["$this.version"] as String
 val projectVersion = "darklaf".v
 
