@@ -57,7 +57,7 @@ public abstract class WrappedRepaintManager extends RepaintManager {
      * Just delegates. {@inheritDoc}
      */
     @Override
-    public void addInvalidComponent(final JComponent invalidComponent) {
+    public synchronized void addInvalidComponent(final JComponent invalidComponent) {
         delegate.addInvalidComponent(invalidComponent);
     }
 
@@ -65,7 +65,7 @@ public abstract class WrappedRepaintManager extends RepaintManager {
      * Just delegates. {@inheritDoc}
      */
     @Override
-    public void removeInvalidComponent(final JComponent component) {
+    public synchronized void removeInvalidComponent(final JComponent component) {
         delegate.removeInvalidComponent(component);
     }
 

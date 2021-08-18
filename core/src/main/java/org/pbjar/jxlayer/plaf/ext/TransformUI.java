@@ -503,7 +503,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
          * {@link RepaintManager}.
          */
         @Override
-        public void addInvalidComponent(final JComponent invalidComponent) {
+        public synchronized void addInvalidComponent(final JComponent invalidComponent) {
             JLayer<? extends JComponent> layer = TransformUtils.findTransformJLayer(invalidComponent);
             RepaintManager.currentManager(layer).addInvalidComponent(layer);
         }
