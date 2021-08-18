@@ -129,9 +129,10 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
     public void paintShadow(final Component c, final Graphics g, final int x, final int y, final int width,
             final int height, final Area bubbleArea) {
         Shape oldClip = g.getClip();
+        if (bubbleArea.contains(oldClip.getBounds())) return;
         Area clip = new Area(new Rectangle2D.Double(x, y, width, height));
         clip.subtract(bubbleArea);
-        g.setClip(clip);
+        ((Graphics2D) g).clip(clip);
         int bw = 1 + bubbleBorder.getThickness();
         shadowBorder.paintBorder(c, g, x + bw, y + bw, width - 2 * bw, height - 2 * bw);
         g.setClip(oldClip);
