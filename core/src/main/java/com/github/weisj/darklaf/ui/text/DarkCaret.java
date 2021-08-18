@@ -42,8 +42,8 @@ public class DarkCaret extends DefaultCaret implements UIResource {
 
     private static final int FLAG_SIZE = 3;
 
-    private static Action selectWord;
-    private static Action selectLine;
+    private static final Action selectWord = new SelectWordAction();
+    private static final Action selectLine = new SelectLineAction();
     private final Segment seg;
     private final DarkHighlightPainter selectionPainter;
     private MouseEvent selectedWordEvent;
@@ -67,8 +67,6 @@ public class DarkCaret extends DefaultCaret implements UIResource {
         seg = new Segment();
         setStyles(style, insertStyle);
         selectionPainter = new DarkHighlightPainter();
-        selectLine = new SelectLineAction();
-        selectWord = new SelectWordAction();
         pasteOnMiddleMouseClick = true;
     }
 
