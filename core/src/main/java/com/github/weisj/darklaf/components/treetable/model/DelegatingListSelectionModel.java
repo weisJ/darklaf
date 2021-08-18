@@ -127,6 +127,8 @@ public interface DelegatingListSelectionModel extends ListSelectionModel {
         getListDelegate().removeListSelectionListener(x);
     }
 
+    // #getUI is a Java 9 API
+    @SuppressWarnings("MissingOverride")
     default int[] getSelectedIndices() {
         int iMin = getMinSelectionIndex();
         int iMax = getMaxSelectionIndex();
@@ -147,6 +149,8 @@ public interface DelegatingListSelectionModel extends ListSelectionModel {
         return rv;
     }
 
+    // #getUI is a Java 9 API
+    @SuppressWarnings("MissingOverride")
     default int getSelectedItemsCount() {
         int iMin = getMinSelectionIndex();
         int iMax = getMaxSelectionIndex();

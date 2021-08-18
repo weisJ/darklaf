@@ -84,6 +84,7 @@ public class IconEditor extends JPanel {
                         fitIconToSize((ThemedIcon) p.getSecond(), comboIconSize, comboIconSize)))
                 .collect(Collectors.toList());
 
+        @SuppressWarnings("JdkObsolete")
         ComboBoxModel<Pair<String, ThemedIcon>> model = new DefaultComboBoxModel<>(new Vector<>(themedIcons));
         iconCombo.setModel(model);
 

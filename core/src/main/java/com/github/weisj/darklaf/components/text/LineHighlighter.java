@@ -47,7 +47,7 @@ public class LineHighlighter implements Highlighter.HighlightPainter, ChangeList
         setColor(color);
     }
 
-    /*
+    /**
      * You can reset the line color at any time
      *
      * @param color the color of the background line

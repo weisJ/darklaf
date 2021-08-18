@@ -97,6 +97,7 @@ public abstract class Animator {
         currentFrame %= totalFrames;
     }
 
+    @SuppressWarnings("ThreadPriorityCheck")
     private static ScheduledExecutorService createScheduler() {
         ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1, r -> {
             final Thread thread = new Thread(r, "Animations Thread");

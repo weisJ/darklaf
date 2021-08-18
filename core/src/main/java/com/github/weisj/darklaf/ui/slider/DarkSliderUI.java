@@ -276,8 +276,9 @@ public class DarkSliderUI extends BasicSliderUI {
      * @param direction the direction
      */
     @Override
+    // Slider is final for the lifetime of this object
+    @SuppressWarnings("SynchronizeOnNonFinalField")
     public void scrollByBlock(final int direction) {
-        // noinspection SynchronizeOnNonFinalField
         synchronized (slider) {
             int blockIncrement = (slider.getMaximum() - slider.getMinimum()) / 10;
             if (blockIncrement == 0) {
@@ -307,8 +308,9 @@ public class DarkSliderUI extends BasicSliderUI {
      * @param direction the direction
      */
     @Override
+    // Slider is final for the lifetime of this object
+    @SuppressWarnings("SynchronizeOnNonFinalField")
     public void scrollByUnit(final int direction) {
-        // noinspection SynchronizeOnNonFinalField
         synchronized (slider) {
             int delta = (direction > 0) ? POSITIVE_SCROLL : NEGATIVE_SCROLL;
 

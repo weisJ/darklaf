@@ -128,6 +128,8 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
     }
 
     @Override
+    // We're not calling the super implementation
+    @SuppressWarnings("UnsynchronizedOverridesSynchronized")
     public void paint(final Graphics g2d, final JComponent c) {
         Graphics2D g = (Graphics2D) g2d;
         AbstractButton b = (AbstractButton) c;

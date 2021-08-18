@@ -177,7 +177,9 @@ public class TabFrameLayout implements LayoutManager {
             int size = leftCount > 0 ? leftHeight : tabFrame.getTabSize();
             int height = dim.height - topPane.getHeight() - bottomPane.getHeight();
             leftPane.setBounds(0, topPane.getHeight(), size, height + (height % 2));
-            tabFrame.getLeftTabContainer().setPreferredSize(new Dimension(leftPane.getHeight(), leftPane.getWidth()));
+            tabFrame.getLeftTabContainer().setPreferredSize(new Dimension(
+                    /* width= */leftPane.getHeight(),
+                    /* height= */leftPane.getWidth()));
             tabFrame.getLeftTabContainer().setSize(tabFrame.getLeftTabContainer().getPreferredSize());
             if (leftCount > 0) {
                 Point start = new Point(leftPane.getHeight(), 0);
@@ -219,8 +221,9 @@ public class TabFrameLayout implements LayoutManager {
             int size = rightCount > 0 ? rightHeight : tabFrame.getTabSize();
             int height = dim.height - topPane.getHeight() - bottomPane.getHeight();
             rightPane.setBounds(dim.width - rightHeight, topPane.getHeight(), size, height + (height % 2));
-            tabFrame.getRightTabContainer()
-                    .setPreferredSize(new Dimension(rightPane.getHeight(), rightPane.getWidth()));
+            tabFrame.getRightTabContainer().setPreferredSize(new Dimension(
+                    /* width= */rightPane.getHeight(),
+                    /* height= */rightPane.getWidth()));
             tabFrame.getRightTabContainer().setSize(tabFrame.getRightTabContainer().getPreferredSize());
             if (rightCount > 0) {
                 Point start = new Point(0, 0);
@@ -270,8 +273,9 @@ public class TabFrameLayout implements LayoutManager {
             case WEST:
             case NORTH_WEST:
                 return 3;
+            default:
+                throw new IllegalStateException("Unexpected alignment " + a);
         }
-        return 0;
     }
 
     public void setDraggedOver(final Alignment a, final boolean b) {

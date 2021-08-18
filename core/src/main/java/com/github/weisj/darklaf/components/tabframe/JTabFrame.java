@@ -105,6 +105,8 @@ public class JTabFrame extends JComponent {
      *
      * @return the ui.
      */
+    // #getUI is a Java 9 API
+    @SuppressWarnings("MissingOverride")
     public TabFrameUI getUI() {
         return (TabFrameUI) ui;
     }

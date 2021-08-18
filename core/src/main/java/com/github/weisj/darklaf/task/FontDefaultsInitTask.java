@@ -68,12 +68,11 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
 
     private static final Map<AttributedCharacterIterator.Attribute, Integer> ENABLE_KERNING =
             Collections.singletonMap(TextAttribute.KERNING, TextAttribute.KERNING_ON);
-    private static final Map<AttributedCharacterIterator.Attribute, Integer> DISABLE_KERNING =
-            Collections.singletonMap(TextAttribute.KERNING, null);
     /*
      * On Catalina the are issues with font kerning and .AppleSystemUIFont. For now Helvetica Neue is
      * used instead.
      */
+    @SuppressWarnings("UnusedVariable")
     private static final String MAC_OS_CATALINA_FONT_NAME = ".AppleSystemUIFont";
     private static final String MAC_OS_CATALINA_FONT_NAME_FALLBACK = "Helvetica Neue";
     private static final String MAC_OS_FONT_NAME = ".SF NS Text";
