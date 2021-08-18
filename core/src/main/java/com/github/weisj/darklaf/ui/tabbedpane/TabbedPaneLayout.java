@@ -555,7 +555,6 @@ public abstract class TabbedPaneLayout implements LayoutManager {
         Insets contentInsets = ui.getContentBorderInsets(tabPlacement);
         Insets tabAreaInsets = ui.getTabAreaInsets(tabPlacement);
 
-        Dimension zeroSize = new Dimension(0, 0);
         int height = 0;
         int width = 0;
         int cWidth = 0;

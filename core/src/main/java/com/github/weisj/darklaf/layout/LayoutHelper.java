@@ -365,8 +365,6 @@ public final class LayoutHelper {
         layout.setHorizontalGroup(horizontal);
         layout.setVerticalGroup(vertical);
 
-        int p = GroupLayout.PREFERRED_SIZE;
-
         for (int i = 0; i < components.size(); i++) {
             JPanel holder = new JPanel(new BorderLayout());
             if (i > 0) holder.setBorder(DarkBorders.createLeftBorder());

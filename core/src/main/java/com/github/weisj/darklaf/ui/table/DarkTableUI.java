@@ -68,12 +68,10 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
 
     private TableCellRenderer oldObjectRenderer;
     private TableCellRenderer oldBooleanRenderer;
-    private TableCellRenderer oldColorRenderer;
 
     private TableCellEditor oldObjectEditor;
     private TableCellEditor oldNumberEditor;
     private TableCellEditor oldBooleanEditor;
-    private TableCellEditor oldColorEditor;
 
     protected DarkTableCellRendererDelegate rendererDelegate;
 
@@ -197,12 +195,12 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
 
         oldObjectRenderer = installRenderer(table, Object.class, cellRenderer);
         oldBooleanRenderer = installRenderer(table, Boolean.class, booleanCellRenderer);
-        oldColorRenderer = installRenderer(table, Color.class, colorRendererEditor);
+        installRenderer(table, Color.class, colorRendererEditor);
 
         oldObjectEditor = installEditor(table, Object.class, cellEditor);
         oldNumberEditor = installEditor(table, Number.class, cellEditor);
         oldBooleanEditor = installEditor(table, Boolean.class, cellEditor);
-        oldColorEditor = installEditor(table, Color.class, colorRendererEditor);
+        installEditor(table, Color.class, colorRendererEditor);
     }
 
     private void uninstallRenderers(final JTable table) {

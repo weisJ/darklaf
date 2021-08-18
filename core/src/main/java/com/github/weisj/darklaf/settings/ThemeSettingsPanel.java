@@ -90,8 +90,6 @@ public class ThemeSettingsPanel extends JPanel {
     }
 
     private JComponent createGeneralSettings(final GroupLayout.Alignment alignment, final Insets insets) {
-        Locale l = getLocale();
-
         JLabel themeLabel = createDynamicLabel(ThemeSettingsUI.THEME_LABEL_KEY);
 
         JComboBox<Theme> themeComboBox = settingsUI.getThemeComboBox();
