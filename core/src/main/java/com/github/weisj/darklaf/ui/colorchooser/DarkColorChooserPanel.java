@@ -335,12 +335,14 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         return pipetteButton;
     }
 
-    @Override
+    // Java 9 API
+    @SuppressWarnings("MissingOverride")
     public boolean isColorTransparencySelectionEnabled() {
         return colorWheelPanel.isColorTransparencySelectionEnabled();
     }
 
-    @Override
+    // Java 9 API
+    @SuppressWarnings("MissingOverride")
     public void setColorTransparencySelectionEnabled(final boolean b) {
         boolean oldValue = isColorTransparencySelectionEnabled();
         if (b != oldValue) {

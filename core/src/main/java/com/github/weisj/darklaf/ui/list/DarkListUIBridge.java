@@ -2028,7 +2028,8 @@ public abstract class DarkListUIBridge extends BasicListUI {
          * @param c the c
          * @return the boolean
          */
-        @Override
+        // Java 9 API
+        @SuppressWarnings("MissingOverride")
         public boolean accept(final Object c) {
             Object name = getName();
             if (name == SELECT_PREVIOUS_COLUMN_CHANGE_LEAD || name == SELECT_NEXT_COLUMN_CHANGE_LEAD
