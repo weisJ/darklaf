@@ -222,7 +222,7 @@ allprojects {
                 "annotationProcessor"(libs.tools.errorprone.guava)
             }
             tasks.withType<JavaCompile>().configureEach {
-                options.compilerArgs.addAll(listOf("-Xmaxerrs", "10000", "-Xmaxwarns", "10000"))
+                options.compilerArgs.addAll(listOf("-Xmaxerrs", "10000", "-Xmaxwarns", "10000", "-Werror"))
                 options.errorprone {
                     errorproneArgs.add("-XepExcludedPaths:.*/javacc/.*")
                     disableWarningsInGeneratedCode.set(true)
