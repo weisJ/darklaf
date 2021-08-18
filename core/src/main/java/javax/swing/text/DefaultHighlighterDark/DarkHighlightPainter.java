@@ -564,8 +564,9 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
                 return new Arc2D.Double(0, -arcSize, 2 * arcSize, 2 * arcSize, 180, 90, Arc2D.PIE);
             case SOUTH_WEST:
                 return new Arc2D.Double(-arcSize, -arcSize, 2 * arcSize, 2 * arcSize, 270, 90, Arc2D.PIE);
+            default:
+                return new Rectangle();
         }
-        return new Rectangle();
     }
 
     private int getIndex(final Alignment a) {
@@ -578,8 +579,9 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
                 return 2;
             case SOUTH_WEST:
                 return 3;
+            default:
+                throw new IllegalStateException("Did not expect " + a);
         }
-        return 0;
     }
 
     public boolean isEnabled() {

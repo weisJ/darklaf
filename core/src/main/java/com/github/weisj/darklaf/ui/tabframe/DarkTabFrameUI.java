@@ -506,6 +506,8 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
                         tab.setIndex(tabFrame.getTabCountAt(a) - 1);
                     }
                     break;
+                case CENTER:
+                    throw new IllegalStateException();
             }
         }
         return res;
@@ -525,8 +527,9 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
             case WEST:
             case NORTH_WEST:
                 return getLeftContainer();
+            default:
+                return null;
         }
-        return null;
     }
 
     public Alignment getSourceAlign() {

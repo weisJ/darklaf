@@ -889,8 +889,9 @@ public class JTabFrame extends JComponent {
             case SOUTH_EAST:
             case SOUTH_WEST:
                 return a.anticlockwise();
+            default:
+                return a;
         }
-        return a;
     }
 
     /**
