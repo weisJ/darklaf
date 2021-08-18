@@ -163,7 +163,7 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
 
     private void calculatePopupHeight(final Rectangle cellBounds, final Rectangle visibleBounds, final Rectangle rect) {
         if (cellBounds.y >= visibleBounds.y
-            && cellBounds.y + cellBounds.height <= visibleBounds.y + visibleBounds.height) {
+                && cellBounds.y + cellBounds.height <= visibleBounds.y + visibleBounds.height) {
             rect.y = cellBounds.y;
             rect.height = cellBounds.height;
         } else {

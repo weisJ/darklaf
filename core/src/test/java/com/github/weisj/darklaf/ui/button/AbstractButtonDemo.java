@@ -59,8 +59,8 @@ public abstract class AbstractButtonDemo<T extends AbstractButton> extends BaseC
         booleanSpec(DarkButtonUI.KEY_THIN);
         booleanSpec(DarkButtonUI.KEY_ALT_ARC);
         booleanSpec("Button.defaultButtonFollowsFocus",
-                    (c, b) -> UIManager.put("Button.defaultButtonFollowsFocus", b),
-                    c -> UIManager.getBoolean("Button.defaultButtonFollowsFocus"));
+                (c, b) -> UIManager.put("Button.defaultButtonFollowsFocus", b),
+                c -> UIManager.getBoolean("Button.defaultButtonFollowsFocus"));
         spacer();
         customControls(cp -> {
             cp.add(new QuickColorChooser(DarkButtonUI.KEY_HOVER_COLOR, Color.BLACK,

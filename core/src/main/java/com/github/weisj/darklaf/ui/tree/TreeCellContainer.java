@@ -74,7 +74,7 @@ public class TreeCellContainer extends AbstractIndexedCellContainer<JTree, Integ
         boolean isLeaf = tree.getModel().isLeaf(path.getLastPathComponent());
         int leadIndex = tree.getLeadSelectionRow();
         return renderer.getTreeCellRendererComponent(tree, path.getLastPathComponent(), tree.isRowSelected(row),
-                                                     isExpanded, isLeaf, row, leadIndex == row);
+                isExpanded, isLeaf, row, leadIndex == row);
     }
 
     @Override

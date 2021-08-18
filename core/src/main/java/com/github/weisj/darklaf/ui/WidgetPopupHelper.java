@@ -55,7 +55,7 @@ public final class WidgetPopupHelper {
     }
 
     private static Rectangle computePopupBounds(final JComponent parent, final int px, final int py, final int pw,
-                                                final int ph) {
+            final int ph) {
         Rectangle screenBounds = DarkUIUtil.getScreenBounds(parent, null);
 
         Point pos = parent.getLocationOnScreen();
