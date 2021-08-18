@@ -287,11 +287,13 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         switch (tabPlacement) {
             case BOTTOM:
                 b.y++;
+                // fall through
             case TOP:
                 b.height--;
                 break;
             case RIGHT:
                 b.x++;
+                // fall through
             case LEFT:
                 b.width--;
                 break;
