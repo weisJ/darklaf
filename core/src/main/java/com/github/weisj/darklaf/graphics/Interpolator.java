@@ -27,7 +27,7 @@ import com.google.errorprone.annotations.Immutable;
  * An interpolation function used for animation. The function should be a function
  *
  * <pre>
- * f: [0, 1] -> [0,1].
+ * f: [0,1] -&gt; [0,1].
  * </pre>
  *
  */
