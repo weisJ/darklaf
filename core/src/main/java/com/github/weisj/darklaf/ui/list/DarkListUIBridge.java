@@ -1918,8 +1918,8 @@ public abstract class DarkListUIBridge extends BasicListUI {
                     list.setSelectionInterval(0, size - 1);
 
                     // this is done to restore the anchor and lead
-                    // Todo: Correct argument order?
-                    SwingUtil.setLeadAnchorWithoutSelection(lsm, anchor, lead);
+                    // Reverse argument order is intended
+                    SwingUtil.setLeadAnchorWithoutSelection(lsm, /* lead= */anchor, /* anchor= */lead);
 
                     list.setValueIsAdjusting(false);
                 }
