@@ -27,7 +27,8 @@ import java.awt.event.FocusListener;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeListener;
-import java.util.Hashtable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Vector;
 
@@ -156,7 +157,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     // PENDING(api): See comment for ContainerHandler
     protected Vector<View> htmlViews;
     /** The Mnemonic to index map. */
-    protected Hashtable<Integer, Integer> mnemonicToIndexMap;
+    protected Map<Integer, Integer> mnemonicToIndexMap;
     /**
      * InputMap used for mnemonics. Only non-null if the JTabbedPane has mnemonics associated with it.
      * Lazily created in initMnemonics.
@@ -811,6 +812,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      *
      * @return the vector
      */
+    @SuppressWarnings("JdkObsolete")
     protected Vector<View> createHTMLVector() {
         Vector<View> htmlViews = new Vector<>();
         int count = tabPane.getTabCount();
@@ -974,7 +976,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
 
     /** Installs the state needed for mnemonics. */
     protected void initMnemonics() {
-        mnemonicToIndexMap = new Hashtable<>();
+        mnemonicToIndexMap = new LinkedHashMap<>();
         mnemonicInputMap = new ComponentInputMapUIResource(tabPane);
         mnemonicInputMap.setParent(SwingUtilities.getUIInputMap(tabPane, JComponent.WHEN_IN_FOCUSED_WINDOW));
         SwingUtilities.replaceUIInputMap(tabPane, JComponent.WHEN_IN_FOCUSED_WINDOW, mnemonicInputMap);
