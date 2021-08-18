@@ -266,7 +266,7 @@ public class IconEditor extends JPanel {
     private ThemedIcon fitIconToSize(final ThemedIcon icon, final int width, final int height) {
         int w = icon.getIconWidth();
         int h = icon.getIconHeight();
-        if (w > width || h > height && icon instanceof DerivableIcon) {
+        if ((w > width || h > height) && icon instanceof DerivableIcon) {
             int wExtra = w - width;
             int hExtra = h - height;
             int newWidth;
