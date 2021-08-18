@@ -224,6 +224,9 @@ allprojects {
             dependencies {
                 "errorprone"(libs.tools.errorprone.core)
                 "annotationProcessor"(libs.tools.errorprone.guava)
+                if (!JavaVersion.current().isJava9Compatible) {
+                    "errorproneJavac"(libs.tools.errorprone.javac)
+                }
             }
             tasks.withType<JavaCompile>().configureEach {
                 options.compilerArgs.addAll(listOf("-Xmaxerrs", "10000", "-Xmaxwarns", "10000", "-Werror"))
