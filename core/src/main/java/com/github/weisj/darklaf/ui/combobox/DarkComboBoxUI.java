@@ -320,7 +320,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
             }
             int extraInsets = pad.top + pad.bottom;
             int newHeight = Math.min(rect.height + extraInsets, rendererSize.height);
-            rect.y -= (newHeight - rect.height) * (pad.top / (float) extraInsets);
+            rect.y = (int) (rect.y - (newHeight - rect.height) * (pad.top / (float) extraInsets));
             rect.y = Math.max(rect.y, i.top);
             rect.height = newHeight;
             rect.height = Math.min(rect.height, comboBox.getHeight() - i.top - i.bottom);
