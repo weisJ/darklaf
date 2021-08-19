@@ -151,7 +151,8 @@ public class ColoredRadioButton extends JRadioButton {
         private Properties propertyMap;
 
         private Icon stateIcon;
-        private Color color;
+        private Color iconColor;
+        private Color focusIconColor;
 
         private Color patchedColor;
         private Color patchedFocusColor;
@@ -159,27 +160,27 @@ public class ColoredRadioButton extends JRadioButton {
         private boolean patched;
         private static final AccentColorAdjustmentTask adjustment = new AccentColorAdjustmentTask();
 
-        public ColoredRadioButtonUI(final Color color, final Color focusColor) {
+        public ColoredRadioButtonUI(final Color iconColor, final Color focusIconColor) {
             super();
-            this.color = color;
-            this.focusColor = focusColor;
+            this.iconColor = iconColor;
+            this.focusIconColor = focusIconColor;
         }
 
         @Override
         protected void installIcons() {
             super.installIcons();
-            patchColors(color, focusColor);
+            patchColors(iconColor, focusIconColor);
         }
 
         public void setColors(final Color color, final Color focusColor) {
-            this.color = color;
-            this.focusColor = focusColor != null ? focusColor : color;
+            this.iconColor = color;
+            this.focusIconColor = focusColor != null ? focusColor : color;
         }
 
         @Override
         public void update(final Graphics g, final JComponent c) {
-            if (!Objects.equals(patchedColor, color) || Objects.equals(patchedFocusColor, focusColor)) {
-                patchColors(color, focusColor);
+            if (!Objects.equals(patchedColor, iconColor) || Objects.equals(patchedFocusColor, focusIconColor)) {
+                patchColors(iconColor, focusIconColor);
             }
             super.update(g, c);
         }
@@ -212,7 +213,7 @@ public class ColoredRadioButton extends JRadioButton {
             for (String prop : COLOR_PROPERTIES) {
                 propertyMap.put(prop, accentCol);
             }
-            if (!Objects.equals(focusCol, DEFAULT_COLOR)) {
+            if (!DEFAULT_COLOR.equals(focusColor)) {
                 for (String prop : FOCUS_COLOR_PROPERTIES) {
                     propertyMap.put(prop, focusCol);
                 }
