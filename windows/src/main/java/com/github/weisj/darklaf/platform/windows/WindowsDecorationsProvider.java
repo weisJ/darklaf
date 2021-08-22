@@ -99,18 +99,6 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
     }
 
     @Override
-    public void adjustWindowInsets(final Window window, final Insets i) {
-        // Compensate for the insets of the native window peer that include the decorations.
-        if (window != null) {
-            Insets insets = window.getInsets();
-            i.left -= insets.left;
-            i.right -= insets.right;
-            i.top -= insets.top;
-            i.bottom -= insets.bottom;
-        }
-    }
-
-    @Override
     public void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults) {
         IconLoader iconLoader = IconLoader.get(WindowsDecorationsProvider.class);
         PropertyLoader.putProperties(
