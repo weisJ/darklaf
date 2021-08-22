@@ -63,7 +63,6 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
         int tpWidth = 0;
         int tpHeight = 0;
         Insets i = parent.getInsets();
-        DecorationsHandler.getSharedInstance().adjustWindowInsets(DarkUIUtil.getWindow(parent), i);
 
         JRootPane root = (JRootPane) parent;
         CustomTitlePane titlePane = getTitlePane(root);
