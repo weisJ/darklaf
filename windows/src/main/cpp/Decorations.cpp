@@ -75,7 +75,12 @@ static LRESULT HandleHitTest(WindowWrapper *wrapper, int x, int y) {
         // The diagonal size handles are wider than the frame
         int diagonal_width = frame_size * 2 + GetSystemMetrics(SM_CXBORDER);
 
-        bool top = ptMouse.y >= rcWindow.top && ptMouse.y < rcWindow.top + frame_size;
+        // Make the top resize area smaller for the window buttons area.
+        bool top =
+                ptMouse.x <= rcWindow.right - wrapper->right ?
+                        ptMouse.y >= rcWindow.top && ptMouse.y < rcWindow.top + frame_size :
+                        ptMouse.y >= rcWindow.top && ptMouse.y < rcWindow.top + 1;
+
         bool bottom = !top && (ptMouse.y < rcWindow.bottom && ptMouse.y >= rcWindow.bottom - frame_size);
 
         bool left = ptMouse.x >= rcWindow.left && ptMouse.x < rcWindow.left + frame_size;
