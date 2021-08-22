@@ -49,6 +49,10 @@ static bool IsLeftMousePressed(WindowWrapper *wrapper) {
     }
 }
 
+static inline int GetFrameSize() {
+    return GetSystemMetrics(SM_CXFRAME) + GetSystemMetrics(SM_CXPADDEDBORDER);
+}
+
 static LRESULT HandleHitTest(WindowWrapper *wrapper, int x, int y) {
     if (wrapper->popup_menu) return HTCLIENT;
 
@@ -67,7 +71,7 @@ static LRESULT HandleHitTest(WindowWrapper *wrapper, int x, int y) {
          * The horizontal frame should be the same size as the vertical frame,
          * since the NONCLIENTMETRICS structure does not distinguish between them
          */
-        int frame_size = GetSystemMetrics(SM_CXFRAME) + GetSystemMetrics(SM_CXPADDEDBORDER);
+        int frame_size = GetFrameSize();
         // The diagonal size handles are wider than the frame
         int diagonal_width = frame_size * 2 + GetSystemMetrics(SM_CXBORDER);
 
@@ -226,6 +230,12 @@ static void HandleNCCalcSize(WindowWrapper *wrapper, WPARAM wparam, LPARAM lpara
          * before WM_NCCALCSIZE modified it. This will make the client size the
          * same as the non-client size.
          */
+        if (wrapper->resizable) {
+            int frame_size = GetFrameSize();
+            nonclient.left += frame_size;
+            nonclient.right -= frame_size;
+            nonclient.bottom -= frame_size;
+        }
         *params.rect = nonclient;
     }
 }
