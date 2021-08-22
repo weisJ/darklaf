@@ -281,6 +281,7 @@ static bool InstallDecorations(HWND handle, bool is_popup) {
     wrapper->window = handle;
     wrapper->prev_proc = proc;
     wrapper->popup_menu = is_popup;
+    wrapper->resizable = !is_popup;
     wrapper_map[handle] = wrapper;
 
     // Update the window procedure with our custom procedure.
