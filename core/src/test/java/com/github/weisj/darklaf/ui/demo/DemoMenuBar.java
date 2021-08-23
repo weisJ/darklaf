@@ -21,6 +21,7 @@
  */
 package com.github.weisj.darklaf.ui.demo;
 
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Objects;
 import java.util.Optional;
@@ -149,8 +150,33 @@ public class DemoMenuBar extends JMenuBar {
                 }
             });
         }
+        dev.add(createOSModeMenu());
         dev.add(createLafMenu());
         return dev;
+    }
+
+    @NotNull
+    private JMenu createOSModeMenu() {
+        JMenu osMode = new JMenu("OS Mode");
+        ButtonGroup osModeBg = new ButtonGroup();
+        JMenuItem host = new JRadioButtonMenuItem("host");
+        host.setSelected(true);
+        host.addActionListener(e -> {
+            System.clearProperty("darklaf.internal.osname");
+            LafManager.install();
+        });
+        osModeBg.add(host);
+        osMode.add(host);
+        Arrays.asList("windows", "mac", "linux").forEach(s -> {
+            JMenuItem item = new JRadioButtonMenuItem(s);
+            item.addActionListener(e -> {
+                System.setProperty("darklaf.internal.osname", s);
+                LafManager.install();
+            });
+            osModeBg.add(item);
+            osMode.add(item);
+        });
+        return osMode;
     }
 
     @NotNull

@@ -156,9 +156,14 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
     private void initPlatformProperties(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {
         IconResolver iconResolver = DarkUIUtil.iconResolver();
         PropertyLoader.putProperties(
-                PropertyLoader.loadProperties(DarkLaf.class, SystemInfo.getOsName(), "platform/"),
+                PropertyLoader.loadProperties(DarkLaf.class, getOsName(), "platform/"),
                 uiProps, defaults, iconResolver);
         currentTheme.customizePlatformProperties(uiProps, defaults, iconResolver);
+    }
+
+    private String getOsName() {
+        String osName = System.getProperty("darklaf.internal.osname");
+        return osName != null ? osName : SystemInfo.getOsName();
     }
 
     private void adjustPlatformSpecifics(final Properties uiProps) {
