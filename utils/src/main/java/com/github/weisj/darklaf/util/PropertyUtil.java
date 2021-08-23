@@ -84,7 +84,7 @@ public final class PropertyUtil {
     }
 
     public static void installBooleanProperty(final JComponent c, final String key, final String valueKey) {
-        installProperty(c, key, UIManager.getBoolean(valueKey));
+        installProperty(c, key, new UIResourceString(String.valueOf(UIManager.getBoolean(valueKey))));
     }
 
     public static boolean getBooleanProperty(final Component c, final String property) {
@@ -102,6 +102,9 @@ public final class PropertyUtil {
     public static boolean getBooleanProperty(final JComponent c, final String property, final boolean defaultValue) {
         if (c == null) return defaultValue;
         Object obj = c.getClientProperty(property);
+        if (!(obj instanceof Boolean) && obj != null) {
+            obj = Boolean.parseBoolean(obj.toString());
+        }
         if (!defaultValue) {
             return Boolean.TRUE.equals(obj);
         } else {
@@ -234,6 +237,32 @@ public final class PropertyUtil {
             return !PropertyValue.FALSE.equals(System.getProperty(key));
         } else {
             return PropertyValue.TRUE.equals(System.getProperty(key));
+        }
+    }
+
+    private static class UIResourceString implements UIResource {
+        private final String value;
+
+        private UIResourceString(final String value) {
+            this.value = value;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof UIResourceString)) return false;
+            UIResourceString that = (UIResourceString) o;
+            return Objects.equals(value, that.value);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(value);
+        }
+
+        @Override
+        public String toString() {
+            return value;
         }
     }
 }
