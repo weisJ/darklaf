@@ -183,6 +183,7 @@ Here is a list of things that currently are not finished or need refinement. Thi
 - [threadtear](https://github.com/GraxCode/threadtear)
 - [HO](https://github.com/akasolace/HO)
 - [Bytecode viewer](https://github.com/Konloch/bytecode-viewer)
+- [Remote Hacker Probe](https://github.com/quantumcore/remote_hacker_probe)
 
 Please send me your project, and I'll add it here.
 
