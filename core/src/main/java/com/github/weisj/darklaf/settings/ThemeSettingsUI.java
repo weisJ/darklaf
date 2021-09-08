@@ -48,6 +48,7 @@ import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
 import com.github.weisj.darklaf.components.tristate.TristateState;
 import com.github.weisj.darklaf.graphics.ThemedColor;
+import com.github.weisj.darklaf.iconset.AllIcons;
 import com.github.weisj.darklaf.listener.UIUpdater;
 import com.github.weisj.darklaf.platform.ThemePreferencesHandler;
 import com.github.weisj.darklaf.platform.macos.theme.MacOSColors;
@@ -338,9 +339,9 @@ public class ThemeSettingsUI {
         Dictionary<Integer, JComponent> dict = fontSlider.createStandardLabels(tickSpacing);
         JLabel min = (JLabel) dict.get(fontSlider.getMinimum());
         UIUpdater.registerComponent(min);
-        DynamicUI.withDynamic(min,
-                c -> c.setText(UIManager.getString("settings.label_font_smaller", fontSlider.getLocale())));
-        min.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        min.setText("");
+        min.setIcon(AllIcons.Action.DecreaseFontSize.get());
+        min.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         min.putClientProperty(DarkSliderUI.KEY_MANUAL_LABEL_ALIGN, true);
 
         JLabel mid = (JLabel) dict.get(fontSlider.getMinimum() + tickSpacing);
@@ -355,9 +356,9 @@ public class ThemeSettingsUI {
 
         JLabel max = (JLabel) dict.get(fontSlider.getMaximum());
         max.putClientProperty(DarkSliderUI.KEY_MANUAL_LABEL_ALIGN, true);
-        DynamicUI.withDynamic(max,
-                c -> c.setText(UIManager.getString("settings.label_font_bigger", fontSlider.getLocale())));
-        max.setAlignmentX(JComponent.RIGHT_ALIGNMENT);
+        max.setText("");
+        max.setIcon(AllIcons.Action.IncreaseFontSize.get());
+        max.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         max.putClientProperty(DarkSliderUI.KEY_MANUAL_LABEL_ALIGN, true);
         UIUpdater.registerComponent(max);
 
