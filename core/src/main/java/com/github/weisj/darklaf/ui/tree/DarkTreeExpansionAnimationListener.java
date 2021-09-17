@@ -28,7 +28,7 @@ import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.TreePath;
 
-import com.github.weisj.darklaf.graphics.LegacyAnimator;
+import com.github.weisj.darklaf.graphics.Animator;
 
 public class DarkTreeExpansionAnimationListener implements TreeExpansionListener {
 
@@ -47,7 +47,7 @@ public class DarkTreeExpansionAnimationListener implements TreeExpansionListener
     }
 
     public void uninstall() {
-        animator.dispose();
+        animator.stop();
         this.tree.removeTreeExpansionListener(this);
     }
 
@@ -66,13 +66,8 @@ public class DarkTreeExpansionAnimationListener implements TreeExpansionListener
         animator.state = 0;
         animator.path = path;
         animator.animationRow = tree.getRowForPath(path);
-        boolean running = animator.isRunning();
-        animator.suspend();
-        if (running) {
-            // Forces paintCycleEnd to be called.
-            animator.resume(animator.getTotalFrames(), false);
-        }
-        animator.resume(0, false, tree);
+        animator.stop();
+        animator.resume(tree);
     }
 
     public TreePath getAnimationPath() {
@@ -83,17 +78,14 @@ public class DarkTreeExpansionAnimationListener implements TreeExpansionListener
         return animator.state;
     }
 
-    protected class TreeStateAnimator extends LegacyAnimator {
-
-        private static final int DURATION = 60;
-        private static final int RESOLUTION = 10;
+    protected class TreeStateAnimator extends Animator {
 
         private TreePath path;
         private float state;
         private int animationRow;
 
         public TreeStateAnimator() {
-            super(DURATION / RESOLUTION, DURATION, 0);
+            super(60);
         }
 
         private void repaint() {
@@ -106,14 +98,13 @@ public class DarkTreeExpansionAnimationListener implements TreeExpansionListener
         }
 
         @Override
-        public void paintNow(final float fraction) {
+        public void paintAnimationFrame(float fraction) {
             state = fraction;
             repaint();
         }
 
         @Override
-        protected void paintCycleEnd() {
-            super.paintCycleEnd();
+        protected void onAnimationFinished() {
             state = 1;
             repaint();
             animationRow = -1;
