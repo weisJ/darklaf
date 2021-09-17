@@ -36,7 +36,7 @@ public class DarkKeyTypedAction extends DefaultEditorKit.DefaultKeyTypedAction {
     public void actionPerformed(final ActionEvent e) {
         JTextComponent target = getTextComponent(e);
         if ((target != null) && (e != null)) {
-            if ((!target.isEditable()) || (!target.isEnabled())) {
+            if (!target.isEditable() || !target.isEnabled()) {
                 return;
             }
             String content = e.getActionCommand();

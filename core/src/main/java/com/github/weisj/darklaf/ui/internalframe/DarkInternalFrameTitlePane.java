@@ -30,12 +30,14 @@ import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 
+import com.github.weisj.darklaf.compatibility.SwingUtil;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.components.uiresource.JButtonUIResource;
-import com.github.weisj.darklaf.icons.ToggleIcon;
+import com.github.weisj.darklaf.focus.FocusParentHelper;
+import com.github.weisj.darklaf.properties.icons.ToggleIcon;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.tooltip.DarkToolTipUI;
-import com.github.weisj.darklaf.util.SwingUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 /** @author Jannis Weis */
 public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane implements PropertyChangeListener {
@@ -130,6 +132,16 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
 
         buttonMarginPad = UIManager.getInt("InternalFrameTitlePane.buttonPad");
         minHeight = UIManager.getInt("InternalFrameTitlePane.minimumHeight");
+
+        frame.putClientProperty(FocusParentHelper.KEY_FOCUS_PARENT, frame);
+    }
+
+    @Override
+    protected void uninstallDefaults() {
+        super.uninstallDefaults();
+        if (frame.getClientProperty(FocusParentHelper.KEY_FOCUS_PARENT) == frame) {
+            frame.putClientProperty(FocusParentHelper.KEY_FOCUS_PARENT, null);
+        }
     }
 
     @Override
@@ -153,6 +165,7 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
         setButtonIcons();
     }
 
+    @Override
     protected void addSystemMenuItems(final JMenu systemMenu) {
         JMenuItem mi = systemMenu.add(restoreAction);
         mi.setMnemonic(getButtonMnemonic("restore"));
@@ -221,7 +234,11 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
     }
 
     protected Color getTitleBackground() {
-        return frame.isSelected() ? selectedTitleColor : notSelectedTitleColor;
+        return isSelected() ? selectedTitleColor : notSelectedTitleColor;
+    }
+
+    private boolean isSelected() {
+        return frame.isSelected() && DarkUIUtil.hasFocus(frame);
     }
 
     private JButton createButton(final Action action) {
@@ -293,14 +310,18 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
     }
 
     protected class DarkTitlePaneLayout implements LayoutManager {
+        @Override
         public void addLayoutComponent(final String name, final Component c) {}
 
+        @Override
         public void removeLayoutComponent(final Component c) {}
 
+        @Override
         public Dimension preferredLayoutSize(final Container c) {
             return minimumLayoutSize(c);
         }
 
+        @Override
         public Dimension minimumLayoutSize(final Container c) {
             int width = 2 * PAD;
             int height;
@@ -367,6 +388,7 @@ public class DarkInternalFrameTitlePane extends BasicInternalFrameTitlePane impl
             return useExternalMenuBar;
         }
 
+        @Override
         public void layoutContainer(final Container c) {
             boolean useExternalMenuBar = useExternalMenuBar();
 

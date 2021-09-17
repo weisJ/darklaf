@@ -25,10 +25,10 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoPanel;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 
-public abstract class LabelDemoBase<T extends JLabel> implements ComponentDemo {
+public abstract class LabelDemoBase<T extends JLabel> extends BaseComponentDemo {
 
     @Override
     public JComponent createComponent() {

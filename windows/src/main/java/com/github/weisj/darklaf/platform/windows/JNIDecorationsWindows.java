@@ -23,7 +23,11 @@ package com.github.weisj.darklaf.platform.windows;
 
 import java.awt.Window;
 
-/** @author Jannis Weis */
+/**
+ * Boundary to the native window decorations implementation.
+ *
+ * @author Jannis Weis
+ */
 public final class JNIDecorationsWindows {
 
     public static native long getWindowHWND(final Window window, final String javaLibPath);

@@ -48,18 +48,23 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
 
     protected Color arrowBackground;
     protected Color background;
-    protected Icon arrowDownIcon;
     protected Color inactiveBackground;
     protected int arc;
-    protected Icon arrowUpIcon;
-    protected Icon plusIcon;
-    protected Icon minusIcon;
+
+    protected Icon arrowDownIcon;
     protected Icon arrowDownInactiveIcon;
+
+    protected Icon arrowUpIcon;
     protected Icon arrowUpInactiveIcon;
+
+    protected Icon plusIcon;
     protected Icon plusInactiveIcon;
+
+    protected Icon minusIcon;
     protected Icon minusInactiveIcon;
     private JComponent editor;
-    private JButton prevButton;
+    protected JButton prevButton;
+    protected JButton nextButton;
     private JComponent editorComponent;
     private VisualPaddingListener visualPaddingListener;
 
@@ -92,9 +97,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
     protected void installListeners() {
         super.installListeners();
         spinnerListener = createSpinnerListener();
-        spinner.addMouseListener(spinnerListener);
-        spinner.addMouseWheelListener(spinnerListener);
-        spinner.addPropertyChangeListener(spinnerListener);
+        spinnerListener.install();
         visualPaddingListener = new VisualPaddingListener();
         spinner.addPropertyChangeListener(visualPaddingListener);
     }
@@ -109,14 +112,13 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
         if (editor != null && editor.getComponents().length > 0) {
             editor.getComponents()[0].removeFocusListener(spinnerListener);
         }
-        spinner.removeMouseListener(spinnerListener);
-        spinner.removeMouseWheelListener(spinnerListener);
-        spinner.removePropertyChangeListener(spinnerListener);
+        spinnerListener.uninstall();
         spinnerListener = null;
         spinner.removePropertyChangeListener(visualPaddingListener);
         visualPaddingListener = null;
     }
 
+    @Override
     protected LayoutManager createLayout() {
         return new DarkSpinnerLayout();
     }
@@ -133,7 +135,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
 
     @Override
     protected Component createNextButton() {
-        JButton nextButton = createArrow(SwingConstants.NORTH);
+        nextButton = createArrow(SwingConstants.NORTH);
         nextButton.setName("Spinner.nextButton");
         nextButton.setBorder(new EmptyBorder(1, 1, 1, 1));
         nextButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -215,14 +217,14 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
 
         Color bg = getBackground(c);
         Color spinBg = getArrowBackground(c);
-        boolean isCellEditor = SpinnerConstants.isTreeOrTableCellEditor(c);
 
         if (editorComponent != null) {
             PropertyUtil.installBackground(editorComponent, bg);
             bg = editorComponent.getBackground();
         }
 
-        DividedWidgetPainter.paintBackground((Graphics2D) g, c, arc, arrowBounds, bg, spinBg, isCellEditor);
+        DividedWidgetPainter.paintBackground((Graphics2D) g, c, arc, arrowBounds, bg, spinBg,
+                SpinnerConstants.getBorderType(c));
     }
 
     protected Color getBackground(final JComponent c) {

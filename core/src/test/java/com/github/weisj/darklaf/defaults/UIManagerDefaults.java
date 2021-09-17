@@ -38,11 +38,12 @@ import javax.swing.plaf.ColorUIResource;
 import javax.swing.table.DefaultTableModel;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.icons.IconLoader;
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.properties.icons.IconLoader;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.table.renderer.DarkColorTableCellRendererEditor;
 
-public class UIManagerDefaults implements ItemListener, ComponentDemo {
+public class UIManagerDefaults extends BaseComponentDemo implements ItemListener {
     private static final String[] COLUMN_NAMES = {"Key", "Value", "Sample"};
     private static String selectedItem;
     private final TreeMap<String, TreeMap<String, Object>> items = new TreeMap<>();
@@ -52,7 +53,7 @@ public class UIManagerDefaults implements ItemListener, ComponentDemo {
     private JTable table;
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new UIManagerDefaults());
+        DemoExecutor.showDemo(new UIManagerDefaults());
     }
 
     @Override
@@ -66,7 +67,7 @@ public class UIManagerDefaults implements ItemListener, ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "UIManager Defaults";
     }
 
@@ -271,6 +272,7 @@ public class UIManagerDefaults implements ItemListener, ComponentDemo {
     /*
      * Implement the ItemListener interface
      */
+    @Override
     public void itemStateChanged(final ItemEvent e) {
         final String itemName = (String) e.getItem();
         changeTableModel(itemName);
@@ -293,7 +295,7 @@ public class UIManagerDefaults implements ItemListener, ComponentDemo {
         model = new DefaultTableModel(COLUMN_NAMES, 0);
         final Map<String, Object> attributes = items.get(itemName);
         for (final Object o : attributes.keySet()) {
-            final String attribute = (String) o;
+            final String attribute = o.toString();
             Object value = attributes.get(attribute);
             final Vector<Object> row = new Vector<>(3);
             row.add(attribute);
@@ -302,7 +304,7 @@ public class UIManagerDefaults implements ItemListener, ComponentDemo {
                 if (value instanceof Icon) {
                     value = new SafeIcon((Icon) value);
                 } else if (value instanceof String && value.toString().endsWith(".wav")) {
-                    value = IconLoader.get().getIcon("icon/sound.svg", 24, 24);
+                    value = IconLoader.get(UIManagerDefaults.class).getIcon("icon/sound.svg", 24, 24);
                 }
                 row.add(value);
             } else {
@@ -316,8 +318,7 @@ public class UIManagerDefaults implements ItemListener, ComponentDemo {
     }
 
     /*
-     * Some rows containing icons, may need to be sized taller to fully display the
-     * com.github.weisj.icon.
+     * Some rows containing icons, may need to be sized taller to fully display the icon.
      */
     private void updateRowHeights() {
         try {

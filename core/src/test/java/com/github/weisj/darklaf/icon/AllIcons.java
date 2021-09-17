@@ -22,6 +22,7 @@
 package com.github.weisj.darklaf.icon;
 
 import java.awt.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -32,22 +33,23 @@ import javax.swing.event.ListDataListener;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.icons.IconLoader;
-import com.github.weisj.darklaf.icons.ThemedSVGIcon;
+import com.github.weisj.darklaf.core.test.util.ClassFinder;
+import com.github.weisj.darklaf.core.test.util.Instantiable;
+import com.github.weisj.darklaf.core.test.util.ResourceWalker;
 import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
-import com.github.weisj.darklaf.ui.ComponentDemo;
-import com.github.weisj.darklaf.util.ClassFinder;
-import com.github.weisj.darklaf.util.Instantiable;
+import com.github.weisj.darklaf.properties.icons.IconLoader;
+import com.github.weisj.darklaf.properties.icons.ThemedSVGIcon;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.util.Lambdas;
 import com.github.weisj.darklaf.util.Pair;
-import com.github.weisj.darklaf.util.ResourceWalker;
 
-public class AllIcons implements ComponentDemo {
+public class AllIcons extends BaseComponentDemo {
 
     private static final int ICON_SIZE = 50;
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new AllIcons());
+        DemoExecutor.showDemo(new AllIcons());
     }
 
     public AllIcons() {
@@ -69,9 +71,9 @@ public class AllIcons implements ComponentDemo {
         return new OverlayScrollPane(createIconJList(ICON_SIZE));
     }
 
-    protected static JList<Pair<String, ? extends Icon>> createIconJList(final int displaySize) {
-        JList<Pair<String, ? extends Icon>> list = new JList<>(new ListModel<Pair<String, ? extends Icon>>() {
-            final List<Pair<String, ? extends Icon>> elements = loadIcons(displaySize, true);
+    protected static JList<NamedIcon<? extends Icon>> createIconJList(final int displaySize) {
+        JList<NamedIcon<? extends Icon>> list = new JList<>(new ListModel<NamedIcon<? extends Icon>>() {
+            final List<NamedIcon<? extends Icon>> elements = loadIcons(displaySize, true);
 
             @Override
             public int getSize() {
@@ -79,7 +81,7 @@ public class AllIcons implements ComponentDemo {
             }
 
             @Override
-            public Pair<String, ? extends Icon> getElementAt(final int index) {
+            public NamedIcon<? extends Icon> getElementAt(final int index) {
                 return elements.get(index);
             }
 
@@ -95,12 +97,12 @@ public class AllIcons implements ComponentDemo {
         return list;
     }
 
-    protected static List<Pair<String, ? extends Icon>> loadIcons(final int displaySize, final boolean centered) {
+    protected static List<NamedIcon<? extends Icon>> loadIcons(final int displaySize, final boolean centered) {
         IconLoader loader = IconLoader.get();
         try (ResourceWalker walker = ResourceWalker.walkResources("com.github.weisj")) {
             return walker.stream().filter(p -> p.endsWith("svg")).map(p -> {
                 ThemedSVGIcon icon = (ThemedSVGIcon) loader.loadSVGIcon(p, -displaySize, -displaySize, true);
-                return new Pair<>(p, centered ? new CenterIcon(icon, displaySize, displaySize) : icon);
+                return new NamedIcon<>(p, centered ? new CenterIcon(icon, displaySize, displaySize) : icon);
             }).collect(Collectors.groupingBy(pair -> pathToIconName(pair.getFirst())))
                     .values().stream()
                     .peek(list -> makeUnique(list, 1))
@@ -109,11 +111,12 @@ public class AllIcons implements ComponentDemo {
         }
     }
 
-    private static <T> void makeUnique(final List<Pair<String, T>> iconList, final int depth) {
+    private static <T extends Icon> void makeUnique(final List<NamedIcon<T>> iconList, final int depth) {
         if (iconList.size() <= 1) {
             iconList.forEach(p -> p.setFirst(pathToIconName(p.getFirst(), depth)));
         } else {
-            iconList.stream()
+            new HashSet<>(iconList)
+                    .stream()
                     .collect(Collectors.groupingBy(p -> pathToIconName(p.getFirst(), depth + 1)))
                     .values()
                     .forEach(list -> makeUnique(list, depth + 1));
@@ -133,20 +136,20 @@ public class AllIcons implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "All Icons";
     }
 
     private static final class IconListRenderer extends JLabel
-            implements ListCellRenderer<Pair<String, ? extends Icon>> {
+            implements ListCellRenderer<NamedIcon<? extends Icon>> {
 
         private IconListRenderer() {
             setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
         }
 
         @Override
-        public Component getListCellRendererComponent(final JList<? extends Pair<String, ? extends Icon>> list,
-                final Pair<String, ? extends Icon> value, final int index, final boolean isSelected,
+        public Component getListCellRendererComponent(final JList<? extends NamedIcon<? extends Icon>> list,
+                final NamedIcon<? extends Icon> value, final int index, final boolean isSelected,
                 final boolean cellHasFocus) {
             setIcon(value.getSecond());
             setText(value.getFirst());
@@ -181,6 +184,23 @@ public class AllIcons implements ComponentDemo {
         @Override
         public int getIconHeight() {
             return height;
+        }
+    }
+
+    public static class NamedIcon<T extends Icon> extends Pair<String, T> {
+
+        public NamedIcon(final String first, final T second) {
+            super(first, second);
+        }
+
+        @Override
+        public boolean equals(final Object obj) {
+            return obj instanceof NamedIcon && Objects.equals(((NamedIcon<?>) obj).getFirst(), getFirst());
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(getFirst());
         }
     }
 }

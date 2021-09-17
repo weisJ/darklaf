@@ -29,15 +29,16 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.DemoResources;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.util.StringUtil;
 
-public class OverlayRSyntaxScrollPane implements ComponentDemo {
+public class OverlayRSyntaxScrollPane extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new OverlayRSyntaxScrollPane());
+        DemoExecutor.showDemo(new OverlayRSyntaxScrollPane());
     }
 
     @Override
@@ -49,7 +50,7 @@ public class OverlayRSyntaxScrollPane implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "OverlayRSyntaxScrollPane Demo";
     }
 }

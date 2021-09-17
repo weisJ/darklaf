@@ -261,6 +261,7 @@ public final class LafManager {
      * @param theme the theme to register.
      */
     public static void registerTheme(final Theme theme) {
+        LOGGER.fine("Registering " + theme);
         registeredThemes.add(theme);
     }
 
@@ -413,6 +414,9 @@ public final class LafManager {
      *
      * @param theme the theme to install.
      */
+    // Even for themes which are Objects#equals we can't be sure that they have the same effect.
+    // Maybe someone installed a custom installtion task and wants to reinstall.
+    @SuppressWarnings("ReferenceEquality")
     public static void installTheme(final Theme theme) {
         if (theme == getTheme() && isInstalled()) return;
         setTheme(theme);

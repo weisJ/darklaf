@@ -1,5 +1,6 @@
 plugins {
     java
+    `module-info-compile`
     id("dev.nokee.jni-library")
     id("dev.nokee.cpp-language")
     `uber-jni-jar`
@@ -17,7 +18,7 @@ library {
 
     targetMachines.addAll(machines.windows.x86, machines.windows.x86_64)
     variants.configureEach {
-        resourcePath.set("com/github/weisj/darklaf/platform/${project.name}/${targetMachine.variantName}")
+        resourcePath.set("com/github/weisj/darklaf/platform/${project.name}")
         sharedLibrary {
             compileTasks.configureEach {
                 compilerArgs.addAll(

@@ -25,9 +25,9 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.icons.RotatableIcon;
+import com.github.weisj.darklaf.properties.icons.RotatableIcon;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class RotatableIconAnimator extends Timer {
 
@@ -55,7 +55,7 @@ public class RotatableIconAnimator extends Timer {
     }
 
     public void onAction(final ActionEvent e) {
-        icon.setRotation(Math.PI * 2 * (((double) frame) / frameCount));
+        icon.setRotation(Math.PI * 2 * ((double) frame / frameCount));
         repaint();
         frame = (frame + 1) % frameCount;
     }

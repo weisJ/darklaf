@@ -56,7 +56,23 @@ public class DummyEditorPaneUI extends BasicEditorPaneUI implements DummyTextUIM
     }
 
     @Override
+    @SuppressWarnings("EmptyCatch")
     public void uninstallUI(final JTextComponent editor) {
-        super.uninstallUI(editor);
+        try {
+            super.uninstallUI(editor);
+        } catch (UninstallBlockedException ignored) {
+        }
+    }
+
+    @Override
+    protected void uninstallKeyboardActions() {}
+
+    @Override
+    protected void uninstallListeners() {
+        // This avoids unsetting the `editor` variable in `BasicTextUI`.
+        throw new UninstallBlockedException();
+    }
+
+    private static class UninstallBlockedException extends RuntimeException {
     }
 }

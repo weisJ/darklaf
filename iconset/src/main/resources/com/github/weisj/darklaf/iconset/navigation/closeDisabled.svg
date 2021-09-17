@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+    <defs id="colors">
+        <linearGradient id="menuIconDisabled" fallback="Label.disabledForeground" opacity="menuIconOpacity" opacity-fallback="%100">
+            <stop offset="0" stop-color="#AFB1B3" stop-opacity=".8"/>
+            <stop offset="1" stop-color="#AFB1B3" stop-opacity=".8"/>
+        </linearGradient>
+    </defs>
+    <path fill="url(#menuIconDisabled)"
+          d="M7.995 8.705l-3.14 3.15-.708-.708 3.148-3.142-3.148-3.148.707-.707 3.148 3.148 3.142-3.148.707.707-3.149 3.141 3.15 3.149-.708.707-3.15-3.149z"/>
+</svg>

@@ -99,6 +99,7 @@ public class TristateCheckBoxMenuItem extends JCheckBoxMenuItem {
         setModel(new TristateButtonModel(state));
         // override action behaviour
         super.addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(final MouseEvent e) {
                 TristateCheckBoxMenuItem.this.iterateState();
             }
@@ -106,6 +107,7 @@ public class TristateCheckBoxMenuItem extends JCheckBoxMenuItem {
         setFocusable(false);
     }
 
+    @Override
     public String getUIClassID() {
         if (LafManager.isInstalled()) {
             return "TristateCheckBoxMenuItemUI";

@@ -31,15 +31,16 @@ import net.miginfocom.swing.MigLayout;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.components.SelectableTreeNode;
-import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoPanel;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-public class TreeDemo implements ComponentDemo {
+public class TreeDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new TreeDemo());
+        DemoExecutor.showDemo(new TreeDemo());
     }
 
     @Override
@@ -160,7 +161,7 @@ public class TreeDemo implements ComponentDemo {
                     final boolean expanded, final boolean leaf, final int row, final boolean hasFocus) {
                 Component component =
                         super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-                component.setEnabled(tree.isEnabled() && (value != parent1 && value != child));
+                component.setEnabled(tree.isEnabled() && value != parent1 && value != child);
                 return component;
             }
         });
@@ -168,7 +169,7 @@ public class TreeDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Tree Demo";
     }
 }

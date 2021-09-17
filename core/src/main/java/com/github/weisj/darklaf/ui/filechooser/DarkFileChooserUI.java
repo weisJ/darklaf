@@ -331,7 +331,9 @@ public class DarkFileChooserUI extends MetalFileChooserUI {
             Component c = parent.getComponent(index);
             if (type.isInstance(c) && (layoutType == null || layoutType.isInstance(((JComponent) c).getLayout())))
                 return type.cast(c);
-        } catch (IndexOutOfBoundsException ignored) {
+        } catch (IndexOutOfBoundsException e) {
+            throw new IllegalArgumentException(
+                    "Invalid request: Parent=" + parent + ", index=" + index + ", layout=" + layoutType, e);
         }
         return null;
     }
@@ -354,6 +356,7 @@ public class DarkFileChooserUI extends MetalFileChooserUI {
         private static final String MIME_TEXT = "text/";
         private static final String MIME_IMAGE = "image/";
 
+        @Override
         public Icon getIcon(final File f) {
             Icon icon = getCachedIcon(f);
             if (icon != null) {
@@ -381,7 +384,7 @@ public class DarkFileChooserUI extends MetalFileChooserUI {
                             icon = textFileIcon;
                         }
                     } catch (final IOException e) {
-                        e.printStackTrace();
+                        icon = fileIcon;
                     }
                 }
             }
@@ -401,6 +404,7 @@ public class DarkFileChooserUI extends MetalFileChooserUI {
                     tf.removeAncestorListener(editorAncestorListener);
                     tf.addAncestorListener(editorAncestorListener);
                     setDelegate(new DarkTableCellEditor(tf) {
+                        @Override
                         public Component getTableCellEditorComponent(JTable table, Object value,
                                 boolean isSelected, int row, int column) {
                             Object realValue = value instanceof File ? getFileChooser().getName((File) value) : value;

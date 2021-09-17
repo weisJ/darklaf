@@ -52,7 +52,7 @@ public class DarkInternalFrameBorder extends DropShadowBorder implements UIResou
     @Override
     public void paintBorder(final Component c, final Graphics graphics, final int x, final int y, final int width,
             final int height) {
-        if (c instanceof JInternalFrame && ((JInternalFrame) c).isMaximum()) {
+        if (shouldHideShadow(c)) {
             return;
         }
         updateOpacity(c);
@@ -69,10 +69,17 @@ public class DarkInternalFrameBorder extends DropShadowBorder implements UIResou
 
     @Override
     public Insets getBorderInsets(final Component c) {
-        if (c instanceof JInternalFrame && ((JInternalFrame) c).isMaximum()) {
+        if (shouldHideShadow(c)) {
             return new InsetsUIResource(0, 0, 0, 0);
         }
         updateOpacity(c);
         return super.getBorderInsets(c);
+    }
+
+    private boolean shouldHideShadow(final Component c) {
+        if (!(c instanceof JInternalFrame) || ((JInternalFrame) c).isMaximum()) {
+            return true;
+        }
+        return !(c.getParent() instanceof JDesktopPane);
     }
 }

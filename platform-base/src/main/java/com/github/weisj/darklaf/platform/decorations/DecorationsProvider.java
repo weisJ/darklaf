@@ -70,12 +70,4 @@ public interface DecorationsProvider {
      * @param rect the proposed content area.
      */
     default void adjustContentArea(final JRootPane root, final Rectangle rect) {}
-
-    /**
-     * Adjust the window insets.
-     *
-     * @param window the corresponding window.
-     * @param i the insets to adjust.
-     */
-    default void adjustWindowInsets(final Window window, final Insets i) {}
 }

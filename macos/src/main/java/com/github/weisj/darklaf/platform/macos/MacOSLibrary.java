@@ -24,20 +24,19 @@ package com.github.weisj.darklaf.platform.macos;
 import java.util.Collections;
 import java.util.List;
 
-import com.github.weisj.darklaf.platform.AbstractLibrary;
-import com.github.weisj.darklaf.platform.NativeUtil;
+import com.github.weisj.darklaf.nativeutil.AbstractLibrary;
+import com.github.weisj.darklaf.nativeutil.NativeUtil;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 public class MacOSLibrary extends AbstractLibrary {
 
-    private static final String PATH = "/com/github/weisj/darklaf/platform/darklaf-macos/";
-    private static final String x86_64_PATH = "macos-x86-64/";
-    private static final String arm64_PATH = "macos-arm64/";
-    private static final String DLL_NAME = "libdarklaf-macos.dylib";
+    private static final String PATH = "/com/github/weisj/darklaf/platform/darklaf-macos";
+    private static final String x86_64_PATH = PATH + "/libdarklaf-macos-x86-64.dylib";
+    private static final String arm64_PATH = PATH + "/libdarklaf-macos-arm64.dylib";
 
     private static final String FRAMEWORK_TARGET_PATH = "JavaNativeFoundation.framework/";
-    private static final String FRAMEWORK_PATH = PATH + FRAMEWORK_TARGET_PATH + "JavaNativeFoundation";
+    private static final String FRAMEWORK_PATH = PATH + "/" + FRAMEWORK_TARGET_PATH + "JavaNativeFoundation";
     private static final MacOSLibrary instance = new MacOSLibrary();
 
     public static MacOSLibrary get() {
@@ -45,20 +44,24 @@ public class MacOSLibrary extends AbstractLibrary {
     }
 
     protected MacOSLibrary() {
-        super(PATH, DLL_NAME, LogUtil.getLogger(MacOSLibrary.class));
+        super("darklaf-macos", LogUtil.getLogger(MacOSLibrary.class));
     }
 
-    private String getArm64Path() {
-        return super.getPath() + arm64_PATH;
+    protected String getArm64Path() {
+        return arm64_PATH;
     }
 
-    private String getX64Path() {
-        return super.getPath() + x86_64_PATH;
+    protected String getX64Path() {
+        return x86_64_PATH;
     }
-
 
     @Override
-    protected String getPath() {
+    final protected Class<?> getLoaderClass() {
+        return MacOSLibrary.class;
+    }
+
+    @Override
+    public String getLibraryPath() {
         if (SystemInfo.isX86Compatible && SystemInfo.isX64) {
             return getX64Path();
         } else if (SystemInfo.isM1) {

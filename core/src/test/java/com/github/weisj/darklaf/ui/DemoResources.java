@@ -23,7 +23,7 @@ package com.github.weisj.darklaf.ui;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.iconset.AllIcons;
 
 public final class DemoResources {
     public static final String LOREM_IPSUM =
@@ -319,5 +319,5 @@ public final class DemoResources {
             + " 詩 路 農 鉄 意 様 緑 練 銀 駅 鼻 横 箱 談 調 橋 整 薬 館 題" + "\nChinese\n" + "視申父泉禁名時資題敬足仲与京周可初明染下。克東験未音際保哉木大卓俳世。\n"
             + "図反署必益明属前判庫男藤染米律児最特選描。事航版設丸井株需意登運名広。\n" + "活率閣探紅容声安目青谷知激武講介。況取密満論訳朝長写端買総冬。逮会朝咲不朝温村験食公納生歩。\n"
             + "京根狭書値裁給事認室健超幼読共法改。索洋物幅意写鳥輩全訴写考盟務少。";
-    public static final Icon FOLDER_ICON = DarkUIUtil.ICON_LOADER.getIcon("files/folder.svg", 19, 19, true);
+    public static final Icon FOLDER_ICON = AllIcons.Files.Folder.get(19, 19);
 }

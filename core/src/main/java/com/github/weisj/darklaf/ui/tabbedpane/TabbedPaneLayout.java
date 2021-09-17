@@ -37,19 +37,24 @@ public abstract class TabbedPaneLayout implements LayoutManager {
         this.ui = ui;
     }
 
+    @Override
     public void addLayoutComponent(final String name, final Component comp) {}
 
+    @Override
     public void removeLayoutComponent(final Component comp) {}
 
+    @Override
     public Dimension preferredLayoutSize(final Container parent) {
         return calculateSize(false);
     }
 
+    @Override
     public Dimension minimumLayoutSize(final Container parent) {
         return calculateSize(true);
     }
 
     /** {@inheritDoc} */
+    @Override
     @SuppressWarnings("deprecation")
     public void layoutContainer(final Container parent) {
         /*
@@ -189,7 +194,7 @@ public abstract class TabbedPaneLayout implements LayoutManager {
         int i, j;
         int x, y;
         int returnAt;
-        boolean verticalTabRuns = (tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT);
+        boolean verticalTabRuns = tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT;
         boolean leftToRight = ui.tabPane.getComponentOrientation().isLeftToRight();
 
         //
@@ -315,7 +320,7 @@ public abstract class TabbedPaneLayout implements LayoutManager {
         for (i = ui.runCount - 1; i >= 0; i--) {
             int start = ui.tabRuns[i];
             int next = ui.tabRuns[i == (ui.runCount - 1) ? 0 : i + 1];
-            int end = (next != 0 ? next - 1 : tabCount - 1);
+            int end = next != 0 ? next - 1 : tabCount - 1;
             if (!verticalTabRuns) {
                 for (j = start; j <= end; j++) {
                     rect = ui.rects[j];
@@ -326,9 +331,9 @@ public abstract class TabbedPaneLayout implements LayoutManager {
                     padTabRun(tabPlacement, start, end, returnAt);
                 }
                 if (tabPlacement == SwingConstants.BOTTOM) {
-                    y -= (ui.maxTabHeight - tabRunOverlay);
+                    y -= ui.maxTabHeight - tabRunOverlay;
                 } else {
-                    y += (ui.maxTabHeight - tabRunOverlay);
+                    y += ui.maxTabHeight - tabRunOverlay;
                 }
             } else {
                 for (j = start; j <= end; j++) {
@@ -340,9 +345,9 @@ public abstract class TabbedPaneLayout implements LayoutManager {
                     padTabRun(tabPlacement, start, end, returnAt);
                 }
                 if (tabPlacement == SwingConstants.RIGHT) {
-                    x -= (ui.maxTabWidth - tabRunOverlay);
+                    x -= ui.maxTabWidth - tabRunOverlay;
                 } else {
-                    x += (ui.maxTabWidth - tabRunOverlay);
+                    x += ui.maxTabWidth - tabRunOverlay;
                 }
             }
         }
@@ -373,7 +378,7 @@ public abstract class TabbedPaneLayout implements LayoutManager {
      * @param max the max
      */
     protected void normalizeTabRuns(final int tabPlacement, final int tabCount, final int start, final int max) {
-        boolean verticalTabRuns = (tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT);
+        boolean verticalTabRuns = tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT;
         int run = ui.runCount - 1;
         boolean keepAdjusting = true;
         double weight = 1.25;
@@ -504,9 +509,9 @@ public abstract class TabbedPaneLayout implements LayoutManager {
             Rectangle selRect = ui.rects[selectedIndex];
             Insets padInsets = ui.getSelectedTabPadInsets(tabPlacement);
             selRect.x -= padInsets.left;
-            selRect.width += (padInsets.left + padInsets.right);
+            selRect.width += padInsets.left + padInsets.right;
             selRect.y -= padInsets.top;
-            selRect.height += (padInsets.top + padInsets.bottom);
+            selRect.height += padInsets.top + padInsets.bottom;
 
             if (!ui.scrollableTabLayoutEnabled()) { // WRAP_TAB_LAYOUT
                 // do not expand selected tab more then necessary
@@ -519,7 +524,7 @@ public abstract class TabbedPaneLayout implements LayoutManager {
                         selRect.y += top;
                         selRect.height -= top;
                     }
-                    int bottom = (selRect.y + selRect.height) + insets.bottom - size.height;
+                    int bottom = selRect.y + selRect.height + insets.bottom - size.height;
                     if (bottom > 0) {
                         selRect.height -= bottom;
                     }
@@ -529,7 +534,7 @@ public abstract class TabbedPaneLayout implements LayoutManager {
                         selRect.x += left;
                         selRect.width -= left;
                     }
-                    int right = (selRect.x + selRect.width) + insets.right - size.width;
+                    int right = selRect.x + selRect.width + insets.right - size.width;
                     if (right > 0) {
                         selRect.width -= right;
                     }
@@ -550,7 +555,6 @@ public abstract class TabbedPaneLayout implements LayoutManager {
         Insets contentInsets = ui.getContentBorderInsets(tabPlacement);
         Insets tabAreaInsets = ui.getTabAreaInsets(tabPlacement);
 
-        Dimension zeroSize = new Dimension(0, 0);
         int height = 0;
         int width = 0;
         int cWidth = 0;

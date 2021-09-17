@@ -87,6 +87,7 @@ class CustomDialog extends JDialog implements ActionListener, PropertyChangeList
         // Handle window closing correctly.
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(final WindowEvent we) {
                 /*
                  * Instead of directly closing the window, we're going to change the JOptionPane's value property.
@@ -97,6 +98,7 @@ class CustomDialog extends JDialog implements ActionListener, PropertyChangeList
 
         // Ensure the text field always gets the first focus.
         addComponentListener(new ComponentAdapter() {
+            @Override
             public void componentShown(final ComponentEvent ce) {
                 textField.requestFocusInWindow();
             }
@@ -118,11 +120,13 @@ class CustomDialog extends JDialog implements ActionListener, PropertyChangeList
     }
 
     /** This method handles events for the text field. */
+    @Override
     public void actionPerformed(final ActionEvent e) {
         optionPane.setValue(btnString1);
     }
 
     /** This method reacts to state changes in the option pane. */
+    @Override
     public void propertyChange(final PropertyChangeEvent e) {
         String prop = e.getPropertyName();
 

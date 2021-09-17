@@ -23,6 +23,7 @@ package com.github.weisj.darklaf.ui.combobox;
 
 import java.awt.*;
 
+import com.github.weisj.darklaf.ui.DividedWidgetPainter;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -42,5 +43,10 @@ public interface ComboBoxConstants {
 
     static boolean isTableCellEditor(final Component c) {
         return PropertyUtil.getBooleanProperty(c, KEY_IS_TABLE_EDITOR);
+    }
+
+    static DividedWidgetPainter.WidgetBorderType getBorderType(final Component c) {
+        boolean isTableEditor = isTableCellEditor(c);
+        return DividedWidgetPainter.getBorderType(c, isTableEditor, !isTableEditor && isTreeCellEditor(c));
     }
 }

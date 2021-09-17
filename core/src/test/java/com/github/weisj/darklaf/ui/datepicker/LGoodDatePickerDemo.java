@@ -24,12 +24,13 @@ package com.github.weisj.darklaf.ui.datepicker;
 import javax.swing.*;
 
 import com.github.lgooddatepicker.demo.BasicDemo;
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
-public class LGoodDatePickerDemo implements ComponentDemo {
+public class LGoodDatePickerDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new LGoodDatePickerDemo());
+        DemoExecutor.showDemo(new LGoodDatePickerDemo());
     }
 
     @Override
@@ -38,7 +39,7 @@ public class LGoodDatePickerDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "LGoodDatePicker Demo";
     }
 }

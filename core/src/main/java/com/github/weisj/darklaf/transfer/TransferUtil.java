@@ -31,13 +31,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.icons.IconUtil;
+import com.github.weisj.darklaf.properties.icons.IconUtil;
+import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.Pair;
 
 public final class TransferUtil {
+
+    private static final Logger LOGGER = LogUtil.getLogger(TransferUtil.class);
 
     private TransferUtil() {
         throw new IllegalStateException("Utility class");
@@ -76,9 +81,8 @@ public final class TransferUtil {
                     // noinspection unchecked
                     return dragImageCreator.apply((T) t.getTransferData(flavor));
                 } catch (UnsupportedFlavorException | IOException e) {
-                    e.printStackTrace();
+                    return null;
                 }
-                return null;
             }
 
             @Override
@@ -94,7 +98,8 @@ public final class TransferUtil {
                 try {
                     // noinspection unchecked
                     importer.accept((T) support.getTransferable().getTransferData(flavor));
-                } catch (final Exception ignored) {
+                } catch (final Exception e) {
+                    LOGGER.log(Level.SEVERE, "Importing failed", e);
                 }
                 return false;
             }

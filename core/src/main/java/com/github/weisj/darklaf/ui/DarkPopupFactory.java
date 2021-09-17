@@ -25,16 +25,17 @@ import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.*;
-import javax.swing.plaf.RootPaneUI;
 
-import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
+import com.github.weisj.darklaf.properties.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
-import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.*;
+import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
 public class DarkPopupFactory extends PopupFactory {
@@ -49,6 +50,10 @@ public class DarkPopupFactory extends PopupFactory {
     public static final String KEY_DOUBLE_BUFFERED = "JPopupFactory.doubleBuffered";
 
     private HeavyWeightParent heavyWeightParent;
+
+    public static Popup createNoOpPopup() {
+        return new NoOpPopup();
+    }
 
     @Override
     public Popup getPopup(final Component owner, final Component contents, final int x, final int y)
@@ -76,7 +81,7 @@ public class DarkPopupFactory extends PopupFactory {
         }
         if (type == PopupType.HEAVY_WEIGHT) {
             Window window = DarkUIUtil.getWindow(contents);
-            if ((owner != null && window != null)
+            if (owner != null && window != null
                     && !Objects.equals(window.getGraphicsConfiguration(), owner.getGraphicsConfiguration())) {
                 /*
                  * Window uses incorrect graphics configuration. Setting the focusable window state will force the
@@ -196,7 +201,7 @@ public class DarkPopupFactory extends PopupFactory {
                     method.setAccessible(true);
                     method.invoke(rootPane, true);
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
+                    LOGGER.log(Level.SEVERE, "Couldn't apply fix for double buffering", e);
                 }
             }
         }
@@ -204,7 +209,7 @@ public class DarkPopupFactory extends PopupFactory {
 
     private void setUseDoubleBuffer(final Component c, final boolean enabled) {
         if (c instanceof JComponent) {
-            setUseDoubleBuffer(((JComponent) c), enabled);
+            setUseDoubleBuffer((JComponent) c, enabled);
         }
     }
 
@@ -249,12 +254,14 @@ public class DarkPopupFactory extends PopupFactory {
         if (startHidden && translucencySupported) {
             try {
                 window.setOpacity(0);
-            } catch (final Exception ignored) {
+            } catch (final Exception e) {
+                // We shouldn't throw here as a popup failure shouldn't break the GUI.
+                LOGGER.log(Level.SEVERE, "We shouldn't be here: ", e);
             }
         }
     }
 
-    protected HeavyWeightParent getHeavyWeightParent(final Container owner) {
+    private HeavyWeightParent getHeavyWeightParent(final Container owner) {
         if (heavyWeightParent == null) {
             JComponent box = Box.createHorizontalBox();
             super.getPopup(null, box, 0, 0);
@@ -309,38 +316,11 @@ public class DarkPopupFactory extends PopupFactory {
         HEAVY_WEIGHT
     }
 
-    private static class WrapperRootPane extends JRootPane implements RootPaneContainer {
+    private static class NoOpPopup extends Popup {
+        @Override
+        public void show() {}
 
         @Override
-        public void updateUI() {
-            setUI(new RootPaneUI() {});
-        }
-
-        @Override
-        public boolean isOpaque() {
-            return false;
-        }
-
-        @Override
-        public JRootPane getRootPane() {
-            return this;
-        }
-
-        @Override
-        protected void paintComponent(final Graphics g) {}
-
-        @Override
-        public void doLayout() {
-            int w = getWidth();
-            int h = getHeight();
-            layout(getLayeredPane(), w, h);
-            layout(getGlassPane(), w, h);
-            layout(getContentPane(), w, h);
-        }
-
-        private void layout(final Component c, final int w, final int h) {
-            c.setBounds(0, 0, w, h);
-            c.doLayout();
-        }
+        public void hide() {}
     }
 }

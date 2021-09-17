@@ -23,13 +23,14 @@ package com.github.weisj.darklaf.ui.font;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoResources;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
-public class FallbackFontDemo implements ComponentDemo {
+public class FallbackFontDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new FallbackFontDemo());
+        DemoExecutor.showDemo(new FallbackFontDemo());
     }
 
     @Override
@@ -41,7 +42,7 @@ public class FallbackFontDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Font-Fallback Demo";
     }
 }

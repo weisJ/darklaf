@@ -31,7 +31,6 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.PropertyLoader;
 import com.github.weisj.darklaf.components.ComponentHelper;
 import com.github.weisj.darklaf.components.DynamicUI;
 import com.github.weisj.darklaf.components.border.DarkBorders;
@@ -40,10 +39,12 @@ import com.github.weisj.darklaf.components.color.QuickColorChooser;
 import com.github.weisj.darklaf.components.popup.AttachedPopupComponent;
 import com.github.weisj.darklaf.components.popup.SharedComponent;
 import com.github.weisj.darklaf.components.renderer.SimpleListCellRenderer;
-import com.github.weisj.darklaf.icons.*;
+import com.github.weisj.darklaf.iconset.AllIcons;
 import com.github.weisj.darklaf.layout.LayoutHelper;
+import com.github.weisj.darklaf.properties.PropertyLoader;
+import com.github.weisj.darklaf.properties.icons.*;
 import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.Pair;
 
 public class IconEditorPanel extends JPanel {
@@ -79,14 +80,14 @@ public class IconEditorPanel extends JPanel {
         valuePanel.setBorder(LayoutHelper.createEmptyContainerBorder());
 
         reset = DynamicUI.withLocalizedTooltip(ComponentHelper.createIconOnlyButton(
-                DarkUIUtil.ICON_LOADER.getIcon("misc/revert.svg", true),
-                DarkUIUtil.ICON_LOADER.getIcon("misc/revertDisabled.svg", true)),
+                AllIcons.Action.Revert.get(),
+                AllIcons.Action.Revert.disabled()),
                 "Actions.revert");
         reset.addActionListener(e -> restore());
 
         save = DynamicUI.withLocalizedTooltip(ComponentHelper.createIconOnlyButton(
-                DarkUIUtil.ICON_LOADER.getIcon("menu/save.svg", true),
-                DarkUIUtil.ICON_LOADER.getIcon("menu/saveDisabled.svg", true)),
+                AllIcons.Action.Save.get(),
+                AllIcons.Action.Save.disabled()),
                 "Actions.save");
         save.addActionListener(e -> save());
 
@@ -223,8 +224,8 @@ public class IconEditorPanel extends JPanel {
 
     private JButton createPaletteButton() {
         return DynamicUI.withLocalizedTooltip(ComponentHelper.createIconOnlyButton(
-                DarkUIUtil.ICON_LOADER.getIcon("misc/palette.svg", true),
-                DarkUIUtil.ICON_LOADER.getIcon("misc/paletteDisabled.svg", true)),
+                AllIcons.Misc.Palette.get(),
+                AllIcons.Misc.Palette.disabled()),
                 "Actions.predefinedValues");
     }
 
@@ -377,7 +378,7 @@ public class IconEditorPanel extends JPanel {
                     }.getDefaults();
                 }
                 Properties props = new Properties();
-                theme.loadIconTheme(props, defaults);
+                theme.loadIconTheme(props, defaults, DarkUIUtil.iconResolver());
                 props.entrySet().forEach(e -> e.setValue(defaults.get(e.getKey())));
                 return new ThemeIconDefaults(defaults, props);
             });

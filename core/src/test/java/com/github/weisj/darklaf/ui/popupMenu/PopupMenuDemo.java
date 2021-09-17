@@ -22,16 +22,19 @@
 package com.github.weisj.darklaf.ui.popupMenu;
 
 import java.awt.*;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoResources;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
-public class PopupMenuDemo implements ComponentDemo {
+public class PopupMenuDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new PopupMenuDemo());
+        DemoExecutor.showDemo(new PopupMenuDemo());
     }
 
     @Override
@@ -125,27 +128,48 @@ public class PopupMenuDemo implements ComponentDemo {
     }
 
     @Override
-    public JMenuBar createMenuBar() {
-        JMenuBar menuBar = ComponentDemo.super.createMenuBar();
-        menuBar.add(new JMenu("CheckBoxes") {
-            {
-                for (int i = 0; i < 10; i++) {
-                    add(new JCheckBoxMenuItem("Item " + i));
-                }
-            }
-        });
-        menuBar.add(new JMenu("Many Items") {
-            {
-                for (int i = 0; i < 70; i++) {
-                    add(new JMenuItem("Item " + i));
-                }
-            }
-        });
-        return menuBar;
+    public List<JMenu> createMenus() {
+        return Arrays.asList(
+                new JMenu("Disabled Menus") {
+                    {
+                        add(new JMenu("No Items"));
+                        add(new JMenu("Menu") {
+                            {
+                                add(new JMenuItem());
+                                add(new JMenuItem());
+                            }
+
+                            @Override
+                            public boolean isEnabled() {
+                                return false;
+                            }
+                        });
+                        add(new JMenuItem("Item") {
+                            @Override
+                            public boolean isEnabled() {
+                                return false;
+                            }
+                        });
+                    }
+                },
+                new JMenu("CheckBoxes") {
+                    {
+                        for (int i = 0; i < 10; i++) {
+                            add(new JCheckBoxMenuItem("Item " + i));
+                        }
+                    }
+                },
+                new JMenu("Many Items") {
+                    {
+                        for (int i = 0; i < 70; i++) {
+                            add(new JMenuItem("Item " + i));
+                        }
+                    }
+                });
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "PopupMenu Demo";
     }
 }

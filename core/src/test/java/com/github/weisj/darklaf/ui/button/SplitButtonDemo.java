@@ -22,17 +22,20 @@
 package com.github.weisj.darklaf.ui.button;
 
 import java.awt.event.ActionListener;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.*;
 
 import com.github.weisj.darklaf.components.button.JSplitButton;
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.core.test.DarklafOnly;
 import com.github.weisj.darklaf.ui.DemoResources;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
+@DarklafOnly
 public class SplitButtonDemo extends ButtonDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new SplitButtonDemo());
+        DemoExecutor.showDemo(new SplitButtonDemo());
     }
 
     @Override
@@ -47,27 +50,23 @@ public class SplitButtonDemo extends ButtonDemo {
     }
 
     @Override
-    protected void addCheckBoxControls(final JPanel controlPanel, final JButton button) {
-        super.addCheckBoxControls(controlPanel, button);
-        controlPanel.add(new JCheckBox("Default action set") {
-            private final ActionListener l = ee -> {
-            };
-
-            {
-                addActionListener(e -> {
-                    if (isSelected()) {
-                        button.addActionListener(l);
-                    } else {
-                        button.removeActionListener(l);
+    protected void initBaseControls() {
+        final ActionListener action = ee -> {
+        };
+        AtomicBoolean actionSet = new AtomicBoolean(false);
+        this.<AbstractButton>booleanSpec("Default action set",
+                (c, b) -> {
+                    if (b && !actionSet.get()) {
+                        c.addActionListener(action);
+                    } else if (actionSet.get()) {
+                        c.removeActionListener(action);
                     }
-                });
-            }
-        });
-
+                    actionSet.set(b);
+                }, c -> actionSet.get());
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Split Button Demo";
     }
 }

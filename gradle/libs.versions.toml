@@ -12,9 +12,12 @@ swingDsl = "0.1.3"
 nullabilityAnnotations = "16.0.2"
 macOSFramework = "latest.release"
 javaNativeFoundation = "1.1.1"
+errorprone = "2.8.1"
+errorproneCompiler = "9+181-r4173-1"
+guava = "1.0"
+javaxAnnotations = "1.3.2"
 
 [libraries]
-jna = { module = "net.java.dev.jna:jna", version.ref = "jna" }
 jxlayer = { module = "org.swinglabs:jxlayer", version.ref = "jxlayer" }
 swingx = { module = "org.swinglabs:swingx", version.ref = "swingx" }
 svgSalamander = { module = "com.formdev:svgSalamander", version.ref = "svgSalamander" }
@@ -23,6 +26,7 @@ visualPaddings = { module = "com.github.weisj:swing-extensions-visual-padding", 
 autoservice-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "autoservice" }
 autoservice-processor = { module = "com.google.auto.service:auto-service", version.ref = "autoservice" }
 nullabilityAnnotations = { module = "org.jetbrains:annotations", version.ref = "nullabilityAnnotations" }
+javaxAnnotations = { module = "javax.annotation:javax.annotation-api", version.ref = "javaxAnnotations"}
 
 # MacOS frameworks
 macosLegacy-javaVM-base = { module = "dev.nokee.framework:JavaVM", version.ref = "macOSFramework" }
@@ -38,6 +42,14 @@ test-miglayout-core = { module = "com.miglayout:miglayout-core", version.ref = "
 test-miglayout-swing = { module = "com.miglayout:miglayout-swing", version.ref = "miglayout" }
 test-lGoodDatePicker = { module = "com.github.lgooddatepicker:LGoodDatePicker", version.ref = "lGoodDatePicker" }
 test-rsyntaxtextarea = { module = "com.fifesoft:rsyntaxtextarea", version.ref = "rsyntaxtextarea" }
+test-swingDslInspector = { module = "com.github.weisj:swing-extensions-inspector", version = "latest.integration" }
+test-jna = { module = "net.java.dev.jna:jna", version.ref = "jna" }
+
+# Tools
+tools-errorprone-core = { module = "com.google.errorprone:error_prone_core", version.ref = "errorprone" }
+tools-errorprone-annotations = { module = "com.google.errorprone:error_prone_annotations", version.ref = "errorprone" }
+tools-errorprone-guava = { module = "com.google.guava:guava-beta-checker", version.ref = "guava" }
+tools-errorprone-javac = { module = "com.google.errorprone:javac", version.ref = "errorproneCompiler" }
 
 [bundles]
 test-miglayout = ["test-miglayout-core", "test-miglayout-swing"]

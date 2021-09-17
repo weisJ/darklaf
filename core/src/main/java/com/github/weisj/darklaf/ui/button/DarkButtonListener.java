@@ -49,6 +49,7 @@ public class DarkButtonListener<T extends DarkButtonUI> extends BasicButtonListe
         ui.repaintNeighbours();
     }
 
+    @Override
     public void mouseEntered(final MouseEvent e) {
         AbstractButton b = (AbstractButton) e.getSource();
         ButtonModel model = b.getModel();
@@ -60,6 +61,7 @@ public class DarkButtonListener<T extends DarkButtonUI> extends BasicButtonListe
         }
     }
 
+    @Override
     public void mouseExited(final MouseEvent e) {
         AbstractButton b = (AbstractButton) e.getSource();
         ButtonModel model = b.getModel();

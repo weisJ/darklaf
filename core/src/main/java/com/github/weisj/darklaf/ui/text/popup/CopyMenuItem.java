@@ -37,6 +37,7 @@ public class CopyMenuItem extends EditMenuItem {
         super(title, editor);
     }
 
+    @Override
     protected void setupIcons() {
         setIcon(UIManager.getIcon("TextComponent.copy.icon"));
         setDisabledIcon(UIManager.getIcon("TextComponent.copyDisabled.icon"));

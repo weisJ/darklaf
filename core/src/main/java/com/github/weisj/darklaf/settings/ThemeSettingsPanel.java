@@ -32,7 +32,7 @@ import com.github.weisj.darklaf.components.DynamicUI;
 import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
 import com.github.weisj.darklaf.layout.LayoutHelper;
 import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.swingdsl.visualpadding.VisualPaddingProvider;
 
 public class ThemeSettingsPanel extends JPanel {
@@ -90,8 +90,6 @@ public class ThemeSettingsPanel extends JPanel {
     }
 
     private JComponent createGeneralSettings(final GroupLayout.Alignment alignment, final Insets insets) {
-        Locale l = getLocale();
-
         JLabel themeLabel = createDynamicLabel(ThemeSettingsUI.THEME_LABEL_KEY);
 
         JComboBox<Theme> themeComboBox = settingsUI.getThemeComboBox();

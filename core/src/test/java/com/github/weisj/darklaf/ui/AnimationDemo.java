@@ -30,11 +30,13 @@ import javax.swing.*;
 import com.github.weisj.darklaf.graphics.Animator;
 import com.github.weisj.darklaf.graphics.DefaultInterpolator;
 import com.github.weisj.darklaf.graphics.Interpolator;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
-public class AnimationDemo implements ComponentDemo {
+public class AnimationDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new AnimationDemo());
+        DemoExecutor.showDemo(new AnimationDemo());
     }
 
     @Override
@@ -83,7 +85,7 @@ public class AnimationDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Animation Demo";
     }
 

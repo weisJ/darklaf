@@ -23,21 +23,25 @@ package com.github.weisj.darklaf.components.tristate;
 
 public enum TristateState {
     SELECTED(false) {
+        @Override
         public TristateState next() {
             return DESELECTED;
         }
     },
     INDETERMINATE_SEL(true) {
+        @Override
         public TristateState next() {
             return SELECTED;
         }
     },
     INDETERMINATE_DES(true) {
+        @Override
         public TristateState next() {
             return DESELECTED;
         }
     },
     DESELECTED(false) {
+        @Override
         public TristateState next() {
             return INDETERMINATE_SEL;
         }

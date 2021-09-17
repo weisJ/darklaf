@@ -22,6 +22,7 @@
 package com.github.weisj.darklaf.ui.toolbar;
 
 import java.awt.*;
+import java.util.Objects;
 
 import javax.swing.*;
 
@@ -65,20 +66,20 @@ public abstract class JDragWindow extends JWindow {
         this.offset = p;
     }
 
+    @Override
     public void paint(final Graphics g) {
         paintDragWindow(g);
         // Paint the children
         super.paint(g);
     }
 
+    @Override
     public Insets getInsets() {
         return new Insets(1, 1, 1, 1);
     }
 
     public void setBorderColor(final Color c) {
-        if (this.borderColor == c) {
-            return;
-        }
+        if (Objects.equals(this.borderColor, c)) return;
         this.borderColor = c;
         repaint();
     }

@@ -29,7 +29,12 @@ import java.awt.image.ColorModel;
 
 public class ColorWrapper extends Color {
 
-    protected static final Color DEFAULT_COLOR = new Color(0, 0, 0);
+    protected static final Color DEFAULT_COLOR = new Color(0, 0, 0) {
+        @Override
+        public boolean equals(Object obj) {
+            return obj == this;
+        }
+    };
     private Color color;
 
     public ColorWrapper(final Color color) {

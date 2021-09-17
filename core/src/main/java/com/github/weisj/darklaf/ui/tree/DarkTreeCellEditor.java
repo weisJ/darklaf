@@ -66,10 +66,12 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
         super(dummyCheckBox);
         editorComponent = toggleButton;
         delegate = new EditorDelegate() {
+            @Override
             public Object getCellEditorValue() {
                 return toggleButton.isSelected();
             }
 
+            @Override
             public void setValue(final Object value) {
                 Object unwrapped = DarkTreeCellRendererDelegate.unwrapValue(value);
                 if (unwrapped instanceof TristateState && toggleButton instanceof TristateCheckBox) {
@@ -118,10 +120,12 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
         editorComponent.addFocusListener(this);
         setClickCountToStart(2);
         delegate = new EditorDelegate() {
+            @Override
             public Object getCellEditorValue() {
                 return spinner.getValue();
             }
 
+            @Override
             public void setValue(final Object value) {
                 try {
                     SpinnerModel model = spinner.getModel();
@@ -133,10 +137,11 @@ public class DarkTreeCellEditor extends DefaultCellEditor implements TreeCellEdi
                         spinner.setValue(value);
                     }
                 } catch (final ParseException e) {
-                    e.printStackTrace();
+                    throw new IllegalStateException(e);
                 }
             }
 
+            @Override
             public boolean shouldSelectCell(final EventObject anEvent) {
                 if (anEvent instanceof MouseEvent) {
                     MouseEvent e = (MouseEvent) anEvent;

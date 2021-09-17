@@ -98,10 +98,12 @@ public class DarkTableCellEditor extends DefaultCellEditor {
         spinner.putClientProperty(SpinnerConstants.KEY_IS_TABLE_EDITOR, Boolean.TRUE);
         setClickCountToStart(2);
         delegate = new EditorDelegate() {
+            @Override
             public Object getCellEditorValue() {
                 return spinner.getValue();
             }
 
+            @Override
             public void setValue(final Object value) {
                 try {
                     SpinnerModel model = spinner.getModel();
@@ -115,7 +117,7 @@ public class DarkTableCellEditor extends DefaultCellEditor {
                     if (spinner.getValue() != null) {
                         Component editor = spinner.getEditor();
                         if (editor instanceof JSpinner.DefaultEditor) {
-                            JSpinner.DefaultEditor defaultEditor = ((JSpinner.DefaultEditor) editor);
+                            JSpinner.DefaultEditor defaultEditor = (JSpinner.DefaultEditor) editor;
                             JFormattedTextField.AbstractFormatter formatter =
                                     defaultEditor.getTextField().getFormatter();
                             if (formatter instanceof DefaultFormatter) {
@@ -124,10 +126,11 @@ public class DarkTableCellEditor extends DefaultCellEditor {
                         }
                     }
                 } catch (final ParseException e) {
-                    e.printStackTrace();
+                    throw new IllegalStateException(e);
                 }
             }
 
+            @Override
             public boolean shouldSelectCell(final EventObject anEvent) {
                 if (anEvent instanceof MouseEvent) {
                     MouseEvent e = (MouseEvent) anEvent;
@@ -147,10 +150,12 @@ public class DarkTableCellEditor extends DefaultCellEditor {
         super(dummyCheckBox);
         editorComponent = toggleButton;
         delegate = new EditorDelegate() {
+            @Override
             public Object getCellEditorValue() {
                 return toggleButton.isSelected();
             }
 
+            @Override
             public void setValue(final Object value) {
                 boolean selected = false;
                 if (value instanceof Boolean) {

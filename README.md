@@ -2,7 +2,7 @@
 
 [![CI Status](https://github.com/weisJ/darklaf/workflows/CI/badge.svg?branch=master)](https://github.com/weisJ/darklaf/actions?query=workflow%3ACI)
 [![Native Libraries](https://github.com/weisJ/darklaf/workflows/Build%20Native%20Libraries/badge.svg)](https://github.com/weisJ/darklaf/actions?query=workflow%3A%22Build+Native+Libraries%22)
-[![Autostyle](https://github.com/weisJ/darklaf/workflows/Autostyle/badge.svg)](https://github.com/weisJ/darklaf/actions?query=workflow%3AAutostyle)
+[![Code Style](https://github.com/weisJ/darklaf/workflows/Autostyle/badge.svg)](https://github.com/weisJ/darklaf/actions?query=workflow%3AAutostyle)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.weisj/darklaf-core?label=Maven%20Central)](https://search.maven.org/artifact/com.github.weisj/darklaf-core)
 
 This project is based on the [darcula](https://github.com/bulenkov/Darcula) look and feel for Swing.
@@ -157,17 +157,16 @@ Here is a list of things that currently are not finished or need refinement. Thi
 
 - [Native window decorations on Linux.](https://github.com/weisJ/darklaf/issues/2)
   * See [/windows](https://github.com/weisJ/darklaf/tree/master/windows) for the Windows implementation.
-  * See [/macos(https://github.com/weisJ/darklaf/tree/master/macos) for the macOS implementation.
+  * See [/macos](https://github.com/weisJ/darklaf/tree/master/macos) for the macOS implementation.
 - Localization:
-  * Theme preferences panel. [here](https://github.com/weisJ/darklaf/blob/master/core/src/main/resources/theme_settings.properties)
-  * Other properties:
-      * [Windows title pane](https://github.com/weisJ/darklaf/blob/master/windows/src/main/java/com/github/weisj/darklaf/platform/windows/ui/WindowsTitlePane.java)
-        This also needs to have a bundle created in the first place.
+  * Theme preferences panel. [here](https://github.com/weisJ/darklaf/blob/master/core/src/main/resources/com/github/weisj/darklaf/task/theme_settings.properties)
+
 # Artifacts
 - Group ID: `com.github.weisj`
 - Version: `2.7.2`
 - Artifact IDs:
   - `darklaf-core` The LaF itself. Include this in your project to use the LaF. Includes all other artifacts.
+  - `darklaf-iconset` The icons used by the laf.
   - `darklaf-theme` The themes to use with the LaF.
   - `darklaf-property-loader` Library to load and parse property files and icon.
   - `darklaf-utils` Shared utility classes for other modules.
@@ -183,6 +182,8 @@ Here is a list of things that currently are not finished or need refinement. Thi
 - [BoofVC](https://github.com/lessthanoptimal/BoofCV)
 - [threadtear](https://github.com/GraxCode/threadtear)
 - [HO](https://github.com/akasolace/HO)
+- [Bytecode viewer](https://github.com/Konloch/bytecode-viewer)
+- [Remote Hacker Probe](https://github.com/quantumcore/remote_hacker_probe)
 
 Please send me your project, and I'll add it here.
 

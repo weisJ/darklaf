@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package com.github.weisj.darklaf.listener;
+package com.github.weisj.darklaf.delegate;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

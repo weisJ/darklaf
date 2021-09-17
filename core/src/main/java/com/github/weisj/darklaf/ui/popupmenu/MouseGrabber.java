@@ -32,10 +32,10 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.github.weisj.darklaf.compatibility.SwingUtil;
 import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
-import com.github.weisj.darklaf.util.SwingUtil;
 
 public class MouseGrabber implements ChangeListener, AWTEventListener, ComponentListener, WindowListener {
 
@@ -71,7 +71,7 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
         }
         grabbedWindow = DarkUIUtil.getWindow(invoker);
         if (grabbedWindow != null) {
-            if (tk.getClass().getName().equals("SunToolkit")) {
+            if (SwingUtil.isSunToolkit(tk)) {
                 SwingUtil.grab(tk, grabbedWindow);
             } else {
                 grabbedWindow.addComponentListener(this);
@@ -98,7 +98,7 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
     protected void realUngrabWindow() {
         Toolkit tk = Toolkit.getDefaultToolkit();
         if (grabbedWindow != null) {
-            if (tk.getClass().getName().equals("SunToolkit")) {
+            if (SwingUtil.isSunToolkit(tk)) {
                 SwingUtil.ungrab(tk, grabbedWindow);
             } else {
                 grabbedWindow.removeComponentListener(this);
@@ -108,6 +108,7 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
         }
     }
 
+    @Override
     public void stateChanged(final ChangeEvent e) {
         MenuSelectionManager msm = MenuSelectionManager.defaultManager();
         MenuElement[] p = msm.getSelectedPath();
@@ -147,8 +148,9 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
         }
     }
 
+    @Override
     public void eventDispatched(final AWTEvent ev) {
-        if (ev != null && ev.getClass().getName().equals("UngrabEvent")) {
+        if (SwingUtil.isUngrabEvent(ev)) {
             // Popup should be canceled in case of ungrab event
             cancelPopupMenu();
             return;
@@ -184,8 +186,8 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
                     /*
                      * Changed here: Enable event consumption for specific sources through client property.
                      */
-                    if ((consumeEvent && !(src instanceof MenuElement)
-                            || PropertyUtil.getBooleanProperty(src, DarkPopupMenuUI.KEY_CONSUME_EVENT_ON_CLOSE))) {
+                    if ((consumeEvent && !(src instanceof MenuElement))
+                            || PropertyUtil.getBooleanProperty(src, DarkPopupMenuUI.KEY_CONSUME_EVENT_ON_CLOSE)) {
                         me.consume();
                     }
                 }
@@ -259,40 +261,51 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
         return false;
     }
 
+    @Override
     public void componentResized(final ComponentEvent e) {
         cancelPopupMenu();
     }
 
+    @Override
     public void componentMoved(final ComponentEvent e) {
         cancelPopupMenu();
     }
 
+    @Override
     public void componentShown(final ComponentEvent e) {
         cancelPopupMenu();
     }
 
+    @Override
     public void componentHidden(final ComponentEvent e) {
         cancelPopupMenu();
     }
 
+    @Override
     public void windowOpened(final WindowEvent e) {}
 
+    @Override
     public void windowClosing(final WindowEvent e) {
         cancelPopupMenu();
     }
 
+    @Override
     public void windowClosed(final WindowEvent e) {
         cancelPopupMenu();
     }
 
+    @Override
     public void windowIconified(final WindowEvent e) {
         cancelPopupMenu();
     }
 
+    @Override
     public void windowDeiconified(final WindowEvent e) {}
 
+    @Override
     public void windowActivated(final WindowEvent e) {}
 
+    @Override
     public void windowDeactivated(final WindowEvent e) {
         cancelPopupMenu();
     }

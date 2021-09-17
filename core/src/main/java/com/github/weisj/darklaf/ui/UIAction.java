@@ -36,6 +36,7 @@ public abstract class UIAction implements Action {
         return name;
     }
 
+    @Override
     public Object getValue(String key) {
         if (NAME.equals(key)) {
             return name;

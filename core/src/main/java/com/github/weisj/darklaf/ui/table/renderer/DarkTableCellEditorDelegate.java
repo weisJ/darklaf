@@ -50,7 +50,7 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
     @Override
     public boolean isCellEditable(final EventObject anEvent) {
         if (anEvent == null) return super.isCellEditable(null);
-        JTable table = ((JTable) anEvent.getSource());
+        JTable table = (JTable) anEvent.getSource();
         if (anEvent instanceof KeyEvent) {
             if (DarkTableUI.ignoreKeyCodeOnEdit((KeyEvent) anEvent, table)) return false;
         }

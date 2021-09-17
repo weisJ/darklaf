@@ -36,7 +36,7 @@ import com.github.weisj.darklaf.components.uiresource.UIResourceWrapper;
 import com.github.weisj.darklaf.focus.FocusParentHelper;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.graphics.StringPainter;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 
@@ -139,7 +139,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
                 target.setActive(dndEnabled);
             }
         } catch (final TooManyListenersException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Can't install DnD support. A valid drop target is already registered", e);
         }
     }
 
@@ -287,11 +287,13 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         switch (tabPlacement) {
             case BOTTOM:
                 b.y++;
+                // fall through
             case TOP:
                 b.height--;
                 break;
             case RIGHT:
                 b.x++;
+                // fall through
             case LEFT:
                 b.width--;
                 break;
@@ -381,6 +383,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         }
     }
 
+    @Override
     protected boolean shouldRotateTabRuns(final int tabPlacement) {
         return PropertyUtil.getBooleanProperty(tabPane, KEY_ROTATE_TAB_RUNS);
     }
@@ -436,6 +439,7 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
         tabPane.repaint();
     }
 
+    @Override
     protected Insets getContentBorderInsets(final int tabPlacement) {
         Insets insets = (Insets) super.getContentBorderInsets(tabPlacement).clone();
         if (northComp != null) {

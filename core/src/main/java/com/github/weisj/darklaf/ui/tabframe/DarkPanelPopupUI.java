@@ -39,9 +39,9 @@ import com.github.weisj.darklaf.focus.FocusParentHelper;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.panel.DarkPanelUI;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.Actions;
 import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListener, TabFramePopupUI {
 
@@ -201,6 +201,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
         }
     }
 
+    @Override
     public final Dimension getPreferredSize(final JComponent c) {
         if (!c.isEnabled()) {
             return new Dimension(0, 0);
@@ -355,11 +356,11 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
 
     protected static final class HeaderButton extends JButton implements UIResource {
 
-        protected final DarkPanelPopupUI ui;
+        private final DarkPanelPopupUI popupUI;
 
-        public HeaderButton(final Icon icon, final DarkPanelPopupUI ui) {
+        public HeaderButton(final Icon icon, final DarkPanelPopupUI popupUI) {
             super(icon);
-            this.ui = ui;
+            this.popupUI = popupUI;
             setName("headerButton");
             putClientProperty(DarkButtonUI.KEY_SQUARE, true);
             putClientProperty(DarkButtonUI.KEY_THIN, true);
@@ -376,9 +377,9 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
 
         public void setFocus(final boolean focus) {
             putClientProperty(DarkButtonUI.KEY_HOVER_COLOR,
-                    focus ? ui.headerButtonFocusHoverBackground : ui.headerButtonHoverBackground);
+                    focus ? popupUI.headerButtonFocusHoverBackground : popupUI.headerButtonHoverBackground);
             putClientProperty(DarkButtonUI.KEY_CLICK_COLOR,
-                    focus ? ui.headerButtonFocusClickBackground : ui.headerButtonClickBackground);
+                    focus ? popupUI.headerButtonFocusClickBackground : popupUI.headerButtonClickBackground);
         }
     }
 }

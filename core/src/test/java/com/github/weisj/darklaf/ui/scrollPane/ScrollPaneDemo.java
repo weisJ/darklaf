@@ -25,20 +25,21 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.DemoResources;
 import com.github.weisj.darklaf.ui.SolidColorComponent;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.util.StringUtil;
 
 /**
  * @author Jannis Weis
  * @since 2019
  */
-public final class ScrollPaneDemo implements ComponentDemo {
+public final class ScrollPaneDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new ScrollPaneDemo());
+        DemoExecutor.showDemo(new ScrollPaneDemo());
     }
 
     @Override
@@ -93,7 +94,7 @@ public final class ScrollPaneDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "ScrollPane Demo";
     }
 }

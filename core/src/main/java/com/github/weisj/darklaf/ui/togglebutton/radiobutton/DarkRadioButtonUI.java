@@ -32,13 +32,13 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicButtonListener;
 import javax.swing.plaf.metal.MetalRadioButtonUI;
 
+import com.github.weisj.darklaf.compatibility.SwingUtil;
 import com.github.weisj.darklaf.graphics.StringPainter;
 import com.github.weisj.darklaf.swingdsl.VisualPaddingListener;
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonFocusNavigationActions;
 import com.github.weisj.darklaf.util.PropertyKey;
-import com.github.weisj.darklaf.util.SwingUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
@@ -128,6 +128,8 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
     }
 
     @Override
+    // We're not calling the super implementation
+    @SuppressWarnings("UnsynchronizedOverridesSynchronized")
     public void paint(final Graphics g2d, final JComponent c) {
         Graphics2D g = (Graphics2D) g2d;
         AbstractButton b = (AbstractButton) c;
@@ -216,10 +218,10 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
 
     @Override
     public boolean contains(final JComponent c, final int x, final int y) {
-        if (hitArea == null || (hitArea.isEmpty()) && c instanceof JToggleButton) {
+        if ((hitArea == null || hitArea.isEmpty()) && c instanceof JToggleButton) {
             c.doLayout();
         }
-        return hitArea.contains(x, y);
+        return hitArea != null && hitArea.contains(x, y);
     }
 
     @Override

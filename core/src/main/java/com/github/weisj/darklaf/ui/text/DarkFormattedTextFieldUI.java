@@ -44,6 +44,7 @@ public class DarkFormattedTextFieldUI extends DarkTextFieldUI implements Propert
         return new DarkFormattedTextFieldUI();
     }
 
+    @Override
     protected String getPropertyPrefix() {
         return "FormattedTextField";
     }

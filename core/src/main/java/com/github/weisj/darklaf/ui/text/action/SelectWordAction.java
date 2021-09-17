@@ -64,7 +64,7 @@ public class SelectWordAction extends TextAction {
                     textArea.setCaretPosition(begOffs);
                 }
             } catch (final BadLocationException ble) {
-                ble.printStackTrace();
+                throw new IllegalStateException("This shouldn't happen", ble);
             }
         }
 
@@ -93,7 +93,7 @@ public class SelectWordAction extends TextAction {
                     textArea.setCaretPosition(endOffs);
                 }
             } catch (final BadLocationException ble) {
-                ble.printStackTrace();
+                throw new IllegalStateException("This shouldn't happen", ble);
             }
         }
 

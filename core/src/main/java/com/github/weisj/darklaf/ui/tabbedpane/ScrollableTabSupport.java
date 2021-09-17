@@ -39,6 +39,7 @@ class ScrollableTabSupport {
     /** Recreates the scroll buttons and adds them to the TabbedPane. */
     void createButtons(final DarkTabbedPaneUIBridge ui) {}
 
+    @Override
     public String toString() {
         return "viewport.viewSize=" + viewport.getViewSize() + "\n" + "viewport.viewRectangle=" + viewport.getViewRect()
                 + "\n" + "leadingTabIndex=" + leadingTabIndex + "\n" + "tabViewPosition=" + tabViewPosition;

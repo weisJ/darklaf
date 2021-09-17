@@ -31,14 +31,14 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.DefaultButton;
-import com.github.weisj.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.event.ThemePreferenceChangeEvent;
 import com.github.weisj.darklaf.theme.event.ThemePreferenceListener;
 import com.github.weisj.darklaf.theme.info.AccentColorRule;
 import com.github.weisj.darklaf.theme.info.FontSizeRule;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LazyValue;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.value.WeakShared;
@@ -371,19 +371,19 @@ public class ThemeSettings implements ThemePreferenceListener {
 
     protected Component createButtonPanel() {
         Locale l = Locale.getDefault();
-        JButton ok = new DefaultButton(UIManager.getString("dialog_ok", l));
+        JButton ok = new DefaultButton(UIManager.getString("settings.dialog_ok", l));
         ok.setDefaultCapable(true);
         ok.addActionListener(e -> {
             apply();
             dialog.dispatchEvent(new WindowEvent(dialog, WindowEvent.WINDOW_CLOSING));
         });
 
-        JButton cancel = new JButton(UIManager.getString("dialog_cancel", l));
+        JButton cancel = new JButton(UIManager.getString("settings.dialog_cancel", l));
         cancel.addActionListener(e -> {
             revert();
             dialog.dispatchEvent(new WindowEvent(dialog, WindowEvent.WINDOW_CLOSING));
         });
-        JButton apply = new JButton(UIManager.getString("dialog_apply", l));
+        JButton apply = new JButton(UIManager.getString("settings.dialog_apply", l));
         apply.addActionListener(e -> apply());
 
         Box box = Box.createHorizontalBox();
@@ -531,7 +531,7 @@ public class ThemeSettings implements ThemePreferenceListener {
      * @return the title
      */
     public String getTitle() {
-        return UIManager.getString("title", Locale.getDefault());
+        return UIManager.getString("settings.title", Locale.getDefault());
     }
 
     @Override

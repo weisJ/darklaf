@@ -30,6 +30,8 @@ import com.github.weisj.darklaf.util.PropertyValue;
 import com.github.weisj.darklaf.util.SystemInfo;
 
 /**
+ * Utility class for creating {@link GraphicsContext}s.
+ *
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */

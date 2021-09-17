@@ -34,10 +34,12 @@ import javax.swing.*;
 import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.DarkLaf;
-import com.github.weisj.darklaf.PropertyLoader;
+import com.github.weisj.darklaf.properties.PropertyLoader;
+import com.github.weisj.darklaf.properties.icons.IconResolver;
+import com.github.weisj.darklaf.properties.uiresource.DarkFontUIResource;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.FontSizeRule;
-import com.github.weisj.darklaf.uiresource.DarkFontUIResource;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.FontUtil;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -49,7 +51,7 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     private static final Logger LOGGER = LogUtil.getLogger(FontDefaultsInitTask.class);
     private static final String SWING_AA_KEY = "swing.aatext";
     private static final String SWING_AA_DEFAULT_VALUE = "true";
-    private static final String FONT_PROPERTY_PATH = "properties/";
+    private static final String FONT_PROPERTY_PATH = "";
     private static final String FONT_SIZE_DEFAULTS_NAME = "font_sizes";
     private static final String FONT_DEFAULTS_NAME = "font";
     private static final String KERNING_ALLOW_LIST = "kerning.allowList";
@@ -66,12 +68,11 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
 
     private static final Map<AttributedCharacterIterator.Attribute, Integer> ENABLE_KERNING =
             Collections.singletonMap(TextAttribute.KERNING, TextAttribute.KERNING_ON);
-    private static final Map<AttributedCharacterIterator.Attribute, Integer> DISABLE_KERNING =
-            Collections.singletonMap(TextAttribute.KERNING, null);
     /*
      * On Catalina the are issues with font kerning and .AppleSystemUIFont. For now Helvetica Neue is
      * used instead.
      */
+    @SuppressWarnings("UnusedVariable")
     private static final String MAC_OS_CATALINA_FONT_NAME = ".AppleSystemUIFont";
     private static final String MAC_OS_CATALINA_FONT_NAME_FALLBACK = "Helvetica Neue";
     private static final String MAC_OS_FONT_NAME = ".SF NS Text";
@@ -174,11 +175,12 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     }
 
     private void loadFontProperties(final UIDefaults defaults) {
+        IconResolver iconResolver = DarkUIUtil.iconResolver();
         Properties fontSizeProps =
                 PropertyLoader.loadProperties(DarkLaf.class, FONT_SIZE_DEFAULTS_NAME, FONT_PROPERTY_PATH);
-        PropertyLoader.putProperties(fontSizeProps, defaults);
+        PropertyLoader.putProperties(fontSizeProps, defaults, iconResolver);
         Properties fontProps = PropertyLoader.loadProperties(DarkLaf.class, FONT_DEFAULTS_NAME, FONT_PROPERTY_PATH);
-        PropertyLoader.putProperties(fontProps, defaults);
+        PropertyLoader.putProperties(fontProps, defaults, iconResolver);
     }
 
     private void patchOSFonts(final UIDefaults defaults, final Function<Map.Entry<Object, Font>, Font> mapper) {

@@ -149,7 +149,7 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
                 dropTarget.setActive(tabFrame.isDndEnabled());
             }
         } catch (final TooManyListenersException e) {
-            e.printStackTrace();
+            throw new IllegalStateException("Can't install DnD support. A valid drop target is already registered", e);
         }
     }
 
@@ -185,6 +185,7 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
         Toolkit.getDefaultToolkit().removeAWTEventListener(this);
     }
 
+    @Override
     public int getTabSize(final JTabFrame tabFrame) {
         return tabHeight;
     }
@@ -256,6 +257,7 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
         return tabFrame.getTabSize();
     }
 
+    @Override
     public Rectangle getTabContainerBounds(final JTabFrame tabFrame, final Alignment a) {
         switch (a) {
             case NORTH:
@@ -363,6 +365,7 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
         return getNearestTabIndexAtImpl(tabFrame, pos).getFirst();
     }
 
+    @Override
     public JTabFrame.TabFramePosition getDropPosition(final JTabFrame tabFrame, final Point p) {
         Pair<JTabFrame.TabFramePosition, Point> res = getNearestTabIndexAtImpl(tabFrame, p);
         JTabFrame.TabFramePosition tab = res.getFirst();
@@ -427,6 +430,7 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
         return new JTabFrame.TabFramePosition(a, index);
     }
 
+    @Override
     public void setDropSize(final int width, final int height) {
         dropSize.setSize(width, height);
     }
@@ -502,6 +506,8 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
                         tab.setIndex(tabFrame.getTabCountAt(a) - 1);
                     }
                     break;
+                case CENTER:
+                    throw new IllegalStateException();
             }
         }
         return res;
@@ -521,8 +527,9 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
             case WEST:
             case NORTH_WEST:
                 return getLeftContainer();
+            default:
+                return null;
         }
-        return null;
     }
 
     public Alignment getSourceAlign() {

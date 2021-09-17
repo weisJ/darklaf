@@ -105,6 +105,8 @@ public class JTabFrame extends JComponent {
      *
      * @return the ui.
      */
+    // #getUI is a Java 9 API
+    @SuppressWarnings("MissingOverride")
     public TabFrameUI getUI() {
         return (TabFrameUI) ui;
     }
@@ -889,8 +891,9 @@ public class JTabFrame extends JComponent {
             case SOUTH_EAST:
             case SOUTH_WEST:
                 return a.anticlockwise();
+            default:
+                return a;
         }
-        return a;
     }
 
     /**

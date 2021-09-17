@@ -153,6 +153,7 @@ public class DarkTabbedPaneHandler extends TabbedPaneHandler {
         }
     }
 
+    @Override
     public void stateChanged(final ChangeEvent e) {
         JTabbedPane tabPane = (JTabbedPane) e.getSource();
         ui.setFocusIndex(tabPane.getSelectedIndex(), true);

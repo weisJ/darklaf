@@ -59,16 +59,16 @@ public class AntialiasingImageFilter extends RGBImageFilter {
         }
         int red = (rgb & 0xff0000) >> 16;
         int green = (rgb & 0x00ff00) >> 8;
-        int blue = (rgb & 0x0000ff);
-        float aa = ((float) (red - bgRed)) / (fgRed - bgRed);
-        float ba = ((float) (blue - bgBlue)) / (fgBlue - bgBlue);
-        float ga = ((float) (green - bgGreen)) / (fgGreen - bgGreen);
+        int blue = rgb & 0x0000ff;
+        float aa = (float) (red - bgRed) / (fgRed - bgRed);
+        float ba = (float) (blue - bgBlue) / (fgBlue - bgBlue);
+        float ga = (float) (green - bgGreen) / (fgGreen - bgGreen);
 
         if (destImg != null) {
             int destRgb = destImg.getRGB(destPosX + x, destPosY + y);
             int destRed = (destRgb & 0xff0000) >> 16;
             int destGreen = (destRgb & 0x00ff00) >> 8;
-            int destBlue = (destRgb & 0x0000ff);
+            int destBlue = destRgb & 0x0000ff;
 
             int outRed = Math.max(0, Math.min(255, (int) ((fgRed * aa) + (1 - aa) * destRed)));
             int outBlue = Math.max(0, Math.min(255, (int) ((fgBlue * ba) + (1 - ba) * destBlue)));

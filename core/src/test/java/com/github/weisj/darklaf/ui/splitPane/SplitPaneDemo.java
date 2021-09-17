@@ -30,15 +30,16 @@ import javax.swing.*;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.graphics.ThemedColor;
 import com.github.weisj.darklaf.theme.event.ThemeInstalledListener;
-import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoPanel;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.splitpane.DividerStyle;
 import com.github.weisj.darklaf.ui.splitpane.SplitPaneConstants;
 
-public final class SplitPaneDemo implements ComponentDemo {
+public final class SplitPaneDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new SplitPaneDemo());
+        DemoExecutor.showDemo(new SplitPaneDemo());
     }
 
     @Override
@@ -111,7 +112,7 @@ public final class SplitPaneDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "SplitPane Demo";
     }
 }

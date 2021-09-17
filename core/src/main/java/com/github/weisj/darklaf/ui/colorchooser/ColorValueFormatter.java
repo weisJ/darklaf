@@ -36,7 +36,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.DocumentFilter;
 
-import com.github.weisj.darklaf.color.DarkColorModel;
+import com.github.weisj.darklaf.properties.color.DarkColorModel;
 import com.github.weisj.darklaf.ui.text.DarkTextUI;
 
 /** @author Jannis Weis */
@@ -115,7 +115,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         this.text = text;
     }
 
-    protected void error() {
+    private void error() {
         text.putClientProperty(DarkTextUI.KEY_HAS_ERROR, true);
         text.repaint();
         errorTimer.restart();
@@ -136,7 +136,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
                     text.commitEdit();
                 }
             } catch (final ParseException e) {
-                e.printStackTrace();
+                throw new IllegalStateException("Shouldn't happen. Committed invalid value", e);
             }
         });
     }
@@ -149,6 +149,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         this.transparencyEnabled = transparencyEnabled;
     }
 
+    @Override
     public void focusGained(final FocusEvent event) {
         Object source = event.getSource();
         if (source instanceof JFormattedTextField) {
@@ -161,6 +162,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         }
     }
 
+    @Override
     public void focusLost(final FocusEvent event) {
         SwingUtilities.invokeLater(() -> text.select(0, 0));
     }
@@ -228,7 +230,7 @@ public final class ColorValueFormatter extends JFormattedTextField.AbstractForma
         }
     }
 
-    protected void checkRange(final int value, final int min, final int max) throws ParseException {
+    private void checkRange(final int value, final int min, final int max) throws ParseException {
         if (value > max || value < min) {
             throw new ParseException("Value not in range [" + min + "," + max + "]", 0);
         }

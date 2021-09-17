@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 
 import javax.swing.JCheckBox;
@@ -47,6 +48,7 @@ import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
 import com.github.weisj.darklaf.components.tristate.TristateState;
 import com.github.weisj.darklaf.graphics.ThemedColor;
+import com.github.weisj.darklaf.iconset.AllIcons;
 import com.github.weisj.darklaf.listener.UIUpdater;
 import com.github.weisj.darklaf.platform.ThemePreferencesHandler;
 import com.github.weisj.darklaf.platform.macos.theme.MacOSColors;
@@ -62,12 +64,12 @@ import com.github.weisj.darklaf.util.Alignment;
 
 public class ThemeSettingsUI {
 
-    public final static String THEME_LABEL_KEY = "label_theme";
-    public final static String SELECTION_COLOR_LABEL_KEY = "label_selection_color";
-    public final static String ACCENT_COLOR_LABEL_KEY = "label_accent_color";
-    public final static String FONT_SIZE_LABEL_KEY = "label_font_size";
-    public final static String GENERAL_LABEL_KEY = "title_general";
-    public final static String MONITORING_LABEL_KEY = "title_monitoring";
+    public final static String THEME_LABEL_KEY = "settings.label_theme";
+    public final static String SELECTION_COLOR_LABEL_KEY = "settings.label_selection_color";
+    public final static String ACCENT_COLOR_LABEL_KEY = "settings.label_accent_color";
+    public final static String FONT_SIZE_LABEL_KEY = "settings.label_font_size";
+    public final static String GENERAL_LABEL_KEY = "settings.title_general";
+    public final static String MONITORING_LABEL_KEY = "settings.title_monitoring";
 
     private final SettingsUIConfiguration settingsConfiguration;
     private final List<ChangeListener> listeners = new ArrayList<>();
@@ -108,14 +110,14 @@ public class ThemeSettingsUI {
         fontSlider = createFontSlider();
 
         enabledSystemPreferences = DynamicUI.withDynamic(new TristateCheckBox(),
-                c -> c.setText(UIManager.getString("check_system_preferences", c.getLocale())));
-        accentColorFollowsSystem = createSystemSettingCheckBox("check_system_accent_color",
+                c -> c.setText(UIManager.getString("settings.check_system_preferences", c.getLocale())));
+        accentColorFollowsSystem = createSystemSettingCheckBox("settings.check_system_accent_color",
                 ThemePreferencesHandler::supportsNativeAccentColor);
-        selectionColorFollowsSystem = createSystemSettingCheckBox("check_system_selection_color",
+        selectionColorFollowsSystem = createSystemSettingCheckBox("settings.check_system_selection_color",
                 ThemePreferencesHandler::supportsNativeSelectionColor);
-        fontSizeFollowsSystem = createSystemSettingCheckBox("check_system_font",
+        fontSizeFollowsSystem = createSystemSettingCheckBox("settings.check_system_font",
                 ThemePreferencesHandler::supportsNativeFontSize);
-        themeFollowsSystem = createSystemSettingCheckBox("check_system_theme",
+        themeFollowsSystem = createSystemSettingCheckBox("settings.check_system_theme",
                 ThemePreferencesHandler::supportsNativeTheme);
 
         setupListeners();
@@ -256,25 +258,25 @@ public class ThemeSettingsUI {
         return new RadioColorChooser(
                 Arrays.asList(
                         new RadioColorChooser.ColorSpec(
-                                ColoredRadioButton.DEFAULT_COLOR, defaultAccentColor, "color_default"),
+                                ColoredRadioButton.DEFAULT_COLOR, defaultAccentColor, "settings.color_default"),
                         new RadioColorChooser.ColorSpec(
-                                MacOSColors.ACCENT_BLUE, null, "color_blue"),
+                                MacOSColors.ACCENT_BLUE, null, "settings.color_blue"),
                         new RadioColorChooser.ColorSpec(
-                                MacOSColors.ACCENT_LILAC, null, "color_lilac"),
+                                MacOSColors.ACCENT_LILAC, null, "settings.color_lilac"),
                         new RadioColorChooser.ColorSpec(
-                                MacOSColors.ACCENT_ROSE, null, "color_rose"),
+                                MacOSColors.ACCENT_ROSE, null, "settings.color_rose"),
                         new RadioColorChooser.ColorSpec(
-                                MacOSColors.ACCENT_RED, null, "color_red"),
+                                MacOSColors.ACCENT_RED, null, "settings.color_red"),
                         new RadioColorChooser.ColorSpec(
-                                MacOSColors.ACCENT_ORANGE, null, "color_orange"),
+                                MacOSColors.ACCENT_ORANGE, null, "settings.color_orange"),
                         new RadioColorChooser.ColorSpec(
-                                MacOSColors.ACCENT_YELLOW, null, "color_yellow"),
+                                MacOSColors.ACCENT_YELLOW, null, "settings.color_yellow"),
                         new RadioColorChooser.ColorSpec(
-                                MacOSColors.ACCENT_GREEN, null, "color_green"),
+                                MacOSColors.ACCENT_GREEN, null, "settings.color_green"),
                         new RadioColorChooser.ColorSpec(
-                                MacOSColors.ACCENT_GRAPHITE, null, "color_gray")),
+                                MacOSColors.ACCENT_GRAPHITE, null, "settings.color_gray")),
                 new RadioColorChooser.ColorSpec(
-                        currentAccentColor, null, "color_custom"),
+                        currentAccentColor, null, "settings.color_custom"),
                 currentAccentColor, defaultAccentColor);
     }
 
@@ -283,25 +285,25 @@ public class ThemeSettingsUI {
         return new RadioColorChooser(
                 Arrays.asList(
                         new RadioColorChooser.ColorSpec(
-                                defaultSelectionColor, ColoredRadioButton.DEFAULT_COLOR, "color_default"),
+                                defaultSelectionColor, ColoredRadioButton.DEFAULT_COLOR, "settings.color_default"),
                         new RadioColorChooser.ColorSpec(
-                                MacOSColors.SELECTION_BLUE, MacOSColors.ACCENT_BLUE, "color_blue"),
+                                MacOSColors.SELECTION_BLUE, MacOSColors.ACCENT_BLUE, "settings.color_blue"),
                         new RadioColorChooser.ColorSpec(
-                                MacOSColors.SELECTION_PURPLE, MacOSColors.ACCENT_LILAC, "color_purple"),
+                                MacOSColors.SELECTION_PURPLE, MacOSColors.ACCENT_LILAC, "settings.color_purple"),
                         new RadioColorChooser.ColorSpec(
-                                MacOSColors.SELECTION_PINK, MacOSColors.ACCENT_ROSE, "color_pink"),
+                                MacOSColors.SELECTION_PINK, MacOSColors.ACCENT_ROSE, "settings.color_pink"),
                         new RadioColorChooser.ColorSpec(
-                                MacOSColors.SELECTION_RED, MacOSColors.ACCENT_RED, "color_red"),
+                                MacOSColors.SELECTION_RED, MacOSColors.ACCENT_RED, "settings.color_red"),
                         new RadioColorChooser.ColorSpec(
-                                MacOSColors.SELECTION_ORANGE, MacOSColors.ACCENT_ORANGE, "color_orange"),
+                                MacOSColors.SELECTION_ORANGE, MacOSColors.ACCENT_ORANGE, "settings.color_orange"),
                         new RadioColorChooser.ColorSpec(
-                                MacOSColors.SELECTION_YELLOW, MacOSColors.ACCENT_YELLOW, "color_yellow"),
+                                MacOSColors.SELECTION_YELLOW, MacOSColors.ACCENT_YELLOW, "settings.color_yellow"),
                         new RadioColorChooser.ColorSpec(
-                                MacOSColors.SELECTION_GREEN, MacOSColors.ACCENT_GREEN, "color_green"),
+                                MacOSColors.SELECTION_GREEN, MacOSColors.ACCENT_GREEN, "settings.color_green"),
                         new RadioColorChooser.ColorSpec(
-                                MacOSColors.SELECTION_GRAPHITE, MacOSColors.ACCENT_GRAPHITE, "color_gray")),
+                                MacOSColors.SELECTION_GRAPHITE, MacOSColors.ACCENT_GRAPHITE, "settings.color_gray")),
                 new RadioColorChooser.ColorSpec(
-                        currentSelectionColor, defaultSelectionColor, "color_custom"),
+                        currentSelectionColor, defaultSelectionColor, "settings.color_custom"),
                 currentSelectionColor, defaultSelectionColor);
     }
 
@@ -335,25 +337,28 @@ public class ThemeSettingsUI {
         fontSlider.setMaximum(FontSizePreset.HUGE.getPercentage());
         int tickSpacing = 25;
         Dictionary<Integer, JComponent> dict = fontSlider.createStandardLabels(tickSpacing);
-        JLabel min = ((JLabel) dict.get(fontSlider.getMinimum()));
+        JLabel min = (JLabel) dict.get(fontSlider.getMinimum());
         UIUpdater.registerComponent(min);
-        DynamicUI.withDynamic(min, c -> c.setText(UIManager.getString("label_font_smaller", fontSlider.getLocale())));
-        min.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        min.setText("");
+        min.setIcon(AllIcons.Action.DecreaseFontSize.get());
+        min.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         min.putClientProperty(DarkSliderUI.KEY_MANUAL_LABEL_ALIGN, true);
 
-        JLabel mid = ((JLabel) dict.get(fontSlider.getMinimum() + tickSpacing));
+        JLabel mid = (JLabel) dict.get(fontSlider.getMinimum() + tickSpacing);
         UIUpdater.registerComponent(mid);
         dict.remove(fontSlider.getMinimum() + tickSpacing);
         dict.put(FontSizePreset.NORMAL.getPercentage(), mid);
-        DynamicUI.withDynamic(mid, c -> c.setText(UIManager.getString("label_font_default", fontSlider.getLocale())));
+        DynamicUI.withDynamic(mid,
+                c -> c.setText(UIManager.getString("settings.label_font_default", fontSlider.getLocale())));
 
         mid.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         mid.setHorizontalTextPosition(JLabel.RIGHT);
 
-        JLabel max = ((JLabel) dict.get(fontSlider.getMaximum()));
+        JLabel max = (JLabel) dict.get(fontSlider.getMaximum());
         max.putClientProperty(DarkSliderUI.KEY_MANUAL_LABEL_ALIGN, true);
-        DynamicUI.withDynamic(max, c -> c.setText(UIManager.getString("label_font_bigger", fontSlider.getLocale())));
-        max.setAlignmentX(JComponent.RIGHT_ALIGNMENT);
+        max.setText("");
+        max.setIcon(AllIcons.Action.IncreaseFontSize.get());
+        max.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         max.putClientProperty(DarkSliderUI.KEY_MANUAL_LABEL_ALIGN, true);
         UIUpdater.registerComponent(max);
 
@@ -424,7 +429,7 @@ public class ThemeSettingsUI {
 
         private Color getSelectedColor(final RadioColorChooser chooser) {
             Color c = chooser.getSelectedColor();
-            return c == chooser.getDefaultColor() ? null : c;
+            return Objects.equals(c, chooser.getDefaultColor()) ? null : c;
         }
 
         @Override

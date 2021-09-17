@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+    <defs id="colors">
+        <linearGradient id="fileIconBackground" fallback="Label.foreground" opacity="fileIconOpacity" opacity-fallback="%100">
+            <stop offset="0" stop-color="#9AA7B0" stop-opacity=".8"/>
+            <stop offset="1" stop-color="#9AA7B0" stop-opacity=".8"/>
+        </linearGradient>
+        <linearGradient id="menuIconHighlight" fallback="textHighlight,#0000FF">
+            <stop offset="0" stop-color="#40B6E0"/>
+            <stop offset="1" stop-color="#40B6E0"/>
+        </linearGradient>
+    </defs>
+    <path fill="url(#fileIconBackground)" fill-rule="evenodd"
+          d="M14,4 L14,9 L10,9 L10,4 L7.984,4 L6.696,2.711 C6.305,2.32 5.532,2 4.979,2 L1.051,2 C1.023,2 1,2.023 1,2.051 L1,13 L15,13 L15,4 L14,4 Z"/>
+    <polygon fill="url(#menuIconHighlight)" points="15 3 12 0 9 3 11 3 11 8 13 8 13 3" fill-rule="evenodd"/>
+</svg>

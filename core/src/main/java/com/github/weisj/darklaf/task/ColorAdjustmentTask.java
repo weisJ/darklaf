@@ -28,11 +28,11 @@ import java.util.logging.Logger;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.parser.ParseResult;
-import com.github.weisj.darklaf.parser.Parser;
-import com.github.weisj.darklaf.parser.ParserContext;
+import com.github.weisj.darklaf.properties.parser.ParseResult;
+import com.github.weisj.darklaf.properties.parser.Parser;
+import com.github.weisj.darklaf.properties.parser.ParserContext;
 import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LogUtil;
 
 public abstract class ColorAdjustmentTask implements DefaultsAdjustmentTask {
@@ -57,7 +57,7 @@ public abstract class ColorAdjustmentTask implements DefaultsAdjustmentTask {
 
     protected void adjust(final String listKey, final Properties listProperties, final Consumer<Map<?, ?>> action) {
         ParseResult p = Parser.parse(Parser.createParseResult(listKey, listProperties.getProperty(listKey)),
-                new ParserContext(listProperties, DEFAULTS, DarkUIUtil.ICON_LOADER));
+                new ParserContext(listProperties, DEFAULTS, DarkUIUtil.iconResolver()));
         Object obj = p.result;
         if (obj instanceof Map<?, ?>) {
             action.accept((Map<?, ?>) obj);

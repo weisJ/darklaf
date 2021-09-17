@@ -26,13 +26,14 @@ import java.util.Collections;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoResources;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
-public class KerningDemo implements ComponentDemo {
+public class KerningDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new KerningDemo());
+        DemoExecutor.showDemo(new KerningDemo());
     }
 
     @Override
@@ -46,7 +47,7 @@ public class KerningDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Font Demo";
     }
 }

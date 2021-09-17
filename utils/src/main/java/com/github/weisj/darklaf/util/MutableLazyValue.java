@@ -33,6 +33,7 @@ public class MutableLazyValue<T> extends LazyValue<T> {
         super(supplier);
     }
 
+    @Override
     public void set(final T value) {
         super.set(value);
     }

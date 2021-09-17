@@ -25,6 +25,7 @@ import java.util.Properties;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.properties.icons.IconResolver;
 import com.github.weisj.darklaf.theme.info.*;
 
 public class ThemeDelegate extends Theme {
@@ -101,33 +102,39 @@ public class ThemeDelegate extends Theme {
     }
 
     @Override
-    public void loadDefaults(final Properties properties, final UIDefaults currentDefaults) {
-        getDelegate().loadDefaults(properties, currentDefaults);
+    public void loadDefaults(final Properties properties, final UIDefaults currentDefaults,
+            final IconResolver iconResolver) {
+        getDelegate().loadDefaults(properties, currentDefaults, iconResolver);
     }
 
     @Override
-    public void customizeGlobals(final Properties properties, final UIDefaults currentDefaults) {
-        getDelegate().customizeGlobals(properties, currentDefaults);
+    public void customizeGlobals(final Properties properties, final UIDefaults currentDefaults,
+            final IconResolver iconResolver) {
+        getDelegate().customizeGlobals(properties, currentDefaults, iconResolver);
     }
 
     @Override
-    public void customizeIconTheme(final Properties properties, final UIDefaults currentDefaults) {
-        getDelegate().customizeIconTheme(properties, currentDefaults);
+    public void customizeIconTheme(final Properties properties, final UIDefaults currentDefaults,
+            final IconResolver iconResolver) {
+        getDelegate().customizeIconTheme(properties, currentDefaults, iconResolver);
     }
 
     @Override
-    public void loadIconTheme(final Properties properties, final UIDefaults currentDefaults) {
-        getDelegate().loadIconTheme(properties, currentDefaults);
+    public void loadIconTheme(final Properties properties, final UIDefaults currentDefaults,
+            final IconResolver iconResolver) {
+        getDelegate().loadIconTheme(properties, currentDefaults, iconResolver);
     }
 
     @Override
-    public void customizePlatformProperties(final Properties properties, final UIDefaults currentDefaults) {
-        getDelegate().customizePlatformProperties(properties, currentDefaults);
+    public void customizePlatformProperties(final Properties properties, final UIDefaults currentDefaults,
+            final IconResolver iconResolver) {
+        getDelegate().customizePlatformProperties(properties, currentDefaults, iconResolver);
     }
 
     @Override
-    public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults) {
-        getDelegate().customizeUIProperties(properties, currentDefaults);
+    public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults,
+            final IconResolver iconResolver) {
+        getDelegate().customizeUIProperties(properties, currentDefaults, iconResolver);
     }
 
     @Override

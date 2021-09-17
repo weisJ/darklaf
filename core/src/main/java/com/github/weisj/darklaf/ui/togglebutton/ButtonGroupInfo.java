@@ -162,10 +162,6 @@ public class ButtonGroupInfo {
             }
         }
 
-        // Update the component we will use as base to transfer
-        // focus from
-        JComponent compTransferFocusFrom = activeButton;
-
         // If next component in the parent window is not in
         // the button group, current active button will be
         // base, otherwise, the base will be first or last

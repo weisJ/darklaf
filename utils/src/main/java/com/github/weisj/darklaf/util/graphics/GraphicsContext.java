@@ -26,6 +26,8 @@ import java.awt.geom.AffineTransform;
 import java.util.Map;
 
 /**
+ * Utility class for scoping changes to a {@link Graphics2D} object.
+ *
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */

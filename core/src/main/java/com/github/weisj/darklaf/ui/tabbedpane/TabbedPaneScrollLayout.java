@@ -27,12 +27,15 @@ abstract class TabbedPaneScrollLayout extends TabbedPaneLayout {
         super(ui);
     }
 
+    @Override
     protected abstract void calculateTabRects(final int tabPlacement, final int tabCount);
 
+    @Override
     protected int preferredTabAreaWidth(final int tabPlacement, final int height) {
         return ui.calculateMaxTabWidth(tabPlacement);
     }
 
+    @Override
     protected int preferredTabAreaHeight(final int tabPlacement, final int width) {
         return ui.calculateMaxTabHeight(tabPlacement);
     }

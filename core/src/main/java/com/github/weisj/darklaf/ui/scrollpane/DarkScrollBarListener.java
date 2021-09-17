@@ -111,8 +111,8 @@ public class DarkScrollBarListener<T extends DarkScrollBarUI> extends MouseAdapt
                 && !((JScrollPane) scrollbar.getParent()).isWheelScrollingEnabled()) {
             return;
         }
-        if (scrollbar.getOrientation() == JScrollBar.VERTICAL && !e.isShiftDown()
-                || scrollbar.getOrientation() == JScrollBar.HORIZONTAL && e.isShiftDown()) {
+        if ((scrollbar.getOrientation() == JScrollBar.VERTICAL && !e.isShiftDown())
+                || (scrollbar.getOrientation() == JScrollBar.HORIZONTAL && e.isShiftDown())) {
             scrollbar.setValueIsAdjusting(true);
             JScrollPane sp = PropertyUtil.getObject(scrollbar, KEY_SCROLL_PANE_PARENT, JScrollPane.class);
             if (scrollbar.getParent() instanceof JScrollPane) {
@@ -247,18 +247,18 @@ public class DarkScrollBarListener<T extends DarkScrollBarUI> extends MouseAdapt
             fadeInAnimator.suspend();
             int startFrame = 0;
             if (currentAlpha < maxAlpha) {
-                startFrame = (int) ((1.0 - currentAlpha / maxAlpha) * (fadeOutAnimator.getTotalFrames()));
+                startFrame = (int) ((1.0 - currentAlpha / maxAlpha) * fadeOutAnimator.getTotalFrames());
             }
             fadeOutAnimator.resume(startFrame, fadeInRunning, scrollbar);
         }
     }
 
-    protected boolean animateTrackOnScroll(final JScrollBar scrollBar) {
+    protected boolean animateTrackOnScroll(final JScrollBar scrollbar) {
         return false;
     }
 
-    protected boolean animateThumbOnScroll(final JScrollBar scrollBar) {
-        return PropertyUtil.getBooleanProperty(scrollBar, KEY_HIGHLIGHT_ON_SCROLL);
+    protected boolean animateThumbOnScroll(final JScrollBar scrollbar) {
+        return PropertyUtil.getBooleanProperty(scrollbar, KEY_HIGHLIGHT_ON_SCROLL);
     }
 
     protected int getFadeResolution() {

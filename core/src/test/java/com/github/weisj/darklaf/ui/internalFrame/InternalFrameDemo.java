@@ -27,25 +27,28 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
 import com.github.weisj.darklaf.components.border.DarkBorders;
-import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoPanel;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
-public class InternalFrameDemo implements ActionListener, ComponentDemo {
+public class InternalFrameDemo extends BaseComponentDemo implements ActionListener {
 
     private JDesktopPane desktop;
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new InternalFrameDemo());
+        DemoExecutor.showDemo(new InternalFrameDemo());
     }
 
     @Override
-    public Dimension getDisplayDimension() {
+    public Dimension getWindowSize() {
         return new Dimension(1000, 500);
     }
 
@@ -64,13 +67,9 @@ public class InternalFrameDemo implements ActionListener, ComponentDemo {
     }
 
     @Override
-    public JMenuBar createMenuBar() {
-        JMenuBar menuBar = ComponentDemo.super.createMenuBar();
-
-        // Set up the lone menu.
+    public List<JMenu> createMenus() {
         JMenu menu = new JMenu("Document");
         menu.setMnemonic(KeyEvent.VK_D);
-        menuBar.add(menu);
 
         // Set up the first menu item.
         JMenuItem menuItem = new JMenuItem("New");
@@ -79,12 +78,11 @@ public class InternalFrameDemo implements ActionListener, ComponentDemo {
         menuItem.setActionCommand("new");
         menuItem.addActionListener(this);
         menu.add(menuItem);
-
-        return menuBar;
+        return Collections.singletonList(menu);
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Internal Frame Demo";
     }
 
@@ -100,6 +98,7 @@ public class InternalFrameDemo implements ActionListener, ComponentDemo {
     }
 
     // React to menu selections.
+    @Override
     public void actionPerformed(final ActionEvent e) {
         if ("new".equals(e.getActionCommand())) {
             createFrame();

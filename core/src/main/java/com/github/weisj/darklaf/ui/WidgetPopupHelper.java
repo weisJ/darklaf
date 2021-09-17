@@ -25,7 +25,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 public final class WidgetPopupHelper {
 
@@ -54,7 +54,7 @@ public final class WidgetPopupHelper {
         return computePopupBounds(parent, x, parentSize.height - parentIns.bottom, popupSize.width, popupSize.height);
     }
 
-    protected static Rectangle computePopupBounds(final JComponent parent, final int px, final int py, final int pw,
+    private static Rectangle computePopupBounds(final JComponent parent, final int px, final int py, final int pw,
             final int ph) {
         Rectangle screenBounds = DarkUIUtil.getScreenBounds(parent, null);
 

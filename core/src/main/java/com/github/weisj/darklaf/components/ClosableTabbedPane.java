@@ -27,7 +27,7 @@ import java.beans.VetoableChangeListener;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 /** @author Jannis Weis */
 public class ClosableTabbedPane extends JTabbedPane {

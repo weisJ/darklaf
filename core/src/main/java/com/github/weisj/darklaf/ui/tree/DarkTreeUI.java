@@ -38,13 +38,13 @@ import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
-import com.github.weisj.darklaf.icons.RotatableIcon;
+import com.github.weisj.darklaf.properties.icons.RotatableIcon;
 import com.github.weisj.darklaf.ui.HasRendererPane;
 import com.github.weisj.darklaf.ui.cell.CellConstants;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererPane;
 import com.github.weisj.darklaf.ui.cell.hint.CellHintPopupListener;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.SystemInfo;
 
@@ -152,6 +152,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         dashGapLength = UIManager.getInt("Tree.dash.gaplength");
     }
 
+    @Override
     protected CellRendererPane createCellRendererPane() {
         return new DarkCellRendererPane();
     }
@@ -499,7 +500,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         if (y1 >= y2) {
             return;
         }
-        y1 += (y1 % 2);
+        y1 += y1 % 2;
         Graphics2D g2d = (Graphics2D) g;
         Stroke oldStroke = g2d.getStroke();
 
@@ -618,6 +619,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         return true;
     }
 
+    @Override
     protected void ensureRowsAreVisible(int beginRow, int endRow) {
         if (tree != null && beginRow >= 0 && endRow < getRowCount(tree)) {
             boolean scrollVert = UIManager.getBoolean("Tree.scrollsHorizontallyAndVertically");

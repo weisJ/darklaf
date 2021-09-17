@@ -23,10 +23,17 @@ package com.github.weisj.darklaf.util;
 
 import static com.github.weisj.darklaf.util.AlignmentHelper.*;
 
-import java.awt.*;
-import java.util.function.BiFunction;
+import java.awt.Dimension;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Rectangle;
 
-/** @author Jannis Weis */
+/**
+ * Utility class for aligning points and rectangles inside other rectangles. It can also be used as
+ * a orientation marker value.
+ *
+ * @author Jannis Weis
+ */
 public enum Alignment {
     NORTH(AlignmentHelper.align(HOR_CENTER_INSIDE, VERT_TOP_INSIDE),
         AlignmentHelper.align(HOR_CENTER_OUTSIDE, VERT_TOP_OUTSIDE)),
@@ -47,11 +54,10 @@ public enum Alignment {
     CENTER(AlignmentHelper.align(HOR_CENTER_INSIDE, VERT_CENTER_INSIDE),
         AlignmentHelper.align(HOR_CENTER_OUTSIDE, VERT_CENTER_OUTSIDE));
 
-    private final BiFunction<Dimension, Rectangle, Point> alignInside;
-    private final BiFunction<Dimension, Rectangle, Point> alignOutside;
+    private final AlignFunction alignInside;
+    private final AlignFunction alignOutside;
 
-    Alignment(final BiFunction<Dimension, Rectangle, Point> alignInside,
-            final BiFunction<Dimension, Rectangle, Point> alignOutside) {
+    Alignment(final AlignFunction alignInside, final AlignFunction alignOutside) {
         this.alignInside = alignInside;
         this.alignOutside = alignOutside;
     }

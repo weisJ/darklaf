@@ -26,14 +26,17 @@ import javax.swing.event.DocumentListener;
 
 @FunctionalInterface
 public interface UpdateDocumentListener extends DocumentListener {
+    @Override
     default void insertUpdate(final DocumentEvent e) {
         update();
     }
 
+    @Override
     default void removeUpdate(final DocumentEvent e) {
         update();
     }
 
+    @Override
     default void changedUpdate(final DocumentEvent e) {
         update();
     }

@@ -28,7 +28,7 @@ public class DemoFrame extends JInternalFrame {
     private static int openFrameCount = 0;
 
     public DemoFrame() {
-        super("Document #" + (++openFrameCount), true, true, true, true);
+        super("Document #" + ++openFrameCount, true, true, true, true);
         setSize(300, 300);
         setLocation(xOffset * openFrameCount, yOffset * openFrameCount);
         setJMenuBar(new JMenuBar() {

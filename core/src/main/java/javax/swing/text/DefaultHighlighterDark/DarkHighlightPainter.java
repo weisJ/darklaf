@@ -193,7 +193,7 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
             // guarantee
             // everything is visible.
             if (lineExtension) {
-                if ((lastSelEnd != c.getSelectionEnd() || lastSelStart != c.getSelectionStart())) {
+                if (lastSelEnd != c.getSelectionEnd() || lastSelStart != c.getSelectionStart()) {
                     lastSelEnd = c.getSelectionEnd();
                     lastSelStart = c.getSelectionStart();
                     repaintCount = 1;
@@ -391,11 +391,9 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     private Rectangle getPosRect(final JTextComponent c, final int offset, final Position.Bias bias) {
         try {
             return c.getUI().modelToView(c, Math.max(0, Math.min(offset, c.getDocument().getLength())), bias);
-        } catch (final BadLocationException ignored) {
-        } catch (final IllegalArgumentException e) {
-            new RuntimeException("" + offset).printStackTrace();
+        } catch (final BadLocationException e) {
+            return new Rectangle(Integer.MIN_VALUE + 100, Integer.MIN_VALUE + 100, 0, 0);
         }
-        return new Rectangle(Integer.MIN_VALUE + 100, Integer.MIN_VALUE + 100, 0, 0);
     }
 
     private int getOffset(final JTextComponent c, final int x, final int y) {
@@ -564,8 +562,9 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
                 return new Arc2D.Double(0, -arcSize, 2 * arcSize, 2 * arcSize, 180, 90, Arc2D.PIE);
             case SOUTH_WEST:
                 return new Arc2D.Double(-arcSize, -arcSize, 2 * arcSize, 2 * arcSize, 270, 90, Arc2D.PIE);
+            default:
+                return new Rectangle();
         }
-        return new Rectangle();
     }
 
     private int getIndex(final Alignment a) {
@@ -578,8 +577,9 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
                 return 2;
             case SOUTH_WEST:
                 return 3;
+            default:
+                throw new IllegalStateException("Did not expect " + a);
         }
-        return 0;
     }
 
     public boolean isEnabled() {

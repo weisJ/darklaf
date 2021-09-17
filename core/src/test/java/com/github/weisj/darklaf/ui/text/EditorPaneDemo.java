@@ -23,14 +23,14 @@ package com.github.weisj.darklaf.ui.text;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoResources;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.util.StringUtil;
 
 public class EditorPaneDemo extends TextComponentDemo<JEditorPane> {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new EditorPaneDemo());
+        DemoExecutor.showDemo(new EditorPaneDemo());
     }
 
     @Override
@@ -41,7 +41,7 @@ public class EditorPaneDemo extends TextComponentDemo<JEditorPane> {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "EditorPane Demo";
     }
 }

@@ -2,6 +2,7 @@
 
 plugins {
     java
+    `module-info-compile`
     id("dev.nokee.jni-library")
     id("dev.nokee.objective-cpp-language")
     `uber-jni-jar`
@@ -45,7 +46,7 @@ library {
 
     targetMachines.addAll(machines.macOS.x86_64, machines.macOS.architecture("arm64"))
     variants.configureEach {
-        resourcePath.set("$nativeResourcePath/${targetMachine.variantName}")
+        resourcePath.set(nativeResourcePath)
         sharedLibrary {
             val isArm = targetMachine.architectureString == "arm64"
             val minOs = if (isArm) "11" else "10.10"

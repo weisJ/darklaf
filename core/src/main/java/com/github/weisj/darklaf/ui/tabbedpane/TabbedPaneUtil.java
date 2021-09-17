@@ -25,7 +25,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 /** @author Jannis Weis */
 public class TabbedPaneUtil implements SwingConstants {
@@ -77,7 +77,7 @@ public class TabbedPaneUtil implements SwingConstants {
                         }
                     }
 
-                    Rectangle sb = (ui.scrollableTabLayoutEnabled()) ? tabBounds : EMPTY_RECT;
+                    Rectangle sb = ui.scrollableTabLayoutEnabled() ? tabBounds : EMPTY_RECT;
                     switch (tabbedPane.getTabPlacement()) {
                         case TOP:
                         case BOTTOM:

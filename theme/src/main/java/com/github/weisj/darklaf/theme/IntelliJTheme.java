@@ -26,11 +26,16 @@ import java.util.Properties;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.annotations.SynthesiseLaf;
+import com.github.weisj.darklaf.properties.icons.IconResolver;
 import com.github.weisj.darklaf.theme.info.ColorToneRule;
 import com.github.weisj.darklaf.theme.info.PresetIconRule;
 import com.google.auto.service.AutoService;
 
-/** @author Jannis Weis */
+/**
+ * A theme following the default IntelliJ color scheme.
+ *
+ * @author Jannis Weis
+ */
 @AutoService(Theme.class)
 @SynthesiseLaf
 public class IntelliJTheme extends Theme {
@@ -66,15 +71,17 @@ public class IntelliJTheme extends Theme {
     }
 
     @Override
-    public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults) {
-        super.customizeUIProperties(properties, currentDefaults);
-        loadCustomProperties("ui", properties, currentDefaults);
+    public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults,
+            final IconResolver iconResolver) {
+        super.customizeUIProperties(properties, currentDefaults, iconResolver);
+        loadCustomProperties("ui", properties, currentDefaults, iconResolver);
     }
 
     @Override
-    public void loadIconTheme(final Properties properties, final UIDefaults currentDefaults) {
-        super.loadIconTheme(properties, currentDefaults);
-        loadCustomProperties("icons", properties, currentDefaults);
+    public void loadIconTheme(final Properties properties, final UIDefaults currentDefaults,
+            final IconResolver iconResolver) {
+        super.loadIconTheme(properties, currentDefaults, iconResolver);
+        loadCustomProperties("icons", properties, currentDefaults, iconResolver);
     }
 
     @Override

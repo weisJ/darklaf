@@ -29,7 +29,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 public class DefaultTreeTableCellRenderer extends JComponent implements TableCellRenderer {
 
@@ -52,6 +52,7 @@ public class DefaultTreeTableCellRenderer extends JComponent implements TableCel
         }
     }
 
+    @Override
     public Component getTableCellRendererComponent(final JTable table, final Object value, final boolean isSelected,
             final boolean hasFocus, final int row, final int column) {
         paintingRow = row;
@@ -68,6 +69,7 @@ public class DefaultTreeTableCellRenderer extends JComponent implements TableCel
         private boolean focus;
         private boolean selectable;
 
+        @Override
         public void setRowHeight(final int rowHeight) {
             if (rowHeight > 0) {
                 super.setRowHeight(rowHeight);

@@ -28,6 +28,8 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 
@@ -35,12 +37,14 @@ import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabFramePopup;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
 import com.github.weisj.darklaf.components.tabframe.TabFrameUI;
+import com.github.weisj.darklaf.ui.util.DnDUtil;
 import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.DnDUtil;
+import com.github.weisj.darklaf.util.LogUtil;
 
 /** @author Jannis Weis */
 public class TabFrameTransferHandler extends TransferHandler implements DropTargetListener, SwingConstants {
 
+    private static final Logger LOGGER = LogUtil.getLogger(TabFrameTransferHandler.class);
     private static final String MIME_TYPE = DataFlavor.javaJVMLocalObjectMimeType + ";class="
             + TabTransferData.class.getName();
     private static TabFrameDragGestureRecognizer recognizer = null;
@@ -62,6 +66,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
         try {
             tabFlavor = new DataFlavor(MIME_TYPE);
         } catch (final ClassNotFoundException ignored) {
+            LOGGER.severe("TabFrame DnD isn't available. Couldn't find MimeType: " + MIME_TYPE);
         }
         timer = new Timer(100, e -> {
             if (lastTabFrame != null) {
@@ -93,6 +98,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
         return getUI(tabFrame).getDropPosition(tabFrame, p);
     }
 
+    @Override
     public void exportAsDrag(final JComponent comp, final InputEvent e, final int a) {
         int srcActions = getSourceActions(comp);
         int action = a;
@@ -264,7 +270,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
                     ui.clearTargetIndicator();
                 }
             } catch (final Exception e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, "Couldn't import tab data", e);
             }
         }
         return successful;
@@ -315,6 +321,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
         }
 
         /** register this DragGestureRecognizer's Listeners with the Component */
+        @Override
         protected void registerListeners() {}
 
         /**
@@ -323,6 +330,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
          * <p>
          * subclasses must override this method
          */
+        @Override
         protected void unregisterListeners() {}
     }
 
@@ -388,6 +396,7 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
         // --- DragGestureListener methods -----------------------------------
 
         /** a Drag gesture has been recognized */
+        @Override
         public void dragGestureRecognized(final DragGestureEvent dge) {
             JComponent c = (JComponent) dge.getComponent();
             TabFrameTransferHandler th = (TabFrameTransferHandler) c.getTransferHandler();
@@ -414,17 +423,22 @@ public class TabFrameTransferHandler extends TransferHandler implements DropTarg
         // --- DragSourceListener methods -----------------------------------
 
         /** as the hotspot enters a platform dependent drop site */
+        @Override
         public void dragEnter(final DragSourceDragEvent dsde) {}
 
         /** as the hotspot moves over a platform dependent drop site */
+        @Override
         public void dragOver(final DragSourceDragEvent dsde) {}
 
+        @Override
         public void dropActionChanged(final DragSourceDragEvent dsde) {}
 
         /** as the hotspot exits a platform dependent drop site */
+        @Override
         public void dragExit(final DragSourceEvent dsde) {}
 
         /** as the operation completes */
+        @Override
         public void dragDropEnd(final DragSourceDropEvent dsde) {
             DragSourceContext dsc = dsde.getDragSourceContext();
             JComponent c = (JComponent) dsc.getComponent();

@@ -57,6 +57,7 @@ public abstract class DarkTextFieldUIBridge extends DarkTextUI {
         basicTextFieldUI = null;
     }
 
+    @Override
     protected String getPropertyPrefix() {
         return "TextField";
     }

@@ -30,6 +30,7 @@ import com.github.weisj.darklaf.ui.list.DarkListCellRendererDelegate;
 
 public class DarkFilterComboBoxRenderer extends DarkListCellRendererDelegate {
 
+    @Override
     public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,
             final boolean isSelected, final boolean cellHasFocus) {
 

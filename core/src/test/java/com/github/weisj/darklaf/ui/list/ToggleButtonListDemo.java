@@ -27,15 +27,16 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.components.togglebuttonlist.JToggleButtonList;
-import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoPanel;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.togglebutton.DarkToggleButtonUI;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 
-public class ToggleButtonListDemo implements ComponentDemo {
+public class ToggleButtonListDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new ToggleButtonListDemo());
+        DemoExecutor.showDemo(new ToggleButtonListDemo());
     }
 
     @Override
@@ -56,7 +57,7 @@ public class ToggleButtonListDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Checkbox List Demo";
     }
 }

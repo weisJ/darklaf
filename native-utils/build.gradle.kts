@@ -3,10 +3,7 @@ import com.github.vlsi.gradle.crlf.LineEndings
 
 plugins {
     `java-library`
-}
-
-dependencies {
-    implementation(projects.darklafUtils)
+    `module-info-compile`
 }
 
 tasks.jar {

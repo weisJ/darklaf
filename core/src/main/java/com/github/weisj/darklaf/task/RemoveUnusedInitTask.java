@@ -26,14 +26,14 @@ import java.util.Properties;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.DarkLaf;
-import com.github.weisj.darklaf.PropertyLoader;
+import com.github.weisj.darklaf.properties.PropertyLoader;
 import com.github.weisj.darklaf.theme.Theme;
 
 public class RemoveUnusedInitTask implements DefaultsInitTask {
 
     @Override
     public void run(final Theme currentTheme, final UIDefaults defaults) {
-        Properties props = PropertyLoader.loadProperties(DarkLaf.class, "unused", "properties/");
+        Properties props = PropertyLoader.loadProperties(DarkLaf.class, "unused", "");
         props.keySet().forEach(defaults::remove);
     }
 }

@@ -28,7 +28,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 /** @author Jannis Weis */
 public abstract class DarkTableUIBridge extends TableUIBridge {
@@ -91,7 +91,7 @@ public abstract class DarkTableUIBridge extends TableUIBridge {
         // from here, we aet DarkTableUI.KEY_IS_PRINT_MODE in TablePrintable#print and
         // access from here.
         Object printMode = table.getClientProperty(DarkTableUI.KEY_IS_PRINT_MODE);
-        if ((printMode == JTable.PrintMode.FIT_WIDTH)) {
+        if (printMode == JTable.PrintMode.FIT_WIDTH) {
             upperLeft = clip.getLocation();
             lowerRight = new Point(clip.x + clip.width - 1, clip.y + clip.height - 1);
         }
@@ -240,6 +240,7 @@ public abstract class DarkTableUIBridge extends TableUIBridge {
         rendererPane.removeAll();
     }
 
+    @Override
     @Deprecated
     protected final void paintCell(final Graphics g, final Rectangle cellRect, final int row, final int column) {}
 

@@ -42,6 +42,7 @@ public class DarkToolBarBorder extends AbstractBorder implements UIResource, Swi
         gripInsets = UIManager.getInsets("ToolBar.gripInsets");
     }
 
+    @Override
     public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int w, final int h) {
         g.translate(x, y);
         if (isFloatable(c)) {
@@ -111,6 +112,7 @@ public class DarkToolBarBorder extends AbstractBorder implements UIResource, Swi
         return verticalGrip;
     }
 
+    @Override
     public Insets getBorderInsets(final Component c, final Insets newInsets) {
         if (isFloatable(c)) {
             if (((JToolBar) c).getOrientation() == HORIZONTAL) {

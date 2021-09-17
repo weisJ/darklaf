@@ -110,8 +110,4 @@ public class DecorationsHandler {
     public void adjustContentArea(final JRootPane root, final Rectangle rect) {
         decorationsProvider.adjustContentArea(root, rect);
     }
-
-    public void adjustWindowInsets(final Window window, final Insets i) {
-        decorationsProvider.adjustWindowInsets(window, i);
-    }
 }

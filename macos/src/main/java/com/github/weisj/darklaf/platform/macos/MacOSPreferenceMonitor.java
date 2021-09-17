@@ -55,7 +55,7 @@ public class MacOSPreferenceMonitor {
             accentColor = newAccentColor;
             selectionColor = newSelectionColor;
             highContrast = newHighContrast;
-            preferenceProvider.reportPreferenceChange(highContrast, darkMode, accentColor, selectionColor);
+            preferenceProvider.reportPreferenceChange(darkMode, highContrast, accentColor, selectionColor);
         }
     }
 

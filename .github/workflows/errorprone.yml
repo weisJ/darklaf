@@ -1,0 +1,14 @@
+name: Errorprone
+
+on: [push, pull_request]
+
+jobs:
+  errorprone:
+    name: "Errorprone"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 10
+      - name: Check
+        run: ./gradlew compileJava -PenableErrorProne

@@ -29,15 +29,19 @@ import java.util.stream.Collectors;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.DelicateDemo;
-import com.github.weisj.darklaf.util.ClassFinder;
-import com.github.weisj.darklaf.util.Instantiable;
+import com.github.weisj.darklaf.core.test.DarklafOnly;
+import com.github.weisj.darklaf.core.test.DelicateDemo;
+import com.github.weisj.darklaf.core.test.util.ClassFinder;
+import com.github.weisj.darklaf.core.test.util.Instantiable;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
+import com.github.weisj.darklaf.util.Pair;
 
-
-public class DemoLauncher implements ComponentDemo {
+public class DemoLauncher extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new DemoLauncher());
+        DemoExecutor.showDemo(new DemoLauncher());
     }
 
     List<DemoEntry> demoClasses;
@@ -56,7 +60,9 @@ public class DemoLauncher implements ComponentDemo {
         demoClasses = ClassFinder.getInstancesOfType(demoType, packages).stream()
                 .filter(i -> !DemoLauncher.class.isAssignableFrom(i.getType()))
                 .map(DemoEntry::new)
-                .sorted(Comparator.comparing(DemoEntry::toString)).collect(Collectors.toList());
+                .distinct()
+                .sorted(Comparator.comparing(DemoEntry::toString))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -66,14 +72,14 @@ public class DemoLauncher implements ComponentDemo {
         box.add(demos);
         JButton button = new JButton("Start");
         button.addActionListener(
-                e -> Optional.ofNullable(((DemoEntry) demos.getSelectedItem())).ifPresent(DemoEntry::start));
+                e -> Optional.ofNullable((DemoEntry) demos.getSelectedItem()).ifPresent(DemoEntry::start));
         box.add(Box.createHorizontalStrut(10));
         box.add(button);
         return new DemoPanel(box);
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Demo Launcher";
     }
 
@@ -86,11 +92,14 @@ public class DemoLauncher implements ComponentDemo {
         }
 
         public AtomicReference<Window> start() {
-            return start(null);
+            return start(null).getFirst();
         }
 
-        public AtomicReference<Window> start(final Level logLevel) {
-            return ComponentDemo.showDemo(demo.instantiate(), true, logLevel);
+        public Pair<AtomicReference<Window>, ComponentDemo> start(final Level logLevel) {
+            ComponentDemo componentDemo = demo.instantiate();
+            return new Pair<>(
+                    DemoExecutor.showDemo(componentDemo, true, logLevel),
+                    componentDemo);
         }
 
         @Override
@@ -100,6 +109,27 @@ public class DemoLauncher implements ComponentDemo {
 
         public boolean isDelicate() {
             return demo.getType().getAnnotation(DelicateDemo.class) != null;
+        }
+
+        public boolean isDarklafOnly() {
+            return demo.getType().getAnnotation(DarklafOnly.class) != null;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof DemoEntry)) {
+                return false;
+            }
+            DemoEntry demoEntry = (DemoEntry) o;
+            return demo.getType().equals(demoEntry.demo.getType());
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(demo.getType());
         }
     }
 }

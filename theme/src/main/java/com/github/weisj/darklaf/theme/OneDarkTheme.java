@@ -26,6 +26,7 @@ import java.util.Properties;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.annotations.SynthesiseLaf;
+import com.github.weisj.darklaf.properties.icons.IconResolver;
 import com.github.weisj.darklaf.theme.info.ColorToneRule;
 import com.github.weisj.darklaf.theme.info.PresetIconRule;
 import com.google.auto.service.AutoService;
@@ -64,9 +65,10 @@ public class OneDarkTheme extends Theme {
     }
 
     @Override
-    public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults) {
-        super.customizeUIProperties(properties, currentDefaults);
-        loadCustomProperties("ui", properties, currentDefaults);
+    public void customizeUIProperties(final Properties properties, final UIDefaults currentDefaults,
+            final IconResolver iconResolver) {
+        super.customizeUIProperties(properties, currentDefaults, iconResolver);
+        loadCustomProperties("ui", properties, currentDefaults, iconResolver);
     }
 
     @Override
@@ -80,7 +82,8 @@ public class OneDarkTheme extends Theme {
     }
 
     @Override
-    public void customizeIconTheme(final Properties properties, final UIDefaults currentDefaults) {
-        loadCustomProperties("icons_adjustments", properties, currentDefaults);
+    public void customizeIconTheme(final Properties properties, final UIDefaults currentDefaults,
+            final IconResolver iconResolver) {
+        loadCustomProperties("icons_adjustments", properties, currentDefaults, iconResolver);
     }
 }

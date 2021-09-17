@@ -28,9 +28,9 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicMenuItemUI;
 
+import com.github.weisj.darklaf.compatibility.MenuItemLayoutHelper;
 import com.github.weisj.darklaf.ui.UIAction;
-import com.github.weisj.darklaf.util.LazyActionMap;
-import com.intellij.util.ui.MenuItemLayoutHelper;
+import com.github.weisj.darklaf.ui.util.LazyActionMap;
 
 /**
  * @author Konstantin Bulenkov
@@ -64,7 +64,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI implements MenuItemUI {
 
     @Override
     public void uninstallUI(JComponent c) {
-        MenuItemLayoutHelper.clearUsedParentClientProperties(menuItem);
+        MenuItemLayoutHelper.uninstall(menuItem);
         super.uninstallUI(c);
     }
 
@@ -74,6 +74,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI implements MenuItemUI {
         LazyActionMap.installLazyActionMap(menuItem, DarkMenuItemUIBase.class, getPropertyPrefix() + ".actionMap");
     }
 
+    @Override
     public void paint(final Graphics g, final JComponent c) {
         paintMenuItem(g, c, checkIcon, arrowIcon, selectionBackground,
                 isSelected(c) ? selectionForeground : c.getForeground(), defaultTextIconGap);
@@ -86,15 +87,26 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI implements MenuItemUI {
 
     @Override
     protected void paintMenuItem(final Graphics g, final JComponent c, final Icon checkIcon,
-            final Icon arrowIcon, final Color background,
-            final Color foreground, final int defaultTextIconGap) {
-        paintMenuItemImpl(g, c, checkIcon, arrowIcon, background, foreground, defaultTextIconGap);
+            final Icon arrowIcon, final Color selectionBackground,
+            final Color selectionForeground, final int defaultTextIconGap) {
+        paintMenuItemImpl(g, c, checkIcon, arrowIcon, defaultTextIconGap);
     }
 
+    @Override
     public MenuItemLayoutHelper getMenuItemLayoutHelper(final Icon checkIcon, final Icon arrowIcon,
             final int defaultTextIconGap, final JMenuItem mi, final Rectangle viewRect) {
         return getMenuItemLayoutHelperImpl(acceleratorDelimiter, acceleratorFont, getPropertyPrefix(), checkIcon,
                 arrowIcon, defaultTextIconGap, mi, viewRect);
+    }
+
+    @Override
+    public Color getSelectionBackground() {
+        return selectionBackground;
+    }
+
+    @Override
+    public Color getDisabledBackground() {
+        return menuItem.getBackground();
     }
 
     @Override
@@ -136,9 +148,8 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI implements MenuItemUI {
             final String acceleratorDelimiter, final Font acceleratorFont, final String propertyPrefix,
             final Icon checkIcon, final Icon arrowIcon,
             final int defaultTextIconGap, final JMenuItem mi, final Rectangle viewRect) {
-        return new MenuItemLayoutHelper(mi, checkIcon, arrowIcon, viewRect, defaultTextIconGap, acceleratorDelimiter,
-                mi.getComponentOrientation().isLeftToRight(), mi.getFont(), acceleratorFont,
-                MenuItemLayoutHelper.useCheckAndArrow(mi), propertyPrefix);
+        return MenuItemLayoutHelper.create(mi, checkIcon, arrowIcon, viewRect, defaultTextIconGap, acceleratorDelimiter,
+                mi.getComponentOrientation().isLeftToRight(), mi.getFont(), acceleratorFont, propertyPrefix);
     }
 
     @Override
@@ -173,6 +184,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI implements MenuItemUI {
             super(key);
         }
 
+        @Override
         public void actionPerformed(final ActionEvent e) {
             JMenuItem mi = (JMenuItem) e.getSource();
             MenuSelectionManager.defaultManager().clearSelectedPath();

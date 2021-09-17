@@ -30,7 +30,7 @@ import com.github.weisj.darklaf.components.tree.LabeledTreeNode;
 import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonConstants;
 import com.github.weisj.darklaf.ui.tree.DarkTreeCellRendererDelegate;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 /** @author Jannis Weis */
 public class DarkCellRendererToggleButton<T extends JToggleButton & CellToggleButton>
@@ -126,6 +126,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellToggleBu
             putClientProperty(ToggleButtonConstants.KEY_IS_TABLE_EDITOR, true);
         }
 
+        @Override
         public void setHasFocus(final boolean hasFocus) {
             this.hasFocus = hasFocus;
         }
@@ -153,6 +154,7 @@ public class DarkCellRendererToggleButton<T extends JToggleButton & CellToggleBu
             putClientProperty(ToggleButtonConstants.KEY_IS_TABLE_EDITOR, true);
         }
 
+        @Override
         public void setHasFocus(final boolean hasFocus) {
             this.hasFocus = hasFocus;
         }

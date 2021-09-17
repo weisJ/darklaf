@@ -22,18 +22,21 @@
 package com.github.weisj.darklaf.ui.colorchooser;
 
 import java.awt.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.colorchooser.ColorSelectionModel;
 import javax.swing.event.AncestorEvent;
 
-import com.github.weisj.darklaf.color.ColorUtil;
-import com.github.weisj.darklaf.color.DarkColorModel;
 import com.github.weisj.darklaf.components.DefaultColorPipette;
 import com.github.weisj.darklaf.listener.AncestorAdapter;
 import com.github.weisj.darklaf.listener.UpdateDocumentListener;
+import com.github.weisj.darklaf.properties.color.DarkColorModel;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
+import com.github.weisj.darklaf.util.ColorUtil;
+import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
@@ -43,6 +46,7 @@ import com.github.weisj.darklaf.util.PropertyUtil;
  */
 public class DarkColorChooserPanel extends AbstractColorChooserPanel implements ColorListener {
 
+    private static final Logger LOGGER = LogUtil.getLogger(DarkColorChooserPanel.class);
     public static final String TRANSPARENCY_ENABLED_PROPERTY = "transparency";
 
     private final Icon pipetteIcon;
@@ -126,9 +130,10 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
             int alpha = isColorTransparencySelectionEnabled() ? Integer.valueOf(hexStr.substring(6, 8), 16) : 255;
             return new Color(Integer.valueOf(hexStr.substring(0, 2), 16), Integer.valueOf(hexStr.substring(2, 4), 16),
                     Integer.valueOf(hexStr.substring(4, 6), 16), alpha);
-        } catch (NumberFormatException | IndexOutOfBoundsException ignore) {
+        } catch (NumberFormatException | IndexOutOfBoundsException e) {
+            LOGGER.log(Level.SEVERE, "Parsing color from hex failed", e);
+            return null;
         }
-        return null;
     }
 
     protected Color getColorFromFields() {
@@ -330,10 +335,14 @@ public class DarkColorChooserPanel extends AbstractColorChooserPanel implements 
         return pipetteButton;
     }
 
+    // Java 9 API
+    @SuppressWarnings("MissingOverride")
     public boolean isColorTransparencySelectionEnabled() {
         return colorWheelPanel.isColorTransparencySelectionEnabled();
     }
 
+    // Java 9 API
+    @SuppressWarnings("MissingOverride")
     public void setColorTransparencySelectionEnabled(final boolean b) {
         boolean oldValue = isColorTransparencySelectionEnabled();
         if (b != oldValue) {

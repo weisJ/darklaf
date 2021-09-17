@@ -28,6 +28,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.beans.PropertyChangeListener;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -35,11 +37,13 @@ import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicToolBarUI;
 
 import com.github.weisj.darklaf.listener.MouseResponder;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.LogUtil;
 
 /** @author Jannis Weis */
 public class DarkToolBarUI extends BasicToolBarUI {
 
+    private static final Logger LOGGER = LogUtil.getLogger(DarkToolBarUI.class);
     protected static final String KEY_PREFIX = "JToolBar.";
     public static final String KEY_USE_TOOL_BAR_BACKGROUND = KEY_PREFIX + "drag.useToolbarBackground";
     private static final Robot robot = createRobot();
@@ -52,7 +56,7 @@ public class DarkToolBarUI extends BasicToolBarUI {
 
     protected Container dockingSource;
     protected RootPaneContainer floatingToolBar;
-    protected DarkDragWindow dragWindow;
+    protected DarkDragWindow darkDragWindow;
     protected boolean floating;
     protected Point floatingPos = new Point();
 
@@ -74,11 +78,11 @@ public class DarkToolBarUI extends BasicToolBarUI {
         previewPanel.setToolBar(toolBar);
     }
 
-    protected DarkDragWindow getDragWindow() {
-        if (dragWindow == null) {
-            dragWindow = createDarkDragWindow(toolBar);
+    protected DarkDragWindow getDarkDragWindow() {
+        if (darkDragWindow == null) {
+            darkDragWindow = createDarkDragWindow(toolBar);
         }
-        return dragWindow;
+        return darkDragWindow;
     }
 
     @Override
@@ -98,7 +102,7 @@ public class DarkToolBarUI extends BasicToolBarUI {
 
             Window ancestor = SwingUtilities.getWindowAncestor(toolBar);
             if (ancestor != null) visible = ancestor.isVisible();
-            if (dragWindow != null) stopDrag();
+            if (darkDragWindow != null) stopDrag();
 
             floating = b;
             RootPaneContainer floatingTB = getFloatingToolBar();
@@ -115,6 +119,7 @@ public class DarkToolBarUI extends BasicToolBarUI {
                     } else {
                         if (ancestor != null) {
                             ancestor.addWindowListener(new WindowAdapter() {
+                                @Override
                                 public void windowOpened(final WindowEvent e) {
                                     ((Window) floatingTB).setVisible(true);
                                     ancestor.removeWindowListener(this);
@@ -192,7 +197,7 @@ public class DarkToolBarUI extends BasicToolBarUI {
             if (lm instanceof BorderLayout) {
                 BorderLayout blm = (BorderLayout) lm;
                 Component c = blm.getLayoutComponent(cont, constraint);
-                return (c == null || c == toolBar || c == previewPanel);
+                return c == null || c == toolBar || c == previewPanel;
             }
         }
         return true;
@@ -220,7 +225,7 @@ public class DarkToolBarUI extends BasicToolBarUI {
     @Override
     public boolean canDock(final Component c, final Point p) {
         String constraints = getDockingConstraint(c, p);
-        return (p != null && constraints != null);
+        return p != null && constraints != null;
     }
 
     @Override
@@ -230,7 +235,7 @@ public class DarkToolBarUI extends BasicToolBarUI {
 
     protected void dragTo() {
         if (toolBar.isFloatable()) {
-            DarkDragWindow dw = getDragWindow();
+            DarkDragWindow dw = getDarkDragWindow();
             Point offset = dw.getOffset();
             PointerInfo pointerInfo = MouseInfo.getPointerInfo();
             if (pointerInfo == null) return;
@@ -262,7 +267,7 @@ public class DarkToolBarUI extends BasicToolBarUI {
     @Override
     public void setOrientation(final int orientation) {
         toolBar.setOrientation(orientation);
-        if (dragWindow != null) dragWindow.setOrientation(orientation);
+        if (darkDragWindow != null) darkDragWindow.setOrientation(orientation);
     }
 
     protected int mapConstraintToOrientation(final String constraint) {
@@ -295,7 +300,7 @@ public class DarkToolBarUI extends BasicToolBarUI {
 
     protected void showDragWindow() {
         DarkUIUtil.getWindow(getFloatingToolBar().getRootPane()).setVisible(false);
-        DarkDragWindow dw = getDragWindow();
+        DarkDragWindow dw = getDarkDragWindow();
         dw.getContentPane().add(toolBar);
         dw.doLayout();
         updateDockingSource(dockingSource);
@@ -330,7 +335,7 @@ public class DarkToolBarUI extends BasicToolBarUI {
     protected void floatAt() {
         if (toolBar.isFloatable()) {
             try {
-                DarkDragWindow dw = getDragWindow();
+                DarkDragWindow dw = getDarkDragWindow();
                 Point offset = dw.getOffset();
                 Point global = MouseInfo.getPointerInfo().getLocation();
                 setFloatingLocation(global.x - offset.x, global.y - offset.y);
@@ -347,16 +352,18 @@ public class DarkToolBarUI extends BasicToolBarUI {
                     setFloating(true, null);
                 }
                 dockingSource.remove(previewPanel);
-            } catch (final IllegalComponentStateException ignored) {
+            } catch (final IllegalComponentStateException e) {
+                LOGGER.log(Level.SEVERE, "Couldn't show docking indicator", e);
             }
         }
     }
 
     protected void stopDrag() {
-        getDragWindow().setVisible(false);
+        getDarkDragWindow().setVisible(false);
         timer.stop();
     }
 
+    @Override
     public void paint(final Graphics g, final JComponent c) {
         g.setColor(background);
         g.fillRect(0, 0, c.getWidth(), c.getHeight());

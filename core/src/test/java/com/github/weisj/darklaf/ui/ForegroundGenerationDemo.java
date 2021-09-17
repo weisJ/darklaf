@@ -30,11 +30,13 @@ import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.color.QuickColorChooser;
 import com.github.weisj.darklaf.task.ForegroundColorGenerationTask;
 import com.github.weisj.darklaf.theme.event.ThemeInstalledListener;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
-public class ForegroundGenerationDemo implements ComponentDemo {
+public class ForegroundGenerationDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new ForegroundGenerationDemo());
+        DemoExecutor.showDemo(new ForegroundGenerationDemo());
     }
 
     @Override
@@ -68,7 +70,7 @@ public class ForegroundGenerationDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Foreground Color Generation Demo";
     }
 }

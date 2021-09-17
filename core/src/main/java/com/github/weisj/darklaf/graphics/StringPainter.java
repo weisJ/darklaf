@@ -26,15 +26,18 @@ import java.awt.image.BufferedImage;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
 import java.lang.reflect.Field;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
 
-import com.github.weisj.darklaf.color.ColorUtil;
+import com.github.weisj.darklaf.compatibility.SwingUtil;
 import com.github.weisj.darklaf.ui.OpacityBufferedUI;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.*;
+import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
@@ -224,7 +227,7 @@ public final class StringPainter {
                 return (BufferedImage) img;
             }
         } catch (final Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Couldn't retrieve Graphics backing image", e);
         }
         return null;
     }

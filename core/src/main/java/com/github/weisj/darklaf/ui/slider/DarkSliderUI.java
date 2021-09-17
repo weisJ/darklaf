@@ -32,10 +32,10 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicSliderUI;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
-import com.github.weisj.darklaf.icons.RotatableIcon;
+import com.github.weisj.darklaf.properties.icons.RotatableIcon;
 import com.github.weisj.darklaf.swingdsl.VisualPaddingUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
@@ -245,6 +245,7 @@ public class DarkSliderUI extends BasicSliderUI {
         super.calculateLabelRect();
     }
 
+    @Override
     protected void calculateThumbLocation() {
         if (slider.getOrientation() == JSlider.HORIZONTAL) {
             int valuePosition = xPositionForValue(slider.getValue());
@@ -274,8 +275,10 @@ public class DarkSliderUI extends BasicSliderUI {
      *
      * @param direction the direction
      */
+    @Override
+    // Slider is final for the lifetime of this object
+    @SuppressWarnings("SynchronizeOnNonFinalField")
     public void scrollByBlock(final int direction) {
-        // noinspection SynchronizeOnNonFinalField
         synchronized (slider) {
             int blockIncrement = (slider.getMaximum() - slider.getMinimum()) / 10;
             if (blockIncrement == 0) {
@@ -304,10 +307,12 @@ public class DarkSliderUI extends BasicSliderUI {
      *
      * @param direction the direction
      */
+    @Override
+    // Slider is final for the lifetime of this object
+    @SuppressWarnings("SynchronizeOnNonFinalField")
     public void scrollByUnit(final int direction) {
-        // noinspection SynchronizeOnNonFinalField
         synchronized (slider) {
-            int delta = ((direction > 0) ? POSITIVE_SCROLL : NEGATIVE_SCROLL);
+            int delta = (direction > 0) ? POSITIVE_SCROLL : NEGATIVE_SCROLL;
 
             if (slider.getSnapToTicks()) {
                 delta *= getTickSpacing();
@@ -378,7 +383,7 @@ public class DarkSliderUI extends BasicSliderUI {
         Component minLabel = ltr ? getLowestValueLabel() : getHighestValueLabel();
         boolean adjustMin = PropertyUtil.getBooleanProperty(minLabel, KEY_MANUAL_LABEL_ALIGN);
         int minPrefWidth = minLabel.getPreferredSize().width;
-        float adj = (adjustMin ? minLabel.getAlignmentX() : Component.CENTER_ALIGNMENT);
+        float adj = adjustMin ? minLabel.getAlignmentX() : Component.CENTER_ALIGNMENT;
         return (int) (minPrefWidth * adj);
     }
 
@@ -387,10 +392,11 @@ public class DarkSliderUI extends BasicSliderUI {
         Component maxLabel = ltr ? getHighestValueLabel() : getLowestValueLabel();
         boolean adjustMax = PropertyUtil.getBooleanProperty(maxLabel, KEY_MANUAL_LABEL_ALIGN);
         int maxPrefWidth = maxLabel.getPreferredSize().width;
-        float adj = (adjustMax ? maxLabel.getAlignmentX() : Component.CENTER_ALIGNMENT);
+        float adj = adjustMax ? maxLabel.getAlignmentX() : Component.CENTER_ALIGNMENT;
         return (int) (maxPrefWidth * (1f - adj));
     }
 
+    @Override
     public Dimension getPreferredHorizontalSize() {
         Dimension dim = super.getPreferredHorizontalSize();
         Rectangle rect = new Rectangle(0, 0, 0, 0);
@@ -809,12 +815,13 @@ public class DarkSliderUI extends BasicSliderUI {
     }
 
     public class SnapTrackListener extends TrackListener {
-        private int offset;
+        private int sliderOffset;
 
+        @Override
         public void mousePressed(final MouseEvent evt) {
             int pos = isHorizontal() ? evt.getX() : evt.getY();
             int loc = getLocationForValue(getSnappedValue(evt));
-            offset = (loc < 0) ? 0 : pos - loc;
+            sliderOffset = (loc < 0) ? 0 : pos - loc;
             if (iconRect.contains(evt.getPoint())) return;
             super.mousePressed(evt);
         }
@@ -824,9 +831,9 @@ public class DarkSliderUI extends BasicSliderUI {
             if (slider.getSnapToTicks()) {
                 int pos = getLocationForValue(getSnappedValue(e));
                 if (isHorizontal()) {
-                    e.translatePoint(pos - e.getX() + offset, 0);
+                    e.translatePoint(pos - e.getX() + sliderOffset, 0);
                 } else {
-                    e.translatePoint(0, pos - e.getY() + offset);
+                    e.translatePoint(0, pos - e.getY() + sliderOffset);
                 }
             }
             super.mouseDragged(e);

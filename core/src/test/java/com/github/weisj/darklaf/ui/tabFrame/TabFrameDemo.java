@@ -26,25 +26,33 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 
+import org.pbjar.jxlayer.plaf.ext.TransformUI;
+
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabbedPopup;
 import com.github.weisj.darklaf.components.text.NonWrappingTextPane;
 import com.github.weisj.darklaf.components.text.NumberedTextComponent;
 import com.github.weisj.darklaf.components.text.NumberingPane;
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.core.test.DarklafOnly;
+import com.github.weisj.darklaf.iconset.AllIcons;
 import com.github.weisj.darklaf.ui.DemoResources;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.PropertyValue;
 import com.github.weisj.darklaf.util.StringUtil;
 
-public class TabFrameDemo implements ComponentDemo {
+@DarklafOnly
+public class TabFrameDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new TabFrameDemo());
+        System.setProperty(TransformUI.BUFFERED_REPAINT_FLAG, PropertyValue.TRUE);
+        DemoExecutor.showDemo(new TabFrameDemo());
     }
 
+
     @Override
-    public Dimension getDisplayDimension() {
+    public Dimension getWindowSize() {
         return new Dimension(1000, 500);
     }
 
@@ -56,7 +64,7 @@ public class TabFrameDemo implements ComponentDemo {
             }
         });
         NumberingPane numbering = numberPane.getNumberingPane();
-        Icon icon = DarkUIUtil.ICON_LOADER.getIcon("navigation/arrow/thick/arrowRight.svg");
+        Icon icon = AllIcons.Arrow.Thick.Right.get();
         addLineIcons(numbering, icon);
         return numberPane;
     }
@@ -108,7 +116,7 @@ public class TabFrameDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "TabFrame Demo";
     }
 }

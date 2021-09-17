@@ -59,8 +59,8 @@ public class DarkTextListener implements FocusListener, PropertyChangeListener {
         JPopupMenu popupMenu = editor.getComponentPopupMenu();
         Component other = e.getOppositeComponent();
         MenuElement[] path = MenuSelectionManager.defaultManager().getSelectedPath();
-        if (popupMenu != null && other != null && SwingUtilities.isDescendingFrom(popupMenu, other)
-                || path != null && path.length > 0 && path[0] == popupMenu)
+        if ((popupMenu != null && other != null && SwingUtilities.isDescendingFrom(popupMenu, other))
+                || (path != null && path.length > 0 && path[0] == popupMenu))
             return;
         if (caret instanceof DarkCaret) {
             ((DarkCaret) caret).setPaintSelectionHighlight(false);

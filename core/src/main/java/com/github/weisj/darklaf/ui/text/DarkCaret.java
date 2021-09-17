@@ -26,6 +26,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.plaf.TextUI;
@@ -36,14 +37,16 @@ import javax.swing.text.DefaultHighlighterDark.DarkHighlightPainter;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.text.action.SelectLineAction;
 import com.github.weisj.darklaf.ui.text.action.SelectWordAction;
+import com.github.weisj.darklaf.util.LogUtil;
 
 /** @author Jannis Weis */
 public class DarkCaret extends DefaultCaret implements UIResource {
 
+    private static final Logger LOGGER = LogUtil.getLogger(DarkCaret.class);
     private static final int FLAG_SIZE = 3;
 
-    private static Action selectWord;
-    private static Action selectLine;
+    private static final Action selectWord = new SelectWordAction();
+    private static final Action selectLine = new SelectLineAction();
     private final Segment seg;
     private final DarkHighlightPainter selectionPainter;
     private MouseEvent selectedWordEvent;
@@ -67,8 +70,6 @@ public class DarkCaret extends DefaultCaret implements UIResource {
         seg = new Segment();
         setStyles(style, insertStyle);
         selectionPainter = new DarkHighlightPainter();
-        selectLine = new SelectLineAction();
-        selectWord = new SelectWordAction();
         pasteOnMiddleMouseClick = true;
     }
 
@@ -271,6 +272,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                                 textArea.paste();
                             }
                         } catch (final HeadlessException ignored) {
+                            LOGGER.severe("Pasting in headless mode isn't supported");
                         }
                     }
                 }
@@ -407,7 +409,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                         flagYPoints[0] = r.y;
                         flagXPoints[1] = flagXPoints[0];
                         flagYPoints[1] = flagYPoints[0] + FLAG_SIZE;
-                        flagXPoints[2] = flagXPoints[0] + ((dotLtr) ? FLAG_SIZE : -FLAG_SIZE);
+                        flagXPoints[2] = flagXPoints[0] + (dotLtr ? FLAG_SIZE : -FLAG_SIZE);
                         flagYPoints[2] = flagYPoints[0];
                         g.fillPolygon(flagXPoints, flagYPoints, 3);
                     }
@@ -440,7 +442,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
                 Element bidiElem = bidiRoot.getElement(index);
                 if (bidiElem.getEndOffset() >= p1) {
                     AttributeSet bidiAttrs = bidiElem.getAttributes();
-                    return ((StyleConstants.getBidiLevel(bidiAttrs) % 2) == 0);
+                    return (StyleConstants.getBidiLevel(bidiAttrs) % 2) == 0;
                 }
             }
         }

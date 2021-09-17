@@ -30,7 +30,7 @@ import javax.swing.plaf.ComponentUI;
 
 import com.github.weisj.darklaf.ui.cell.CellConstants;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererPane;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /** @author Jannis Weis */
@@ -78,6 +78,7 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
         return handler;
     }
 
+    @Override
     protected void paintImpl(final Graphics g, final JComponent c) {
         switch (layoutOrientation) {
             case JList.VERTICAL_WRAP:

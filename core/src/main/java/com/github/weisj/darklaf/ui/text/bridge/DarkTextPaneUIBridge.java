@@ -33,10 +33,12 @@ public abstract class DarkTextPaneUIBridge extends DarkEditorPaneUI {
     private static final WeakShared<DummyEditorPane> sharedDummyTextPane = new WeakShared<>(DummyEditorPane::new);
     private static final WeakShared<DummyTextUIMethods> sharedDummyUI = new WeakShared<>(DummyTextPaneUI::new);
 
+    @Override
     protected DummyTextUIMethods createDummyUI() {
         return sharedDummyUI.get();
     }
 
+    @Override
     protected DummyEditorPane createDummyEditorPane() {
         return sharedDummyTextPane.get();
     }

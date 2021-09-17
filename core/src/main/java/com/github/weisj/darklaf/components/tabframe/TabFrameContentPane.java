@@ -173,6 +173,7 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
      * @param a position of panel.
      * @param enabled true if should be shown.
      */
+    @Override
     public void setEnabled(final Alignment a, final boolean enabled) {
         setEnabled(a, enabled, false);
     }
@@ -279,10 +280,12 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         }
     }
 
+    @Override
     public Component getContent() {
         return cont;
     }
 
+    @Override
     public void setContent(final Component pane) {
         cont = pane;
         rightSplit.setLeftComponent(pane);
@@ -304,6 +307,7 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
      * @param a the position of the panel.
      * @return true if enabled.
      */
+    @Override
     public boolean isEnabled(final Alignment a) {
         if (a == Alignment.CENTER) {
             return false;
@@ -312,6 +316,7 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         }
     }
 
+    @Override
     public void setComponentAt(final Alignment a, final Component c) {
         switch (a) {
             case NORTH:
@@ -363,28 +368,28 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         PopupContainer popupComponent;
         switch (alignment) {
             case NORTH:
-                popupComponent = ((PopupContainer) topSplitter.getLeftComponent());
+                popupComponent = (PopupContainer) topSplitter.getLeftComponent();
                 break;
             case NORTH_EAST:
-                popupComponent = ((PopupContainer) topSplitter.getRightComponent());
+                popupComponent = (PopupContainer) topSplitter.getRightComponent();
                 break;
             case EAST:
-                popupComponent = ((PopupContainer) rightSplitter.getTopComponent());
+                popupComponent = (PopupContainer) rightSplitter.getTopComponent();
                 break;
             case SOUTH_EAST:
-                popupComponent = ((PopupContainer) rightSplitter.getBottomComponent());
+                popupComponent = (PopupContainer) rightSplitter.getBottomComponent();
                 break;
             case SOUTH:
-                popupComponent = ((PopupContainer) bottomSplitter.getRightComponent());
+                popupComponent = (PopupContainer) bottomSplitter.getRightComponent();
                 break;
             case SOUTH_WEST:
-                popupComponent = ((PopupContainer) bottomSplitter.getLeftComponent());
+                popupComponent = (PopupContainer) bottomSplitter.getLeftComponent();
                 break;
             case WEST:
-                popupComponent = ((PopupContainer) leftSplitter.getBottomComponent());
+                popupComponent = (PopupContainer) leftSplitter.getBottomComponent();
                 break;
             case NORTH_WEST:
-                popupComponent = ((PopupContainer) leftSplitter.getTopComponent());
+                popupComponent = (PopupContainer) leftSplitter.getTopComponent();
                 break;
             default:
                 throw new IllegalArgumentException("CENTER is not supported");

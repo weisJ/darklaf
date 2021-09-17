@@ -30,7 +30,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
 /*
  * DialogDemo.java requires these files: CustomDialog.java images/middle.gif
@@ -76,7 +76,7 @@ public class DialogDemo extends JPanel {
     public static void main(final String[] args) {
         // Schedule a job for the event-dispatching thread:
         // creating and showing this application's GUI.
-        LafManager.install(ComponentDemo.getTheme());
+        LafManager.install(DemoExecutor.getPreferredTheme());
         javax.swing.SwingUtilities.invokeLater(DialogDemo::createAndShowGUI);
     }
 
@@ -165,6 +165,7 @@ public class DialogDemo extends JPanel {
                 dialog.setContentPane(optionPane);
                 dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
                 dialog.addWindowListener(new WindowAdapter() {
+                    @Override
                     public void windowClosing(final WindowEvent we) {
                         setLabel("Thwarted user attempt to close window.");
                     }
@@ -173,7 +174,7 @@ public class DialogDemo extends JPanel {
                     String prop = e12.getPropertyName();
 
                     if (dialog.isVisible() && (e12.getSource() == optionPane)
-                            && (JOptionPane.VALUE_PROPERTY.equals(prop))) {
+                            && JOptionPane.VALUE_PROPERTY.equals(prop)) {
                         // If you were going to check something
                         // before closing the window, you'd do
                         // it here.
@@ -249,8 +250,7 @@ public class DialogDemo extends JPanel {
 
     /*
      * Creates the panel shown by the 3rd tab. These dialogs are implemented using showMessageDialog,
-     * but you can specify the com.github.weisj.icon (using similar code) for any other kind of dialog,
-     * as well.
+     * but you can specify the icon (using similar code) for any other kind of dialog, as well.
      */
     private JPanel createIconDialogBox() {
         JButton showItButton = null;
@@ -266,22 +266,22 @@ public class DialogDemo extends JPanel {
         final String warningCommand = "warning";
         final String customCommand = "custom";
 
-        radioButtons[0] = new JRadioButton("Plain (no com.github.weisj.icon)");
+        radioButtons[0] = new JRadioButton("Plain (no icon)");
         radioButtons[0].setActionCommand(plainCommand);
 
-        radioButtons[1] = new JRadioButton("Information com.github.weisj.icon");
+        radioButtons[1] = new JRadioButton("Information icon");
         radioButtons[1].setActionCommand(infoCommand);
 
-        radioButtons[2] = new JRadioButton("Question com.github.weisj.icon");
+        radioButtons[2] = new JRadioButton("Question icon");
         radioButtons[2].setActionCommand(questionCommand);
 
-        radioButtons[3] = new JRadioButton("Error com.github.weisj.icon");
+        radioButtons[3] = new JRadioButton("Error icon");
         radioButtons[3].setActionCommand(errorCommand);
 
-        radioButtons[4] = new JRadioButton("Warning com.github.weisj.icon");
+        radioButtons[4] = new JRadioButton("Warning icon");
         radioButtons[4].setActionCommand(warningCommand);
 
-        radioButtons[5] = new JRadioButton("Custom com.github.weisj.icon");
+        radioButtons[5] = new JRadioButton("Custom icon");
         radioButtons[5].setActionCommand(customCommand);
 
         for (int i = 0; i < numButtons; i++) {
@@ -293,11 +293,11 @@ public class DialogDemo extends JPanel {
         showItButton.addActionListener(e -> {
             String command = group.getSelection().getActionCommand();
 
-            // no com.github.weisj.icon
+            // no icon
             if (Objects.equals(command, plainCommand)) {
                 JOptionPane.showMessageDialog(frame, "Eggs aren't supposed to be green.", "A plain message",
                         JOptionPane.PLAIN_MESSAGE);
-                // information com.github.weisj.icon
+                // information icon
             } else if (Objects.equals(command, infoCommand)) {
                 JOptionPane.showMessageDialog(frame, "Eggs aren't supposed to be green.", "Inane informational dialog",
                         JOptionPane.INFORMATION_MESSAGE);
@@ -305,20 +305,20 @@ public class DialogDemo extends JPanel {
                 // XXX: It doesn't make sense to make a question with
                 // XXX: only one button.
                 // XXX: See "Yes/No (but not in those words)" for a better solution.
-                // question com.github.weisj.icon
+                // question icon
             } else if (Objects.equals(command, questionCommand)) {
                 JOptionPane.showMessageDialog(frame,
                         "You shouldn't use a message dialog " + "(like this)\n" + "for a question, OK?",
                         "Inane question", JOptionPane.QUESTION_MESSAGE);
-                // error com.github.weisj.icon
+                // error icon
             } else if (Objects.equals(command, errorCommand)) {
                 JOptionPane.showMessageDialog(frame, "Eggs aren't supposed to be green.", "Inane error",
                         JOptionPane.ERROR_MESSAGE);
-                // warning com.github.weisj.icon
+                // warning icon
             } else if (Objects.equals(command, warningCommand)) {
                 JOptionPane.showMessageDialog(frame, "Eggs aren't supposed to be green.", "Inane warning",
                         JOptionPane.WARNING_MESSAGE);
-                // custom com.github.weisj.icon
+                // custom icon
             } else if (Objects.equals(command, customCommand)) {
                 JOptionPane.showMessageDialog(frame, "Eggs aren't supposed to be green.", "Inane custom dialog",
                         JOptionPane.INFORMATION_MESSAGE, icon);

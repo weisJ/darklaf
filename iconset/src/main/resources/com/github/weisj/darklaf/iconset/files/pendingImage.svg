@@ -1,0 +1,40 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 16 16">
+    <defs id="colors">
+        <linearGradient id="fileIconBackground" fallback="Label.foreground" opacity="fileIconOpacity" opacity-fallback="%100">
+            <stop offset="0" stop-color="#9AA7B0" stop-opacity=".8"/>
+            <stop offset="1" stop-color="#9AA7B0" stop-opacity=".8"/>
+        </linearGradient>
+        <linearGradient id="Icons.image.sky.color">
+            <stop offset="0" stop-color="#40B6E0"/>
+            <stop offset="1" stop-color="#40B6E0"/>
+        </linearGradient>
+        <linearGradient id="Icons.image.grass.color">
+            <stop offset="0" stop-color="#62B543"/>
+            <stop offset="1" stop-color="#62B543"/>
+        </linearGradient>
+        <linearGradient id="warningIconColor" fallback="%FFFF00">
+            <stop offset="0" stop-color="#e2a53a"/>
+            <stop offset="1" stop-color="#e2a53a"/>
+        </linearGradient>
+        <linearGradient id="fileIconForeground" fallback="Label.background"
+                        opacity="fileIconOpacity" opacity-fallback="%100">
+            <stop offset="0" stop-color="#231F20" stop-opacity=".8"/>
+            <stop offset="1" stop-color="#231F20" stop-opacity=".8"/>
+        </linearGradient>
+    </defs>
+    <g fill="url(#fileIconBackground)">
+        <rect x="1" y="1" class="st0" width="1" height="11.3"/>
+        <rect x="2" y="1" class="st0" width="12" height="1"/>
+        <path class="st0" d="M7,12.5c0-0.1,0-0.1,0-0.2H1v1h6.1C7,13,7,12.8,7,12.5z"/>
+        <path class="st0" d="M15,9.7V1h-1v7.8C14.4,9,14.7,9.3,15,9.7z"/>
+    </g>
+    <path fill="url(#Icons.image.sky.color)" d="M11.2,8c0.1,0,0.2,0,0.3,0c0.5,0,1,0.1,1.5,0.3V3H3v4.2c0,0,2.9-2.8,4.3-1.4C8.5,6.8,9.8,7.5,11.2,8z M10.5,4.7
+	c0.6,0,0.8,0.4,0.8,0.9s-0.2,0.8-0.8,0.8c-0.5,0-0.8-0.3-0.8-0.9C9.7,5,9.9,4.7,10.5,4.7z"/>
+    <path fill="url(#Icons.image.grass.color)"
+          d="M9.3,8.6c-0.7-0.4-1.4-0.9-2-1.4C6,5.9,3,8.6,3,8.6v2.8h4.1C7.5,10.2,8.2,9.2,9.3,8.6z"/>
+
+    <path fill="url(#warningIconColor)"
+          d="M15,12.5c0,1.9-1.6,3.5-3.5,3.5S8,14.4,8,12.5S9.6,9,11.5,9S15,10.6,15,12.5"/>
+    <path fill="url(#fileIconForeground)" d="M10,14.9V14l1.1-1.5L10,11v-0.8h3V11l-1.1,1.5L13,14v0.8H10z M10.8,14.1h1.4l-0.7-1L10.8,14.1z M11.5,11.9
+	l0.7-1h-1.4L11.5,11.9z"/>
+</svg>

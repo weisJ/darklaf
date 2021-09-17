@@ -53,15 +53,18 @@ public abstract class SwatchPanel extends JPanel {
         setFocusable(true);
         setInheritsPopupMenu(true);
         addFocusListener(new FocusAdapter() {
+            @Override
             public void focusGained(final FocusEvent e) {
                 repaint();
             }
 
+            @Override
             public void focusLost(final FocusEvent e) {
                 repaint();
             }
         });
         addKeyListener(new KeyAdapter() {
+            @Override
             public void keyPressed(final KeyEvent e) {
                 if (selRow < 0 || selCol < 0) return;
                 int typed = e.getKeyCode();
@@ -149,6 +152,7 @@ public abstract class SwatchPanel extends JPanel {
         return colors[index];
     }
 
+    @Override
     public void paintComponent(final Graphics g) {
         Insets ins = getInsets();
 
@@ -193,6 +197,7 @@ public abstract class SwatchPanel extends JPanel {
         }
     }
 
+    @Override
     public Dimension getPreferredSize() {
         int x = numSwatches.width * (swatchSize.width + gap.width);
         int y = numSwatches.height * (swatchSize.height + gap.height);
@@ -200,6 +205,7 @@ public abstract class SwatchPanel extends JPanel {
         return new Dimension(x + ins.left + ins.right, y + ins.top + ins.bottom);
     }
 
+    @Override
     public String getToolTipText(final MouseEvent e) {
         Color color = getColorForLocation(e.getX(), e.getY());
         if (color == null) return null;

@@ -64,6 +64,7 @@ public class DefaultTreeTableNode implements TreeTableNode {
         children.remove(child);
     }
 
+    @Override
     public String toString() {
         return getTreeValue().toString();
     }

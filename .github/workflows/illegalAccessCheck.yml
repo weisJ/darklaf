@@ -25,7 +25,7 @@ jobs:
       - name: Build & Test
         uses: eskatos/gradle-command-action@v1
         with:
-          arguments: build test -PskipAutostyle -PverboseTest=true --no-daemon
+          arguments: build test -PskipAutostyle -PverboseTest=true -PgithubAccessToken=${{ secrets.GITHUB_TOKEN }} --no-daemon
           wrapper-cache-enabled: true
           dependencies-cache-enabled: true
           configuration-cache-enabled: true
@@ -37,6 +37,12 @@ jobs:
         with:
           name: windows-test-results
           path: build/test_results
+      - name: Upload test report
+        uses: actions/upload-artifact@v1
+        if: ${{ always() }}
+        with:
+          name: windows-test-report
+          path: core/build/reports
 
   linux:
     name: Linux (Java 16)
@@ -63,6 +69,12 @@ jobs:
         with:
           name: linux-test-results
           path: build/test_results
+      - name: Upload test report
+        uses: actions/upload-artifact@v1
+        if: ${{ always() }}
+        with:
+          name: linux-test-report
+          path: core/build/reports
 
   macos:
     name: macOS (Java 16)
@@ -81,7 +93,7 @@ jobs:
       - name: Build & Test
         uses: eskatos/gradle-command-action@v1
         with:
-          arguments: build test -PskipAutostyle -PverboseTest=true --no-daemon
+          arguments: build test -PskipAutostyle -PverboseTest=true -PgithubAccessToken=${{ secrets.GITHUB_TOKEN }} --no-daemon
           wrapper-cache-enabled: true
           dependencies-cache-enabled: true
           configuration-cache-enabled: true
@@ -93,3 +105,9 @@ jobs:
         with:
           name: macOS-test-results
           path: build/test_results
+      - name: Upload test report
+        uses: actions/upload-artifact@v1
+        if: ${{ always() }}
+        with:
+          name: macOS-test-report
+          path: core/build/reports

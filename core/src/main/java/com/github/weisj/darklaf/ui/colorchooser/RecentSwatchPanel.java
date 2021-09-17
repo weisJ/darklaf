@@ -31,12 +31,14 @@ import javax.swing.*;
 class RecentSwatchPanel extends SwatchPanel {
     private Color defaultRecentColor;
 
+    @Override
     protected void initValues() {
         swatchSize = UIManager.getDimension("ColorChooser.swatchesRecentSwatchSize", getLocale());
         numSwatches = new Dimension(30, 5);
         gap = new Dimension(1, 1);
     }
 
+    @Override
     protected void initColors() {
         defaultRecentColor = UIManager.getColor("ColorChooser.swatchesDefaultRecentColor");
         int numColors = numSwatches.width * numSwatches.height;
@@ -50,7 +52,7 @@ class RecentSwatchPanel extends SwatchPanel {
     @Override
     public String getToolTipText(final MouseEvent e) {
         Color color = getColorForLocation(e.getX(), e.getY());
-        if (color == defaultRecentColor || color == null) return null;
+        if (color == null || color.equals(defaultRecentColor)) return null;
         return color.getRed() + ", " + color.getGreen() + ", " + color.getBlue();
     }
 

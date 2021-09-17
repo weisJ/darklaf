@@ -25,15 +25,16 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.combobox.ComboBoxConstants;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.util.PropertyKey;
 
-public class ComboBoxDemo implements ComponentDemo {
+public class ComboBoxDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new ComboBoxDemo());
+        DemoExecutor.showDemo(new ComboBoxDemo());
     }
 
     @Override
@@ -80,7 +81,7 @@ public class ComboBoxDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "ComboBox Demo";
     }
 }

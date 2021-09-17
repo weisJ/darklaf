@@ -38,9 +38,6 @@ import javax.tools.JavaFileObject;
 
 import com.github.weisj.darklaf.annotations.SynthesiseLaf;
 
-/**
- * @deprecated Auto-Generated class. Use LafManager.installTheme(Theme) instead.
- */
 @SupportedAnnotationTypes("com.github.weisj.darklaf.annotations.SynthesiseLaf")
 public class SynthesiseLafProcessor extends AbstractProcessor {
 
@@ -67,6 +64,7 @@ public class SynthesiseLafProcessor extends AbstractProcessor {
             builder.append(" * @deprecated Auto-Generated class. Use LafManager.installTheme(Theme) instead.\n");
             builder.append(" */\n");
             builder.append("@Deprecated\n");
+            builder.append("@javax.annotation.Generated(value = {\"").append(getClass().getName()).append("\"})\n");
             builder.append("public class ").append(synthesisedClassName).append(" extends ").append(baseClassName);
             builder.append(" {\n\n");
             builder.append(IDENT).append("public ").append(synthesisedClassName).append("() {\n");
@@ -79,7 +77,7 @@ public class SynthesiseLafProcessor extends AbstractProcessor {
                 writer.write(builder.toString());
                 writer.close();
             } catch (final IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException("Could not write class file " + synthesisedName, e);
             }
         }
         return false;

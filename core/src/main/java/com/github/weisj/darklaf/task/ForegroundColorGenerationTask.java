@@ -29,12 +29,12 @@ import java.util.logging.Logger;
 
 import javax.swing.plaf.ColorUIResource;
 
-import com.github.weisj.darklaf.color.ColorUtil;
-import com.github.weisj.darklaf.color.DarkColorModelHSB;
-import com.github.weisj.darklaf.color.DarkColorModelHSL;
+import com.github.weisj.darklaf.properties.color.DarkColorModelHSB;
+import com.github.weisj.darklaf.properties.color.DarkColorModelHSL;
+import com.github.weisj.darklaf.properties.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.AccentColorRule;
-import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
+import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.Types;
 

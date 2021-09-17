@@ -31,7 +31,7 @@ import javax.swing.text.JTextComponent;
 
 import com.github.weisj.darklaf.graphics.Outline;
 import com.github.weisj.darklaf.graphics.PaintUtil;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
@@ -91,6 +91,7 @@ public class DarkTextBorder implements Border, UIResource, VisualPaddingProvider
         return borderSize;
     }
 
+    @Override
     public void paintBorder(final Component c, final Graphics g2, final int x, final int y, final int width,
             final int height) {
         boolean editable = !(c instanceof JTextComponent) || ((JTextComponent) c).isEditable();

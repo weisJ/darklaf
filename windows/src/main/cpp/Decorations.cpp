@@ -49,6 +49,10 @@ static bool IsLeftMousePressed(WindowWrapper *wrapper) {
     }
 }
 
+static inline int GetFrameSize() {
+    return GetSystemMetrics(SM_CXFRAME) + GetSystemMetrics(SM_CXPADDEDBORDER);
+}
+
 static LRESULT HandleHitTest(WindowWrapper *wrapper, int x, int y) {
     if (wrapper->popup_menu) return HTCLIENT;
 
@@ -67,11 +71,16 @@ static LRESULT HandleHitTest(WindowWrapper *wrapper, int x, int y) {
          * The horizontal frame should be the same size as the vertical frame,
          * since the NONCLIENTMETRICS structure does not distinguish between them
          */
-        int frame_size = GetSystemMetrics(SM_CXFRAME) + GetSystemMetrics(SM_CXPADDEDBORDER);
+        int frame_size = GetFrameSize();
         // The diagonal size handles are wider than the frame
         int diagonal_width = frame_size * 2 + GetSystemMetrics(SM_CXBORDER);
 
-        bool top = ptMouse.y >= rcWindow.top && ptMouse.y < rcWindow.top + frame_size;
+        // Make the top resize area smaller for the window buttons area.
+        bool top =
+                ptMouse.x <= rcWindow.right - wrapper->right ?
+                        ptMouse.y >= rcWindow.top && ptMouse.y < rcWindow.top + frame_size :
+                        ptMouse.y >= rcWindow.top && ptMouse.y < rcWindow.top + 1;
+
         bool bottom = !top && (ptMouse.y < rcWindow.bottom && ptMouse.y >= rcWindow.bottom - frame_size);
 
         bool left = ptMouse.x >= rcWindow.left && ptMouse.x < rcWindow.left + frame_size;
@@ -226,6 +235,12 @@ static void HandleNCCalcSize(WindowWrapper *wrapper, WPARAM wparam, LPARAM lpara
          * before WM_NCCALCSIZE modified it. This will make the client size the
          * same as the non-client size.
          */
+        if (wrapper->resizable) {
+            int frame_size = GetFrameSize();
+            nonclient.left += frame_size;
+            nonclient.right -= frame_size;
+            nonclient.bottom -= frame_size;
+        }
         *params.rect = nonclient;
     }
 }
@@ -281,6 +296,7 @@ static bool InstallDecorations(HWND handle, bool is_popup) {
     wrapper->window = handle;
     wrapper->prev_proc = proc;
     wrapper->popup_menu = is_popup;
+    wrapper->resizable = !is_popup;
     wrapper_map[handle] = wrapper;
 
     // Update the window procedure with our custom procedure.

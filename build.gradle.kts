@@ -7,6 +7,7 @@ import com.github.vlsi.gradle.properties.dsl.stringProperty
 import com.github.vlsi.gradle.properties.dsl.toBool
 import com.github.vlsi.gradle.publishing.dsl.simplifyXml
 import com.github.vlsi.gradle.publishing.dsl.versionFromResolution
+import net.ltgt.gradle.errorprone.errorprone
 
 plugins {
     idea
@@ -15,14 +16,20 @@ plugins {
     id("com.github.vlsi.gradle-extensions")
     id("com.github.vlsi.stage-vote-release")
     id("org.ajoberstar.grgit")
+    id("net.ltgt.errorprone") apply false
 }
 
 val skipJavadoc by props()
 val enableMavenLocal by props(false)
 val enableGradleMetadata by props()
+val enableErrorProne by props()
 val skipAutostyle by props(false)
 val isRelease = project.stringProperty("release").toBool()
 val snapshotName by props("")
+
+if (isRelease && JavaVersion.current().isJava9Compatible) {
+    logger.error("Java 9 compatible compiler is needed for release builds")
+}
 
 val String.v: String get() = rootProject.extra["$this.version"] as String
 val projectVersion = "darklaf".v
@@ -133,7 +140,7 @@ allprojects {
         apply(plugin = "com.github.autostyle")
         autostyle {
             kotlinGradle {
-                ktlint()
+                ktlint(version = "ktlint".v)
             }
             format("properties") {
                 configFilter {
@@ -162,6 +169,16 @@ allprojects {
                     configFile("${project.rootDir}/darklaf_cpp.eclipseformat.xml")
                 }
             }
+            plugins.withType<JavaPlugin>().configureEach {
+                java {
+                    importOrder("java", "javax", "org", "com")
+                    removeUnusedImports()
+                    license()
+                    eclipse {
+                        configFile("${project.rootDir}/darklaf_java.eclipseformat.xml")
+                    }
+                }
+            }
         }
     }
 
@@ -188,20 +205,6 @@ allprojects {
                 withJavadocJar()
             }
         }
-
-        if (!skipAutostyle) {
-            autostyle {
-                java {
-                    importOrder("java", "javax", "org", "com")
-                    removeUnusedImports()
-                    license()
-                    eclipse {
-                        configFile("${project.rootDir}/darklaf_java.eclipseformat.xml")
-                    }
-                }
-            }
-        }
-
         apply(plugin = "maven-publish")
 
         val useInMemoryKey by props()
@@ -213,6 +216,29 @@ allprojects {
                     project.stringProperty("signing.inMemoryKey")?.replace("#", "\n"),
                     project.stringProperty("signing.password")
                 )
+            }
+        }
+
+        if (enableErrorProne) {
+            apply(plugin = "net.ltgt.errorprone")
+            dependencies {
+                "errorprone"(libs.tools.errorprone.core)
+                "annotationProcessor"(libs.tools.errorprone.guava)
+                if (!JavaVersion.current().isJava9Compatible) {
+                    "errorproneJavac"(libs.tools.errorprone.javac)
+                }
+            }
+            tasks.withType<JavaCompile>().configureEach {
+                options.compilerArgs.addAll(listOf("-Xmaxerrs", "10000", "-Xmaxwarns", "10000", "-Werror"))
+                options.errorprone {
+                    errorproneArgs.add("-XepExcludedPaths:.*/javacc/.*")
+                    disableWarningsInGeneratedCode.set(true)
+                    disable(
+                        "StringSplitter",
+                        "InlineMeSuggester",
+                        "MissingSummary"
+                    )
+                }
             }
         }
 

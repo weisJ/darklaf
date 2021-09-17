@@ -29,8 +29,8 @@ import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.AlignmentExt;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.swingdsl.visualpadding.VisualPaddingProvider;
@@ -247,6 +247,7 @@ public class DarkButtonBorder implements Border, UIResource, VisualPaddingProvid
         return c.hasFocus();
     }
 
+    @Override
     public boolean isBorderOpaque() {
         return false;
     }
@@ -263,6 +264,7 @@ public class DarkButtonBorder implements Border, UIResource, VisualPaddingProvid
         }
     }
 
+    @Override
     public Insets getBorderInsets(final Component c) {
         if (ButtonConstants.isBorderlessVariant(c)) {
             return new InsetsUIResource(0, 0, 0, 0);

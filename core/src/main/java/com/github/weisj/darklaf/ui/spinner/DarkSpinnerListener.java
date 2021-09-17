@@ -28,7 +28,7 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 
 public class DarkSpinnerListener extends MouseAdapter
@@ -40,6 +40,18 @@ public class DarkSpinnerListener extends MouseAdapter
     public DarkSpinnerListener(final JSpinner spinner, final DarkSpinnerUI ui) {
         this.spinner = spinner;
         this.ui = ui;
+    }
+
+    public void install() {
+        spinner.addMouseListener(this);
+        spinner.addMouseWheelListener(this);
+        spinner.addPropertyChangeListener(this);
+    }
+
+    public void uninstall() {
+        spinner.removeMouseListener(this);
+        spinner.removeMouseWheelListener(this);
+        spinner.removePropertyChangeListener(this);
     }
 
     @Override

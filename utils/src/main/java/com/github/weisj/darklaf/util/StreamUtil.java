@@ -34,10 +34,12 @@ public final class StreamUtil {
 
     public static <T> Stream<T> enumerationAsStream(final Enumeration<T> e) {
         return StreamSupport.stream(Spliterators.spliteratorUnknownSize(new Iterator<T>() {
+            @Override
             public T next() {
                 return e.nextElement();
             }
 
+            @Override
             public boolean hasNext() {
                 return e.hasMoreElements();
             }

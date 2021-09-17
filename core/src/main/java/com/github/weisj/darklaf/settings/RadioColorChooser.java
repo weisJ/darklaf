@@ -143,7 +143,7 @@ public class RadioColorChooser {
     private boolean updateSelection(final Color color) {
         Enumeration<AbstractButton> buttons = bg.getElements();
         while (buttons.hasMoreElements()) {
-            ColoredRadioButton radioButton = ((ColoredRadioButton) buttons.nextElement());
+            ColoredRadioButton radioButton = (ColoredRadioButton) buttons.nextElement();
             boolean selected = Objects.equals(radioButton.getColor(), color)
                     || (radioButton == defaultButton && Objects.equals(defaultColor, color));
             bg.setSelected(radioButton.getModel(), selected);

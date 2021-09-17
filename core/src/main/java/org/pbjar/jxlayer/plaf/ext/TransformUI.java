@@ -132,7 +132,7 @@ import com.github.weisj.darklaf.util.SystemInfo;
 public class TransformUI extends MouseEventUI<JComponent> {
 
     public static final String BUFFERED_REPAINT_FLAG = "darklaf.useBufferedRepaintManager";
-    private static final String EXPORTS_FLAG = "--add-exports java.desktop/com.sun.java.swing=ALL-UNNAMED";
+    private static final String EXPORTS_FLAG = "--add-exports java.desktop/com.sun.java.swing=darklaf.core";
     private static final LayoutManager transformLayout = new TransformLayout();
     private static final String KEY_VIEW = "view";
     private static final boolean delegatePossible;
@@ -348,7 +348,8 @@ public class TransformUI extends MouseEventUI<JComponent> {
             if (this.view != null) {
                 try {
                     setDelegateRepaintManagerMethod.invokeExact(this.view, null);
-                } catch (Throwable ignored) {
+                } catch (Throwable e) {
+                    LOGGER.log(Level.SEVERE, "Setting delegate repaint manager failed", e);
                 }
             }
         }
@@ -357,7 +358,8 @@ public class TransformUI extends MouseEventUI<JComponent> {
             if (this.view != null) {
                 try {
                     setDelegateRepaintManagerMethod.invokeExact(this.view, wrappedManager);
-                } catch (Throwable ignored) {
+                } catch (Throwable e) {
+                    LOGGER.log(Level.SEVERE, "Setting delegate repaint manager failed", e);
                 }
             }
         }
@@ -503,7 +505,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
          * {@link RepaintManager}.
          */
         @Override
-        public void addInvalidComponent(final JComponent invalidComponent) {
+        public synchronized void addInvalidComponent(final JComponent invalidComponent) {
             JLayer<? extends JComponent> layer = TransformUtils.findTransformJLayer(invalidComponent);
             RepaintManager.currentManager(layer).addInvalidComponent(layer);
         }

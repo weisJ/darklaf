@@ -44,7 +44,7 @@ public class MoreTabsButton extends TabButtonContainer {
         JButton button = new JButtonUIResource();
         button.setForeground(UIManager.getColor("TabbedPane.moreTabsButton.foreground"));
         button.setFont(UIManager.getFont("TabbedPane.moreTabsButton.font"));
-        button.setIcon(new MoreTabsIcon(ui.getMoreTabsIcon(), this));
+        button.setIcon(new MoreTabsIcon(tabbedPaneUI.getMoreTabsIcon(), this));
         button.putClientProperty(DarkButtonUI.KEY_VARIANT, DarkButtonUI.VARIANT_BORDERLESS);
         button.putClientProperty(DarkButtonUI.KEY_THIN, true);
         button.setFocusable(false);
@@ -55,7 +55,8 @@ public class MoreTabsButton extends TabButtonContainer {
 
     protected String getLabelString() {
         int invisible =
-                Math.min(ui.minVisible - 1 + ui.tabPane.getTabCount() - ui.maxVisible, ui.tabPane.getTabCount());
+                Math.min(tabbedPaneUI.minVisible - 1 + tabbedPaneUI.tabPane.getTabCount() - tabbedPaneUI.maxVisible,
+                        tabbedPaneUI.tabPane.getTabCount());
         return invisible >= 100 ? INFINITY : String.valueOf(invisible);
     }
 

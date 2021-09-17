@@ -321,6 +321,7 @@ public class DropShadowBorder implements Border, Serializable {
     }
 
     /** {@inheritDoc} */
+    @Override
     public Insets getBorderInsets(final Component c) {
         int top = showTopShadow ? shadowSize : 0;
         int left = showLeftShadow ? shadowSize : 0;
@@ -330,6 +331,7 @@ public class DropShadowBorder implements Border, Serializable {
     }
 
     /** {@inheritDoc} */
+    @Override
     public boolean isBorderOpaque() {
         return false;
     }

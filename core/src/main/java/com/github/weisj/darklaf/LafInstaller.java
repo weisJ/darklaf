@@ -22,6 +22,7 @@
 package com.github.weisj.darklaf;
 
 import java.awt.Window;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,10 +39,14 @@ import com.github.weisj.darklaf.util.LogUtil;
 final class LafInstaller {
 
     private static final Logger LOGGER = LogUtil.getLogger(LafManager.class);
+    private static final AtomicBoolean isInstalling = new AtomicBoolean(false);
     private static final ThemeEventSupport<ThemeChangeEvent, ThemeChangeListener> eventSupport =
             new ThemeEventSupport<>();
 
     void install(final Theme theme) {
+        if (!isInstalling.compareAndSet(false, true)) {
+            throw new IllegalStateException("Can't install Laf while installation is in progress");
+        }
         try {
             LOGGER.fine(() -> "Installing theme " + theme);
             LafTransition transition = LafTransition.showSnapshot();
@@ -51,6 +56,8 @@ final class LafInstaller {
             notifyThemeInstalled(theme);
         } catch (final UnsupportedLookAndFeelException e) {
             LOGGER.log(Level.SEVERE, "Could not install LaF", e);
+        } finally {
+            isInstalling.set(false);
         }
     }
 
@@ -80,6 +87,8 @@ final class LafInstaller {
     }
 
 
+    // Even for themes which are Objects#equals equal we want to dispatch an event.
+    @SuppressWarnings("ReferenceEquality")
     void notifyThemeChanged(final Theme oldTheme, final Theme newTheme) {
         if (oldTheme != newTheme) {
             eventSupport.dispatchEvent(new ThemeChangeEvent(oldTheme, newTheme), ThemeChangeListener::themeChanged);

@@ -23,13 +23,13 @@ package com.github.weisj.darklaf.ui.text;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoResources;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
 public class HTMLPaneDemo extends TextPaneDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new HTMLPaneDemo());
+        DemoExecutor.showDemo(new HTMLPaneDemo());
     }
 
     @Override
@@ -41,7 +41,7 @@ public class HTMLPaneDemo extends TextPaneDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "HTML Demo";
     }
 }

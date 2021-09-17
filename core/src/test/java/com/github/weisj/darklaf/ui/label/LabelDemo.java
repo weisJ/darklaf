@@ -23,21 +23,22 @@ package com.github.weisj.darklaf.ui.label;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoResources;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
 public class LabelDemo extends LabelDemoBase<JLabel> {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new LabelDemo());
+        DemoExecutor.showDemo(new LabelDemo());
     }
 
+    @Override
     protected JLabel createLabel() {
         return new JLabel("Test Label", DemoResources.FOLDER_ICON, JLabel.LEFT);
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Label Demo";
     }
 }

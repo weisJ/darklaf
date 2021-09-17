@@ -35,8 +35,8 @@ import javax.swing.plaf.UIResource;
 import com.github.weisj.darklaf.components.tabframe.JTabFrame;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTab;
 import com.github.weisj.darklaf.components.tabframe.TabFrameTabLabel;
-import com.github.weisj.darklaf.icons.RotatableIcon;
 import com.github.weisj.darklaf.listener.HoverListener;
+import com.github.weisj.darklaf.properties.icons.RotatableIcon;
 import com.github.weisj.darklaf.ui.label.DarkLabelUI;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.PropertyKey;
@@ -197,7 +197,7 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
 
     @Override
     protected Icon getIcon(final JLabel label) {
-        Icon icon = (tabComponent.isEnabled()) ? tabComponent.getIcon() : tabComponent.getDisabledIcon();
+        Icon icon = tabComponent.isEnabled() ? tabComponent.getIcon() : tabComponent.getDisabledIcon();
         if (icon == null) return null;
         rotatableIcon.setIcon(icon);
         if (rotatableIcon.getOrientation() == null) {

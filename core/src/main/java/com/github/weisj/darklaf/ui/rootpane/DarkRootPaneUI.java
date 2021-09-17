@@ -33,7 +33,7 @@ import javax.swing.plaf.basic.BasicRootPaneUI;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.platform.DecorationsHandler;
 import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
@@ -214,7 +214,7 @@ public class DarkRootPaneUI extends BasicRootPaneUI implements HierarchyListener
             return;
         }
         if (parent.getClass().getName().startsWith("org.jdesktop.jdic.tray")
-                || (parent.getClass().getName().equals("javax.swing.Popup$HeavyWeightWindow"))) {
+                || parent.getClass().getName().equals("javax.swing.Popup$HeavyWeightWindow")) {
             SwingUtilities.invokeLater(() -> {
                 if (rootPane != null) {
                     rootPane.removeHierarchyListener(this);

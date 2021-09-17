@@ -108,6 +108,7 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
         add(swatches);
     }
 
+    @Override
     public String getDisplayName() {
         return UIManager.getString("ColorChooser.swatchesNameText", getLocale());
     }
@@ -127,10 +128,12 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
         return null;
     }
 
+    @Override
     public void installChooserPanel(final JColorChooser enclosingChooser) {
         super.installChooserPanel(enclosingChooser);
     }
 
+    @Override
     public void uninstallChooserPanel(final JColorChooser enclosingChooser) {
         super.uninstallChooserPanel(enclosingChooser);
         swatchPanel.removeMouseListener(mainSwatchListener);
@@ -157,6 +160,7 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
     }
 
     protected class RecentSwatchKeyListener extends KeyAdapter {
+        @Override
         public void keyPressed(final KeyEvent e) {
             if (KeyEvent.VK_SPACE == e.getKeyCode()) {
                 Color color = recentSwatchPanel.getSelectedColor();
@@ -166,6 +170,7 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
     }
 
     protected class MainSwatchKeyListener extends KeyAdapter {
+        @Override
         public void keyPressed(final KeyEvent e) {
             if (KeyEvent.VK_SPACE == e.getKeyCode()) {
                 Color color = swatchPanel.getSelectedColor();
@@ -176,6 +181,7 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
     }
 
     protected class RecentSwatchListener extends MouseAdapter implements Serializable {
+        @Override
         public void mousePressed(final MouseEvent e) {
             if (isEnabled()) {
                 Color color = recentSwatchPanel.getColorForLocation(e.getX(), e.getY());
@@ -187,6 +193,7 @@ public class DarkSwatchesChooserPanel extends AbstractColorChooserPanel {
     }
 
     protected class MainSwatchListener extends MouseAdapter implements Serializable {
+        @Override
         public void mousePressed(final MouseEvent e) {
             if (isEnabled()) {
                 Color color = swatchPanel.getColorForLocation(e.getX(), e.getY());

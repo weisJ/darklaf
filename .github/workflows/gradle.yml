@@ -25,12 +25,11 @@ jobs:
       - name: Build & Test
         uses: eskatos/gradle-command-action@v1
         with:
-          arguments: build test -PskipAutostyle --no-daemon
+          arguments: build test -PskipAutostyle -PgithubAccessToken=${{ secrets.GITHUB_TOKEN }} --no-daemon
           wrapper-cache-enabled: true
           dependencies-cache-enabled: true
           configuration-cache-enabled: true
         env:
-          PROPS_GITHUB: "-PgithubAccessToken=${{ secrets.GITHUB_TOKEN }}"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload Test Results
         uses: actions/upload-artifact@v1
@@ -38,8 +37,14 @@ jobs:
         with:
           name: windows-test-results
           path: build/test_results
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v1
+        if: ${{ always() }}
+        with:
+          name: windows-test-report
+          path: core/build/reports
 
-  linux:
+  linux8:
     name: Linux (Java 8)
     runs-on: ubuntu-latest
     permissions:
@@ -53,17 +58,49 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 8
+      - name: Build
+        env:
+          PROPS_GITHUB: "-PgithubAccessToken=${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: xvfb-run -a -server-num=1 --server-args="-screen 0 2000x3000x16" ./gradlew build test -PskipAutostyle -PskipModuleInfo -PfailIfLibraryMissing=true $(echo $PROPS_GITHUB) --no-daemon
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v1
+        if: ${{ always() }}
+        with:
+          name: linux-8-test-report
+          path: core/build/reports
+
+  linux:
+    name: Linux (Java 11)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
       - name: Build & Test
         env:
           PROPS_GITHUB: "-PgithubAccessToken=${{ secrets.GITHUB_TOKEN }}"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: xvfb-run -a -server-num=1 --server-args="-screen 0 2000x3000x16" ./gradlew build test -PskipAutostyle  -PfailIfLibraryMissing=true $(echo $PROPS_GITHUB) --no-daemon
+        run: xvfb-run -a -server-num=1 --server-args="-screen 0 2000x3000x16" ./gradlew build test -PskipAutostyle -PfailIfLibraryMissing=true $(echo $PROPS_GITHUB) --no-daemon
       - name: Upload Test Results
         if: ${{ always() }}
         uses: actions/upload-artifact@v1
         with:
-          name: linux-test-results
+          name: linux-11-test-results
           path: build/test_results
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v1
+        if: ${{ always() }}
+        with:
+          name: linux-11-test-report
+          path: core/build/reports
 
   macos:
     name: macOS (Java 11)
@@ -82,12 +119,11 @@ jobs:
       - name: Build & Test
         uses: eskatos/gradle-command-action@v1
         with:
-          arguments: build test -PskipAutostyle --no-daemon
+          arguments: build test -PskipAutostyle -PgithubAccessToken=${{ secrets.GITHUB_TOKEN }} --no-daemon
           wrapper-cache-enabled: true
           dependencies-cache-enabled: true
           configuration-cache-enabled: true
         env:
-          PROPS_GITHUB: "-PgithubAccessToken=${{ secrets.GITHUB_TOKEN }}"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload Test Results
         uses: actions/upload-artifact@v1
@@ -95,3 +131,9 @@ jobs:
         with:
           name: macOS-test-results
           path: build/test_results
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v1
+        if: ${{ always() }}
+        with:
+          name: macOS-test-report
+          path: core/build/reports

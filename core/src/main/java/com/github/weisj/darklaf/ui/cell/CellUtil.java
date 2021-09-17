@@ -26,12 +26,12 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.ui.list.DarkListUI;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.table.renderer.IconWrapper;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
@@ -353,7 +353,7 @@ public final class CellUtil {
         int row = index;
         boolean altRow = true;
         if ((layout == JList.VERTICAL_WRAP || layout == JList.HORIZONTAL_WRAP)
-                && (index >= 0 && index < parent.getModel().getSize())) {
+                && index >= 0 && index < parent.getModel().getSize()) {
             DarkListUI ui = DarkUIUtil.getUIOfType(parent.getUI(), DarkListUI.class);
             if (ui != null) {
                 row = ui.convertModelToRow(index);
@@ -462,9 +462,9 @@ public final class CellUtil {
         return c;
     }
 
-    protected static boolean hasFocus(final Component cellComponent, final Component parentComponent) {
-        return parentComponent.hasFocus() || (DarkUIUtil.hasFocus(cellComponent)
-                || DarkUIUtil.getParentOfType(JPopupMenu.class, cellComponent, 4) != null);
+    private static boolean hasFocus(final Component cellComponent, final Component parentComponent) {
+        return parentComponent.hasFocus() || DarkUIUtil.hasFocus(cellComponent)
+                || DarkUIUtil.getParentOfType(JPopupMenu.class, cellComponent, 4) != null;
     }
 
     public static void setSelectedFlag(final Component comp, final boolean selected) {
@@ -497,11 +497,11 @@ public final class CellUtil {
         }
     }
 
-    protected static boolean isInWrapper(final Component c) {
+    private static boolean isInWrapper(final Component c) {
         return c.getParent() instanceof IconWrapper;
     }
 
-    protected static boolean isListEditor(final Component c) {
+    private static boolean isListEditor(final Component c) {
         return PropertyUtil.getBooleanProperty(c, DarkListUI.KEY_IS_LIST_EDITOR) && c.getParent() instanceof JList;
     }
 
@@ -538,7 +538,7 @@ public final class CellUtil {
         return ins;
     }
 
-    protected static boolean parentLTR(final Component c) {
+    private static boolean parentLTR(final Component c) {
         return c.getParent().getComponentOrientation().isLeftToRight();
     }
 

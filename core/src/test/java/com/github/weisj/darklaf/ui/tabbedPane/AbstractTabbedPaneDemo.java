@@ -32,12 +32,12 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.UIResource;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoPanel;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.tabbedpane.DarkTabbedPaneUI;
 import com.github.weisj.darklaf.util.StringUtil;
 
-public abstract class AbstractTabbedPaneDemo<T extends JTabbedPane> implements ComponentDemo {
+public abstract class AbstractTabbedPaneDemo<T extends JTabbedPane> extends BaseComponentDemo {
 
     @Override
     public JComponent createComponent() {

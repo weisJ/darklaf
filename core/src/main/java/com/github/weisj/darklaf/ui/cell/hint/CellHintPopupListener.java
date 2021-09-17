@@ -33,9 +33,9 @@ import javax.swing.event.MouseInputAdapter;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.WindowUtil;
 import com.github.weisj.darklaf.util.LogUtil;
-import com.github.weisj.darklaf.util.WindowUtil;
 
 public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAdapter {
 
@@ -162,8 +162,8 @@ public class CellHintPopupListener<T extends JComponent, I> extends MouseInputAd
     }
 
     private void calculatePopupHeight(final Rectangle cellBounds, final Rectangle visibleBounds, final Rectangle rect) {
-        if ((cellBounds.y >= visibleBounds.y
-                && cellBounds.y + cellBounds.height <= visibleBounds.y + visibleBounds.height)) {
+        if (cellBounds.y >= visibleBounds.y
+                && cellBounds.y + cellBounds.height <= visibleBounds.y + visibleBounds.height) {
             rect.y = cellBounds.y;
             rect.height = cellBounds.height;
         } else {

@@ -22,15 +22,16 @@
 package com.github.weisj.darklaf.ui.tooltip;
 
 import java.awt.*;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 
 import javax.swing.*;
 
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.WindowUtil;
 import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.DarkUIUtil;
-import com.github.weisj.darklaf.util.WindowUtil;
 
 public final class ToolTipUtil {
 
@@ -52,7 +53,7 @@ public final class ToolTipUtil {
         }
     }
 
-    protected static Point getBestPositionMatch(final ToolTipContext context, final Point p) {
+    private static Point getBestPositionMatch(final ToolTipContext context, final Point p) {
         if (!context.isBestFit()) {
             return context.getToolTipLocation(p, null);
         }
@@ -98,7 +99,7 @@ public final class ToolTipUtil {
         return pos;
     }
 
-    protected static Point tryAlignments(final Alignment[] alignments, final ToolTipContext context, final Point p,
+    private static Point tryAlignments(final Alignment[] alignments, final ToolTipContext context, final Point p,
             final Rectangle tooltipBounds, final Rectangle boundary, final Rectangle screenBoundary,
             final BiConsumer<ToolTipContext, Alignment> setter, final boolean centerHorizontally,
             final boolean centerVertically) {
@@ -115,7 +116,7 @@ public final class ToolTipUtil {
         return pos;
     }
 
-    protected static Alignment[] getAlignments(final Alignment start) {
+    private static Alignment[] getAlignments(final Alignment start) {
         // Example with start == NORTH: [NORTH, SOUTH, EAST, WEST, NORTH_EAST, SOUTH_WEST, NORTH_WEST,
         // SOUTH_EAST]
         return new Alignment[] {start, start.opposite(), start.clockwise().clockwise(),
@@ -123,7 +124,7 @@ public final class ToolTipUtil {
                 start.anticlockwise(), start.anticlockwise().opposite()};
     }
 
-    protected static Point tryPosition(final Alignment a, final ToolTipContext context, final Point p,
+    private static Point tryPosition(final Alignment a, final ToolTipContext context, final Point p,
             final Rectangle tooltipBounds, final Rectangle boundary, final Rectangle screenBoundary,
             final BiConsumer<ToolTipContext, Alignment> setter, final boolean centerHorizontally,
             final boolean centerVertically) {
@@ -138,16 +139,16 @@ public final class ToolTipUtil {
         return pos;
     }
 
-    protected static boolean fits(final Rectangle toolTipBounds, final Rectangle boundary,
+    private static boolean fits(final Rectangle toolTipBounds, final Rectangle boundary,
             final Rectangle screenBoundary) {
-        if (boundary == screenBoundary) {
+        if (Objects.equals(boundary, screenBoundary)) {
             return SwingUtilities.isRectangleContainingRectangle(boundary, toolTipBounds);
         }
         return SwingUtilities.isRectangleContainingRectangle(boundary, toolTipBounds)
                 && SwingUtilities.isRectangleContainingRectangle(screenBoundary, toolTipBounds);
     }
 
-    protected static ToolTipContext getToolTipContext(final JToolTip tooltip) {
+    private static ToolTipContext getToolTipContext(final JToolTip tooltip) {
         Object context = tooltip.getClientProperty(DarkToolTipUI.KEY_CONTEXT);
         if (context instanceof ToolTipContext) {
             return (ToolTipContext) context;

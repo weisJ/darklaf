@@ -86,8 +86,7 @@ public class SelectLineAction extends TextAction {
                 }
 
             } catch (final BadLocationException ble) {
-                /* Shouldn't ever happen. */
-                ble.printStackTrace();
+                throw new IllegalStateException("This shouldn't happen", ble);
             }
         }
 

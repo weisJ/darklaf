@@ -32,6 +32,7 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.table.*;
 
+import com.github.weisj.darklaf.compatibility.SwingUtil;
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.HasRendererPane;
@@ -43,10 +44,9 @@ import com.github.weisj.darklaf.ui.table.renderer.DarkColorTableCellRendererEdit
 import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellEditorDelegate;
 import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellRenderer;
 import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellRendererDelegate;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
-import com.github.weisj.darklaf.util.SwingUtil;
 
 /** @author Jannis Weis */
 public class DarkTableUI extends DarkTableUIBridge implements TableConstants, HasRendererPane {
@@ -68,11 +68,10 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
 
     private TableCellRenderer oldObjectRenderer;
     private TableCellRenderer oldBooleanRenderer;
-    private TableCellRenderer oldColorRenderer;
 
     private TableCellEditor oldObjectEditor;
+    private TableCellEditor oldNumberEditor;
     private TableCellEditor oldBooleanEditor;
-    private TableCellEditor oldColorEditor;
 
     protected DarkTableCellRendererDelegate rendererDelegate;
 
@@ -172,7 +171,8 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
     private TableCellEditor installEditor(final JTable table, final Class<?> type,
             final TableCellEditor renderer) {
         TableCellEditor oldRenderer = table.getDefaultEditor(type);
-        if (PropertyUtil.canOverwrite(oldRenderer)) {
+        if (PropertyUtil.canOverwrite(oldRenderer)
+                || Objects.equals(oldRenderer.getClass().getEnclosingClass(), JTable.class)) {
             table.setDefaultEditor(type, renderer);
         }
         return oldRenderer;
@@ -195,11 +195,12 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
 
         oldObjectRenderer = installRenderer(table, Object.class, cellRenderer);
         oldBooleanRenderer = installRenderer(table, Boolean.class, booleanCellRenderer);
-        oldColorRenderer = installRenderer(table, Color.class, colorRendererEditor);
+        installRenderer(table, Color.class, colorRendererEditor);
 
         oldObjectEditor = installEditor(table, Object.class, cellEditor);
+        oldNumberEditor = installEditor(table, Number.class, cellEditor);
         oldBooleanEditor = installEditor(table, Boolean.class, cellEditor);
-        oldColorEditor = installEditor(table, Color.class, colorRendererEditor);
+        installEditor(table, Color.class, colorRendererEditor);
     }
 
     private void uninstallRenderers(final JTable table) {
@@ -219,26 +220,23 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
             table.setDefaultRenderer(Color.class, null);
         }
 
-        if (table.getDefaultEditor(Object.class) == cellEditor) {
-            table.setDefaultEditor(Object.class, oldObjectEditor);
-            if (oldObjectEditor instanceof DefaultCellEditor) {
-                Component comp = ((DefaultCellEditor) oldObjectEditor).getComponent();
-                if (comp instanceof JComponent) {
-                    ((JComponent) comp).updateUI();
-                }
-            }
-        }
-        if (table.getDefaultEditor(Boolean.class) == cellEditor) {
-            table.setDefaultEditor(Boolean.class, oldBooleanEditor);
-            if (oldBooleanEditor instanceof DefaultCellEditor) {
-                Component comp = ((DefaultCellEditor) oldBooleanEditor).getComponent();
-                if (comp instanceof JComponent) {
-                    ((JComponent) comp).updateUI();
-                }
-            }
-        }
+        uninstallEditor(Object.class, oldObjectEditor, cellEditor);
+        uninstallEditor(Number.class, oldNumberEditor, cellEditor);
+        uninstallEditor(Boolean.class, oldBooleanEditor, cellEditor);
         if (table.getDefaultEditor(Color.class) == colorRendererEditor) {
             table.setDefaultEditor(Color.class, null);
+        }
+    }
+
+    private void uninstallEditor(final Class<?> type, final TableCellEditor old, final TableCellEditor current) {
+        if (table.getDefaultEditor(type) == current) {
+            table.setDefaultEditor(type, old);
+            if (old instanceof DefaultCellEditor) {
+                Component comp = ((DefaultCellEditor) old).getComponent();
+                if (comp instanceof JComponent) {
+                    ((JComponent) comp).updateUI();
+                }
+            }
         }
     }
 
@@ -385,9 +383,6 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
         // Move to the where the cell has been dragged.
         vacatedColumnRect.x += dist;
 
-        g.setColor(Color.RED);
-        PaintUtil.drawRect(g, vacatedColumnRect);
-
         boolean ltr = table.getComponentOrientation().isLeftToRight();
 
         // Fill the background.
@@ -492,6 +487,7 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
         return false;
     }
 
+    @Override
     protected void paintCell(final Graphics g, final Rectangle r, final int row, final int column, final int cMin,
             final int cMax) {
         // if (true) return;
@@ -634,7 +630,7 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
                 }
                 if (newVal instanceof Component) {
                     Container newUnwrapped = DarkUIUtil.getUnwrappedParent((Component) newVal);
-                    if ((newUnwrapped instanceof JScrollPane)) {
+                    if (newUnwrapped instanceof JScrollPane) {
                         LookAndFeel.installBorder((JComponent) newUnwrapped, "Table.scrollPaneBorder");
                     }
                 }

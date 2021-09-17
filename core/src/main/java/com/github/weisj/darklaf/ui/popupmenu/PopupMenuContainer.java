@@ -32,7 +32,7 @@ import javax.swing.event.PopupMenuListener;
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.listener.PopupMenuAdapter;
 import com.github.weisj.darklaf.ui.scrollpane.DarkScrollBarUI;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 public class PopupMenuContainer extends JPanel {
 
@@ -157,8 +157,8 @@ public class PopupMenuContainer extends JPanel {
     }
 
     public Dimension adjustSize(final Dimension size, final int maxWidth, final int maxHeight) {
-        boolean exceedsHorizontalSize = (maxHeight > 0 && size.height > maxHeight);
-        boolean exceedsVerticalSize = (maxWidth > 0 && size.width > maxWidth);
+        boolean exceedsHorizontalSize = maxHeight > 0 && size.height > maxHeight;
+        boolean exceedsVerticalSize = maxWidth > 0 && size.width > maxWidth;
         if (!exceedsHorizontalSize && !exceedsVerticalSize) {
             return size;
         } else {

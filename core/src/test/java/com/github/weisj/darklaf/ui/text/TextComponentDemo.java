@@ -27,13 +27,13 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
 import com.github.weisj.darklaf.ui.DemoPanel;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.StringUtil;
 
-public abstract class TextComponentDemo<T extends JTextComponent> implements ComponentDemo {
+public abstract class TextComponentDemo<T extends JTextComponent> extends BaseComponentDemo {
 
     @Override
     public JComponent createComponent() {

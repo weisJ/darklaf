@@ -28,8 +28,8 @@ public enum ToolTipStyle implements ToolTipConstants {
     PLAIN_BALLOON(false, false),
     PLAIN(false, true);
 
-    protected final boolean supportsPointer;
-    protected final boolean opaque;
+    private final boolean supportsPointer;
+    private final boolean opaque;
 
     ToolTipStyle(final boolean supportsPointer, final boolean opqaue) {
         this.supportsPointer = supportsPointer;

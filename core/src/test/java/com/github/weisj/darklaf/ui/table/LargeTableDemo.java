@@ -27,15 +27,16 @@ import javax.swing.*;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.table.AbstractTableModel;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
-public class LargeTableDemo implements ComponentDemo {
+public class LargeTableDemo extends BaseComponentDemo {
 
     private static final int COLUMN_COUNT = 100;
     private static final int CELL_COUNT = 5000000;
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new LargeTableDemo());
+        DemoExecutor.showDemo(new LargeTableDemo());
     }
 
     @Override
@@ -64,7 +65,7 @@ public class LargeTableDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Large Table Demo";
     }
 

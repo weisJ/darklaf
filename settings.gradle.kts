@@ -10,7 +10,8 @@ pluginManagement {
         idv("com.github.vlsi.gradle-extensions", "com.github.vlsi.vlsi-release-plugins")
         idv("com.github.vlsi.license-gather", "com.github.vlsi.vlsi-release-plugins")
         idv("com.github.vlsi.stage-vote-release", "com.github.vlsi.vlsi-release-plugins")
-        idv("org.ajoberstar.grgit", "org.ajoberstar.grgit")
+        idv("org.ajoberstar.grgit")
+        idv("net.ltgt.errorprone")
     }
 }
 rootProject.name = "darklaf"
@@ -20,6 +21,8 @@ include(
     "annotations-processor",
     "native-utils",
     "core",
+    "compatibility",
+    "iconset",
     "theme",
     "property-loader",
     "utils",

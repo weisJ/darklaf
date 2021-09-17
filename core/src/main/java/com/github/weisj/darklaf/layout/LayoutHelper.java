@@ -33,8 +33,8 @@ import javax.swing.border.Border;
 import com.github.weisj.darklaf.components.HoveringPanel;
 import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.components.border.DarkBorders;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.DarkUIUtil;
 
 public final class LayoutHelper {
 
@@ -364,8 +364,6 @@ public final class LayoutHelper {
         GroupLayout.ParallelGroup vertical = layout.createParallelGroup();
         layout.setHorizontalGroup(horizontal);
         layout.setVerticalGroup(vertical);
-
-        int p = GroupLayout.PREFERRED_SIZE;
 
         for (int i = 0; i < components.size(); i++) {
             JPanel holder = new JPanel(new BorderLayout());

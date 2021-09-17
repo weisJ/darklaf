@@ -27,6 +27,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Rectangle;
+import java.util.Arrays;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonModel;
@@ -35,12 +36,12 @@ import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.compatibility.MenuItemLayoutHelper;
+import com.github.weisj.darklaf.compatibility.SwingUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.StringUtil;
-import com.github.weisj.darklaf.util.SwingUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
-import com.intellij.util.ui.MenuItemLayoutHelper;
 
 public interface MenuItemUI {
 
@@ -50,6 +51,18 @@ public interface MenuItemUI {
 
     String getPropertyPrefix();
 
+    default Color getForeground(final JMenuItem item) {
+        boolean enabled = item.isEnabled();
+        boolean armed = item.isArmed()
+                || (item instanceof JMenu && item.isSelected())
+                || (item.isRolloverEnabled() && item.getModel().isRollover());
+        if (enabled) {
+            return armed ? getSelectionForeground() : item.getForeground();
+        } else {
+            return getDisabledForeground();
+        }
+    }
+
     Color getDisabledForeground();
 
     Color getSelectionForeground();
@@ -58,13 +71,26 @@ public interface MenuItemUI {
 
     Color getAcceleratorForeground();
 
+    default Color getBackground(final JMenuItem item) {
+        boolean enabled = item.isEnabled();
+        boolean armed = item.isArmed() || (item instanceof JMenu && item.isSelected());
+        if (enabled) {
+            return armed ? getSelectionBackground() : item.getBackground();
+        } else {
+            return getDisabledBackground();
+        }
+    }
+
+    Color getSelectionBackground();
+
+    Color getDisabledBackground();
+
     int getAcceleratorTextOffset();
 
     boolean isUseEvenHeight();
 
     default void paintMenuItemImpl(final Graphics g, final JComponent c, final Icon checkIcon,
-            final Icon arrowIcon,
-            final Color background, final Color foreground, final int defaultTextIconGap) {
+            final Icon arrowIcon, final int defaultTextIconGap) {
         // Save original graphics font and color
         GraphicsContext context = new GraphicsContext(g);
 
@@ -75,7 +101,10 @@ public interface MenuItemUI {
         DarkUIUtil.applyInsets(viewRect, mi.getInsets());
 
         MenuItemLayoutHelper lh = getMenuItemLayoutHelper(checkIcon, arrowIcon, defaultTextIconGap, mi, viewRect);
-        MenuItemLayoutHelper.LayoutResult lr = lh.layoutMenuItem();
+        MenuItemLayoutHelper.MILayoutResult lr = lh.layoutMenuItem();
+
+        Color background = getBackground(mi);
+        Color foreground = getForeground(mi);
 
         paintBackgroundImpl(g, mi, background);
         context.restore();
@@ -93,29 +122,21 @@ public interface MenuItemUI {
     }
 
     default void paintBackgroundImpl(final Graphics g, final JMenuItem menuItem, final Color bgColor) {
-        ButtonModel model = menuItem.getModel();
-        Color oldColor = g.getColor();
         int menuWidth = menuItem.getWidth();
         int menuHeight = menuItem.getHeight() + 1;
 
+        boolean armed = menuItem.isArmed()
+                || (menuItem instanceof JMenu && menuItem.isSelected())
+                || (menuItem.isRolloverEnabled() && menuItem.getModel().isRollover());
         boolean parentOpaque = menuItem.getParent().isOpaque();
-        if (menuItem.isOpaque() && parentOpaque) {
-            if (model.isArmed() || (menuItem instanceof JMenu && model.isSelected())) {
-                g.setColor(bgColor);
-            } else {
-                g.setColor(menuItem.getBackground());
-            }
-            g.fillRect(0, 0, menuWidth, menuHeight);
-            g.setColor(oldColor);
-        } else if (model.isArmed() || (menuItem instanceof JMenu && model.isSelected())) {
+        if (armed || (menuItem.isOpaque() && parentOpaque)) {
             g.setColor(bgColor);
             g.fillRect(0, 0, menuWidth, menuHeight);
-            g.setColor(oldColor);
         }
     }
 
     default void paintCheckIcon(final Graphics g, final JMenuItem mi, final MenuItemLayoutHelper lh,
-            final MenuItemLayoutHelper.LayoutResult lr, final Color foreground) {
+            final MenuItemLayoutHelper.MILayoutResult lr, final Color foreground) {
         if (lh.getCheckIcon() != null) {
             ButtonModel model = mi.getModel();
             if (model.isArmed() || (mi instanceof JMenu && model.isSelected())) {
@@ -128,7 +149,7 @@ public interface MenuItemUI {
     }
 
     default void paintIcon(final Graphics g, final JMenuItem mi, final MenuItemLayoutHelper lh,
-            final MenuItemLayoutHelper.LayoutResult lr) {
+            final MenuItemLayoutHelper.MILayoutResult lr) {
         if (lh.getIcon() != null) {
             Icon icon;
             ButtonModel model = mi.getModel();
@@ -151,7 +172,7 @@ public interface MenuItemUI {
     }
 
     default void paintText(final Graphics g, final JMenuItem mi, final MenuItemLayoutHelper lh,
-            final MenuItemLayoutHelper.LayoutResult lr) {
+            final MenuItemLayoutHelper.MILayoutResult lr) {
         GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         if (!StringUtil.isBlank(lh.getText())) {
             if (lh.getHtmlView() != null) {
@@ -170,7 +191,7 @@ public interface MenuItemUI {
         ButtonModel model = menuItem.getModel();
         FontMetrics fm = SwingUtil.getFontMetrics(menuItem, g);
         int mnemIndex = menuItem.getDisplayedMnemonicIndex();
-        if (!model.isEnabled()) {
+        if (!model.isEnabled() || !menuItem.isEnabled()) {
             g.setColor(getDisabledForeground());
         } else {
             if (model.isArmed() || (menuItem instanceof JMenu && model.isSelected())) {
@@ -182,7 +203,7 @@ public interface MenuItemUI {
     }
 
     default void paintAccText(final Graphics g, final JMenuItem mi, final MenuItemLayoutHelper lh,
-            final MenuItemLayoutHelper.LayoutResult lr) {
+            final MenuItemLayoutHelper.MILayoutResult lr) {
         GraphicsContext config = GraphicsUtil.setupAntialiasing(g);
         rightAlignAccText(lh, lr);
         if (!StringUtil.isBlank(lh.getAccText())) {
@@ -196,7 +217,7 @@ public interface MenuItemUI {
 
     default Color getAcceleratorForeground(final AbstractButton b) {
         ButtonModel model = b.getModel();
-        if (!model.isEnabled()) return getDisabledForeground();
+        if (!model.isEnabled() || !b.isEnabled()) return getDisabledForeground();
         if (model.isArmed() || (b instanceof JMenu && model.isSelected())) {
             return getAcceleratorSelectionForeground();
         } else {
@@ -204,7 +225,7 @@ public interface MenuItemUI {
         }
     }
 
-    static void rightAlignAccText(final MenuItemLayoutHelper lh, final MenuItemLayoutHelper.LayoutResult lr) {
+    static void rightAlignAccText(final MenuItemLayoutHelper lh, final MenuItemLayoutHelper.MILayoutResult lr) {
         Rectangle accRect = lr.getAccRect();
         ButtonModel model = lh.getMenuItem().getModel();
         if (model.isEnabled()) {
@@ -214,7 +235,7 @@ public interface MenuItemUI {
     }
 
     default void paintArrowIcon(final Graphics g, final JMenuItem mi, final MenuItemLayoutHelper lh,
-            final MenuItemLayoutHelper.LayoutResult lr, final Color foreground) {
+            final MenuItemLayoutHelper.MILayoutResult lr, final Color foreground) {
         if (lh.getArrowIcon() != null) {
             ButtonModel model = mi.getModel();
             if (model.isArmed() || (mi instanceof JMenu && model.isSelected())) {
@@ -238,7 +259,7 @@ public interface MenuItemUI {
         result.width = lh.getLeadingGap();
         MenuItemLayoutHelper.addMaxWidth(lh.getCheckSize(), lh.getAfterCheckIconGap(), result);
         // Take into account minimal text offset.
-        if ((!lh.isTopLevelMenu()) && (lh.getMinTextOffset() > 0) && (result.width < lh.getMinTextOffset())) {
+        if (!lh.isTopLevelMenu() && (lh.getMinTextOffset() > 0) && (result.width < lh.getMinTextOffset())) {
             result.width = lh.getMinTextOffset();
         }
         int acceleratorTextOffset = getAcceleratorTextOffset();
@@ -247,8 +268,8 @@ public interface MenuItemUI {
         MenuItemLayoutHelper.addMaxWidth(lh.getArrowSize(), lh.getGap(), result);
 
         // Calculate the result height
-        result.height = MenuItemLayoutHelper.max(lh.getCheckSize().getHeight(), lh.getLabelSize().getHeight(),
-                lh.getAccSize().getHeight(), lh.getArrowSize().getHeight());
+        result.height = Arrays.stream(new int[] {lh.getCheckSize().getHeight(), lh.getLabelSize().getHeight(),
+                lh.getAccSize().getHeight(), lh.getArrowSize().getHeight()}).max().orElse(Integer.MIN_VALUE);
 
         // Take into account menu item insets
         Insets insets = mi.getInsets();

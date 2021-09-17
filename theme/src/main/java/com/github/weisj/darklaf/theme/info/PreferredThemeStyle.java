@@ -102,7 +102,7 @@ public class PreferredThemeStyle {
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof PreferredThemeStyle)) return false;
         PreferredThemeStyle that = (PreferredThemeStyle) o;
         return contrastRule == that.contrastRule && colorToneRule == that.colorToneRule
                 && Objects.equals(fontSizeRule, that.fontSizeRule)

@@ -28,7 +28,11 @@ import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 import com.github.weisj.darklaf.util.graphics.ScaledImage;
 
 
-/** @author Jannis Weis */
+/**
+ * Utility class for creating images from components.
+ *
+ * @author Jannis Weis
+ */
 public final class ImageUtil {
 
     private ImageUtil() {}

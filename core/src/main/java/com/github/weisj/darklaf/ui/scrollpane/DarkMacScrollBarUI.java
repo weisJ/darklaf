@@ -63,12 +63,12 @@ public class DarkMacScrollBarUI extends DarkScrollBarUI {
             float animationState = scrollBarListener.getTrackState();
             if (horizontal) {
                 int newHeight = Math.round(height * animationState);
-                y += (height - newHeight);
+                y += height - newHeight;
                 height = newHeight;
             } else {
                 int newWidth = Math.round(width * animationState);
                 if (scrollbar.getComponentOrientation().isLeftToRight()) {
-                    x += (width - newWidth);
+                    x += width - newWidth;
                 }
                 width = newWidth;
             }
@@ -104,7 +104,7 @@ public class DarkMacScrollBarUI extends DarkScrollBarUI {
         }
 
         @Override
-        protected boolean animateTrackOnScroll(final JScrollBar scrollBar) {
+        protected boolean animateTrackOnScroll(final JScrollBar scrollbar) {
             return ui.hideScrollBar;
         }
 

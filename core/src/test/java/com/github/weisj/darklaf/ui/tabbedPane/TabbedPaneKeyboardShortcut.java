@@ -26,12 +26,13 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
-public class TabbedPaneKeyboardShortcut implements ComponentDemo {
+public class TabbedPaneKeyboardShortcut extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new TabbedPaneKeyboardShortcut());
+        DemoExecutor.showDemo(new TabbedPaneKeyboardShortcut());
     }
 
     @Override
@@ -56,7 +57,7 @@ public class TabbedPaneKeyboardShortcut implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Tabbed Pane Keyboard Shortcut Demo";
     }
 }

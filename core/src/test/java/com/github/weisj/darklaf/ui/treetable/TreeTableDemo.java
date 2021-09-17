@@ -27,17 +27,18 @@ import java.util.Random;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.DelicateDemo;
 import com.github.weisj.darklaf.components.treetable.JTreeTable;
 import com.github.weisj.darklaf.components.treetable.model.*;
-import com.github.weisj.darklaf.ui.ComponentDemo;
+import com.github.weisj.darklaf.core.test.DelicateDemo;
 import com.github.weisj.darklaf.ui.DemoPanel;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
 @DelicateDemo
-public class TreeTableDemo implements ComponentDemo {
+public class TreeTableDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new TreeTableDemo());
+        DemoExecutor.showDemo(new TreeTableDemo());
     }
 
     @Override
@@ -69,7 +70,7 @@ public class TreeTableDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "TreeTable Demo";
     }
 

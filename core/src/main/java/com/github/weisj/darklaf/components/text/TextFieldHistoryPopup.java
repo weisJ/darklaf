@@ -51,6 +51,7 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
         textField.addSearchListener(this);
         setCapacity(capacity);
         this.history = Collections.newSetFromMap(new LinkedHashMap<String, Boolean>() {
+            @Override
             protected boolean removeEldestEntry(final Map.Entry<String, Boolean> eldest) {
                 return size() > capacity;
             }
@@ -123,10 +124,9 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
     public void show(final Component invoker, final int x, final int y) {
         if (history.size() == 0) return;
         this.removeAll();
-        LinkedList<String> list = new LinkedList<>(history);
-        Iterator<String> itr = list.descendingIterator();
-        while (itr.hasNext()) {
-            String item = itr.next();
+        List<String> list = new ArrayList<>(history);
+        for (int i = list.size() - 1; i >= 0; i--) {
+            String item = list.get(i);
             add(new JMenuItem(new PlainAction(item, () -> textField.setText(item))));
         }
         super.show(invoker, x, y);

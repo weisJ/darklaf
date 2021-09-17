@@ -22,6 +22,7 @@
 package com.github.weisj.darklaf.components;
 
 import java.awt.*;
+import java.util.Objects;
 import java.util.Properties;
 
 import javax.swing.*;
@@ -29,14 +30,15 @@ import javax.swing.plaf.ComponentUI;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.PropertyLoader;
-import com.github.weisj.darklaf.icons.IconLoader;
-import com.github.weisj.darklaf.icons.StateIcon;
+import com.github.weisj.darklaf.iconset.IconSet;
+import com.github.weisj.darklaf.properties.PropertyLoader;
+import com.github.weisj.darklaf.properties.icons.IconLoader;
+import com.github.weisj.darklaf.properties.icons.StateIcon;
 import com.github.weisj.darklaf.task.AccentColorAdjustmentTask;
 import com.github.weisj.darklaf.task.ForegroundColorGenerationTask;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.togglebutton.radiobutton.DarkRadioButtonUI;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 public class ColoredRadioButton extends JRadioButton {
 
@@ -149,8 +151,8 @@ public class ColoredRadioButton extends JRadioButton {
         private Properties propertyMap;
 
         private Icon stateIcon;
-        private Color color;
-        private Color focusColor;
+        private Color iconColor;
+        private Color focusIconColor;
 
         private Color patchedColor;
         private Color patchedFocusColor;
@@ -158,49 +160,52 @@ public class ColoredRadioButton extends JRadioButton {
         private boolean patched;
         private static final AccentColorAdjustmentTask adjustment = new AccentColorAdjustmentTask();
 
-        public ColoredRadioButtonUI(final Color color, final Color focusColor) {
+        public ColoredRadioButtonUI(final Color iconColor, final Color focusIconColor) {
             super();
-            this.color = color;
-            this.focusColor = focusColor;
+            this.iconColor = iconColor;
+            this.focusIconColor = focusIconColor;
         }
 
         @Override
         protected void installIcons() {
             super.installIcons();
-            patchColors(color, focusColor);
+            patchColors(iconColor, focusIconColor);
         }
 
         public void setColors(final Color color, final Color focusColor) {
-            this.color = color;
-            this.focusColor = focusColor != null ? focusColor : color;
+            this.iconColor = color;
+            this.focusIconColor = focusColor != null ? focusColor : color;
         }
 
         @Override
         public void update(final Graphics g, final JComponent c) {
-            if (patchedColor != color || patchedFocusColor != focusColor) {
-                patchColors(color, focusColor);
+            if (!Objects.equals(patchedColor, iconColor) || Objects.equals(patchedFocusColor, focusIconColor)) {
+                patchColors(iconColor, focusIconColor);
             }
             super.update(g, c);
         }
 
         private void patchColors(final Color color, final Color focusColor) {
-            if (color == null || (patched && patchedColor == color && patchedFocusColor == focusColor)) {
+            if (color == null
+                    || (patched && Objects.equals(patchedColor, color)
+                            && Objects.equals(patchedFocusColor, focusColor))) {
                 return;
             }
             this.patchedColor = color;
             this.patchedFocusColor = focusColor;
-            IconLoader loader = DarkUIUtil.ICON_LOADER;
+            IconLoader iconLoader = DarkUIUtil.radioButtonLoader();
+
             Theme theme = LafManager.getInstalledTheme();
             Properties props = new Properties();
             UIDefaults defaults = UIManager.getLookAndFeelDefaults();
-            theme.loadDefaults(props, defaults);
-            Color accentCol = color == DEFAULT_COLOR ? (Color) props.get("widgetFillDefault") : color;
-            Color focusCol = focusColor == DEFAULT_COLOR ? accentCol : focusColor;
+            theme.loadDefaults(props, defaults, iconLoader);
+            Color accentCol = DEFAULT_COLOR.equals(color) ? (Color) props.get("widgetFillDefault") : color;
+            Color focusCol = DEFAULT_COLOR.equals(focusColor) ? accentCol : focusColor;
             adjustment.applyColors(theme, props, accentCol, null);
-            PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, "radioButton", "properties/ui/"),
-                    props, defaults);
-            PropertyLoader.putProperties(
-                    PropertyLoader.loadProperties(DarkLaf.class, "radioButton", "properties/icons/"), props, defaults);
+            PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, "radioButton", "ui/"),
+                    props, defaults, iconLoader);
+            PropertyLoader.putProperties(PropertyLoader.loadProperties(IconSet.class, "radioButton", ""),
+                    props, defaults, iconLoader);
             propertyMap = new Properties();
             for (String prop : PROPERTIES) {
                 propertyMap.put(prop, props.get(prop));
@@ -208,7 +213,7 @@ public class ColoredRadioButton extends JRadioButton {
             for (String prop : COLOR_PROPERTIES) {
                 propertyMap.put(prop, accentCol);
             }
-            if (focusColor != DEFAULT_COLOR) {
+            if (!DEFAULT_COLOR.equals(focusColor)) {
                 for (String prop : FOCUS_COLOR_PROPERTIES) {
                     propertyMap.put(prop, focusCol);
                 }
@@ -220,12 +225,12 @@ public class ColoredRadioButton extends JRadioButton {
             }
 
             stateIcon = new StateIcon(new Icon[] {
-                    load(loader, "control/radio.svg"),
-                    load(loader, "control/radioDisabled.svg"),
-                    load(loader, "control/radioFocused.svg"),
-                    load(loader, "control/radioSelected.svg"),
-                    load(loader, "control/radioSelectedDisabled.svg"),
-                    load(loader, "control/radioSelectedFocused.svg")});
+                    load(iconLoader, "control/radio.svg"),
+                    load(iconLoader, "control/radioDisabled.svg"),
+                    load(iconLoader, "control/radioFocused.svg"),
+                    load(iconLoader, "control/radioSelected.svg"),
+                    load(iconLoader, "control/radioSelectedDisabled.svg"),
+                    load(iconLoader, "control/radioSelectedFocused.svg")});
             patched = true;
         }
 

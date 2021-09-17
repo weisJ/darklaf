@@ -32,18 +32,18 @@ import javax.swing.event.AncestorListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicColorChooserUI;
 
-import com.github.weisj.darklaf.color.DarkColorModelCMYK;
-import com.github.weisj.darklaf.color.DarkColorModelHSB;
-import com.github.weisj.darklaf.color.DarkColorModelHSL;
-import com.github.weisj.darklaf.color.DarkColorModelRGB;
-import com.github.weisj.darklaf.icons.IconLoader;
 import com.github.weisj.darklaf.listener.AncestorAdapter;
+import com.github.weisj.darklaf.properties.color.DarkColorModelCMYK;
+import com.github.weisj.darklaf.properties.color.DarkColorModelHSB;
+import com.github.weisj.darklaf.properties.color.DarkColorModelHSL;
+import com.github.weisj.darklaf.properties.color.DarkColorModelRGB;
+import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.util.PropertyKey;
 
 /** @author Jannis Weis */
 public class DarkColorChooserUI extends BasicColorChooserUI {
 
-    private final PropertyChangeListener propertyChangeListener = e -> {
+    private final PropertyChangeListener layoutPropertyChangeListener = e -> {
         if (PropertyKey.ANCESTOR.equals(e.getPropertyName())) {
             JComponent pane = (JComponent) e.getNewValue();
             if (pane != null) {
@@ -97,14 +97,14 @@ public class DarkColorChooserUI extends BasicColorChooserUI {
     @Override
     protected void installListeners() {
         super.installListeners();
-        chooser.addPropertyChangeListener(propertyChangeListener);
+        chooser.addPropertyChangeListener(layoutPropertyChangeListener);
         chooser.addAncestorListener(ancestorListener);
     }
 
     @Override
     protected void uninstallListeners() {
         super.uninstallListeners();
-        chooser.removePropertyChangeListener(propertyChangeListener);
+        chooser.removePropertyChangeListener(layoutPropertyChangeListener);
         chooser.removeAncestorListener(ancestorListener);
     }
 }

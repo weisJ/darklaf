@@ -33,13 +33,13 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicToolTipUI;
 import javax.swing.text.View;
 
-import com.github.weisj.darklaf.color.ColorUtil;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.graphics.*;
+import com.github.weisj.darklaf.properties.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
-import com.github.weisj.darklaf.uiresource.DarkColorUIResource;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.Alignment;
-import com.github.weisj.darklaf.util.DarkUIUtil;
+import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
@@ -210,13 +210,14 @@ public class DarkToolTipUI extends BasicToolTipUI
         fadeAnimator.resume();
     }
 
+    // NO_TEXT is a reference quality sentinel value.
+    @SuppressWarnings({"ReferenceEquality", "StringEquality"})
     protected void paintText(final Graphics g, final JComponent c) {
         Dimension size = c.getSize();
 
         g.setColor(c.getForeground());
         String tipText = getTipText();
 
-        // noinspection StringEquality
         if (tipText != NO_TEXT) {
             Insets insets = c.getInsets();
             Rectangle paintTextR = new Rectangle(insets.left, insets.top, size.width - (insets.left + insets.right),
@@ -235,6 +236,7 @@ public class DarkToolTipUI extends BasicToolTipUI
         return effectiveTipText;
     }
 
+    @Override
     public Dimension getPreferredSize(final JComponent c) {
         Font font = c.getFont();
         FontMetrics fm = c.getFontMetrics(font);
@@ -355,8 +357,8 @@ public class DarkToolTipUI extends BasicToolTipUI
         return style.supportsPointer();
     }
 
-    protected void updateTipText(final JToolTip tooltip) {
-        effectiveTipText = tooltip.getTipText();
+    protected void updateTipText(final JToolTip toolTip) {
+        effectiveTipText = toolTip.getTipText();
         if (effectiveTipText == null) effectiveTipText = "";
     }
 

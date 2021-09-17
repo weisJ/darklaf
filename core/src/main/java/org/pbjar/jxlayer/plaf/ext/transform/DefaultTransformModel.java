@@ -431,6 +431,8 @@ public class DefaultTransformModel implements TransformModel {
      * <p>
      * 2: User options
      */
+    // defaultValue can only be of primitive type
+    @SuppressWarnings("ImmutableEnumChecker")
     protected enum Type {
         /*
          * Program values

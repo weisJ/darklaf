@@ -43,10 +43,10 @@ public class MacOSThemePreferenceProvider implements ThemePreferenceProvider {
         boolean highContrast = JNIThemeInfoMacOS.isHighContrastEnabled();
         Color accentColor = JNIThemeInfoMacOS.getAccentColor();
         Color selectionColor = JNIThemeInfoMacOS.getSelectionColor();
-        return create(highContrast, darkMode, accentColor, selectionColor);
+        return create(darkMode, highContrast, accentColor, selectionColor);
     }
 
-    private PreferredThemeStyle create(final boolean highContrast, final boolean darkMode, final Color accentColor,
+    private PreferredThemeStyle create(final boolean darkMode, final boolean highContrast, final Color accentColor,
             final Color selectionColor) {
         ContrastRule contrastRule = highContrast ? ContrastRule.HIGH_CONTRAST : ContrastRule.STANDARD;
         ColorToneRule toneRule = darkMode ? ColorToneRule.DARK : ColorToneRule.LIGHT;

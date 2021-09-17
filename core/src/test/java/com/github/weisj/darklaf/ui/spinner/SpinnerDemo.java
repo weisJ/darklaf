@@ -22,21 +22,26 @@
 package com.github.weisj.darklaf.ui.spinner;
 
 import java.awt.*;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.ui.ComponentDemo;
-import com.github.weisj.darklaf.ui.DemoPanel;
+import org.jetbrains.annotations.NotNull;
 
-public class SpinnerDemo implements ComponentDemo {
+import com.github.weisj.darklaf.ui.DemoPanel;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
+import com.github.weisj.darklaf.ui.demo.DemoExecutor;
+
+public class SpinnerDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        ComponentDemo.showDemo(new SpinnerDemo());
+        DemoExecutor.showDemo(new SpinnerDemo());
     }
 
     @Override
     public JComponent createComponent() {
-        JSpinner spinner = new JSpinner() {
+        JSpinner spinner = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1)) {
 
             @Override
             public void updateUI() {
@@ -81,7 +86,33 @@ public class SpinnerDemo implements ComponentDemo {
     }
 
     @Override
-    public String getTitle() {
+    public List<JMenu> createMenus() {
+        JMenu menu = new JMenu("Spinner");
+        menu.add(createMenuSpinner());
+
+        JMenu alone = new JMenu("Alone");
+        alone.add(createMenuSpinner());
+        menu.add(alone);
+
+        menu.add(createMenuSpinner());
+
+        JMenu headToHead = new JMenu("Head to head");
+        headToHead.add(createMenuSpinner());
+        headToHead.add(createMenuSpinner());
+        headToHead.add(createMenuSpinner());
+
+        menu.add(headToHead);
+        menu.add(createMenuSpinner());
+        return Collections.singletonList(menu);
+    }
+
+    @NotNull
+    private JSpinner createMenuSpinner() {
+        return new JSpinner(new SpinnerNumberModel(0, 0, 10, 1));
+    }
+
+    @Override
+    public String getName() {
         return "Spinner Demo";
     }
 }
