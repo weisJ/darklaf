@@ -21,15 +21,17 @@
  */
 package com.github.weisj.darklaf.components.border;
 
-import com.github.weisj.swingdsl.visualpadding.VisualPaddingProvider;
-import org.jetbrains.annotations.NotNull;
+import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicBorders;
-import java.awt.*;
+
+import org.jetbrains.annotations.NotNull;
+
+import com.github.weisj.swingdsl.visualpadding.VisualPaddingProvider;
 
 public class MarginBorderWrapper extends CompoundBorder implements VisualPaddingProvider {
 
