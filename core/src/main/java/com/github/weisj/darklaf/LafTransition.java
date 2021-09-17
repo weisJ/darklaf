@@ -71,6 +71,10 @@ class LafTransition {
             animator = new TransitionAnimator();
             uiSnapshots = new LinkedHashMap<>();
             Window[] windows = Window.getWindows();
+            if (windows.length == 0) {
+                animator.setEnabled(false);
+                return;
+            }
             for (Window window : windows) {
                 if (window instanceof RootPaneContainer && window.isShowing()) {
                     RootPaneContainer rootPaneContainer = (RootPaneContainer) window;
@@ -87,7 +91,7 @@ class LafTransition {
 
         @Override
         void runTransition() {
-            animator.resume();
+            animator.play();
         }
 
         private void disposeSnapshots() {
@@ -110,27 +114,24 @@ class LafTransition {
 
         private class TransitionAnimator extends Animator {
 
-            private static final int DURATION = 160;
-            private static final int RESOLUTION = 10;
-
             public TransitionAnimator() {
-                super(DURATION / RESOLUTION, DURATION, false, DefaultInterpolator.EASE_IN_SINE);
+                super(160, DefaultInterpolator.EASE_IN_SINE);
             }
 
             @Override
-            public void resume() {
-                doPaint();
-                super.resume();
-            }
-
-            @Override
-            public void paintNow(final float fraction) {
+            public void paintAnimationFrame(float fraction) {
                 sharedAlpha.set(1f - fraction);
                 doPaint();
             }
 
             @Override
-            protected void paintCycleEnd() {
+            public void play() {
+                doPaint();
+                super.play();
+            }
+
+            @Override
+            protected void onAnimationFinished() {
                 disposeSnapshots();
             }
         }

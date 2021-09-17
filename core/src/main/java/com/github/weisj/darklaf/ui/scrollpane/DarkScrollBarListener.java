@@ -26,8 +26,8 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.graphics.Animator;
 import com.github.weisj.darklaf.graphics.DefaultInterpolator;
+import com.github.weisj.darklaf.graphics.LegacyAnimator;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class DarkScrollBarListener<T extends DarkScrollBarUI> extends MouseAdapter
@@ -52,10 +52,10 @@ public class DarkScrollBarListener<T extends DarkScrollBarUI> extends MouseAdapt
     protected final JScrollBar scrollbar;
     protected final T ui;
 
-    private final Animator trackFadeoutAnimator;
-    private final Animator trackFadeinAnimator;
-    private final Animator thumbFadeoutAnimator;
-    private final Animator thumbFadeinAnimator;
+    private final LegacyAnimator trackFadeoutAnimator;
+    private final LegacyAnimator trackFadeinAnimator;
+    private final LegacyAnimator thumbFadeoutAnimator;
+    private final LegacyAnimator thumbFadeinAnimator;
 
     protected boolean mouseOverThumb = false;
     protected boolean mouseOverTrack = false;
@@ -85,7 +85,7 @@ public class DarkScrollBarListener<T extends DarkScrollBarUI> extends MouseAdapt
         dispose(trackFadeoutAnimator);
     }
 
-    private void dispose(final Animator animator) {
+    private void dispose(final LegacyAnimator animator) {
         if (animator != null) animator.dispose();
     }
 
@@ -232,7 +232,7 @@ public class DarkScrollBarListener<T extends DarkScrollBarUI> extends MouseAdapt
         resetAnimators(trackFadeinAnimator, trackFadeoutAnimator, mouseOverTrack, trackAlpha, MAX_TRACK_ALPHA);
     }
 
-    protected void resetAnimators(final Animator fadeInAnimator, final Animator fadeOutAnimator,
+    protected void resetAnimators(final LegacyAnimator fadeInAnimator, final LegacyAnimator fadeOutAnimator,
             final boolean overAnimatedComponent, final float currentAlpha, final float maxAlpha) {
         boolean fadeInRunning = fadeInAnimator.isRunning();
         boolean fadeOutRunning = fadeInAnimator.isRunning();
@@ -297,19 +297,19 @@ public class DarkScrollBarListener<T extends DarkScrollBarUI> extends MouseAdapt
         return THUMB_FADE_IN_DELAY;
     }
 
-    protected Animator createTrackFadeoutAnimator() {
+    protected LegacyAnimator createTrackFadeoutAnimator() {
         return new TrackFadeOutAnimator();
     }
 
-    protected Animator createThumbFadeoutAnimator() {
+    protected LegacyAnimator createThumbFadeoutAnimator() {
         return new ThumbFadeOutAnimator();
     }
 
-    protected Animator createTrackFadeinAnimator() {
+    protected LegacyAnimator createTrackFadeinAnimator() {
         return new TrackFadeInAnimator();
     }
 
-    protected Animator createThumbFadeinAnimator() {
+    protected LegacyAnimator createThumbFadeinAnimator() {
         return new ThumbFadeInAnimator();
     }
 
@@ -381,7 +381,7 @@ public class DarkScrollBarListener<T extends DarkScrollBarUI> extends MouseAdapt
         }
     }
 
-    protected abstract static class SBAnimator extends Animator {
+    protected abstract static class SBAnimator extends LegacyAnimator {
 
         private final JComponent component;
         private final float minValue;
@@ -390,7 +390,7 @@ public class DarkScrollBarListener<T extends DarkScrollBarUI> extends MouseAdapt
 
         public SBAnimator(final int duration, final int resolution, final int delay,
                 final JComponent component, final float minValue, final float maxValue, final boolean fadeIn) {
-            super(duration / resolution, duration, delay, false, true,
+            super(duration / resolution, duration, delay, false,
                     fadeIn ? DefaultInterpolator.EASE_OUT_CUBIC : DefaultInterpolator.EASE_IN_CUBIC);
             this.component = component;
             this.minValue = minValue;

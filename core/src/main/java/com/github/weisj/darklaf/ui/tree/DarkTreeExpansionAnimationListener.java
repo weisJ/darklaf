@@ -28,7 +28,7 @@ import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.TreePath;
 
-import com.github.weisj.darklaf.graphics.Animator;
+import com.github.weisj.darklaf.graphics.LegacyAnimator;
 
 public class DarkTreeExpansionAnimationListener implements TreeExpansionListener {
 
@@ -83,7 +83,7 @@ public class DarkTreeExpansionAnimationListener implements TreeExpansionListener
         return animator.state;
     }
 
-    protected class TreeStateAnimator extends Animator {
+    protected class TreeStateAnimator extends LegacyAnimator {
 
         private static final int DURATION = 60;
         private static final int RESOLUTION = 10;

@@ -27,9 +27,9 @@ import java.util.List;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.graphics.Animator;
 import com.github.weisj.darklaf.graphics.DefaultInterpolator;
 import com.github.weisj.darklaf.graphics.Interpolator;
+import com.github.weisj.darklaf.graphics.LegacyAnimator;
 import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 
@@ -94,7 +94,7 @@ public class AnimationDemo extends BaseComponentDemo {
 
         private Runnable endCallback;
 
-        Animator animator = new Animator(1000, 1000, 0) {
+        LegacyAnimator animator = new LegacyAnimator(1000, 1000, 0) {
             @Override
             public void paintNow(final float fraction) {
                 state = fraction;

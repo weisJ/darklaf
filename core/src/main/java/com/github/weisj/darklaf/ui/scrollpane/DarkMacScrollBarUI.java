@@ -27,7 +27,7 @@ import java.awt.geom.RoundRectangle2D;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 
-import com.github.weisj.darklaf.graphics.Animator;
+import com.github.weisj.darklaf.graphics.LegacyAnimator;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
@@ -109,12 +109,12 @@ public class DarkMacScrollBarUI extends DarkScrollBarUI {
         }
 
         @Override
-        protected Animator createTrackFadeinAnimator() {
+        protected LegacyAnimator createTrackFadeinAnimator() {
             return ui.hideScrollBar ? super.createTrackFadeinAnimator() : null;
         }
 
         @Override
-        protected Animator createTrackFadeoutAnimator() {
+        protected LegacyAnimator createTrackFadeoutAnimator() {
             return ui.hideScrollBar ? super.createTrackFadeoutAnimator() : null;
         }
 

@@ -32,70 +32,283 @@ import javax.swing.*;
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-/** @author Konstantin Bulenkov */
 public abstract class Animator {
+
+    public enum RepeatMode {
+        DO_NOT_REPEAT,
+        DO_NOT_REPEAT_FREEZE,
+        CYCLE,
+        CYCLE_FLIP
+    }
 
     public static final String ANIMATIONS_FLAG = DarkLaf.SYSTEM_PROPERTY_PREFIX + "animations";
     private static final ScheduledExecutorService scheduler = createScheduler();
+    private static final int DEFAULT_FPS = 60;
 
-    private final int totalFrames;
-    private final int cycleDuration;
-    private final boolean repeatable;
-    private final int delay;
+    static ScheduledExecutorService scheduler() {
+        return scheduler;
+    }
 
-    private boolean forward;
+    private final long animationDurationMillis;
+    private final long delayMillis;
+    private final int fps;
+    private final Interpolator interpolator;
+    private final RepeatMode repeatMode;
 
-    private Interpolator interpolator;
+    private boolean reverse = false;
 
+    private final AtomicBoolean isScheduled = new AtomicBoolean(false);
     private ScheduledFuture<?> ticker;
-    private int startFrame;
-    private int currentFrame;
-    private long startTime;
-    private long stopTime;
+
+    private double fraction;
+    private double fractionDelta;
+
     private boolean enabled = true;
-    private volatile boolean disposed = false;
 
-    public Animator(final int totalFrames, final int cycleDuration, final int delay) {
-        this(totalFrames, cycleDuration, delay, false);
+    public Animator(final long animationDurationMillis, final int fps) {
+        this(animationDurationMillis, fps, DefaultInterpolator.LINEAR);
     }
 
-    public Animator(final int totalFrames, final int cycleDuration, final int delay, final boolean repeatable) {
-        this(totalFrames, cycleDuration, delay, repeatable, true, DefaultInterpolator.LINEAR);
+    public Animator(final long animationDurationMillis, final int fps, final Interpolator interpolator) {
+        this(animationDurationMillis, fps, interpolator, RepeatMode.DO_NOT_REPEAT);
     }
 
-    public Animator(final int totalFrames, final int cycleDuration, final boolean repeatable) {
-        this(totalFrames, cycleDuration, 0, repeatable, true, DefaultInterpolator.LINEAR);
+    public Animator(final long animationDurationMillis) {
+        this(animationDurationMillis, DEFAULT_FPS);
     }
 
-    public Animator(final int totalFrames, final int cycleDuration, final boolean repeatable,
-            final Interpolator interpolator) {
-        this(totalFrames, cycleDuration, 0, repeatable, true, interpolator);
+    public Animator(final long animationDurationMillis, final Interpolator interpolator) {
+        this(animationDurationMillis, DEFAULT_FPS, interpolator, RepeatMode.DO_NOT_REPEAT);
     }
 
-    public Animator(final int totalFrames, final int cycleDuration, final int delay, final boolean repeatable,
-            final boolean forward, final Interpolator interpolator) {
-        this.totalFrames = totalFrames;
-        this.cycleDuration = cycleDuration;
-        this.delay = delay;
-        this.repeatable = repeatable;
-        this.forward = forward;
+    public Animator(final long animationDurationMillis, final int fps,
+            final Interpolator interpolator, final RepeatMode repeatMode) {
+        this(animationDurationMillis, 0, fps, interpolator, repeatMode);
+    }
+
+    public Animator(final long animationDurationMillis, final long delayMillis, final int fps,
+            final Interpolator interpolator, final RepeatMode repeatMode) {
+        this.animationDurationMillis = animationDurationMillis;
+        this.delayMillis = delayMillis;
+        this.fps = fps;
         this.interpolator = interpolator;
-        currentFrame = forward ? 0 : totalFrames;
-        resetTime();
+        this.repeatMode = repeatMode;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(final boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public void setReverse(final boolean reverse) {
+        this.reverse = reverse;
+    }
+
+    public boolean isReverse() {
+        return reverse;
+    }
+
+    public boolean isRunning() {
+        return ticker != null;
+    }
+
+    public double currentState() {
+        return fraction;
+    }
+
+    private boolean animationsEnabled() {
+        return enabled && PropertyUtil.getSystemFlag(ANIMATIONS_FLAG);
+    }
+
+    public void play() {
+        resumeAt(0, true);
+    }
+
+    public void playForwards() {
+        playForwards(true);
+    }
+
+    /**
+     * Plays the animation ensuring it will go forward.
+     */
+    public void playForwards(boolean skipDelay) {
+        if (reverse || !isRunning()) {
+            pause();
+            reverse = false;
+            resumeAt(0, skipDelay);
+        }
+    }
+
+    public void playBackwards() {
+        playBackwards(true);
+    }
+
+    /**
+     * Plays the animation ensuring it will go backward.
+     */
+    public void playBackwards(boolean skipDelay) {
+        if (!reverse || !isRunning()) {
+            pause();
+            reverse = true;
+            resumeAt(1, skipDelay);
+        }
+    }
+
+    public void resume(final JComponent target) {
+        resumeAt(fraction, true, target);
+    }
+
+    public void resumeAt(final double startFraction, final boolean skipDelay, final JComponent target) {
+        if (target != null && (!target.isVisible() || !target.isShowing())) {
+            stop();
+            return;
+        }
+        resumeAt(startFraction, skipDelay);
+    }
+
+    public void resume() {
+        resumeAt(fraction, true);
+    }
+
+    public void resumeAt(final double startFraction, final boolean skipDelay) {
+        if (startFraction < 0 || startFraction > 1) {
+            throw new IllegalArgumentException("Starting fraction must be between 0.0 and 1.0.");
+        }
+
+        if (animationDurationMillis == 0 || !animationsEnabled()) {
+            stop();
+            return;
+        }
+
+        if (ticker == null) {
+            this.fractionDelta = 1f / (fps * animationDurationMillis / 1000f);
+
+            long initialDelay = skipDelay ? 0 : delayMillis;
+
+            long millisPerFrame = (long) (animationDurationMillis * (fps / 1000f));
+
+            isScheduled.set(false);
+            ticker = scheduler.scheduleWithFixedDelay(() -> {
+                if (isRunning()) {
+                    if (tick()) submitAnimationFrame();
+                }
+            }, initialDelay, millisPerFrame, TimeUnit.MILLISECONDS);
+        }
+    }
+
+    private void submitAnimationFrame() {
+        if (!isScheduled.get()) {
+            isScheduled.set(true);
+            SwingUtilities.invokeLater(() -> {
+                if (isRunning()) paintAnimationFrame(interpolator.interpolate((float) fraction));
+                isScheduled.set(false);
+            });
+        }
+    }
+
+    private boolean tick() {
+        final double oldFraction = fraction;
+
+        if (reverse) {
+            fraction = oldFraction - fractionDelta;
+        } else {
+            fraction = oldFraction + fractionDelta;
+        }
+
+        switch (repeatMode) {
+            case DO_NOT_REPEAT:
+                if (fraction > 1 && !reverse) {
+                    stop();
+                    return false;
+                }
+                if (fraction < 0 && reverse) {
+                    stop();
+                    return false;
+                }
+                break;
+            case DO_NOT_REPEAT_FREEZE:
+                if (fraction > 1 && !reverse) pause();
+                if (fraction < 0 && reverse) pause();
+                break;
+            case CYCLE:
+                if (reverse) {
+                    if (fraction < 0) {
+                        fraction = 1 + fraction;
+                    }
+                } else {
+                    if (fraction > 1) {
+                        fraction = fraction - 1;
+                    }
+                }
+                break;
+            case CYCLE_FLIP:
+                if (reverse) {
+                    if (fraction < 0) {
+                        fraction = -fraction;
+                        reverse = false;
+                    }
+                } else {
+                    if (fraction > 1) {
+                        fraction = 1 - (fraction - Math.floor(fraction));
+                        reverse = true;
+                    }
+                }
+                break;
+        }
+        fraction = Math.max(Math.min(1, fraction), 0);
+        return true;
+    }
+
+    /**
+     * Stops the animation setting it back to the beginning and calls {@code onAnimationFinished()}.
+     *
+     * @see #cancel()
+     */
+    public void stop() {
+        if (cancel()) {
+            onAnimationFinished();
+        }
+    }
+
+    /**
+     * Stops the animation without calling {@code onAnimationFinished()}.
+     *
+     * @see #stop()
+     * @return true if the animation was running
+     */
+    public boolean cancel() {
+        if (pause()) {
+            reset();
+            return true;
+        }
         reset();
-    }
-
-    public void setForward(final boolean forward) {
-        this.forward = forward;
-    }
-
-    private void resetTime() {
-        startTime = -1;
+        return false;
     }
 
     public void reset() {
-        currentFrame %= totalFrames;
+        fraction = reverse ? 1 : 0;
     }
+
+    /**
+     * Pauses the animation. Can be resumed.
+     *
+     * @return true if the animation was running
+     */
+    public boolean pause() {
+        if (ticker != null) {
+            ticker.cancel(false);
+            ticker = null;
+            return true;
+        }
+        return false;
+    }
+
+    public abstract void paintAnimationFrame(float fraction);
+
+    protected void onAnimationFinished() {}
 
     @SuppressWarnings("ThreadPriorityCheck")
     private static ScheduledExecutorService createScheduler() {
@@ -108,148 +321,5 @@ public abstract class Animator {
         executor.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);
         executor.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
         return executor;
-    }
-
-    public void suspend() {
-        resetTime();
-        reset();
-        stopTicker();
-    }
-
-    public void stopTicker() {
-        if (ticker != null) {
-            ticker.cancel(false);
-            ticker = null;
-        }
-    }
-
-    public void resume() {
-        resume(0, false);
-    }
-
-    private boolean animationsEnabled() {
-        return enabled && PropertyUtil.getSystemFlag(ANIMATIONS_FLAG);
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(final boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    private void stopAnimation() {
-        currentFrame = totalFrames - 1;
-        paint();
-        animationDone();
-    }
-
-    public void resume(final int startFrame, final boolean skipDelay, final JComponent target) {
-        if (target != null && (!target.isVisible() || !target.isShowing())) {
-            stopAnimation();
-            return;
-        }
-        resume(startFrame, skipDelay);
-    }
-
-    public void resume(final int startFrame, final boolean skipDelay) {
-        if (startFrame < 0) {
-            throw new IllegalArgumentException("Starting frame must be non negative.");
-        }
-        if (cycleDuration == 0 || startFrame >= totalFrames || !animationsEnabled()) {
-            stopAnimation();
-        } else if (ticker == null) {
-            this.startFrame = startFrame;
-            long initialDelay = skipDelay ? 0 : delay * 1000L;
-            ticker = scheduler.scheduleWithFixedDelay(new Runnable() {
-                final AtomicBoolean isScheduled = new AtomicBoolean(false);
-
-                @Override
-                public void run() {
-                    if (!isScheduled.get() && !isDisposed()) {
-                        isScheduled.set(true);
-                        SwingUtilities.invokeLater(() -> {
-                            onTick();
-                            isScheduled.set(false);
-                        });
-                    }
-                }
-            }, initialDelay, cycleDuration * 1000L / totalFrames, TimeUnit.MICROSECONDS);
-        }
-    }
-
-    private void paint() {
-        int frame = forward ? currentFrame : totalFrames - currentFrame - 1;
-        paintNow(interpolator.interpolate((float) frame / totalFrames));
-    }
-
-    private void animationDone() {
-        stopTicker();
-        SwingUtilities.invokeLater(this::paintCycleEnd);
-    }
-
-    public boolean isDisposed() {
-        return disposed;
-    }
-
-    private void onTick() {
-        if (isDisposed() || ticker == null) return;
-
-        if (startTime == -1) {
-            startTime = System.currentTimeMillis();
-            stopTime = startTime + ((long) cycleDuration * (totalFrames - currentFrame)) / totalFrames;
-        }
-
-        final double passedTime = System.currentTimeMillis() - startTime;
-        final double totalTime = stopTime - startTime;
-
-        final int newFrame = (int) (passedTime * totalFrames / totalTime) + startFrame;
-        if (currentFrame > 0 && newFrame == currentFrame) return;
-        currentFrame = newFrame;
-
-        if (currentFrame >= totalFrames) {
-            if (repeatable) {
-                reset();
-            } else {
-                animationDone();
-                return;
-            }
-        }
-
-        paint();
-    }
-
-    public abstract void paintNow(float fraction);
-
-    protected void paintCycleEnd() {}
-
-    public void dispose() {
-        disposed = true;
-        stopTicker();
-    }
-
-    public boolean isRunning() {
-        return ticker != null;
-    }
-
-    public final boolean isForward() {
-        return forward;
-    }
-
-    public int getCurrentFrame() {
-        return currentFrame;
-    }
-
-    public int getTotalFrames() {
-        return totalFrames;
-    }
-
-    public Interpolator getInterpolator() {
-        return interpolator;
-    }
-
-    public void setInterpolator(final Interpolator interpolator) {
-        this.interpolator = interpolator;
     }
 }

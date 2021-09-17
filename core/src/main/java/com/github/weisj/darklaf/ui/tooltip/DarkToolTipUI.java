@@ -98,7 +98,7 @@ public class DarkToolTipUI extends BasicToolTipUI
         }
     };
 
-    protected Animator fadeAnimator;
+    protected LegacyAnimator fadeAnimator;
     protected float alpha = 0;
     protected JToolTip toolTip;
     protected ToolTipStyle style;
@@ -409,7 +409,7 @@ public class DarkToolTipUI extends BasicToolTipUI
         toolTip.doLayout();
     }
 
-    protected class FadeInAnimator extends Animator {
+    protected class FadeInAnimator extends LegacyAnimator {
         private static final int FADEIN_FRAMES_COUNT = 15;
 
         public FadeInAnimator() {

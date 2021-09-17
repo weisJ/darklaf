@@ -80,17 +80,15 @@ public class DarkToggleButtonListener extends DarkButtonListener<DarkToggleButto
         if (!ToggleButtonConstants.isSlider(button)) return;
         boolean sel = button.isSelected();
         if (sel != selected) {
+            if (!animator.pause()) {
+                animator.reset();
+            }
             selected = sel;
             float endState = sel ? 1 : 0;
-            int startFrame = 0;
-            if (animator.isRunning()) {
-                startFrame = animator.getCurrentFrame();
-            }
             animator.animationBounds = ui.getSliderBounds(button);
-            animator.suspend();
             animator.reverse = !sel;
             animator.setEndValue(endState);
-            animator.resume(startFrame, false, button);
+            animator.resume(button);
         }
     }
 
@@ -103,8 +101,7 @@ public class DarkToggleButtonListener extends DarkButtonListener<DarkToggleButto
         private Rectangle animationBounds;
 
         public SliderAnimator(final JComponent c) {
-            super(10, 100, 0);
-            setInterpolator(DefaultInterpolator.EASE_OUT_QUAD);
+            super(100, DefaultInterpolator.EASE_OUT_QUAD);
             this.c = c;
         }
 
@@ -113,13 +110,13 @@ public class DarkToggleButtonListener extends DarkButtonListener<DarkToggleButto
         }
 
         @Override
-        public void paintNow(final float fraction) {
+        public void paintAnimationFrame(float fraction) {
             this.state = reverse ? 1 - fraction : fraction;
             repaint();
         }
 
         @Override
-        protected void paintCycleEnd() {
+        protected void onAnimationFinished() {
             this.state = endValue;
             repaint();
             animationBounds = null;
