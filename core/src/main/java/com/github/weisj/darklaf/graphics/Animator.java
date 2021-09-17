@@ -38,7 +38,17 @@ public abstract class Animator {
         DO_NOT_REPEAT,
         DO_NOT_REPEAT_FREEZE,
         CYCLE,
-        CYCLE_FLIP
+        CYCLE_FLIP;
+
+        public boolean isRepeating() {
+            switch (this) {
+                case DO_NOT_REPEAT:
+                case DO_NOT_REPEAT_FREEZE:
+                    return false;
+                default:
+                    return true;
+            }
+        }
     }
 
     public static final String ANIMATIONS_FLAG = DarkLaf.SYSTEM_PROPERTY_PREFIX + "animations";
@@ -52,9 +62,9 @@ public abstract class Animator {
     private final long animationDurationMillis;
     private final long delayMillis;
     private final int fps;
-    private final Interpolator interpolator;
-    private final RepeatMode repeatMode;
 
+    private RepeatMode repeatMode;
+    private Interpolator interpolator;
     private boolean reverse = false;
 
     private final AtomicBoolean isScheduled = new AtomicBoolean(false);
@@ -111,12 +121,28 @@ public abstract class Animator {
         return reverse;
     }
 
+    public void setInterpolator(final Interpolator interpolator) {
+        this.interpolator = interpolator;
+    }
+
+    public Interpolator interpolator() {
+        return interpolator;
+    }
+
     public boolean isRunning() {
         return ticker != null;
     }
 
     public double currentState() {
         return fraction;
+    }
+
+    public RepeatMode repeatMode() {
+        return repeatMode;
+    }
+
+    public void setRepeatMode(final RepeatMode repeatMode) {
+        this.repeatMode = repeatMode;
     }
 
     private boolean animationsEnabled() {
@@ -306,7 +332,7 @@ public abstract class Animator {
         return false;
     }
 
-    public abstract void paintAnimationFrame(float fraction);
+    protected abstract void paintAnimationFrame(float fraction);
 
     protected void onAnimationFinished() {}
 
