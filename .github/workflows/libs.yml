@@ -19,6 +19,7 @@ on:
       - published
   schedule:
     - cron:  '0 0 1 * *'
+  workflow_dispatch:
 jobs:
   windows:
     name: Windows (Java 11)
