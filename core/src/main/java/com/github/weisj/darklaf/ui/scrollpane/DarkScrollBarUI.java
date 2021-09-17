@@ -36,7 +36,7 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConstants {
 
     protected static final AlphaComposite COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER);
-    protected DarkScrollBarListener scrollBarListener;
+    protected DarkScrollBarListener<?> scrollBarListener;
     protected Color thumbBorderColor;
     protected Color thumbFadeStartColor;
     protected Color thumbFadeEndColor;
@@ -88,8 +88,8 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
         scrollbar.addMouseWheelListener(scrollBarListener);
     }
 
-    protected DarkScrollBarListener createScrollBarListener() {
-        return new DarkScrollBarListener(scrollbar, this);
+    protected DarkScrollBarListener<?> createScrollBarListener() {
+        return new DarkScrollBarListener<>(scrollbar, this);
     }
 
     @Override
