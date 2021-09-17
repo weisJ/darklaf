@@ -42,6 +42,15 @@ public class DarkTreeExpansionAnimationListener implements TreeExpansionListener
         tree.addTreeExpansionListener(this);
     }
 
+    public void install() {
+        this.tree.addTreeExpansionListener(this);
+    }
+
+    public void uninstall() {
+        animator.dispose();
+        this.tree.removeTreeExpansionListener(this);
+    }
+
     @Override
     public void treeExpanded(final TreeExpansionEvent event) {
         startAnimation(event.getPath());
