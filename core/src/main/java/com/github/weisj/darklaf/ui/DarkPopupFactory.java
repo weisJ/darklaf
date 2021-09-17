@@ -164,7 +164,7 @@ public class DarkPopupFactory extends PopupFactory {
         if (!opaque) {
             boolean doubleBufferHint = PropertyUtil.getBooleanProperty(content, KEY_DOUBLE_BUFFERED);
             LOGGER.fine("Content wants to be double buffered = " + doubleBufferHint);
-            linuxOpacityFix(rootPane, doubleBufferHint);
+            setupDoubleBuffering(rootPane, doubleBufferHint);
         }
 
         while (p != null && p != window) {
@@ -177,8 +177,10 @@ public class DarkPopupFactory extends PopupFactory {
         window.setBackground(bg);
     }
 
-    private void linuxOpacityFix(final JRootPane rootPane, final boolean doubleBufferHint) {
-        boolean useDoubleBuffering = doubleBufferHint && canApplyRootPaneFix();
+    private void setupDoubleBuffering(final JRootPane rootPane, final boolean doubleBufferHint) {
+        // On Linux (X11) Java 8 the regular fix doesn't work and the hacky workaround is needed.
+        boolean isLinuxJava8 = !SystemInfo.isJava9OrGreater && SystemInfo.isLinux;
+        boolean useDoubleBuffering = (isLinuxJava8 || doubleBufferHint) && canApplyRootPaneFix();
         LOGGER.fine("Content can use double buffering = " + useDoubleBuffering);
 
         // See: https://bugs.java.com/bugdatabase/view_bug.do?bug_id=6848852
