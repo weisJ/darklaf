@@ -168,7 +168,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         selectionListener = createMouseSelectionListener();
         tree.addMouseListener(selectionListener);
         this.treeExpansionAnimationListener = createExpansionAnimationListener();
-        tree.addTreeExpansionListener(treeExpansionAnimationListener);
+        treeExpansionAnimationListener.install();
     }
 
     protected DarkTreeExpansionAnimationListener createExpansionAnimationListener() {
@@ -258,7 +258,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         tree.removeMouseListener(selectionListener);
         selectionListener = null;
         tree.removePropertyChangeListener(this);
-        tree.removeTreeExpansionListener(treeExpansionAnimationListener);
+        treeExpansionAnimationListener.uninstall();
         treeExpansionAnimationListener = null;
     }
 
