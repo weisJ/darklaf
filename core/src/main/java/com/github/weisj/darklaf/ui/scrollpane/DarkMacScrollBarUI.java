@@ -89,12 +89,11 @@ public class DarkMacScrollBarUI extends DarkScrollBarUI {
 
     private static class MacScrollBarListener extends DarkScrollBarListener<DarkMacScrollBarUI> {
 
-        private final int hideDelay;
         private final Timer hideTimer;
 
         public MacScrollBarListener(final JScrollBar scrollbar, final DarkMacScrollBarUI ui) {
             super(scrollbar, ui);
-            hideDelay = getTrackFadeOutDelay();
+            int hideDelay = getTrackFadeOutDelay();
             hideTimer = new Timer(hideDelay, e -> {
                 Point p = MouseInfo.getPointerInfo().getLocation();
                 SwingUtilities.convertPointFromScreen(p, scrollbar);
