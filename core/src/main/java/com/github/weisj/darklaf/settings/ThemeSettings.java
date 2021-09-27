@@ -37,7 +37,6 @@ import com.github.weisj.darklaf.theme.event.ThemePreferenceChangeEvent;
 import com.github.weisj.darklaf.theme.event.ThemePreferenceListener;
 import com.github.weisj.darklaf.theme.info.AccentColorRule;
 import com.github.weisj.darklaf.theme.info.FontSizeRule;
-import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.ui.util.UIThread;
 import com.github.weisj.darklaf.util.LazyValue;
@@ -469,33 +468,7 @@ public class ThemeSettings implements ThemePreferenceListener {
 
     /** Sets the theme according to the selected options. Does not save the settings. */
     public void peek() {
-        applyTheme(getEffectiveTheme());
-    }
-
-    private Theme getEffectiveTheme() {
-        return getEffectiveTheme(LafManager.getPreferredThemeStyle());
-    }
-
-    private Theme getEffectiveTheme(final PreferredThemeStyle themeStyle) {
-        Theme baseTheme = getEffectiveBaseTheme(themeStyle);
-        if (baseTheme == null) return null;
-        FontSizeRule fontSizeRule = getEffectiveFontSizeRule(baseTheme, themeStyle);
-        AccentColorRule accentColorRule = getEffectiveAccentColorRule(baseTheme);
-        return baseTheme.derive(fontSizeRule, accentColorRule);
-    }
-
-    private Theme getEffectiveBaseTheme(final PreferredThemeStyle preferredThemeStyle) {
-        return isThemeFollowsSystem() ? LafManager.themeForPreferredStyle(preferredThemeStyle) : getTheme();
-    }
-
-    private FontSizeRule getEffectiveFontSizeRule(final Theme theme, final PreferredThemeStyle preferredThemeStyle) {
-        if (theme == null) return FontSizeRule.getDefault();
-        return isFontSizeFollowsSystem() ? preferredThemeStyle.getFontSizeRule() : getFontSizeRule();
-    }
-
-    private AccentColorRule getEffectiveAccentColorRule(final Theme theme) {
-        if (theme == null) return AccentColorRule.getDefault();
-        return currentConfiguration.getAccentColorRule();
+        applyTheme(currentConfiguration.getEffectiveTheme());
     }
 
     /**
@@ -538,6 +511,6 @@ public class ThemeSettings implements ThemePreferenceListener {
     @Override
     public void themePreferenceChanged(final ThemePreferenceChangeEvent e) {
         refresh();
-        applyTheme(getEffectiveTheme(e.getPreferredThemeStyle()));
+        applyTheme(currentConfiguration.getEffectiveTheme(e.getPreferredThemeStyle()));
     }
 }

@@ -21,6 +21,7 @@
  */
 package com.github.weisj.darklaf.settings;
 
+import java.awt.*;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -29,6 +30,7 @@ import com.github.weisj.darklaf.platform.ThemePreferencesHandler;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.AccentColorRule;
 import com.github.weisj.darklaf.theme.info.FontSizeRule;
+import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 
 public class SettingsConfiguration implements Serializable {
 
@@ -53,6 +55,50 @@ public class SettingsConfiguration implements Serializable {
         setFontSizeRule(config.getFontSizeRule());
         setAccentColorRule(config.getAccentColorRule());
         setTheme(config.getTheme());
+    }
+
+    public final Theme getEffectiveTheme() {
+        return getEffectiveTheme(LafManager.getPreferredThemeStyle());
+    }
+
+    public final Theme getEffectiveTheme(final PreferredThemeStyle themeStyle) {
+        Theme baseTheme = getEffectiveBaseTheme(themeStyle);
+        if (baseTheme == null) return null;
+
+        FontSizeRule fontSizeRule = getEffectiveFontSizeRule(baseTheme, themeStyle);
+        AccentColorRule accentColorRule = getEffectiveAccentColorRule(baseTheme, themeStyle);
+
+        return baseTheme.derive(fontSizeRule, accentColorRule);
+    }
+
+    private AccentColorRule getEffectiveAccentColorRule(final Theme baseTheme,
+            final PreferredThemeStyle preferredThemeStyle) {
+        AccentColorRule accentColorRule = getAccentColorRule();
+        if (accentColorRule == null) accentColorRule = AccentColorRule.getDefault();
+
+        AccentColorRule systemAccentColorRule = preferredThemeStyle.getAccentColorRule();
+        Color accentColor = accentColorRule.getAccentColor();
+        Color selectionColor = accentColorRule.getSelectionColor();
+        if (isAccentColorFollowsSystem() && baseTheme.supportsCustomAccentColor()) {
+            accentColor = systemAccentColorRule.getAccentColor();
+        }
+        if (isSelectionColorFollowsSystem() && baseTheme.supportsCustomSelectionColor()) {
+            selectionColor = systemAccentColorRule.getSelectionColor();
+        }
+
+        return AccentColorRule.fromColor(accentColor, selectionColor);
+    }
+
+    private Theme getEffectiveBaseTheme(final PreferredThemeStyle preferredThemeStyle) {
+        return isThemeFollowsSystem()
+                ? LafManager.themeForPreferredStyle(preferredThemeStyle)
+                : getTheme();
+    }
+
+    private FontSizeRule getEffectiveFontSizeRule(final Theme theme, final PreferredThemeStyle preferredThemeStyle) {
+        return isFontSizeFollowsSystem()
+                ? preferredThemeStyle.getFontSizeRule()
+                : getFontSizeRule();
     }
 
     /**

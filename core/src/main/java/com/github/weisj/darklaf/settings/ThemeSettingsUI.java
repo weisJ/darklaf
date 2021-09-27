@@ -56,7 +56,6 @@ import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.info.AccentColorRule;
 import com.github.weisj.darklaf.theme.info.FontSizePreset;
 import com.github.weisj.darklaf.theme.info.FontSizeRule;
-import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 import com.github.weisj.darklaf.ui.combobox.ComboBoxConstants;
 import com.github.weisj.darklaf.ui.slider.DarkSliderUI;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
@@ -434,49 +433,19 @@ public class ThemeSettingsUI {
 
         @Override
         public AccentColorRule getAccentColorRule() {
-            // Avoid unnecessary native calls.
-            boolean useSystemAccent = isAccentColorFollowsSystem();
-            boolean useSystemSelection = isSelectionColorFollowsSystem();
-            PreferredThemeStyle prefStyle = useSystemAccent || useSystemSelection
-                    ? LafManager.getPreferredThemeStyle()
-                    : null;
-            Theme theme = getTheme(prefStyle);
-            Color accentColor = null;
-            Color selectionColor = null;
-            if (theme.supportsCustomAccentColor()) {
-                accentColor = useSystemAccent
-                        ? prefStyle.getAccentColorRule().getAccentColor()
-                        : getSelectedColor(ThemeSettingsUI.this.accentChooser);
-            }
-            if (theme.supportsCustomSelectionColor()) {
-                selectionColor = useSystemSelection
-                        ? prefStyle.getAccentColorRule().getSelectionColor()
-                        : getSelectedColor(ThemeSettingsUI.this.selectionChooser);
-            }
-            return AccentColorRule.fromColor(accentColor, selectionColor);
+            return AccentColorRule.fromColor(
+                    getSelectedColor(ThemeSettingsUI.this.accentChooser),
+                    getSelectedColor(ThemeSettingsUI.this.selectionChooser));
         }
 
         @Override
         public FontSizeRule getFontSizeRule() {
-            return isFontSizeFollowsSystem()
-                    ? LafManager.getPreferredThemeStyle().getFontSizeRule()
-                    : FontSizeRule.relativeAdjustment(fontSlider.getValue());
+            return FontSizeRule.relativeAdjustment(fontSlider.getValue());
         }
 
         @Override
         public Theme getTheme() {
-            return getTheme(null);
-        }
-
-        private Theme getTheme(final PreferredThemeStyle preferredThemeStyle) {
-            if (isThemeFollowsSystem()) {
-                PreferredThemeStyle prefStyle = preferredThemeStyle != null
-                        ? preferredThemeStyle
-                        : LafManager.getPreferredThemeStyle();
-                return LafManager.themeForPreferredStyle(prefStyle);
-            } else {
-                return getSelectedTheme();
-            }
+            return getSelectedTheme();
         }
 
         private Theme getSelectedTheme() {
