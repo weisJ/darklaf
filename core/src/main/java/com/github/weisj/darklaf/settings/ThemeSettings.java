@@ -483,7 +483,7 @@ public class ThemeSettings implements ThemePreferenceListener {
 
     protected void applyTheme(final Theme theme) {
         if (theme == null) return;
-        if (LafManager.isInstalled() && LafManager.getTheme().appearsEqualTo(theme)) return;
+        if (LafManager.isInstalled() && LafManager.getInstalledTheme().appearsEqualTo(theme)) return;
         UIThread.runOnUIThread(() -> {
             LafManager.installTheme(theme);
             refresh();

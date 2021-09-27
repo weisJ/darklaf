@@ -350,7 +350,12 @@ public final class LafManager {
      * @return the currently installed theme.
      */
     public static Theme getInstalledTheme() {
-        return installedTheme != null ? installedTheme : getTheme();
+        Theme installed = getInstalledThemeInternal();
+        return installed != null ? installed : getTheme();
+    }
+
+    private static Theme getInstalledThemeInternal() {
+        return installedTheme;
     }
 
     static void setInstalledTheme(final Theme theme) {
@@ -439,6 +444,13 @@ public final class LafManager {
      */
     public static void install() {
         Theme theme = getTheme();
+        Theme installed = getInstalledThemeInternal();
+        if (isInstalled() && installed != null && installed.appearsEqualTo(theme)) {
+            LOGGER.warning("Theme " + theme
+                    + " is already installed. Additional installs are unnecessary and should be avoided."
+                    + " The theme will be installed regardless to ensure all properties have the correct value."
+                    + " If this operation was intentional consider creating a custom theme.");
+        }
         installer.install(theme);
         setInstalledTheme(theme);
     }
