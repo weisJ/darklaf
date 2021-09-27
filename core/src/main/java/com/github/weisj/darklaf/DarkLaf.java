@@ -44,6 +44,10 @@ public class DarkLaf extends ThemedLookAndFeel {
     public static final String ALLOW_NATIVE_CODE_FLAG = DarkLaf.SYSTEM_PROPERTY_PREFIX + "allowNativeCode";
     private static final Logger LOGGER = LogUtil.getLogger(DarkLaf.class);
 
+    private static final float DEFAULTS_LOAD_FACTOR = 0.75f;
+    // Ensure we don't have to resize during installation.
+    private static final int DEFAULTS_CAPACITY = (int) Math.ceil(1430 / DEFAULTS_LOAD_FACTOR);
+
     /*
      * All tasks for initializing the ui defaults in order of execution.
      */
@@ -59,6 +63,7 @@ public class DarkLaf extends ThemedLookAndFeel {
             new PlatformDefaultsInitTask(),
             new UserInitTask(),
             new UtilityDefaultsInitTask()};
+
     /*
      * The base look and feel. This may vary to handle different platform support.
      */
@@ -142,7 +147,10 @@ public class DarkLaf extends ThemedLookAndFeel {
 
     @Override
     public UIDefaults getDefaults() {
-        final UIDefaults defaults = base.getDefaults();
+        final UIDefaults baseDefaults = base.getDefaults();
+        final UIDefaults defaults = new UIDefaults(DEFAULTS_CAPACITY, DEFAULTS_LOAD_FACTOR);
+        defaults.putAll(baseDefaults);
+
         final Theme currentTheme = getTheme();
         for (DefaultsInitTask task : INIT_TASKS) {
             if (task.onlyDuringInstallation() && !isInitialized) continue;
@@ -151,6 +159,7 @@ public class DarkLaf extends ThemedLookAndFeel {
         if (isInitialized) {
             postInstall();
         }
+        System.out.println(defaults.size());
         return defaults;
     }
 
