@@ -39,6 +39,7 @@ import com.github.weisj.darklaf.theme.info.AccentColorRule;
 import com.github.weisj.darklaf.theme.info.FontSizeRule;
 import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.UIThread;
 import com.github.weisj.darklaf.util.LazyValue;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.value.WeakShared;
@@ -510,7 +511,7 @@ public class ThemeSettings implements ThemePreferenceListener {
     protected void applyTheme(final Theme theme) {
         if (theme == null) return;
         if (LafManager.isInstalled() && LafManager.getTheme().appearsEqualTo(theme)) return;
-        SwingUtilities.invokeLater(() -> {
+        UIThread.runOnUIThread(() -> {
             LafManager.installTheme(theme);
             refresh();
         });
