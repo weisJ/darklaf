@@ -65,7 +65,7 @@ public class SettingsConfiguration implements Serializable {
         Theme baseTheme = getEffectiveBaseTheme(themeStyle);
         if (baseTheme == null) return null;
 
-        FontSizeRule fontSizeRule = getEffectiveFontSizeRule(baseTheme, themeStyle);
+        FontSizeRule fontSizeRule = getEffectiveFontSizeRule(themeStyle);
         AccentColorRule accentColorRule = getEffectiveAccentColorRule(baseTheme, themeStyle);
 
         return baseTheme.derive(fontSizeRule, accentColorRule);
@@ -95,7 +95,7 @@ public class SettingsConfiguration implements Serializable {
                 : getTheme();
     }
 
-    private FontSizeRule getEffectiveFontSizeRule(final Theme theme, final PreferredThemeStyle preferredThemeStyle) {
+    private FontSizeRule getEffectiveFontSizeRule(final PreferredThemeStyle preferredThemeStyle) {
         return isFontSizeFollowsSystem()
                 ? preferredThemeStyle.getFontSizeRule()
                 : getFontSizeRule();
