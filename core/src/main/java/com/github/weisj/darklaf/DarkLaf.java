@@ -159,7 +159,6 @@ public class DarkLaf extends ThemedLookAndFeel {
         if (isInitialized) {
             postInstall();
         }
-        System.out.println(defaults.size());
         return defaults;
     }
 
