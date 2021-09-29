@@ -31,7 +31,9 @@ import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.iconset.IconSet;
 import com.github.weisj.darklaf.properties.PropertyLoader;
+import com.github.weisj.darklaf.properties.icons.CustomThemedIcon;
 import com.github.weisj.darklaf.properties.icons.IconLoader;
+import com.github.weisj.darklaf.properties.icons.IconResolver;
 import com.github.weisj.darklaf.properties.icons.StateIcon;
 import com.github.weisj.darklaf.task.AccentColorAdjustmentTask;
 import com.github.weisj.darklaf.task.ForegroundColorGenerationTask;
@@ -147,9 +149,10 @@ public class ColoredRadioButton extends JRadioButton {
                 "Icons.RadioButtonSelected.selectionSelectedColor",
                 "Icons.RadioButtonSelectedFocused.selectionFocusSelectedColor"};
         private static final double MIN_FG_CONTRAST = 0.6;
-        private Properties propertyMap;
+        private final Properties propertyMap = new Properties();
 
-        private Icon stateIcon;
+        private StateIcon stateIcon;
+        private Icon[] iconStates;
         private Color iconColor;
         private Color focusIconColor;
 
@@ -192,20 +195,21 @@ public class ColoredRadioButton extends JRadioButton {
             }
             this.patchedColor = color;
             this.patchedFocusColor = focusColor;
-            IconLoader iconLoader = DarkUIUtil.radioButtonLoader();
+            IconResolver iconResolver = DarkUIUtil.iconResolver();
 
             Theme theme = LafManager.getInstalledTheme();
             Properties props = new Properties();
             UIDefaults defaults = UIManager.getLookAndFeelDefaults();
-            theme.loadDefaults(props, defaults, iconLoader);
+            theme.loadDefaults(props, defaults, iconResolver);
             Color accentCol = DEFAULT_COLOR.equals(color) ? (Color) props.get("widgetFillDefault") : color;
             Color focusCol = DEFAULT_COLOR.equals(focusColor) ? accentCol : focusColor;
             adjustment.applyColors(theme, props, accentCol, null);
             PropertyLoader.putProperties(PropertyLoader.loadProperties(DarkLaf.class, "radioButton", "ui/"),
-                    props, defaults, iconLoader);
+                    props, defaults, iconResolver);
             PropertyLoader.putProperties(PropertyLoader.loadProperties(IconSet.class, "radioButton", ""),
-                    props, defaults, iconLoader);
-            propertyMap = new Properties();
+                    props, defaults, iconResolver);
+
+            propertyMap.clear();
             for (String prop : PROPERTIES) {
                 propertyMap.put(prop, props.get(prop));
             }
@@ -223,13 +227,22 @@ public class ColoredRadioButton extends JRadioButton {
                 propertyMap.put(prop, fg);
             }
 
-            stateIcon = new StateIcon(new Icon[] {
-                    load(iconLoader, "control/radio.svg"),
-                    load(iconLoader, "control/radioDisabled.svg"),
-                    load(iconLoader, "control/radioFocused.svg"),
-                    load(iconLoader, "control/radioSelected.svg"),
-                    load(iconLoader, "control/radioSelectedDisabled.svg"),
-                    load(iconLoader, "control/radioSelectedFocused.svg")});
+            if (stateIcon == null) {
+                IconLoader iconLoader = DarkUIUtil.radioButtonLoader();
+                iconStates = new Icon[] {
+                        load(iconLoader, "control/radio.svg"),
+                        load(iconLoader, "control/radioDisabled.svg"),
+                        load(iconLoader, "control/radioFocused.svg"),
+                        load(iconLoader, "control/radioSelected.svg"),
+                        load(iconLoader, "control/radioSelectedDisabled.svg"),
+                        load(iconLoader, "control/radioSelectedFocused.svg")};
+                stateIcon = new StateIcon(iconStates);
+            } else {
+                for (Icon iconState : iconStates) {
+                    ((CustomThemedIcon) iconState).invalidate();
+                }
+            }
+
             patched = true;
         }
 
