@@ -99,7 +99,7 @@ public class AllIcons extends BaseComponentDemo {
     protected static List<NamedIcon<? extends Icon>> loadIcons(final int displaySize, final boolean centered) {
         IconLoader loader = IconLoader.get();
         try (ResourceWalker walker = ResourceWalker.walkResources("com.github.weisj")) {
-            return walker.stream().filter(p -> p.endsWith("svg")).map(p -> {
+            return walker.stream().filter(p -> p.endsWith(".svg")).map(p -> {
                 ThemedSVGIcon icon = (ThemedSVGIcon) loader.loadSVGIcon(p, -displaySize, -displaySize, true);
                 return new NamedIcon<>(p, centered ? new CenterIcon(icon, displaySize, displaySize) : icon);
             }).collect(Collectors.groupingBy(pair -> pathToIconName(pair.getFirst())))
