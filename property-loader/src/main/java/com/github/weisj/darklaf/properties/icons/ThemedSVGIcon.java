@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -21,9 +21,14 @@
 package com.github.weisj.darklaf.properties.icons;
 
 import java.net.URI;
-import java.util.function.Supplier;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.*;
+
+import org.jetbrains.annotations.NotNull;
+
+import com.github.weisj.jsvg.parser.*;
 
 
 /**
@@ -33,21 +38,18 @@ import javax.swing.*;
  */
 public class ThemedSVGIcon extends DarkSVGIcon implements ThemedIcon {
 
+    private final List<ThemedSVGIconParserProvider.ThemedSolidColorPaint> paints;
     private Object currentTheme;
     private boolean updatedNotDuringPaint;
 
-    public ThemedSVGIcon(final Supplier<URI> uriSupplier, final int displayWidth, final int displayHeight) {
-        super(uriSupplier, displayWidth, displayHeight);
-        currentTheme = new Object();
-    }
-
     public ThemedSVGIcon(final URI uri, final int displayWidth, final int displayHeight) {
         super(uri, displayWidth, displayHeight);
-        currentTheme = new Object();
+        this.paints = new ArrayList<>();
     }
 
     protected ThemedSVGIcon(final int width, final int height, final ThemedSVGIcon icon) {
         super(width, height, icon);
+        this.paints = icon.paints;
         this.currentTheme = icon.currentTheme;
         this.updatedNotDuringPaint = icon.updatedNotDuringPaint;
     }
@@ -83,22 +85,36 @@ public class ThemedSVGIcon extends DarkSVGIcon implements ThemedIcon {
         if (updatedNotDuringPaint) {
             updatedNotDuringPaint = false;
             // Update didn't happen during painting call.
-            // Image might not be up to date.
+            // Image might not be up-to-date.
             return true;
         }
         return false;
     }
 
     @Override
+    protected @NotNull ParserProvider createParserProvider() {
+        return new ThemedSVGIconParserProvider(this);
+    }
+
+    @Override
     public String toString() {
         return "ThemedSVGIcon{" +
                 "parentState= " + super.toString() +
-                "currentTheme=" + currentTheme +
+                "paints=" + paints +
+                ", currentTheme=" + currentTheme +
                 ", updatedNotDuringPaint=" + updatedNotDuringPaint +
                 '}';
     }
 
-    protected void invalidate() {
+    void registerPaint(final ThemedSVGIconParserProvider.ThemedSolidColorPaint paint) {
+        paints.add(paint);
+    }
+
+    List<ThemedSVGIconParserProvider.ThemedSolidColorPaint> paints() {
+        return paints;
+    }
+
+    public void invalidate() {
         currentTheme = new Object();
     }
 
@@ -107,6 +123,6 @@ public class ThemedSVGIcon extends DarkSVGIcon implements ThemedIcon {
     }
 
     protected void patchColors() {
-        IconColorMapper.patchColors(getSVGIcon(), getContextDefaults());
+        ThemedSVGIconParserProvider.patchColors(paints, getContextDefaults(), null);
     }
 }

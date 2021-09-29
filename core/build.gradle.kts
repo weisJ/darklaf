@@ -19,7 +19,7 @@ dependencies {
     implementation(projects.darklafWindows)
     implementation(projects.darklafMacos)
     implementation(libs.swingDslLafSupport)
-    implementation(libs.svgSalamander)
+    implementation(libs.jsvg)
 
     compileOnly(libs.nullabilityAnnotations)
     compileOnly(libs.swingx)
@@ -27,7 +27,7 @@ dependencies {
     compileOnly(toolLibs.autoservice.annotations)
     annotationProcessor(toolLibs.autoservice.processor)
 
-    testImplementation(libs.svgSalamander)
+    testImplementation(libs.jsvg)
     testImplementation(libs.swingx)
     testImplementation(testLibs.bundles.miglayout)
     testImplementation(testLibs.swingDslInspector)

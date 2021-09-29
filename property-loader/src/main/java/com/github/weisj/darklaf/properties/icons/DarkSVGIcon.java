@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -24,22 +24,24 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Supplier;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.UIManager;
+import javax.swing.*;
 
 import org.jetbrains.annotations.NotNull;
 
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.Scale;
+import com.github.weisj.jsvg.SVGDocument;
+import com.github.weisj.jsvg.attributes.ViewBox;
+import com.github.weisj.jsvg.geometry.size.FloatSize;
+import com.github.weisj.jsvg.parser.DefaultParserProvider;
+import com.github.weisj.jsvg.parser.ParserProvider;
 import com.github.weisj.swingdsl.visualpadding.VisualPaddingProvider;
-import com.kitfox.svg.SVGException;
-import com.kitfox.svg.SVGRoot;
-import com.kitfox.svg.app.beans.SVGIcon;
-import com.kitfox.svg.xml.StyleAttribute;
 
 /**
  * Icon from SVG image.
@@ -58,16 +60,18 @@ public class DarkSVGIcon
      * accounts for diagonal lines (i.e. when the rotation is pi/4). Ideally this value would only need
      * to be sqrt(2) but 2.0 behaves a lot better w.r.t. floating point calculations.
      *
-     * The scale factor is only used if the icon is painted with a non trivial rotation.
+     * The scale factor is only used if the icon is painted with a non-trivial rotation.
      */
     private static final double extraScale = 2.0;
 
-    private final AtomicBoolean loaded;
-    private final Dimension iconSize;
-    private final SVGIcon icon;
+    private final @NotNull AtomicBoolean loaded;
+    private final @NotNull Dimension iconSize;
 
-    private Supplier<URI> uriSupplier;
-    private URI uri;
+    private SVGDocument svgDocument;
+
+    private Insets visualPadding;
+
+    private final @NotNull URI uri;
 
     private IconLoader.IconKey iconKey;
 
@@ -78,44 +82,22 @@ public class DarkSVGIcon
     private Image image;
 
     /**
-     * Method to fetch the SVG icon from a url.
+     * Method to fetch the SVG icon from an url.
      *
-     * @param uriSupplier supplier for the uri from which to fetch the SVG icon.
+     * @param uri the svg uri.
      * @param displayWidth display width of icon.
      * @param displayHeight display height of icon.
      */
-    public DarkSVGIcon(final Supplier<URI> uriSupplier, final int displayWidth, final int displayHeight) {
-        this.uri = null;
-        this.uriSupplier = uriSupplier;
-        iconSize = new Dimension(displayWidth, displayHeight);
-        icon = createSVGIcon();
-        icon.setAutosize(SVGIcon.AUTOSIZE_STRETCH);
-        icon.setAntiAlias(true);
-        loaded = new AtomicBoolean(false);
-    }
-
-    /**
-     * Method to fetch the SVG icon from a url.
-     *
-     * @param uri the uri from which to fetch the SVG icon.
-     * @param displayWidth display width of icon.
-     * @param displayHeight display height of icon.
-     */
-    public DarkSVGIcon(final URI uri, final int displayWidth, final int displayHeight) {
+    public DarkSVGIcon(final @NotNull URI uri, final int displayWidth, final int displayHeight) {
         this.uri = uri;
-        uriSupplier = null;
         iconSize = new Dimension(displayWidth, displayHeight);
-        icon = createSVGIcon();
-        icon.setAutosize(SVGIcon.AUTOSIZE_STRETCH);
-        icon.setAntiAlias(true);
         loaded = new AtomicBoolean(false);
     }
 
     protected DarkSVGIcon(final int width, final int height, final DarkSVGIcon parent) {
         this.iconSize = new Dimension(width, height);
-        this.icon = parent.icon;
+        this.svgDocument = parent.svgDocument;
         this.uri = parent.uri;
-        this.uriSupplier = parent.uriSupplier;
         this.loaded = parent.loaded;
     }
 
@@ -156,34 +138,31 @@ public class DarkSVGIcon
         return ensureSVGLoaded();
     }
 
-    protected URI getUri() {
-        ensureURILoaded();
-        return uri;
-    }
-
     private boolean ensureSVGLoaded() {
         if (!isSVGLoaded()) {
             URI iconUri = getUri();
             LOGGER.finer(() -> "Loading icon '" + iconUri.toASCIIString() + "'.");
-            icon.setSvgURI(iconUri);
+            try {
+                svgDocument = IconLoader.svgLoader().load(uri.toURL(), createParserProvider());
+            } catch (MalformedURLException e) {
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            }
             loaded.set(true);
             return true;
         }
         return false;
     }
 
-    private boolean isSVGLoaded() {
-        return loaded.get();
+    protected @NotNull ParserProvider createParserProvider() {
+        return new DefaultParserProvider();
     }
 
-    private void ensureURILoaded() {
-        if (uri == null && uriSupplier != null) {
-            uri = uriSupplier.get();
-            uriSupplier = null;
-        }
-        if (uri == null) {
-            throw new IllegalStateException("Uri is null.");
-        }
+    protected @NotNull URI getUri() {
+        return uri;
+    }
+
+    private boolean isSVGLoaded() {
+        return loaded.get();
     }
 
     protected void updateCache(final boolean update, final Component c) {
@@ -203,7 +182,6 @@ public class DarkSVGIcon
     @Override
     public Image createImage(final Dimension size) {
         ensureLoaded(false);
-        icon.setPreferredSize(size);
         try {
             BufferedImage bi = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g = (Graphics2D) bi.getGraphics();
@@ -213,20 +191,10 @@ public class DarkSVGIcon
                     RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_NORMALIZE);
             Object aaHint = UIManager.get(RenderingHints.KEY_TEXT_ANTIALIASING);
             if (aaHint != null) g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, aaHint);
-            icon.paintIcon(null, g, 0, 0);
+            svgDocument.render(null, g, new ViewBox(0, 0, size.width, size.height));
             g.dispose();
             return bi;
         } catch (final RuntimeException e) {
-            if (!(this instanceof ThemedSVGIcon)) {
-                IconColorMapper.patchColors(icon);
-                Image img = icon.getImage();
-                /*
-                 * If we get to here the issue was that the icon hasn't been patched because it isn't loaded as a
-                 * themed svg icon.
-                 */
-                LOGGER.severe("Icon '" + getName(uri) + "' that defines custom colors isn't loaded as themed icon.");
-                return img;
-            }
             throw new RuntimeException("Exception while painting '" + uri.toASCIIString() + "'.", e);
         }
     }
@@ -252,16 +220,11 @@ public class DarkSVGIcon
                 || Scale.equalWithError(r, 3 * Math.PI / 2);
     }
 
-    protected SVGIcon createSVGIcon() {
-        return new SVGIcon();
-    }
-
     @Override
     public void paintIcon(final Component c, final Graphics g, final int x, final int y, final double rotation) {
         boolean dr = isDirectRenderingMode();
         if (dr) {
             ensureLoaded(true);
-            icon.setPreferredSize(getSize());
         } else {
             ensureImageLoaded(c, rotation);
         }
@@ -275,17 +238,19 @@ public class DarkSVGIcon
         double imageHeight = dr ? size.height : image.getHeight(null);
         double sx = size.width / imageWidth;
         double sy = size.height / imageHeight;
-        g2.scale(sx, sy);
+        if (!dr) g2.scale(sx, sy);
         if (rotation != 0) {
             g2.rotate(rotation, imageWidth / 2.0, imageHeight / 2.0);
         }
 
         if (dr) {
-            getSVGIcon().paintIcon(c, g, 0, 0);
+            SVGDocument svg = getSVGDocument();
+            svg.render((JComponent) c, (Graphics2D) g, new ViewBox(0, 0, size.width, size.height));
         } else {
             g2.drawImage(image, 0, 0, c);
+            g2.scale(1 / sx, 1 / sy);
         }
-        g2.scale(1 / sx, 1 / sy);
+
         g2.translate(-x, -y);
         g2.setTransform(transform);
     }
@@ -316,12 +281,10 @@ public class DarkSVGIcon
 
     private void ensureSizeLoaded() {
         if (iconSize.width < 0 || iconSize.height < 0) {
-            SVGIcon svg = getSVGIcon();
-            int autoSizeMode = svg.getAutosize();
-            svg.setAutosize(SVGIcon.AUTOSIZE_NONE);
-            int width = svg.getIconWidthIgnoreAutosize();
-            int height = svg.getIconHeightIgnoreAutosize();
-            svg.setAutosize(autoSizeMode);
+            SVGDocument svg = getSVGDocument();
+            FloatSize svgSize = svg.size();
+            int width = (int) (svgSize.width + 0.5);
+            int height = (int) (svgSize.height + 0.5);
 
             if (iconSize.height < 0 && iconSize.width >= 0) {
                 height = (int) ((iconSize.width * height) / (double) width);
@@ -330,7 +293,7 @@ public class DarkSVGIcon
                 width = (int) ((iconSize.height * width) / (double) height);
                 height = iconSize.height;
             } else if (iconSize.width == iconSize.height && iconSize.height < -1) {
-                // Scale to make largest side fit the given size.
+                // Scale to make the largest side fit the given size.
                 int size = Math.abs(iconSize.width);
                 if (width == height) {
                     width = size;
@@ -348,9 +311,23 @@ public class DarkSVGIcon
         }
     }
 
-    public SVGIcon getSVGIcon() {
+    public SVGDocument getSVGDocument() {
         ensureSVGLoaded();
-        return icon;
+        return svgDocument;
+    }
+
+    @Override
+    public @NotNull Insets getVisualPaddings(@NotNull Component component) {
+        ensureSVGLoaded();
+        return visualPadding != null ? visualPadding : new Insets(0, 0, 0, 0);
+    }
+
+    void setVisualPadding(final Insets visualPadding) {
+        this.visualPadding = visualPadding;
+    }
+
+    public URI getURI() {
+        return uri;
     }
 
     @Override
@@ -358,8 +335,8 @@ public class DarkSVGIcon
         return "DarkSVGIcon{" +
                 "loaded=" + loaded +
                 ", iconSize=" + iconSize +
-                ", icon=" + icon +
-                ", uriSupplier=" + uriSupplier +
+                ", svgDocument=" + svgDocument +
+                ", visualPadding=" + visualPadding +
                 ", uri=" + uri +
                 ", iconKey=" + iconKey +
                 ", directRendering=" + directRendering +
@@ -368,23 +345,5 @@ public class DarkSVGIcon
                 ", scaleY=" + scaleY +
                 ", image=" + image +
                 '}';
-    }
-
-    @Override
-    @SuppressWarnings("EmptyCatch")
-    public @NotNull Insets getVisualPaddings(@NotNull Component component) {
-        SVGIcon icon = getSVGIcon();
-        SVGRoot root = icon.getSvgUniverse().getDiagram(icon.getSvgURI()).getRoot();
-        StyleAttribute attr = new StyleAttribute("visualPadding");
-        try {
-            if (root.getStyle(attr, false)) {
-                int[] paddings = attr.getIntList();
-                if (paddings.length == 4) {
-                    return new Insets(paddings[0], paddings[1], paddings[2], paddings[3]);
-                }
-            }
-        } catch (SVGException ignore) {
-        }
-        return new Insets(0, 0, 0, 0);
     }
 }

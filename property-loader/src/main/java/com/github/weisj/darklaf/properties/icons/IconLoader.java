@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -28,8 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Supplier;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.*;
@@ -41,6 +39,7 @@ import org.jetbrains.annotations.Nullable;
 import com.github.weisj.darklaf.util.LazyValue;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.cache.SoftCache;
+import com.github.weisj.jsvg.parser.SVGLoader;
 
 /**
  * Default implementation of {@link IconResolver}, which provides some additional convenience
@@ -55,6 +54,8 @@ public final class IconLoader implements IconResolver {
 
     private static final AtomicReference<Object> currentThemeKey = new AtomicReference<>(null);
     private static final AtomicReference<AwareIconStyle> currentAwareStyle = new AtomicReference<>(null);
+
+    private static final SVGLoader loader;
 
     // Infer size by default.
     private static final int DEFAULT_WIDTH_SVG = -1;
@@ -73,6 +74,11 @@ public final class IconLoader implements IconResolver {
                 updateThemeStatus(new Object());
             }
         });
+        loader = new SVGLoader();
+    }
+
+    static SVGLoader svgLoader() {
+        return loader;
     }
 
     /**
@@ -415,35 +421,26 @@ public final class IconLoader implements IconResolver {
 
     private CacheableIcon loadSVGIconInternal(final String path, final int w, final int h, final boolean themed,
             final Map<Object, Object> propertyMap) {
-        Supplier<URI> uriSupplier = createURISupplier(path);
+        URI uri = createURI(path);
         DarkSVGIcon svgIcon;
         if (themed) {
             if (propertyMap != null) {
-                svgIcon = new CustomThemedIcon(uriSupplier, w, h, propertyMap);
+                svgIcon = new CustomThemedIcon(uri, w, h, propertyMap);
             } else {
-                svgIcon = new ThemedSVGIcon(uriSupplier, w, h);
+                svgIcon = new ThemedSVGIcon(uri, w, h);
             }
         } else {
-            svgIcon = new DarkSVGIcon(createURISupplier(path), w, h);
+            svgIcon = new DarkSVGIcon(uri, w, h);
         }
         return svgIcon;
     }
 
-    private Supplier<URI> createURISupplier(final String path) {
-        return () -> {
-            try {
-                URL url = getResource(path);
-                if (url.getPath().startsWith("file:///")) {
-                    return new URI(url.toString().replace("file:///", "file:/"));
-                } else {
-                    return Objects.requireNonNull(url.toURI());
-                }
-            } catch (NullPointerException | URISyntaxException e) {
-                LOGGER.log(Level.SEVERE,
-                        "Exception while loading '" + path + "'" + ". Resolving from " + parentClass, e);
-            }
-            return null;
-        };
+    private @NotNull URI createURI(final String path) {
+        try {
+            return Objects.requireNonNull(getResource(path)).toURI();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

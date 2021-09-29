@@ -26,7 +26,7 @@ module darklaf.properties {
     requires transitive java.desktop;
     requires transitive darklaf.utils;
     requires swingdsl.visualPadding;
-    requires com.kitfox.svg;
+    requires com.github.weisj.jsvg;
 
     requires static org.jetbrains.annotations;
 

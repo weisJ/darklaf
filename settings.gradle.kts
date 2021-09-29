@@ -32,7 +32,7 @@ dependencyResolutionManagement {
         }
 
         create("libs") {
-            idv("svgSalamander", "com.formdev:svgSalamander")
+            idv("jsvg", "com.github.weisj:jsvg")
             idv("swingDslLafSupport", "com.github.weisj:swing-extensions-laf-support", "swingDsl")
             idv("visualPaddings", "com.github.weisj:swing-extensions-visual-padding", "swingDsl")
             idv("swingx", "org.swinglabs:swingx")
