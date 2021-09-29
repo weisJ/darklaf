@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -22,12 +22,10 @@ package com.github.weisj.darklaf.properties.icons;
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import com.github.weisj.darklaf.properties.PropertyLoader;
-import com.kitfox.svg.SVGUniverse;
-import com.kitfox.svg.app.beans.SVGIcon;
 
 public class CustomThemedIcon extends ThemedSVGIcon implements MutableThemedIcon {
 
@@ -35,16 +33,6 @@ public class CustomThemedIcon extends ThemedSVGIcon implements MutableThemedIcon
     private Map<Object, Object> defaults;
     private Map<Object, Object> contextDefaults;
     private boolean derived;
-
-    public CustomThemedIcon(final Supplier<URI> uriSupplier, final int displayWidth, final int displayHeight) {
-        this(uriSupplier, displayWidth, displayHeight, null);
-    }
-
-    public CustomThemedIcon(final Supplier<URI> uriSupplier, final int displayWidth, final int displayHeight,
-            final Map<Object, Object> colors) {
-        super(uriSupplier, displayWidth, displayHeight);
-        defaults = colors;
-    }
 
     public CustomThemedIcon(final URI uri, final int displayWidth, final int displayHeight,
             final Map<Object, Object> colors) {
@@ -59,9 +47,16 @@ public class CustomThemedIcon extends ThemedSVGIcon implements MutableThemedIcon
     public CustomThemedIcon(final DarkSVGIcon icon, final Map<Object, Object> contextDefaults,
             final MergeMode mergeMode) {
         super(icon.getUri(), icon.getIconWidth(), icon.getIconHeight());
+        List<ThemedSVGIconParserProvider.ThemedSolidColorPaint> customPaints;
+        if (icon instanceof ThemedSVGIcon) {
+            icon.ensureLoaded(false);
+            customPaints = ((ThemedSVGIcon) icon).paints();
+        } else {
+            ensureLoaded(false);
+            customPaints = paints();
+        }
+        defaults = ThemedSVGIconParserProvider.getProperties(customPaints);
         setContextProperties(contextDefaults);
-        ensureLoaded(false);
-        defaults = IconColorMapper.getProperties(getSVGIcon());
         mergeProperties(mergeMode, icon);
     }
 
@@ -124,13 +119,6 @@ public class CustomThemedIcon extends ThemedSVGIcon implements MutableThemedIcon
     }
 
     @Override
-    protected SVGIcon createSVGIcon() {
-        SVGIcon icon = new SVGIcon();
-        icon.setSvgUniverse(new SVGUniverse());
-        return icon;
-    }
-
-    @Override
     public Map<Object, Object> getContextProperties() {
         return contextDefaults != LAF_CONTEXT ? contextDefaults : getContextDefaults();
     }
@@ -143,7 +131,8 @@ public class CustomThemedIcon extends ThemedSVGIcon implements MutableThemedIcon
 
     @Override
     protected void patchColors() {
-        IconColorMapper.patchColors(getSVGIcon(), getProperties(), getContextProperties());
+        super.patchColors();
+        ThemedSVGIconParserProvider.patchColors(paints(), getProperties(), getContextProperties());
     }
 
     public enum MergeMode {

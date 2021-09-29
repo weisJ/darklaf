@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -21,12 +21,12 @@
 package com.github.weisj.darklaf.core.documentation;
 
 import java.awt.*;
+import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -40,23 +40,12 @@ import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.border.DropShadowBorder;
 import com.github.weisj.darklaf.defaults.SampleRenderer;
-import com.github.weisj.darklaf.properties.icons.DarkSVGIcon;
-import com.github.weisj.darklaf.properties.icons.EmptyIcon;
-import com.github.weisj.darklaf.properties.icons.IconColorMapper;
-import com.github.weisj.darklaf.properties.icons.StateIcon;
+import com.github.weisj.darklaf.properties.icons.*;
 import com.github.weisj.darklaf.properties.parser.ParseResult;
 import com.github.weisj.darklaf.properties.parser.Parser;
 import com.github.weisj.darklaf.properties.parser.PrimitiveParser;
 import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.util.ColorUtil;
-import com.github.weisj.darklaf.util.ImageUtil;
-import com.github.weisj.darklaf.util.StringUtil;
-import com.github.weisj.darklaf.util.SystemInfo;
-import com.github.weisj.darklaf.util.Types;
-import com.kitfox.svg.LinearGradient;
-import com.kitfox.svg.SVGDiagram;
-import com.kitfox.svg.SVGElement;
-import com.kitfox.svg.app.beans.SVGIcon;
+import com.github.weisj.darklaf.util.*;
 
 public class CreateUITable {
 
@@ -131,8 +120,8 @@ public class CreateUITable {
     }
 
     private UIDefaults setupThemeDefaults(final Theme theme) {
+        LafManager.installTheme(theme);
         Parser.setDebugMode(true);
-        LafManager.setTheme(theme);
         UIDefaults defaults = new DarkLaf() {
             @Override
             public Theme getTheme() {
@@ -140,7 +129,6 @@ public class CreateUITable {
             }
         }.getDefaults();
         Parser.setDebugMode(false);
-        LafManager.installTheme(theme);
         currentDefaults = UIManager.getLookAndFeelDefaults();
         return defaults;
     }
@@ -286,43 +274,36 @@ public class CreateUITable {
     }
 
     private String parseSVGIcon(final DarkSVGIcon value, final int ident) {
-        SVGIcon icon = value.getSVGIcon();
         StringBuilder sb = new StringBuilder(StringUtil.repeat(IDENT, ident)).append("<td align=\"center\">\n");
         try {
-            readFile(icon.getSvgURI().toURL(), sb, ident + 1);
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
-        sb.append(StringUtil.repeat(IDENT, ident)).append("</td>\n");
+            readFile(value.getURI().toURL(), sb, ident + 1);
+            sb.append(StringUtil.repeat(IDENT, ident)).append("</td>\n");
 
-        String svg = sb.toString();
+            String svg = sb.toString();
 
-        SVGDiagram svgDiagram = icon.getSvgUniverse().getDiagram(icon.getSvgURI());
-        SVGElement defs = svgDiagram.getElement("colors");
-        if (defs != null) {
-            List<?> children = defs.getChildren(null);
-            for (Object child : children) {
-                if (child instanceof LinearGradient) {
-                    float opacity = IconColorMapper.getOpacity((LinearGradient) child, currentDefaults, null);
-                    if (opacity < 0) opacity = 1;
-                    Color color = IconColorMapper.getColor((LinearGradient) child, currentDefaults, null);
-                    String id = ((LinearGradient) child).getId();
-                    String match = "=\"url\\(#" + id + "\\)\"";
-                    String fillReplacement = "fill=\"#" + ColorUtil.toHex(color) + "\"";
-                    if (opacity != 1) {
-                        fillReplacement += " fill-opacity=\"" + opacity + "\"";
-                        svg = svg.replaceAll("fill-opacity=\"[^\"]*\"", "");
-                    }
-                    svg = svg.replaceAll("fill" + match, fillReplacement);
+            for (Map.Entry<String, Color> entry : ThemedSVGIconParserProvider.getNamedColors(
+                    new CustomThemedIcon(value, currentDefaults, CustomThemedIcon.MergeMode.REMOVE_REFERENCES))
+                    .entrySet()) {
+                String id = entry.getKey();
+                String match = "=\"url\\(#" + id + "\\)\"";
+                String colorHex = ColorUtil.toHex(ColorUtil.removeAlpha(entry.getValue()));
+                String fillReplacement = "fill=\"#" + colorHex + "\"";
 
-                    String strokeReplacement = "stroke=\"#" + ColorUtil.toHex(color) + "\"";
-                    if (opacity != 1) strokeReplacement += " stroke-opacity=\"" + opacity + "\"";
-                    svg = svg.replaceAll("stroke" + match, strokeReplacement);
+                float opacity = entry.getValue().getAlpha() / 255f;
+                if (opacity != 1) {
+                    fillReplacement += " fill-opacity=\"" + opacity + "\"";
                 }
+                svg = svg.replaceAll("fill" + match, fillReplacement);
+
+                String strokeReplacement = "stroke=\"#" + colorHex + "\"";
+                if (opacity != 1) strokeReplacement += " stroke-opacity=\"" + opacity + "\"";
+                svg = svg.replaceAll("stroke" + match, strokeReplacement);
             }
             svg = svg.replaceAll("<defs id=\"colors\">(\\n.*)* </defs>\\s+", "");
+            return svg;
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
         }
-        return svg;
     }
 
     private void readFile(final URL url, final StringBuilder builder, final int ident) throws IOException {

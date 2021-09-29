@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -28,7 +28,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
-import com.kitfox.svg.app.beans.SVGIcon;
+import com.github.weisj.jsvg.SVGDocument;
 
 @ResourceLock(value = "IconLoader")
 class SVGImageTest {
@@ -45,8 +45,8 @@ class SVGImageTest {
         DarkSVGIcon icon = (DarkSVGIcon) loader.getIcon("svg_icon.svg", 16, 16);
         Assertions.assertSame(icon, icon.derive(16, 16));
 
-        // Force load the icon.
-        icon.getSVGIcon();
+        // Forcefully load the icon.
+        icon.getSVGDocument();
 
         icon.setDisplaySize(-1, -1);
         Assertions.assertSame(icon, loader.getIcon("svg_icon.svg", 16, 16));
@@ -62,7 +62,7 @@ class SVGImageTest {
         Assertions.assertSame(icon, loader.getIcon("svg_icon.svg", 16, 16));
 
         // Force load
-        icon.getSVGIcon();
+        icon.getSVGDocument();
         Assertions.assertSame(icon, loader.getIcon("svg_icon.svg", 16, 16));
 
         icon.setDisplaySize(50, 50);
@@ -70,8 +70,8 @@ class SVGImageTest {
 
         icon.setDisplaySize(-1, -1);
         Assertions.assertNotSame(icon, loader.getIcon("svg_icon.svg", 50, 50));
-        Assertions.assertSame(icon.getSVGIcon(),
-                ((DarkSVGIcon) loader.getIcon("svg_icon.svg", 50, 50)).getSVGIcon());
+        Assertions.assertSame(icon.getSVGDocument(),
+                ((DarkSVGIcon) loader.getIcon("svg_icon.svg", 50, 50)).getSVGDocument());
 
 
         Assertions.assertEquals(16, icon.getIconWidth());
@@ -86,17 +86,17 @@ class SVGImageTest {
         Assertions.assertEquals(16, icon.getIconWidth());
         Assertions.assertEquals(16, icon.getIconHeight());
 
-        Set<SVGIcon> svgSet = new HashSet<>();
+        Set<SVGDocument> svgSet = new HashSet<>();
         for (int i = 0; i < 100; i++) {
             DarkSVGIcon svgIcon = (DarkSVGIcon) loader.getIcon("svg_icon.svg");
-            svgSet.add(svgIcon.getSVGIcon());
+            svgSet.add(svgIcon.getSVGDocument());
         }
         Assertions.assertEquals(1, svgSet.size());
 
         svgSet.clear();
         for (int i = 0; i < 100; i++) {
             DarkSVGIcon icon2 = icon.derive(i, i);
-            svgSet.add(icon2.getSVGIcon());
+            svgSet.add(icon2.getSVGDocument());
         }
         Assertions.assertEquals(1, svgSet.size());
     }

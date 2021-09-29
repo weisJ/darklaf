@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
     api(projects.darklafUtils)
-    implementation(libs.svgSalamander)
+    implementation(libs.jsvg)
     implementation(libs.visualPaddings)
     compileOnly(libs.nullabilityAnnotations)
     compileOnly(toolLibs.errorprone.annotations)
