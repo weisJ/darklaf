@@ -21,15 +21,16 @@
 package com.github.weisj.darklaf.core.documentation;
 
 import java.awt.*;
-import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -71,7 +72,9 @@ public class CreateUITable {
         workingFolder = FOLDER + theme.getPrefix() + "/";
         String os = SystemInfo.getOsName();
         String htmlFile = workingFolder + "defaults_" + os + ".html";
-        Files.createDirectories(new File(workingFolder).toPath());
+        final Path workingPath = new File(workingFolder).toPath();
+        deleteDeep(workingPath);
+        Files.createDirectories(workingPath);
         File f = new File(htmlFile);
         if (!f.exists()) Files.createFile(f.toPath());
 
@@ -84,6 +87,21 @@ public class CreateUITable {
             writer.append(tableCreator.createTables(theme, 0));
             writer.append("<a href=\"../index.html\">back</a>\n");
             writer.append("</html>");
+        }
+    }
+
+    private static void deleteDeep(final Path path) {
+        if (Files.isDirectory(path)) {
+            try (Stream<Path> children = Files.list(path)) {
+                children.forEach(CreateUITable::deleteDeep);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            Files.deleteIfExists(path);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -236,18 +254,20 @@ public class CreateUITable {
         Dimension size = new Dimension(SAMPLE_WIDTH, SAMPLE_HEIGHT);
         try {
             if (!(value instanceof Icon)) {
-                path = createImage(value, stringRepresentation, size);
+                path = createImage(value, stringRepresentation, size, 4);
             } else {
-                path = createImage(value, keyName, size);
+                path = createImage(value, keyName, size, 1);
             }
         } catch (final IOException ignored) {
             return StringUtil.repeat(IDENT, ident) + "<td></td>\n";
         }
         return StringUtil.repeat(IDENT, ident) + String
-                .format("<td style=\"padding:0\" align=\"center\"><img src=\"%s\" alt=\"%s\"></td>\n", path, key);
+                .format("<td style=\"padding:0\" align=\"center\"><img src=\"%s\" alt=\"%s\" width=\"%d\" height=\"%d\"></td>\n",
+                        path, key, SAMPLE_WIDTH, SAMPLE_HEIGHT);
     }
 
-    private String createImage(final Object value, final String name, final Dimension size) throws IOException {
+    private String createImage(final Object value, final String name, final Dimension size, int scale)
+            throws IOException {
         // noinspection ResultOfMethodCallIgnored
         new File(workingFolder + "img/").mkdirs();
         String fileName = "img/" + name + "_" + SystemInfo.getOsName() + ".png";
@@ -259,14 +279,17 @@ public class CreateUITable {
         }
         JComponent comp =
                 (JComponent) new SampleRenderer().getTableCellRendererComponent(null, value, false, false, 0, 0);
-        BufferedImage image = ImageUtil.createCompatibleTranslucentImage(size.width, size.height);
+        BufferedImage image = ImageUtil.createCompatibleTranslucentImage(scale * size.width, scale * size.height);
         Graphics g = image.getGraphics();
+        ((Graphics2D) g).scale(scale, scale);
+
         if (!(value instanceof Icon) && !(value instanceof DropShadowBorder)) {
             g.setColor(new JPanel().getBackground());
             g.fillRect(0, 0, size.width, size.height);
         }
         comp.setBounds(0, 0, size.width, size.height);
         comp.setOpaque(false);
+        comp.doLayout();
         comp.paint(g);
         g.dispose();
         ImageIO.write(image, "png", imageFile);
