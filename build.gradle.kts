@@ -146,6 +146,7 @@ allprojects {
                 configFilter {
                     include("**/*.properties")
                     exclude("**/gradle.properties")
+                    exclude("externalResources/**")
                 }
                 license("\nsuppress inspection \"UnusedProperty\" for whole file")
             }

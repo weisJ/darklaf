@@ -31,8 +31,8 @@ public class ResourceBundleInitTask implements DefaultsInitTask {
     /*
      * The resource bundle containing localization for FileChooser, ColorChooser etc.
      */
-    private static final String PLAF_BUNDLE_NAME = "com.sun.swing.internal.plaf.basic.resources.basic";
-    private static final String METAL_BUNDLE_NAME = "com.sun.swing.internal.plaf.metal.resources.metal";
+    private static final String PLAF_BUNDLE_NAME = ResourceUtil.getBundleName("external/jdk/basic");
+    private static final String METAL_BUNDLE_NAME = ResourceUtil.getBundleName("external/jdk/metal");
     private static final String DARKLAF_BUNDLE_NAME = ResourceUtil.getBundleName("task/darklaf");
     private static final String SETTING_BUNDLE_NAME = ResourceUtil.getBundleName("task/theme_settings");
     private static final String TAB_FRAME_BUNDLE_NAME = ResourceUtil.getBundleName("task/tabFrame");
