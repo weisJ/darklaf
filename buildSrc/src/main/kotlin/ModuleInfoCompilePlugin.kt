@@ -27,7 +27,7 @@ class ModuleInfoCompilePlugin : Plugin<Project> {
                 classpath = files()
                 source("src/main/module/module-info.java")
                 source(javaCompile.source)
-                destinationDir = buildDir.resolve("classes/module")
+                destinationDirectory.set(buildDir.resolve("classes/module"))
                 check(infoExtension.version.isJava9Compatible)
                 options.compilerArgs.addAll(listOf("--module-path", javaCompile.classpath.asPath))
                 if (infoExtension.extraArgs.isNotEmpty()) {
