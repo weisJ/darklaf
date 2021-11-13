@@ -38,7 +38,7 @@ import com.github.weisj.darklaf.util.SystemInfo;
 public class WindowsDecorationsProvider implements DecorationsProvider {
 
     public WindowsDecorationsProvider() throws UnsupportedProviderException {
-        if (!SystemInfo.isWindows10)
+        if (!SystemInfo.isWindows10OrGreater)
             throw new UnsupportedProviderException("Only supported on Windows 10 or later");
         if (!WindowsLibrary.get().canLoad())
             throw new UnsupportedProviderException("Native components aren't supported");

@@ -743,8 +743,9 @@ public class WindowsTitlePane extends CustomTitlePane {
     }
 
     protected void updateDragArea(final GraphicsConfiguration gc) {
-        JNIDecorationsWindows.updateValues(windowHandle, (int) Scale.scaleWidth(left, gc),
-                (int) Scale.scaleWidth(right, gc), (int) Scale.scaleHeight(height, gc));
+        JNIDecorationsWindows.updateValues(windowHandle,
+                (int) Scale.scaleWidth(left, gc), (int) Scale.scaleWidth(right, gc),
+                (int) Scale.scaleHeight(height, gc), (int) Scale.scaleHeight(BUTTON_WIDTH, gc));
     }
 
     private Dimension getPreferredMenuSize() {

@@ -66,6 +66,6 @@ public class WindowsLibrary extends AbstractLibrary {
 
     @Override
     protected boolean canLoad() {
-        return !SystemInfo.undefinedArchitecture && SystemInfo.isX86Compatible && SystemInfo.isWindows10;
+        return !SystemInfo.undefinedArchitecture && SystemInfo.isX86Compatible && SystemInfo.isWindows10OrGreater;
     }
 }

@@ -32,7 +32,7 @@ public class PlatformDefaultsInitTask implements DefaultsInitTask {
     @Override
     public void run(final Theme currentTheme, final UIDefaults defaults) {
         String key = DarkPopupMenuUI.KEY_DEFAULT_LIGHTWEIGHT_POPUPS;
-        if (SystemInfo.isWindows10 && DecorationsHandler.getSharedInstance().isCustomDecorationSupported()) {
+        if (SystemInfo.isWindows10OrGreater && DecorationsHandler.getSharedInstance().isCustomDecorationSupported()) {
             JPopupMenu.setDefaultLightWeightPopupEnabled(Boolean.TRUE.equals(defaults.get(key + ".windows10")));
         } else {
             JPopupMenu.setDefaultLightWeightPopupEnabled(Boolean.TRUE.equals(defaults.get(key)));

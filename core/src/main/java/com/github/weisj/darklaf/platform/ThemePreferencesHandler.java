@@ -56,7 +56,7 @@ public class ThemePreferencesHandler {
         try {
             // Extend for different platforms.
             boolean enableNativePreferences = isNativePreferencesEnabled();
-            if (SystemInfo.isWindows10 && enableNativePreferences) {
+            if (SystemInfo.isWindows10OrGreater && enableNativePreferences) {
                 preferenceProvider = new WindowsThemePreferenceProvider();
             } else if (SystemInfo.isMac && enableNativePreferences) {
                 preferenceProvider = new MacOSThemePreferenceProvider();

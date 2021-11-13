@@ -69,7 +69,7 @@ public final class SystemInfo {
     public static final boolean isMacOSMojave;
     public static final boolean isMacOSCatalina;
     public static final boolean isMacOSYosemite;
-    public static final boolean isWindows10;
+    public static final boolean isWindows10OrGreater;
     public static final boolean isWindows7;
     public static final boolean isWindowsVista;
 
@@ -94,8 +94,12 @@ public final class SystemInfo {
         isMacOSCatalina = isMac && isOsVersionAtLeast("10.15");
         isMacOSMojave = isMacOSCatalina || (isMac && isOsVersionAtLeast("10.14"));
         isMacOSYosemite = isMacOSCatalina || (isMac && isOsVersionAtLeast("10.10"));
-        isWindows10 = isWindows && isOsVersionAtLeast("10.0");
-        isWindows7 = isWindows10 || (isWindows && isOsVersionAtLeast("6.1"));
+
+        isWindows10OrGreater = isWindows && isOsVersionAtLeast("10.0");
+        System.out.println(OS_VERSION);
+        System.out.println(OS_NAME);
+
+        isWindows7 = isWindows10OrGreater || (isWindows && isOsVersionAtLeast("6.1"));
         isWindowsVista = isWindows7 || (isWindows && isOsVersionAtLeast("6.0"));
         isJava9OrGreater = isJavaVersionAtLeast("9");
         isJava16OrGreater = isJava9OrGreater && isJavaVersionAtLeast("16");
