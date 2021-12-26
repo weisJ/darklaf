@@ -24,20 +24,20 @@ package com.github.weisj.darklaf.ui.scrollpane;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 
-public class DarkMacScrollBarUI extends DarkRoundedScrollBarUI {
+public class DarkWindows11ScrollBarUI extends DarkRoundedScrollBarUI {
 
     public static ComponentUI createUI(final JComponent c) {
-        return new DarkMacScrollBarUI();
+        return new DarkWindows11ScrollBarUI();
     }
 
     @Override
     protected void installDefaults() {
         super.installDefaults();
-        hideScrollBar = UIManager.getBoolean("ScrollBar.macos.hideScrollBar");
+        hideScrollBar = UIManager.getBoolean("ScrollBar.windows11.hideScrollBar");
     }
 
     @Override
     protected int getTrackFadeOutDelay() {
-        return UIManager.getInt("ScrollBar.macos.hideDelay");
+        return UIManager.getInt("ScrollBar.windows11.hideDelay");
     }
 }

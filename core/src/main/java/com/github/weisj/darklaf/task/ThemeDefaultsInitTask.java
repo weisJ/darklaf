@@ -25,6 +25,7 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.function.Consumer;
 
 import javax.swing.*;
 
@@ -155,9 +156,13 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
 
     private void initPlatformProperties(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {
         IconResolver iconResolver = DarkUIUtil.iconResolver();
-        PropertyLoader.putProperties(
-                PropertyLoader.loadProperties(DarkLaf.class, getOsName(), "platform/"),
+        Consumer<String> osPlatformLoader = osName -> PropertyLoader.putProperties(
+                PropertyLoader.loadProperties(DarkLaf.class, osName, "platform/"),
                 uiProps, defaults, iconResolver);
+        osPlatformLoader.accept(getOsName());
+        if (SystemInfo.isWindows11OrGreater) {
+            osPlatformLoader.accept("windows11");
+        }
         currentTheme.customizePlatformProperties(uiProps, defaults, iconResolver);
     }
 
