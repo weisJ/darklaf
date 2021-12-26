@@ -41,6 +41,11 @@ public class WindowsLibrary extends AbstractLibrary {
     }
 
     @Override
+    protected void afterLoad() {
+        JNIDecorationsWindows.init();
+    }
+
+    @Override
     final protected Class<?> getLoaderClass() {
         return WindowsLibrary.class;
     }

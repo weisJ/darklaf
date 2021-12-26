@@ -46,8 +46,11 @@ public abstract class AbstractLibrary {
     public void updateLibrary() {
         if (!isLoaded() && !attemptedLoad) {
             loadLibrary();
+            afterLoad();
         }
     }
+
+    protected void afterLoad() {}
 
     private void loadLibrary() {
         attemptedLoad = true;

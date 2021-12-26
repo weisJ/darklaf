@@ -23,12 +23,12 @@
  *
  */
 #include "com_github_weisj_darklaf_platform_windows_JNIThemeInfoWindows.h"
+#include "Registry.h"
 
 #include <string>
 #include <thread>
 #include <atomic>
 #include <windows.h>
-#include <winreg.h>
 #include <winuser.h>
 
 constexpr auto DARK_MODE_PATH = "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize";
@@ -48,41 +48,6 @@ constexpr auto DARK_MODE_DEFAULT_VALUE = false;
 constexpr auto HIGH_CONTRAST_DEFAULT_VALUE = false;
 constexpr auto FONT_SCALE_DEFAULT_VALUE = 100;
 constexpr auto ACCENT_COLOR_DEFAULT_VALUE = 0;
-
-static void ModifyFlags(DWORD &flags) {
-#ifdef _WIN64
-    flags |= RRF_SUBKEY_WOW6464KEY;
-#else
-    flags |= RRF_SUBKEY_WOW6432KEY;
-#endif
-}
-
-static DWORD RegGetDword(HKEY hKey, const LPCSTR subKey, const LPCSTR value) {
-    DWORD data {};
-    DWORD dataSize = sizeof(data);
-    DWORD flags = RRF_RT_REG_DWORD;
-    ModifyFlags(flags);
-    LONG retCode = ::RegGetValue(hKey, subKey, value, flags, nullptr, &data, &dataSize);
-    if (retCode != ERROR_SUCCESS) throw retCode;
-
-    return data;
-}
-
-static std::string RegGetString(HKEY hKey, const LPCSTR subKey, const LPCSTR value) {
-    DWORD dataSize {};
-    DWORD flags = RRF_RT_REG_SZ;
-    ModifyFlags(flags);
-    LONG retCode = ::RegGetValue(hKey, subKey, value, flags, nullptr, nullptr, &dataSize);
-    if (retCode != ERROR_SUCCESS) throw retCode;
-
-    std::string data;
-    DWORD stringLengthInChars = dataSize / sizeof(char);
-    data.resize(stringLengthInChars);
-    retCode = ::RegGetValue(hKey, subKey, value, flags, nullptr, &data[0], &dataSize);
-    if (retCode != ERROR_SUCCESS) throw retCode;
-
-    return data;
-}
 
 static bool IsHighContrastMode() {
     HIGHCONTRAST info = { 0, 0, 0 };
@@ -119,7 +84,7 @@ static bool RegisterRegistryEvent(const LPCSTR subKey, HANDLE event) {
     HKEY hKey;
     REGSAM flags = KEY_NOTIFY;
     ModifyFlags(flags);
-    DWORD res = RegOpenKeyEx(HKEY_CURRENT_USER, subKey, 0, flags, &hKey);
+    DWORD res = RegOpenKeyExA(HKEY_CURRENT_USER, subKey, 0, flags, &hKey);
     if (res == ERROR_SUCCESS) {
         LSTATUS status = RegNotifyChangeKeyValue(hKey, FALSE, REG_NOTIFY_CHANGE_LAST_SET, event, TRUE);
         return status == ERROR_SUCCESS;

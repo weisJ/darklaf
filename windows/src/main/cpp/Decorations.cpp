@@ -23,6 +23,7 @@
  *
  */
 #include "Decorations.h"
+#include "Registry.h"
 #include "com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows.h"
 
 #ifndef WM_NCUAHDRAWCAPTION
@@ -31,6 +32,8 @@
 #ifndef WM_NCUAHDRAWFRAME
 #define WM_NCUAHDRAWFRAME (0x00AF)
 #endif
+
+static bool is_windows_11 = false;
 
 std::map<HWND, WindowWrapper*> wrapper_map = std::map<HWND, WindowWrapper*>();
 
@@ -461,4 +464,16 @@ JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_restore(JNIEnv*, jclass, jlong hwnd) {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     ShowWindow(handle, SW_RESTORE);
+}
+
+JNIEXPORT void JNICALL
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_init(JNIEnv*, jclass) {
+    try {
+        auto buildVersion = RegGetString(
+                HKEY_LOCAL_MACHINE,
+                "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion",
+                "CurrentBuild");
+        auto buildInt = std::stoi(buildVersion);
+        is_windows_11 = buildInt >= 22000;
+    } catch (LONG) {}
 }
