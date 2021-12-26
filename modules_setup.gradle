@@ -1,3 +1,0 @@
-jar {
-    moduleInfoPath = "src/main/module/module-info.java"
-}
