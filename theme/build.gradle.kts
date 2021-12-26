@@ -8,9 +8,9 @@ dependencies {
     implementation(projects.darklafUtils)
 
     compileOnly(projects.darklafAnnotations)
-    compileOnly(libs.tools.errorprone.annotations)
+    compileOnly(toolLibs.errorprone.annotations)
     annotationProcessor(projects.darklafAnnotationsProcessor)
 
-    compileOnly(libs.autoservice.annotations)
-    annotationProcessor(libs.autoservice.processor)
+    compileOnly(toolLibs.autoservice.annotations)
+    annotationProcessor(toolLibs.autoservice.processor)
 }

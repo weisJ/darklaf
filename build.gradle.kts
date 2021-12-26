@@ -223,10 +223,10 @@ allprojects {
         if (enableErrorProne) {
             apply(plugin = "net.ltgt.errorprone")
             dependencies {
-                "errorprone"(libs.tools.errorprone.core)
-                "annotationProcessor"(libs.tools.errorprone.guava)
+                "errorprone"(toolLibs.errorprone.core)
+                "annotationProcessor"(toolLibs.errorprone.guava)
                 if (!JavaVersion.current().isJava9Compatible) {
-                    "errorproneJavac"(libs.tools.errorprone.javac)
+                    "errorproneJavac"(toolLibs.errorprone.javac)
                 }
             }
             tasks.withType<JavaCompile>().configureEach {

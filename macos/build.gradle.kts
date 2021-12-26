@@ -17,7 +17,7 @@ val jnfConfig: Configuration by configurations.creating {
 }
 
 dependencies {
-    jnfConfig(libs.macos.javaNativeFoundation)
+    jnfConfig(macOsFrameworks.javaNativeFoundation)
 }
 
 val nativeResourcePath = "com/github/weisj/darklaf/platform/${project.name}"
@@ -39,9 +39,9 @@ library {
         jvmImplementation(projects.darklafUtils)
         jvmImplementation(projects.darklafPlatformBase)
         jvmImplementation(projects.darklafPropertyLoader)
-        nativeLibImplementation(libs.macos.appKit)
-        nativeLibImplementation(libs.macos.cocoa)
-        nativeLibImplementation(libs.macos.javaNativeFoundation)
+        nativeLibImplementation(macOsFrameworks.appKit)
+        nativeLibImplementation(macOsFrameworks.cocoa)
+        nativeLibImplementation(macOsFrameworks.javaNativeFoundation)
     }
 
     targetMachines.addAll(machines.macOS.x86_64, machines.macOS.architecture("arm64"))

@@ -8,9 +8,9 @@ dependencies {
     implementation(libs.svgSalamander)
     implementation(libs.visualPaddings)
     compileOnly(libs.nullabilityAnnotations)
-    compileOnly(libs.tools.errorprone.annotations)
-    testImplementation(libs.test.junit.api)
-    testRuntimeOnly(libs.test.junit.engine)
+    compileOnly(toolLibs.errorprone.annotations)
+    testImplementation(testLibs.junit.api)
+    testRuntimeOnly(testLibs.junit.engine)
 }
 
 tasks.test {

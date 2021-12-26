@@ -5,10 +5,10 @@ plugins {
 
 dependencies {
     compileOnly(libs.nullabilityAnnotations)
-    compileOnly(libs.tools.errorprone.annotations)
+    compileOnly(toolLibs.errorprone.annotations)
 
-    testImplementation(libs.test.junit.api)
-    testRuntimeOnly(libs.test.junit.engine)
+    testImplementation(testLibs.junit.api)
+    testRuntimeOnly(testLibs.junit.engine)
 }
 
 tasks.test {
