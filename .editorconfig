@@ -25,3 +25,9 @@ ij_kotlin_name_count_to_use_star_import_for_members = 999
 # Doc: https://youtrack.jetbrains.com/issue/IDEA-170643#focus=streamItem-27-3708697.0-0
 indent_size = 4
 max_line_length = 120
+
+[*.properties]
+ij_properties_align_group_field_declarations = true
+ij_properties_keep_blank_lines = true
+ij_properties_key_value_delimiter = equals
+ij_properties_spaces_around_key_value_delimiter = true
