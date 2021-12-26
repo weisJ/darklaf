@@ -37,7 +37,8 @@ module darklaf.core {
     requires swingdsl.laf;
     requires swingdsl.visualPadding;
 
-    requires static annotations;
+    requires static org.jetbrains.annotations;
+    requires static com.google.errorprone.annotations;
     requires static com.google.auto.service;
     requires static swingx;
 

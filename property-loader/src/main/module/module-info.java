@@ -28,7 +28,7 @@ module darklaf.properties {
     requires swingdsl.visualPadding;
     requires com.kitfox.svg;
 
-    requires static annotations;
+    requires static org.jetbrains.annotations;
 
     exports com.github.weisj.darklaf.properties;
     exports com.github.weisj.darklaf.properties.parser;
