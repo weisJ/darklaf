@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 16 16">
+    <defs id="colors">
+        <linearGradient id="Windows.Icons.windowRestoreInactive.color">
+            <stop offset="0" stop-color="#8C8C8C"/>
+            <stop offset="1" stop-color="#8C8C8C"/>
+        </linearGradient>
+    </defs>
+    <path fill="url(#Windows.Icons.windowRestoreInactive.color)"
+          transform="translate(0.5,-0.5)"
+          d="M3,7c0-1.3,0.7-2,2-2h4c1.3,0,2,0.7,2,2v4c0,1.3-0.7,2-2,2H5c-1.3,0-2-0.7-2-2V5V7z
+             M5,6C4.3,6,4,6.3,4,7v4 c0,0.7,0.3,1,1,1h4c0.7,0,1-0.3,1-1V7c0-0.7-0.3-1-1-1H4H5z"/>
+    <path fill="url(#Windows.Icons.windowRestoreInactive.color)"
+          d="M11,3H7C6.1,3,5.5,3.3,5.2,4H7h4c0.7,0,1,0.3,1,1v2.5V9v1.8c0.7-0.3,1-0.9,1-1.8V5C13,3.7,12.3,3,11,3z"/>
+</svg>

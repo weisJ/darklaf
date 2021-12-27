@@ -23,6 +23,7 @@ package com.github.weisj.darklaf.platform.windows;
 
 import java.awt.*;
 import java.util.Properties;
+import java.util.function.Consumer;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -101,11 +102,13 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
     @Override
     public void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults) {
         IconLoader iconLoader = IconLoader.get(WindowsDecorationsProvider.class);
-        PropertyLoader.putProperties(
-                PropertyLoader.loadProperties(WindowsDecorationsProvider.class, "windows_decorations", ""), properties,
-                currentDefaults, iconLoader);
-        PropertyLoader.putProperties(
-                PropertyLoader.loadProperties(WindowsDecorationsProvider.class, "windows_icons", ""), properties,
-                currentDefaults, iconLoader);
+        Consumer<String> loadProps = fileName -> PropertyLoader.putProperties(
+                PropertyLoader.loadProperties(WindowsDecorationsProvider.class, fileName, ""),
+                properties, currentDefaults, iconLoader);
+        loadProps.accept("windows_icons");
+        loadProps.accept("windows_decorations");
+        if (SystemInfo.isWindows11OrGreater) {
+            loadProps.accept("windows_11_decorations");
+        }
     }
 }
