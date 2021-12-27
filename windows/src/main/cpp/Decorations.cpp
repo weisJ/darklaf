@@ -37,7 +37,7 @@ static bool is_windows_11 = false;
 
 std::map<HWND, WindowWrapper*> wrapper_map = std::map<HWND, WindowWrapper*>();
 
-static bool Maximized(HWND hwnd) {
+[[nodiscard]] static bool Maximized(HWND hwnd) {
     WINDOWPLACEMENT placement;
     if (!GetWindowPlacement(hwnd, &placement)) return false;
     return placement.showCmd == SW_MAXIMIZE;
@@ -52,11 +52,11 @@ static bool IsLeftMousePressed(WindowWrapper *wrapper) {
     }
 }
 
-static inline int GetFrameSize() {
+[[nodiscard]] static inline int GetFrameSize() {
     return GetSystemMetrics(SM_CXFRAME) + GetSystemMetrics(SM_CXPADDEDBORDER);
 }
 
-static LRESULT HandleHitTest(WindowWrapper *wrapper, int x, int y) {
+[[nodiscard]] static LRESULT HandleHitTest(WindowWrapper *wrapper, int x, int y) {
     if (wrapper->popup_menu) return HTCLIENT;
 
     POINT ptMouse = { x, y };
@@ -69,6 +69,9 @@ static LRESULT HandleHitTest(WindowWrapper *wrapper, int x, int y) {
     USHORT uRow = 1;
     USHORT uCol = 1;
 
+    bool x_in_button_area = ptMouse.x > rcWindow.right - wrapper->right;
+    bool y_in_title_area = ptMouse.y >= rcWindow.top && ptMouse.y < rcWindow.top + wrapper->title_height;
+
     if (!Maximized(wrapper->window)) {
         /*
          * The horizontal frame should be the same size as the vertical frame,
@@ -80,9 +83,8 @@ static LRESULT HandleHitTest(WindowWrapper *wrapper, int x, int y) {
 
         // Make the top resize area smaller for the window buttons area.
         bool top =
-                ptMouse.x <= rcWindow.right - wrapper->right ?
-                        ptMouse.y >= rcWindow.top && ptMouse.y < rcWindow.top + frame_size :
-                        ptMouse.y >= rcWindow.top && ptMouse.y < rcWindow.top + 1;
+                !x_in_button_area ? ptMouse.y >= rcWindow.top && ptMouse.y < rcWindow.top + frame_size :
+                                    ptMouse.y >= rcWindow.top && ptMouse.y < rcWindow.top + 1;
 
         bool bottom = !top && (ptMouse.y < rcWindow.bottom && ptMouse.y >= rcWindow.bottom - frame_size);
 
@@ -126,6 +128,15 @@ static LRESULT HandleHitTest(WindowWrapper *wrapper, int x, int y) {
             && ptMouse.x >= rcWindow.left + wrapper->left
             && ptMouse.x <= rcWindow.right - wrapper->right) {
             return HTCAPTION;
+        }
+        if (x_in_button_area && y_in_title_area) {
+            if (ptMouse.x < rcWindow.right - 2 * wrapper->button_width) {
+                return HTCLIENT;
+            } else if (ptMouse.x < rcWindow.right - wrapper->button_width) {
+                return HTMAXBUTTON;
+            } else {
+                return HTCLIENT;
+            }
         }
         return HTCLIENT;
     } else {
@@ -171,12 +182,36 @@ static void UpdateRegion(WindowWrapper *wrapper) {
     else SetWindowRgn(wrapper->window, CreateRectRgnIndirect(&wrapper->rgn), TRUE);
 }
 
-static bool AutoHideTaskbar(UINT edge, RECT mon) {
+[[nodiscard]] static bool AutoHideTaskbar(UINT edge, RECT mon) {
     APPBARDATA data;
     data.cbSize = sizeof(APPBARDATA);
     data.uEdge = edge;
     data.rc = mon;
     return SHAppBarMessage(ABM_GETAUTOHIDEBAREX, &data);
+}
+
+[[nodiscard]] static inline bool IsWindowSnappedTop(RECT rcWork, RECT rcWindow) {
+    return rcWindow.left == rcWork.left && rcWindow.right == rcWork.right && rcWindow.top == rcWork.top;
+}
+
+[[nodiscard]] static inline bool IsWindowSnappedBottom(RECT rcWork, RECT rcWindow) {
+    return rcWindow.left == rcWork.left && rcWindow.right == rcWork.right && rcWindow.bottom == rcWork.bottom;
+}
+
+[[nodiscard]] static inline bool IsWindowSnappedLeft(RECT rcWork, RECT rcWindow) {
+    return rcWindow.left == rcWork.left && rcWindow.bottom == rcWork.bottom && rcWindow.top == rcWork.top;
+}
+
+[[nodiscard]] static inline bool IsWindowSnappedRight(RECT rcWork, RECT rcWindow) {
+    return rcWindow.right == rcWork.right && rcWindow.bottom == rcWork.bottom && rcWindow.top == rcWork.top;
+}
+
+[[nodiscard]] static inline MONITORINFO GetMonitorInfo(WindowWrapper &wrapper) {
+    HMONITOR mon = MonitorFromWindow(wrapper.window, MONITOR_DEFAULTTOPRIMARY);
+    MONITORINFO mi;
+    mi.cbSize = sizeof(mi);
+    GetMonitorInfoW(mon, &mi);
+    return mi;
 }
 
 /**
@@ -212,10 +247,7 @@ static void HandleNCCalcSize(WindowWrapper *wrapper, WPARAM wparam, LPARAM lpara
         (*params.rect).right = client.right;
         (*params.rect).bottom = client.bottom;
 
-        HMONITOR mon = MonitorFromWindow(wrapper->window, MONITOR_DEFAULTTOPRIMARY);
-        MONITORINFO mi;
-        mi.cbSize = sizeof(mi);
-        GetMonitorInfoW(mon, &mi);
+        MONITORINFO mi = GetMonitorInfo(*wrapper);
 
         /*
          * If the client rectangle is the same as the monitor's rectangle,
@@ -240,9 +272,22 @@ static void HandleNCCalcSize(WindowWrapper *wrapper, WPARAM wparam, LPARAM lpara
          */
         if (wrapper->resizable) {
             int frame_size = GetFrameSize();
-            nonclient.left += frame_size;
-            nonclient.right -= frame_size;
-            nonclient.bottom -= frame_size;
+            if (is_windows_11) {
+                MONITORINFO mi = GetMonitorInfo(*wrapper);
+
+                bool top_equals = mi.rcMonitor.top == nonclient.top;
+                bool bottom_equals = mi.rcMonitor.bottom == nonclient.bottom;
+                bool left_equals = mi.rcMonitor.left == nonclient.left;
+                bool right_equals = mi.rcMonitor.right == nonclient.right;
+
+                if (!(left_equals && (top_equals || bottom_equals))) nonclient.left += frame_size;
+                if (!(right_equals && (top_equals || bottom_equals))) nonclient.right -= frame_size;
+                if (!(bottom_equals && (left_equals || right_equals))) nonclient.bottom -= frame_size;
+            } else {
+                nonclient.left += frame_size;
+                nonclient.right -= frame_size;
+                nonclient.bottom -= frame_size;
+            }
         }
         *params.rect = nonclient;
     }
@@ -281,9 +326,17 @@ static void ExtendClientFrame(HWND handle) {
  */
 static void SetupWindowStyle(HWND handle) {
     auto style = GetWindowLongPtr(handle, GWL_STYLE);
-    style |= WS_THICKFRAME;
+    style |= WS_THICKFRAME | WS_MAXIMIZEBOX;
     SetWindowLongPtr(handle, GWL_STYLE, style);
 }
+
+enum M_DWMWINDOWATTRIBUTE {
+    DWMWA_WINDOW_CORNER_PREFERENCE = 33
+};
+
+enum DWM_WINDOW_CORNER_PREFERENCE {
+    DWMWCP_DEFAULT = 0, DWMWCP_DONOTROUND = 1, DWMWCP_ROUND = 2, DWMWCP_ROUNDSMALL = 3
+};
 
 static bool InstallDecorations(HWND handle, bool is_popup) {
     // Prevent multiple installations overriding the real window procedure.
@@ -291,7 +344,14 @@ static bool InstallDecorations(HWND handle, bool is_popup) {
     if (it != wrapper_map.end()) return false;
 
     SetupWindowStyle(handle);
-    ExtendClientFrame(handle);
+    if (is_popup || !is_windows_11) {
+        ExtendClientFrame(handle);
+        if (is_popup) {
+            auto attribute = M_DWMWINDOWATTRIBUTE::DWMWA_WINDOW_CORNER_PREFERENCE;
+            auto preference = DWM_WINDOW_CORNER_PREFERENCE::DWMWCP_ROUNDSMALL;
+            DwmSetWindowAttribute(handle, attribute, &preference, sizeof(preference));
+        }
+    }
 
     WNDPROC proc = reinterpret_cast<WNDPROC>(GetWindowLongPtr(handle, GWLP_WNDPROC));
 
@@ -391,7 +451,38 @@ LRESULT CALLBACK WindowWrapper::WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ 
         default:
             break;
     }
-    return CallWindowProc(wrapper->prev_proc, hwnd, uMsg, wParam, lParam);
+    if (is_windows_11) {
+        return WindowProc_Windows11(wrapper, uMsg, wParam, lParam);
+    } else {
+        return CallWindowProc(wrapper->prev_proc, hwnd, uMsg, wParam, lParam);
+    }
+}
+
+[[maybe_unused]] LRESULT WindowWrapper::WindowProc_Windows11(WindowWrapper* wrapper, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam) {
+    switch (uMsg) {
+        case WM_NCLBUTTONDOWN:
+            if (wParam == HTMAXBUTTON) {
+                wParam = 0;
+                uMsg = WM_LBUTTONDOWN;
+            }
+            break;
+        case WM_NCLBUTTONUP:
+            if (wParam == HTMAXBUTTON) {
+                wParam = 0;
+                uMsg = WM_LBUTTONUP;
+            }
+            break;
+        case WM_NCMOUSEMOVE:
+            if (wParam == HTMAXBUTTON) {
+                wParam = 0;
+                uMsg = WM_MOUSEMOVE;
+            }
+            break;
+        default:
+            break;
+    }
+    if (uMsg >= WM_NCXBUTTONUP && uMsg <= WM_NCXBUTTONUP) return TRUE;
+    return CallWindowProc(wrapper->prev_proc, wrapper->window, uMsg, wParam, lParam);
 }
 // @formatter:on
 JNIEXPORT void JNICALL
@@ -404,13 +495,14 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_setResizabl
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_updateValues(JNIEnv*, jclass, jlong hwnd, jint l, jint r, jint h) {
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_updateValues(JNIEnv*, jclass, jlong hwnd, jint l, jint r, jint h, jint bw) {
     HWND handle = reinterpret_cast<HWND>(hwnd);
     auto wrap = wrapper_map[handle];
     if (wrap) {
         wrap->left = l;
         wrap->right = r;
         wrap->title_height = h;
+        wrap->button_width = bw;
     }
 }
 

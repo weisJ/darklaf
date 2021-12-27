@@ -32,7 +32,8 @@ public final class JNIDecorationsWindows {
 
     public static native long getWindowHWND(final Window window, final String javaLibPath);
 
-    public static native void updateValues(final long hwnd, final int left, final int right, final int height);
+    public static native void updateValues(final long hwnd, final int left, final int right, final int height,
+            final int buttonWidth);
 
     public static native void setResizable(final long hwnd, final boolean resizable);
 

@@ -22,43 +22,20 @@
  * SOFTWARE.
  *
  */
-#include <stdio.h>
+#pragma once
+
+#include <string>
 #include <windows.h>
-#include <windowsx.h>
-#include <dwmapi.h>
-#include <map>
-#include <iostream>
-#include <shellapi.h>
-#include <winuser.h>
+#include <winreg.h>
 
-class WindowWrapper {
-    public:
-    bool resizable = true;
-    bool popup_menu = false;
-    bool moving = false;
-    bool move_mode = false;
-    bool maximized = false;
-    bool skipEraseBg = true;
-    bool left_pressed = false;
+inline void ModifyFlags(DWORD &flags) {
+#ifdef _WIN64
+    flags |= RRF_SUBKEY_WOW6464KEY;
+#else
+    flags |= RRF_SUBKEY_WOW6432KEY;
+#endif
+}
 
-    // The original window procedure.
-    WNDPROC prev_proc;
+DWORD RegGetDword(HKEY hKey, const LPCSTR subKey, const LPCSTR value);
 
-    // The background brush.
-    HBRUSH bgBrush;
-
-    HWND window;
-    int width;
-    int height;
-    int button_width;
-
-    // The window region.
-    RECT rgn;
-
-    // The insets for the title bar area that is draggable.
-    int left = 0;
-    int right = 0;
-    int title_height = 0;
-
-    static LRESULT CALLBACK WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam);static LRESULT WindowProc_Windows11(WindowWrapper*, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam);
-};
+std::string RegGetString(HKEY hKey, const LPCSTR subKey, const LPCSTR value);

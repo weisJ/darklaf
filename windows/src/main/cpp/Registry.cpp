@@ -22,43 +22,31 @@
  * SOFTWARE.
  *
  */
-#include <stdio.h>
-#include <windows.h>
-#include <windowsx.h>
-#include <dwmapi.h>
-#include <map>
-#include <iostream>
-#include <shellapi.h>
-#include <winuser.h>
+#include "Registry.h"
 
-class WindowWrapper {
-    public:
-    bool resizable = true;
-    bool popup_menu = false;
-    bool moving = false;
-    bool move_mode = false;
-    bool maximized = false;
-    bool skipEraseBg = true;
-    bool left_pressed = false;
+DWORD RegGetDword(HKEY hKey, const LPCSTR subKey, const LPCSTR value) {
+    DWORD data {};
+    DWORD dataSize = sizeof(data);
+    DWORD flags = RRF_RT_REG_DWORD;
+    ModifyFlags(flags);
+    LONG retCode = ::RegGetValueA(hKey, subKey, value, flags, nullptr, &data, &dataSize);
+    if (retCode != ERROR_SUCCESS) throw retCode;
 
-    // The original window procedure.
-    WNDPROC prev_proc;
+    return data;
+}
 
-    // The background brush.
-    HBRUSH bgBrush;
+std::string RegGetString(HKEY hKey, const LPCSTR subKey, const LPCSTR value) {
+    DWORD dataSize {};
+    DWORD flags = RRF_RT_REG_SZ;
+    ModifyFlags(flags);
+    LONG retCode = ::RegGetValueA(hKey, subKey, value, flags, nullptr, nullptr, &dataSize);
+    if (retCode != ERROR_SUCCESS) throw retCode;
 
-    HWND window;
-    int width;
-    int height;
-    int button_width;
+    std::string data;
+    DWORD stringLengthInChars = dataSize / sizeof(char);
+    data.resize(stringLengthInChars);
+    retCode = ::RegGetValueA(hKey, subKey, value, flags, nullptr, &data[0], &dataSize);
+    if (retCode != ERROR_SUCCESS) throw retCode;
 
-    // The window region.
-    RECT rgn;
-
-    // The insets for the title bar area that is draggable.
-    int left = 0;
-    int right = 0;
-    int title_height = 0;
-
-    static LRESULT CALLBACK WindowProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam);static LRESULT WindowProc_Windows11(WindowWrapper*, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam);
-};
+    return data;
+}
