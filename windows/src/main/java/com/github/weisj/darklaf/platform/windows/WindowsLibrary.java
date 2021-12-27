@@ -43,6 +43,7 @@ public class WindowsLibrary extends AbstractLibrary {
     @Override
     protected void afterLoad() {
         JNIDecorationsWindows.init();
+        SystemInfo.setWindows11State(JNIDecorationsWindows.isWindows11());
     }
 
     @Override

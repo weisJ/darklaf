@@ -69,7 +69,7 @@ public final class SystemInfo {
     public static final boolean isMacOSMojave;
     public static final boolean isMacOSCatalina;
     public static final boolean isMacOSYosemite;
-    public static final boolean isWindows11OrGreater;
+    private static boolean isWindows11;
     public static final boolean isWindows10OrGreater;
     public static final boolean isWindows7;
     public static final boolean isWindowsVista;
@@ -97,7 +97,7 @@ public final class SystemInfo {
         isMacOSYosemite = isMacOSCatalina || (isMac && isOsVersionAtLeast("10.10"));
 
         isWindows10OrGreater = isWindows && isOsVersionAtLeast("10.0");
-        isWindows11OrGreater = isWindows && _OS_NAME.contains("windows 11");
+        isWindows11 = isWindows && _OS_NAME.contains("windows 11");
 
         isWindows7 = isWindows10OrGreater || (isWindows && isOsVersionAtLeast("6.1"));
         isWindowsVista = isWindows7 || (isWindows && isOsVersionAtLeast("6.0"));
@@ -146,6 +146,20 @@ public final class SystemInfo {
                 return part1.length > idx ? 1 : -1;
             }
         }
+    }
+
+    public static boolean isWindows11() {
+        return isWindows11;
+    }
+
+    /**
+     * This function is temporary for the time being as the JDK doesn't report whether we are running on
+     * Windows 11. Don't call this method if you aren't sure that you are passing the correct value.
+     *
+     * @param isWindows11 Whether the OS is Windows 11
+     */
+    public static void setWindows11State(final boolean isWindows11) {
+        SystemInfo.isWindows11 = isWindows11;
     }
 
     public static boolean isJavaVersionAtLeast(final String v) {

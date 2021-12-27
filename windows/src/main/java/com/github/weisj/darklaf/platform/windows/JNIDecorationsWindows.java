@@ -52,4 +52,6 @@ public final class JNIDecorationsWindows {
     public static native boolean installPopupMenuDecorations(final long hwnd);
 
     public static native void init();
+
+    public static native boolean isWindows11();
 }

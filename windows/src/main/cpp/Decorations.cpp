@@ -558,14 +558,28 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_restore(JNI
     ShowWindow(handle, SW_RESTORE);
 }
 
+static bool checkIsWindows11() {
+    static bool local_is_windows_11 = []() {
+        try {
+            auto buildVersion = RegGetString(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion",
+                    "CurrentBuild");
+            auto buildInt = std::stoi(buildVersion);
+            return buildInt >= 22000;
+        } catch (LONG) {
+            return false;
+        }
+    }();
+    return local_is_windows_11;
+}
+
 JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_init(JNIEnv*, jclass) {
-    try {
-        auto buildVersion = RegGetString(
-                HKEY_LOCAL_MACHINE,
-                "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion",
-                "CurrentBuild");
-        auto buildInt = std::stoi(buildVersion);
-        is_windows_11 = buildInt >= 22000;
-    } catch (LONG) {}
+    // We setup this global value here once to avoid the lock associated with querying the local static
+    // in checkIsWindows11().
+    is_windows_11 = checkIsWindows11();
+}
+
+JNIEXPORT jboolean JNICALL
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_isWindows11(JNIEnv*, jclass) {
+    return checkIsWindows11();
 }

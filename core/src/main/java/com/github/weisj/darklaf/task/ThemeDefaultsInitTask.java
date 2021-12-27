@@ -160,7 +160,7 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
                 PropertyLoader.loadProperties(DarkLaf.class, osName, "platform/"),
                 uiProps, defaults, iconResolver);
         osPlatformLoader.accept(getOsName());
-        if (SystemInfo.isWindows11OrGreater) {
+        if (SystemInfo.isWindows11()) {
             osPlatformLoader.accept("windows11");
         }
         currentTheme.customizePlatformProperties(uiProps, defaults, iconResolver);

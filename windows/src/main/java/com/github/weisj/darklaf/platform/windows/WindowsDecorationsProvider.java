@@ -107,7 +107,7 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
                 properties, currentDefaults, iconLoader);
         loadProps.accept("windows_icons");
         loadProps.accept("windows_decorations");
-        if (SystemInfo.isWindows11OrGreater) {
+        if (SystemInfo.isWindows11()) {
             loadProps.accept("windows_11_decorations");
         }
     }
