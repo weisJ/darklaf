@@ -25,6 +25,12 @@
 #include "Decorations.h"
 #include "Registry.h"
 #include "com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows.h"
+#include <windowsx.h>
+#include <dwmapi.h>
+#include <map>
+#include <iostream>
+#include <shellapi.h>
+#include <winuser.h>
 
 #ifndef WM_NCUAHDRAWCAPTION
 #define WM_NCUAHDRAWCAPTION (0x00AE)
@@ -190,22 +196,6 @@ static void UpdateRegion(WindowWrapper *wrapper) {
     return SHAppBarMessage(ABM_GETAUTOHIDEBAREX, &data);
 }
 
-[[nodiscard]] static inline bool IsWindowSnappedTop(RECT rcWork, RECT rcWindow) {
-    return rcWindow.left == rcWork.left && rcWindow.right == rcWork.right && rcWindow.top == rcWork.top;
-}
-
-[[nodiscard]] static inline bool IsWindowSnappedBottom(RECT rcWork, RECT rcWindow) {
-    return rcWindow.left == rcWork.left && rcWindow.right == rcWork.right && rcWindow.bottom == rcWork.bottom;
-}
-
-[[nodiscard]] static inline bool IsWindowSnappedLeft(RECT rcWork, RECT rcWindow) {
-    return rcWindow.left == rcWork.left && rcWindow.bottom == rcWork.bottom && rcWindow.top == rcWork.top;
-}
-
-[[nodiscard]] static inline bool IsWindowSnappedRight(RECT rcWork, RECT rcWindow) {
-    return rcWindow.right == rcWork.right && rcWindow.bottom == rcWork.bottom && rcWindow.top == rcWork.top;
-}
-
 [[nodiscard]] static inline MONITORINFO GetMonitorInfo(WindowWrapper &wrapper) {
     HMONITOR mon = MonitorFromWindow(wrapper.window, MONITOR_DEFAULTTOPRIMARY);
     MONITORINFO mi;
@@ -330,14 +320,6 @@ static void SetupWindowStyle(HWND handle) {
     SetWindowLongPtr(handle, GWL_STYLE, style);
 }
 
-enum M_DWMWINDOWATTRIBUTE {
-    DWMWA_WINDOW_CORNER_PREFERENCE = 33
-};
-
-enum DWM_WINDOW_CORNER_PREFERENCE {
-    DWMWCP_DEFAULT = 0, DWMWCP_DONOTROUND = 1, DWMWCP_ROUND = 2, DWMWCP_ROUNDSMALL = 3
-};
-
 static bool InstallDecorations(HWND handle, bool is_popup) {
     // Prevent multiple installations overriding the real window procedure.
     auto it = wrapper_map.find(handle);
@@ -347,7 +329,7 @@ static bool InstallDecorations(HWND handle, bool is_popup) {
     if (is_popup || !is_windows_11) {
         ExtendClientFrame(handle);
         if (is_popup) {
-            auto attribute = M_DWMWINDOWATTRIBUTE::DWMWA_WINDOW_CORNER_PREFERENCE;
+            auto attribute = DWMWINDOWATTRIBUTE::DWMWA_WINDOW_CORNER_PREFERENCE;
             auto preference = DWM_WINDOW_CORNER_PREFERENCE::DWMWCP_ROUNDSMALL;
             DwmSetWindowAttribute(handle, attribute, &preference, sizeof(preference));
         }

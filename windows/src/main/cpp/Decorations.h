@@ -22,14 +22,7 @@
  * SOFTWARE.
  *
  */
-#include <stdio.h>
 #include <windows.h>
-#include <windowsx.h>
-#include <dwmapi.h>
-#include <map>
-#include <iostream>
-#include <shellapi.h>
-#include <winuser.h>
 
 class WindowWrapper {
     public:
