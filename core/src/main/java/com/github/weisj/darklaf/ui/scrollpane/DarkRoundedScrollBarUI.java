@@ -73,10 +73,12 @@ public abstract class DarkRoundedScrollBarUI extends DarkScrollBarUI {
         }
         int arc = horizontal ? height : width;
         roundRect.setRoundRect(x, y, width, height, arc, arc);
-        g.setColor(getThumbColor());
-        g.fill(roundRect);
-        g.setColor(getThumbBorderColor());
-        g.draw(roundRect);
+        if (!roundRect.isEmpty()) {
+            g.setColor(getThumbColor());
+            g.fill(roundRect);
+            g.setColor(getThumbBorderColor());
+            g.draw(roundRect);
+        }
         context.restore();
     }
 
