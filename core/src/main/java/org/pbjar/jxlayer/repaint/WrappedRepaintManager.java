@@ -18,7 +18,6 @@
  */
 package org.pbjar.jxlayer.repaint;
 
-import java.applet.Applet;
 import java.awt.*;
 
 import javax.swing.*;
@@ -83,16 +82,6 @@ public abstract class WrappedRepaintManager extends RepaintManager {
     @Override
     public void addDirtyRegion(final Window window, final int x, final int y, final int w, final int h) {
         delegate.addDirtyRegion(window, x, y, w, h);
-    }
-
-    /**
-     * Just delegates. {@inheritDoc}
-     */
-    @Override
-    @Deprecated
-    @SuppressWarnings("deprecation")
-    public void addDirtyRegion(final Applet applet, final int x, final int y, final int w, final int h) {
-        delegate.addDirtyRegion(applet, x, y, w, h);
     }
 
     /**

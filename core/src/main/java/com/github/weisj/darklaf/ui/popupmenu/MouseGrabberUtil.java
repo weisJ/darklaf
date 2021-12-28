@@ -25,7 +25,6 @@ import java.awt.*;
 import java.awt.event.AWTEventListener;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowListener;
-import java.security.PrivilegedAction;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
@@ -78,11 +77,7 @@ public final class MouseGrabberUtil {
         MenuSelectionManager menuSelectionManager = MenuSelectionManager.defaultManager();
         menuSelectionManager.removeChangeListener(oldMouseGrabber);
         if (oldMouseGrabber instanceof AWTEventListener) {
-            Toolkit tk = Toolkit.getDefaultToolkit();
-            java.security.AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
-                tk.removeAWTEventListener((AWTEventListener) oldMouseGrabber);
-                return null;
-            });
+            Toolkit.getDefaultToolkit().removeAWTEventListener((AWTEventListener) oldMouseGrabber);
         }
         MenuElement[] path = menuSelectionManager.getSelectedPath();
         if (path.length != 0 && path[0] != null) {

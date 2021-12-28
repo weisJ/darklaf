@@ -21,11 +21,8 @@
  */
 package com.github.weisj.darklaf.ui.popupmenu;
 
-import java.applet.Applet;
 import java.awt.*;
 import java.awt.event.*;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.List;
 
 import javax.swing.*;
@@ -53,17 +50,14 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
     }
 
     protected void grabWindow(final MenuElement[] newPath) {
-        // A grab needs to be added
         final Toolkit tk = Toolkit.getDefaultToolkit();
-        AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
-            tk.addAWTEventListener(MouseGrabber.this,
-                    AWTEvent.MOUSE_EVENT_MASK |
-                            AWTEvent.MOUSE_MOTION_EVENT_MASK |
-                            AWTEvent.MOUSE_WHEEL_EVENT_MASK |
-                            AWTEvent.WINDOW_EVENT_MASK |
-                            GRAB_EVENT_MASK);
-            return null;
-        });
+        // A grab needs to be added
+        tk.addAWTEventListener(MouseGrabber.this,
+                AWTEvent.MOUSE_EVENT_MASK |
+                        AWTEvent.MOUSE_MOTION_EVENT_MASK |
+                        AWTEvent.MOUSE_WHEEL_EVENT_MASK |
+                        AWTEvent.WINDOW_EVENT_MASK |
+                        GRAB_EVENT_MASK);
 
         Component invoker = newPath[0].getComponent();
         if (invoker instanceof JPopupMenu) {
@@ -86,12 +80,8 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
     }
 
     protected void ungrabWindow() {
-        final Toolkit tk = Toolkit.getDefaultToolkit();
         // The grab should be removed
-        java.security.AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
-            tk.removeAWTEventListener(MouseGrabber.this);
-            return null;
-        });
+        Toolkit.getDefaultToolkit().removeAWTEventListener(MouseGrabber.this);
         realUngrabWindow();
     }
 
@@ -247,7 +237,7 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
 
     protected boolean isInPopup(final Component src) {
         for (Component c = src; c != null; c = c.getParent()) {
-            if (c instanceof Applet || c instanceof Window) {
+            if (c instanceof Window) {
                 break;
             } else if (c instanceof JPopupMenu) {
                 return true;
