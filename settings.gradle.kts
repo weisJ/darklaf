@@ -4,8 +4,7 @@ rootProject.name = "darklaf"
 
 pluginManagement {
     plugins {
-        fun String.v() = extra["$this.version"].toString()
-        fun idv(id: String, key: String = id) = id(id) version key.v()
+        fun idv(id: String, key: String = id) = id(id) version extra["$key.version"].toString()
         idv("com.github.autostyle")
         idv("com.github.vlsi.crlf", "com.github.vlsi.vlsi-release-plugins")
         idv("com.github.vlsi.gradle-extensions", "com.github.vlsi.vlsi-release-plugins")
@@ -18,90 +17,59 @@ pluginManagement {
 
 dependencyResolutionManagement {
     versionCatalogs {
-        fun String.v() = extra["$this.version"].toString()
-        fun VersionCatalogBuilder.versionId(id: String) = version(id, id.v())
+        fun VersionCatalogBuilder.idv(name: String, coordinates: String, versionRef: String = name) {
+            val parts = coordinates.split(':', limit = 2)
+            alias(name).to(parts[0], parts[1]).version(extra["$versionRef.version"].toString())
+        }
+        class VersionBundle(val bundleName: String, val builder: VersionCatalogBuilder) {
+            val libs = mutableListOf<String>()
+            fun idv(name: String, coordinates: String, versionRef: String = bundleName) =
+                builder.idv("$bundleName-$name".also { libs.add(it) }, coordinates, versionRef)
+        }
+        fun VersionCatalogBuilder.bundle(name: String, init: VersionBundle.() -> Unit) = VersionBundle(name, this).run {
+            init()
+            bundle(name, libs)
+        }
 
         create("libs") {
-            versionId("svgSalamander")
-            versionId("swingDsl")
-            versionId("swingx")
-            versionId("javaxAnnotations")
-            versionId("nullabilityAnnotations")
+            idv("svgSalamander", "com.formdev:svgSalamander")
+            idv("swingDslLafSupport", "com.github.weisj:swing-extensions-laf-support", "swingDsl")
+            idv("visualPaddings", "com.github.weisj:swing-extensions-visual-padding", "swingDsl")
+            idv("swingx", "org.swinglabs:swingx")
 
-            alias("svgSalamander").to("com.formdev", "svgSalamander")
-                .versionRef("svgSalamander")
-
-            alias("swingDslLafSupport").to("com.github.weisj", "swing-extensions-laf-support")
-                .versionRef("swingDsl")
-            alias("visualPaddings").to("com.github.weisj", "swing-extensions-visual-padding")
-                .versionRef("swingDsl")
-            alias("swingx").to("org.swinglabs", "swingx")
-                .versionRef("swingx")
-
-            alias("javaxAnnotations").to("javax.annotation", "javax.annotation-api")
-                .versionRef("javaxAnnotations")
-            alias("nullabilityAnnotations").to("org.jetbrains", "annotations")
-                .versionRef("nullabilityAnnotations")
+            idv("javaxAnnotations", "javax.annotation:javax.annotation-api")
+            idv("nullabilityAnnotations", "org.jetbrains:annotations")
         }
         create("macOsFrameworks") {
-            versionId("javaNativeFoundation")
-            versionId("macOSFramework")
-
-            alias("javaNativeFoundation").to("com.github.weisj", "java-native-foundation")
-                .versionRef("javaNativeFoundation")
-            alias("appKit").to("dev.nokee.framework", "AppKit")
-                .versionRef("macOSFramework")
-            alias("cocoa").to("dev.nokee.framework", "Cocoa")
-                .versionRef("macOSFramework")
+            idv("javaNativeFoundation", "com.github.weisj:java-native-foundation")
+            idv("appKit", "dev.nokee.framework:AppKit", "macOSFramework")
+            idv("cocoa", "dev.nokee.framework:Cocoa", "macOSFramework")
         }
         create("testLibs") {
-            versionId("junit")
-            versionId("miglayout")
-            versionId("lGoodDatePicker")
-            versionId("rsyntaxtextarea")
-            versionId("swingDsl.inspector")
-            versionId("jna")
-
-            alias("junit-api").to("org.junit.jupiter", "junit-jupiter-api")
-                .versionRef("junit")
-            alias("junit-engine").to("org.junit.jupiter", "junit-jupiter-engine")
-                .versionRef("junit")
-
-            alias("miglayout-core").to("com.miglayout", "miglayout-core")
-                .versionRef("miglayout")
-            alias("miglayout-swing").to("com.miglayout", "miglayout-swing")
-                .versionRef("miglayout")
-            bundle("miglayout", listOf("miglayout-core", "miglayout-swing"))
-
-            alias("lGoodDatePicker").to("com.github.lgooddatepicker", "LGoodDatePicker")
-                .versionRef("lGoodDatePicker")
-            alias("rsyntaxtextarea").to("com.fifesoft", "rsyntaxtextarea")
-                .versionRef("rsyntaxtextarea")
-            alias("swingDslInspector").to("com.github.weisj", "swing-extensions-inspector")
-                .versionRef("swingDsl.inspector")
-
-            alias("jna").to("net.java.dev.jna", "jna")
-                .versionRef("jna")
+            bundle("junit") {
+                idv("api", "org.junit.jupiter:junit-jupiter-api")
+                idv("engine", "org.junit.jupiter:junit-jupiter-engine")
+            }
+            bundle("miglayout") {
+                idv("core", "com.miglayout:miglayout-core")
+                idv("swing", "com.miglayout:miglayout-swing")
+            }
+            idv("lGoodDatePicker", "com.github.lgooddatepicker:LGoodDatePicker")
+            idv("rsyntaxtextarea", "com.fifesoft:rsyntaxtextarea")
+            idv("swingDslInspector", "com.github.weisj:swing-extensions-inspector", "swingDsl.inspector")
+            idv("jna", "net.java.dev.jna:jna")
         }
         create("toolLibs") {
-            versionId("errorprone")
-            versionId("errorprone.compiler")
-            versionId("guava")
-            versionId("autoservice")
-
-            alias("errorprone-core").to("com.google.errorprone", "error_prone_core")
-                .versionRef("errorprone")
-            alias("errorprone-annotations").to("com.google.errorprone", "error_prone_annotations")
-                .versionRef("errorprone")
-            alias("errorprone-guava").to("com.google.guava", "guava-beta-checker")
-                .versionRef("errorprone")
-            alias("errorprone-javac").to("com.google.errorprone", "javac")
-                .versionRef("errorprone")
-
-            alias("autoservice-annotations").to("com.google.auto.service", "auto-service-annotations")
-                .versionRef("autoservice")
-            alias("autoservice-processor").to("com.google.auto.service", "auto-service")
-                .versionRef("autoservice")
+            bundle("errorprone") {
+                idv("core", "com.google.errorprone:error_prone_core")
+                idv("annotations", "com.google.errorprone:error_prone_annotations")
+                idv("javac", "com.google.errorprone:javac", "errorprone.compiler")
+                idv("guava", "com.google.guava:guava-beta-checker", "guava")
+            }
+            bundle("autoservice") {
+                idv("annotations", "com.google.auto.service:auto-service-annotations")
+                idv("processor", "com.google.auto.service:auto-service")
+            }
         }
     }
 }
