@@ -33,6 +33,13 @@ import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 public abstract class DarkRoundedScrollBarUI extends DarkScrollBarUI {
 
     protected boolean hideScrollBar = false;
+    private int minimumSize;
+
+    @Override
+    protected void installDefaults() {
+        super.installDefaults();
+        minimumSize = UIManager.getInt("ScrollBar.minimumWidth");
+    }
 
     protected abstract int getTrackFadeOutDelay();
 
@@ -53,11 +60,11 @@ public abstract class DarkRoundedScrollBarUI extends DarkScrollBarUI {
         if (hideScrollBar) {
             float animationState = scrollBarListener.getTrackState();
             if (horizontal) {
-                int newHeight = Math.round(height * animationState);
+                int newHeight = Math.round(minimumSize + (height - minimumSize) * animationState);
                 y += height - newHeight;
                 height = newHeight;
             } else {
-                int newWidth = Math.round(width * animationState);
+                int newWidth = Math.round(minimumSize + (width - minimumSize) * animationState);
                 if (scrollbar.getComponentOrientation().isLeftToRight()) {
                     x += width - newWidth;
                 }
