@@ -34,12 +34,6 @@ public abstract class DarkRoundedScrollBarUI extends DarkScrollBarUI {
 
     protected boolean hideScrollBar = false;
 
-    @Override
-    protected void installDefaults() {
-        super.installDefaults();
-        hideScrollBar = UIManager.getBoolean("ScrollBar.macos.hideScrollBar");
-    }
-
     protected abstract int getTrackFadeOutDelay();
 
     @Override
