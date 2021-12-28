@@ -212,7 +212,11 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
     @Override
     protected Dimension getMinimumThumbSize() {
         int size = getThickness();
-        return new Dimension(size, size);
+        if (scrollbar.getOrientation() == JScrollBar.HORIZONTAL) {
+            return new Dimension(2 * size, size);
+        } else {
+            return new Dimension(size, 2 * size);
+        }
     }
 
     @Override
