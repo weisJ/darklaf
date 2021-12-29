@@ -47,8 +47,11 @@ public final class MacOSDecorationsUtil {
         if (windowHandle == 0) {
             return new DecorationInformation(0, false, false, false, rootPane, false, 0, 0);
         }
-        LOGGER.fine(
-                "Installing decorations for window " + windowHandle + "(coloredTitleBar = " + useColoredTitleBar + ")");
+        // Removing the decorations may cause the window to be resized.
+        // Hence, we save the current bounds to restore them later.
+        Rectangle windowBounds = window.getBounds();
+        LOGGER.fine("Installing decorations for window " + windowHandle
+                + "(coloredTitleBar = " + useColoredTitleBar + ")");
         JNIDecorationsMacOS.retainWindow(windowHandle);
         boolean fullWindowContent = isFullWindowContentEnabled(rootPane);
         boolean transparentTitleBar = isTransparentTitleBarEnabled(rootPane);
@@ -63,6 +66,7 @@ public final class MacOSDecorationsUtil {
             boolean isDarkTheme = UIManager.getBoolean("Theme.dark");
             JNIDecorationsMacOS.setDarkTheme(windowHandle, isDarkTheme);
         }
+        window.setBounds(windowBounds);
         return new DecorationInformation(
                 windowHandle, fullWindowContent,
                 transparentTitleBar, useColoredTitleBar,
