@@ -2,7 +2,7 @@
 
 [![CI Status](https://github.com/weisJ/darklaf/workflows/CI/badge.svg?branch=master)](https://github.com/weisJ/darklaf/actions?query=workflow%3ACI)
 [![Native Libraries](https://github.com/weisJ/darklaf/workflows/Build%20Native%20Libraries/badge.svg)](https://github.com/weisJ/darklaf/actions?query=workflow%3A%22Build+Native+Libraries%22)
-[![Code Style](https://github.com/weisJ/darklaf/workflows/Autostyle/badge.svg)](https://github.com/weisJ/darklaf/actions?query=workflow%3AAutostyle)
+[![Code Style](https://github.com/weisJ/darklaf/workflows/Spotless/badge.svg)](https://github.com/weisJ/darklaf/actions?query=workflow%3ASpotless)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.weisj/darklaf-core?label=Maven%20Central)](https://search.maven.org/artifact/com.github.weisj/darklaf-core)
 
 This project is based on the [darcula](https://github.com/bulenkov/Darcula) look and feel for Swing.

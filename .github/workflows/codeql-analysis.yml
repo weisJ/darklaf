@@ -63,7 +63,7 @@ jobs:
     - name: Build
       uses: eskatos/gradle-command-action@v1
       with:
-        arguments: build -PskipAutostyle --info -x test
+        arguments: build -PskipSpotless --info -x test
         wrapper-cache-enabled: true
         dependencies-cache-enabled: true
         configuration-cache-enabled: true

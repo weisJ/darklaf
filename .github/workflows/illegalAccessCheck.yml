@@ -25,7 +25,7 @@ jobs:
       - name: Build & Test
         uses: eskatos/gradle-command-action@v1
         with:
-          arguments: build test -PskipAutostyle -PverboseTest=true -PgithubAccessToken=${{ secrets.GITHUB_TOKEN }} --no-daemon
+          arguments: build test -PskipSpotless -PverboseTest=true -PgithubAccessToken=${{ secrets.GITHUB_TOKEN }} --no-daemon
           wrapper-cache-enabled: true
           dependencies-cache-enabled: true
           configuration-cache-enabled: true
@@ -62,7 +62,7 @@ jobs:
         env:
           PROPS_GITHUB: "-PgithubAccessToken=${{ secrets.GITHUB_TOKEN }}"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: xvfb-run -a -server-num=1 --server-args="-screen 0 2000x3000x16" ./gradlew build test -PskipAutostyle -PverboseTest=true -PfailIfLibraryMissing=true $(echo $PROPS_GITHUB) --no-daemon
+        run: xvfb-run -a -server-num=1 --server-args="-screen 0 2000x3000x16" ./gradlew build test -PskipSpotless -PverboseTest=true -PfailIfLibraryMissing=true $(echo $PROPS_GITHUB) --no-daemon
       - name: Upload Test Results
         if: ${{ always() }}
         uses: actions/upload-artifact@v1
@@ -93,7 +93,7 @@ jobs:
       - name: Build & Test
         uses: eskatos/gradle-command-action@v1
         with:
-          arguments: build test -PskipAutostyle -PverboseTest=true -PgithubAccessToken=${{ secrets.GITHUB_TOKEN }} --no-daemon
+          arguments: build test -PskipSpotless -PverboseTest=true -PgithubAccessToken=${{ secrets.GITHUB_TOKEN }} --no-daemon
           wrapper-cache-enabled: true
           dependencies-cache-enabled: true
           configuration-cache-enabled: true
