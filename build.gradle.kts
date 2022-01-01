@@ -1,5 +1,3 @@
-import com.github.autostyle.generic.DefaultCopyrightStyle
-import com.github.autostyle.gradle.BaseFormatExtension
 import com.github.vlsi.gradle.crlf.CrLfSpec
 import com.github.vlsi.gradle.crlf.LineEndings
 import com.github.vlsi.gradle.properties.dsl.props
@@ -11,7 +9,7 @@ import net.ltgt.gradle.errorprone.errorprone
 
 plugins {
     idea
-    id("com.github.autostyle")
+    id("com.diffplug.spotless")
     id("com.github.vlsi.crlf")
     id("com.github.vlsi.gradle-extensions")
     id("com.github.vlsi.stage-vote-release")
@@ -23,7 +21,7 @@ val skipJavadoc by props()
 val enableMavenLocal by props(false)
 val enableGradleMetadata by props()
 val enableErrorProne by props()
-val skipAutostyle by props(false)
+val skipSpotless by props(false)
 val isRelease = project.stringProperty("release").toBool()
 val snapshotName by props("")
 
@@ -67,35 +65,6 @@ println("Building: Darklaf $buildVersion")
 println("     JDK: " + System.getProperty("java.home"))
 println("  Gradle: " + gradle.gradleVersion)
 
-fun BaseFormatExtension.license(addition: String = "") {
-    val extra = if (addition.isEmpty()) "" else "\n$addition"
-    licenseHeader(File("${project.rootDir}/LICENSE").readText() + extra) {
-        filter {
-            exclude("**/org/pbjar/jxlayer/*")
-        }
-        copyrightStyle("bat", DefaultCopyrightStyle.REM)
-        copyrightStyle("cmd", DefaultCopyrightStyle.REM)
-    }
-    trimTrailingWhitespace()
-    if (addition.isEmpty()) {
-        endWithNewline()
-    }
-}
-
-fun BaseFormatExtension.configFilter(init: PatternFilterable.() -> Unit) {
-    filter {
-        // Autostyle does not support gitignore yet https://github.com/autostyle/autostyle/issues/13
-        exclude("out/**")
-        exclude(".idea/**", ".run/**")
-        if (project == rootProject) {
-            exclude("gradlew*", "gradle/**")
-        } else {
-            exclude("bin/**")
-        }
-        init()
-    }
-}
-
 allprojects {
     group = "com.github.weisj"
     version = buildVersion
@@ -136,48 +105,49 @@ allprojects {
         }
     }
 
-    if (!skipAutostyle) {
-        apply(plugin = "com.github.autostyle")
-        autostyle {
+    if (!skipSpotless) {
+        apply(plugin = "com.diffplug.spotless")
+        spotless {
+            val spotlessRatchet by props(default = true)
+            if (spotlessRatchet) {
+                ratchetFrom("origin/master")
+            }
             kotlinGradle {
-                ktlint(version = "ktlint".v)
-            }
-            format("properties") {
-                configFilter {
-                    include("**/*.properties")
-                    exclude("**/gradle.properties")
-                    exclude("externalResources/**")
-                }
-                license("\nsuppress inspection \"UnusedProperty\" for whole file")
-            }
-            format("configs") {
-                configFilter {
-                    include("**/*.sh", "**/*.bsh", "**/*.cmd", "**/*.bat")
-                    include("**/*.xsd", "**/*.xsl", "**/*.xml")
-                    exclude("**/*.eclipseformat.xml")
-                }
-                license()
+                ktlint("ktlint".v)
             }
             format("markdown") {
-                filter.include("**/*.md")
+                target("**/*.md")
                 endWithNewline()
-            }
-            cpp {
                 trimTrailingWhitespace()
+            }
+            format("svg") {
+                target("**/*.svg")
                 endWithNewline()
-                license()
-                eclipse {
-                    configFile("${project.rootDir}/darklaf_cpp.eclipseformat.xml")
+                trimTrailingWhitespace()
+                eclipseWtp(com.diffplug.spotless.extra.wtp.EclipseWtpFormatterStep.XML)
+            }
+            plugins.withType<dev.nokee.platform.jni.internal.plugins.JniLibraryPlugin>().configureEach {
+                cpp {
+                    target("**/*.cpp", "**/*.h")
+                    endWithNewline()
+                    trimTrailingWhitespace()
+                    eclipseCdt().configFile("${project.rootDir}/config/darklaf_cpp.eclipseformat.xml")
+                    licenseHeaderFile("${project.rootDir}/config/LICENSE_HEADER_JAVA.txt")
                 }
             }
             plugins.withType<JavaPlugin>().configureEach {
+                format("properties") {
+                    target("**/*.properties")
+                    targetExclude("*/build/")
+                    licenseHeaderFile("${project.rootDir}/config/LICENSE_HEADER_PROPERTIES.txt", "[^#]")
+                }
                 java {
                     importOrder("java", "javax", "org", "com")
                     removeUnusedImports()
-                    license()
-                    eclipse {
-                        configFile("${project.rootDir}/darklaf_java.eclipseformat.xml")
-                    }
+                    endWithNewline()
+                    trimTrailingWhitespace()
+                    eclipse().configFile("${project.rootDir}/config/darklaf_java.eclipseformat.xml")
+                    licenseHeaderFile("${project.rootDir}/config/LICENSE_HEADER_JAVA.txt")
                 }
             }
         }

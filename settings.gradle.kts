@@ -5,7 +5,7 @@ rootProject.name = "darklaf"
 pluginManagement {
     plugins {
         fun idv(id: String, key: String = id) = id(id) version extra["$key.version"].toString()
-        idv("com.github.autostyle")
+        idv("com.diffplug.spotless")
         idv("com.github.vlsi.crlf", "com.github.vlsi.vlsi-release-plugins")
         idv("com.github.vlsi.gradle-extensions", "com.github.vlsi.vlsi-release-plugins")
         idv("com.github.vlsi.license-gather", "com.github.vlsi.vlsi-release-plugins")

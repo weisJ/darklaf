@@ -31,7 +31,7 @@ jobs:
       - name: Publish
         if: contains(github.event.pull_request.labels.*.name, 'published to test')
         env:
-          PROPS_RELEASE: "-Prc=1 -Pgh -Prelease=false -PskipJavadoc -PskipAutostyle -PfailIfLibraryMissing -PsnapshotName=${{ steps.extract_branch.outputs.branch }}"
+          PROPS_RELEASE: "-Prc=1 -Pgh -Prelease=false -PskipJavadoc -PskipSpotless -PfailIfLibraryMissing -PsnapshotName=${{ steps.extract_branch.outputs.branch }}"
           PROPS_GIT: "-PghGitSourceUsername=${{ secrets.GH_GIT_USERNAME }} -PghGitSourcePassword=${{ secrets.RELEASE_TOKEN }}"
           PROPS_NEXUS: "-PghNexusUsername=${{ secrets.GH_NEXUS_USERNAME }} -PghNexusPassword=${{ secrets.GH_NEXUS_PASSWORD }}"
           PROPS_SIGNING: "-PuseInMemoryKey=true -Psigning.inMemoryKey=${{ secrets.IN_MEMORY_KEY }} -Psigning.password=${{ secrets.SIGNING_PASSWORD }}"
