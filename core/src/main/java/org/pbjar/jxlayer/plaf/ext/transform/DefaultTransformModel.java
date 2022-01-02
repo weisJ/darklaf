@@ -1,3 +1,23 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2019-2021 Jannis Weis
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 package org.pbjar.jxlayer.plaf.ext.transform;
 
 import java.awt.*;
@@ -15,7 +35,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * This is an implementation of {@link TransformModel} with methods to explicitly set transformation values.
+ * This is an implementation of {@link TransformModel} with methods to explicitly set transformation
+ * values.
  *
  * @author Piet Blok
  */
@@ -60,8 +81,8 @@ public class DefaultTransformModel implements TransformModel {
     /**
      * Get the rotation center corresponding to the size.
      *
-     * @param  size the size.
-     * @return      center of rotation.
+     * @param size the size.
+     * @return center of rotation.
      */
     public Point2D getRotationCenter(final Dimension size) {
         if (supplier != null) {
@@ -75,9 +96,9 @@ public class DefaultTransformModel implements TransformModel {
     /**
      * Apply the prescribed transformations, excluding the scale.
      *
-     * @param  centerX a center X
-     * @param  centerY a center Y
-     * @return         a new {@link AffineTransform}
+     * @param centerX a center X
+     * @param centerY a center Y
+     * @return a new {@link AffineTransform}
      */
     protected AffineTransform transformNoScale(final double centerX, final double centerY) {
         AffineTransform at = new AffineTransform();
@@ -90,10 +111,11 @@ public class DefaultTransformModel implements TransformModel {
     }
 
     /**
-     * Get the rotation value in radians as set by {@link #setRotation(double)}. The default value is {@code 0}.
+     * Get the rotation value in radians as set by {@link #setRotation(double)}. The default value is
+     * {@code 0}.
      *
      * @return the rotation value.
-     * @see    #setRotation(double)
+     * @see #setRotation(double)
      */
     public double getRotation() {
         return getDouble(Type.Rotation);
@@ -119,7 +141,7 @@ public class DefaultTransformModel implements TransformModel {
      * Get the quadrant rotation value. The default value is {@code 0}.
      *
      * @return the quadrant rotation value
-     * @see    #setQuadrantRotation(int)
+     * @see #setQuadrantRotation(int)
      */
     public int getQuadrantRotation() {
         return getInteger(Type.QuadrantRotation);
@@ -129,7 +151,7 @@ public class DefaultTransformModel implements TransformModel {
      * Set the rotation in quadrants. The default value is {@code 0}.
      *
      * @param newValue the number of quadrants
-     * @see            #getQuadrantRotation()
+     * @see #getQuadrantRotation()
      */
     public void setQuadrantRotation(final int newValue) {
         setValue(Type.QuadrantRotation, newValue);
@@ -139,15 +161,15 @@ public class DefaultTransformModel implements TransformModel {
      * Set a scale.
      * <p>
      * The scale is primarily used to calculate a preferred size. Unless {@code
-     * ScaleToPreferredSize} is set to {@code true} (see {@link #setScaleToPreferredSize(boolean)} and {@link
-     * #isScaleToPreferredSize()}), actual scaling itself is calculated such that the view occupies as much space as
-     * possible on the {@link JLayer}.
+     * ScaleToPreferredSize} is set to {@code true} (see {@link #setScaleToPreferredSize(boolean)} and
+     * {@link #isScaleToPreferredSize()}), actual scaling itself is calculated such that the view
+     * occupies as much space as possible on the {@link JLayer}.
      * <p>
      * The default value is 1.
      *
-     * @param  newValue                 the preferred scale
+     * @param newValue the preferred scale
      * @throws IllegalArgumentException when the argument value is 0
-     * @see                             #getScale()
+     * @see #getScale()
      */
     public void setScale(final double newValue) throws IllegalArgumentException {
         if (newValue == 0.0) {
@@ -217,7 +239,7 @@ public class DefaultTransformModel implements TransformModel {
      * Get the shearX value as set by {@link #setShearX(double)}; The default value is {@code 0}.
      *
      * @return the shear x value
-     * @see    #setShearX(double)
+     * @see #setShearX(double)
      */
     public double getShearX() {
         return getDouble(Type.ShearX);
@@ -227,7 +249,7 @@ public class DefaultTransformModel implements TransformModel {
      * Set the shearX value. The default value is {@code 0}.
      *
      * @param newValue the shear x
-     * @see            #getShearX()
+     * @see #getShearX()
      */
     public void setShearX(final double newValue) {
         setValue(Type.ShearX, newValue);
@@ -237,7 +259,7 @@ public class DefaultTransformModel implements TransformModel {
      * Get the shearY value as set by {@link #setShearY(double)}; The default value is {@code 0}.
      *
      * @return the shear y value
-     * @see    #setShearY(double)
+     * @see #setShearY(double)
      */
     public double getShearY() {
         return getDouble(Type.ShearY);
@@ -247,7 +269,7 @@ public class DefaultTransformModel implements TransformModel {
      * Set the shearY value. The default value is {@code 0}.
      *
      * @param newValue the shear y
-     * @see            #getShearY()
+     * @see #getShearY()
      */
     public void setShearY(final double newValue) {
         setValue(Type.ShearY, newValue);
@@ -257,7 +279,7 @@ public class DefaultTransformModel implements TransformModel {
      * Set the rotation in radians. The default value is {@code 0}.
      *
      * @param newValue the rotation in radians
-     * @see            #getRotation()
+     * @see #getRotation()
      */
     public void setRotation(final double newValue) {
         setValue(Type.Rotation, newValue);
@@ -266,7 +288,7 @@ public class DefaultTransformModel implements TransformModel {
     /**
      * Set a value and fire a PropertyChange.
      *
-     * @param type     the value type
+     * @param type the value type
      * @param newValue the new value
      */
     private void setValue(final Type type, final Object newValue) {
@@ -284,7 +306,7 @@ public class DefaultTransformModel implements TransformModel {
      * Get the scale.
      *
      * @return the scale
-     * @see    #setScale(double)
+     * @see #setScale(double)
      */
     public double getScale() {
         return getDouble(Type.PreferredScale);
@@ -315,7 +337,7 @@ public class DefaultTransformModel implements TransformModel {
      * The default value is {@code false}.
      *
      * @return {@code true} if the transformation will mirror the view.
-     * @see    #setMirror(boolean)
+     * @see #setMirror(boolean)
      */
     public boolean isMirror() {
         return getBoolean(Type.Mirror);
@@ -327,7 +349,7 @@ public class DefaultTransformModel implements TransformModel {
      * The default value is {@code false}
      *
      * @param newValue the new value
-     * @see            #isMirror()
+     * @see #isMirror()
      */
     public void setMirror(final boolean newValue) {
         setValue(Type.Mirror, newValue);
@@ -339,7 +361,7 @@ public class DefaultTransformModel implements TransformModel {
      * The default value is {@code true}.
      *
      * @return {@code true} if preserving aspect ratio, {@code false} otherwise
-     * @see    #setPreserveAspectRatio(boolean)
+     * @see #setPreserveAspectRatio(boolean)
      */
     public boolean isPreserveAspectRatio() {
         return getBoolean(Type.PreserveAspectRatio);
@@ -351,7 +373,7 @@ public class DefaultTransformModel implements TransformModel {
      * The default value is {@code true}.
      *
      * @param newValue the new value
-     * @see            #isPreserveAspectRatio()
+     * @see #isPreserveAspectRatio()
      */
     public void setPreserveAspectRatio(final boolean newValue) {
         setValue(Type.PreserveAspectRatio, newValue);
@@ -362,14 +384,14 @@ public class DefaultTransformModel implements TransformModel {
      * <p>
      * The default value is {@code false}.
      * <p>
-     * When {@code true}, the view is scaled according to the preferred scale, regardless of the
-     * size of the {@link JLayer}.
+     * When {@code true}, the view is scaled according to the preferred scale, regardless of the size of
+     * the {@link JLayer}.
      * <p>
      * When {@code false}, the view is scaled to occupy as much as possible of the size of the
      * {@link JLayer}.
      *
      * @return {@code true} if scale to preferred size, {@code false} otherwise
-     * @see    #setScaleToPreferredSize(boolean)
+     * @see #setScaleToPreferredSize(boolean)
      */
     public boolean isScaleToPreferredSize() {
         return getBoolean(Type.ScaleToPreferredSize);
@@ -380,14 +402,14 @@ public class DefaultTransformModel implements TransformModel {
      * <p>
      * The default value is {@code false}.
      * <p>
-     * When {@code true}, the view is scaled according to the preferred scale, regardless of the
-     * size of the {@link JLayer}.
+     * When {@code true}, the view is scaled according to the preferred scale, regardless of the size of
+     * the {@link JLayer}.
      * <p>
      * When {@code false}, the view is scaled to occupy as much as possible of the size of the
      * {@link JLayer}.
      *
      * @param newValue the new value
-     * @see            #isScaleToPreferredSize()
+     * @see #isScaleToPreferredSize()
      */
     public void setScaleToPreferredSize(final boolean newValue) {
         setValue(Type.ScaleToPreferredSize, newValue);
@@ -414,16 +436,16 @@ public class DefaultTransformModel implements TransformModel {
     /**
      * Enum for internal convenience.
      * <p>
-     * Describes the values that on change trigger recalculation of the transform. All have a
-     * default value, used for initializing arrays.
+     * Describes the values that on change trigger recalculation of the transform. All have a default
+     * value, used for initializing arrays.
      * <p>
      * These enums are used for two purposes:
      * <p>
      * 1: To easily detect a change that requires renewed calculation of the transform(both program
      * values and user options).
      * <p>
-     * 2: To generalize setters (both program values and user options) and getters (only
-     * userOptions) for the various values.
+     * 2: To generalize setters (both program values and user options) and getters (only userOptions)
+     * for the various values.
      * <p>
      * There are two groups:
      * <p>
