@@ -11,4 +11,4 @@ jobs:
         with:
           fetch-depth: 10
       - name: Check
-        run: ./gradlew compileJava -PenableErrorProne -PWerror
+        run: ./gradlew compileJava -PskipSpotless -PenableErrorProne -PWerror
