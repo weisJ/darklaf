@@ -1,13 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-    <defs id="colors">
-        <linearGradient id="menuIconDisabled" fallback="Label.disabledForeground">
-            <stop offset="0" stop-color="#6E6E6E"/>
-            <stop offset="1" stop-color="#6E6E6E"/>
-        </linearGradient>
-    </defs>
-    <g fill="none" fill-rule="evenodd">
-        <path fill="url(#menuIconDisabled)" d="M11,3 L4,3 L4,11 L2,11 L2,1 L11,1 L11,3 Z"/>
-        <path fill="url(#menuIconDisabled)"
-              d="M5,4 L14,4 L14,14 L5,14 L5,4 Z M7,6 L7,7 L12,7 L12,6 L7,6 Z M7,10 L7,11 L12,11 L12,10 L7,10 Z M7,8 L7,9 L12,9 L12,8 L7,8 Z"/>
-    </g>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+	viewBox="0 0 16 16">
+	<defs id="colors">
+		<linearGradient id="menuIconDisabled"
+			fallback="Label.disabledForeground">
+			<stop offset="0" stop-color="#6E6E6E" />
+			<stop offset="1" stop-color="#6E6E6E" />
+		</linearGradient>
+	</defs>
+	<g fill="none" fill-rule="evenodd">
+		<path fill="url(#menuIconDisabled)"
+			d="M11,3 L4,3 L4,11 L2,11 L2,1 L11,1 L11,3 Z" />
+		<path fill="url(#menuIconDisabled)"
+			d="M5,4 L14,4 L14,14 L5,14 L5,4 Z M7,6 L7,7 L12,7 L12,6 L7,6 Z M7,10 L7,11 L12,11 L12,10 L7,10 Z M7,8 L7,9 L12,9 L12,8 L7,8 Z" />
+	</g>
 </svg>

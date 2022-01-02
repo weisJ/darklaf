@@ -1,9 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14">
-    <defs id="colors">
-        <linearGradient id="menuIconEnabled" fallback="Label.foreground">
-            <stop offset="0" stop-color="#AFB1B3"/>
-            <stop offset="1" stop-color="#AFB1B3"/>
-        </linearGradient>
-    </defs>
-    <polygon fill="url(#menuIconEnabled)" fill-rule="evenodd" points="7 1 14 13 0 13" transform="rotate(90 7 7)"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+	viewBox="0 0 14 14">
+	<defs id="colors">
+		<linearGradient id="menuIconEnabled"
+			fallback="Label.foreground">
+			<stop offset="0" stop-color="#AFB1B3" />
+			<stop offset="1" stop-color="#AFB1B3" />
+		</linearGradient>
+	</defs>
+	<polygon fill="url(#menuIconEnabled)" fill-rule="evenodd"
+		points="7 1 14 13 0 13" transform="rotate(90 7 7)" />
 </svg>

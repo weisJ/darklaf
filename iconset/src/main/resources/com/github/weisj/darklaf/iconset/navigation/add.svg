@@ -1,12 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-    <defs id="colors">
-        <linearGradient id="menuIconEnabled" fallback="Label.foreground">
-            <stop offset="0" stop-color="#AFB1B3"/>
-            <stop offset="1" stop-color="#AFB1B3"/>
-        </linearGradient>
-    </defs>
-    <g fill="none" fill-rule="evenodd">
-        <rect width="2" height="10" x="7" y="3" fill="url(#menuIconEnabled)"/>
-        <rect width="2" height="10" x="7" y="3" fill="url(#menuIconEnabled)" transform="rotate(90 8 8)"/>
-    </g>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+	viewBox="0 0 16 16">
+	<defs id="colors">
+		<linearGradient id="menuIconEnabled"
+			fallback="Label.foreground">
+			<stop offset="0" stop-color="#AFB1B3" />
+			<stop offset="1" stop-color="#AFB1B3" />
+		</linearGradient>
+	</defs>
+	<g fill="none" fill-rule="evenodd">
+		<rect width="2" height="10" x="7" y="3"
+			fill="url(#menuIconEnabled)" />
+		<rect width="2" height="10" x="7" y="3"
+			fill="url(#menuIconEnabled)" transform="rotate(90 8 8)" />
+	</g>
 </svg>
