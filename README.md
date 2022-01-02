@@ -69,10 +69,10 @@ LafManager.install(new DarculaTheme());
 
 For more information see the [wiki](https://github.com/weisJ/darklaf/wiki/LafManager#setting-the-theme).
 
-**Note**: The recommended method is using the `LafManager` as it automatically handles reloading the ui. 
+**Note**: The recommended method is using the `LafManager` as it automatically handles reloading the ui.
 
 ### Choosing a theme
-It is highly encouraged to provide users more than one theme. Forcing users to use a light/dark theme because of personal preferences might be degrading their experience in certain situations. 
+It is highly encouraged to provide users more than one theme. Forcing users to use a light/dark theme because of personal preferences might be degrading their experience in certain situations.
 For the visually impaired darklaf provides a set of high contrast themes, `HighContrastThemeLight` and `HighContrastThemeDark`.
 
 Darklaf supports detecting the system theme on macOS and Windows with the ability to automatically change the theme if the settings change.
@@ -148,7 +148,7 @@ The access token only needs to have the permission to read repositories.
 
 You can also manually download the respective native libraries
 from the latest successful run of the [Build Native Libraries Action](https://github.com/weisJ/darklaf/actions?query=workflow%3A%22Build+Native+Libraries%22+branch%3Amaster) and place it in the corresponding `<variant>/libraries` folder.
-This is necessary if you don't have the appropriate toolchain installed, but you machine is a binary target. 
+This is necessary if you don't have the appropriate toolchain installed, but you machine is a binary target.
 
 **Note**: You can still build the project without the libraries, but then custom decorations won't be supported.
 
