@@ -1,12 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 12 12">
-    <defs id="colors">
-        <linearGradient id="menuIconEnabled" fallback="Label.foreground">
-            <stop offset="0" stop-color="#AFB1B3"/>
-            <stop offset="1" stop-color="#AFB1B3"/>
-        </linearGradient>
-    </defs>
-    <g fill="url(#menuIconEnabled)" fill-rule="evenodd">
-        <path d="M1.413 4.496l2.83 2.83-.707.707L0 4.497 3.536.96l.707.707-2.83 2.83z"/>
-        <path d="M5 11h3a3 3 0 1 0 0-6H1V4h7a4 4 0 1 1 0 8H5v-1z"/>
-    </g>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+	viewBox="0 0 12 12">
+	<defs id="colors">
+		<linearGradient id="menuIconEnabled"
+			fallback="Label.foreground">
+			<stop offset="0" stop-color="#AFB1B3" />
+			<stop offset="1" stop-color="#AFB1B3" />
+		</linearGradient>
+	</defs>
+	<g fill="url(#menuIconEnabled)" fill-rule="evenodd">
+		<path
+			d="M1.413 4.496l2.83 2.83-.707.707L0 4.497 3.536.96l.707.707-2.83 2.83z" />
+		<path d="M5 11h3a3 3 0 1 0 0-6H1V4h7a4 4 0 1 1 0 8H5v-1z" />
+	</g>
 </svg>
