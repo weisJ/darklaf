@@ -38,7 +38,7 @@ jobs:
         uses: eskatos/gradle-command-action@v1
         with:
           arguments: :darklaf-windows:build -PskipSpotless -x test
-          wrapper-cache-enabled: true
+          distributions-cache-enabled: true
           dependencies-cache-enabled: true
           configuration-cache-enabled: true
       - name: Upload x86 artifact
@@ -70,7 +70,7 @@ jobs:
         uses: eskatos/gradle-command-action@v1
         with:
           arguments: :darklaf-macos:build -PskipSpotless -x test
-          wrapper-cache-enabled: true
+          distributions-cache-enabled: true
           dependencies-cache-enabled: true
           configuration-cache-enabled: true
         env:
