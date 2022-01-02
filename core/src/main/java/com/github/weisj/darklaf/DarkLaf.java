@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -80,30 +80,40 @@ public class DarkLaf extends ThemedLookAndFeel {
 
     private final boolean runListenerCallback;
 
-    DarkLaf(final Theme theme, final boolean runListenerCallback) {
+    DarkLaf(final Theme theme, final boolean runListenerCallback, final boolean isBeingInstalled) {
         this.runListenerCallback = runListenerCallback;
         this.theme = theme;
-        this.base = getBase();
+        this.base = getBase(isBeingInstalled);
     }
 
-    /** Create Custom Darcula LaF. */
+    /** Create Custom DarkLaf. */
     public DarkLaf() {
-        this(null, true);
+        this(null, true, false);
     }
 
-    private LookAndFeel getBase() {
+    private LookAndFeel getBase(boolean isBeingInstalled) {
         LookAndFeel baseLaf;
         if (SystemInfo.isWindows || SystemInfo.isLinux) {
             baseLaf = new MetalLookAndFeel();
         } else {
             final String systemLafClassName = UIManager.getSystemLookAndFeelClassName();
             final LookAndFeel currentLaf = UIManager.getLookAndFeel();
-            if (currentLaf != null && systemLafClassName.equals(currentLaf.getClass().getName())) {
+            if (currentLaf instanceof DarkLaf) {
+                // Share the base laf
+                baseLaf = ((DarkLaf) currentLaf).base;
+            } else if (currentLaf != null && systemLafClassName.equals(currentLaf.getClass().getName())) {
                 baseLaf = currentOrFallback(currentLaf);
             } else {
                 try {
                     UIManager.setLookAndFeel(systemLafClassName);
                     baseLaf = currentOrFallback(UIManager.getLookAndFeel());
+                    if (!isBeingInstalled) {
+                        /*
+                         * Reset to previous state. This path only gets hit if someone installs the laf by manually
+                         * instantiating it.
+                         */
+                        UIManager.setLookAndFeel(currentLaf);
+                    }
                 } catch (final Exception e) {
                     LOGGER.log(Level.SEVERE, e.getMessage(), e);
                     throw new IllegalStateException("Could not load base LaF class." + e.getMessage());
