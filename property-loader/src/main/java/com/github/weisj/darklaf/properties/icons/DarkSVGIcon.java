@@ -65,14 +65,9 @@ public class DarkSVGIcon
      */
     private static final double extraScale = 2.0;
 
-    private final @NotNull AtomicBoolean loaded;
     private final @NotNull Dimension iconSize;
 
-    private SVGDocument svgDocument;
-
-    private Insets visualPadding;
-
-    private final @NotNull URI uri;
+    private final @NotNull SVGDocumentHolder svgDocumentHolder;
 
     private IconLoader.IconKey iconKey;
 
@@ -90,16 +85,13 @@ public class DarkSVGIcon
      * @param displayHeight display height of icon.
      */
     public DarkSVGIcon(final @NotNull URI uri, final int displayWidth, final int displayHeight) {
-        this.uri = uri;
+        this.svgDocumentHolder = new SVGDocumentHolder(uri);
         iconSize = new Dimension(displayWidth, displayHeight);
-        loaded = new AtomicBoolean(false);
     }
 
     protected DarkSVGIcon(final int width, final int height, final DarkSVGIcon parent) {
         this.iconSize = new Dimension(width, height);
-        this.svgDocument = parent.svgDocument;
-        this.uri = parent.uri;
-        this.loaded = parent.loaded;
+        this.svgDocumentHolder = parent.svgDocumentHolder;
     }
 
     @Override
@@ -136,35 +128,11 @@ public class DarkSVGIcon
     }
 
     protected boolean ensureLoaded(final boolean painting) {
-        return ensureSVGLoaded();
-    }
-
-    private boolean ensureSVGLoaded() {
-        if (!isSVGLoaded()) {
-            URI iconUri = getUri();
-            LOGGER.finer(() -> "Loading icon '" + iconUri.toASCIIString() + "'.");
-            try {
-                svgDocument = IconLoader.svgLoader().load(uri.toURL(), createParserProvider());
-            } catch (MalformedURLException e) {
-                LOGGER.log(Level.SEVERE, e.getMessage(), e);
-            }
-            Objects.requireNonNull(svgDocument, () -> "Document failed to load: " + iconUri.toASCIIString());
-            loaded.set(true);
-            return true;
-        }
-        return false;
+        return svgDocumentHolder.ensureLoaded(this);
     }
 
     protected @NotNull ParserProvider createParserProvider() {
         return new DefaultParserProvider();
-    }
-
-    protected @NotNull URI getUri() {
-        return uri;
-    }
-
-    private boolean isSVGLoaded() {
-        return loaded.get();
     }
 
     protected void updateCache(final boolean update, final Component c) {
@@ -177,7 +145,7 @@ public class DarkSVGIcon
         double effectiveScaleX = loadedWithExtraScale ? scaleX * extraScale : scaleX;
         double effectiveScaleY = loadedWithExtraScale ? scaleY * extraScale : scaleY;
         LOGGER.finer(() -> String.format("Creating Image with size (w=%s, h=%s, scaleW=%s, scaleH=%s) for icon '%s'",
-                getSize().width, getSize().height, effectiveScaleX, effectiveScaleX, getName(getUri())));
+                getSize().width, getSize().height, effectiveScaleX, effectiveScaleX, getName(getURI())));
         image = createImage(Scale.scale(effectiveScaleX, effectiveScaleY, getSize()));
     }
 
@@ -193,11 +161,11 @@ public class DarkSVGIcon
                     RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_NORMALIZE);
             Object aaHint = UIManager.get(RenderingHints.KEY_TEXT_ANTIALIASING);
             if (aaHint != null) g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, aaHint);
-            svgDocument.render(null, g, new ViewBox(0, 0, size.width, size.height));
+            svgDocumentHolder.svgDocument.render(null, g, new ViewBox(0, 0, size.width, size.height));
             g.dispose();
             return bi;
         } catch (final RuntimeException e) {
-            throw new RuntimeException("Exception while painting '" + uri.toASCIIString() + "'.", e);
+            throw new RuntimeException("Exception while painting '" + getURI().toASCIIString() + "'.", e);
         }
     }
 
@@ -309,37 +277,32 @@ public class DarkSVGIcon
                 }
             }
             setDisplaySize(width, height);
-            LOGGER.finer(() -> "Inferred size of icon '" + getName(uri) + "' to " + iconSize);
+            LOGGER.finer(() -> "Inferred size of icon '" + getName(getURI()) + "' to " + iconSize);
         }
     }
 
     public SVGDocument getSVGDocument() {
-        ensureSVGLoaded();
-        return svgDocument;
+        return svgDocumentHolder.svgDocument(this);
     }
 
     @Override
     public @NotNull Insets getVisualPaddings(@NotNull Component component) {
-        ensureSVGLoaded();
-        return visualPadding != null ? visualPadding : new Insets(0, 0, 0, 0);
+        return svgDocumentHolder.visualPaddings(this);
     }
 
     void setVisualPadding(final Insets visualPadding) {
-        this.visualPadding = visualPadding;
+        this.svgDocumentHolder.visualPadding = visualPadding;
     }
 
     public URI getURI() {
-        return uri;
+        return svgDocumentHolder.uri;
     }
 
     @Override
     public String toString() {
         return "DarkSVGIcon{" +
-                "loaded=" + loaded +
+                ", svgDocumentHolder=" + svgDocumentHolder +
                 ", iconSize=" + iconSize +
-                ", svgDocument=" + svgDocument +
-                ", visualPadding=" + visualPadding +
-                ", uri=" + uri +
                 ", iconKey=" + iconKey +
                 ", directRendering=" + directRendering +
                 ", loadedWithExtraScale=" + loadedWithExtraScale +
@@ -347,5 +310,73 @@ public class DarkSVGIcon
                 ", scaleY=" + scaleY +
                 ", image=" + image +
                 '}';
+    }
+
+    private static class SVGDocumentHolder {
+        private final @NotNull AtomicBoolean loaded = new AtomicBoolean();
+        private SVGDocument svgDocument;
+        private final @NotNull URI uri;
+        private Insets visualPadding;
+
+        private SVGDocumentHolder(final @NotNull URI uri) {
+            this(uri, null);
+        }
+
+        private SVGDocumentHolder(final @NotNull URI uri, final SVGDocument svgDocument) {
+            this.uri = uri;
+            this.svgDocument = svgDocument;
+        }
+
+        private boolean ensureLoaded(final @NotNull DarkSVGIcon darkSVGIcon) {
+            if (!loaded.get()) {
+                URI iconUri = uri;
+                LOGGER.finer(() -> "Loading icon '" + iconUri.toASCIIString() + "'.");
+                try {
+                    svgDocument = IconLoader.svgLoader().load(uri.toURL(), darkSVGIcon.createParserProvider());
+                } catch (MalformedURLException e) {
+                    LOGGER.log(Level.SEVERE, e.getMessage(), e);
+                }
+                Objects.requireNonNull(svgDocument, () -> "Document failed to load: " + iconUri.toASCIIString());
+                loaded.set(true);
+                return true;
+            }
+            return false;
+        }
+
+        private @NotNull SVGDocument svgDocument(final @NotNull DarkSVGIcon darkSVGIcon) {
+            ensureLoaded(darkSVGIcon);
+            return svgDocument;
+        }
+
+        private @NotNull Insets visualPaddings(final @NotNull DarkSVGIcon darkSVGIcon) {
+            ensureLoaded(darkSVGIcon);
+            return visualPadding != null ? visualPadding : new Insets(0, 0, 0, 0);
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) return true;
+            if (!(o instanceof SVGDocumentHolder)) return false;
+            SVGDocumentHolder that = (SVGDocumentHolder) o;
+            return loaded.equals(that.loaded)
+                    && Objects.equals(svgDocument, that.svgDocument)
+                    && uri.equals(that.uri)
+                    && Objects.equals(visualPadding, that.visualPadding);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(loaded, svgDocument, uri, visualPadding);
+        }
+
+        @Override
+        public String toString() {
+            return "SVGDocumentHolder{" +
+                    "loaded=" + loaded +
+                    ", svgDocument=" + svgDocument +
+                    ", uri=" + uri +
+                    ", visualPadding=" + visualPadding +
+                    '}';
+        }
     }
 }
