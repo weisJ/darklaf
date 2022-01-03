@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -194,8 +194,13 @@ public class SmallColorChooser extends JPanel implements ChooserComponent<Color>
         box.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         previewComponent = createPreviewComponent();
 
-        JPanel hexFieldHolder = new JPanel(new GridBagLayout());
-        hexFieldHolder.setOpaque(false);
+        JPanel hexFieldHolder = new JPanel(new GridBagLayout()) {
+            @Override
+            public Color getBackground() {
+                return SmallColorChooser.this.getBackground();
+            }
+        };
+        hexFieldHolder.setOpaque(true);
         Box hexBox = Box.createHorizontalBox();
         JLabel label = new JLabel("#");
         hexBox.add(label);
@@ -285,11 +290,12 @@ public class SmallColorChooser extends JPanel implements ChooserComponent<Color>
 
             Descriptor label = new Descriptor(descriptors[i], descriptorsAfter[i],
                     model.getMinimum(i), model.getMaximum(i), slider::setValue);
-            label.setLabelFor(slider);
+            label.label.setLabelFor(slider);
 
             label.setBorder(BorderFactory.createEmptyBorder(0, LayoutHelper.getDefaultSpacing(), 0, 0));
             JPanel holder = new JPanel(new BorderLayout());
             holder.setOpaque(false);
+            holder.setBackground(Color.GREEN);
             holder.add(label, BorderLayout.BEFORE_FIRST_LINE);
             holder.add(slider, BorderLayout.CENTER);
             box.add(holder);
@@ -346,8 +352,7 @@ public class SmallColorChooser extends JPanel implements ChooserComponent<Color>
         };
     }
 
-    protected static class Descriptor extends JPanel {
-
+    protected class Descriptor extends JPanel {
 
         private final JFormattedTextField textField;
         private final JLabel label;
@@ -456,9 +461,13 @@ public class SmallColorChooser extends JPanel implements ChooserComponent<Color>
             });
             textField.setBorder(BorderFactory.createEmptyBorder());
             textField.setOpaque(false);
-            setOpaque(false);
             add(textField);
             setValue(min);
+        }
+
+        @Override
+        public Color getBackground() {
+            return SmallColorChooser.this.getBackground();
         }
 
         public void setValue(final Object value) {

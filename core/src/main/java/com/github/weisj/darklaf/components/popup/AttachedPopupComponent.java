@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -53,7 +53,12 @@ public class AttachedPopupComponent extends JToolTip {
         setLayout(new BorderLayout());
         this.content = content;
         add(content);
-        setBackground(content.getBackground());
+        content.setOpaque(false);
+    }
+
+    @Override
+    public Color getBackground() {
+        return content != null ? content.getBackground() : super.getBackground();
     }
 
     public static <K, T extends JComponent & ChooserComponent<K>> void attachChooser(final JComponent component,

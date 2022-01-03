@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -100,7 +100,11 @@ public final class StringPainter {
 
     public static <T extends JComponent> void drawStringImpl(final Graphics g, final T c, final View view,
             final String text, final Rectangle textRect, final Font font, final FontMetrics fm, final int mnemIndex) {
-        drawStringImpl(g, c, view, text, textRect, font, fm, mnemIndex, c.getBackground());
+        drawStringImpl(g, c, view, text, textRect, font, fm, mnemIndex, null);
+    }
+
+    private static Color effectiveBackgroundColor(JComponent c) {
+        return DarkUIUtil.getOpaqueParent(c).getBackground();
     }
 
     public static <T extends JComponent> void drawStringImpl(final Graphics g, final T c, final View view,
@@ -132,6 +136,9 @@ public final class StringPainter {
         boolean paintOpaqueBuffered = window != null;
 
         if (paintOpaqueBuffered) {
+            if (bgColor == null) {
+                bgColor = effectiveBackgroundColor(c);
+            }
             LOGGER.finest(() -> "Using opaque buffering for " + c);
             double scaleX = Scale.getScaleX((Graphics2D) g);
             double scaleY = Scale.getScaleX((Graphics2D) g);
