@@ -26,6 +26,7 @@ import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -147,6 +148,7 @@ public class DarkSVGIcon
             } catch (MalformedURLException e) {
                 LOGGER.log(Level.SEVERE, e.getMessage(), e);
             }
+            Objects.requireNonNull(svgDocument, () -> "Document failed to load: " + iconUri.toASCIIString());
             loaded.set(true);
             return true;
         }
