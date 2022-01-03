@@ -6,6 +6,7 @@ import com.github.vlsi.gradle.properties.dsl.toBool
 import com.github.vlsi.gradle.publishing.dsl.simplifyXml
 import com.github.vlsi.gradle.publishing.dsl.versionFromResolution
 import net.ltgt.gradle.errorprone.errorprone
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
     idea
@@ -217,6 +218,15 @@ allprojects {
         }
 
         tasks {
+            withType<Test>().configureEach {
+                testLogging {
+                    showStandardStreams = true
+                    showExceptions = true
+                    showStackTraces = true
+                    exceptionFormat = TestExceptionFormat.FULL
+                }
+            }
+
             withType<JavaCompile>().configureEach {
                 options.encoding = "UTF-8"
             }
