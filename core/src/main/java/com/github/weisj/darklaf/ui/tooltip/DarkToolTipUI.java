@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -22,7 +22,6 @@ package com.github.weisj.darklaf.ui.tooltip;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.Area;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -43,7 +42,9 @@ import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
-/** @author Jannis Weis */
+/**
+ * @author Jannis Weis
+ */
 public class DarkToolTipUI extends BasicToolTipUI
         implements PropertyChangeListener, HierarchyListener, ToolTipConstants {
 
@@ -193,8 +194,10 @@ public class DarkToolTipUI extends BasicToolTipUI
         GraphicsContext context = GraphicsUtil.setupAntialiasing(g);
         g.setColor(c.getBackground());
         if (!isPlain && c.getBorder() instanceof DarkTooltipBorder) {
-            Area area = ((DarkTooltipBorder) c.getBorder()).getBackgroundArea(c, c.getWidth(), c.getHeight());
-            ((Graphics2D) g).fill(area);
+            for (Shape shape : ((DarkTooltipBorder) c.getBorder()).getBackgroundShapes(c, c.getWidth(),
+                    c.getHeight())) {
+                ((Graphics2D) g).fill(shape);
+            }
         } else {
             PaintUtil.fillRect(g, 0, 0, c.getWidth(), c.getHeight());
         }
@@ -280,9 +283,11 @@ public class DarkToolTipUI extends BasicToolTipUI
     public boolean contains(final JComponent c, final int x, final int y) {
         Border b = c.getBorder();
         if (b instanceof DarkTooltipBorder) {
-            Area insideArea =
-                    ((DarkTooltipBorder) b).getBackgroundArea(toolTip, toolTip.getWidth(), toolTip.getHeight());
-            return insideArea.contains(x, y);
+            for (Shape shape : ((DarkTooltipBorder) b).getBackgroundShapes(
+                    toolTip, toolTip.getWidth(), toolTip.getHeight())) {
+                if (shape.contains(x, y)) return true;
+            }
+            return false;
         } else {
             return super.contains(c, x, y);
         }

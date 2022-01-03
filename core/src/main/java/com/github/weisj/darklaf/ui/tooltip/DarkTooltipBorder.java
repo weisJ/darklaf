@@ -60,13 +60,13 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
         paintShadow = UIManager.getBoolean("ToolTip.paintShadow");
     }
 
-    public Area getBackgroundArea(final Component c, final int width, final int height) {
+    public Shape[] getBackgroundShapes(final Component c, final int width, final int height) {
         if (isPlain(c)) {
-            return new Area(new Rectangle(0, 0, width, height));
+            return new Area[] {new Area(new Rectangle(0, 0, width, height))};
         }
         Insets ins = shadowBorder.getBorderInsets(null);
         adjustInsets(ins);
-        return bubbleBorder.getBubbleArea(ins.left, ins.top, width - ins.left - ins.right,
+        return bubbleBorder.getBubbleShapes(ins.left, ins.top, width - ins.left - ins.right,
                 height - ins.top - ins.bottom, bubbleBorder.getThickness() / 3f);
     }
 
