@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -55,8 +55,8 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
         bubbleBorder.setPointerSide(Alignment.CENTER);
         int shadowSize = UIManager.getInt("ToolTip.shadowSize");
         float opacity = UIManager.getInt("ToolTip.shadowOpacity") / 100.0f;
-        shadowBorder = new DropShadowBorder(UIManager.getColor("ToolTip.borderShadowColor"), shadowSize, opacity,
-                2 * shadowSize, true, true, true, true);
+        Color shadowColor = UIManager.getColor("ToolTip.borderShadowColor");
+        shadowBorder = new DropShadowBorder(shadowColor, shadowSize, opacity, borderRadius);
         paintShadow = UIManager.getBoolean("ToolTip.paintShadow");
     }
 

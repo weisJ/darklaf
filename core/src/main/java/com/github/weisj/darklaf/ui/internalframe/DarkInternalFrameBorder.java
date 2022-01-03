@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -39,13 +39,9 @@ public class DarkInternalFrameBorder extends DropShadowBorder implements UIResou
         inactiveOpacity = UIManager.getInt("InternalFrame.inactiveShadowOpacity") / 100f;
         int shadowSize = UIManager.getInt("InternalFrame.shadowSize");
         setShadowSize(shadowSize);
-        setCornerSize(2 * shadowSize);
+        setCornerSize(shadowSize);
         setShadowOpacity(activeOpacity);
         setShadowColor(UIManager.getColor("InternalFrame.borderShadowColor"));
-        setShowTopShadow(true);
-        setShowBottomShadow(true);
-        setShowLeftShadow(true);
-        setShowRightShadow(true);
     }
 
     @Override
