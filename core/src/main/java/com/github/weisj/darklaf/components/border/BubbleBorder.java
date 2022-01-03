@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -270,29 +270,46 @@ public class BubbleBorder extends AbstractBorder {
         return getBorderInsets(c);
     }
 
+    public Shape[] getBubbleShapes(final float x, final float y, final float width, final float height,
+            final float adj) {
+        float w = width - 2 * adj;
+        float h = height - 2 * adj;
+        RoundRectangle2D.Float bubble = calculateBubbleRect(x + adj, y + adj, w, h);
+        final Shape[] shapes = new Shape[pointerSide != Alignment.CENTER ? 2 : 1];
+        shapes[0] = calculateBubbleRect(x + adj, y + adj, w, h);
+        if (pointerSide != Alignment.CENTER) {
+            shapes[1] = calculatePointerShape(adj, w, h, bubble);
+        }
+        return shapes;
+    }
+
+    private Shape calculatePointerShape(final float adj, final float w, final float h,
+            final RoundRectangle2D.Float bubble) {
+        double pSize = getPointerSize() - adj;
+        double pWidth = getPointerWidth() - 2 * adj;
+        double pointerPad = calculatePointerPad(w, h, pointerSide);
+        switch (pointerSide) {
+            case SOUTH_EAST:
+            case NORTH_EAST:
+                pointerPad += adj;
+                break;
+            case NORTH_WEST:
+            case SOUTH_WEST:
+                pointerPad -= adj;
+                break;
+            default:
+                break;
+        }
+        return creatPointerShape(pointerPad, pSize, pWidth, bubble);
+    }
+
     public Area getBubbleArea(final float x, final float y, final float width, final float height, final float adj) {
         float w = width - 2 * adj;
         float h = height - 2 * adj;
-        double pSize = getPointerSize() - adj;
-        double pWidth = getPointerWidth() - 2 * adj;
         RoundRectangle2D.Float bubble = calculateBubbleRect(x + adj, y + adj, w, h);
         final Area area = new Area(bubble);
         if (pointerSide != Alignment.CENTER) {
-            double pointerPad = calculatePointerPad(w, h, pointerSide);
-            switch (pointerSide) {
-                case SOUTH_EAST:
-                case NORTH_EAST:
-                    pointerPad += adj;
-                    break;
-                case NORTH_WEST:
-                case SOUTH_WEST:
-                    pointerPad -= adj;
-                    break;
-                default:
-                    break;
-            }
-            Path2D pointer = creatPointerShape(pointerPad, pSize, pWidth, bubble);
-            area.add(new Area(pointer));
+            area.add(new Area(calculatePointerShape(adj, w, h, bubble)));
         }
         return area;
     }
