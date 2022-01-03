@@ -46,7 +46,7 @@ public class CustomThemedIcon extends ThemedSVGIcon implements MutableThemedIcon
 
     public CustomThemedIcon(final DarkSVGIcon icon, final Map<Object, Object> contextDefaults,
             final MergeMode mergeMode) {
-        super(icon.getUri(), icon.getIconWidth(), icon.getIconHeight());
+        super(icon.getURI(), icon.getIconWidth(), icon.getIconHeight());
         List<ThemedSVGIconParserProvider.ThemedSolidColorPaint> customPaints;
         if (icon instanceof ThemedSVGIcon) {
             icon.ensureLoaded(false);
