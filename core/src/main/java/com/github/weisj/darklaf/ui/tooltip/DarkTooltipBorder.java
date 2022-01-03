@@ -52,6 +52,8 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
         bubbleBorder.setThickness(1);
         bubbleBorder.setPointerSize(8);
         bubbleBorder.setPointerWidth(12);
+        int borderRadius = UIManager.getInt("Tooltip.borderRadius");
+        bubbleBorder.setRadius(borderRadius);
         bubbleBorder.setPointerSide(Alignment.CENTER);
         int shadowSize = UIManager.getInt("ToolTip.shadowSize");
         float opacity = UIManager.getInt("ToolTip.shadowOpacity") / 100.0f;
