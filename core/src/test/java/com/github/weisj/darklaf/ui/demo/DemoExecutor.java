@@ -66,23 +66,28 @@ public final class DemoExecutor {
         DemoExecutionSpec executionSpec = demo.getExecutionSpec();
 
         SwingUtilities.invokeLater(() -> {
-            setupLaf(executionSpec);
-            Window window = createWindow(demo, asDialog);
-            executionSpec.configureWindow(window);
+            try {
+                setupLaf(executionSpec);
+                Window window = createWindow(demo, asDialog);
+                executionSpec.configureWindow(window);
 
-            Icon icon = executionSpec.getFrameIcon();
-            if (icon != null) {
-                window.setIconImage(IconLoader.createFrameIcon(icon, window));
-            }
+                Icon icon = executionSpec.getFrameIcon();
+                if (icon != null) {
+                    window.setIconImage(IconLoader.createFrameIcon(icon, window));
+                }
 
-            window.pack();
-            configureWindowSize(executionSpec, window);
+                window.pack();
+                configureWindowSize(executionSpec, window);
 
-            window.setVisible(true);
-            window.setLocationRelativeTo(null);
-            synchronized (windowRef) {
-                windowRef.set(window);
-                windowRef.notifyAll();
+                window.setVisible(true);
+                window.setLocationRelativeTo(null);
+                synchronized (windowRef) {
+                    windowRef.set(window);
+                }
+            } finally {
+                synchronized (windowRef) {
+                    windowRef.notifyAll();
+                }
             }
         });
         synchronized (windowRef) {
