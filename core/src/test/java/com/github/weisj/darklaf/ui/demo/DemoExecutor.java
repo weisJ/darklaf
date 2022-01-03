@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Jannis Weis
+ * Copyright (c) 2021-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -25,7 +25,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Level;
 
 import javax.swing.Icon;
 import javax.swing.JDialog;
@@ -55,16 +54,14 @@ public final class DemoExecutor {
         showDemo(demo, false);
     }
 
-    public static AtomicReference<Window> showDemo(final ComponentDemo demo, final boolean asDialog,
-            final Level logLevel) {
-        LafManager.setLogLevel(logLevel != null ? logLevel : Level.FINE);
-        return showDemo(demo, asDialog);
-    }
-
     public static AtomicReference<Window> showDemo(final ComponentDemo demo, final boolean asDialog) {
         InspectorKt.installInspector();
         LafManager.enabledPreferenceChangeReporting(false);
         LafManager.addThemePreferenceChangeListener(LafManager::installTheme);
+        return showDemoWithoutSetup(demo, asDialog);
+    }
+
+    public static AtomicReference<Window> showDemoWithoutSetup(final ComponentDemo demo, final boolean asDialog) {
         AtomicReference<Window> windowRef = new AtomicReference<>();
         DemoExecutionSpec executionSpec = demo.getExecutionSpec();
 
@@ -88,6 +85,13 @@ public final class DemoExecutor {
                 windowRef.notifyAll();
             }
         });
+        synchronized (windowRef) {
+            try {
+                windowRef.wait();
+            } catch (InterruptedException e) {
+                throw new IllegalStateException(e);
+            }
+        }
         return windowRef;
     }
 
