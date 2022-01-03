@@ -57,7 +57,8 @@ library {
             }
             linkTask.configure {
                 val systemFrameworks = "/System/Library/Frameworks"
-                val current = "Versions/Current"
+                val versionCurrent = "Versions/Current"
+                val versionA = "Versions/A"
                 val jnfName = "JavaNativeFoundation.framework"
                 linkerArgs.addAll(
                     "-lobjc", "-mmacosx-version-min=$minOs",
@@ -67,12 +68,14 @@ library {
                     // with the dynamic library of the framework we specifically have to add the system framework
                     // search paths accordingly.
                     // First try any system provided framework (this will fail on arm64):
-                    "-rpath", "$systemFrameworks/$jnfName/$current",
-                    "-rpath", "$systemFrameworks/JavaVM.framework/$current/Frameworks/$jnfName/$current",
+                    "-rpath", "$systemFrameworks/$jnfName/$versionCurrent",
+                    "-rpath", "$systemFrameworks/$jnfName/$versionA",
+                    "-rpath", "$systemFrameworks/JavaVM.framework/$versionCurrent/Frameworks/$jnfName/$versionCurrent",
+                    "-rpath", "$systemFrameworks/JavaVM.framework/$versionA/Frameworks/$jnfName/$versionA",
                     // Then try the jdk provided framework (folder layout may vary. We check multiple possibilities):
                     "-rpath", "@executable_path/../lib/$jnfName",
-                    "-rpath", "@executable_path/../lib/$jnfName/$current/",
-                    "-rpath", "@executable_path/../lib/$jnfName/Versions/A/",
+                    "-rpath", "@executable_path/../lib/$jnfName/$versionCurrent",
+                    "-rpath", "@executable_path/../lib/$jnfName/$versionA",
                     // Lastly use our bundled drop-in replacement:
                     "-rpath", "@loader_path/$jnfName"
                 )
