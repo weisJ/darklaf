@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.core.test.DarklafOnly;
 import com.github.weisj.darklaf.core.test.DelicateDemo;
 import com.github.weisj.darklaf.core.test.util.ClassFinder;
@@ -90,14 +91,15 @@ public class DemoLauncher extends BaseComponentDemo {
             this.demo = demo;
         }
 
-        public AtomicReference<Window> start() {
-            return start(null).getFirst();
+        public void start() {
+            start(null);
         }
 
         public Pair<AtomicReference<Window>, ComponentDemo> start(final Level logLevel) {
             ComponentDemo componentDemo = demo.instantiate();
+            LafManager.setLogLevel(logLevel != null ? logLevel : Level.FINE);
             return new Pair<>(
-                    DemoExecutor.showDemo(componentDemo, true, logLevel),
+                    DemoExecutor.showDemoWithoutSetup(componentDemo, true),
                     componentDemo);
         }
 
