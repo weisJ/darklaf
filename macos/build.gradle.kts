@@ -69,15 +69,15 @@ library {
                     // search paths accordingly.
                     // First try any system provided framework (this will fail on arm64):
                     "-rpath", "$systemFrameworks/$jnfName/$versionCurrent",
-                    "-rpath", "$systemFrameworks/$jnfName/$versionA",
-                    "-rpath", "$systemFrameworks/JavaVM.framework/$versionCurrent/Frameworks/$jnfName/$versionCurrent",
-                    "-rpath", "$systemFrameworks/JavaVM.framework/$versionA/Frameworks/$jnfName/$versionA",
+//                    "-rpath", "$systemFrameworks/$jnfName/$versionA",
+//                    "-rpath", "$systemFrameworks/JavaVM.framework/$versionCurrent/Frameworks/$jnfName/$versionCurrent",
+//                    "-rpath", "$systemFrameworks/JavaVM.framework/$versionA/Frameworks/$jnfName/$versionA",
                     // Then try the jdk provided framework (folder layout may vary. We check multiple possibilities):
-                    "-rpath", "@executable_path/../lib/$jnfName",
-                    "-rpath", "@executable_path/../lib/$jnfName/$versionCurrent",
-                    "-rpath", "@executable_path/../lib/$jnfName/$versionA",
+//                    "-rpath", "@executable_path/../lib/$jnfName",
+//                    "-rpath", "@executable_path/../lib/$jnfName/$versionCurrent",
+//                    "-rpath", "@executable_path/../lib/$jnfName/$versionA",
                     // Lastly use our bundled drop-in replacement:
-                    "-rpath", "@loader_path/$jnfName"
+//                    "-rpath", "@loader_path/$jnfName"
                 )
             }
         }
