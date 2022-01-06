@@ -47,6 +47,8 @@ public final class StringPainter {
     private static boolean translucentAAPaintingEnabled = true;
     private static boolean experimentalAntialiasingEnabled = false;
 
+    private StringPainter() {}
+
     public static void setExperimentalAntialiasingEnabled(final boolean enabled) {
         experimentalAntialiasingEnabled = enabled;
     }
@@ -104,7 +106,7 @@ public final class StringPainter {
     }
 
     private static Color effectiveBackgroundColor(JComponent c) {
-        return DarkUIUtil.getOpaqueParent(c).getBackground();
+        return c.getBackground();
     }
 
     public static <T extends JComponent> void drawStringImpl(final Graphics g, final T c, final View view,
