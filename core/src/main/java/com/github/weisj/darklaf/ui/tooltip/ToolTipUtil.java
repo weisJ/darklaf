@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -25,6 +25,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
@@ -56,11 +57,6 @@ public final class ToolTipUtil {
         if (!context.isBestFit()) {
             return context.getToolTipLocation(p, null);
         }
-        Rectangle screenBounds = DarkUIUtil.getScreenBounds(context.getTarget(), p);
-        Rectangle windowBounds = DarkUIUtil.getWindow(context.getTarget()).getBounds();
-        Rectangle tooltipBounds = new Rectangle();
-        tooltipBounds.setSize(context.getToolTip().getPreferredSize());
-
         Alignment original = context.getAlignment();
         Alignment originalCenter = context.getCenterAlignment();
 
@@ -72,15 +68,18 @@ public final class ToolTipUtil {
 
         Alignment[] alignments = getAlignments(targetAlignment);
         Point pos;
-        BiConsumer<ToolTipContext, Alignment> setter =
-                isCenter ? ToolTipContext::setCenterAlignment : ToolTipContext::setAlignment;
+        BiConsumer<ToolTipContext, Alignment> setter = isCenter
+                ? ToolTipContext::setCenterAlignment
+                : ToolTipContext::setAlignment;
         // Check if a position keeps the tooltip inside the window.
-        pos = tryAlignments(alignments, context, p, tooltipBounds, windowBounds, screenBounds, setter,
-                centerHorizontally, centerVertically);
+
+        LayoutConstraints layoutConstraints = calculateLayoutConstraints(context, p);
+
+        pos = tryAlignments(alignments, context, p, layoutConstraints, setter, centerHorizontally, centerVertically);
         if (pos == null) {
             // Try again with screen bounds instead.
-            pos = tryAlignments(alignments, context, p, tooltipBounds, screenBounds, screenBounds, setter,
-                    centerHorizontally, centerVertically);
+            pos = tryAlignments(alignments, context, p, layoutConstraints, setter, centerHorizontally,
+                    centerVertically);
         }
 
         /*
@@ -98,18 +97,32 @@ public final class ToolTipUtil {
         return pos;
     }
 
+    private static LayoutConstraints calculateLayoutConstraints(final ToolTipContext context, final Point p) {
+        Rectangle screenBounds = DarkUIUtil.getScreenBounds(context.getTarget(), p);
+        Rectangle windowBounds = DarkUIUtil.getWindow(context.getTarget()).getBounds();
+
+        JToolTip toolTip = context.getToolTip();
+        Rectangle tooltipBounds = new Rectangle(toolTip.getPreferredSize());
+
+        Border tooltipBorder = toolTip.getBorder();
+        Insets layoutInsets = tooltipBorder instanceof AlignableTooltipBorder
+                ? ((AlignableTooltipBorder) tooltipBorder).getAlignmentInsets(toolTip)
+                : new Insets(0, 0, 0, 0);
+
+        return new LayoutConstraints(tooltipBounds, windowBounds, screenBounds, layoutInsets);
+    }
+
     private static Point tryAlignments(final Alignment[] alignments, final ToolTipContext context, final Point p,
-            final Rectangle tooltipBounds, final Rectangle boundary, final Rectangle screenBoundary,
-            final BiConsumer<ToolTipContext, Alignment> setter, final boolean centerHorizontally,
-            final boolean centerVertically) {
+            final LayoutConstraints layoutConstraints, final BiConsumer<ToolTipContext, Alignment> setter,
+            final boolean centerHorizontally, final boolean centerVertically) {
         Point pos = null;
         for (Alignment a : alignments) {
             if ((centerHorizontally || centerVertically) && a.isDiagonal()) {
-                pos = tryPosition(a, context, p, tooltipBounds, boundary, screenBoundary, setter, centerHorizontally,
+                pos = tryPosition(a, context, p, layoutConstraints, setter, centerHorizontally,
                         centerVertically);
                 if (pos != null) break;
             }
-            pos = tryPosition(a, context, p, tooltipBounds, boundary, screenBoundary, setter, false, false);
+            pos = tryPosition(a, context, p, layoutConstraints, setter, false, false);
             if (pos != null) break;
         }
         return pos;
@@ -124,7 +137,7 @@ public final class ToolTipUtil {
     }
 
     private static Point tryPosition(final Alignment a, final ToolTipContext context, final Point p,
-            final Rectangle tooltipBounds, final Rectangle boundary, final Rectangle screenBoundary,
+            final LayoutConstraints layoutConstraints,
             final BiConsumer<ToolTipContext, Alignment> setter, final boolean centerHorizontally,
             final boolean centerVertically) {
         setter.accept(context, a);
@@ -133,18 +146,19 @@ public final class ToolTipUtil {
         Point pos = context.getToolTipLocation(p, null, centerHorizontally, centerVertically);
         Point screenPos = new Point(pos.x, pos.y);
         SwingUtilities.convertPointToScreen(screenPos, context.getTarget());
-        tooltipBounds.setLocation(screenPos);
-        if (!fits(tooltipBounds, boundary, screenBoundary)) pos = null;
+        layoutConstraints.tooltipBounds.setLocation(screenPos);
+        if (!fits(layoutConstraints)) pos = null;
         return pos;
     }
 
-    private static boolean fits(final Rectangle toolTipBounds, final Rectangle boundary,
-            final Rectangle screenBoundary) {
-        if (Objects.equals(boundary, screenBoundary)) {
-            return SwingUtilities.isRectangleContainingRectangle(boundary, toolTipBounds);
+    private static boolean fits(final LayoutConstraints layoutConstraints) {
+        final Rectangle testRectangle = layoutConstraints.testRectangle();
+
+        if (Objects.equals(layoutConstraints.boundary, layoutConstraints.screenBoundary)) {
+            return SwingUtilities.isRectangleContainingRectangle(layoutConstraints.boundary, testRectangle);
         }
-        return SwingUtilities.isRectangleContainingRectangle(boundary, toolTipBounds)
-                && SwingUtilities.isRectangleContainingRectangle(screenBoundary, toolTipBounds);
+        return SwingUtilities.isRectangleContainingRectangle(layoutConstraints.boundary, testRectangle)
+                && SwingUtilities.isRectangleContainingRectangle(layoutConstraints.screenBoundary, testRectangle);
     }
 
     private static ToolTipContext getToolTipContext(final JToolTip tooltip) {
@@ -169,5 +183,26 @@ public final class ToolTipUtil {
         Point p = new Point(x, y);
         SwingUtilities.convertPointToScreen(p, target);
         WindowUtil.moveWindow(window, toolTip, p.x, p.y);
+    }
+
+    private static final class LayoutConstraints {
+
+        private final Rectangle tooltipBounds;
+        private final Rectangle boundary;
+        private final Rectangle screenBoundary;
+        private final Insets layoutInsets;
+
+        private LayoutConstraints(final Rectangle tooltipBounds, final Rectangle boundary,
+                final Rectangle screenBoundary, Insets layoutInsets) {
+
+            this.tooltipBounds = tooltipBounds;
+            this.boundary = boundary;
+            this.screenBoundary = screenBoundary;
+            this.layoutInsets = layoutInsets;
+        }
+
+        public Rectangle testRectangle() {
+            return DarkUIUtil.applyInsets(new Rectangle(tooltipBounds), layoutInsets);
+        }
     }
 }

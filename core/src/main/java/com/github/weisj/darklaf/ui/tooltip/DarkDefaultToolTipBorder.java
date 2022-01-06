@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -25,6 +25,8 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.github.weisj.darklaf.components.border.MutableLineBorder;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
@@ -42,5 +44,10 @@ public class DarkDefaultToolTipBorder extends MutableLineBorder implements UIRes
     public Insets getBorderInsets(final Component c) {
         Insets ins = super.getBorderInsets(c);
         return DarkUIUtil.addInsets(ins, padding);
+    }
+
+    @Override
+    public @NotNull Insets getAlignmentInsets(final JToolTip c) {
+        return new Insets(0, 0, 0, 0);
     }
 }

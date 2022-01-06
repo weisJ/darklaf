@@ -27,10 +27,13 @@ import java.awt.geom.Rectangle2D;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.github.weisj.darklaf.components.border.BubbleBorder;
 import com.github.weisj.darklaf.components.border.DropShadowBorder;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.Alignment;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
@@ -153,6 +156,12 @@ public class DarkTooltipBorder implements Border, AlignableTooltipBorder {
         ins.right = Math.max(bi.right, si.right) + uIns.right;
         ins.top = Math.max(bi.top, si.top) + uIns.top;
         return ins;
+    }
+
+    @Override
+    public @NotNull Insets getAlignmentInsets(final JToolTip c) {
+        Insets shadowInsets = shadowBorder.getBorderInsets(c);
+        return DarkUIUtil.addInsets(shadowInsets, DarkUIUtil.invert(bubbleBorder.getBorderInsets(c)));
     }
 
     protected Insets getUserInsets(final Component c) {
