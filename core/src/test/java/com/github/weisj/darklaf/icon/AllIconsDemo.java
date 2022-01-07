@@ -21,10 +21,8 @@
 package com.github.weisj.darklaf.icon;
 
 import java.awt.*;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
-import java.util.Properties;
 import java.util.stream.Collectors;
 
 import javax.swing.*;
@@ -104,21 +102,21 @@ public class AllIconsDemo extends BaseComponentDemo {
                 return new NamedIcon<>(p, centered ? new CenterIcon(icon, displaySize, displaySize) : icon);
             }).collect(Collectors.groupingBy(pair -> pathToIconName(pair.getFirst())))
                     .values().stream()
+                    .map(HashSet::new)
                     .peek(list -> makeUnique(list, 1))
-                    .flatMap(List::stream)
-                    .sorted(Pair.compareFirst(AllIconsDemo::pathToIconName)).collect(Collectors.toList());
+                    .flatMap(Set::stream)
+                    .sorted(Pair.compareFirst()).collect(Collectors.toList());
         }
     }
 
-    private static <T extends Icon> void makeUnique(final List<NamedIcon<T>> iconList, final int depth) {
-        if (iconList.size() <= 1) {
-            iconList.forEach(p -> p.setFirst(pathToIconName(p.getFirst(), depth)));
+    private static <T extends Icon> void makeUnique(final Set<NamedIcon<T>> iconSet, final int depth) {
+        if (iconSet.size() <= 1) {
+            iconSet.forEach(p -> p.setFirst(pathToIconName(p.getFirst(), depth)));
         } else {
-            new HashSet<>(iconList)
-                    .stream()
+            iconSet.stream()
                     .collect(Collectors.groupingBy(p -> pathToIconName(p.getFirst(), depth + 1)))
                     .values()
-                    .forEach(list -> makeUnique(list, depth + 1));
+                    .forEach(list -> makeUnique(new HashSet<>(list), depth + 1));
         }
     }
 
