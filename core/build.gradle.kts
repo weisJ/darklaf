@@ -46,33 +46,11 @@ tasks.processResources {
     }
 }
 
-fun JavaForkOptions.patchTestExecParams() {
-    if (!JavaVersion.current().isJava9Compatible || props.bool("skipModuleInfo")) return
-    val patchFiles = sourceSets.test.get().output.classesDirs +
-        sourceSets.test.get().resources.sourceDirectories +
-        sourceSets.main.get().resources.sourceDirectories
-    val resourceDir = sourceSets.test.get().resources.sourceDirectories.singleFile
-    val testPackages = sourceSets.test.get().resources.asSequence().map { it.parentFile }.toSet().asSequence().map {
-        it.relativeTo(resourceDir).toPath().joinToString(separator = ".")
-    }.filter { it.isNotEmpty() }
-    jvmArgs(
-        "--module-path", (sourceSets.test.get().runtimeClasspath - patchFiles).asPath,
-        "--patch-module", "darklaf.core=${patchFiles.asPath}",
-        "--add-modules", "ALL-MODULE-PATH",
-        "--add-reads", "darklaf.core=org.junit.jupiter.api"
-    )
-    jvmArgs(
-        "--add-exports", "java.desktop/com.sun.java.swing=darklaf.core",
-        "--add-exports", "org.junit.platform.commons/org.junit.platform.commons.util=ALL-UNNAMED",
-        "--add-exports", "org.junit.platform.commons/org.junit.platform.commons.logging=ALL-UNNAMED",
-    )
-    jvmArgs(
-        "--add-opens", "darklaf.core/com.github.weisj.darklaf.core.test=org.junit.platform.commons"
-    )
-    testPackages.forEach {
-        jvmArgs(
-            "--add-opens", "darklaf.core/$it=darklaf.properties"
-        )
+moduleInfo {
+    modularExec {
+        patchJUnit = true
+        addExports.add("java.desktop/com.sun.java.swing=darklaf.core")
+        openTestPackagesTo("darklaf.properties")
     }
 }
 
@@ -82,7 +60,6 @@ tasks.test {
         workingDir.mkdirs()
     }
     useJUnitPlatform()
-    patchTestExecParams()
     val verboseTest by props(false)
     if (!verboseTest) {
         exclude("**/DemoTest*")
@@ -134,7 +111,6 @@ val runDemo by tasks.registering(DemoTask::class) {
         "Launches demo (e.g. com.github.weisj.darklaf.ui.table.TableDemo, com.github.weisj.darklaf.ui.button.ButtonDemo, ...)"
 
     dependsOn(tasks.compileJava, tasks.compileTestJava)
-    patchTestExecParams()
 
     // Pass the property to the demo
     // By default JavaExec is executed in its own JVM with its own properties
