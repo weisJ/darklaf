@@ -30,5 +30,5 @@ open module darklaf.platform.windows {
     requires darklaf.utils;
     requires darklaf.properties;
 
-    exports com.github.weisj.darklaf.platform.windows;
+    exports com.github.weisj.darklaf.platform.windows to darklaf.core;
 }

@@ -30,5 +30,5 @@ module darklaf.compatibility {
     // Note: This module is only available since Java 11
     requires jdk.unsupported.desktop;
 
-    exports com.github.weisj.darklaf.compatibility;
+    exports com.github.weisj.darklaf.compatibility to darklaf.core;
 }

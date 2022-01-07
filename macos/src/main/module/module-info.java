@@ -30,6 +30,6 @@ open module darklaf.platform.macos {
     requires darklaf.utils;
     requires darklaf.properties;
 
-    exports com.github.weisj.darklaf.platform.macos;
-    exports com.github.weisj.darklaf.platform.macos.theme;
+    exports com.github.weisj.darklaf.platform.macos to darklaf.core;
+    exports com.github.weisj.darklaf.platform.macos.theme to darklaf.core;
 }
