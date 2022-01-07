@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -95,7 +95,7 @@ public class RotatableIconDemo extends BaseComponentDemo {
         controls = panel.addControls(new BorderLayout());
 
         AtomicReference<Icon> nextIcon = new AtomicReference<>(rotateIcon.getIcon());
-        JList<AllIcons.NamedIcon<? extends Icon>> list = AllIcons.createIconJList(size);
+        JList<AllIconsDemo.NamedIcon<? extends Icon>> list = AllIconsDemo.createIconJList(size);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.addListSelectionListener(e -> nextIcon.set(list.getSelectedValue().getSecond()));
         controls.add(new OverlayScrollPane(list));

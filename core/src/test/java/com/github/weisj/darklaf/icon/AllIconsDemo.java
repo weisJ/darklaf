@@ -43,15 +43,15 @@ import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.util.Lambdas;
 import com.github.weisj.darklaf.util.Pair;
 
-public class AllIcons extends BaseComponentDemo {
+public class AllIconsDemo extends BaseComponentDemo {
 
     private static final int ICON_SIZE = 50;
 
     public static void main(final String[] args) {
-        DemoExecutor.showDemo(new AllIcons());
+        DemoExecutor.showDemo(new AllIconsDemo());
     }
 
-    public AllIcons() {
+    public AllIconsDemo() {
         List<DecorationsProvider> decorationsProviders =
                 ClassFinder.getInstancesOfType(DecorationsProvider.class, "com.github.weisj.darklaf")
                         .stream()
@@ -106,7 +106,7 @@ public class AllIcons extends BaseComponentDemo {
                     .values().stream()
                     .peek(list -> makeUnique(list, 1))
                     .flatMap(List::stream)
-                    .sorted(Pair.compareFirst(AllIcons::pathToIconName)).collect(Collectors.toList());
+                    .sorted(Pair.compareFirst(AllIconsDemo::pathToIconName)).collect(Collectors.toList());
         }
     }
 
