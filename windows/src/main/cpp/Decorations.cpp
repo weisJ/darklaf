@@ -261,10 +261,10 @@ static void HandleNCCalcSize(WindowWrapper *wrapper, WPARAM wparam, LPARAM lpara
             if (is_windows_11) {
                 MONITORINFO mi = GetMonitorInfo(*wrapper);
 
-                bool top_equals = mi.rcMonitor.top == nonclient.top;
-                bool bottom_equals = mi.rcMonitor.bottom == nonclient.bottom;
-                bool left_equals = mi.rcMonitor.left == nonclient.left;
-                bool right_equals = mi.rcMonitor.right == nonclient.right;
+                bool top_equals = mi.rcWork.top == nonclient.top;
+                bool bottom_equals = mi.rcWork.bottom == nonclient.bottom;
+                bool left_equals = mi.rcWork.left == nonclient.left;
+                bool right_equals = mi.rcWork.right == nonclient.right;
 
                 if (!(left_equals && (top_equals || bottom_equals))) nonclient.left += frame_size;
                 if (!(right_equals && (top_equals || bottom_equals))) nonclient.right -= frame_size;
