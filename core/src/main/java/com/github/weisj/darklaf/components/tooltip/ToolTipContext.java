@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -46,8 +46,13 @@ public class ToolTipContext {
     }
 
     public static ToolTipContext createDefaultContext() {
-        return new ToolTipContext().setAlignment(Alignment.SOUTH).setCenterAlignment(Alignment.SOUTH)
-                .setAlignInside(false).setIgnoreBorder(true).setUseBestFit(true);
+        return new ToolTipContext()
+                .setAlignment(Alignment.SOUTH)
+                .setCenterAlignment(Alignment.SOUTH)
+                .setAlignInside(false)
+                .setIgnoreBorder(true)
+                .setUseBestFit(true)
+                .setChooseBestInitialAlignment(true);
     }
 
     public static void setDefaultContext(final ToolTipContext defaultContext) {
@@ -102,9 +107,12 @@ public class ToolTipContext {
     private Insets insets;
     private boolean ignoreBorder;
     private boolean bestFit;
+    private boolean chooseBestInitialAlignment;
     private Function<ToolTipContext, Point> fallBackPositionProvider;
 
-    /** Create a new tooltip context to ease the creation of custom tooltips. */
+    /**
+     * Create a new tooltip context to ease the creation of custom tooltips.
+     */
     public ToolTipContext() {
         this(null, null, null, null, true, null);
     }
@@ -132,7 +140,6 @@ public class ToolTipContext {
             final AlignmentStrategy alignmentStrategy, final boolean alignInside,
             final Function<MouseEvent, Rectangle> toolTipRectSupplier) {
         setTarget(target);
-        setUpdatePosition(false);
         setHideOnExit(false);
         setFallBackPositionProvider(null);
         setAlignInside(alignInside);
@@ -140,20 +147,6 @@ public class ToolTipContext {
         setCenterAlignment(centerAlignment);
         setAlignmentStrategy(alignmentStrategy);
         setToolTipRectSupplier(toolTipRectSupplier);
-    }
-
-    /**
-     * Sets whether the position should be recalculated each time after the popup has been shown. This
-     * may be useful if the tooltip should follow the mouse.
-     *
-     * <p>
-     * Default is false.
-     *
-     * @param updatePosition true if it should be recalculated.
-     * @return this
-     */
-    public ToolTipContext setUpdatePosition(final boolean updatePosition) {
-        return this;
     }
 
     /**
@@ -188,6 +181,10 @@ public class ToolTipContext {
 
     public boolean isBestFit() {
         return bestFit;
+    }
+
+    public boolean isChooseBestInitialAlignment() {
+        return chooseBestInitialAlignment;
     }
 
     /**
@@ -450,6 +447,18 @@ public class ToolTipContext {
      */
     public ToolTipContext setUseBestFit(final boolean bestFit) {
         this.bestFit = bestFit;
+        return this;
+    }
+
+    /**
+     * Sets whether the tooltip should choose an appropriate initial alignment when using the best fit
+     * algorithm.
+     *
+     * @param chooseBestInitialAlignment true if best initial alignment should be probed.
+     * @return this.
+     */
+    public ToolTipContext setChooseBestInitialAlignment(final boolean chooseBestInitialAlignment) {
+        this.chooseBestInitialAlignment = chooseBestInitialAlignment;
         return this;
     }
 
