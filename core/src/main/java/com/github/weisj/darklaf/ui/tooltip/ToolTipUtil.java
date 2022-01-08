@@ -139,8 +139,6 @@ public final class ToolTipUtil {
             final LayoutConstraints layoutConstraints, final BiConsumer<ToolTipContext, Alignment> setter,
             final boolean centerHorizontally, final boolean centerVertically) {
         Point pos = null;
-        System.out.println("----");
-
         for (Alignment a : alignments) {
             if ((centerHorizontally || centerVertically) && a.isDiagonal()) {
                 pos = tryPosition(a, context, p, layoutConstraints, setter, centerHorizontally,
