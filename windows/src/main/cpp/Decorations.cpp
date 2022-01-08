@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -322,13 +322,11 @@ static bool InstallDecorations(HWND handle, bool is_popup) {
     if (it != wrapper_map.end()) return false;
 
     SetupWindowStyle(handle);
-    if (is_popup || !is_windows_11) {
-        ExtendClientFrame(handle);
-        if (is_popup) {
-            auto attribute = DWMWINDOWATTRIBUTE::DWMWA_WINDOW_CORNER_PREFERENCE;
-            auto preference = DWM_WINDOW_CORNER_PREFERENCE::DWMWCP_ROUNDSMALL;
-            DwmSetWindowAttribute(handle, attribute, &preference, sizeof(preference));
-        }
+    ExtendClientFrame(handle);
+    if (is_popup) {
+        auto attribute = DWMWINDOWATTRIBUTE::DWMWA_WINDOW_CORNER_PREFERENCE;
+        auto preference = DWM_WINDOW_CORNER_PREFERENCE::DWMWCP_ROUNDSMALL;
+        DwmSetWindowAttribute(handle, attribute, &preference, sizeof(preference));
     }
 
     WNDPROC proc = reinterpret_cast<WNDPROC>(GetWindowLongPtr(handle, GWLP_WNDPROC));
