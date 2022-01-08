@@ -48,7 +48,6 @@ tasks.processResources {
 
 moduleInfo {
     modularExec {
-        patchJUnit = true
         addExports.add("java.desktop/com.sun.java.swing=darklaf.core")
         openTestPackagesTo("darklaf.properties")
     }

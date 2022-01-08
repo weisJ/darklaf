@@ -1,11 +1,13 @@
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.api.tasks.testing.Test
 import org.gradle.kotlin.dsl.getValue
 import org.gradle.kotlin.dsl.named
 import org.gradle.kotlin.dsl.provideDelegate
@@ -18,7 +20,7 @@ class ExecParameters(
     var addExports : MutableList<String> = mutableListOf(),
     var addReads : MutableList<String> = mutableListOf(),
     var addOpens : MutableList<String> = mutableListOf(),
-    var patchJUnit : Boolean = false,
+    var patchJUnit : Boolean = true,
 ) {
     internal val testPackagesOpens : MutableList<String> = mutableListOf()
 
@@ -62,6 +64,11 @@ class ModuleInfoCompilePlugin : Plugin<Project> {
                     patchTestExecParams(target, infoExtension)
                 }
             }
+            tasks.withType<Test>().configureEach {
+                doFirst {
+                    patchTestExecParams(target, infoExtension)
+                }
+            }
         }
     }
 
@@ -101,6 +108,11 @@ class ModuleInfoCompilePlugin : Plugin<Project> {
         }
     }
 
+    private fun SourceDirectorySet.folders() : List<String> =
+        this.asSequence().map { it.parentFile }.toSet().asSequence().map {
+            it.relativeTo(sourceDirectories.singleFile).toPath().joinToString(separator = ".")
+        }.filter { it.isNotEmpty() }.toList()
+
     private fun JavaForkOptions.patchTestExecParams(project : Project, infoExtension: ModuleInfoExtension) {
         val sourceSets = project.sourceSets
         val testSourceSet = sourceSets.test
@@ -108,10 +120,8 @@ class ModuleInfoCompilePlugin : Plugin<Project> {
         val patchFiles = testSourceSet.output.classesDirs +
                 testSourceSet.resources.sourceDirectories +
                 mainSourceSet.resources.sourceDirectories
-        val resourceDir = testSourceSet.resources.sourceDirectories.singleFile
-        val testPackages = testSourceSet.resources.asSequence().map { it.parentFile }.toSet().asSequence().map {
-            it.relativeTo(resourceDir).toPath().joinToString(separator = ".")
-        }.filter { it.isNotEmpty() }
+        val testPackages = testSourceSet.resources.folders() + testSourceSet.allJava.folders()
+
         jvmArgs(
             "--module-path", (testSourceSet.runtimeClasspath - patchFiles).asPath,
             "--patch-module", "${infoExtension.moduleName}=${patchFiles.asPath}",

@@ -16,9 +16,3 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
-
-moduleInfo {
-    modularExec {
-        patchJUnit = true
-    }
-}
