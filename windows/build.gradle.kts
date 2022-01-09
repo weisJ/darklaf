@@ -7,6 +7,10 @@ plugins {
     `use-prebuilt-binaries`
 }
 
+moduleInfo {
+    stubModule("darklaf.core")
+}
+
 library {
     dependencies {
         jvmImplementation(projects.darklafNativeUtils)

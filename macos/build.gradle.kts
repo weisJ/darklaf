@@ -1,5 +1,3 @@
-
-
 plugins {
     java
     `module-info-compile`
@@ -8,6 +6,10 @@ plugins {
     `uber-jni-jar`
     `use-prebuilt-binaries`
     `apple-m1-toolchain`
+}
+
+moduleInfo {
+    stubModule("darklaf.core")
 }
 
 val jnfConfig: Configuration by configurations.creating {

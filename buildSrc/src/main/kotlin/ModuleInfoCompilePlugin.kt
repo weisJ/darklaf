@@ -14,17 +14,19 @@ import org.gradle.kotlin.dsl.provideDelegate
 import org.gradle.kotlin.dsl.registering
 import org.gradle.kotlin.dsl.withType
 import org.gradle.process.JavaForkOptions
+import java.io.File
+import java.nio.file.Files
 import java.util.regex.Pattern
 
 class ExecParameters(
-    var addExports : MutableList<String> = mutableListOf(),
-    var addReads : MutableList<String> = mutableListOf(),
-    var addOpens : MutableList<String> = mutableListOf(),
-    var patchJUnit : Boolean = true,
+    var addExports: MutableList<String> = mutableListOf(),
+    var addReads: MutableList<String> = mutableListOf(),
+    var addOpens: MutableList<String> = mutableListOf(),
+    var patchJUnit: Boolean = true,
 ) {
-    internal val testPackagesOpens : MutableList<String> = mutableListOf()
+    internal val testPackagesOpens: MutableList<String> = mutableListOf()
 
-    fun openTestPackagesTo(vararg modules : String) {
+    fun openTestPackagesTo(vararg modules: String) {
         testPackagesOpens.addAll(modules)
     }
 }
@@ -35,19 +37,23 @@ open class ModuleInfoExtension {
     lateinit var moduleName: String
     val execParameters = ExecParameters()
 
-    fun modularExec(action : ExecParameters.() -> Unit) = execParameters.action()
+    internal val stubbedModules = mutableListOf<String>()
+
+    fun stubModule(moduleName: String) = stubbedModules.add(moduleName)
+    fun modularExec(action: ExecParameters.() -> Unit) = execParameters.action()
 }
 
 class ModuleInfoCompilePlugin : Plugin<Project> {
 
     companion object {
-        private val MODULE_PATTERN : Pattern = Pattern.compile("""module\s+([^\s]+)\s*\{""")
+        private val MODULE_PATTERN: Pattern = Pattern.compile("""module\s+([^\s]+)\s*\{""")
     }
 
     override fun apply(target: Project) = target.run {
         val infoExtension = target.extensions.create("moduleInfo", ModuleInfoExtension::class.java)
         if (!JavaVersion.current().isJava9Compatible
-            || project.findProperty("skipModuleInfo") in listOf("", "true")) return@run
+            || project.findProperty("skipModuleInfo") in listOf("", "true")
+        ) return@run
 
         val moduleInfoFile = file("src/main/module/module-info.java")
         if (moduleInfoFile.exists()) {
@@ -72,17 +78,44 @@ class ModuleInfoCompilePlugin : Plugin<Project> {
         }
     }
 
-    private fun Project.setupModuleInfoCompilation(infoExtension : ModuleInfoExtension) {
+    private fun Project.setupModuleInfoCompilation(infoExtension: ModuleInfoExtension) {
+        val stubOutputDir = buildDir.resolve("generated/moduleInfoStubs")
+
+        fun String.stubModuleInfoPath() = stubOutputDir.resolve("$this/module-info.java")
+
+        val createModuleStubs by tasks.registering(JavaCompile::class) {
+            stubOutputDir.deleteRecursively()
+            Files.createDirectories(stubOutputDir.toPath())
+            infoExtension.stubbedModules.forEach {
+                source(it.stubModuleInfoPath().also { file ->
+                    file.parentFile.mkdirs()
+                    file.writeText("module $it {}")
+                })
+            }
+            classpath = files()
+            options.compilerArgs.addAll(listOf(
+                "--release", infoExtension.version.majorVersion,
+                "--module-source-path", stubOutputDir.absolutePath
+            ))
+            destinationDirectory.set(buildDir.resolve("classes/moduleStubs"))
+        }
+
         val compileJava = tasks.named<JavaCompile>("compileJava")
 
         val compileModuleInfoJava by tasks.registering(JavaCompile::class) {
+            dependsOn(createModuleStubs)
+
             val javaCompile = compileJava.get()
             classpath = files()
             source("src/main/module/module-info.java")
+
             source(javaCompile.source)
             destinationDirectory.set(buildDir.resolve("classes/module"))
             check(infoExtension.version.isJava9Compatible)
-            options.compilerArgs.addAll(listOf("--module-path", javaCompile.classpath.asPath))
+            val separator = "${File.pathSeparatorChar}"
+            val modulePath = javaCompile.classpath.asPath + separator + infoExtension.stubbedModules
+                .joinToString(separator) { "${stubOutputDir.absolutePath}/$it/$it.jar" }
+            options.compilerArgs.addAll(listOf("--module-path", modulePath))
             if (infoExtension.extraArgs.isNotEmpty()) {
                 options.compilerArgs.addAll(infoExtension.extraArgs)
                 sourceCompatibility = infoExtension.version.majorVersion
@@ -108,12 +141,12 @@ class ModuleInfoCompilePlugin : Plugin<Project> {
         }
     }
 
-    private fun SourceDirectorySet.folders() : List<String> =
+    private fun SourceDirectorySet.folders(): List<String> =
         this.asSequence().map { it.parentFile }.toSet().asSequence().map {
             it.relativeTo(sourceDirectories.singleFile).toPath().joinToString(separator = ".")
         }.filter { it.isNotEmpty() }.toList()
 
-    private fun JavaForkOptions.patchTestExecParams(project : Project, infoExtension: ModuleInfoExtension) {
+    private fun JavaForkOptions.patchTestExecParams(project: Project, infoExtension: ModuleInfoExtension) {
         val sourceSets = project.sourceSets
         val testSourceSet = sourceSets.test
         val mainSourceSet = sourceSets.main
@@ -154,12 +187,12 @@ class ModuleInfoCompilePlugin : Plugin<Project> {
         }
     }
 
-    private val Project.sourceSets : SourceSetContainer
+    private val Project.sourceSets: SourceSetContainer
         get() = extensions.getByName("sourceSets") as SourceSetContainer
 
-    private val SourceSetContainer.test : SourceSet
+    private val SourceSetContainer.test: SourceSet
         get() = named<SourceSet>("test").get()
 
-    private val SourceSetContainer.main : SourceSet
+    private val SourceSetContainer.main: SourceSet
         get() = named<SourceSet>("main").get()
 }

@@ -12,6 +12,7 @@ configure<ModuleInfoExtension> {
     extraArgs = listOf(
         "--add-exports", "java.desktop/sun.awt=darklaf.compatibility"
     )
+    stubModule("darklaf.core")
 }
 
 dependencies {
