@@ -130,6 +130,7 @@ allprojects {
             plugins.withType<dev.nokee.platform.jni.internal.plugins.JniLibraryPlugin>().configureEach {
                 cpp {
                     target("**/*.cpp", "**/*.h")
+                    targetExclude("**/objcpp/**")
                     endWithNewline()
                     trimTrailingWhitespace()
                     eclipseCdt().configFile("${project.rootDir}/config/darklaf_cpp.eclipseformat.xml")
