@@ -26,7 +26,7 @@
 
 JNIEXPORT jlong JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_getComponentPointer(JNIEnv *env, jclass cls, jobject window) {
-JNF_COCOA_ENTER(env);
+Darklaf_JNF_COCOA_ENTER(env);
     if (!env || !window) return 0;
     jclass class_window = env->GetObjectClass(window);
     jfieldID fid_peer = env->GetFieldID(class_window, "peer", "Ljava/awt/peer/ComponentPeer;");
@@ -46,61 +46,61 @@ JNF_COCOA_ENTER(env);
     jfieldID fid_ptr = env->GetFieldID(class_platformWindow, "ptr", "J");
     jlong ptr = env->GetLongField(platformWindow, fid_ptr);
     return ptr;
-JNF_COCOA_EXIT(env);
+Darklaf_JNF_COCOA_EXIT(env);
     return 0;
 }
 
 JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_retainWindow(JNIEnv *env, jclass obj, jlong hwnd) {
-JNF_COCOA_ENTER(env);
+Darklaf_JNF_COCOA_ENTER(env);
     NSWindow *nsWindow = OBJC(hwnd);
     [nsWindow retain];
-JNF_COCOA_EXIT(env);
+Darklaf_JNF_COCOA_EXIT(env);
 }
 
 JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_releaseWindow(JNIEnv *env, jclass obj, jlong hwnd) {
-JNF_COCOA_ENTER(env);
+Darklaf_JNF_COCOA_ENTER(env);
     NSWindow *nsWindow = OBJC(hwnd);
     [nsWindow release];
-JNF_COCOA_EXIT(env);
+Darklaf_JNF_COCOA_EXIT(env);
 }
 
 JNIEXPORT jdouble JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_getTitleBarHeight(JNIEnv *env, jclass obj, jlong hwnd) {
-JNF_COCOA_ENTER(env);
+Darklaf_JNF_COCOA_ENTER(env);
     NSWindow *nsWindow = OBJC(hwnd);
     NSRect frame = NSMakeRect(0.0, 0.0, 100.0, 100.0);
     NSUInteger windowStyle = nsWindow.styleMask & ~NSWindowStyleMaskFullSizeContentView;
     NSRect rect = [NSWindow contentRectForFrameRect:frame styleMask:windowStyle];
     return (jdouble)(frame.size.height - rect.size.height);
-JNF_COCOA_EXIT(env);
+Darklaf_JNF_COCOA_EXIT(env);
     return 0;
 }
 
 JNIEXPORT jboolean JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_isFullscreen(JNIEnv *env, jclass obj, jlong hwnd) {
-JNF_COCOA_ENTER(env);
+Darklaf_JNF_COCOA_ENTER(env);
     NSWindow *nsWindow = OBJC(hwnd);
     return (jboolean)(([nsWindow styleMask] & NSWindowStyleMaskFullScreen) != 0);
-JNF_COCOA_EXIT(env);
+Darklaf_JNF_COCOA_EXIT(env);
     return NO;
 }
 
 JNIEXPORT jdouble JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_getTitleFontSize(JNIEnv *env, jclass obj, jlong hwnd) {
-JNF_COCOA_ENTER(env);
+Darklaf_JNF_COCOA_ENTER(env);
     return (jdouble)[[NSFont titleBarFontOfSize:0] pointSize];
-JNF_COCOA_EXIT(env);
+Darklaf_JNF_COCOA_EXIT(env);
     return 0;
 }
 
 JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_setTitleEnabled(JNIEnv *env, jclass obj, jlong hwnd,
                                                                                  jboolean enabled) {
-JNF_COCOA_ENTER(env);
+Darklaf_JNF_COCOA_ENTER(env);
     NSWindow *nsWindow = OBJC(hwnd);
-    [JNFRunLoop performOnMainThreadWaiting:YES withBlock:^{
+    [Darklaf_JNFRunLoop performOnMainThreadWaiting:YES withBlock:^{
         if (enabled) {
             nsWindow.titleVisibility = NSWindowTitleVisible;
         } else {
@@ -108,16 +108,16 @@ JNF_COCOA_ENTER(env);
         }
         [nsWindow contentView].needsDisplay = TRUE;
     }];
-JNF_COCOA_EXIT(env);
+Darklaf_JNF_COCOA_EXIT(env);
 }
 
 JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_setDarkTheme(JNIEnv *env, jclass obj, jlong hwnd,
                                                                               jboolean darkEnabled) {
-JNF_COCOA_ENTER(env);
+Darklaf_JNF_COCOA_ENTER(env);
     NSWindow *nsWindow = OBJC(hwnd);
     if(@available(macOS 10.14, *)) {
-        [JNFRunLoop performOnMainThreadWaiting:YES withBlock:^{
+        [Darklaf_JNFRunLoop performOnMainThreadWaiting:YES withBlock:^{
             if (darkEnabled) {
                 nsWindow.appearance = [NSAppearance appearanceNamed:@"NSAppearanceNameDarkAqua"];
             } else {
@@ -126,27 +126,27 @@ JNF_COCOA_ENTER(env);
             [nsWindow contentView].needsDisplay = YES;
         }];
     }
-JNF_COCOA_EXIT(env);
+Darklaf_JNF_COCOA_EXIT(env);
 }
 
 JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_installDecorations(JNIEnv *env, jclass obj, jlong hwnd) {
-JNF_COCOA_ENTER(env);
+Darklaf_JNF_COCOA_ENTER(env);
     NSWindow *nsWindow = OBJC(hwnd);
-    [JNFRunLoop performOnMainThreadWaiting:YES withBlock:^{
+    [Darklaf_JNFRunLoop performOnMainThreadWaiting:YES withBlock:^{
         nsWindow.styleMask |= NSWindowStyleMaskFullSizeContentView;
         nsWindow.titlebarAppearsTransparent = YES;
         [nsWindow contentView].needsDisplay = YES;
     }];
-JNF_COCOA_EXIT(env);
+Darklaf_JNF_COCOA_EXIT(env);
 }
 
 JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_uninstallDecorations(JNIEnv *env, jclass obj, jlong hwnd,
     jboolean fullSizeContent, jboolean transparentTitleBar) {
-JNF_COCOA_ENTER(env);
+Darklaf_JNF_COCOA_ENTER(env);
     NSWindow *nsWindow = OBJC(hwnd);
-    [JNFRunLoop performOnMainThreadWaiting:YES withBlock:^{
+    [Darklaf_JNFRunLoop performOnMainThreadWaiting:YES withBlock:^{
         if (fullSizeContent) {
             nsWindow.styleMask |= NSWindowStyleMaskFullSizeContentView;
         } else {
@@ -155,5 +155,5 @@ JNF_COCOA_ENTER(env);
         nsWindow.titlebarAppearsTransparent = transparentTitleBar ? YES : NO;
         [nsWindow contentView].needsDisplay = YES;
     }];
-JNF_COCOA_EXIT(env);
+Darklaf_JNF_COCOA_EXIT(env);
 }

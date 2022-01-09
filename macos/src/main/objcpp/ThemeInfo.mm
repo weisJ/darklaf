@@ -114,7 +114,7 @@ BOOL manuallyPatched = NO;
 }
 
 - (void)dispatchCallback {
-    [JNFRunLoop performOnMainThreadWaiting:NO withBlock:^{
+    [Darklaf_JNFRunLoop performOnMainThreadWaiting:NO withBlock:^{
         [self runCallback];
     }];
 }
@@ -150,7 +150,7 @@ BOOL isAutoMode() {
 
 JNIEXPORT jboolean JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_isDarkThemeEnabled(JNIEnv *env, jclass obj) {
-JNF_COCOA_ENTER(env);
+Darklaf_JNF_COCOA_ENTER(env);
     if(@available(macOS 10.15, *)) {
         if (isPatched && isAutoMode()) {
             /*
@@ -166,21 +166,21 @@ JNF_COCOA_ENTER(env);
     } else {
         return (jboolean) NO;
     }
-JNF_COCOA_EXIT(env);
+Darklaf_JNF_COCOA_EXIT(env);
     return NO;
 }
 
 JNIEXPORT jboolean JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_isHighContrastEnabled(JNIEnv *env, jclass obj) {
-JNF_COCOA_ENTER(env);
+Darklaf_JNF_COCOA_ENTER(env);
     return (jboolean) NSWorkspace.sharedWorkspace.accessibilityDisplayShouldIncreaseContrast;
-JNF_COCOA_EXIT(env);
+Darklaf_JNF_COCOA_EXIT(env);
     return (jboolean) NO;
 }
 
 JNIEXPORT jint JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_nativeGetAccentColor(JNIEnv *env, jclass obj) {
-JNF_COCOA_ENTER(env);
+Darklaf_JNF_COCOA_ENTER(env);
     if (@available(macOS 10.14, *)) {
         BOOL hasAccentSet = ([[NSUserDefaults standardUserDefaults] objectForKey:KEY_ACCENT_COLOR] != nil);
         if (hasAccentSet) {
@@ -188,13 +188,13 @@ JNF_COCOA_ENTER(env);
         }
     }
     return (jint) VALUE_DEFAULT_ACCENT_COLOR;
-JNF_COCOA_EXIT(env);
+Darklaf_JNF_COCOA_EXIT(env);
     return (jint) VALUE_NO_ACCENT_COLOR;
 }
 
 JNIEXPORT jint JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_nativeGetSelectionColor(JNIEnv *env, jclass obj) {
-JNF_COCOA_ENTER(env);
+Darklaf_JNF_COCOA_ENTER(env);
     NSColorSpace *rgbSpace = [NSColorSpace sRGBColorSpace];
     NSColor *accentColor = [[[NSColorList colorListNamed: KEY_SYSTEM_COLOR_LIST] colorWithKey:KEY_SELECTION_COLOR] colorUsingColorSpace:rgbSpace];
     // This is the same conversion as in MacOSColors for consistency.
@@ -205,13 +205,13 @@ JNF_COCOA_ENTER(env);
                     ((r & 0xFF) << 16) |
                     ((g & 0xFF) << 8)  |
                     ((b & 0xFF) << 0);
-JNF_COCOA_EXIT(env);
+Darklaf_JNF_COCOA_EXIT(env);
     return (jint) VALUE_NO_SELECTION_COLOR;
 }
 
 JNIEXPORT jlong JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_createPreferenceChangeListener(JNIEnv *env, jclass obj, jobject callback) {
-JNF_COCOA_DURING(env); // We dont want an auto release pool.
+Darklaf_JNF_COCOA_DURING(env); // We dont want an auto release pool.
     JavaVM *jvm;
     if (env->GetJavaVM(&jvm) == JNI_OK) {
         jobject callbackRef = env->NewGlobalRef(callback);
@@ -220,25 +220,25 @@ JNF_COCOA_DURING(env); // We dont want an auto release pool.
         return reinterpret_cast<jlong>(listener);
     }
     return (jlong) 0;
-JNF_COCOA_HANDLE(env);
+Darklaf_JNF_COCOA_HANDLE(env);
     return (jlong) 0;
 }
 
 JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_deletePreferenceChangeListener(JNIEnv *env, jclass obj, jlong listenerPtr) {
-JNF_COCOA_ENTER(env);
+Darklaf_JNF_COCOA_ENTER(env);
     PreferenceChangeListener *listener = OBJC(listenerPtr);
     if (listener) {
         env->DeleteGlobalRef(listener->callback);
         [listener release];
         [listener dealloc];
     }
-JNF_COCOA_EXIT(env);
+Darklaf_JNF_COCOA_EXIT(env);
 }
 
 JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_patchAppBundle(JNIEnv *env, jclass obj, jboolean preJava11) {
-JNF_COCOA_ENTER(env);
+Darklaf_JNF_COCOA_ENTER(env);
     if (@available(macOS 10.15, *)) {
         NSString *name = [[NSBundle mainBundle] bundleIdentifier];
 
@@ -257,12 +257,12 @@ JNF_COCOA_ENTER(env);
     } else {
         isPatched = NO;
     }
-JNF_COCOA_EXIT(env);
+Darklaf_JNF_COCOA_EXIT(env);
 }
 
 JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_unpatchAppBundle(JNIEnv *env, jclass obj) {
-JNF_COCOA_ENTER(env);
+Darklaf_JNF_COCOA_ENTER(env);
     if (!manuallyPatched) return;
     if (@available(macOS 10.15, *)) {
         NSString *name = [[NSBundle mainBundle] bundleIdentifier];
@@ -270,5 +270,5 @@ JNF_COCOA_ENTER(env);
         CFPreferencesSetAppValue(NSRequiresAquaSystemAppearance, nil, bundleName);
         CFPreferencesAppSynchronize(bundleName);
     }
-JNF_COCOA_EXIT(env);
+Darklaf_JNF_COCOA_EXIT(env);
 }
