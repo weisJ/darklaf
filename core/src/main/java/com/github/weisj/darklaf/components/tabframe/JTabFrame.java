@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -487,7 +487,7 @@ public class JTabFrame extends JComponent {
      * Get the component at the given position.
      *
      * @param a the alignment position.{@link TabFramePosition#getAlignment()}
-     * @param index the index. {@link TabFramePosition#getIndex()} ()}
+     * @param index the index. {@link TabFramePosition#getIndex()}
      * @return the popup component specified by {@link TabFramePopup#getContentPane()}.
      * @throws IndexOutOfBoundsException if the alignment or index is out of bounds, or the tab doesn't
      *         exist.
@@ -627,14 +627,47 @@ public class JTabFrame extends JComponent {
     }
 
     /**
+     * Get the popup at the given position that is currently active.
+     *
+     * @param a the alignment position. {@link TabFramePosition#getAlignment()}
+     * @return the popup specified by {@link TabFramePopup#getComponent()}.
+     */
+    public TabFramePopup getPopupAt(final Alignment a) {
+        List<TabFramePopup> tabs = compsForAlignment(a);
+        return tabs.get(Math.max(Math.min(tabs.size() - 1, selectedIndices[a.ordinal()]), 0));
+    }
+
+    /**
      * Get the popup component at the given position that is currently active.
      *
      * @param a the alignment position. {@link TabFramePosition#getAlignment()}
      * @return the popup component specified by {@link TabFramePopup#getComponent()}.
      */
     public Component getPopupComponentAt(final Alignment a) {
+        return getPopupAt(a).getComponent();
+    }
+
+    /**
+     * Get the popup at the given position.
+     *
+     * @param a the alignment position.{@link TabFramePosition#getAlignment()}
+     * @param index the index.{@link TabFramePosition#getIndex()}
+     * @return the popup specified by {@link TabFramePopup#getComponent()}.
+     */
+    public TabFramePopup getPopupAt(final Alignment a, final int index) {
         List<TabFramePopup> tabs = compsForAlignment(a);
-        return tabs.get(Math.max(Math.min(tabs.size() - 1, selectedIndices[a.ordinal()]), 0)).getComponent();
+        return tabs.get(index);
+    }
+
+    /**
+     * Get the popup component at the given position.
+     *
+     * @param a the alignment position.{@link TabFramePosition#getAlignment()}
+     * @param index the index.{@link TabFramePosition#getIndex()}
+     * @return the popup component specified by {@link TabFramePopup#getComponent()}.
+     */
+    public Component getPopupComponentAt(final Alignment a, final int index) {
+        return getPopupAt(a, index).getComponent();
     }
 
     /**
@@ -783,29 +816,6 @@ public class JTabFrame extends JComponent {
         }
         TabFrameTab tab = tabs.remove(index);
         getTabContainer(a).remove(tab.getComponent());
-    }
-
-    /**
-     * Get the popup component at the given position.
-     *
-     * @param a the alignment position.{@link TabFramePosition#getAlignment()}
-     * @param index the index.{@link TabFramePosition#getIndex()}
-     * @return the popup component specified by {@link TabFramePopup#getComponent()}.
-     */
-    public Component getPopupComponentAt(final Alignment a, final int index) {
-        List<TabFramePopup> tabs = compsForAlignment(a);
-        return tabs.get(index).getComponent();
-    }
-
-    /**
-     * Get the component at the given position.
-     *
-     * @param a the alignment position. {@link TabFramePosition#getAlignment()}
-     * @return the component specified by {@link TabFramePopup#getContentPane()}.
-     */
-    public Component getComponentAt(final Alignment a) {
-        List<TabFramePopup> tabs = compsForAlignment(a);
-        return tabs.get(Math.max(Math.min(tabs.size() - 1, selectedIndices[a.ordinal()]), 0)).getContentPane();
     }
 
     /**

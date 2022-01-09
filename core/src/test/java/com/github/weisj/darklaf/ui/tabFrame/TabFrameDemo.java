@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -48,7 +48,6 @@ public class TabFrameDemo extends BaseComponentDemo {
         System.setProperty(TransformUI.BUFFERED_REPAINT_FLAG, PropertyValue.TRUE);
         DemoExecutor.showDemo(new TabFrameDemo());
     }
-
 
     @Override
     public Dimension getWindowSize() {
@@ -100,6 +99,17 @@ public class TabFrameDemo extends BaseComponentDemo {
             panel.add(label);
             tabbedPopup.getTabbedPane().addTab("Tab " + i, panel);
         }
+
+        for (int i = 0; i < 3; i++) {
+            String text = "Custom Button " + i;
+            tabbedPopup
+                    .addButton(AllIcons.Menu.Help.get(), text)
+                    .addActionListener(e -> JOptionPane.showMessageDialog(tabFrame, text));
+            tabFrame.getPopupAt(Alignment.EAST, 0)
+                    .addButton(AllIcons.Menu.Help.get(), "Custom Button")
+                    .addActionListener(e -> JOptionPane.showMessageDialog(tabFrame, text));
+        }
+
         /*
          * Activate for a custom tab. tabFrame.setUserTabComponentAt(new JLabel("NORTH (custom tab)") {{
          * setBorder(new EmptyBorder(0, 5, 0, 5)); setOpaque(false); setForeground(Color.RED); setFont(new

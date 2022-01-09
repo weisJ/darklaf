@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -143,6 +143,16 @@ public class PanelPopup extends JPanel implements TabFramePopup {
                 && parent.isSelected(getAlignment(), getIndex())) {
             parent.closeTab(getAlignment(), getIndex());
         }
+    }
+
+    @Override
+    public AbstractButton addButton(final Icon icon, final String tooltipText) {
+        return getPopupUI().addButton(icon, tooltipText);
+    }
+
+    @Override
+    public void removeButton(AbstractButton button) {
+        getPopupUI().removeButton(button);
     }
 
     @Override

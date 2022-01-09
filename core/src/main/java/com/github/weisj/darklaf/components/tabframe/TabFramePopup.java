@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -70,6 +70,23 @@ public interface TabFramePopup {
             getTabFrame().closeTab(getAlignment(), getIndex());
         }
     }
+
+    /**
+     * Add a button to the popup matching the frames' appearance.
+     *
+     * @param icon the icon of the button
+     * @param tooltipText the tooltip text
+     * @return the added button. Use this to configure any actions.
+     */
+    AbstractButton addButton(final Icon icon, final String tooltipText);
+
+
+    /**
+     * Remove a button added through {@link #addButton(Icon, String)}.
+     *
+     * @param button the button to remove
+     */
+    void removeButton(final AbstractButton button);
 
     /**
      * Get the {{@link JTabFrame}} this popup belongs to.

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -76,6 +76,7 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI implements TabFrameTabbe
     protected void installComponents() {
         closeButton = createCloseButton();
         label = createLabel();
+        customButtonArea = createCustomButtonArea();
         tabbedPane = getTabbedPane();
         setupTabbedPane();
         border = createBorder();
@@ -107,11 +108,11 @@ public class DarkTabbedPopupUI extends DarkPanelPopupUI implements TabFrameTabbe
         JPanelUIResource buttonHolder = new JPanelUIResource();
         buttonHolder.setLayout(new BoxLayout(buttonHolder, BoxLayout.X_AXIS));
         buttonHolder.add(Box.createHorizontalStrut(1));
+        buttonHolder.add(customButtonArea);
         buttonHolder.add(closeButton);
         buttonHolder.add(Box.createHorizontalStrut(1));
         buttonHolder.setBorder(UIManager.getBorder("TabFramePopup.headerBorder"));
         buttonHolder.setOpaque(false);
-
         tabbedPane.setOpaque(false);
         tabbedPane.putClientProperty("JTabbedPane.leadingComponent", label);
         tabbedPane.putClientProperty("JTabbedPane.trailingComponent", buttonHolder);

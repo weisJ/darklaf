@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -34,6 +34,7 @@ import com.github.weisj.darklaf.components.tabframe.PanelPopup;
 import com.github.weisj.darklaf.components.tabframe.TabFramePopup;
 import com.github.weisj.darklaf.components.tabframe.TabFramePopupUI;
 import com.github.weisj.darklaf.components.uiresource.JLabelUIResource;
+import com.github.weisj.darklaf.components.uiresource.JPanelUIResource;
 import com.github.weisj.darklaf.focus.FocusParentHelper;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
 import com.github.weisj.darklaf.ui.panel.DarkPanelUI;
@@ -48,6 +49,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     private final Action closeAction = Actions.create(e -> closeButton.doClick());
     protected JPanel content;
     protected JLabel label;
+    protected JComponent customButtonArea;
     protected Color headerFocusBackground;
     protected Color headerButtonFocusHoverBackground;
     protected Color headerButtonFocusClickBackground;
@@ -91,6 +93,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
     protected void installComponents() {
         closeButton = createCloseButton();
         label = createLabel();
+        customButtonArea = createCustomButtonArea();
         header = createHeader();
 
         JPanel headerContainer = new JPanel(new BorderLayout());
@@ -111,6 +114,14 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
         content.setBorder(contentBorder);
     }
 
+    protected JComponent createCustomButtonArea() {
+        JPanelUIResource buttonHolder = new JPanelUIResource();
+        buttonHolder.setLayout(new BoxLayout(buttonHolder, BoxLayout.X_AXIS));
+        buttonHolder.setOpaque(false);
+        buttonHolder.setBorder(BorderFactory.createEmptyBorder());
+        return buttonHolder;
+    }
+
     protected void installListeners() {
         popupComponent.addPropertyChangeListener(this);
         installFocusListener();
@@ -129,6 +140,19 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
             if (!popupComponent.isOpen()) return;
             setHeaderBackground(DarkUIUtil.hasFocus(popupComponent));
         });
+    }
+
+    @Override
+    public AbstractButton addButton(final Icon icon, String tooltipText) {
+        HeaderButton button = new HeaderButton(icon, this);
+        button.setToolTipText(tooltipText);
+        customButtonArea.add(button);
+        return button;
+    }
+
+    @Override
+    public void removeButton(final AbstractButton button) {
+        customButtonArea.remove(button);
     }
 
     protected HeaderButton createCloseButton() {
@@ -152,6 +176,7 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
         header.add(Box.createHorizontalStrut(5));
         header.add(label);
         header.add(Box.createGlue());
+        header.add(customButtonArea);
         header.add(closeButton);
         header.add(Box.createHorizontalStrut(1));
         header.setBorder(UIManager.getBorder("TabFramePopup.headerBorder"));
@@ -162,6 +187,9 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
         closeButton.setFocus(focus);
         if (header != null) {
             header.setBackground(focus ? headerFocusBackground : headerBackground);
+        }
+        for (Component customButton : customButtonArea.getComponents()) {
+            if (customButton instanceof HeaderButton) ((HeaderButton) customButton).setFocus(focus);
         }
         if (oldFocus != focus) {
             if (header != null) {
@@ -372,6 +400,9 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
             setFocus(false);
             setFocusable(false);
             setOpaque(false);
+
+            System.out.println(icon.getIconWidth() + " " + icon.getIconHeight());
+            System.out.println(getPreferredSize());
         }
 
         public void setFocus(final boolean focus) {
