@@ -15,7 +15,6 @@ import org.gradle.kotlin.dsl.registering
 import org.gradle.kotlin.dsl.withType
 import org.gradle.process.JavaForkOptions
 import java.io.File
-import java.nio.file.Files
 import java.util.regex.Pattern
 
 class ExecParameters(
@@ -83,27 +82,48 @@ class ModuleInfoCompilePlugin : Plugin<Project> {
 
         fun String.stubModuleInfoPath() = stubOutputDir.resolve("$this/module-info.java")
 
-        val createModuleStubs by tasks.registering(JavaCompile::class) {
-            stubOutputDir.deleteRecursively()
-            Files.createDirectories(stubOutputDir.toPath())
-            infoExtension.stubbedModules.forEach {
-                source(it.stubModuleInfoPath().also { file ->
-                    file.parentFile.mkdirs()
-                    file.writeText("module $it {}")
-                })
+        val createModuleStubs by tasks.registering {
+            doFirst {
+                infoExtension.stubbedModules.map {
+                    it.stubModuleInfoPath().also { file ->
+                        file.parentFile.mkdirs()
+                        file.writeText("module $it {}")
+                    }
+                }
             }
-            classpath = files()
-            options.compilerArgs.addAll(listOf(
-                "--release", infoExtension.version.majorVersion,
-                "--module-source-path", stubOutputDir.absolutePath
-            ))
-            destinationDirectory.set(buildDir.resolve("classes/moduleStubs"))
+        }
+
+        val moduleStubs by sourceSets.registering {
+            java.srcDir(stubOutputDir)
+
+            tasks.named<JavaCompile>(compileJavaTaskName).configure {
+                dependsOn(createModuleStubs)
+                options.compilerArgs.addAll(listOf(
+                    "--release", infoExtension.version.majorVersion,
+                    "--module-source-path", stubOutputDir.absolutePath
+                ))
+                destinationDirectory.set(buildDir.resolve("classes/moduleStubs"))
+            }
+        }
+
+        val packageModuleStubs by tasks.registering {
+            dependsOn(moduleStubs.map { it.compileJavaTaskName })
+
+            doFirst {
+                infoExtension.stubbedModules.forEach {
+                    runCommand(
+                        "jar", "cf", stubOutputDir.resolve("$it/$it.jar").absolutePath,
+                        buildDir.resolve("classes/moduleStubs").resolve("$it/module-info.class").absolutePath,
+                        workingDirectory = stubOutputDir.resolve(it)
+                    )
+                }
+            }
         }
 
         val compileJava = tasks.named<JavaCompile>("compileJava")
 
         val compileModuleInfoJava by tasks.registering(JavaCompile::class) {
-            dependsOn(createModuleStubs)
+            dependsOn(packageModuleStubs)
 
             val javaCompile = compileJava.get()
             classpath = files()
@@ -111,11 +131,13 @@ class ModuleInfoCompilePlugin : Plugin<Project> {
 
             source(javaCompile.source)
             destinationDirectory.set(buildDir.resolve("classes/module"))
-            check(infoExtension.version.isJava9Compatible)
             val separator = "${File.pathSeparatorChar}"
+
+            check(infoExtension.version.isJava9Compatible)
             val modulePath = javaCompile.classpath.asPath + separator + infoExtension.stubbedModules
                 .joinToString(separator) { "${stubOutputDir.absolutePath}/$it/$it.jar" }
             options.compilerArgs.addAll(listOf("--module-path", modulePath))
+
             if (infoExtension.extraArgs.isNotEmpty()) {
                 options.compilerArgs.addAll(infoExtension.extraArgs)
                 sourceCompatibility = infoExtension.version.majorVersion
