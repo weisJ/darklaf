@@ -70,7 +70,7 @@
     jobject validObj = [self _getWithEnv:env];
     if (!validObj) return NULL;
 
-    return (*env)->NewLocalRef(env, validObj);
+    return env->NewLocalRef(validObj);
 }
 
 - (void) setJObject:(jobject)jObjectIn withEnv:(JNIEnv *)env {
@@ -119,7 +119,7 @@
 - (jobject) _getWithEnv:(JNIEnv *)env {
     jobject const jobj = self.jObject;
 
-    if ((*env)->IsSameObject(env, jobj, NULL) == JNI_TRUE) {
+    if (env->IsSameObject(jobj, NULL) == JNI_TRUE) {
         self.jObject = NULL; // object went invalid
         return NULL;
     }

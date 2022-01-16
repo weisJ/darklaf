@@ -50,7 +50,7 @@ NSString *Darklaf_JNFObjectToString(JNIEnv *env, jobject obj)
     jobject name = Darklaf_JNFCallObjectMethod(env, obj, jm_toString); // AWT_THREADING Safe (known object)
 
     id result = Darklaf_JNFJavaToNSString(env, name);
-    (*env)->DeleteLocalRef(env, name);
+    env->DeleteLocalRef(name);
     return result;
 }
 
@@ -60,6 +60,6 @@ NSString *Darklaf_JNFObjectClassName(JNIEnv* env, jobject obj)
 
     jobject clz = Darklaf_JNFCallObjectMethod(env, obj, jm_getClass); // AWT_THREADING Safe (known object)
     NSString *result = Darklaf_JNFObjectToString(env, clz);
-    (*env)->DeleteLocalRef(env, clz);
+    env->DeleteLocalRef(clz);
     return result;
 }

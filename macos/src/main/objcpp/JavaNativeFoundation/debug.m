@@ -41,26 +41,26 @@
  */
 void Darklaf_JNFJavaStackTrace(JNIEnv *env) {
     jthrowable obj_javaException;
-    if ((obj_javaException = (*env)->ExceptionOccurred(env)) != NULL) (*env)->ExceptionClear(env);
+    if ((obj_javaException = env->ExceptionOccurred()) != NULL) env->ExceptionClear();
 
-    jclass cls_Thread = (*env)->FindClass(env, "java/lang/Thread");
-    jmethodID mid_currentThread = (*env)->GetStaticMethodID(env, cls_Thread, "currentThread", "()Ljava/lang/Thread;");
-    jobject obj_currentThread = (*env)->CallStaticObjectMethod(env, cls_Thread, mid_currentThread);
-    jclass cls_currentThread = (*env)->GetObjectClass(env, obj_currentThread);
-    jmethodID mid_getName = (*env)->GetMethodID(env, cls_currentThread, "getName", "()Ljava/lang/String;");
-    jobject obj_threadName = (*env)->CallObjectMethod(env, obj_currentThread, mid_getName);
-    (*env)->DeleteLocalRef(env, obj_currentThread);
+    jclass cls_Thread = env->FindClass("java/lang/Thread");
+    jmethodID mid_currentThread = env->GetStaticMethodID(cls_Thread, "currentThread", "()Ljava/lang/Thread;");
+    jobject obj_currentThread = env->CallStaticObjectMethod(cls_Thread, mid_currentThread);
+    jclass cls_currentThread = env->GetObjectClass(obj_currentThread);
+    jmethodID mid_getName = env->GetMethodID(cls_currentThread, "getName", "()Ljava/lang/String;");
+    jstring obj_threadName = (jstring) env->CallObjectMethod(obj_currentThread, mid_getName);
+    env->DeleteLocalRef(obj_currentThread);
 
-    const char *threadName = (*env)->GetStringUTFChars(env, obj_threadName, NULL);
+    const char *threadName = env->GetStringUTFChars(obj_threadName, NULL);
     Darklaf_JNF_WARN("Stack trace from Java thread \"%s\":", threadName);
-    (*env)->ReleaseStringUTFChars(env, obj_threadName, threadName);
-    (*env)->DeleteLocalRef(env, obj_threadName);
+    env->ReleaseStringUTFChars(obj_threadName, threadName);
+    env->DeleteLocalRef(obj_threadName);
 
-    jmethodID mid_dumpStack = (*env)->GetStaticMethodID(env, cls_Thread, "dumpStack", "()V");
-    (*env)->CallStaticVoidMethod(env, cls_Thread, mid_dumpStack);
-    (*env)->DeleteLocalRef(env, cls_Thread);
+    jmethodID mid_dumpStack = env->GetStaticMethodID(cls_Thread, "dumpStack", "()V");
+    env->CallStaticVoidMethod(cls_Thread, mid_dumpStack);
+    env->DeleteLocalRef(cls_Thread);
 
-    if (obj_javaException) (*env)->Throw(env, obj_javaException);
+    if (obj_javaException) env->Throw(obj_javaException);
 }
 
 /*
@@ -70,14 +70,14 @@ void Darklaf_JNFJavaStackTrace(JNIEnv *env) {
  */
 void Darklaf_JNFDumpJavaObject(JNIEnv *env, jobject obj) {
     jthrowable obj_javaException;
-    if ((obj_javaException = (*env)->ExceptionOccurred(env)) != NULL) (*env)->ExceptionClear(env);
+    if ((obj_javaException = env->ExceptionOccurred()) != NULL) env->ExceptionClear(env);
 
-    jclass cls_CToolkit = (*env)->FindClass(env, "apple/awt/CToolkit");
-    jmethodID mid_dumpObject = (*env)->GetStaticMethodID(env, cls_CToolkit, "dumpObject", "(Ljava/lang/Object;)V");
-    (*env)->CallStaticVoidMethod(env, cls_CToolkit, mid_dumpObject, obj);
-    (*env)->DeleteLocalRef(env, cls_CToolkit);
+    jclass cls_CToolkit = env->FindClass("apple/awt/CToolkit");
+    jmethodID mid_dumpObject = env->GetStaticMethodID(cls_CToolkit, "dumpObject", "(Ljava/lang/Object;)V");
+    env->CallStaticVoidMethod(cls_CToolkit, mid_dumpObject, obj);
+    env->DeleteLocalRef(cls_CToolkit);
 
-    if (obj_javaException) (*env)->Throw(env, obj_javaException);
+    if (obj_javaException) env->Throw(obj_javaException);
 }
 
 /*
@@ -98,10 +98,10 @@ NSString *Darklaf_JNFGetStackTraceAsNSString(JNIEnv *env, jthrowable throwable) 
     Darklaf_JNF_CLASS_CACHE(jc_Throwable, "java/lang/Throwable");
     Darklaf_JNF_MEMBER_CACHE(jm_printStackTrace, jc_Throwable, "printStackTrace", "(Ljava/io/PrintWriter;)V");
     Darklaf_JNFCallVoidMethod(env, throwable, jm_printStackTrace, printWriter);
-    (*env)->DeleteLocalRef(env, printWriter);
+    env->DeleteLocalRef(printWriter);
 
     // return writer.toString();
     NSString *stackTraceAsString = Darklaf_JNFObjectToString(env, writer);
-    (*env)->DeleteLocalRef(env, writer);
+    env->DeleteLocalRef(writer);
     return stackTraceAsString;
 }

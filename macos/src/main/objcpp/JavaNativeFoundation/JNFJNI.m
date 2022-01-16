@@ -62,11 +62,11 @@ static inline BOOL isMethod(Darklaf_JNFMemberInfo *member) {
 static void Darklaf_JNFLookupClass(JNIEnv *env, Darklaf_JNFClassInfo *class) {
     jclass localCls = NULL;
     Darklaf_JNF_ASSERT_COND(class);
-    localCls = (*env)->FindClass(env, class->name);
+    localCls = env->FindClass(class->name);
     if (localCls == NULL) [Darklaf_JNFException raiseUnnamedException:env];
 
     class->cls = Darklaf_JNFNewGlobalRef(env, localCls);
-    (*env)->DeleteLocalRef(env, localCls);
+    env->DeleteLocalRef(localCls);
     if (class->cls == NULL) [Darklaf_JNFException raiseUnnamedException:env];
 }
 
@@ -78,12 +78,12 @@ static void Darklaf_JNFLookupMemberID(JNIEnv *env, Darklaf_JNFMemberInfo *member
 
     if (isMethod(member)) {
         member->j.methodID = member->isStatic ?
-        (*env)->GetStaticMethodID(env, member->classInfo->cls, member->name, member->sig) :
-        (*env)->GetMethodID(env, member->classInfo->cls, member->name, member->sig);
+        env->GetStaticMethodID(member->classInfo->cls, member->name, member->sig) :
+        env->GetMethodID(member->classInfo->cls, member->name, member->sig);
     } else {   // This member is a field
         member->j.fieldID = member->isStatic ?
-        (*env)->GetStaticFieldID(env, member->classInfo->cls, member->name, member->sig) :
-        (*env)->GetFieldID(env, member->classInfo->cls, member->name, member->sig);
+        env->GetStaticFieldID(member->classInfo->cls, member->name, member->sig) :
+        env->GetFieldID(member->classInfo->cls, member->name, member->sig);
     }
 
     // If NULL, then exception occurred
@@ -92,7 +92,7 @@ static void Darklaf_JNFLookupMemberID(JNIEnv *env, Darklaf_JNFMemberInfo *member
 
 BOOL Darklaf_JNFIsInstanceOf(JNIEnv *env, jobject obj, Darklaf_JNFClassInfo *clazz) {
     if (clazz->cls == NULL) Darklaf_JNFLookupClass(env, clazz);
-    return (BOOL)(*env)->IsInstanceOf(env, obj, clazz->cls);
+    return (BOOL)env->IsInstanceOf(obj, clazz->cls);
 }
 
 //
@@ -133,7 +133,7 @@ Darklaf_JNFLookupMemberID(env, member)
 #define GET_FIELD(env, obj, field, result, sig, jni_call)						\
     LOOKUP_MEMBER_ID(env, field);												\
     VERIFY_FIELD(env, obj, field, sig);											\
-    result = (*env)->jni_call(env, obj, field->j.fieldID);						\
+    result = env->jni_call(obj, field->j.fieldID);						\
     Darklaf_JNF_CHECK_AND_RETHROW_EXCEPTION(env);
 
 // GET_STATIC_FIELD
@@ -141,7 +141,7 @@ Darklaf_JNFLookupMemberID(env, member)
 #define GET_STATIC_FIELD(env, field, result, sig, jni_call)						\
     LOOKUP_MEMBER_ID(env, field);												\
     VERIFY_FIELD(env, NULL, field, sig);										\
-    result = (*env)->jni_call(env, field->classInfo->cls, field->j.fieldID);	\
+    result = env->jni_call(field->classInfo->cls, field->j.fieldID);	\
     Darklaf_JNF_CHECK_AND_RETHROW_EXCEPTION(env);
 
 // SET_FIELD - Safe way to set a java field
@@ -150,7 +150,7 @@ Darklaf_JNFLookupMemberID(env, member)
 #define SET_FIELD(env, obj, field, val, sig, jni_call)							\
     LOOKUP_MEMBER_ID(env, field);												\
     VERIFY_FIELD(env, obj, field, sig);											\
-    (*env)->jni_call(env, obj, field->j.fieldID, val);							\
+    env->jni_call(obj, field->j.fieldID, val);							\
     Darklaf_JNF_CHECK_AND_RETHROW_EXCEPTION(env);
 
 // SET_STATIC_FIELD
@@ -158,7 +158,7 @@ Darklaf_JNFLookupMemberID(env, member)
 #define SET_STATIC_FIELD(env, field, val, sig, jni_call)						\
     LOOKUP_MEMBER_ID(env, field);												\
     VERIFY_FIELD(env, NULL, field, sig);										\
-    (*env)->jni_call(env, field->classInfo->cls, field->j.fieldID, val);		\
+    env->jni_call(field->classInfo->cls, field->j.fieldID, val);		\
     Darklaf_JNF_CHECK_AND_RETHROW_EXCEPTION(env);
 
 // CALL_VOID_METHOD
@@ -167,7 +167,7 @@ Darklaf_JNFLookupMemberID(env, member)
 #define CALL_VOID_METHOD(env, obj, method, jni_call, args)						\
     LOOKUP_MEMBER_ID(env, method);												\
     VERIFY_METHOD(env, obj, method, JVM_SIGNATURE_VOID);						\
-    (*env)->jni_call(env, obj, method->j.methodID, args);						\
+    env->jni_call(obj, method->j.methodID, args);						\
     Darklaf_JNF_CHECK_AND_RETHROW_EXCEPTION(env);
 
 // CALL_STATIC_VOID_METHOD
@@ -176,7 +176,7 @@ Darklaf_JNFLookupMemberID(env, member)
 #define CALL_STATIC_VOID_METHOD(env, method, jni_call, args)					\
     LOOKUP_MEMBER_ID(env, method);												\
     VERIFY_METHOD(env, NULL, method, JVM_SIGNATURE_VOID);						\
-    (*env)->jni_call(env, method->classInfo->cls, method->j.methodID, args);	\
+    env->jni_call(method->classInfo->cls, method->j.methodID, args);	\
     Darklaf_JNF_CHECK_AND_RETHROW_EXCEPTION(env);
 
 // CALL_METHOD - Call a method that returns a value
@@ -185,7 +185,7 @@ Darklaf_JNFLookupMemberID(env, member)
 #define CALL_METHOD(env, obj, method, result, sig, jni_call, args )				\
     LOOKUP_MEMBER_ID(env, method);												\
     VERIFY_METHOD(env, obj, method, sig);										\
-    result = (*env)->jni_call(env, obj, method->j.methodID, args);				\
+    result = env->jni_call(obj, method->j.methodID, args);				\
     Darklaf_JNF_CHECK_AND_RETHROW_EXCEPTION(env);
 
 // CALL_STATIC_METHOD - Call a static method that returns a value
@@ -194,7 +194,7 @@ Darklaf_JNFLookupMemberID(env, member)
 #define CALL_STATIC_METHOD(env, method, result, sig, jni_call, args)							\
     LOOKUP_MEMBER_ID(env, method);																\
     VERIFY_METHOD(env, NULL, method, sig);														\
-    result = (*env)->jni_call(env, method->classInfo->cls, method->j.methodID, args);			\
+    result = env->jni_call(method->classInfo->cls, method->j.methodID, args);			\
     Darklaf_JNF_CHECK_AND_RETHROW_EXCEPTION(env);
 
 
@@ -205,7 +205,7 @@ Darklaf_JNFLookupMemberID(env, member)
 #define NEW_OBJECT(env, constructor, obj, args)													\
     LOOKUP_MEMBER_ID(env, constructor);															\
     VERIFY_METHOD(env, NULL, constructor, JVM_SIGNATURE_VOID);									\
-    obj = (*env)->NewObjectV(env, constructor->classInfo->cls, constructor->j.methodID, args);	\
+    obj = env->NewObjectV(constructor->classInfo->cls, constructor->j.methodID, args);	\
     Darklaf_JNF_CHECK_AND_RETHROW_EXCEPTION(env);
 
 
@@ -375,14 +375,14 @@ jobjectArray Darklaf_JNFNewObjectArray(JNIEnv *env, Darklaf_JNFClassInfo *clazz,
 {
     if (clazz->cls == NULL) Darklaf_JNFLookupClass(env, clazz);
     Darklaf_JNF_ASSERT_COND(clazz->cls);
-    jobjectArray newArray = (*env)->NewObjectArray(env, length, clazz->cls, NULL);
+    jobjectArray newArray = env->NewObjectArray(length, clazz->cls, NULL);
     Darklaf_JNF_CHECK_AND_RETHROW_EXCEPTION(env);
     return newArray;
 }
 
 #define NEW_PRIMITIVE_ARRAY(primitiveArrayType, methodName)				\
     primitiveArrayType Darklaf_JNF ## methodName(JNIEnv *env, jsize length) {	\
-        primitiveArrayType array = (*env)->methodName(env, length);		\
+        primitiveArrayType array = env->methodName(length);		\
         Darklaf_JNF_CHECK_AND_RETHROW_EXCEPTION(env);							\
         return array;													\
     }
@@ -404,7 +404,7 @@ jobject Darklaf_JNFNewGlobalRef(JNIEnv *env, jobject obj)
 {
     if (!obj) return NULL;
 
-    jobject globalRef = (*env)->NewGlobalRef(env, obj);
+    jobject globalRef = env->NewGlobalRef(obj);
     if (!globalRef) Darklaf_JNF_CHECK_AND_RETHROW_EXCEPTION(env);
 
     //	Darklaf_JNF_WARN("Created global ref %#08lx to object:", globalRef);
@@ -418,7 +418,7 @@ void Darklaf_JNFDeleteGlobalRef(JNIEnv *env, jobject globalRef)
     if (!globalRef) return;
     //	Darklaf_JNF_WARN("Deleting global ref %#08lx to object:", globalRef);
     //	Darklaf_JNFDumpJavaObject(env, globalRef);
-    (*env)->DeleteGlobalRef(env, globalRef);
+    env->DeleteGlobalRef(globalRef);
 }
 
 // A bottleneck for creating weak global references
@@ -426,7 +426,7 @@ jobject Darklaf_JNFNewWeakGlobalRef(JNIEnv *env, jobject obj)
 {
     if (!obj) return NULL;
 
-    jobject globalRef = (*env)->NewWeakGlobalRef(env, obj);
+    jobject globalRef = env->NewWeakGlobalRef(obj);
     if (!globalRef) Darklaf_JNF_CHECK_AND_RETHROW_EXCEPTION(env);
 
     //	Darklaf_JNF_WARN("Created global ref %#08lx to object:", globalRef);
@@ -440,5 +440,5 @@ void Darklaf_JNFDeleteWeakGlobalRef(JNIEnv *env, jobject globalRef)
     if (!globalRef) return;
     //	Darklaf_JNF_WARN("Deleting global ref %#08lx to object:", globalRef);
     //	Darklaf_JNFDumpJavaObject(env, globalRef);
-    (*env)->DeleteWeakGlobalRef(env, globalRef);
+    env->DeleteWeakGlobalRef(globalRef);
 }

@@ -184,7 +184,7 @@
 
 - (id) initWithCoercion:(NSObject <Darklaf_JNFTypeCoercion> *)coercionIn className:(NSString *)className withEnv:(JNIEnv *)env {
     const char *classNameCStr = [className cStringUsingEncoding:NSUTF8StringEncoding];
-    jclass clz = (*env)->FindClass(env, classNameCStr);
+    jclass clz = env->FindClass(classNameCStr);
     if (clz == NULL) [Darklaf_JNFException raise:env as:kClassNotFoundException reason:"Unable to create type converter."];
 
     self = [super initWithJObject:clz withEnv:env];
@@ -221,7 +221,7 @@
 #endif
 
     jclass javaClazz = [self jObject];
-    return (BOOL)(*env)->IsInstanceOf(env, obj, javaClazz);
+    return (BOOL)env->IsInstanceOf(obj, javaClazz);
 }
 
 @end
@@ -303,8 +303,8 @@ static Darklaf_JNF_MEMBER_CACHE(jm_Iterator_next, jc_Iterator, "next", "()Ljava/
 
         Darklaf_JNFCallObjectMethod(env, jHashMap, jm_HashMap_put, jkey, java_value);
 
-        if (jkey != NULL) (*env)->DeleteLocalRef(env, jkey);
-        if (java_value != NULL) (*env)->DeleteLocalRef(env, java_value);
+        if (jkey != NULL) env->DeleteLocalRef(jkey);
+        if (java_value != NULL) env->DeleteLocalRef(java_value);
     }
 
     return jHashMap;
@@ -321,17 +321,17 @@ static Darklaf_JNF_MEMBER_CACHE(jm_Iterator_next, jc_Iterator, "next", "()Ljava/
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     jobject jKeySet = Darklaf_JNFCallObjectMethod(env, obj, jm_Map_keySet);
     jobject jKeyIter = Darklaf_JNFCallObjectMethod(env, jKeySet, jm_Set_iterator);
-    if (jKeySet != NULL) (*env)->DeleteLocalRef(env, jKeySet);
+    if (jKeySet != NULL) env->DeleteLocalRef(jKeySet);
 
     while (Darklaf_JNFCallBooleanMethod(env, jKeyIter, jm_Iterator_hasNext)) {
         jobject jkey = Darklaf_JNFCallObjectMethod(env, jKeyIter, jm_Iterator_next);
         id nsKey = [coercer coerceJavaObject:jkey withEnv:env usingCoercer:coercer];
 
         jobject java_value = Darklaf_JNFCallObjectMethod(env, obj, jm_Map_get, jkey);
-        if (jkey != NULL) (*env)->DeleteLocalRef(env, jkey);
+        if (jkey != NULL) env->DeleteLocalRef(jkey);
 
         id nsValue = [coercer coerceJavaObject:java_value withEnv:env usingCoercer:coercer];
-        if (java_value != NULL) (*env)->DeleteLocalRef(env, java_value);
+        if (java_value != NULL) env->DeleteLocalRef(java_value);
 
         [dict setObject:nsValue forKey:nsKey];
     }
@@ -362,7 +362,7 @@ static Darklaf_JNF_MEMBER_CACHE(jm_Iterator_next, jc_Iterator, "next", "()Ljava/
         id iThObj = [nsArray objectAtIndex:i];
         jobject iThJObj = [coercer coerceNSObject:iThObj withEnv:env usingCoercer:coercer];
         Darklaf_JNFCallBooleanMethod(env, javaArray, jm_List_add, iThJObj);
-        if (iThJObj != NULL) (*env)->DeleteLocalRef(env, iThJObj);
+        if (iThJObj != NULL) env->DeleteLocalRef(iThJObj);
     }
 
     return javaArray;
@@ -378,7 +378,7 @@ static Darklaf_JNF_MEMBER_CACHE(jm_Iterator_next, jc_Iterator, "next", "()Ljava/
     while (Darklaf_JNFCallBooleanMethod(env, jIterator, jm_Iterator_hasNext)) {
         jobject jobj = Darklaf_JNFCallObjectMethod(env, jIterator, jm_Iterator_next);
         id nsObj = [coercer coerceJavaObject:jobj withEnv:env usingCoercer:coercer];
-        if (jobj != NULL) (*env)->DeleteLocalRef(env, jobj);
+        if (jobj != NULL) env->DeleteLocalRef(jobj);
         [nsArray addObject:nsObj];
     }
 
@@ -407,7 +407,7 @@ static Darklaf_JNF_MEMBER_CACHE(jm_Iterator_next, jc_Iterator, "next", "()Ljava/
         jobject jnext = [coercer coerceNSObject:next withEnv:env usingCoercer:coercer];
         if (jnext != NULL) {
             Darklaf_JNFCallBooleanMethod(env, javaSet, jm_Set_add, jnext);
-            (*env)->DeleteLocalRef(env, jnext);
+            env->DeleteLocalRef(jnext);
         }
     }
 
@@ -425,7 +425,7 @@ static Darklaf_JNF_MEMBER_CACHE(jm_Iterator_next, jc_Iterator, "next", "()Ljava/
         jobject jobj = Darklaf_JNFCallObjectMethod(env, jIterator, jm_Iterator_next);
         if (jobj != NULL) {
             id nsObj = [coercer coerceJavaObject:jobj withEnv:env usingCoercer:coercer];
-            (*env)->DeleteLocalRef(env, jobj);
+            env->DeleteLocalRef(jobj);
             [nsSet addObject:nsObj];
         }
     }

@@ -68,7 +68,7 @@ const char* kRuntimeException           = JAVA_LANG "RuntimeException";
 
 - initUnnamed:(JNIEnv *)env {
     Darklaf_JNF_ASSERT_COND(env);
-    jthrowable throwable = (*env)->ExceptionOccurred(env);
+    jthrowable throwable = env->ExceptionOccurred();
     if (throwable) return [self init:env throwable:throwable];
 
     return [self initWithName:@"JavaNativeException" reason:@"See Java exception" userInfo:nil];
@@ -91,24 +91,24 @@ const char* kRuntimeException           = JAVA_LANG "RuntimeException";
 
 - init:(JNIEnv *)env throwable:(jthrowable)throwable {
     [self _setThrowable:throwable withEnv:env];
-    (*env)->ExceptionClear(env);	// The exception will be rethrown in -raiseToJava
+    env->ExceptionClear(env);	// The exception will be rethrown in -raiseToJava
 
     static jclass jc_Throwable = NULL;
     if (jc_Throwable == NULL) {
-        jc_Throwable = (*env)->FindClass(env, "java/lang/Throwable");
-        jthrowable unexpected = (*env)->ExceptionOccurred(env);
+        jc_Throwable = env->FindClass("java/lang/Throwable");
+        jthrowable unexpected = env->ExceptionOccurred();
         if (unexpected) {
-            (*env)->ExceptionClear(env);
+            env->ExceptionClear(env);
             return [self initWithName:@"JavaNativeException" reason:@"Internal Darklaf_JNF Error: could not find Throwable class" userInfo:nil];
         }
     }
 
     static jmethodID jm_Throwable_getMessage = NULL;
     if (jm_Throwable_getMessage == NULL && jc_Throwable != NULL) {
-        jm_Throwable_getMessage = (*env)->GetMethodID(env, jc_Throwable, "toString", "()Ljava/lang/String;");
-        jthrowable unexpected = (*env)->ExceptionOccurred(env);
+        jm_Throwable_getMessage = env->GetMethodID(jc_Throwable, "toString", "()Ljava/lang/String;");
+        jthrowable unexpected = env->ExceptionOccurred();
         if (unexpected) {
-            (*env)->ExceptionClear(env);
+            env->ExceptionClear(env);
             return [self initWithName:@"JavaNativeException" reason:@"Internal Darklaf_JNF Error: could not find Throwable.toString() method" userInfo:nil];
         }
     }
@@ -117,15 +117,15 @@ const char* kRuntimeException           = JAVA_LANG "RuntimeException";
         return [self initWithName:@"JavaNativeException" reason:@"Internal Darklaf_JNF Error: exception occurred, unable to determine cause" userInfo:nil];
     }
 
-    jobject msg = (*env)->CallObjectMethod(env, throwable, jm_Throwable_getMessage);
-    jthrowable unexpected = (*env)->ExceptionOccurred(env);
+    jobject msg = env->CallObjectMethod(throwable, jm_Throwable_getMessage);
+    jthrowable unexpected = env->ExceptionOccurred();
     if (unexpected) {
-        (*env)->ExceptionClear(env);
+        env->ExceptionClear(env);
         return [self initWithName:@"JavaNativeException" reason:@"Internal Darklaf_JNF Error: failed calling Throwable.toString()" userInfo:nil];
     }
 
     NSString *reason = Darklaf_JNFJavaToNSString(env, msg);
-    (*env)->DeleteLocalRef(env, msg);
+    env->DeleteLocalRef(msg);
     return [self initWithName:@"JavaNativeException" reason:reason userInfo:nil];
 }
 
@@ -135,7 +135,7 @@ const char* kRuntimeException           = JAVA_LANG "RuntimeException";
 
     Darklaf_JNF_ASSERT_COND(env);
     if (javaExceptionType != NULL) {
-        exceptionClass = (*env)->FindClass(env, javaExceptionType);
+        exceptionClass = env->FindClass(javaExceptionType);
     }
 
     if (exceptionClass == NULL) {
@@ -143,9 +143,9 @@ const char* kRuntimeException           = JAVA_LANG "RuntimeException";
         static jthrowable  panicExceptionClass = NULL;
         const char*        panicExceptionName = kRuntimeException;
         if (panicExceptionClass == NULL) {
-            jclass cls = (*env)->FindClass(env, panicExceptionName);
+            jclass cls = env->FindClass(panicExceptionName);
             if (cls != NULL) {
-                panicExceptionClass = (*env)->NewGlobalRef(env, cls);
+                panicExceptionClass = env->NewGlobalRef(cls);
             }
         }
 
@@ -167,10 +167,10 @@ const char* kRuntimeException           = JAVA_LANG "RuntimeException";
 
     // Can't throw squat if there's no class to throw
     if (exceptionClass != NULL) {
-        (*env)->ThrowNew(env, exceptionClass, reasonMsg);
-        jthrowable ex = (*env)->ExceptionOccurred(env);
+        env->ThrowNew(exceptionClass, reasonMsg);
+        jthrowable ex = env->ExceptionOccurred();
         if (ex) {
-            (*env)->ExceptionClear(env);    // Exception will be rethrown in -raiseToJava
+            env->ExceptionClear(env);    // Exception will be rethrown in -raiseToJava
         }
         [self _setThrowable:ex withEnv:env];
     }
@@ -207,7 +207,7 @@ const char* kRuntimeException           = JAVA_LANG "RuntimeException";
 
     Darklaf_JNF_ASSERT_COND(env);
     Darklaf_JNF_ASSERT_COND(javaException != NULL);
-    (*env)->Throw(env, javaException);
+    env->Throw(javaException);
 }
 
 - (NSString *)description {
@@ -222,7 +222,7 @@ const char* kRuntimeException           = JAVA_LANG "RuntimeException";
             NSLog(@"JavaNativeFoundation: NULL JNIEnv error occurred obtaining Java exception description");
             return desc;
         }
-        (*env)->ExceptionClear(env);
+        env->ExceptionClear(env);
         NSString *stackTrace = Darklaf_JNFGetStackTraceAsNSString(env, javaException);
         Darklaf_JNFReleaseEnv(env, &ctx);
 
@@ -269,7 +269,7 @@ const char* kRuntimeException           = JAVA_LANG "RuntimeException";
 
 - (void) _setThrowable:(jthrowable)throwable withNonNullEnv:(JNIEnv *)env {
     if (!throwable) return;
-    self.javaException = (*env)->NewGlobalRef(env, throwable);
+    self.javaException = env->NewGlobalRef(throwable);
 }
 
 // delete and clear
@@ -277,7 +277,7 @@ const char* kRuntimeException           = JAVA_LANG "RuntimeException";
     jthrowable const javaException = self.javaException;
     if (!javaException) return;
     self.javaException = NULL;
-    (*env)->DeleteGlobalRef(env, javaException);
+    env->DeleteGlobalRef(javaException);
 }
 
 - (void) dealloc {

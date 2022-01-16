@@ -62,11 +62,11 @@ Darklaf_JNF_EXPORT extern void Darklaf_JNFAssertionFailure(const char *file, int
 
 
 #define Darklaf_JNF_ASSERT_MSG(condition, msg)						\
-do {														\
-    if (!(condition)) {										\
+do {														        \
+    if (!(condition)) {										        \
         Darklaf_JNF_ASSERT_FAILURE(#condition, msg);				\
-    }														\
-} while(0)													\
+    }													        	\
+} while(0)												        	\
 
 
 #define Darklaf_JNF_ASSERT_COND(condition)							\
@@ -74,16 +74,16 @@ do {														\
 
 
 #define Darklaf_JNF_EXCEPTION_WARN(env, msg)						\
-do {														\
-    (*(env))->ExceptionDescribe(env);						\
+do {														        \
+    env->ExceptionDescribe();						                \
     Darklaf_JNF_ASSERT_FAILURE("Java exception thrown", msg);		\
-} while (0)													\
+} while (0)													        \
 
 
 #define Darklaf_JNF_ASSERT_NO_EXCEPTION_MSG(env, msg)				\
-if ((*(env))->ExceptionOccurred(env)) {						\
+if (env->ExceptionOccurred()) {						                \
     Darklaf_JNF_EXCEPTION_WARN(env, msg);							\
-}															\
+}															        \
 
 
 #define Darklaf_JNF_ASSERT_NO_EXCEPTION(env)						\

@@ -45,9 +45,9 @@ NSString *Darklaf_JNFJavaToNSString(JNIEnv *env, jstring javaString)
     // We try very hard to only allocate and memcopy once.
     if (javaString == NULL) return nil;
 
-    jsize length = (*env)->GetStringLength(env, javaString);
+    jsize length = env->GetStringLength(javaString);
     unichar *buffer = (unichar *)calloc((size_t)length, sizeof(unichar));
-    (*env)->GetStringRegion(env, javaString, 0, length, buffer);
+    env->GetStringRegion(javaString, 0, length, buffer);
     NSString *str = (NSString *)CFStringCreateWithCharactersNoCopy(NULL, buffer, length, kCFAllocatorMalloc);
     //	NSLog(@"%@", str);
     return [(NSString *)CFMakeCollectable(str) autorelease];
@@ -73,7 +73,7 @@ jstring Darklaf_JNFNSToJavaString(JNIEnv *env, NSString *nsString)
 
     Darklaf_JNF_ASSERT_COND(buffer != NULL);
     [nsString getCharacters:buffer];
-    res = (*env)->NewString(env, buffer, (jsize)length);
+    res = env->NewString(buffer, (jsize)length);
     if (buffer != stackBuffer) free(buffer);
     return res;
 }
@@ -82,7 +82,7 @@ const unichar *Darklaf_JNFGetStringUTF16UniChars(JNIEnv *env, jstring javaString
 {
     const jchar *unichars = NULL;
     Darklaf_JNF_ASSERT_COND(javaString != NULL);
-    unichars = (*env)->GetStringChars(env, javaString, NULL);
+    unichars = env->GetStringChars(javaString, NULL);
     if (unichars == NULL) [Darklaf_JNFException raise:env as:kNullPointerException reason:"unable to obtain characters from GetStringChars"];
     return (const unichar *)unichars;
 }
@@ -90,14 +90,14 @@ const unichar *Darklaf_JNFGetStringUTF16UniChars(JNIEnv *env, jstring javaString
 void Darklaf_JNFReleaseStringUTF16UniChars(JNIEnv *env, jstring javaString, const unichar *unichars)
 {
     Darklaf_JNF_ASSERT_COND(unichars != NULL);
-    (*env)->ReleaseStringChars(env, javaString, (const jchar *)unichars);
+    env->ReleaseStringChars(javaString, (const jchar *)unichars);
 }
 
 const char *Darklaf_JNFGetStringUTF8Chars(JNIEnv *env, jstring javaString)
 {
     const char *chars = NULL;
     Darklaf_JNF_ASSERT_COND(javaString != NULL);
-    chars = (*env)->GetStringUTFChars(env, javaString, NULL);
+    chars = env->GetStringUTFChars(javaString, NULL);
     if (chars == NULL) [Darklaf_JNFException raise:env as:kNullPointerException reason:"unable to obtain characters from GetStringUTFChars"];
     return chars;
 }
@@ -105,5 +105,5 @@ const char *Darklaf_JNFGetStringUTF8Chars(JNIEnv *env, jstring javaString)
 void Darklaf_JNFReleaseStringUTF8Chars(JNIEnv *env, jstring javaString, const char *chars)
 {
     Darklaf_JNF_ASSERT_COND(chars != NULL);
-    (*env)->ReleaseStringUTFChars(env, javaString, (const char *)chars);
+    env->ReleaseStringUTFChars(javaString, (const char *)chars);
 }

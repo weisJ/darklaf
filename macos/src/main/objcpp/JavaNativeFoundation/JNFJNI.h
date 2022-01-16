@@ -119,7 +119,7 @@ __BEGIN_DECLS
 // check automatically.
 #define Darklaf_JNF_CHECK_AND_RETHROW_EXCEPTION(env)							\
 {																	\
-    jthrowable _exception = (*env)->ExceptionOccurred(env);			\
+    jthrowable _exception = env->ExceptionOccurred();			\
     if (_exception) [Darklaf_JNFException raise:env throwable:_exception];	\
 }
 
