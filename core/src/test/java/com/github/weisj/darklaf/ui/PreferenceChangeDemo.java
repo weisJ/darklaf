@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -72,10 +72,11 @@ public class PreferenceChangeDemo extends BaseComponentDemo {
                 setMargin(new Insets(5, 5, 5, 5));
                 setEditable(false);
                 setText("Press start/stop to enable/disable preference monitoring.\n" + "Then do one of the following\n"
-                        + " - switch between dark/light com.github.weisj.theme (Windows/macOS)\n"
-                        + " - toggle high contrast mode (Windows/macOS)\n" + " - change accent color (Windows/macOS)\n"
+                        + " - switch between dark/light theme (Windows/macOS)\n"
+                        + " - toggle high contrast mode (Windows/macOS)\n"
+                        + " - change accent color (Windows/macOS)\n"
                         + " - change selection color (macOS)\n" + " - change font scaling (Windows)\n"
-                        + "The com.github.weisj.theme should then adjust automatically (if monitoring is started).\n");
+                        + "The theme should then adjust automatically (if monitoring is started).\n");
             }
         });
         return panel;
