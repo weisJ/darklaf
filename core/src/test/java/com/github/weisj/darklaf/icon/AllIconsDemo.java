@@ -34,6 +34,7 @@ import com.github.weisj.darklaf.core.test.util.ClassFinder;
 import com.github.weisj.darklaf.core.test.util.Instantiable;
 import com.github.weisj.darklaf.core.test.util.ResourceWalker;
 import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
+import com.github.weisj.darklaf.properties.PropertyLoader;
 import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.properties.icons.ThemedSVGIcon;
 import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
@@ -58,7 +59,14 @@ public class AllIconsDemo extends BaseComponentDemo {
                         .collect(Collectors.toList());
         LafManager.registerInitTask((currentTheme, defaults) -> {
             Properties props = new Properties();
-            decorationsProviders.forEach(provider -> provider.loadDecorationProperties(props, defaults));
+            decorationsProviders.forEach(provider -> {
+                IconLoader iconLoader = IconLoader.get(provider.getClass());
+                for (String path : provider.getPropertyResourcePaths()) {
+                    PropertyLoader.putProperties(
+                        PropertyLoader.loadProperties(provider.getClass(), path, ""),
+                        props, defaults, iconLoader);
+                }
+            });
             defaults.putAll(props);
         });
     }
