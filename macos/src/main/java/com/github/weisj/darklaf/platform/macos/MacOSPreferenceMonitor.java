@@ -24,9 +24,13 @@ import java.awt.*;
 import java.util.Objects;
 import java.util.logging.Logger;
 
+import javax.swing.*;
+
+import com.github.weisj.darklaf.util.LogUtil;
+
 public class MacOSPreferenceMonitor {
 
-    private static final Logger LOGGER = Logger.getLogger(MacOSThemePreferenceProvider.class.getName());
+    private static final Logger LOGGER = LogUtil.getLogger(MacOSThemePreferenceProvider.class);
 
     private final MacOSThemePreferenceProvider preferenceProvider;
 
@@ -42,18 +46,20 @@ public class MacOSPreferenceMonitor {
     }
 
     private void onNotification() {
-        boolean newDark = JNIThemeInfoMacOS.isDarkThemeEnabled();
-        boolean newHighContrast = JNIThemeInfoMacOS.isHighContrastEnabled();
-        Color newAccentColor = JNIThemeInfoMacOS.getAccentColor();
-        Color newSelectionColor = JNIThemeInfoMacOS.getSelectionColor();
-        if (darkMode != newDark || highContrast != newHighContrast || !Objects.equals(accentColor, newAccentColor)
-                || !Objects.equals(selectionColor, newSelectionColor)) {
-            darkMode = newDark;
-            accentColor = newAccentColor;
-            selectionColor = newSelectionColor;
-            highContrast = newHighContrast;
-            preferenceProvider.reportPreferenceChange(darkMode, highContrast, accentColor, selectionColor);
-        }
+        SwingUtilities.invokeLater(() -> {
+            boolean newDark = JNIThemeInfoMacOS.isDarkThemeEnabled();
+            boolean newHighContrast = JNIThemeInfoMacOS.isHighContrastEnabled();
+            Color newAccentColor = JNIThemeInfoMacOS.getAccentColor();
+            Color newSelectionColor = JNIThemeInfoMacOS.getSelectionColor();
+            if (darkMode != newDark || highContrast != newHighContrast || !Objects.equals(accentColor, newAccentColor)
+                    || !Objects.equals(selectionColor, newSelectionColor)) {
+                darkMode = newDark;
+                accentColor = newAccentColor;
+                selectionColor = newSelectionColor;
+                highContrast = newHighContrast;
+                preferenceProvider.reportPreferenceChange(darkMode, highContrast, accentColor, selectionColor);
+            }
+        });
     }
 
     private void start() {

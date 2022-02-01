@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -21,6 +21,8 @@
 package com.github.weisj.darklaf.platform.windows;
 
 import java.util.logging.Logger;
+
+import javax.swing.*;
 
 import com.github.weisj.darklaf.util.LogUtil;
 
@@ -42,18 +44,20 @@ public class WindowsPreferenceMonitor {
     }
 
     private void onNotification() {
-        boolean newDark = JNIThemeInfoWindows.isDarkThemeEnabled();
-        boolean newHighContrast = JNIThemeInfoWindows.isHighContrastEnabled();
-        long newFotScale = JNIThemeInfoWindows.getFontScaleFactor();
-        int newColor = JNIThemeInfoWindows.getAccentColor();
-        if (darkMode != newDark || color != newColor || fontScaleFactor != newFotScale
-                || highContrast != newHighContrast) {
-            darkMode = newDark;
-            fontScaleFactor = newFotScale;
-            highContrast = newHighContrast;
-            color = newColor;
-            preferenceProvider.reportPreferenceChange(highContrast, darkMode, fontScaleFactor, color);
-        }
+        SwingUtilities.invokeLater(() -> {
+            boolean newDark = JNIThemeInfoWindows.isDarkThemeEnabled();
+            boolean newHighContrast = JNIThemeInfoWindows.isHighContrastEnabled();
+            long newFotScale = JNIThemeInfoWindows.getFontScaleFactor();
+            int newColor = JNIThemeInfoWindows.getAccentColor();
+            if (darkMode != newDark || color != newColor || fontScaleFactor != newFotScale
+                    || highContrast != newHighContrast) {
+                darkMode = newDark;
+                fontScaleFactor = newFotScale;
+                highContrast = newHighContrast;
+                color = newColor;
+                preferenceProvider.reportPreferenceChange(highContrast, darkMode, fontScaleFactor, color);
+            }
+        });
     }
 
     private void start() {

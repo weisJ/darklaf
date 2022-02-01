@@ -23,12 +23,11 @@ package com.github.weisj.darklaf.nativelaf;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.DarkLaf;
-import com.github.weisj.darklaf.platform.preferences.NativeThemePreferenceProvider;
+import com.github.weisj.darklaf.platform.preferences.SystemPreferencesManager;
 import com.github.weisj.darklaf.theme.event.ThemeEventSupport;
 import com.github.weisj.darklaf.theme.event.ThemePreferenceChangeEvent;
 import com.github.weisj.darklaf.theme.event.ThemePreferenceListener;
 import com.github.weisj.darklaf.theme.spec.PreferredThemeStyle;
-import com.github.weisj.darklaf.theme.spec.ThemePreferenceProvider;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class ThemePreferencesHandler {
@@ -38,7 +37,7 @@ public class ThemePreferencesHandler {
     private static ThemePreferencesHandler sharedInstance;
     private final ThemeEventSupport<ThemePreferenceChangeEvent, ThemePreferenceListener> changeSupport =
             new ThemeEventSupport<>();
-    private final ThemePreferenceProvider preferenceProvider;
+    private final SystemPreferencesManager systemPreferencesManager;
 
     public static ThemePreferencesHandler getSharedInstance() {
         if (sharedInstance == null) setSharedInstance(new ThemePreferencesHandler());
@@ -50,20 +49,12 @@ public class ThemePreferencesHandler {
     }
 
     protected ThemePreferencesHandler() {
-        if (isNativePreferencesEnabled()) {
-            preferenceProvider = NativeThemePreferenceProvider.create();
-        } else {
-            preferenceProvider = NativeThemePreferenceProvider.createNullProvider();
-
-        }
-        preferenceProvider.initialize();
-        preferenceProvider.setCallback(this::onChange);
+        systemPreferencesManager = new SystemPreferencesManager(isNativePreferencesEnabled());
+        systemPreferencesManager.addListener(this::onChange);
     }
 
     private void onChange(final PreferredThemeStyle style) {
-        SwingUtilities.invokeLater(() -> {
-            changeSupport.dispatchEvent(new ThemePreferenceChangeEvent(style));
-        });
+        SwingUtilities.invokeLater(() -> changeSupport.dispatchEvent(new ThemePreferenceChangeEvent(style)));
     }
 
     public void addThemePreferenceChangeListener(final ThemePreferenceListener listener) {
@@ -75,7 +66,7 @@ public class ThemePreferencesHandler {
     }
 
     public void enablePreferenceChangeReporting(final boolean enabled) {
-        preferenceProvider.setReporting(enabled);
+        systemPreferencesManager.enableReporting(enabled);
     }
 
     private boolean isNativePreferencesEnabled() {
@@ -84,31 +75,30 @@ public class ThemePreferencesHandler {
     }
 
     public boolean isPreferenceChangeReportingEnabled() {
-        return preferenceProvider.canReport() && preferenceProvider.isReporting()
-                && PropertyUtil.getSystemFlag(PREFERENCE_REPORTING_FLAG);
-    }
-
-    public boolean supportsNativeAccentColor() {
-        return preferenceProvider.supportsNativeAccentColor();
-    }
-
-    public boolean supportsNativeSelectionColor() {
-        return preferenceProvider.supportsNativeSelectionColor();
-    }
-
-    public boolean supportsNativeFontSize() {
-        return preferenceProvider.supportsNativeFontSize();
-    }
-
-    public boolean supportsNativeTheme() {
-        return preferenceProvider.supportsNativeTheme();
-    }
-
-    public PreferredThemeStyle getPreferredThemeStyle() {
-        return preferenceProvider.getPreference();
+        return systemPreferencesManager.isReportingEnabled() && PropertyUtil.getSystemFlag(PREFERENCE_REPORTING_FLAG);
     }
 
     public boolean canReport() {
-        return preferenceProvider.canReport();
+        return systemPreferencesManager.provider().canReport();
+    }
+
+    public boolean supportsNativeFontSize() {
+        return systemPreferencesManager.provider().supportsNativeFontSize();
+    }
+
+    public boolean supportsNativeAccentColor() {
+        return systemPreferencesManager.provider().supportsNativeAccentColor();
+    }
+
+    public boolean supportsNativeSelectionColor() {
+        return systemPreferencesManager.provider().supportsNativeSelectionColor();
+    }
+
+    public boolean supportsNativeTheme() {
+        return systemPreferencesManager.provider().supportsNativeTheme();
+    }
+
+    public PreferredThemeStyle getPreferredThemeStyle() {
+        return systemPreferencesManager.getPreferredThemeStyle();
     }
 }
