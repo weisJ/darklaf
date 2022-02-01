@@ -63,8 +63,8 @@ public class AllIconsDemo extends BaseComponentDemo {
                 IconLoader iconLoader = IconLoader.get(provider.getClass());
                 for (String path : provider.getPropertyResourcePaths()) {
                     PropertyLoader.putProperties(
-                        PropertyLoader.loadProperties(provider.getClass(), path, ""),
-                        props, defaults, iconLoader);
+                            PropertyLoader.loadProperties(provider.getClass(), path, ""),
+                            props, defaults, iconLoader);
                 }
             });
             defaults.putAll(props);
