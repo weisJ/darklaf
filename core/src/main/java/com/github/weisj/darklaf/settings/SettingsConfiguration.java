@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -25,11 +25,11 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.platform.ThemePreferencesHandler;
+import com.github.weisj.darklaf.nativelaf.ThemePreferencesHandler;
 import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.theme.info.AccentColorRule;
-import com.github.weisj.darklaf.theme.info.FontSizeRule;
-import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
+import com.github.weisj.darklaf.theme.spec.AccentColorRule;
+import com.github.weisj.darklaf.theme.spec.FontSizeRule;
+import com.github.weisj.darklaf.theme.spec.PreferredThemeStyle;
 
 public class SettingsConfiguration implements Serializable {
 

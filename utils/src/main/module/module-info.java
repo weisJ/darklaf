@@ -25,6 +25,7 @@
 module darklaf.utils {
     requires transitive java.desktop;
     requires transitive java.logging;
+    requires darklaf.platform.base;
 
     requires static org.jetbrains.annotations;
     requires static com.google.errorprone.annotations;

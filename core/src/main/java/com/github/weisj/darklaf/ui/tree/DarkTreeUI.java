@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -37,6 +37,7 @@ import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.properties.icons.RotatableIcon;
 import com.github.weisj.darklaf.ui.HasRendererPane;
 import com.github.weisj.darklaf.ui.cell.CellConstants;
@@ -45,7 +46,6 @@ import com.github.weisj.darklaf.ui.cell.DarkCellRendererPane;
 import com.github.weisj.darklaf.ui.cell.hint.CellHintPopupListener;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
-import com.github.weisj.darklaf.util.SystemInfo;
 
 /**
  * @author Konstantin Bulenkov

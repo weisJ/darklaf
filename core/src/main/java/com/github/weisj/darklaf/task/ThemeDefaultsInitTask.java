@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -30,13 +30,13 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.iconset.IconSet;
-import com.github.weisj.darklaf.platform.DecorationsHandler;
+import com.github.weisj.darklaf.nativelaf.DecorationsHandler;
+import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.properties.PropertyLoader;
 import com.github.weisj.darklaf.properties.icons.IconResolver;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
-import com.github.weisj.darklaf.util.SystemInfo;
 
 public class ThemeDefaultsInitTask implements DefaultsInitTask {
 
@@ -156,7 +156,7 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
     private void initPlatformProperties(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {
         IconResolver iconResolver = DarkUIUtil.iconResolver();
         Consumer<String> osPlatformLoader = osName -> PropertyLoader.putProperties(
-                PropertyLoader.loadProperties(DarkLaf.class, osName, "platform/"),
+                PropertyLoader.loadProperties(DarkLaf.class, osName, "nativelaf/"),
                 uiProps, defaults, iconResolver);
         osPlatformLoader.accept(getOsName());
         if (SystemInfo.isWindows11()) {

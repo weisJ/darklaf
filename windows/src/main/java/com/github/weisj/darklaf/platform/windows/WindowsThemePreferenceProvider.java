@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -24,7 +24,7 @@ import java.awt.*;
 import java.util.function.Consumer;
 
 import com.github.weisj.darklaf.properties.color.DarkColorModelHSB;
-import com.github.weisj.darklaf.theme.info.*;
+import com.github.weisj.darklaf.theme.spec.*;
 
 public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
 

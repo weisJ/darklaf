@@ -82,11 +82,14 @@ include(
     "compatibility",
     "iconset",
     "theme",
+    "theme-spec",
     "property-loader",
     "utils",
-    "platform-base",
     "windows",
-    "macos"
+    "macos",
+    "platform-base",
+    "platform-decorations",
+    "platform-preferences"
 )
 
 for (p in rootProject.children) {

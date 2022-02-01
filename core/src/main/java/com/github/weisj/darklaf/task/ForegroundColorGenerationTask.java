@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -32,7 +32,7 @@ import com.github.weisj.darklaf.properties.color.DarkColorModelHSB;
 import com.github.weisj.darklaf.properties.color.DarkColorModelHSL;
 import com.github.weisj.darklaf.properties.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.theme.info.AccentColorRule;
+import com.github.weisj.darklaf.theme.spec.AccentColorRule;
 import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.Types;

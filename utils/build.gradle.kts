@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
+    implementation(projects.darklafPlatformBase)
     compileOnly(libs.nullabilityAnnotations)
     compileOnly(toolLibs.errorprone.annotations)
 

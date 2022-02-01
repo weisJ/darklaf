@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -24,11 +24,11 @@ import java.util.Properties;
 
 import javax.swing.UIDefaults;
 
+import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.properties.icons.IconResolver;
 import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.theme.info.ColorToneRule;
 import com.github.weisj.darklaf.theme.info.PresetIconRule;
-import com.github.weisj.darklaf.util.SystemInfo;
+import com.github.weisj.darklaf.theme.spec.ColorToneRule;
 
 public class MyCustomTheme extends Theme {
 

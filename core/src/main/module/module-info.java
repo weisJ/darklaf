@@ -32,6 +32,8 @@ module darklaf.core {
     requires darklaf.iconset;
     requires darklaf.nativeutil;
     requires darklaf.platform.base;
+    requires darklaf.platform.decorations;
+    requires darklaf.platform.preferences;
     requires darklaf.platform.windows;
     requires darklaf.platform.macos;
     requires swingdsl.laf;
@@ -49,7 +51,7 @@ module darklaf.core {
 
     // Open properties to PropertyLoader
     opens com.github.weisj.darklaf to darklaf.properties;
-    opens com.github.weisj.darklaf.platform to darklaf.properties;
+    opens com.github.weisj.darklaf.nativelaf to darklaf.properties;
     opens com.github.weisj.darklaf.ui to darklaf.properties;
 
     provides com.github.weisj.darklaf.theme.laf.SynthesisedThemedLaf.ThemedLafProvider with

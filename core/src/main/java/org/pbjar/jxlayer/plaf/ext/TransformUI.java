@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -64,9 +64,9 @@ import org.pbjar.jxlayer.repaint.RepaintManagerProvider;
 import org.pbjar.jxlayer.repaint.RepaintManagerUtils;
 import org.pbjar.jxlayer.repaint.WrappedRepaintManager;
 
+import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
-import com.github.weisj.darklaf.util.SystemInfo;
 
 /**
  * This class provides for all necessary functionality when using transformations in a

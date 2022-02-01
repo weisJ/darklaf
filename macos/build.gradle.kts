@@ -10,6 +10,7 @@ plugins {
 
 moduleInfo {
     stubModule("darklaf.core")
+    stubModule("darklaf.platform.preferences")
 }
 
 val jnfConfig: Configuration by configurations.creating {
@@ -36,10 +37,11 @@ tasks.jar {
 
 library {
     dependencies {
-        jvmImplementation(projects.darklafTheme)
+        jvmImplementation(projects.darklafThemeSpec)
         jvmImplementation(projects.darklafNativeUtils)
         jvmImplementation(projects.darklafUtils)
         jvmImplementation(projects.darklafPlatformBase)
+        jvmImplementation(projects.darklafPlatformDecorations)
         jvmImplementation(projects.darklafPropertyLoader)
         nativeLibImplementation(macOsFrameworks.appKit)
         nativeLibImplementation(macOsFrameworks.cocoa)

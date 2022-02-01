@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -43,12 +43,12 @@ import org.jetbrains.annotations.NotNull;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.graphics.StringPainter;
+import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.settings.ThemeSettingsMenuItem;
 import com.github.weisj.darklaf.theme.event.ThemeInstalledListener;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 import com.github.weisj.darklaf.util.Lambdas;
 import com.github.weisj.darklaf.util.PropertyUtil;
-import com.github.weisj.darklaf.util.SystemInfo;
 
 public class DemoMenuBar extends JMenuBar {
 

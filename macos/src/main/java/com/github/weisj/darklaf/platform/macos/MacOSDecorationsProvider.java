@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -25,13 +25,13 @@ import java.util.Properties;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
 import com.github.weisj.darklaf.platform.decorations.UnsupportedProviderException;
 import com.github.weisj.darklaf.platform.macos.ui.MacOSTitlePane;
 import com.github.weisj.darklaf.properties.PropertyLoader;
 import com.github.weisj.darklaf.properties.icons.IconLoader;
-import com.github.weisj.darklaf.util.SystemInfo;
 
 public class MacOSDecorationsProvider implements DecorationsProvider {
 

@@ -25,6 +25,7 @@
 open module darklaf.theme {
     requires transitive java.desktop;
 
+    requires transitive darklaf.theme.spec;
     requires darklaf.utils;
     requires darklaf.properties;
 

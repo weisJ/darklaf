@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -33,16 +33,16 @@ import javax.swing.*;
 import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.DarkLaf;
+import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.properties.PropertyLoader;
 import com.github.weisj.darklaf.properties.icons.IconResolver;
 import com.github.weisj.darklaf.properties.uiresource.DarkFontUIResource;
 import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.theme.info.FontSizeRule;
+import com.github.weisj.darklaf.theme.spec.FontSizeRule;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.FontUtil;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
-import com.github.weisj.darklaf.util.SystemInfo;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
 public class FontDefaultsInitTask implements DefaultsInitTask {

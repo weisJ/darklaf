@@ -39,10 +39,10 @@ import org.jetbrains.annotations.NotNull;
 
 import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.theme.info.PreferredThemeStyle;
-import com.github.weisj.darklaf.util.SystemInfo;
+import com.github.weisj.darklaf.theme.spec.PreferredThemeStyle;
 import com.github.weisj.swingdsl.inspector.InspectorKt;
 
 public final class DemoExecutor {

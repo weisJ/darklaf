@@ -23,13 +23,14 @@
  *
  */
 open module darklaf.platform.macos {
-    requires transitive darklaf.platform.base;
-    requires transitive darklaf.theme;
+    requires transitive darklaf.platform.decorations;
+    requires transitive darklaf.theme.spec;
+    requires darklaf.platform.base;
 
     requires darklaf.nativeutil;
     requires darklaf.utils;
     requires darklaf.properties;
 
-    exports com.github.weisj.darklaf.platform.macos to darklaf.core;
-    exports com.github.weisj.darklaf.platform.macos.theme to darklaf.core;
+    exports com.github.weisj.darklaf.platform.macos to darklaf.core, darklaf.platform.preferences;
+    exports com.github.weisj.darklaf.platform.macos.theme to darklaf.core, darklaf.platform.preferences;
 }

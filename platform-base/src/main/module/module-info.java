@@ -23,8 +23,5 @@
  *
  */
 module darklaf.platform.base {
-    requires transitive java.desktop;
-
-    exports com.github.weisj.darklaf.platform.decorations;
-
+    exports com.github.weisj.darklaf.platform;
 }

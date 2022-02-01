@@ -26,6 +26,7 @@ module darklaf.compatibility {
     requires transitive java.desktop;
 
     requires darklaf.utils;
+    requires darklaf.platform.base;
 
     // Note: This module is only available since Java 11
     requires jdk.unsupported.desktop;

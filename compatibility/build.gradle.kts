@@ -17,6 +17,7 @@ configure<ModuleInfoExtension> {
 
 dependencies {
     implementation(projects.darklafUtils)
+    implementation(projects.darklafPlatformBase)
 }
 
 fun Jar.includeLicenses() {

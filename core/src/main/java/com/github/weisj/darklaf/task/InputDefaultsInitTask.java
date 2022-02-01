@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -27,8 +27,8 @@ import javax.swing.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.text.DefaultEditorKit;
 
+import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.util.SystemInfo;
 
 public class InputDefaultsInitTask implements DefaultsInitTask {
 

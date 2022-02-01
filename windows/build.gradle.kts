@@ -9,6 +9,7 @@ plugins {
 
 moduleInfo {
     stubModule("darklaf.core")
+    stubModule("darklaf.platform.preferences")
 }
 
 library {
@@ -16,7 +17,8 @@ library {
         jvmImplementation(projects.darklafNativeUtils)
         jvmImplementation(projects.darklafUtils)
         jvmImplementation(projects.darklafPlatformBase)
-        jvmImplementation(projects.darklafTheme)
+        jvmImplementation(projects.darklafPlatformDecorations)
+        jvmImplementation(projects.darklafThemeSpec)
         jvmImplementation(projects.darklafPropertyLoader)
     }
 

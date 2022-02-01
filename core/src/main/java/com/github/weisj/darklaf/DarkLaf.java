@@ -27,14 +27,14 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
-import com.github.weisj.darklaf.platform.DecorationsHandler;
+import com.github.weisj.darklaf.nativelaf.DecorationsHandler;
+import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.task.*;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.laf.ThemedLookAndFeel;
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.ui.popupmenu.MouseGrabberUtil;
 import com.github.weisj.darklaf.util.LogUtil;
-import com.github.weisj.darklaf.util.SystemInfo;
 
 /** @author Jannis Weis */
 public class DarkLaf extends ThemedLookAndFeel {

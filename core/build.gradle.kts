@@ -16,6 +16,8 @@ dependencies {
     implementation(projects.darklafCompatibility)
     implementation(projects.darklafNativeUtils)
     implementation(projects.darklafPlatformBase)
+    implementation(projects.darklafPlatformDecorations)
+    implementation(projects.darklafPlatformPreferences)
     implementation(projects.darklafWindows)
     implementation(projects.darklafMacos)
     implementation(libs.swingDslLafSupport)
