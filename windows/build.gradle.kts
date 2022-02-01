@@ -19,7 +19,6 @@ library {
         jvmImplementation(projects.darklafPlatformBase)
         jvmImplementation(projects.darklafPlatformDecorations)
         jvmImplementation(projects.darklafThemeSpec)
-        jvmImplementation(projects.darklafPropertyLoader)
     }
 
     targetMachines.addAll(machines.windows.x86, machines.windows.x86_64)

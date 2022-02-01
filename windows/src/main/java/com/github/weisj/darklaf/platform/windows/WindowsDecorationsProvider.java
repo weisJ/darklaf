@@ -21,8 +21,8 @@
 package com.github.weisj.darklaf.platform.windows;
 
 import java.awt.*;
-import java.util.Properties;
-import java.util.function.Consumer;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -32,8 +32,6 @@ import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
 import com.github.weisj.darklaf.platform.decorations.UnsupportedProviderException;
 import com.github.weisj.darklaf.platform.windows.ui.WindowsTitlePane;
-import com.github.weisj.darklaf.properties.PropertyLoader;
-import com.github.weisj.darklaf.properties.icons.IconLoader;
 
 public class WindowsDecorationsProvider implements DecorationsProvider {
 
@@ -99,15 +97,13 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
     }
 
     @Override
-    public void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults) {
-        IconLoader iconLoader = IconLoader.get(WindowsDecorationsProvider.class);
-        Consumer<String> loadProps = fileName -> PropertyLoader.putProperties(
-                PropertyLoader.loadProperties(WindowsDecorationsProvider.class, fileName, ""),
-                properties, currentDefaults, iconLoader);
-        loadProps.accept("windows_icons");
-        loadProps.accept("windows_decorations");
+    public List<String> getPropertyResourcePaths() {
+        ArrayList<String> properties = new ArrayList<>();
+        properties.add("windows_icons");
+        properties.add("windows_decorations");
         if (SystemInfo.isWindows11()) {
-            loadProps.accept("windows_11_decorations");
+            properties.add("windows_11_decorations");
         }
+        return properties;
     }
 }

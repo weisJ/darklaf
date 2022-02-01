@@ -32,6 +32,8 @@ import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
 import com.github.weisj.darklaf.platform.macos.MacOSDecorationsProvider;
 import com.github.weisj.darklaf.platform.windows.WindowsDecorationsProvider;
+import com.github.weisj.darklaf.properties.PropertyLoader;
+import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class DecorationsHandler {
@@ -99,7 +101,12 @@ public class DecorationsHandler {
     }
 
     public void loadDecorationProperties(final Properties uiProps, final UIDefaults defaults) {
-        decorationsProvider.loadDecorationProperties(uiProps, defaults);
+        IconLoader iconLoader = IconLoader.get(decorationsProvider.getClass());
+        for (String path : decorationsProvider.getPropertyResourcePaths()) {
+            PropertyLoader.putProperties(
+                    PropertyLoader.loadProperties(decorationsProvider.getClass(), path, ""),
+                    uiProps, defaults, iconLoader);
+        }
     }
 
     public void setDecorationsEnabled(final boolean enabled) {

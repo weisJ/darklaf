@@ -21,7 +21,7 @@
 package com.github.weisj.darklaf.platform.decorations;
 
 import java.awt.*;
-import java.util.Properties;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -49,12 +49,11 @@ public interface DecorationsProvider {
     void initialize();
 
     /**
-     * Load the necessary properties into the defaults.
+     * Returns the path to the decoration properties.
      *
-     * @param properties the properties to load the values into.
-     * @param currentDefaults the current ui defaults.
+     * @return path to load a resources from.
      */
-    void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults);
+    List<String> getPropertyResourcePaths();
 
     /** Initialize the window of a popup menu. */
     default void installPopupWindow(final Window window) {}

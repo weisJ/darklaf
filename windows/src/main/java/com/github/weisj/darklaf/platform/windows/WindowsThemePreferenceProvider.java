@@ -23,7 +23,6 @@ package com.github.weisj.darklaf.platform.windows;
 import java.awt.*;
 import java.util.function.Consumer;
 
-import com.github.weisj.darklaf.properties.color.DarkColorModelHSB;
 import com.github.weisj.darklaf.theme.spec.*;
 
 public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
@@ -56,8 +55,11 @@ public class WindowsThemePreferenceProvider implements ThemePreferenceProvider {
 
     private Color deriveSelectionColor(final Color color) {
         if (color == null) return null;
-        double[] hsb = DarkColorModelHSB.RGBtoHSBValues(color.getRed(), color.getGreen(), color.getBlue());
-        return DarkColorModelHSB.getColorFromHSBValues(hsb[0], hsb[1] / 2.5, Math.min(1, hsb[2] * 1.2));
+        float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+        float h = hsb[0];
+        float s = hsb[1] / 2.5f;
+        float b = Math.min(1, hsb[2] * 1.2f);
+        return Color.getHSBColor(Math.max(Math.min(h, 1), 0), Math.max(Math.min(s, 1), 0), Math.max(Math.min(b, 1), 0));
     }
 
     private Color createColorFromRGB(final int rgb) {

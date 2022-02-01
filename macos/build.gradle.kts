@@ -38,11 +38,10 @@ tasks.jar {
 library {
     dependencies {
         jvmImplementation(projects.darklafThemeSpec)
-        jvmImplementation(projects.darklafNativeUtils)
         jvmImplementation(projects.darklafUtils)
+        jvmImplementation(projects.darklafNativeUtils)
         jvmImplementation(projects.darklafPlatformBase)
         jvmImplementation(projects.darklafPlatformDecorations)
-        jvmImplementation(projects.darklafPropertyLoader)
         nativeLibImplementation(macOsFrameworks.appKit)
         nativeLibImplementation(macOsFrameworks.cocoa)
         nativeLibImplementation(macOsFrameworks.javaNativeFoundation)

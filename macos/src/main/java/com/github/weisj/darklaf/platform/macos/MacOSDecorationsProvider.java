@@ -21,7 +21,8 @@
 package com.github.weisj.darklaf.platform.macos;
 
 import java.awt.*;
-import java.util.Properties;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -30,8 +31,6 @@ import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
 import com.github.weisj.darklaf.platform.decorations.UnsupportedProviderException;
 import com.github.weisj.darklaf.platform.macos.ui.MacOSTitlePane;
-import com.github.weisj.darklaf.properties.PropertyLoader;
-import com.github.weisj.darklaf.properties.icons.IconLoader;
 
 public class MacOSDecorationsProvider implements DecorationsProvider {
 
@@ -58,10 +57,7 @@ public class MacOSDecorationsProvider implements DecorationsProvider {
     }
 
     @Override
-    public void loadDecorationProperties(final Properties properties, final UIDefaults currentDefaults) {
-        IconLoader iconLoader = IconLoader.get(MacOSDecorationsProvider.class);
-        PropertyLoader.putProperties(
-                PropertyLoader.loadProperties(MacOSDecorationsProvider.class, "macos_decorations", ""), properties,
-                currentDefaults, iconLoader);
+    public List<String> getPropertyResourcePaths() {
+        return Collections.singletonList("macos_decorations");
     }
 }

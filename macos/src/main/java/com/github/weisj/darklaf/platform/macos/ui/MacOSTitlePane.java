@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -32,13 +32,10 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.platform.macos.JNIDecorationsMacOS;
-import com.github.weisj.darklaf.util.LogUtil;
-import com.github.weisj.darklaf.util.PropertyKey;
-import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class MacOSTitlePane extends CustomTitlePane {
 
-    private static final Logger LOGGER = LogUtil.getLogger(MacOSTitlePane.class);
+    private static final Logger LOGGER = Logger.getLogger(MacOSTitlePane.class.getName());
 
     private final JRootPane rootPane;
     private final Window window;
@@ -137,7 +134,7 @@ public class MacOSTitlePane extends CustomTitlePane {
     }
 
     private boolean isUseColoredTitleBar(final JRootPane rootPane) {
-        return PropertyUtil.getBooleanProperty(rootPane, "JRootPane.coloredTitleBar", true);
+        return MacOSDecorationsUtil.getBooleanProperty(rootPane, "JRootPane.coloredTitleBar", true);
     }
 
     private String getTitle() {
@@ -244,9 +241,8 @@ public class MacOSTitlePane extends CustomTitlePane {
                 || getDecorationStyle() == JRootPane.NONE;
     }
 
-
     private void updateTitleBarVisibility() {
-        titleBarHidden = PropertyUtil.getBooleanProperty(rootPane, "JRootPane.hideTitleBar");
+        titleBarHidden = MacOSDecorationsUtil.getBooleanProperty(rootPane, "JRootPane.hideTitleBar", false);
         rootPane.doLayout();
         rootPane.repaint();
     }
@@ -288,7 +284,7 @@ public class MacOSTitlePane extends CustomTitlePane {
         @Override
         public void propertyChange(final PropertyChangeEvent pce) {
             String name = pce.getPropertyName();
-            if (PropertyKey.TITLE.equals(name)) {
+            if ("title".equals(name)) {
                 titleLabel.setText(pce.getNewValue() == null ? "" : pce.getNewValue().toString());
                 repaint();
             }

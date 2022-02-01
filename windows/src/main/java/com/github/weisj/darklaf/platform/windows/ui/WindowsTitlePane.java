@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -36,8 +36,6 @@ import javax.swing.plaf.UIResource;
 import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
 import com.github.weisj.darklaf.platform.windows.JNIDecorationsWindows;
 import com.github.weisj.darklaf.platform.windows.PointerUtil;
-import com.github.weisj.darklaf.properties.icons.ScaledIcon;
-import com.github.weisj.darklaf.properties.icons.ToggleIcon;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -69,10 +67,10 @@ public class WindowsTitlePane extends CustomTitlePane {
     private PropertyChangeListener windowPropertyChangeListener;
     private PropertyChangeListener rootPanePropertyChangeListener;
     private WindowListener windowListener;
-    private ToggleIcon closeIcon;
-    private ToggleIcon maximizeIcon;
-    private ToggleIcon restoreIcon;
-    private ToggleIcon minimizeIcon;
+    private TitlebarIcon closeIcon;
+    private TitlebarIcon maximizeIcon;
+    private TitlebarIcon restoreIcon;
+    private TitlebarIcon minimizeIcon;
     private JButton windowIconButton;
     private JButton closeButton;
     private JButton maximizeToggleButton;
@@ -379,13 +377,13 @@ public class WindowsTitlePane extends CustomTitlePane {
     }
 
     private void createIcons() {
-        minimizeIcon = new ToggleIcon(UIManager.getIcon("Windows.TitlePane.minimize.icon"),
+        minimizeIcon = new TitlebarIcon(UIManager.getIcon("Windows.TitlePane.minimize.icon"),
                 UIManager.getIcon("Windows.TitlePane.minimizeInactive.icon"));
-        maximizeIcon = new ToggleIcon(UIManager.getIcon("Windows.TitlePane.maximize.icon"),
+        maximizeIcon = new TitlebarIcon(UIManager.getIcon("Windows.TitlePane.maximize.icon"),
                 UIManager.getIcon("Windows.TitlePane.maximizeInactive.icon"));
-        restoreIcon = new ToggleIcon(UIManager.getIcon("Windows.TitlePane.restore.icon"),
+        restoreIcon = new TitlebarIcon(UIManager.getIcon("Windows.TitlePane.restore.icon"),
                 UIManager.getIcon("Windows.TitlePane.restoreInactive.icon"));
-        closeIcon = new ToggleIcon(UIManager.getIcon("Windows.TitlePane.close.icon"),
+        closeIcon = new TitlebarIcon(UIManager.getIcon("Windows.TitlePane.close.icon"),
                 UIManager.getIcon("Windows.TitlePane.closeInactive.icon"));
     }
 

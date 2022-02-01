@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Jannis Weis
+ * Copyright (c) 2021-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -29,8 +29,6 @@ import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuBar;
 import javax.swing.JRootPane;
-
-import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class MenuBarStealer {
 
@@ -71,7 +69,7 @@ public class MenuBarStealer {
     }
 
     public void updateMenuBar(final boolean install) {
-        unifiedMenuBar = PropertyUtil.getBooleanProperty(rootPane, "JRootPane.unifiedMenuBar");
+        unifiedMenuBar = isUnifiedMenuBarEnabled(rootPane);
         if (unifiedMenuBar && install) {
             if (rootPaneContainerListener == null) {
                 rootPaneContainerListener = createRootPaneContainerListener();
@@ -90,6 +88,14 @@ public class MenuBarStealer {
             }
         }
         rootPane.revalidate();
+    }
+
+    private boolean isUnifiedMenuBarEnabled(final JComponent c) {
+        Object obj = c.getClientProperty("JRootPane.unifiedMenuBar");
+        if (!(obj instanceof Boolean) && obj != null) {
+            obj = Boolean.parseBoolean(obj.toString());
+        }
+        return Boolean.TRUE.equals(obj);
     }
 
     private void addMenuBar(final JMenuBar bar) {
