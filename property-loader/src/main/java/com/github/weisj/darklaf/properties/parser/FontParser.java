@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Jannis Weis
+ * Copyright (c) 2021-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -40,7 +40,7 @@ public class FontParser extends KeyFilteredParser implements Delimiters {
     private static final char FONT_DELIMITER = '-';
 
     public FontParser() {
-        super("font");
+        super("font", "Font");
     }
 
     @Override
@@ -70,7 +70,7 @@ public class FontParser extends KeyFilteredParser implements Delimiters {
             }
             if (parseResult.value.length() == length) {
                 // Did not make any progress. Bail
-                return ParserUtil.error(parseResult, "Unexpected token while parsing font");
+                return ParserUtil.error(parseResult, "Unexpected token while parsing font " + parseResult.value);
             }
         }
         if (base == null) base = FontUtil.createFont(null, Font.PLAIN, 12);
