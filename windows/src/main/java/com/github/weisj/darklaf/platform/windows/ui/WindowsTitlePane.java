@@ -254,6 +254,7 @@ public class WindowsTitlePane extends CustomTitlePane {
     private void installSubcomponents() {
         titleLabel = new JLabel();
         titleLabel.setHorizontalAlignment(JLabel.LEFT);
+        titleLabel.setFont(getFont());
 
         createIcons();
         createActions();
@@ -309,6 +310,12 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     private void installDefaults() {
         setFont(UIManager.getFont("InternalFrame.titleFont", getLocale()));
+    }
+
+    @Override
+    public void setFont(final Font font) {
+        super.setFont(font);
+        if (titleLabel != null) titleLabel.setFont(font);
     }
 
     protected JButton createWindowIcon() {
@@ -702,7 +709,7 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     private int computeHeight() {
         if (hideTitleBar()) return 0;
-        FontMetrics fm = rootPane.getFontMetrics(getFont());
+        FontMetrics fm = titleLabel.getFontMetrics(titleLabel.getFont());
         int height = fm.getHeight() + 7;
         if (menuBarStealer.hasMenuBar()) {
             height = Math.max(height, menuBarStealer.getMenuBar().getMinimumSize().height);
