@@ -437,7 +437,7 @@ public final class IconLoader implements IconResolver {
 
     private @NotNull URI createURI(final String path) {
         try {
-            return Objects.requireNonNull(getResource(path)).toURI();
+            return Objects.requireNonNull(getResource(path), path).toURI();
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
