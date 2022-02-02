@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -37,7 +37,7 @@ import javax.swing.plaf.ColorUIResource;
 import javax.swing.table.DefaultTableModel;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
-import com.github.weisj.darklaf.properties.icons.IconLoader;
+import com.github.weisj.darklaf.iconset.AllIcons;
 import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
 import com.github.weisj.darklaf.ui.table.renderer.DarkColorTableCellRendererEditor;
@@ -303,7 +303,7 @@ public class UIManagerDefaults extends BaseComponentDemo implements ItemListener
                 if (value instanceof Icon) {
                     value = new SafeIcon((Icon) value);
                 } else if (value instanceof String && value.toString().endsWith(".wav")) {
-                    value = IconLoader.get(UIManagerDefaults.class).getIcon("icon/sound.svg", 24, 24);
+                    value = AllIcons.Misc.Sound.get(24, 24);
                 }
                 row.add(value);
             } else {
