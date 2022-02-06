@@ -41,7 +41,6 @@ dependencyResolutionManagement {
             idv("nullabilityAnnotations", "org.jetbrains:annotations")
         }
         create("macOsFrameworks") {
-            idv("javaNativeFoundation", "com.github.weisj:java-native-foundation")
             idv("appKit", "dev.nokee.framework:AppKit", "macOSFramework")
             idv("cocoa", "dev.nokee.framework:Cocoa", "macOSFramework")
         }
