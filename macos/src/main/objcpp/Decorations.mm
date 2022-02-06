@@ -19,10 +19,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 #import "com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS.h"
-#import <JavaNativeFoundation/JavaNativeFoundation.h>
+#import "JNFUtils.h"
 #import <Cocoa/Cocoa.h>
-
-#define OBJC(jl) ((id)jlong_to_ptr(jl))
 
 JNIEXPORT jlong JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_getComponentPointer(JNIEnv *env, jclass cls, jobject window) {
@@ -100,7 +98,7 @@ Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_setTitleEnabled
                                                                                  jboolean enabled) {
 JNF_COCOA_ENTER(env);
     NSWindow *nsWindow = OBJC(hwnd);
-    [JNFRunLoop performOnMainThreadWaiting:YES withBlock:^{
+    [JNF_RunLoop performOnMainThreadWaiting:YES withBlock:^{
         if (enabled) {
             nsWindow.titleVisibility = NSWindowTitleVisible;
         } else {
@@ -117,7 +115,7 @@ Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_setDarkTheme(JN
 JNF_COCOA_ENTER(env);
     NSWindow *nsWindow = OBJC(hwnd);
     if(@available(macOS 10.14, *)) {
-        [JNFRunLoop performOnMainThreadWaiting:YES withBlock:^{
+        [JNF_RunLoop performOnMainThreadWaiting:YES withBlock:^{
             if (darkEnabled) {
                 nsWindow.appearance = [NSAppearance appearanceNamed:@"NSAppearanceNameDarkAqua"];
             } else {
@@ -133,7 +131,7 @@ JNIEXPORT void JNICALL
 Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_installDecorations(JNIEnv *env, jclass obj, jlong hwnd) {
 JNF_COCOA_ENTER(env);
     NSWindow *nsWindow = OBJC(hwnd);
-    [JNFRunLoop performOnMainThreadWaiting:YES withBlock:^{
+    [JNF_RunLoop performOnMainThreadWaiting:YES withBlock:^{
         nsWindow.styleMask |= NSWindowStyleMaskFullSizeContentView;
         nsWindow.titlebarAppearsTransparent = YES;
         [nsWindow contentView].needsDisplay = YES;
@@ -146,7 +144,7 @@ Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_uninstallDecora
     jboolean fullSizeContent, jboolean transparentTitleBar) {
 JNF_COCOA_ENTER(env);
     NSWindow *nsWindow = OBJC(hwnd);
-    [JNFRunLoop performOnMainThreadWaiting:YES withBlock:^{
+    [JNF_RunLoop performOnMainThreadWaiting:YES withBlock:^{
         if (fullSizeContent) {
             nsWindow.styleMask |= NSWindowStyleMaskFullSizeContentView;
         } else {
