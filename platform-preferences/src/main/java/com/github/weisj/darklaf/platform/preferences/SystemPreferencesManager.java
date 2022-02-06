@@ -83,6 +83,17 @@ public class SystemPreferencesManager {
         return nativeProvider;
     }
 
+    /**
+     * Enabled whether changes in the preferred theme style should be reported to
+     * {@link SystemPreferenceChangeListener}s. On some platforms this setting may do nothing.
+     *
+     * <p>
+     * Warning: If preference reporting is enabled it <b>needs</b> to be disabled for the classloader to
+     * be eligible for garbage collection. This is only relevant if you actually need the classloader to
+     * be unloaded.
+     *
+     * @param reportingEnabled true if changes should be reported.
+     */
     public void enableReporting(final boolean reportingEnabled) {
         if (isReportingEnabled() != reportingEnabled) {
             preferenceProvider.setReporting(reportingEnabled);

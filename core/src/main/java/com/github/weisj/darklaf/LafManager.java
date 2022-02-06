@@ -124,9 +124,9 @@ public final class LafManager {
      * {@link ThemePreferenceListener}s. On some platforms this setting may do nothing.
      *
      * <p>
-     * Warning: If preference reporting is enabled it <b>needs</b> to be disabled before closing the
-     * program. Not doing so can result in memory leaks and prevent the classloader from being garbage
-     * collected.
+     * Warning: If preference reporting is enabled it <b>needs</b> to be disabled for the classloader to
+     * be eligible for garbage collection. This is only relevant if you actually need the classloader to
+     * be unloaded.
      *
      * @param enabled true if changes should be reported.
      */
