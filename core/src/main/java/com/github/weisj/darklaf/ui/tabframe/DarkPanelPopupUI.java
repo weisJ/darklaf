@@ -400,9 +400,6 @@ public class DarkPanelPopupUI extends DarkPanelUI implements PropertyChangeListe
             setFocus(false);
             setFocusable(false);
             setOpaque(false);
-
-            System.out.println(icon.getIconWidth() + " " + icon.getIconHeight());
-            System.out.println(getPreferredSize());
         }
 
         public void setFocus(final boolean focus) {
