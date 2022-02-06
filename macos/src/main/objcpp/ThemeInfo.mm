@@ -19,10 +19,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 #import "com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS.h"
-#import <JavaNativeFoundation/JavaNativeFoundation.h>
+#import "JNFUtils.h"
 #import <AppKit/AppKit.h>
-
-#define OBJC(jl) ((id)jlong_to_ptr(jl))
 
 #define NSRequiresAquaSystemAppearance CFSTR("NSRequiresAquaSystemAppearance")
 
@@ -114,7 +112,7 @@ BOOL manuallyPatched = NO;
 }
 
 - (void)dispatchCallback {
-    [JNFRunLoop performOnMainThreadWaiting:NO withBlock:^{
+    [JNF_RunLoop performOnMainThreadWaiting:NO withBlock:^{
         [self runCallback];
     }];
 }
