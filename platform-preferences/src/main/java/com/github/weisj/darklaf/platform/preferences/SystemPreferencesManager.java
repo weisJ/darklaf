@@ -84,7 +84,10 @@ public class SystemPreferencesManager {
     }
 
     public void enableReporting(final boolean reportingEnabled) {
-        preferenceProvider.setReporting(reportingEnabled);
+        if (isReportingEnabled() != reportingEnabled) {
+            preferenceProvider.setReporting(reportingEnabled);
+            onPreferenceChange(getPreferredThemeStyle());
+        }
     }
 
     public boolean isReportingEnabled() {
