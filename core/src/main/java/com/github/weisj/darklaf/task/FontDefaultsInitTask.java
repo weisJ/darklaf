@@ -55,6 +55,7 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     private static final String FONT_DEFAULTS_NAME = "font";
     private static final String KERNING_ALLOW_LIST = "kerning.allowList";
     private static final String KERNING_BLOCK_LIST = "kerning.blockList";
+    private static final String THEME_DEFAULT_FONT = "theme.fontPrototype";
 
     /*
      * Per https://docs.oracle.com/javase/7/docs/api/java/awt/RenderingHints.html#
@@ -82,10 +83,23 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     public void run(final Theme currentTheme, final UIDefaults defaults) {
         loadFontProperties(defaults);
 
-        if (SystemInfo.isMac) {
-            patchOSFonts(defaults, this::mapMacOSFont);
-        } else if (SystemInfo.isWindows) {
-            patchOSFonts(defaults, this::mapWindowsFont);
+        Font defaultFont = defaults.getFont(THEME_DEFAULT_FONT);
+        if (defaultFont != null) {
+            patchOSFonts(defaults, entry -> {
+                Font f = entry.getValue();
+                Font newFont = FontUtil.createFont(
+                        defaultFont.getFamily(), defaultFont.getStyle(), f.getSize());
+                if (f instanceof UIResource) {
+                    newFont = new DarkFontUIResource(newFont);
+                }
+                return newFont;
+            });
+        } else {
+            if (SystemInfo.isMac) {
+                patchOSFonts(defaults, this::mapMacOSFont);
+            } else if (SystemInfo.isWindows) {
+                patchOSFonts(defaults, this::mapWindowsFont);
+            }
         }
 
         if (SystemInfo.isMacOSCatalina) {
@@ -110,6 +124,7 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
         setupRenderingHints(defaults);
         defaults.remove(KERNING_ALLOW_LIST);
         defaults.remove(KERNING_BLOCK_LIST);
+        defaults.remove(THEME_DEFAULT_FONT);
     }
 
     private boolean systemKerningEnabled() {
