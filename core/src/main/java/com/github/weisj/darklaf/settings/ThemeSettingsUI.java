@@ -107,8 +107,8 @@ public class ThemeSettingsUI {
 
         fontSlider = createFontSlider();
 
-        enabledSystemPreferences = DynamicUI.withDynamic(new TristateCheckBox(),
-                c -> c.setText(UIManager.getString("settings.check_system_preferences", c.getLocale())));
+        enabledSystemPreferences =
+                DynamicUI.withLocalizedText(new TristateCheckBox(), "settings.check_system_preferences");
         accentColorFollowsSystem = createSystemSettingCheckBox("settings.check_system_accent_color",
                 ThemePreferencesHandler::supportsNativeAccentColor);
         selectionColorFollowsSystem = createSystemSettingCheckBox("settings.check_system_selection_color",
@@ -376,13 +376,13 @@ public class ThemeSettingsUI {
 
     private static JCheckBox createSystemSettingCheckBox(final String labelKey,
             final Function<ThemePreferencesHandler, Boolean> enabledCondition) {
-        JCheckBox checkBox = DynamicUI.withDynamic(new JCheckBox() {
+        JCheckBox checkBox = DynamicUI.withLocalizedText(new JCheckBox() {
             @Override
             public void setEnabled(final boolean b) {
                 boolean enabled = b && enabledCondition.apply(ThemePreferencesHandler.getSharedInstance());
                 super.setEnabled(enabled);
             }
-        }, c -> c.setText(UIManager.getString(labelKey, c.getLocale())));
+        }, labelKey);
         checkBox.setSelected(false);
         checkBox.setEnabled(false);
         return checkBox;

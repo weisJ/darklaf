@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -34,7 +34,7 @@ public final class DynamicUI {
     static {
         UIManager.addPropertyChangeListener(e -> {
             String key = e.getPropertyName();
-            if ("lookAndFeel".equals(key)) {
+            if ("lookandfeel".equalsIgnoreCase(key)) {
                 listeners.keySet().forEach(DynamicUI::updateComponent);
             }
         });
@@ -63,6 +63,13 @@ public final class DynamicUI {
         return component;
     }
 
+    public static <T extends AbstractButton> T withLocalizedText(final T comp, final String textKey) {
+        return withDynamic(comp, c -> c.setText(UIManager.getString(textKey, c.getLocale())));
+    }
+
+    public static <T extends JLabel> T withLocalizedText(final T comp, final String textKey) {
+        return withDynamic(comp, c -> c.setText(UIManager.getString(textKey, c.getLocale())));
+    }
 
     public static <T extends JComponent> T withLocalizedTooltip(final T comp, final String tipTextKey) {
         return withDynamic(comp, c -> c.setToolTipText(UIManager.getString(tipTextKey, c.getLocale())));

@@ -418,7 +418,7 @@ public final class LafManager {
      * @param theme the theme to install.
      */
     // Even for themes which are Objects#equals we can't be sure that they have the same effect.
-    // Maybe someone installed a custom installtion task and wants to reinstall.
+    // Maybe someone installed a custom installation task and wants to reinstall.
     @SuppressWarnings("ReferenceEquality")
     public static void installTheme(final Theme theme) {
         if (theme == getTheme() && isInstalled()) return;
@@ -451,6 +451,14 @@ public final class LafManager {
         }
         installer.install(theme);
         setInstalledTheme(theme);
+    }
+
+    public static void forceLafUpdate() {
+        if (isInstalled()) {
+            installer.install(getInstalledTheme());
+        } else {
+            install();
+        }
     }
 
     /** Update the component ui classes for all current windows. */

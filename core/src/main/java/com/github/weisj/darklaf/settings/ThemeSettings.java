@@ -30,6 +30,7 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.components.DefaultButton;
+import com.github.weisj.darklaf.components.DynamicUI;
 import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.event.ThemePreferenceChangeEvent;
@@ -369,20 +370,19 @@ public class ThemeSettings implements ThemePreferenceListener {
     }
 
     protected Component createButtonPanel() {
-        Locale l = Locale.getDefault();
-        JButton ok = new DefaultButton(UIManager.getString("settings.dialog_ok", l));
+        JButton ok = DynamicUI.withLocalizedText(new DefaultButton(""), "settings.dialog_ok");
         ok.setDefaultCapable(true);
         ok.addActionListener(e -> {
             apply();
             dialog.dispatchEvent(new WindowEvent(dialog, WindowEvent.WINDOW_CLOSING));
         });
 
-        JButton cancel = new JButton(UIManager.getString("settings.dialog_cancel", l));
+        JButton cancel = DynamicUI.withLocalizedText(new JButton(), "settings.dialog_cancel");
         cancel.addActionListener(e -> {
             revert();
             dialog.dispatchEvent(new WindowEvent(dialog, WindowEvent.WINDOW_CLOSING));
         });
-        JButton apply = new JButton(UIManager.getString("settings.dialog_apply", l));
+        JButton apply = DynamicUI.withLocalizedText(new JButton(), "settings.dialog_apply");
         apply.addActionListener(e -> apply());
 
         Box box = Box.createHorizontalBox();

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -21,7 +21,6 @@
 package com.github.weisj.darklaf.settings;
 
 import java.awt.*;
-import java.util.*;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
@@ -85,7 +84,7 @@ public class ThemeSettingsPanel extends JPanel {
     }
 
     private static JLabel createDynamicLabel(final String key) {
-        return DynamicUI.withDynamic(new JLabel(), c -> c.setText(UIManager.getString(key, c.getLocale())));
+        return DynamicUI.withLocalizedText(new JLabel(), key);
     }
 
     private JComponent createGeneralSettings(final GroupLayout.Alignment alignment, final Insets insets) {
