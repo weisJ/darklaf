@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Jannis Weis
+ * Copyright (c) 2021-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,8 +46,11 @@ module darklaf.core {
 
     uses com.github.weisj.darklaf.theme.Theme;
 
-    // Open resource bundles for java.desktop
-    opens com.github.weisj.darklaf.task;
+    // Open resource bundles for java.desktop.
+    // Ideally this would only open for the java.desktop module.
+    // But it won't actually load in this case.
+    opens com.github.weisj.darklaf.ui.bundles;
+    opens com.github.weisj.darklaf.ui.bundles.jdk;
 
     // Open properties to PropertyLoader
     opens com.github.weisj.darklaf to darklaf.properties;

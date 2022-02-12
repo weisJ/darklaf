@@ -41,13 +41,6 @@ dependencies {
     testCompileOnly(libs.nullabilityAnnotations)
 }
 
-tasks.processResources {
-    into("com/github/weisj/darklaf/external/jdk") {
-        from(rootDir.resolve("externalResources/jdk/basic"))
-        from(rootDir.resolve("externalResources/jdk/metal"))
-    }
-}
-
 moduleInfo {
     modularExec {
         addExports.add("java.desktop/com.sun.java.swing=darklaf.core")

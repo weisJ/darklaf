@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -23,22 +23,23 @@ package com.github.weisj.darklaf.task;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.ui.util.ResourceUtil;
+import com.github.weisj.darklaf.ui.bundles.ResourceUtil;
 
 public class ResourceBundleInitTask implements DefaultsInitTask {
 
     /*
      * The resource bundle containing localization for FileChooser, ColorChooser etc.
      */
-    private static final String PLAF_BUNDLE_NAME = ResourceUtil.getBundleName("external/jdk/basic");
-    private static final String METAL_BUNDLE_NAME = ResourceUtil.getBundleName("external/jdk/metal");
-    private static final String DARKLAF_BUNDLE_NAME = ResourceUtil.getBundleName("task/darklaf");
-    private static final String SETTING_BUNDLE_NAME = ResourceUtil.getBundleName("task/theme_settings");
-    private static final String TAB_FRAME_BUNDLE_NAME = ResourceUtil.getBundleName("task/tabFrame");
+    private static final String DARKLAF_BUNDLE_NAME = ResourceUtil.getBundleName("darklaf");
+    private static final String SETTING_BUNDLE_NAME = ResourceUtil.getBundleName("theme_settings");
+    private static final String TAB_FRAME_BUNDLE_NAME = ResourceUtil.getBundleName("tabFrame");
+    // Note: These two bundles are pulled from the jdk.
+    private static final String BASIC_BUNDLE_NAME = ResourceUtil.getBundleName("jdk/basic");
+    private static final String METAL_BUNDLE_NAME = ResourceUtil.getBundleName("jdk/metal");
 
     @Override
     public void run(final Theme currentTheme, final UIDefaults defaults) {
-        defaults.addResourceBundle(PLAF_BUNDLE_NAME);
+        defaults.addResourceBundle(BASIC_BUNDLE_NAME);
         defaults.addResourceBundle(METAL_BUNDLE_NAME);
         defaults.addResourceBundle(DARKLAF_BUNDLE_NAME);
         defaults.addResourceBundle(SETTING_BUNDLE_NAME);
