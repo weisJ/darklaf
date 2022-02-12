@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -21,23 +21,37 @@
 package com.github.weisj.darklaf.ui.fileChooser;
 
 
+import java.awt.*;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
-import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
-public final class FileChooserDemo {
+public final class FileChooserDemo extends BaseComponentDemo {
 
     public static void main(final String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            LafManager.install(DemoExecutor.getPreferredTheme());
+        DemoExecutor.showDemo(new FileChooserDemo());
+    }
+
+    @Override
+    protected JComponent createComponent() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        JButton button = new JButton("Open FileChooser");
+        button.addActionListener(e -> {
             JFileChooser chooser = new JFileChooser(System.getProperty("user.home"));
             chooser.addChoosableFileFilter(new FileNameExtensionFilter("Test Filter", ".svg"));
             chooser.setMultiSelectionEnabled(true);
-            SwingUtilities.invokeLater(() -> DarkUIUtil.getWindow(chooser).toFront());
-            chooser.showOpenDialog(null);
+            chooser.showOpenDialog(panel);
         });
+        panel.add(button, null);
+        panel.setPreferredSize(new Dimension(200, 200));
+        return panel;
+    }
+
+    @Override
+    public String getName() {
+        return "FileChooser Demo";
     }
 }
