@@ -86,7 +86,7 @@ public final class DemoExecutor {
             throw new IllegalStateException("Not running on module path");
         }
 
-        SwingUtilities.invokeLater(() -> {
+        Runnable demoRunnable = () -> {
             try {
                 setupLaf(executionSpec);
                 Window window = createWindow(demo, asDialog);
@@ -110,14 +110,21 @@ public final class DemoExecutor {
                     windowRef.notifyAll();
                 }
             }
-        });
-        synchronized (windowRef) {
-            try {
-                windowRef.wait();
-            } catch (InterruptedException e) {
-                throw new IllegalStateException(e);
+        };
+
+        if (SwingUtilities.isEventDispatchThread()) {
+            demoRunnable.run();
+        } else {
+            SwingUtilities.invokeLater(demoRunnable);
+            synchronized (windowRef) {
+                try {
+                    windowRef.wait();
+                } catch (InterruptedException e) {
+                    throw new IllegalStateException(e);
+                }
             }
         }
+
         return windowRef;
     }
 
