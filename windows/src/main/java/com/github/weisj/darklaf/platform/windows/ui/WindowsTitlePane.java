@@ -110,7 +110,6 @@ public class WindowsTitlePane extends CustomTitlePane {
         installSubcomponents();
         menuBarStealer.install();
         updateTitleBarVisibility();
-        installDefaults();
         setLayout(createLayout());
     }
 
@@ -254,7 +253,7 @@ public class WindowsTitlePane extends CustomTitlePane {
     private void installSubcomponents() {
         titleLabel = new JLabel();
         titleLabel.setHorizontalAlignment(JLabel.LEFT);
-        titleLabel.setFont(getFont());
+        setTitleFont(getFont());
 
         createIcons();
         createActions();
@@ -308,6 +307,12 @@ public class WindowsTitlePane extends CustomTitlePane {
         inactiveForeground = new Color(inactiveForeground.getRGB());
     }
 
+    @Override
+    public void updateUI() {
+        super.updateUI();
+        installDefaults();
+    }
+
     private void installDefaults() {
         setFont(UIManager.getFont("InternalFrame.titleFont", getLocale()));
     }
@@ -315,7 +320,13 @@ public class WindowsTitlePane extends CustomTitlePane {
     @Override
     public void setFont(final Font font) {
         super.setFont(font);
-        if (titleLabel != null) titleLabel.setFont(font);
+        setTitleFont(font);
+    }
+
+    private void setTitleFont(final Font font) {
+        if (titleLabel != null) {
+            titleLabel.setFont(font);
+        }
     }
 
     protected JButton createWindowIcon() {
