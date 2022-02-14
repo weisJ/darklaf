@@ -47,15 +47,15 @@ public final class ToolTipUtil {
 
         Point p = MouseInfo.getPointerInfo().getLocation();
         SwingUtilities.convertPointFromScreen(p, target);
-        Point pos = getBestPositionMatch(context, p);
-        if (pos != null) {
-            moveToolTip(toolTip, pos.x, pos.y, target);
+        LocationResult pos = getBestPositionMatch(context, p);
+        if (pos.point != null) {
+            moveToolTip(toolTip, pos, target);
         }
     }
 
-    private static Point getBestPositionMatch(final ToolTipContext context, final Point p) {
+    private static LocationResult getBestPositionMatch(final ToolTipContext context, final Point p) {
         if (!context.isBestFit()) {
-            return context.getToolTipLocation(p, null);
+            return new LocationResult(context.getToolTipLocation(p, null), true);
         }
         Alignment original = context.getAlignment();
         Alignment originalCenter = context.getCenterAlignment();
@@ -72,18 +72,21 @@ public final class ToolTipUtil {
         boolean centerHorizontally = targetAlignment.isVertical();
 
         Alignment[] alignments = getAlignments(targetAlignment);
+
         Point pos;
         BiConsumer<ToolTipContext, Alignment> setter = isCenter
                 ? ToolTipContext::setCenterAlignment
                 : ToolTipContext::setAlignment;
-        // Check if a position keeps the tooltip inside the window.
 
+        // Check if a position keeps the tooltip inside the window.
         pos = tryAlignments(alignments, context, p, layoutConstraints, setter, centerHorizontally, centerVertically);
         if (pos == null) {
             // Try again with screen bounds instead.
             pos = tryAlignments(alignments, context, p, layoutConstraints, setter, centerHorizontally,
                     centerVertically);
         }
+
+        LocationResult result;
 
         /*
          * At this point if the tooltip is still extending outside the screen boundary we surrender and
@@ -92,12 +95,16 @@ public final class ToolTipUtil {
         if (pos == null) {
             context.setAlignment(Alignment.CENTER);
             context.setCenterAlignment(Alignment.CENTER);
-            pos = context.getFallBackPosition();
+            result = new LocationResult(
+                    context.getFallBackPositionProvider().calculateFallbackPosition(context),
+                    !context.getFallBackPositionProvider().providesAbsolutePosition());
+        } else {
+            result = new LocationResult(pos, true);
         }
         context.updateToolTip();
         context.setAlignment(original);
         context.setCenterAlignment(originalCenter);
-        return pos;
+        return result;
     }
 
     private static Alignment probeAlignment(final ToolTipContext context, final LayoutConstraints layoutConstraints) {
@@ -140,12 +147,14 @@ public final class ToolTipUtil {
             final boolean centerHorizontally, final boolean centerVertically) {
         Point pos = null;
         for (Alignment a : alignments) {
+            System.out.print(a + " => ");
             if ((centerHorizontally || centerVertically) && a.isDiagonal()) {
                 pos = tryPosition(a, context, p, layoutConstraints, setter, centerHorizontally,
                         centerVertically);
                 if (pos != null) break;
             }
             pos = tryPosition(a, context, p, layoutConstraints, setter, false, false);
+            System.out.println(pos);
             if (pos != null) break;
         }
         return pos;
@@ -207,12 +216,23 @@ public final class ToolTipUtil {
         return null;
     }
 
-    public static void moveToolTip(final JToolTip toolTip, final int x, final int y, final JComponent target) {
+    public static void moveToolTip(final JToolTip toolTip, final LocationResult result, final JComponent target) {
         Window window = DarkUIUtil.getWindow(toolTip);
         if (window == null) return;
-        Point p = new Point(x, y);
-        SwingUtilities.convertPointToScreen(p, target);
-        WindowUtil.moveWindow(window, toolTip, p.x, p.y);
+        if (result.isRelative) {
+            SwingUtilities.convertPointToScreen(result.point, target);
+        }
+        WindowUtil.moveWindow(window, toolTip, result.point.x, result.point.y);
+    }
+
+    private static class LocationResult {
+        private final Point point;
+        private final boolean isRelative;
+
+        private LocationResult(Point point, boolean isRelative) {
+            this.point = point;
+            this.isRelative = isRelative;
+        }
     }
 
     private static final class LayoutConstraints {
@@ -234,6 +254,18 @@ public final class ToolTipUtil {
 
         public Rectangle testRectangle() {
             return DarkUIUtil.applyInsets(new Rectangle(tooltipBounds), layoutInsets);
+        }
+
+
+        @Override
+        public String toString() {
+            return "LayoutConstraints{" +
+                    "tooltipBounds=" + tooltipBounds +
+                    ", layoutInsets=" + layoutInsets +
+                    ", screenBoundary=" + screenBoundary +
+                    ", windowBounds=" + windowBounds +
+                    ", window=" + window +
+                    '}';
         }
     }
 }

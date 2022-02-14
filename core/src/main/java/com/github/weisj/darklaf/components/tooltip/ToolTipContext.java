@@ -108,7 +108,7 @@ public class ToolTipContext {
     private boolean ignoreBorder;
     private boolean bestFit;
     private boolean chooseBestInitialAlignment;
-    private Function<ToolTipContext, Point> fallBackPositionProvider;
+    private FallBackPositionProvider fallBackPositionProvider;
 
     /**
      * Create a new tooltip context to ease the creation of custom tooltips.
@@ -641,13 +641,21 @@ public class ToolTipContext {
         }
     }
 
-    public Point getFallBackPosition() {
-        return fallBackPositionProvider.apply(this);
+    public FallBackPositionProvider getFallBackPositionProvider() {
+        return fallBackPositionProvider;
     }
 
-    public ToolTipContext setFallBackPositionProvider(final Function<ToolTipContext, Point> fallBackPositionProvider) {
+    public ToolTipContext setFallBackPositionProvider(final FallBackPositionProvider fallBackPositionProvider) {
         this.fallBackPositionProvider = fallBackPositionProvider;
         if (fallBackPositionProvider == null) this.fallBackPositionProvider = c -> null;
         return this;
+    }
+
+    public interface FallBackPositionProvider {
+        Point calculateFallbackPosition(final ToolTipContext context);
+
+        default boolean providesAbsolutePosition() {
+            return true;
+        }
     }
 }

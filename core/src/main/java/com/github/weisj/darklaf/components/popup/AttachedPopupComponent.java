@@ -234,12 +234,15 @@ public class AttachedPopupComponent extends JToolTip {
                 .setCenterAlignment(Alignment.SOUTH)
                 .setUseBestFit(true)
                 .setToolTipInsets(new Insets(2, 2, 2, 2))
+                .setChooseBestInitialAlignment(true)
                 .setFallBackPositionProvider(c -> {
                     Window window = DarkUIUtil.getWindow(c.getTarget());
                     Dimension size = c.getToolTip().getPreferredSize();
                     Rectangle bounds = window.getBounds();
-                    return new Point(bounds.x + (bounds.width - size.width) / 2,
-                            bounds.y + (bounds.height - size.height) / 2);
+                    Point loc = window.getLocation();
+                    return new Point(
+                            loc.x + (bounds.width - size.width) / 2,
+                            loc.y + (bounds.height - size.height) / 2);
                 });
     }
 
