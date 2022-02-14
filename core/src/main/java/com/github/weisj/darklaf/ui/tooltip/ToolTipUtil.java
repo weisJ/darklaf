@@ -82,12 +82,12 @@ public final class ToolTipUtil {
         pos = tryAlignments(alignments, context, p, layoutConstraints, setter, centerHorizontally, centerVertically);
         if (pos == null) {
             // Try again with screen bounds instead.
+            layoutConstraints.windowBounds.setBounds(layoutConstraints.screenBoundary);
             pos = tryAlignments(alignments, context, p, layoutConstraints, setter, centerHorizontally,
                     centerVertically);
         }
 
         LocationResult result;
-
         /*
          * At this point if the tooltip is still extending outside the screen boundary we surrender and
          * leave the tooltip as it was.
@@ -147,14 +147,12 @@ public final class ToolTipUtil {
             final boolean centerHorizontally, final boolean centerVertically) {
         Point pos = null;
         for (Alignment a : alignments) {
-            System.out.print(a + " => ");
             if ((centerHorizontally || centerVertically) && a.isDiagonal()) {
                 pos = tryPosition(a, context, p, layoutConstraints, setter, centerHorizontally,
                         centerVertically);
                 if (pos != null) break;
             }
             pos = tryPosition(a, context, p, layoutConstraints, setter, false, false);
-            System.out.println(pos);
             if (pos != null) break;
         }
         return pos;
@@ -194,7 +192,7 @@ public final class ToolTipUtil {
         final Rectangle testRectangle = layoutConstraints.testRectangle();
 
         if (Objects.equals(layoutConstraints.windowBounds, layoutConstraints.screenBoundary)) {
-            return SwingUtilities.isRectangleContainingRectangle(layoutConstraints.windowBounds, testRectangle);
+            return SwingUtilities.isRectangleContainingRectangle(layoutConstraints.screenBoundary, testRectangle);
         }
         return SwingUtilities.isRectangleContainingRectangle(layoutConstraints.windowBounds, testRectangle)
                 && SwingUtilities.isRectangleContainingRectangle(layoutConstraints.screenBoundary, testRectangle);
