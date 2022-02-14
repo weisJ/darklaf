@@ -110,6 +110,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         installSubcomponents();
         menuBarStealer.install();
         updateTitleBarVisibility();
+        installDefaults();
         setLayout(createLayout());
     }
 
@@ -253,7 +254,6 @@ public class WindowsTitlePane extends CustomTitlePane {
     private void installSubcomponents() {
         titleLabel = new JLabel();
         titleLabel.setHorizontalAlignment(JLabel.LEFT);
-        setTitleFont(getFont());
 
         createIcons();
         createActions();
@@ -314,7 +314,7 @@ public class WindowsTitlePane extends CustomTitlePane {
     }
 
     private void installDefaults() {
-        setFont(UIManager.getFont("InternalFrame.titleFont", getLocale()));
+        setFont(UIManager.getFont("InternalFrame.titleFont"));
     }
 
     @Override
