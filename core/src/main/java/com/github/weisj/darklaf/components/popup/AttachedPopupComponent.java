@@ -58,7 +58,7 @@ public class AttachedPopupComponent extends JToolTip {
 
     @Override
     public Color getBackground() {
-        return content != null ? content.getBackground() : super.getBackground();
+        return content != null && content.isBackgroundSet() ? content.getBackground() : super.getBackground();
     }
 
     public static <K, T extends JComponent & ChooserComponent<K>> void attachChooser(final JComponent component,
@@ -219,8 +219,6 @@ public class AttachedPopupComponent extends JToolTip {
         putClientProperty(DarkPopupFactory.KEY_FOCUSABLE_POPUP, true);
         putClientProperty(DarkToolTipUI.KEY_STYLE, ToolTipConstants.VARIANT_BALLOON);
         putClientProperty(DarkToolTipUI.KEY_CONTEXT, getContext());
-        super.updateUI();
-        if (content != null) setBackground(content.getBackground());
     }
 
     protected ToolTipContext getContext() {
