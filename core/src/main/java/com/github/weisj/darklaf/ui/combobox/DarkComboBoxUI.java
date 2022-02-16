@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -357,7 +357,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
     public void paintCurrentValue(final Graphics g, final Rectangle bounds, final boolean hasFocus, final Component c) {
         PropertyUtil.installFont(c, comboBox.getFont());
         c.setFont(comboBox.getFont());
-        if (hasFocus && !isPopupVisible(comboBox)) {
+        if (comboBox.isEnabled() && hasFocus) {
             PropertyUtil.installForeground(c, listBox.getForeground());
             PropertyUtil.installBackground(c, listBox.getBackground());
         } else {
