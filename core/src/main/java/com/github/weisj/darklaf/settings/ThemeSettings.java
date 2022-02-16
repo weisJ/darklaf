@@ -36,6 +36,7 @@ import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.event.ThemePreferenceChangeEvent;
 import com.github.weisj.darklaf.theme.event.ThemePreferenceListener;
 import com.github.weisj.darklaf.theme.spec.AccentColorRule;
+import com.github.weisj.darklaf.theme.spec.FontPrototype;
 import com.github.weisj.darklaf.theme.spec.FontSizeRule;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.ui.util.UIThread;
@@ -240,6 +241,15 @@ public class ThemeSettings implements ThemePreferenceListener {
     }
 
     /**
+     * Get the current font prototype.
+     *
+     * @return the current font prototype.
+     */
+    public FontPrototype getFontPrototype() {
+        return currentConfiguration.getFontPrototype();
+    }
+
+    /**
      * Get the currently selected theme. This is not the same as {@link LafManager#getTheme()} as the
      * current settings might not have been applied.
      *
@@ -351,6 +361,19 @@ public class ThemeSettings implements ThemePreferenceListener {
         if (!Objects.equals(getFontSizeRule(), fontSizeRule)) {
             LOGGER.info("Setting fontSizeRule = " + fontSizeRule);
             currentConfiguration.setFontSizeRule(fontSizeRule);
+            updateSettingsPanel();
+        }
+    }
+
+    /**
+     * Set the current font prototype. If passed null this will disable the prototype functionality.
+     *
+     * @param fontPrototype the font prototype or null to use the default font.
+     */
+    public void setFontPrototype(final FontPrototype fontPrototype) {
+        if (!Objects.equals(getFontPrototype(), fontPrototype)) {
+            LOGGER.info("Setting fontPrototype = " + fontPrototype);
+            currentConfiguration.setFontPrototype(fontPrototype);
             updateSettingsPanel();
         }
     }
