@@ -77,6 +77,7 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     private static final String MAC_OS_CATALINA_FONT_NAME_FALLBACK = "Helvetica Neue";
     private static final String MAC_OS_FONT_NAME = ".SF NS Text";
     private static final String WINDOWS_10_FONT_NAME = "Segoe UI";
+    private static final String WINDOWS_10_CHINESE_FONT_NAME = "Microsoft YaHei";
     private static final String WINDOWS_10_MONO_FONT_NAME = "Consolas";
 
     @Override
@@ -228,14 +229,29 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
     private Font mapWindowsFont(final Map.Entry<Object, Font> entry) {
         Font font = entry.getValue();
         if (!SystemInfo.isWindowsVista) return font;
+        String normalFontName = isAsianScript()
+                ? WINDOWS_10_CHINESE_FONT_NAME
+                : WINDOWS_10_FONT_NAME;
         String fontName = isMonospaceDefault(font)
                 ? WINDOWS_10_MONO_FONT_NAME
-                : WINDOWS_10_FONT_NAME;
+                : normalFontName;
         Font windowsFont = FontUtil.createFont(fontName, font.getStyle(), font.getSize());
         if (font instanceof UIResource) {
             windowsFont = new DarkFontUIResource(windowsFont);
         }
         return windowsFont;
+    }
+
+    private boolean isAsianScript() {
+        Locale locale = Locale.getDefault();
+        switch (locale.getLanguage()) {
+            case "zh":
+            case "ja":
+            case "ko":
+                return true;
+            default:
+                return false;
+        }
     }
 
     private void setupKerningPerFont(final UIDefaults defaults, final Predicate<String> kerningPredicate) {
