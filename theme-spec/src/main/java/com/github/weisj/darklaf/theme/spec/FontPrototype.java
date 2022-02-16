@@ -22,6 +22,7 @@ package com.github.weisj.darklaf.theme.spec;
 
 import java.awt.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 public class FontPrototype implements Serializable {
     private final String family;
@@ -47,5 +48,18 @@ public class FontPrototype implements Serializable {
         return "FontPrototype{" +
                 "family='" + family + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof FontPrototype)) return false;
+        FontPrototype that = (FontPrototype) o;
+        return Objects.equals(family, that.family);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(family);
     }
 }

@@ -481,9 +481,9 @@ public abstract class Theme implements Comparable<Theme>, Serializable {
 
     @Override
     public int hashCode() {
-        int result = fontSizeRule != null ? fontSizeRule.hashCode() : 0;
-        result = 31 * result + (accentColorRule != null ? accentColorRule.hashCode() : 0);
-        result = 31 * result + (fontPrototype != null ? fontPrototype.hashCode() : 0);
+        int result = Objects.hashCode(fontSizeRule);
+        result = 31 * result + Objects.hashCode(accentColorRule);
+        result = 31 * result + Objects.hashCode(fontPrototype);
         result = 31 * result + getThemeClass().hashCode();
         return result;
     }
