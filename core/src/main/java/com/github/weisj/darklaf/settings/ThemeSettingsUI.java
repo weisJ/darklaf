@@ -107,7 +107,7 @@ public class ThemeSettingsUI {
 
         fontSlider = createFontSlider();
         useCustomFontPrototype = DynamicUI.withLocalizedText(new JCheckBox(), "settings.label_font_prototype");
-        fontPrototypeChooser = new JComboBox<>(FontFamiliesCache.INSTANCE.families);
+        fontPrototypeChooser = new JComboBox<>(FontFamiliesCache.families);
         // noinspection unchecked
         fontPrototypeChooser.setRenderer(new ListCellRendererDelegate<FontEntry>(
                 (ListCellRenderer<FontEntry>) fontPrototypeChooser.getRenderer()) {
@@ -452,14 +452,12 @@ public class ThemeSettingsUI {
         }
     }
 
-    private enum FontFamiliesCache {
-        INSTANCE;
+    private static class FontFamiliesCache {
+        private static final FontEntry[] families;
 
-        private final FontEntry[] families;
-
-        FontFamiliesCache() {
+        static {
             families = getFontFamilies();
-            DynamicUI.registerCallback(this, c -> {
+            DynamicUI.registerCallback(FontFamiliesCache.class, c -> {
                 new SwingWorker<Void, FontEntry>() {
                     @Override
                     protected Void doInBackground() {
@@ -538,8 +536,9 @@ public class ThemeSettingsUI {
 
         @Override
         public FontPrototype getFontPrototype() {
-            return useCustomFontPrototype.isSelected()
-                    ? FontPrototype.fromFont(((FontEntry) fontPrototypeChooser.getSelectedItem()).font)
+            FontEntry selected = ((FontEntry) fontPrototypeChooser.getSelectedItem());
+            return useCustomFontPrototype.isSelected() && selected != null
+                    ? FontPrototype.fromFont(selected.font)
                     : FontPrototype.getDefault();
         }
 
