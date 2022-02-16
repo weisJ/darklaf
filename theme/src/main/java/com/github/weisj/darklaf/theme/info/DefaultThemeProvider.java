@@ -91,7 +91,7 @@ public class DefaultThemeProvider implements ThemeProvider {
         Theme theme = dark ? highContrast ? darkHighContrastTheme : darkTheme
                 : highContrast ? lightHighContrastTheme : lightTheme;
 
-        return theme.derive(themeStyle.getFontSizeRule(), themeStyle.getAccentColorRule());
+        return theme.derive(themeStyle.getFontSizeRule(), null, themeStyle.getAccentColorRule());
     }
 
     @Override

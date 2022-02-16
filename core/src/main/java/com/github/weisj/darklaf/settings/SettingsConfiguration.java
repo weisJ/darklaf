@@ -28,6 +28,7 @@ import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.nativelaf.ThemePreferencesHandler;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.spec.AccentColorRule;
+import com.github.weisj.darklaf.theme.spec.FontPrototype;
 import com.github.weisj.darklaf.theme.spec.FontSizeRule;
 import com.github.weisj.darklaf.theme.spec.PreferredThemeStyle;
 
@@ -41,6 +42,7 @@ public class SettingsConfiguration implements Serializable {
 
     private AccentColorRule accentColorRule;
     private FontSizeRule fontSizeRule;
+    private FontPrototype fontPrototype;
 
     private Theme theme;
 
@@ -52,6 +54,7 @@ public class SettingsConfiguration implements Serializable {
         setThemeFollowsSystem(config.isThemeFollowsSystem());
 
         setFontSizeRule(config.getFontSizeRule());
+        setFontPrototype(config.getFontPrototype());
         setAccentColorRule(config.getAccentColorRule());
         setTheme(config.getTheme());
     }
@@ -67,7 +70,7 @@ public class SettingsConfiguration implements Serializable {
         FontSizeRule fontSizeRule = getEffectiveFontSizeRule(themeStyle);
         AccentColorRule accentColorRule = getEffectiveAccentColorRule(baseTheme, themeStyle);
 
-        return baseTheme.derive(fontSizeRule, accentColorRule);
+        return baseTheme.derive(fontSizeRule, getFontPrototype(), accentColorRule);
     }
 
     private AccentColorRule getEffectiveAccentColorRule(final Theme baseTheme,
@@ -177,6 +180,15 @@ public class SettingsConfiguration implements Serializable {
     }
 
     /**
+     * Returns the font prototype.
+     *
+     * @return the font prototype.
+     */
+    public FontPrototype getFontPrototype() {
+        return fontPrototype;
+    }
+
+    /**
      * Get the currently selected theme. This is not the same as {@link LafManager#getTheme()} as the
      * current settings might not have been applied.
      *
@@ -265,6 +277,15 @@ public class SettingsConfiguration implements Serializable {
     }
 
     /**
+     * Sets the font prototype.
+     *
+     * @param fontPrototype the font prototype.
+     */
+    public void setFontPrototype(final FontPrototype fontPrototype) {
+        this.fontPrototype = fontPrototype;
+    }
+
+    /**
      * Sets the theme.
      *
      * @param theme the theme.
@@ -321,7 +342,8 @@ public class SettingsConfiguration implements Serializable {
                 + ", isAccentColorFollowsSystem=" + isAccentColorFollowsSystem + ", isFontSizeFollowsSystem="
                 + isFontSizeFollowsSystem + ", isThemeFollowsSystem=" + isThemeFollowsSystem
                 + ", isSelectionColorFollowsSystem=" + isSelectionColorFollowsSystem + ", accentColorRule="
-                + accentColorRule + ", fontSizeRule=" + fontSizeRule + ", theme=" + theme + '}';
+                + accentColorRule + ", fontSizeRule=" + fontSizeRule + ", fontPrototype=" + fontPrototype
+                + ", theme=" + theme + '}';
     }
 
     public boolean isResultingAppearanceEqualTo(final SettingsConfiguration other) {
@@ -332,6 +354,7 @@ public class SettingsConfiguration implements Serializable {
                 other.isFontSizeFollowsSystem() == isFontSizeFollowsSystem() &&
                 Objects.equals(other.getAccentColorRule(), getAccentColorRule()) &&
                 Objects.equals(other.getFontSizeRule(), getFontSizeRule()) &&
+                Objects.equals(other.getFontPrototype(), getFontPrototype()) &&
                 Objects.equals(Theme.baseThemeOf(other.getTheme()), Theme.baseThemeOf(getTheme()));
     }
 }

@@ -34,10 +34,7 @@ import com.github.weisj.darklaf.properties.PropertyLoader;
 import com.github.weisj.darklaf.properties.icons.IconResolver;
 import com.github.weisj.darklaf.theme.info.*;
 import com.github.weisj.darklaf.theme.laf.RenamedTheme;
-import com.github.weisj.darklaf.theme.spec.AccentColorRule;
-import com.github.weisj.darklaf.theme.spec.ColorToneRule;
-import com.github.weisj.darklaf.theme.spec.ContrastRule;
-import com.github.weisj.darklaf.theme.spec.FontSizeRule;
+import com.github.weisj.darklaf.theme.spec.*;
 import com.github.weisj.darklaf.util.LogUtil;
 
 /**
@@ -50,19 +47,22 @@ public abstract class Theme implements Comparable<Theme>, Serializable {
     private static final Logger LOGGER = LogUtil.getLogger(Theme.class);
 
     private final FontSizeRule fontSizeRule;
+    private final FontPrototype fontPrototype;
     private final AccentColorRule accentColorRule;
 
     public Theme() {
-        this(null, null);
+        this(null, null, null);
     }
 
-    public Theme(final FontSizeRule fontSizeRule, final AccentColorRule accentColorRule) {
+    public Theme(final FontSizeRule fontSizeRule, final FontPrototype fontPrototype,
+            final AccentColorRule accentColorRule) {
         this.fontSizeRule = fontSizeRule != null ? fontSizeRule : FontSizeRule.getDefault();
+        this.fontPrototype = fontPrototype != null ? fontPrototype : FontPrototype.getDefault();
         this.accentColorRule = accentColorRule != null ? accentColorRule : AccentColorRule.getDefault();
     }
 
     public static Theme baseThemeOf(final Theme theme) {
-        return theme.derive(FontSizeRule.getDefault(), AccentColorRule.getDefault());
+        return theme.derive(FontSizeRule.getDefault(), FontPrototype.getDefault(), AccentColorRule.getDefault());
     }
 
     /**
@@ -79,11 +79,13 @@ public abstract class Theme implements Comparable<Theme>, Serializable {
      * Create a derived theme with the given {@link FontSizeRule} and {@link AccentColorRule}.
      *
      * @param fontSizeRule the font size rule.
+     * @param fontPrototype the font prototype.
      * @param accentColorRule the accent color rule.
      * @return the derived theme.
      */
-    public Theme derive(final FontSizeRule fontSizeRule, final AccentColorRule accentColorRule) {
-        return new ThemeDelegate(this, fontSizeRule, accentColorRule);
+    public Theme derive(final FontSizeRule fontSizeRule, final FontPrototype fontPrototype,
+            final AccentColorRule accentColorRule) {
+        return new ThemeDelegate(this, fontSizeRule, fontPrototype, accentColorRule);
     }
 
     /**
@@ -439,6 +441,15 @@ public abstract class Theme implements Comparable<Theme>, Serializable {
     }
 
     /**
+     * Get the font prototype.
+     *
+     * @return the font prototype
+     */
+    public FontPrototype getFontPrototype() {
+        return fontPrototype;
+    }
+
+    /**
      * Get the accent color rule.
      *
      * @return the accent color rule.
@@ -472,6 +483,7 @@ public abstract class Theme implements Comparable<Theme>, Serializable {
     public int hashCode() {
         int result = fontSizeRule != null ? fontSizeRule.hashCode() : 0;
         result = 31 * result + (accentColorRule != null ? accentColorRule.hashCode() : 0);
+        result = 31 * result + (fontPrototype != null ? fontPrototype.hashCode() : 0);
         result = 31 * result + getThemeClass().hashCode();
         return result;
     }
@@ -488,6 +500,7 @@ public abstract class Theme implements Comparable<Theme>, Serializable {
         return Objects.equals(getAccentColorRule(), theme.getAccentColorRule())
                 && Objects.equals(getColorToneRule(), theme.getColorToneRule())
                 && Objects.equals(getContrastRule(), theme.getContrastRule())
-                && Objects.equals(getFontSizeRule(), theme.getFontSizeRule());
+                && Objects.equals(getFontSizeRule(), theme.getFontSizeRule())
+                && Objects.equals(getFontPrototype(), theme.getFontPrototype());
     }
 }

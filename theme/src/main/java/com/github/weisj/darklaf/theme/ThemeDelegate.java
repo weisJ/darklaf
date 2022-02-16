@@ -26,29 +26,29 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.properties.icons.IconResolver;
 import com.github.weisj.darklaf.theme.info.*;
-import com.github.weisj.darklaf.theme.spec.AccentColorRule;
-import com.github.weisj.darklaf.theme.spec.ColorToneRule;
-import com.github.weisj.darklaf.theme.spec.ContrastRule;
-import com.github.weisj.darklaf.theme.spec.FontSizeRule;
+import com.github.weisj.darklaf.theme.spec.*;
 
 public class ThemeDelegate extends Theme {
 
     private final Theme delegate;
     private final boolean overwriteFontSize;
-    private final boolean overWriteAccentColor;
+    private final boolean overwriteFontPrototype;
+    private final boolean overwriteAccentColor;
 
     public ThemeDelegate(final Theme delegate) {
-        this(delegate, null, null);
+        this(delegate, null, null, null);
     }
 
-    public ThemeDelegate(final Theme delegate, final FontSizeRule fontSizeRule, final AccentColorRule accentColorRule) {
-        super(fontSizeRule, accentColorRule);
+    public ThemeDelegate(final Theme delegate, final FontSizeRule fontSizeRule, final FontPrototype fontPrototype,
+            final AccentColorRule accentColorRule) {
+        super(fontSizeRule, fontPrototype, accentColorRule);
         if (delegate == null) {
             throw new IllegalArgumentException("Theme delegate cannot be null");
         }
         this.delegate = delegate;
         this.overwriteFontSize = fontSizeRule != null;
-        this.overWriteAccentColor = accentColorRule != null;
+        this.overwriteFontPrototype = fontPrototype != null;
+        this.overwriteAccentColor = accentColorRule != null;
     }
 
     public Theme getDelegate() {
@@ -62,7 +62,7 @@ public class ThemeDelegate extends Theme {
 
     @Override
     public boolean appearsEqualTo(final Theme theme) {
-        if (overwriteFontSize || overWriteAccentColor) {
+        if (overwriteFontSize || overwriteAccentColor || overwriteFontPrototype) {
             return super.appearsEqualTo(theme);
         } else {
             return getDelegate().appearsEqualTo(theme);
@@ -70,8 +70,9 @@ public class ThemeDelegate extends Theme {
     }
 
     @Override
-    public Theme derive(final FontSizeRule fontSizeRule, final AccentColorRule accentColorRule) {
-        return getDelegate().derive(fontSizeRule, accentColorRule);
+    public Theme derive(final FontSizeRule fontSizeRule, final FontPrototype fontPrototype,
+            final AccentColorRule accentColorRule) {
+        return getDelegate().derive(fontSizeRule, fontPrototype, accentColorRule);
     }
 
     @Override
@@ -86,7 +87,12 @@ public class ThemeDelegate extends Theme {
 
     @Override
     public AccentColorRule getAccentColorRule() {
-        return overWriteAccentColor ? super.getAccentColorRule() : getDelegate().getAccentColorRule();
+        return overwriteAccentColor ? super.getAccentColorRule() : getDelegate().getAccentColorRule();
+    }
+
+    @Override
+    public FontPrototype getFontPrototype() {
+        return overwriteFontPrototype ? super.getFontPrototype() : getDelegate().getFontPrototype();
     }
 
     @Override

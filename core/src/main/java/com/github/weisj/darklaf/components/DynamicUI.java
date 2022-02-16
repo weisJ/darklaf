@@ -29,7 +29,7 @@ import javax.swing.*;
 
 public final class DynamicUI {
 
-    private static final Map<Component, List<Consumer<Component>>> listeners = new WeakHashMap<>();
+    private static final Map<Object, List<Consumer<Object>>> listeners = new WeakHashMap<>();
 
     static {
         UIManager.addPropertyChangeListener(e -> {
@@ -45,22 +45,26 @@ public final class DynamicUI {
     }
 
     public static <T extends Component> T withDynamic(final T component, final Consumer<T> onUpdateUi) {
+        return registerCallback(component, onUpdateUi, true);
+    }
+
+    public static <T> T registerCallback(final T object, final Consumer<T> onUpdateUi, boolean invokeOnce) {
         // Explicit component update is required since the component already exists
         // and we can't want to wait for the next LaF change
-        onUpdateUi.accept(component);
+        if (invokeOnce) onUpdateUi.accept(object);
         synchronized (listeners) {
-            listeners.compute(component, (k, v) -> {
+            listeners.compute(object, (k, v) -> {
                 if (v == null) {
                     // noinspection unchecked
-                    return Collections.singletonList((Consumer<Component>) onUpdateUi);
+                    return Collections.singletonList((Consumer<Object>) onUpdateUi);
                 }
-                List<Consumer<Component>> res = v.size() == 1 ? new ArrayList<>(v) : v;
+                List<Consumer<Object>> res = v.size() == 1 ? new ArrayList<>(v) : v;
                 // noinspection unchecked
-                res.add((Consumer<Component>) onUpdateUi);
+                res.add((Consumer<Object>) onUpdateUi);
                 return res;
             });
         }
-        return component;
+        return object;
     }
 
     public static <T extends AbstractButton> T withLocalizedText(final T comp, final String textKey) {
@@ -75,13 +79,13 @@ public final class DynamicUI {
         return withDynamic(comp, c -> c.setToolTipText(UIManager.getString(tipTextKey, c.getLocale())));
     }
 
-    private static void updateComponent(final Component component) {
+    private static void updateComponent(final Object component) {
         synchronized (listeners) {
-            List<Consumer<Component>> list = listeners.get(component);
+            List<Consumer<Object>> list = listeners.get(component);
             if (list == null) {
                 return;
             }
-            for (Consumer<Component> action : list) {
+            for (Consumer<Object> action : list) {
                 action.accept(component);
             }
         }

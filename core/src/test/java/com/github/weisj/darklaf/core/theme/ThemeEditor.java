@@ -87,6 +87,7 @@ public class ThemeEditor extends JPanel {
         SwingUtilities.invokeLater(() -> {
             LafManager.install(DemoExecutor.getPreferredTheme().derive(
                     FontSizeRule.getDefault(),
+                    null,
                     AccentColorRule.getDefault()));
             JFrame frame = new JFrame("Theme Editor");
             frame.setContentPane(new ThemeEditor());

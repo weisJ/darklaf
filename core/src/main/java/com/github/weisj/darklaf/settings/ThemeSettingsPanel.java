@@ -112,12 +112,15 @@ public class ThemeSettingsPanel extends JPanel {
         JSlider fontSlider = settingsUI.getFontSlider();
         JLabel fontSizeLabel = createDynamicLabel(ThemeSettingsUI.FONT_SIZE_LABEL_KEY);
         fontSizeLabel.setLabelFor(fontSlider);
+
         JPanel panel = DynamicUI.withDynamic(new JPanel(new BorderLayout()),
                 c -> c.setBorder(BorderFactory
                         .createTitledBorder(UIManager.getString(ThemeSettingsUI.GENERAL_LABEL_KEY, getLocale()))));
         JComponent c = LayoutHelper.createTwoColumnPanel(
-                new JLabel[] {themeLabel, accentColorLabel, selectionColorLabel, fontSizeLabel},
-                new JComponent[] {themeComboBox, accentBox, selectionBox, fontSlider},
+                new JComponent[] {themeLabel, accentColorLabel, selectionColorLabel, fontSizeLabel,
+                        Box.createHorizontalBox()},
+                new JComponent[] {themeComboBox, accentBox, selectionBox, fontSlider,
+                        settingsUI.getFontPrototypeChooser()},
                 alignment, GroupLayout.Alignment.LEADING);
         c.setBorder(LayoutHelper.createEmptyBorder(insets));
         panel.add(c);

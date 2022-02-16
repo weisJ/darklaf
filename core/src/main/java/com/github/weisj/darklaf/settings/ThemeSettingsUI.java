@@ -20,8 +20,7 @@
  */
 package com.github.weisj.darklaf.settings;
 
-import java.awt.Color;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,12 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JSlider;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.SliderUI;
@@ -46,13 +40,16 @@ import com.github.weisj.darklaf.components.DynamicUI;
 import com.github.weisj.darklaf.components.tooltip.ToolTipContext;
 import com.github.weisj.darklaf.components.tristate.TristateCheckBox;
 import com.github.weisj.darklaf.components.tristate.TristateState;
+import com.github.weisj.darklaf.delegate.ListCellRendererDelegate;
 import com.github.weisj.darklaf.graphics.ThemedColor;
 import com.github.weisj.darklaf.iconset.AllIcons;
+import com.github.weisj.darklaf.layout.LayoutHelper;
 import com.github.weisj.darklaf.listener.UIUpdater;
 import com.github.weisj.darklaf.nativelaf.ThemePreferencesHandler;
 import com.github.weisj.darklaf.platform.macos.theme.MacOSColors;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.spec.AccentColorRule;
+import com.github.weisj.darklaf.theme.spec.FontPrototype;
 import com.github.weisj.darklaf.theme.spec.FontSizePreset;
 import com.github.weisj.darklaf.theme.spec.FontSizeRule;
 import com.github.weisj.darklaf.ui.combobox.ComboBoxConstants;
@@ -78,6 +75,9 @@ public class ThemeSettingsUI {
     private final RadioColorChooser accentChooser;
 
     private final JSlider fontSlider;
+    private final JCheckBox useCustomFontPrototype;
+    private final JComboBox<FontEntry> fontPrototypeChooser;
+    private final JComponent fontPrototypeChooserComponent;
 
     private final TristateCheckBox enabledSystemPreferences;
     private final JCheckBox fontSizeFollowsSystem;
@@ -106,6 +106,30 @@ public class ThemeSettingsUI {
         }
 
         fontSlider = createFontSlider();
+        useCustomFontPrototype = DynamicUI.withLocalizedText(new JCheckBox(), "settings.label_font_prototype");
+        fontPrototypeChooser = new JComboBox<>(FontFamiliesCache.INSTANCE.families);
+        // noinspection unchecked
+        fontPrototypeChooser.setRenderer(new ListCellRendererDelegate<FontEntry>(
+                (ListCellRenderer<FontEntry>) fontPrototypeChooser.getRenderer()) {
+            @Override
+            public Component getListCellRendererComponent(final JList<? extends FontEntry> list, final FontEntry value,
+                    final int index, final boolean isSelected, final boolean cellHasFocus) {
+                Component delegate = getDelegate()
+                        .getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (index >= 0 && value != null) {
+                    delegate.setFont(value.font);
+                } else {
+                    delegate.setFont(useCustomFontPrototype.getFont());
+                }
+                return delegate;
+            }
+        });
+
+        fontPrototypeChooser.setEnabled(useCustomFontPrototype.isSelected());
+        fontPrototypeChooserComponent = Box.createHorizontalBox();
+        fontPrototypeChooserComponent.add(useCustomFontPrototype);
+        fontPrototypeChooserComponent.add(Box.createHorizontalStrut(LayoutHelper.getDefaultSpacing()));
+        fontPrototypeChooserComponent.add(fontPrototypeChooser);
 
         enabledSystemPreferences =
                 DynamicUI.withLocalizedText(new TristateCheckBox(), "settings.check_system_preferences");
@@ -135,6 +159,9 @@ public class ThemeSettingsUI {
             update();
         });
         themeFollowsSystem.addActionListener(e -> update());
+
+        useCustomFontPrototype.addItemListener(
+                e -> fontPrototypeChooser.setEnabled(useCustomFontPrototype.isSelected()));
 
         accentColorFollowsSystem.addActionListener(e -> update());
         selectionColorFollowsSystem.addActionListener(e -> update());
@@ -222,6 +249,10 @@ public class ThemeSettingsUI {
 
     public JSlider getFontSlider() {
         return fontSlider;
+    }
+
+    public JComponent getFontPrototypeChooser() {
+        return fontPrototypeChooserComponent;
     }
 
     public TristateCheckBox getSystemPreferencesTristateCheckBox() {
@@ -388,6 +419,69 @@ public class ThemeSettingsUI {
         return checkBox;
     }
 
+    private static class FontEntry {
+        private final String name;
+        private Font font;
+
+        private FontEntry(Font font) {
+            this.font = font;
+            this.name = font.getFontName();
+        }
+
+        private FontEntry(String family) {
+            this.font = new Font(family, Font.PLAIN, 12);
+            this.name = font.getFontName();
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof FontEntry)) return false;
+            FontEntry fontEntry = (FontEntry) o;
+            return Objects.equals(name, fontEntry.name);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(name);
+        }
+    }
+
+    private enum FontFamiliesCache {
+        INSTANCE;
+
+        private final FontEntry[] families;
+
+        FontFamiliesCache() {
+            families = getFontFamilies();
+            DynamicUI.registerCallback(this, c -> {
+                new SwingWorker<Void, FontEntry>() {
+                    @Override
+                    protected Void doInBackground() {
+                        float fontSize = new JLabel().getFont().getSize2D();
+                        for (FontEntry family : families) {
+                            family.font = family.font.deriveFont(fontSize);
+                        }
+                        return null;
+                    }
+                }.execute();
+            }, false);
+        }
+
+        private static FontEntry[] getFontFamilies() {
+            GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            return Arrays.stream(env.getAvailableFontFamilyNames())
+                    .map(FontEntry::new)
+                    .filter(e -> e.font.canDisplayUpTo(e.toString()) == -1)
+                    .toArray(FontEntry[]::new);
+        }
+    }
+
     private class SettingsUIConfiguration extends SettingsConfiguration {
 
         @Override
@@ -440,6 +534,13 @@ public class ThemeSettingsUI {
         @Override
         public FontSizeRule getFontSizeRule() {
             return FontSizeRule.relativeAdjustment(fontSlider.getValue());
+        }
+
+        @Override
+        public FontPrototype getFontPrototype() {
+            return useCustomFontPrototype.isSelected()
+                    ? FontPrototype.fromFont(((FontEntry) fontPrototypeChooser.getSelectedItem()).font)
+                    : FontPrototype.getDefault();
         }
 
         @Override
@@ -516,6 +617,19 @@ public class ThemeSettingsUI {
                 fontSlider.setValue(FontSizePreset.NORMAL.getPercentage());
             } else {
                 fontSlider.setValue(fontSizeRule.getPercentage());
+            }
+        }
+
+        @Override
+        public void setFontPrototype(FontPrototype fontPrototype) {
+            boolean validPrototype = fontPrototype != null && fontPrototype.family() != null;
+            if (validPrototype) {
+                fontPrototypeChooser.setSelectedItem(new FontEntry(fontPrototype.family()));
+            }
+
+            if (!validPrototype || fontPrototypeChooser.getSelectedItem() == null) {
+                useCustomFontPrototype.setSelected(false);
+                fontPrototypeChooser.setSelectedItem(new FontEntry(fontPrototypeChooser.getFont()));
             }
         }
 

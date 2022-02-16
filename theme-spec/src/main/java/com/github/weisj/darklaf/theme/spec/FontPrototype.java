@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,32 +18,34 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.github.weisj.darklaf.theme.laf;
+package com.github.weisj.darklaf.theme.spec;
 
-import com.github.weisj.darklaf.theme.Theme;
-import com.github.weisj.darklaf.theme.ThemeDelegate;
-import com.github.weisj.darklaf.theme.spec.AccentColorRule;
-import com.github.weisj.darklaf.theme.spec.FontPrototype;
-import com.github.weisj.darklaf.theme.spec.FontSizeRule;
+import java.awt.*;
+import java.io.Serializable;
 
-public class RenamedTheme extends ThemeDelegate {
+public class FontPrototype implements Serializable {
+    private final String family;
 
-    private final String name;
+    public static FontPrototype getDefault() {
+        return new FontPrototype(null);
+    }
 
-    public RenamedTheme(final Theme delegate, final String name) {
-        super(delegate);
-        this.name = name;
+    public FontPrototype(String family) {
+        this.family = family;
+    }
+
+    public String family() {
+        return family;
+    }
+
+    public static FontPrototype fromFont(final Font font) {
+        return new FontPrototype(font.getFamily());
     }
 
     @Override
-    public Theme derive(final FontSizeRule fontSizeRule, final FontPrototype fontPrototype,
-            final AccentColorRule accentColorRule) {
-        return new RenamedTheme(getDelegate().derive(fontSizeRule, fontPrototype, accentColorRule), name);
-    }
-
-    @Override
-    public String getDisplayName() {
-        if (name != null) return name;
-        return super.getDisplayName();
+    public String toString() {
+        return "FontPrototype{" +
+                "family='" + family + '\'' +
+                '}';
     }
 }
