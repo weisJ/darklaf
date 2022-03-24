@@ -11,6 +11,7 @@ plugins {
 moduleInfo {
     stubModule("darklaf.core")
     stubModule("darklaf.platform.preferences")
+    stubModule("darklaf.platform.decorations")
 }
 
 val nativeResourcePath = "com/github/weisj/darklaf/platform/${project.name}"
@@ -21,7 +22,6 @@ library {
         jvmImplementation(projects.darklafUtils)
         jvmImplementation(projects.darklafNativeUtils)
         jvmImplementation(projects.darklafPlatformBase)
-        jvmImplementation(projects.darklafPlatformDecorations)
         nativeLibImplementation(macOsFrameworks.appKit)
         nativeLibImplementation(macOsFrameworks.cocoa)
     }

@@ -23,5 +23,7 @@
  *
  */
 module darklaf.platform.base {
+    requires java.desktop;
+
     exports com.github.weisj.darklaf.platform;
 }

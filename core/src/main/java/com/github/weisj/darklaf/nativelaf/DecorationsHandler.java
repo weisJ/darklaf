@@ -20,28 +20,14 @@
  */
 package com.github.weisj.darklaf.nativelaf;
 
-import java.awt.*;
-import java.util.Properties;
-
-import javax.swing.*;
-
 import com.github.weisj.darklaf.DarkLaf;
-import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.platform.SystemInfo;
-import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
-import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
-import com.github.weisj.darklaf.platform.macos.MacOSDecorationsProvider;
-import com.github.weisj.darklaf.platform.windows.WindowsDecorationsProvider;
-import com.github.weisj.darklaf.properties.PropertyLoader;
-import com.github.weisj.darklaf.properties.icons.IconLoader;
+import com.github.weisj.darklaf.platform.decorations.NativeDecorationsManager;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-public class DecorationsHandler {
+public class DecorationsHandler extends NativeDecorationsManager {
 
     public static final String DECORATIONS_FLAG = DarkLaf.SYSTEM_PROPERTY_PREFIX + "decorations";
     private static DecorationsHandler sharedInstance;
-    private DecorationsProvider decorationsProvider;
-    private boolean decorationsEnabled = true;
 
     public static DecorationsHandler getSharedInstance() {
         if (sharedInstance == null) setSharedInstance(new DecorationsHandler());
@@ -53,67 +39,11 @@ public class DecorationsHandler {
     }
 
     protected DecorationsHandler() {
-        try {
-            // Extend for different platforms.
-            boolean enableDecorations = isNativeDecorationsEnabled();
-            if (SystemInfo.isWindows && enableDecorations) {
-                // Decorations are in the Windows10 visuals. Disable for older version.
-                decorationsProvider = new WindowsDecorationsProvider();
-            } else if (SystemInfo.isMac && enableDecorations) {
-                // Compiled binary needs at least macOS 10.10 (Yosemite).
-                decorationsProvider = new MacOSDecorationsProvider();
-            } else {
-                decorationsProvider = new DefaultDecorationsProvider();
-            }
-        } catch (final Throwable e) {
-            // If decorations modules are not available disable them.
-            decorationsProvider = new DefaultDecorationsProvider();
-        }
+        super(isNativeDecorationsEnabled());
     }
 
-    public CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle, final Window window) {
-        if (!decorationsProvider.isCustomDecorationSupported()) return DefaultDecorationsProvider.createNoOPTitlePane();
-        return decorationsProvider.createTitlePane(rootPane, decorationStyle, window);
-    }
-
-    public void installPopupWindow(final Window window) {
-        if (!decorationsProvider.isCustomDecorationSupported()) return;
-        decorationsProvider.installPopupWindow(window);
-    }
-
-    public void uninstallPopupWindow(final Window window) {
-        if (!decorationsProvider.isCustomDecorationSupported()) return;
-        decorationsProvider.uninstallPopupWindow(window);
-    }
-
-    public boolean isCustomDecorationSupported() {
-        return decorationsProvider.isCustomDecorationSupported() && decorationsEnabled
-                && LafManager.getInstalledTheme().useCustomDecorations();
-    }
-
-    private boolean isNativeDecorationsEnabled() {
+    private static boolean isNativeDecorationsEnabled() {
         return PropertyUtil.getSystemFlag(DECORATIONS_FLAG)
                 && PropertyUtil.getSystemFlag(DarkLaf.ALLOW_NATIVE_CODE_FLAG);
-    }
-
-    public void initialize() {
-        decorationsProvider.initialize();
-    }
-
-    public void loadDecorationProperties(final Properties uiProps, final UIDefaults defaults) {
-        IconLoader iconLoader = IconLoader.get(decorationsProvider.getClass());
-        for (String path : decorationsProvider.getPropertyResourcePaths()) {
-            PropertyLoader.putProperties(
-                    PropertyLoader.loadProperties(decorationsProvider.getClass(), path, ""),
-                    uiProps, defaults, iconLoader);
-        }
-    }
-
-    public void setDecorationsEnabled(final boolean enabled) {
-        decorationsEnabled = enabled;
-    }
-
-    public void adjustContentArea(final JRootPane root, final Rectangle rect) {
-        decorationsProvider.adjustContentArea(root, rect);
     }
 }

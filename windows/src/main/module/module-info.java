@@ -23,12 +23,11 @@
  *
  */
 open module darklaf.platform.windows {
-    requires transitive darklaf.platform.decorations;
-    requires transitive darklaf.theme.spec;
-
+    requires darklaf.theme.spec;
     requires darklaf.platform.base;
     requires darklaf.utils;
     requires darklaf.nativeutil;
 
-    exports com.github.weisj.darklaf.platform.windows to darklaf.core, darklaf.platform.preferences;
+    exports com.github.weisj.darklaf.platform.windows to
+        darklaf.core, darklaf.platform.preferences, darklaf.platform.decorations;
 }

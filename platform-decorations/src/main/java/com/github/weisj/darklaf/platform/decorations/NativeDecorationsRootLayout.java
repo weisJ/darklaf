@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,25 +18,25 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.github.weisj.darklaf.ui.rootpane;
+package com.github.weisj.darklaf.platform.decorations;
 
 import java.awt.*;
 import java.util.logging.Logger;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.nativelaf.DecorationsHandler;
-import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
-import com.github.weisj.darklaf.ui.util.DarkUIUtil;
+import com.github.weisj.darklaf.platform.CustomTitlePane;
 import com.github.weisj.darklaf.util.LogUtil;
 
-/**
- * @author Konstantin Bulenkov
- * @author Jannis Weis
- */
-class DarkSubstanceRootLayout implements LayoutManager2 {
+class NativeDecorationsRootLayout implements LayoutManager2 {
 
-    private static final Logger LOGGER = LogUtil.getLogger(DarkSubstanceRootLayout.class);
+    private static final Logger LOGGER = LogUtil.getLogger(NativeDecorationsRootLayout.class);
+
+    private final AbstractNativeDecorationsRootPaneUI ui;
+
+    NativeDecorationsRootLayout(final AbstractNativeDecorationsRootPaneUI ui) {
+        this.ui = ui;
+    }
 
     @Override
     public void addLayoutComponent(final String name, final Component comp) {}
@@ -144,10 +144,7 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
     }
 
     protected CustomTitlePane getTitlePane(final JRootPane root) {
-        if (root.getUI() instanceof DarkRootPaneUI) {
-            return ((DarkRootPaneUI) root.getUI()).getTitlePane();
-        }
-        return null;
+        return ui.titlePane();
     }
 
     @Override
@@ -158,7 +155,10 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
         Insets i = root.getInsets();
 
         b.setLocation(0, 0);
-        DarkUIUtil.applyInsets(b, i);
+        b.x += i.left;
+        b.y += i.top;
+        b.width -= i.left + i.right;
+        b.height -= i.top + i.bottom;
 
         if (root.getLayeredPane() != null) {
             root.getLayeredPane().setBounds(b.x, b.y, b.width, b.height);
@@ -167,7 +167,7 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
             root.getGlassPane().setBounds(b.x, b.y, b.width, b.height);
         }
 
-        DecorationsHandler.getSharedInstance().adjustContentArea(root, b);
+        ui.decorationsManager().adjustContentArea(root, b);
 
         layoutContent(root, b.x, b.y, b.width, b.height);
     }
@@ -221,8 +221,8 @@ class DarkSubstanceRootLayout implements LayoutManager2 {
             }
         }
 
-        if ((root.getWindowDecorationStyle() != JRootPane.NONE) && (root.getUI() instanceof DarkRootPaneUI)) {
-            JComponent titlePane = ((DarkRootPaneUI) root.getUI()).getTitlePane();
+        if ((root.getWindowDecorationStyle() != JRootPane.NONE)) {
+            JComponent titlePane = ui.titlePane();
             if (titlePane != null) {
                 tpd = titlePane.getMaximumSize();
                 if (tpd != null) {
