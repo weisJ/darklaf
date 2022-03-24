@@ -20,6 +20,8 @@
  */
 package com.github.weisj.darklaf.platform.windows.ui;
 
+import com.github.weisj.darklaf.platform.DecorationsConstants;
+
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
 import java.awt.event.HierarchyEvent;

@@ -18,11 +18,30 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.github.weisj.darklaf.platform.decorations;
+package com.github.weisj.darklaf.platform;
 
-public class UnsupportedProviderException extends Exception {
+import javax.swing.*;
 
-    public UnsupportedProviderException(final String message) {
-        super(message);
+public abstract class CustomTitlePane extends JComponent {
+
+    protected int decorationStyle;
+
+    public abstract void uninstall(final boolean removeDecorations);
+
+    /** Do not call directly. */
+    protected abstract void install();
+
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        install();
+    }
+
+    public void setDecorationsStyle(final int style) {
+        this.decorationStyle = style;
+    }
+
+    public int getDecorationStyle() {
+        return decorationStyle;
     }
 }

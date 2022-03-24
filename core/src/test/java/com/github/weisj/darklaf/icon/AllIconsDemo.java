@@ -33,7 +33,7 @@ import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.core.test.util.ClassFinder;
 import com.github.weisj.darklaf.core.test.util.Instantiable;
 import com.github.weisj.darklaf.core.test.util.ResourceWalker;
-import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
+import com.github.weisj.darklaf.platform.DecorationsProvider;
 import com.github.weisj.darklaf.properties.PropertyLoader;
 import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.properties.icons.ThemedSVGIcon;

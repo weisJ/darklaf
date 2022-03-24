@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -30,7 +30,8 @@ import java.util.logging.Logger;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
+import com.github.weisj.darklaf.platform.CustomTitlePane;
+import com.github.weisj.darklaf.platform.DecorationsConstants;
 import com.github.weisj.darklaf.platform.macos.JNIDecorationsMacOS;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
