@@ -72,9 +72,9 @@ public class WindowsTitlePane extends CustomTitlePane {
     private TitlebarIcon restoreIcon;
     private TitlebarIcon minimizeIcon;
     private JButton windowIconButton;
-    private JButton closeButton;
-    private JButton maximizeToggleButton;
-    private JButton minimizeButton;
+    private TitleBarButton closeButton;
+    private TitleBarButton maximizeToggleButton;
+    private TitleBarButton minimizeButton;
     private Action closeAction;
     private Action restoreAction;
     private Action maximizeAction;
@@ -86,7 +86,9 @@ public class WindowsTitlePane extends CustomTitlePane {
 
     private Color inactiveBackground;
     private Color inactiveForeground;
+    private Color hover;
     private Color inactiveHover;
+    private Color click;
     private Color inactiveClick;
     private Color activeBackground;
     private Color activeForeground;
@@ -120,24 +122,24 @@ public class WindowsTitlePane extends CustomTitlePane {
         rootPane.repaint();
     }
 
-    private static JButton createButton(final Icon icon, final Action action) {
+    private TitleBarButton createButton(final Icon icon, final Action action) {
         return createButton(icon, action, false);
     }
 
-    private static JButton createButton(final Icon icon, final Action action, final boolean close) {
-        JButton button = new JButton(action);
+    private TitleBarButton createButton(final Icon icon, final Action action, final boolean close) {
+        TitleBarButton button = new TitleBarButton(action);
         button.setRolloverEnabled(true);
         if (close) {
-            button.putClientProperty("JButton.borderless.hover",
-                    UIManager.getColor("Windows.TitlePane.close.rollOverColor"));
-            button.putClientProperty("JButton.borderless.click",
-                    UIManager.getColor("Windows.TitlePane.close.clickColor"));
+            button.setHoverColor(UIManager.getColor("Windows.TitlePane.close.rollOverColor"));
+            button.setClickColor(UIManager.getColor("Windows.TitlePane.close.clickColor"));
+        } else {
+            button.setHoverColor(hover);
+            button.setClickColor(click);
         }
         button.putClientProperty("JButton.noBorderlessOverwrite", true);
         button.setFocusable(false);
         button.setOpaque(false);
         button.setRolloverEnabled(true);
-        button.putClientProperty("JButton.variant", "borderlessRectangular");
         button.putClientProperty("paintActive", Boolean.TRUE);
         button.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, button.getText());
         button.putClientProperty("JToolTip.style", "plain");
@@ -298,6 +300,8 @@ public class WindowsTitlePane extends CustomTitlePane {
         }
         inactiveBackground = UIManager.getColor("Windows.TitlePane.inactiveBackground");
         inactiveForeground = UIManager.getColor("Windows.TitlePane.inactiveForeground");
+        hover = UIManager.getColor("Windows.TitlePane.backgroundHover");
+        click = UIManager.getColor("Windows.TitlePane.backgroundClick");
         inactiveHover = UIManager.getColor("Windows.TitlePane.inactiveBackgroundHover");
         inactiveClick = UIManager.getColor("Windows.TitlePane.inactiveBackgroundClick");
         border = UIManager.getColor("Windows.TitlePane.borderColor");
@@ -432,13 +436,13 @@ public class WindowsTitlePane extends CustomTitlePane {
         getRootPane().repaint();
     }
 
-    protected void setButtonActive(final JButton button, final boolean active) {
+    protected void setButtonActive(final TitleBarButton button, final boolean active) {
         if (active) {
-            button.putClientProperty("JButton.borderless.hover", null);
-            button.putClientProperty("JButton.borderless.click", null);
+            button.setHoverColor(hover);
+            button.setClickColor(click);
         } else {
-            button.putClientProperty("JButton.borderless.hover", inactiveHover);
-            button.putClientProperty("JButton.borderless.click", inactiveClick);
+            button.setHoverColor(inactiveHover);
+            button.setClickColor(inactiveClick);
         }
     }
 
