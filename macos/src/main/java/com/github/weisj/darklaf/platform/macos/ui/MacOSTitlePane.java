@@ -138,7 +138,7 @@ public class MacOSTitlePane extends CustomTitlePane {
     }
 
     private boolean isUseColoredTitleBar(final JRootPane rootPane) {
-        return PropertyUtil.getBooleanProperty(rootPane, "JRootPane.coloredTitleBar", true);
+        return PropertyUtil.getBooleanProperty(rootPane, DecorationsConstants.KEY_COLORED_TITLE_BAR, true);
     }
 
     private String getTitle() {
@@ -197,9 +197,9 @@ public class MacOSTitlePane extends CustomTitlePane {
 
         @Override
         public void propertyChange(final PropertyChangeEvent evt) {
-            if ("JRootPane.hideTitleBar".equals(evt.getPropertyName())) {
+            if (DecorationsConstants.KEY_HIDE_TITLEBAR.equals(evt.getPropertyName())) {
                 updateTitleBarVisibility();
-            } else if ("JRootPane.coloredTitleBar".equals(evt.getPropertyName())) {
+            } else if (DecorationsConstants.KEY_COLORED_TITLE_BAR.equals(evt.getPropertyName())) {
                 uninstall(false);
                 install();
             }
@@ -247,7 +247,7 @@ public class MacOSTitlePane extends CustomTitlePane {
 
 
     private void updateTitleBarVisibility() {
-        titleBarHidden = PropertyUtil.getBooleanProperty(rootPane, "JRootPane.hideTitleBar");
+        titleBarHidden = PropertyUtil.getBooleanProperty(rootPane, DecorationsConstants.KEY_HIDE_TITLEBAR);
         rootPane.doLayout();
         rootPane.repaint();
     }

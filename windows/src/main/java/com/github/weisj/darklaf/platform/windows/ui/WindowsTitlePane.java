@@ -33,7 +33,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.UIResource;
 
-import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
+import com.github.weisj.darklaf.platform.CustomTitlePane;
+import com.github.weisj.darklaf.platform.DecorationsConstants;
 import com.github.weisj.darklaf.platform.windows.JNIDecorationsWindows;
 import com.github.weisj.darklaf.platform.windows.PointerUtil;
 import com.github.weisj.darklaf.util.LogUtil;
@@ -117,7 +118,7 @@ public class WindowsTitlePane extends CustomTitlePane {
     }
 
     private void updateTitleBarVisibility() {
-        titleBarHidden = PropertyUtil.getBooleanProperty(rootPane, "JRootPane.hideTitleBar");
+        titleBarHidden = PropertyUtil.getBooleanProperty(rootPane, DecorationsConstants.KEY_HIDE_TITLEBAR);
         rootPane.doLayout();
         rootPane.repaint();
     }
@@ -656,9 +657,22 @@ public class WindowsTitlePane extends CustomTitlePane {
         }
     }
 
-    private class CloseAction extends AbstractAction {
+    private abstract class TitlePaneAction extends AbstractAction {
+        private TitlePaneAction(Icon icon, String... resourceNames) {
+            super("", icon);
+            for (String key : resourceNames) {
+                String value = UIManager.getString(key, getLocale());
+                if (value != null) {
+                    putValue(AbstractAction.NAME, value);
+                    return;
+                }
+            }
+        }
+    }
+
+    private class CloseAction extends TitlePaneAction {
         public CloseAction() {
-            super(UIManager.getString("Actions.close", getLocale()), closeIcon);
+            super(closeIcon, "Actions.close", "InternalFrame.closeButtonToolTip");
         }
 
         @Override
@@ -667,9 +681,9 @@ public class WindowsTitlePane extends CustomTitlePane {
         }
     }
 
-    private class MinimizeAction extends AbstractAction {
+    private class MinimizeAction extends TitlePaneAction {
         public MinimizeAction() {
-            super(UIManager.getString("Actions.minimize", getLocale()), minimizeIcon);
+            super(minimizeIcon, "Actions.minimize", "InternalFrame.iconButtonToolTip");
         }
 
         @Override
@@ -678,9 +692,9 @@ public class WindowsTitlePane extends CustomTitlePane {
         }
     }
 
-    private class MaximizeAction extends AbstractAction {
+    private class MaximizeAction extends TitlePaneAction {
         public MaximizeAction() {
-            super(UIManager.getString("Actions.maximize", getLocale()), maximizeIcon);
+            super(maximizeIcon, "Actions.maximize", "InternalFrame.maxButtonToolTip");
         }
 
         @Override
@@ -689,9 +703,9 @@ public class WindowsTitlePane extends CustomTitlePane {
         }
     }
 
-    private class RestoreAction extends AbstractAction {
+    private class RestoreAction extends TitlePaneAction {
         public RestoreAction() {
-            super(UIManager.getString("Actions.restore", getLocale()), restoreIcon);
+            super(restoreIcon, "Actions.restore", "InternalFrame.restoreButtonToolTip");
         }
 
         @Override
@@ -910,9 +924,9 @@ public class WindowsTitlePane extends CustomTitlePane {
 
         @Override
         public void propertyChange(final PropertyChangeEvent evt) {
-            if ("JRootPane.unifiedMenuBar".equals(evt.getPropertyName())) {
+            if (DecorationsConstants.KEY_UNIFIED_MENUBAR.equals(evt.getPropertyName())) {
                 menuBarStealer.updateMenuBar(true);
-            } else if ("JRootPane.hideTitleBar".equals(evt.getPropertyName())) {
+            } else if (DecorationsConstants.KEY_HIDE_TITLEBAR.equals(evt.getPropertyName())) {
                 updateTitleBarVisibility();
             }
         }

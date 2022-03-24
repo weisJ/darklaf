@@ -20,8 +20,6 @@
  */
 package com.github.weisj.darklaf.platform.windows.ui;
 
-import com.github.weisj.darklaf.platform.DecorationsConstants;
-
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
 import java.awt.event.HierarchyEvent;
@@ -31,6 +29,8 @@ import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuBar;
 import javax.swing.JRootPane;
+
+import com.github.weisj.darklaf.platform.DecorationsConstants;
 
 public class MenuBarStealer {
 
@@ -93,7 +93,7 @@ public class MenuBarStealer {
     }
 
     private boolean isUnifiedMenuBarEnabled(final JComponent c) {
-        Object obj = c.getClientProperty("JRootPane.unifiedMenuBar");
+        Object obj = c.getClientProperty(DecorationsConstants.KEY_UNIFIED_MENUBAR);
         if (!(obj instanceof Boolean) && obj != null) {
             obj = Boolean.parseBoolean(obj.toString());
         }

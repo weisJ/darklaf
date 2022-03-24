@@ -233,7 +233,7 @@ class CustomTitleBarTest extends AbstractImageTest implements NonThreadSafeTest 
         checkImage("title_bar_hidden_" + SystemInfo.getOsName(),
                 frame -> {
                     JRootPane rootPane = frame.getRootPane();
-                    rootPane.putClientProperty(DarkRootPaneUI.HIDE_TITLEBAR, true);
+                    rootPane.putClientProperty(DarkRootPaneUI.KEY_HIDE_TITLEBAR, true);
                 },
                 img -> assertScreenColorEquals(CONTENT_COLOR, new Color(img.getRGB(img.getWidth() / 2, TITLE_BAR_Y)),
                         "Titlebar isn't hidden"));
