@@ -18,7 +18,7 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.github.weisj.darklaf.nativelaf;
+package com.github.weisj.darklaf.platform.decorations;
 
 import java.awt.*;
 import java.util.Collections;
@@ -26,10 +26,11 @@ import java.util.List;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.platform.decorations.CustomTitlePane;
-import com.github.weisj.darklaf.platform.decorations.DecorationsProvider;
+import com.github.weisj.darklaf.platform.CustomTitlePane;
+import com.github.weisj.darklaf.platform.DecorationsProvider;
 
-public class DefaultDecorationsProvider implements DecorationsProvider {
+class DefaultDecorationsProvider implements DecorationsProvider {
+
     @Override
     public CustomTitlePane createTitlePane(final JRootPane rootPane, final int decorationStyle, final Window window) {
         return createNoOPTitlePane();
