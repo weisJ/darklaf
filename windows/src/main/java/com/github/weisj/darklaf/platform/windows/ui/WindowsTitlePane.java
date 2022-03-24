@@ -67,6 +67,17 @@ public class WindowsTitlePane extends CustomTitlePane {
     private boolean oldResizable;
     private PropertyChangeListener windowPropertyChangeListener;
     private PropertyChangeListener rootPanePropertyChangeListener;
+    private final MouseListener contextMenuListener = new MouseAdapter() {
+        @Override
+        public void mouseReleased(final MouseEvent e) {
+            if (SwingUtilities.isRightMouseButton(e)) {
+                Point location = MouseInfo.getPointerInfo().getLocation();
+                showWindowContextMenu(location);
+            }
+            super.mouseReleased(e);
+        }
+    };
+
     private WindowListener windowListener;
     private TitlebarIcon closeIcon;
     private TitlebarIcon maximizeIcon;
@@ -166,6 +177,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         if (rootPane != null) {
             rootPane.removePropertyChangeListener(rootPanePropertyChangeListener);
         }
+        removeMouseListener(contextMenuListener);
     }
 
     protected void uninstallDecorations(final boolean removeDecorations) {
@@ -240,6 +252,7 @@ public class WindowsTitlePane extends CustomTitlePane {
             rootPane.addPropertyChangeListener(rootPanePropertyChangeListener);
             window.addPropertyChangeListener(windowPropertyChangeListener);
         }
+        addMouseListener(contextMenuListener);
     }
 
     private WindowListener createWindowListener() {
@@ -338,12 +351,20 @@ public class WindowsTitlePane extends CustomTitlePane {
         JButton button = new JButton();
         button.putClientProperty("JButton.noShadowOverwrite", true);
         button.setComponentPopupMenu(createMenu());
-        button.addActionListener(e -> button.getComponentPopupMenu().show(button,
-                button.getWidth() / 2, button.getHeight() / 2));
+        button.addActionListener(e -> {
+            Point buttonLocation = new Point(0, windowIconButton.getHeight());
+            SwingUtilities.convertPointToScreen(buttonLocation, windowIconButton);
+            showWindowContextMenu(buttonLocation);
+        });
         button.setFocusable(false);
         button.setContentAreaFilled(false);
         button.setBorderPainted(false);
         return button;
+    }
+
+    private void showWindowContextMenu(final Point p) {
+        if (window == null) return;
+        windowIconButton.getComponentPopupMenu().show(window, p.x - window.getX(), p.y - window.getY());
     }
 
     private JPopupMenu createMenu() {
