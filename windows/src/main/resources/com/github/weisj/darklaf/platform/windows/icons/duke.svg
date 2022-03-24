@@ -1,7 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" x="0px" width="16"
 	height="16" viewBox="-2 0 14 16">
 	<defs id="colors">
-		<linearGradient id="effectiveAccentColor">
+		<linearGradient id="effectiveAccentColor"
+			fallback="%#ED1C24">
 			<stop offset="0" stop-color="#ED1C24" />
 			<stop offset="1" stop-color="#ED1C24" />
 		</linearGradient>
