@@ -78,14 +78,18 @@ public final class MacOSDecorationsUtil {
         }
     }
 
-    static void uninstallDecorations(final DecorationInformation information) {
+    static void uninstallDecorations(final Window window, final DecorationInformation information) {
         if (information == null || information.windowHandle == 0) {
             return;
         }
         if (information.useColoredTitleBar) {
+            // As for the case when removing decorations, adding them back will cause the window to
+            // change it's size.
+            Rectangle bounds = window.getBounds();
             JNIDecorationsMacOS.uninstallDecorations(information.windowHandle,
                     information.fullWindowContentEnabled,
                     information.transparentTitleBarEnabled);
+            window.setBounds(bounds);
         }
         JNIDecorationsMacOS.setTitleEnabled(information.windowHandle, true);
         JNIDecorationsMacOS.releaseWindow(information.windowHandle);

@@ -159,7 +159,7 @@ public class MacOSTitlePane extends CustomTitlePane {
         uninstallListeners();
         if (decorationInformation != null) {
             if (removeDecorations || decorationInformation.useColoredTitleBar != isUseColoredTitleBar(getRootPane())) {
-                MacOSDecorationsUtil.uninstallDecorations(decorationInformation);
+                MacOSDecorationsUtil.uninstallDecorations(window, decorationInformation);
                 decorationInformation = null;
             }
         }
