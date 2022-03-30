@@ -45,6 +45,6 @@ public class BasicNativeDecorationsRootPaneUI extends AbstractNativeDecorationsR
 
     @Override
     protected boolean shouldRemoveDecorations() {
-        return true;
+        return !ExternalLafDecorator.instance().isInstalled();
     }
 }

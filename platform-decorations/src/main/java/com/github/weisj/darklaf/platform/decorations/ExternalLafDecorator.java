@@ -64,7 +64,13 @@ public final class ExternalLafDecorator {
     }
 
     public void uninstall() {
+        if (!installed) return;
+        installed = false;
         UIManager.removePropertyChangeListener(propertyChangeListener);
+    }
+
+    public boolean isInstalled() {
+        return installed;
     }
 
     private void putOrCopy(final String key, final Object value, final Properties props, final UIDefaults uiDefaults) {
