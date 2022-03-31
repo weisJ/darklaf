@@ -37,6 +37,9 @@ public final class ExternalLafDecorator {
     private final PropertyChangeListener propertyChangeListener;
     private boolean installed;
 
+    private final DecorationsColorProvider fallbackColorProvider = new DefaultDecorationsColorProvider();
+    private DecorationsColorProvider colorProvider;
+
     private ExternalLafDecorator() {
         decorationsManager = new NativeDecorationsManager();
         propertyChangeListener = evt -> {
@@ -69,6 +72,13 @@ public final class ExternalLafDecorator {
         UIManager.removePropertyChangeListener(propertyChangeListener);
     }
 
+    public void setColorProvider(final DecorationsColorProvider colorProvider) {
+        this.colorProvider = colorProvider;
+        if (colorProvider == null) {
+            this.colorProvider = fallbackColorProvider;
+        }
+    }
+
     public boolean isInstalled() {
         return installed;
     }
@@ -81,33 +91,22 @@ public final class ExternalLafDecorator {
 
     private void installExtraProperties() {
         IconLoader.updateThemeStatus(new Object());
+        colorProvider.onLafChanged();
 
         Properties props = new Properties();
         UIDefaults defaults = UIManager.getDefaults();
 
-        JLabel label = new JLabel();
-        label.setOpaque(true);
-        Color foreground = new DarkColorUIResource(label.getForeground());
-        Color background = new DarkColorUIResource(label.getBackground());
-        label.setEnabled(false);
-        Color disabledForeground = new DarkColorUIResource(label.getForeground());
+        putOrCopy("borderSecondary", colorProvider.borderColor(), props, defaults);
+        putOrCopy("hoverHighlight", colorProvider.hoverBackgroundColor(), props, defaults);
+        putOrCopy("clickHighlight", colorProvider.clickBackgroundColor(), props, defaults);
 
-        putOrCopy("borderSecondary", disabledForeground, props, defaults);
+        putOrCopy("background", colorProvider.backgroundColor(), props, defaults);
+        putOrCopy("textForeground", colorProvider.activeForegroundColor(), props, defaults);
+        putOrCopy("textForegroundInactive", colorProvider.inactiveForegroundColor(), props, defaults);
+        putOrCopy("textForegroundSecondary", colorProvider.inactiveForegroundColor(), props, defaults);
 
-        Color highlight = new DarkColorUIResource(
-                Math.max((int) (background.getRed() * 0.9f), 0),
-                Math.max((int) (background.getGreen() * 0.9f), 0),
-                Math.max((int) (background.getBlue() * 0.9f), 0));
-        putOrCopy("hoverHighlight", highlight, props, defaults);
-        putOrCopy("clickHighlight", highlight, props, defaults);
-
-        putOrCopy("background", background, props, defaults);
-        putOrCopy("textForeground", foreground, props, defaults);
-        putOrCopy("textForegroundInactive", foreground, props, defaults);
-        putOrCopy("textForegroundSecondary", disabledForeground, props, defaults);
-
-        putOrCopy("windowButton", foreground, props, defaults);
-        putOrCopy("windowButtonDisabled", disabledForeground, props, defaults);
+        putOrCopy("windowButton", colorProvider.windowButtonColor(), props, defaults);
+        putOrCopy("windowButtonDisabled", colorProvider.inactiveWindowButtonColor(), props, defaults);
         putOrCopy("windowCloseHovered", new DarkColorUIResource(Color.WHITE), props, defaults);
 
         decorationsManager.loadDecorationProperties(props, defaults);
@@ -125,5 +124,37 @@ public final class ExternalLafDecorator {
 
         defaults.putAll(props);
         defaults.put("RootPaneUI", BasicNativeDecorationsRootPaneUI.class.getName());
+    }
+
+    private static class DefaultDecorationsColorProvider implements DecorationsColorProvider {
+
+        private Color foreground;
+        private Color background;
+        private Color disabledForeground;
+
+        @Override
+        public void onLafChanged() {
+            JLabel label = new JLabel();
+            label.setOpaque(true);
+            foreground = new DarkColorUIResource(label.getForeground());
+            background = new DarkColorUIResource(label.getBackground());
+            label.setEnabled(false);
+            disabledForeground = new DarkColorUIResource(label.getForeground());
+        }
+
+        @Override
+        public Color backgroundColor() {
+            return background;
+        }
+
+        @Override
+        public Color activeForegroundColor() {
+            return foreground;
+        }
+
+        @Override
+        public Color inactiveForegroundColor() {
+            return disabledForeground;
+        }
     }
 }
