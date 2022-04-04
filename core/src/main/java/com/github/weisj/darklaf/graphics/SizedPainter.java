@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,20 +18,15 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.github.weisj.darklaf.ui.scrollpane;
+package com.github.weisj.darklaf.graphics;
+
+import java.awt.*;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.util.PropertyUtil;
+public interface SizedPainter<T> extends Painter<T> {
 
-public interface ScrollBarConstants {
-    String KEY_SCROLL_PANE_PARENT = "JScrollBar.scrollPaneParent";
-    String KEY_FAST_WHEEL_SCROLLING = "JScrollBar.fastWheelScrolling";
-    String KEY_HIGHLIGHT_ON_SCROLL = "JScrollBar.highlightOnScroll";
-    String KEY_SMALL = "JComponent.small";
-    String KEY_BACKGROUND_PAINTER = "JScrollBar.backgroundPainter";
+    Dimension preferredSize(final Dimension preferredSizeOfT);
 
-    static boolean isSmall(final JScrollBar scrollBar) {
-        return PropertyUtil.getBooleanProperty(scrollBar, KEY_SMALL);
-    }
+    default void doLayout(final Rectangle bounds) {}
 }

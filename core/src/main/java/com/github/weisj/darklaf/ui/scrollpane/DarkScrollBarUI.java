@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -21,6 +21,8 @@
 package com.github.weisj.darklaf.ui.scrollpane;
 
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -28,6 +30,7 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.graphics.SizedPainter;
 import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
@@ -43,6 +46,10 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
     protected int smallSize;
     protected int size;
     protected float thumbAlpha;
+
+    private PropertyChangeListener propertyChangeListener;
+    private SizedPainter<JScrollBar> backgroundPainter;
+    private final Rectangle backgroundRect = new Rectangle();
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkScrollBarUI();
@@ -75,6 +82,8 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
         smallSize = UIManager.getInt("ScrollBar.smallWidth");
         size = UIManager.getInt("ScrollBar.width");
         thumbAlpha = UIManager.getInt("ScrollBar.thumbAlpha") / 100.0f;
+
+        updateBackgroundPainter(scrollbar.getClientProperty(KEY_BACKGROUND_PAINTER));
     }
 
     @Override
@@ -85,6 +94,9 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
         scrollbar.addMouseMotionListener(scrollBarListener);
         scrollbar.addMouseListener(scrollBarListener);
         scrollbar.addMouseWheelListener(scrollBarListener);
+
+        propertyChangeListener = this::onPropertyChange;
+        scrollbar.addPropertyChangeListener(propertyChangeListener);
     }
 
     protected DarkScrollBarListener<?> createScrollBarListener() {
@@ -125,6 +137,18 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
         scrollbar.removeAdjustmentListener(scrollBarListener);
         scrollBarListener.uninstall();
         scrollBarListener = null;
+
+        scrollbar.removePropertyChangeListener(propertyChangeListener);
+        propertyChangeListener = null;
+    }
+
+    @Override
+    public void paint(final Graphics g, final JComponent c) {
+        if (backgroundPainter != null) {
+            Graphics2D bg = (Graphics2D) g.create();
+            backgroundPainter.paint(bg, (JScrollBar) c, backgroundRect.width, backgroundRect.height);
+        }
+        super.paint(g, c);
     }
 
     @Override
@@ -148,6 +172,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
     }
 
     protected void paintMaxiThumb(final Graphics2D g, final Rectangle rect) {
+        System.out.println(rect);
         g.setComposite(COMPOSITE.derive(thumbAlpha));
         g.setColor(getThumbBorderColor());
         PaintUtil.drawRect(g, rect.x, rect.y, rect.width, rect.height, 1);
@@ -205,6 +230,19 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
 
     @Override
     public Dimension getMinimumSize(final JComponent c) {
+        Dimension size = getMinimumSizeWithoutBackgroundPainter();
+        if (backgroundPainter != null) {
+            Dimension bgSize = backgroundPainter.preferredSize(new Dimension(size));
+            if (scrollbar.getOrientation() == JScrollBar.HORIZONTAL) {
+                size.height = Math.max(bgSize.height, size.height);
+            } else {
+                size.width = Math.max(bgSize.width, size.width);
+            }
+        }
+        return size;
+    }
+
+    private Dimension getMinimumSizeWithoutBackgroundPainter() {
         return getMinimumThumbSize();
     }
 
@@ -222,8 +260,42 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
     public void layoutContainer(final Container scrollbarContainer) {
         try {
             super.layoutContainer(scrollbarContainer);
+            if (!isDragging && backgroundPainter != null) {
+                Dimension size = getMinimumSizeWithoutBackgroundPainter();
+                backgroundRect.setBounds(trackRect);
+                if (scrollbar.getOrientation() == JScrollBar.HORIZONTAL) {
+                    trackRect.y = trackRect.y + trackRect.height - size.height;
+                    trackRect.height = size.height;
+
+                    thumbRect.y = thumbRect.y + thumbRect.height - size.height;
+                    thumbRect.height = size.height;
+                } else {
+                    trackRect.x = trackRect.x + trackRect.width - size.width;
+                    trackRect.width = size.width;
+
+                    thumbRect.x = thumbRect.x + thumbRect.width - size.width;
+                    thumbRect.width = size.width;
+                }
+                backgroundPainter.doLayout(backgroundRect);
+            }
         } catch (final NullPointerException ignore) {
             // installUI is not performed yet or uninstallUI has set almost every field to null.
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void updateBackgroundPainter(final Object painter) {
+        if (painter instanceof SizedPainter) {
+            backgroundPainter = (SizedPainter<JScrollBar>) painter;
+        } else {
+            backgroundPainter = null;
+        }
+    }
+
+    private void onPropertyChange(final PropertyChangeEvent e) {
+        String key = e.getPropertyName();
+        if (KEY_BACKGROUND_PAINTER.equals(key)) {
+            updateBackgroundPainter(e.getNewValue());
         }
     }
 }
