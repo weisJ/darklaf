@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -21,17 +21,25 @@
 package com.github.weisj.darklaf.ui.scrollPane;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import javax.swing.*;
+import javax.swing.text.*;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
+import com.github.weisj.darklaf.graphics.SizedPainter;
+import com.github.weisj.darklaf.theme.ColorPalette;
 import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.DemoResources;
 import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
+import com.github.weisj.darklaf.ui.scrollpane.ScrollBarConstants;
+import com.github.weisj.darklaf.util.Pair;
 import com.github.weisj.darklaf.util.StringUtil;
 
 public class OverlayRSyntaxScrollPane extends BaseComponentDemo {
@@ -45,11 +53,62 @@ public class OverlayRSyntaxScrollPane extends BaseComponentDemo {
         RSyntaxTextArea textArea = new RSyntaxTextArea(StringUtil.repeat(DemoResources.LOREM_IPSUM, 5));
         RTextScrollPane sp = new RTextScrollPane(textArea);
         OverlayScrollPane scrollPane = new OverlayScrollPane(sp);
+
+        Random r = new Random();
+        Color[] colors = new Color[] {ColorPalette.ORANGE, ColorPalette.RED, ColorPalette.GREEN};
+        int length = textArea.getDocument().getLength();
+        List<Pair<Position, Color>> markers = new ArrayList<>();
+        int count = 15;
+        for (int i = 0; i < count; i++) {
+            try {
+                Position position = textArea.getDocument().createPosition(i * length / count);
+                Color color = colors[r.nextInt(colors.length)];
+                markers.add(new Pair<>(position, color));
+            } catch (BadLocationException ignored) {
+            }
+        }
+
+        scrollPane.getVerticalScrollBar().putClientProperty(ScrollBarConstants.KEY_BACKGROUND_PAINTER,
+                new MarkerBackgroundPainter(textArea, markers));
         return new DemoPanel(scrollPane, new BorderLayout(), 0);
     }
 
     @Override
     public String getName() {
         return "OverlayRSyntaxScrollPane Demo";
+    }
+
+    private static class MarkerBackgroundPainter implements SizedPainter<JScrollBar> {
+
+        private final JTextComponent textComponent;
+        private final List<Pair<Position, Color>> markers;
+
+        private MarkerBackgroundPainter(final JTextComponent textComponent,
+                final List<Pair<Position, Color>> markers) {
+            this.textComponent = textComponent;
+            this.markers = markers;
+        }
+
+        @Override
+        public void paint(final Graphics2D g, final JScrollBar object, final int width, final int height) {
+            int totalHeight = textComponent.getHeight();
+            for (Pair<Position, Color> marker : markers) {
+                Position position = marker.getFirst();
+                try {
+                    int y = textComponent.modelToView(position.getOffset()).y;
+                    y = (int) (height * ((float) y / totalHeight));
+                    g.setColor(marker.getSecond());
+                    g.fillRect(0, y, width, 2);
+                } catch (BadLocationException ignored) {
+                }
+            }
+        }
+
+        @Override
+        public Dimension preferredSize(final Dimension preferredSize) {
+            preferredSize.width *= 1.5;
+            preferredSize.height *= 1.5;
+            return preferredSize;
+        }
     }
 }
