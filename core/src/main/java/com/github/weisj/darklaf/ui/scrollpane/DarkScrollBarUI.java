@@ -47,7 +47,7 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
     protected int size;
     protected float thumbAlpha;
 
-    private PropertyChangeListener propertyChangeListener;
+    private PropertyChangeListener darkPropertyChangeListener;
     private SizedPainter<JScrollBar> backgroundPainter;
     private final Rectangle backgroundRect = new Rectangle();
 
@@ -95,8 +95,8 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
         scrollbar.addMouseListener(scrollBarListener);
         scrollbar.addMouseWheelListener(scrollBarListener);
 
-        propertyChangeListener = this::onPropertyChange;
-        scrollbar.addPropertyChangeListener(propertyChangeListener);
+        darkPropertyChangeListener = this::onPropertyChange;
+        scrollbar.addPropertyChangeListener(darkPropertyChangeListener);
     }
 
     protected DarkScrollBarListener<?> createScrollBarListener() {
@@ -138,8 +138,8 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
         scrollBarListener.uninstall();
         scrollBarListener = null;
 
-        scrollbar.removePropertyChangeListener(propertyChangeListener);
-        propertyChangeListener = null;
+        scrollbar.removePropertyChangeListener(darkPropertyChangeListener);
+        darkPropertyChangeListener = null;
     }
 
     @Override
