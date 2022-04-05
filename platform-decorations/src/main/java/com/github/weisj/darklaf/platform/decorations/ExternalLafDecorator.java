@@ -23,11 +23,13 @@ package com.github.weisj.darklaf.platform.decorations;
 import java.awt.*;
 import java.beans.PropertyChangeListener;
 import java.util.Properties;
+import java.util.function.Function;
 
 import javax.swing.*;
 
 import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.properties.uiresource.DarkColorUIResource;
+import com.github.weisj.darklaf.util.ColorUtil;
 
 public final class ExternalLafDecorator {
 
@@ -83,9 +85,11 @@ public final class ExternalLafDecorator {
         return installed;
     }
 
-    private void putOrCopy(final String key, final Object value, final Properties props, final UIDefaults uiDefaults) {
+    private void putOrCopy(final String key, final Function<DecorationsColorProvider, Color> getter,
+            final Properties props, final UIDefaults uiDefaults) {
         Object other = uiDefaults.get(key);
-        if (other == null) other = value;
+        if (other == null) other = getter.apply(colorProvider);
+        if (other == null) other = getter.apply(fallbackColorProvider);
         props.put(key, other);
     }
 
@@ -96,18 +100,18 @@ public final class ExternalLafDecorator {
         Properties props = new Properties();
         UIDefaults defaults = UIManager.getDefaults();
 
-        putOrCopy("borderSecondary", colorProvider.borderColor(), props, defaults);
-        putOrCopy("hoverHighlight", colorProvider.hoverBackgroundColor(), props, defaults);
-        putOrCopy("clickHighlight", colorProvider.clickBackgroundColor(), props, defaults);
+        putOrCopy("borderSecondary", DecorationsColorProvider::borderColor, props, defaults);
+        putOrCopy("hoverHighlight", DecorationsColorProvider::hoverBackgroundColor, props, defaults);
+        putOrCopy("clickHighlight", DecorationsColorProvider::clickBackgroundColor, props, defaults);
 
-        putOrCopy("background", colorProvider.backgroundColor(), props, defaults);
-        putOrCopy("textForeground", colorProvider.activeForegroundColor(), props, defaults);
-        putOrCopy("textForegroundInactive", colorProvider.inactiveForegroundColor(), props, defaults);
-        putOrCopy("textForegroundSecondary", colorProvider.inactiveForegroundColor(), props, defaults);
+        putOrCopy("background", DecorationsColorProvider::backgroundColor, props, defaults);
+        putOrCopy("textForeground", DecorationsColorProvider::activeForegroundColor, props, defaults);
+        putOrCopy("textForegroundInactive", DecorationsColorProvider::inactiveForegroundColor, props, defaults);
+        putOrCopy("textForegroundSecondary", DecorationsColorProvider::inactiveForegroundColor, props, defaults);
 
-        putOrCopy("windowButton", colorProvider.windowButtonColor(), props, defaults);
-        putOrCopy("windowButtonDisabled", colorProvider.inactiveWindowButtonColor(), props, defaults);
-        putOrCopy("windowCloseHovered", new DarkColorUIResource(Color.WHITE), props, defaults);
+        putOrCopy("windowButton", DecorationsColorProvider::windowButtonColor, props, defaults);
+        putOrCopy("windowButtonDisabled", DecorationsColorProvider::inactiveWindowButtonColor, props, defaults);
+        putOrCopy("windowCloseHovered", p -> new DarkColorUIResource(Color.WHITE), props, defaults);
 
         decorationsManager.loadDecorationProperties(props, defaults);
 

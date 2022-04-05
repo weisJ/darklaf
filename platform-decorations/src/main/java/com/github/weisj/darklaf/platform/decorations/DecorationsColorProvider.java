@@ -37,6 +37,7 @@ public interface DecorationsColorProvider {
 
     default Color hoverBackgroundColor() {
         Color background = backgroundColor();
+        if (background == null) return null;
         int brightness = (int) ColorUtil.getPerceivedBrightness(background);
         if (brightness >= 125) {
             // Darken
