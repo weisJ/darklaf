@@ -127,6 +127,7 @@ public final class ExternalLafDecorator {
         props.remove("windowCloseHovered");
 
         defaults.putAll(props);
+        defaults.put("Theme.dark", colorProvider.isDark());
         defaults.put("RootPaneUI", BasicNativeDecorationsRootPaneUI.class.getName());
     }
 
@@ -159,6 +160,11 @@ public final class ExternalLafDecorator {
         @Override
         public Color inactiveForegroundColor() {
             return disabledForeground;
+        }
+
+        @Override
+        public boolean isDark() {
+            return ColorUtil.getPerceivedBrightness(background) <= 125;
         }
     }
 }

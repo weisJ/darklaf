@@ -33,6 +33,8 @@ public interface DecorationsColorProvider {
         return inactiveForegroundColor();
     }
 
+    boolean isDark();
+
     Color backgroundColor();
 
     default Color hoverBackgroundColor() {
