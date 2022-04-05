@@ -68,4 +68,13 @@ public interface DecorationsProvider {
      * @param rect the proposed content area.
      */
     default void adjustContentArea(final JRootPane root, final Rectangle rect) {}
+
+    /**
+     * Returns whether the system provides a title label for us.
+     *
+     * @return true of the system paints the title label.
+     */
+    default boolean supportsNativeTitleLabel() {
+        return false;
+    }
 }

@@ -110,4 +110,8 @@ public class NativeDecorationsManager {
     public void adjustContentArea(final JRootPane root, final Rectangle rect) {
         decorationsProvider.adjustContentArea(root, rect);
     }
+
+    public boolean supportsNativeTitleText() {
+        return decorationsProvider.supportsNativeTitleLabel();
+    }
 }

@@ -27,13 +27,37 @@ import com.github.weisj.darklaf.util.ColorUtil;
 
 public interface DecorationsColorProvider {
 
+    enum TitleColor {
+        /**
+         * On platforms which support painting the window title for us a light text color will be use. In
+         * this case the value of {@link #activeForegroundColor()} and {@link #inactiveForegroundColor()}
+         * will be ignored. On other platforms the color is based on {@link #activeForegroundColor()} by
+         * making it very light.
+         */
+        LIGHT,
+        /**
+         * On platforms which support painting the window title for us a dark text color will be use. In
+         * this case the value of {@link #activeForegroundColor()} and {@link #inactiveForegroundColor()}
+         * will be ignored. On other platforms the color is based on {@link #activeForegroundColor()} by
+         * making it very dark.
+         */
+        DARK,
+        /**
+         * Even if the platform supports painting the window title a custom label is used to respect the
+         * value of {@link #activeForegroundColor()} and {@link #inactiveForegroundColor()}.
+         */
+        CUSTOM
+    }
+
     default void onLafChanged() {}
 
     default Color borderColor() {
         return inactiveForegroundColor();
     }
 
-    boolean isDark();
+    default TitleColor windowTitleColor() {
+        return TitleColor.DARK;
+    }
 
     Color backgroundColor();
 

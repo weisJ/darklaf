@@ -23,10 +23,12 @@ package com.github.weisj.darklaf.platform.decorations;
 import java.awt.*;
 import java.beans.PropertyChangeListener;
 import java.util.Properties;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.properties.color.DarkColorModelHSL;
 import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.properties.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.util.ColorUtil;
@@ -97,6 +99,8 @@ public final class ExternalLafDecorator {
         IconLoader.updateThemeStatus(new Object());
         colorProvider.onLafChanged();
 
+        DecorationsColorProvider.TitleColor titleColor = colorProvider.windowTitleColor();
+
         Properties props = new Properties();
         UIDefaults defaults = UIManager.getDefaults();
 
@@ -113,6 +117,13 @@ public final class ExternalLafDecorator {
         putOrCopy("windowButtonDisabled", DecorationsColorProvider::inactiveWindowButtonColor, props, defaults);
         putOrCopy("windowCloseHovered", p -> new DarkColorUIResource(Color.WHITE), props, defaults);
 
+        if (!decorationsManager.supportsNativeTitleText()) {
+            Consumer<String> adjustColor = s -> props.put(s, adjustForegroundColor((Color) props.get(s), titleColor));
+            adjustColor.accept("textForeground");
+            adjustColor.accept("textForegroundSecondary");
+            adjustColor.accept("textForegroundInactive");
+        }
+
         decorationsManager.loadDecorationProperties(props, defaults);
 
         props.remove("borderSecondary");
@@ -127,8 +138,16 @@ public final class ExternalLafDecorator {
         props.remove("windowCloseHovered");
 
         defaults.putAll(props);
-        defaults.put("Theme.dark", colorProvider.isDark());
+        defaults.put("Theme.dark", titleColor == DecorationsColorProvider.TitleColor.LIGHT);
+        defaults.put("Theme.macos.useSwingTitleLabel", titleColor == DecorationsColorProvider.TitleColor.CUSTOM);
         defaults.put("RootPaneUI", BasicNativeDecorationsRootPaneUI.class.getName());
+    }
+
+    private Color adjustForegroundColor(final Color color, final DecorationsColorProvider.TitleColor titleColor) {
+        if (titleColor == DecorationsColorProvider.TitleColor.CUSTOM) return color;
+        final double[] hslFG = DarkColorModelHSL.RGBtoHSLValues(color.getRed(), color.getGreen(), color.getBlue());
+        double brightness = titleColor == DecorationsColorProvider.TitleColor.LIGHT ? 0.9 : 0.1;
+        return DarkColorModelHSL.getColorFromHSLValues(hslFG[0], hslFG[1], brightness);
     }
 
     private static class DefaultDecorationsColorProvider implements DecorationsColorProvider {
@@ -163,8 +182,9 @@ public final class ExternalLafDecorator {
         }
 
         @Override
-        public boolean isDark() {
-            return ColorUtil.getPerceivedBrightness(background) <= 125;
+        public TitleColor windowTitleColor() {
+            if (ColorUtil.getPerceivedBrightness(background) <= 125) return TitleColor.LIGHT;
+            return TitleColor.DARK;
         }
     }
 }

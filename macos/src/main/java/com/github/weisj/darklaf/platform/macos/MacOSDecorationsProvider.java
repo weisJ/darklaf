@@ -60,4 +60,9 @@ public class MacOSDecorationsProvider implements DecorationsProvider {
     public List<String> getPropertyResourcePaths() {
         return Collections.singletonList("macos_decorations");
     }
+
+    @Override
+    public boolean supportsNativeTitleLabel() {
+        return SystemInfo.isMacOSMojave;
+    }
 }

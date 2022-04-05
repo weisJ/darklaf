@@ -59,7 +59,7 @@ public final class MacOSDecorationsUtil {
 
         setFullSizeContent(windowHandle, useColoredTitleBar);
 
-        boolean titleVisible = SystemInfo.isMacOSMojave;
+        boolean titleVisible = SystemInfo.isMacOSMojave && !UIManager.getBoolean("Theme.macos.useSwingTitleLabel");
         JNIDecorationsMacOS.setTitleEnabled(windowHandle, titleVisible);
         if (titleVisible) {
             boolean isDarkTheme = UIManager.getBoolean("Theme.dark");
