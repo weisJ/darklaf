@@ -126,6 +126,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         updateTitleBarVisibility();
         installDefaults();
         setLayout(createLayout());
+        setOpaque(true);
     }
 
     private void updateTitleBarVisibility() {
@@ -474,15 +475,18 @@ public class WindowsTitlePane extends CustomTitlePane {
             setState(getFrame().getExtendedState());
         }
         updateResizeBehaviour();
-        Window window = getWindow();
-        boolean active = window == null || window.isActive();
+
         int width = getWidth();
         int height = getHeight();
 
-        Color background = active ? activeBackground : inactiveBackground;
+        if (isOpaque()) {
+            Window window = getWindow();
+            boolean active = window == null || window.isActive();
+            Color background = active ? activeBackground : inactiveBackground;
 
-        g.setColor(background);
-        g.fillRect(0, 0, width, height);
+            g.setColor(background);
+            g.fillRect(0, 0, width, height);
+        }
 
         if (isDrawBorder()) {
             g.setColor(border);

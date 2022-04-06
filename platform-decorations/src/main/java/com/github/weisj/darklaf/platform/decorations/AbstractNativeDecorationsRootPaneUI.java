@@ -36,6 +36,7 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 
 public abstract class AbstractNativeDecorationsRootPaneUI extends BasicRootPaneUI implements DecorationsConstants {
 
+    private static final int TITLE_PANE_CONTENT_LAYER = JLayeredPane.FRAME_CONTENT_LAYER + 1;
     private final PropertyChangeListener decorationsPropertyChangeListener = new DecorationsPropertyChangeListener();
     private final HierarchyListener decorationsHierarchyListener = new DecorationsHierarchyListener();
 
@@ -143,7 +144,7 @@ public abstract class AbstractNativeDecorationsRootPaneUI extends BasicRootPaneU
             layeredPane.remove(oldTitlePane);
         }
         if (titlePane != null) {
-            layeredPane.add(titlePane, JLayeredPane.FRAME_CONTENT_LAYER);
+            layeredPane.add(titlePane, TITLE_PANE_CONTENT_LAYER);
             titlePane.setVisible(true);
         }
         this.titlePane = titlePane;

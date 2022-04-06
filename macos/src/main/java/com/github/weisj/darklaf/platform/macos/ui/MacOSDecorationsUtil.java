@@ -34,7 +34,7 @@ public final class MacOSDecorationsUtil {
 
     private static final Logger LOGGER = LogUtil.getLogger(MacOSDecorationsUtil.class);
     private static final String FULL_WINDOW_CONTENT_KEY = "apple.awt.fullWindowContent";
-    private static final String TRANSPARENT_TITLE_BAR_KEY = "apple.awt.transparentTitleBar";
+    static final String TRANSPARENT_TITLE_BAR_KEY = "apple.awt.transparentTitleBar";
 
     static DecorationInformation installDecorations(final JRootPane rootPane,
             final boolean useColoredTitleBar) {
@@ -44,7 +44,7 @@ public final class MacOSDecorationsUtil {
         Window window = SwingUtilities.getWindowAncestor(rootPane);
         long windowHandle = JNIDecorationsMacOS.getComponentPointer(window);
         if (windowHandle == 0) {
-            return new DecorationInformation(0, false, false, false, rootPane, false, 0, 0);
+            return new DecorationInformation(0, false, rootPane, false, 0, 0);
         }
         // Removing the decorations may cause the window to be resized.
         // Hence, we save the current bounds to restore them later.
@@ -52,8 +52,6 @@ public final class MacOSDecorationsUtil {
         LOGGER.fine("Installing decorations for window " + windowHandle
                 + "(coloredTitleBar = " + useColoredTitleBar + ")");
         JNIDecorationsMacOS.retainWindow(windowHandle);
-        boolean fullWindowContent = isFullWindowContentEnabled(rootPane);
-        boolean transparentTitleBar = isTransparentTitleBarEnabled(rootPane);
         float titleFontSize = (float) JNIDecorationsMacOS.getTitleFontSize(windowHandle);
         int titleBarHeight = (int) JNIDecorationsMacOS.getTitleBarHeight(windowHandle);
 
@@ -67,8 +65,7 @@ public final class MacOSDecorationsUtil {
         }
         window.setBounds(windowBounds);
         return new DecorationInformation(
-                windowHandle, fullWindowContent,
-                transparentTitleBar, useColoredTitleBar,
+                windowHandle, useColoredTitleBar,
                 rootPane, titleVisible, titleBarHeight, titleFontSize);
     }
 
@@ -87,8 +84,8 @@ public final class MacOSDecorationsUtil {
             // change it's size.
             Rectangle bounds = window.getBounds();
             JNIDecorationsMacOS.uninstallDecorations(information.windowHandle,
-                    information.fullWindowContentEnabled,
-                    information.transparentTitleBarEnabled);
+                    isFullWindowContentEnabled(information.rootPane),
+                    isTransparentTitleBarEnabled(information.rootPane));
             window.setBounds(bounds);
         }
         JNIDecorationsMacOS.setTitleEnabled(information.windowHandle, true);
@@ -99,7 +96,7 @@ public final class MacOSDecorationsUtil {
         return PropertyUtil.getBooleanProperty(rootPane, FULL_WINDOW_CONTENT_KEY);
     }
 
-    private static boolean isTransparentTitleBarEnabled(final JRootPane rootPane) {
+    static boolean isTransparentTitleBarEnabled(final JRootPane rootPane) {
         return PropertyUtil.getBooleanProperty(rootPane, TRANSPARENT_TITLE_BAR_KEY);
     }
 }

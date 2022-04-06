@@ -21,12 +21,15 @@
 package com.github.weisj.darklaf.platform.decorations;
 
 import java.awt.*;
+import java.util.function.Function;
 import java.util.logging.Logger;
 
 import javax.swing.*;
 
 import com.github.weisj.darklaf.platform.CustomTitlePane;
+import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.util.LogUtil;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 class NativeDecorationsRootLayout implements LayoutManager2 {
 
@@ -52,8 +55,7 @@ class NativeDecorationsRootLayout implements LayoutManager2 {
         return root.getJMenuBar() != null && root.getJMenuBar().getParent() == root.getLayeredPane();
     }
 
-    @Override
-    public Dimension preferredLayoutSize(final Container parent) {
+    private Dimension calculateLayoutSize(final Container parent, final Function<Container, Dimension> measure) {
         Dimension cpd, mbd, tpd;
         int cpWidth = 0;
         int cpHeight = 0;
@@ -67,80 +69,50 @@ class NativeDecorationsRootLayout implements LayoutManager2 {
         CustomTitlePane titlePane = getTitlePane(root);
 
         if (root.getContentPane() != null) {
-            cpd = root.getContentPane().getPreferredSize();
+            cpd = measure.apply(root.getContentPane());
         } else {
             cpd = root.getSize();
         }
-        LOGGER.finer("[PrefSize] JRootPane content size: " + cpd);
+        LOGGER.finer("JRootPane content size: " + cpd);
+
         if (cpd != null) {
             cpWidth = cpd.width;
             cpHeight = cpd.height;
         }
 
         if (hasValidMenuBar(root)) {
-            mbd = root.getJMenuBar().getPreferredSize();
+            mbd = measure.apply(root.getJMenuBar());
             if (mbd != null) {
                 mbWidth = mbd.width;
                 mbHeight = mbd.height;
             }
         }
 
-        if (titlePane != null) {
-            tpd = titlePane.getPreferredSize();
+        if (titlePane != null && shouldDisplayTitlePane(root)) {
+            tpd = measure.apply(titlePane);
             if (tpd != null) {
                 tpWidth = tpd.width;
                 tpHeight = tpd.height;
             }
-            LOGGER.finer("[PrefSize] JRootPane titlePane size: " + tpd);
+            LOGGER.finer("JRootPane titlePane size: " + tpd);
         }
 
-        return new Dimension(Math.max(Math.max(cpWidth, mbWidth), tpWidth) + i.left + i.right,
-                cpHeight + mbHeight + tpHeight + i.top + i.bottom);
+        int totalWidth = Math.max(Math.max(cpWidth, mbWidth), tpWidth);
+        int totalHeight = shouldLayerTitlePane(root)
+                ? Math.max(cpHeight + mbHeight, tpHeight)
+                : cpHeight + mbHeight + tpHeight;
+
+        return new Dimension(totalWidth + i.left + i.right, totalHeight + i.top + i.bottom);
+    }
+
+    @Override
+    public Dimension preferredLayoutSize(final Container parent) {
+        return calculateLayoutSize(parent, Container::getPreferredSize);
     }
 
     @Override
     public Dimension minimumLayoutSize(final Container parent) {
-        Dimension cpd, mbd, tpd;
-        int cpWidth = 0;
-        int cpHeight = 0;
-        int mbWidth = 0;
-        int mbHeight = 0;
-        int tpWidth = 0;
-        int tpHeight = 0;
-        Insets i = parent.getInsets();
-        JRootPane root = (JRootPane) parent;
-        CustomTitlePane titlePane = getTitlePane(root);
-
-        if (root.getContentPane() != null) {
-            cpd = root.getContentPane().getMinimumSize();
-        } else {
-            cpd = root.getSize();
-        }
-        LOGGER.finer("[MinSize] JRootPane content size: " + cpd);
-        if (cpd != null) {
-            cpWidth = cpd.width;
-            cpHeight = cpd.height;
-        }
-
-        if (hasValidMenuBar(root)) {
-            mbd = root.getJMenuBar().getMinimumSize();
-            if (mbd != null) {
-                mbWidth = mbd.width;
-                mbHeight = mbd.height;
-            }
-        }
-
-        if (titlePane != null) {
-            tpd = titlePane.getMinimumSize();
-            if (tpd != null) {
-                tpWidth = tpd.width;
-                tpHeight = tpd.height;
-            }
-            LOGGER.finer("[MinSize] JRootPane titlePane size: " + tpd);
-        }
-
-        return new Dimension(Math.max(Math.max(cpWidth, mbWidth), tpWidth) + i.left + i.right,
-                cpHeight + mbHeight + tpHeight + i.top + i.bottom);
+        return calculateLayoutSize(parent, Container::getMinimumSize);
     }
 
     protected CustomTitlePane getTitlePane(final JRootPane root) {
@@ -180,7 +152,9 @@ class NativeDecorationsRootLayout implements LayoutManager2 {
             if (tpd != null) {
                 int tpHeight = tpd.height;
                 titlePane.setBounds(x, y, w, tpHeight);
-                nextY += tpHeight;
+                if (!shouldLayerTitlePane(root)) {
+                    nextY += tpHeight;
+                }
             }
         }
         if (hasValidMenuBar(root)) {
@@ -198,12 +172,11 @@ class NativeDecorationsRootLayout implements LayoutManager2 {
         Dimension cpd, mbd, tpd;
         int cpWidth = Integer.MAX_VALUE;
         int cpHeight = Integer.MAX_VALUE;
-        int mbWidth = Integer.MAX_VALUE;
         int mbHeight = Integer.MAX_VALUE;
-        int tpWidth = Integer.MAX_VALUE;
         int tpHeight = Integer.MAX_VALUE;
         Insets i = target.getInsets();
         JRootPane root = (JRootPane) target;
+        JComponent titlePane = ui.titlePane();
 
         if (root.getContentPane() != null) {
             cpd = root.getContentPane().getMaximumSize();
@@ -216,34 +189,38 @@ class NativeDecorationsRootLayout implements LayoutManager2 {
         if (hasValidMenuBar(root)) {
             mbd = root.getJMenuBar().getMaximumSize();
             if (mbd != null) {
-                mbWidth = mbd.width;
                 mbHeight = mbd.height;
             }
         }
 
-        if ((root.getWindowDecorationStyle() != JRootPane.NONE)) {
-            JComponent titlePane = ui.titlePane();
-            if (titlePane != null) {
-                tpd = titlePane.getMaximumSize();
-                if (tpd != null) {
-                    tpWidth = tpd.width;
-                    tpHeight = tpd.height;
-                }
+        if (titlePane != null && shouldDisplayTitlePane(root)) {
+            tpd = titlePane.getMaximumSize();
+            if (tpd != null) {
+                tpHeight = tpd.height;
             }
         }
 
-        int maxHeight = Math.max(Math.max(cpHeight, mbHeight), tpHeight);
-        if (maxHeight != Integer.MAX_VALUE) {
-            maxHeight = cpHeight + mbHeight + tpHeight + i.top + i.bottom;
+        int totalWidth = cpWidth;
+        if (totalWidth != Integer.MAX_VALUE) {
+            totalWidth += i.left + i.right;
         }
 
-        int maxWidth = Math.max(Math.max(cpWidth, mbWidth), tpWidth);
-
-        if (maxWidth != Integer.MAX_VALUE) {
-            maxWidth += i.left + i.right;
+        int totalHeight = cpHeight;
+        if (totalHeight < Integer.MAX_VALUE) {
+            if (tpHeight < Integer.MAX_VALUE && !shouldLayerTitlePane(root)) totalHeight += tpHeight;
+            if (mbHeight < Integer.MAX_VALUE) totalHeight += mbHeight;
+            totalHeight += i.top + i.bottom;
         }
 
-        return new Dimension(maxWidth, maxHeight);
+        return new Dimension(totalWidth, totalHeight);
+    }
+
+    private boolean shouldDisplayTitlePane(final JRootPane root) {
+        return root.getWindowDecorationStyle() != JRootPane.NONE;
+    }
+
+    private boolean shouldLayerTitlePane(final JRootPane root) {
+        return SystemInfo.isMac && PropertyUtil.getBooleanProperty(root, "apple.awt.fullWindowContent");
     }
 
     @Override

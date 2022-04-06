@@ -61,6 +61,7 @@ public class MacOSTitlePane extends CustomTitlePane {
         this.window = window;
         determineColors();
         updateTitleBarVisibility();
+        updateOpacity();
     }
 
     protected void determineColors() {
@@ -100,15 +101,18 @@ public class MacOSTitlePane extends CustomTitlePane {
 
     @Override
     public void paintComponent(final Graphics g) {
-        Window window = getWindow();
-        boolean active = window == null || window.isActive();
         int width = getWidth();
         int height = getHeight();
 
-        Color background = active ? activeBackground : inactiveBackground;
+        if (isOpaque()) {
+            Window window = getWindow();
+            boolean active = window == null || window.isActive();
 
-        g.setColor(background);
-        g.fillRect(0, 0, width, height);
+            Color background = active ? activeBackground : inactiveBackground;
+
+            g.setColor(background);
+            g.fillRect(0, 0, width, height);
+        }
 
         if (!hideTitleBar()) {
             g.setColor(border);
@@ -202,6 +206,9 @@ public class MacOSTitlePane extends CustomTitlePane {
             } else if (DecorationsConstants.KEY_COLORED_TITLE_BAR.equals(evt.getPropertyName())) {
                 uninstall(false);
                 install();
+            } else if (MacOSDecorationsUtil.TRANSPARENT_TITLE_BAR_KEY.equals(evt.getPropertyName())) {
+                updateOpacity();
+                repaint();
             }
         }
     }
@@ -245,15 +252,23 @@ public class MacOSTitlePane extends CustomTitlePane {
                 || getDecorationStyle() == JRootPane.NONE;
     }
 
-
     private void updateTitleBarVisibility() {
         titleBarHidden = PropertyUtil.getBooleanProperty(rootPane, DecorationsConstants.KEY_HIDE_TITLEBAR);
         rootPane.doLayout();
         rootPane.repaint();
     }
 
+    private void updateOpacity() {
+        setOpaque(PropertyUtil.getBooleanProperty(rootPane, MacOSDecorationsUtil.TRANSPARENT_TITLE_BAR_KEY));
+    }
+
     private boolean useCustomTitle() {
         return titleLabel != null && decorationInformation != null && !decorationInformation.titleVisible;
+    }
+
+    @Override
+    public boolean contains(int x, int y) {
+        return !titleBarHidden && isOpaque() && super.contains(x, y);
     }
 
     @Override
