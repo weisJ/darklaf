@@ -32,9 +32,7 @@ import java.awt.Window;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.swing.JComponent;
-import javax.swing.JLayeredPane;
-import javax.swing.RootPaneContainer;
+import javax.swing.*;
 
 import com.github.weisj.darklaf.graphics.Animator;
 import com.github.weisj.darklaf.graphics.DefaultInterpolator;
@@ -77,6 +75,8 @@ class LafTransition {
             for (Window window : windows) {
                 if (window instanceof RootPaneContainer && window.isShowing()) {
                     RootPaneContainer rootPaneContainer = (RootPaneContainer) window;
+                    JRootPane rootPane = rootPaneContainer.getRootPane();
+                    if (rootPane.getWidth() == 0 || rootPane.getHeight() == 0) continue;
                     Image img = ImageUtil.scaledImageFromComponent(rootPaneContainer.getRootPane());
                     JLayeredPane layeredPane = rootPaneContainer.getLayeredPane();
                     JComponent imageLayer = new ImageLayer(layeredPane, img, sharedAlpha);
