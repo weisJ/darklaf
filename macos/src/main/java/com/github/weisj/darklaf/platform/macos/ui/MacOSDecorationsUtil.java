@@ -36,8 +36,7 @@ public final class MacOSDecorationsUtil {
     private static final String FULL_WINDOW_CONTENT_KEY = "apple.awt.fullWindowContent";
     static final String TRANSPARENT_TITLE_BAR_KEY = "apple.awt.transparentTitleBar";
 
-    static DecorationInformation installDecorations(final JRootPane rootPane,
-            final boolean useColoredTitleBar) {
+    static DecorationInformation installDecorations(final JRootPane rootPane, final boolean useColoredTitleBar) {
         if (rootPane == null) {
             return null;
         }

@@ -104,13 +104,16 @@ public class MacOSTitlePane extends CustomTitlePane {
         int width = getWidth();
         int height = getHeight();
 
+        LOGGER.warning("IsOpaque: " + isOpaque());
         if (isOpaque()) {
             Window window = getWindow();
             boolean active = window == null || window.isActive();
 
             Color background = active ? activeBackground : inactiveBackground;
 
-            g.setColor(background);
+            LOGGER.warning("Background: " + background);
+
+            g.setColor(Color.RED);
             g.fillRect(0, 0, width, height);
         }
 
