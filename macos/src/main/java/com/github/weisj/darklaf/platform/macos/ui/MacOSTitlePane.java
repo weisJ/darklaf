@@ -262,7 +262,7 @@ public class MacOSTitlePane extends CustomTitlePane {
     }
 
     private void updateOpacity() {
-        setOpaque(PropertyUtil.getBooleanProperty(rootPane, MacOSDecorationsUtil.TRANSPARENT_TITLE_BAR_KEY));
+        setOpaque(!PropertyUtil.getBooleanProperty(rootPane, MacOSDecorationsUtil.TRANSPARENT_TITLE_BAR_KEY));
     }
 
     private boolean useCustomTitle() {
