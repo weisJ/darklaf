@@ -486,11 +486,11 @@ public class WindowsTitlePane extends CustomTitlePane {
 
             g.setColor(background);
             g.fillRect(0, 0, width, height);
-        }
 
-        if (isDrawBorder()) {
-            g.setColor(border);
-            g.fillRect(0, height - 1, width, 1);
+            if (isDrawBorder()) {
+                g.setColor(border);
+                g.fillRect(0, height - 1, width, 1);
+            }
         }
 
         GraphicsConfiguration currentGC = getGraphicsConfiguration();

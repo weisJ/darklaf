@@ -101,18 +101,18 @@ public class MacOSTitlePane extends CustomTitlePane {
 
     @Override
     public void paintComponent(final Graphics g) {
+        if (!isOpaque()) return;
+        
         int width = getWidth();
         int height = getHeight();
 
-        if (isOpaque()) {
-            Window window = getWindow();
-            boolean active = window == null || window.isActive();
+        Window window = getWindow();
+        boolean active = window == null || window.isActive();
 
-            Color background = active ? activeBackground : inactiveBackground;
+        Color background = active ? activeBackground : inactiveBackground;
 
-            g.setColor(background);
-            g.fillRect(0, 0, width, height);
-        }
+        g.setColor(background);
+        g.fillRect(0, 0, width, height);
 
         if (!hideTitleBar()) {
             g.setColor(border);
