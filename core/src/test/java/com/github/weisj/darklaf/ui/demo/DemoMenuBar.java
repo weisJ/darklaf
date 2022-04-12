@@ -43,6 +43,7 @@ import org.jetbrains.annotations.NotNull;
 
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.graphics.StringPainter;
+import com.github.weisj.darklaf.platform.DecorationsConstants;
 import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.settings.ThemeSettingsMenuItem;
 import com.github.weisj.darklaf.theme.event.ThemeInstalledListener;
@@ -127,6 +128,13 @@ public class DemoMenuBar extends JMenuBar {
             {
                 setSelected(LafManager.isDecorationsEnabled());
                 addActionListener(e -> LafManager.setDecorationsEnabled(isSelected()));
+            }
+        });
+        dev.add(new JCheckBoxMenuItem("Title visible") {
+            {
+                setSelected(true);
+                addActionListener(e -> SwingUtilities.getRootPane(dev).putClientProperty(
+                        DecorationsConstants.KEY_HIDE_TITLE, !isSelected()));
             }
         });
         if (SystemInfo.isWindows) {
