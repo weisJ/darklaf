@@ -155,3 +155,29 @@ JNF_COCOA_ENTER(env);
     }];
 JNF_COCOA_EXIT(env);
 }
+
+NSRect join(NSRect r, NSButton* button) {
+    NSRect buttonRect = [button convertRect: [button bounds] toView: nil];
+    return NSUnionRect(r, buttonRect);
+}
+
+JNIEXPORT jfloatArray JNICALL
+Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_windowButtonRect(JNIEnv *env, jclass, jlong hwnd) {
+JNF_COCOA_ENTER(env);
+    NSWindow *nsWindow = OBJC(hwnd);
+    NSButton *closeButton = [nsWindow standardWindowButton: NSWindowCloseButton];
+    NSButton *minimizeButton = [nsWindow standardWindowButton: NSWindowMiniaturizeButton];
+    NSButton *zoomButton = [nsWindow standardWindowButton: NSWindowZoomButton];
+
+    NSRect rect = NSMakeRect(0, 0, -1, -1);
+    if (closeButton) rect = join(rect, closeButton);
+    if (minimizeButton) rect = join(rect, minimizeButton);
+    if (zoomButton) rect = join(rect, zoomButton);
+
+    jfloatArray bounds = env->NewFloatArray(4);
+    jfloat rawBounds[4] = {rect.origin.x, rect.origin.y, rect.size.width, rect.size.height};
+    env->SetFloatArrayRegion(bounds, 0, 0, rawBounds);
+
+    return bounds;
+JNF_COCOA_EXIT(env);
+}

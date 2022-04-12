@@ -24,10 +24,12 @@ import java.awt.*;
 import java.util.Properties;
 
 import javax.swing.*;
+import javax.swing.plaf.RootPaneUI;
 
 import com.github.weisj.darklaf.platform.CustomTitlePane;
 import com.github.weisj.darklaf.platform.DecorationsProvider;
 import com.github.weisj.darklaf.platform.SystemInfo;
+import com.github.weisj.darklaf.platform.TitlePaneLayoutInfo;
 import com.github.weisj.darklaf.platform.macos.MacOSDecorationsProvider;
 import com.github.weisj.darklaf.platform.windows.WindowsDecorationsProvider;
 import com.github.weisj.darklaf.properties.PropertyLoader;
@@ -113,5 +115,11 @@ public class NativeDecorationsManager {
 
     public boolean supportsNativeTitleText() {
         return decorationsProvider.supportsNativeTitleLabel();
+    }
+
+    public TitlePaneLayoutInfo titlePaneLayoutInfo(final RootPaneContainer frameOrDialog) {
+        RootPaneUI ui = frameOrDialog.getRootPane().getUI();
+        if (!(ui instanceof AbstractNativeDecorationsRootPaneUI)) throw new IllegalStateException();
+        return decorationsProvider.titlePaneLayoutInfo(((AbstractNativeDecorationsRootPaneUI) ui).titlePane());
     }
 }
