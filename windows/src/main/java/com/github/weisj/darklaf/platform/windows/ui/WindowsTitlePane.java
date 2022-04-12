@@ -26,6 +26,7 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 import javax.accessibility.AccessibleContext;
@@ -687,6 +688,20 @@ public class WindowsTitlePane extends CustomTitlePane {
             tracker.waitForAll();
         } catch (final InterruptedException ignored) {
         }
+    }
+
+    public Rectangle windowButtonRect() {
+        Rectangle rect = new Rectangle(0, 0, -1, -1);
+        if (hideTitleBar()) return rect;
+        Consumer<JComponent> joinRect = c -> {
+            if (c != null && c.isVisible()) {
+                rect.setBounds(rect.union(c.getBounds()));
+            }
+        };
+        joinRect.accept(closeButton);
+        joinRect.accept(maximizeToggleButton);
+        joinRect.accept(minimizeButton);
+        return rect;
     }
 
     private abstract class TitlePaneAction extends AbstractAction {

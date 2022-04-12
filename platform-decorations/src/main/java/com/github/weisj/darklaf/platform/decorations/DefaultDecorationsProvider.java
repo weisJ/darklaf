@@ -28,6 +28,7 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.platform.CustomTitlePane;
 import com.github.weisj.darklaf.platform.DecorationsProvider;
+import com.github.weisj.darklaf.platform.TitlePaneLayoutInfo;
 
 class DefaultDecorationsProvider implements DecorationsProvider {
 
@@ -59,4 +60,8 @@ class DefaultDecorationsProvider implements DecorationsProvider {
         return Collections.emptyList();
     }
 
+    @Override
+    public TitlePaneLayoutInfo titlePaneLayoutInfo(final CustomTitlePane customTitlePane) {
+        return new TitlePaneLayoutInfo(new Rectangle());
+    }
 }

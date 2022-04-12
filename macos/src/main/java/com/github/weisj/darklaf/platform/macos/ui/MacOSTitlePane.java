@@ -198,6 +198,10 @@ public class MacOSTitlePane extends CustomTitlePane {
         return new RootPanePropertyChangeListener();
     }
 
+    public long windowHandle() {
+        return decorationInformation.windowHandle;
+    }
+
     protected class RootPanePropertyChangeListener implements PropertyChangeListener {
 
         @Override

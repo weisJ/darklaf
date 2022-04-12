@@ -27,10 +27,7 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.Border;
 
-import com.github.weisj.darklaf.platform.CustomTitlePane;
-import com.github.weisj.darklaf.platform.DecorationsProvider;
-import com.github.weisj.darklaf.platform.SystemInfo;
-import com.github.weisj.darklaf.platform.UnsupportedProviderException;
+import com.github.weisj.darklaf.platform.*;
 import com.github.weisj.darklaf.platform.windows.ui.WindowsTitlePane;
 
 public class WindowsDecorationsProvider implements DecorationsProvider {
@@ -94,6 +91,13 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
             rect.x -= ins.left;
             rect.y -= ins.top;
         }
+    }
+
+    @Override
+    public TitlePaneLayoutInfo titlePaneLayoutInfo(final CustomTitlePane customTitlePane) {
+        if (!(customTitlePane instanceof WindowsTitlePane)) throw new IllegalStateException();
+        WindowsTitlePane titlePane = (WindowsTitlePane) customTitlePane;
+        return new TitlePaneLayoutInfo(titlePane.windowButtonRect());
     }
 
     @Override

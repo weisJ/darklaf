@@ -26,10 +26,7 @@ import java.util.List;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.platform.CustomTitlePane;
-import com.github.weisj.darklaf.platform.DecorationsProvider;
-import com.github.weisj.darklaf.platform.SystemInfo;
-import com.github.weisj.darklaf.platform.UnsupportedProviderException;
+import com.github.weisj.darklaf.platform.*;
 import com.github.weisj.darklaf.platform.macos.ui.MacOSTitlePane;
 
 public class MacOSDecorationsProvider implements DecorationsProvider {
@@ -64,5 +61,14 @@ public class MacOSDecorationsProvider implements DecorationsProvider {
     @Override
     public boolean supportsNativeTitleLabel() {
         return SystemInfo.isMacOSMojave;
+    }
+
+    @Override
+    public TitlePaneLayoutInfo titlePaneLayoutInfo(final CustomTitlePane customTitlePane) {
+        if (!(customTitlePane instanceof MacOSTitlePane)) throw new IllegalStateException();
+        long hwnd = ((MacOSTitlePane) customTitlePane).windowHandle();
+        if (hwnd == 0) return new TitlePaneLayoutInfo(new Rectangle(0, 0, -1, -1));
+        float[] b = JNIDecorationsMacOS.windowButtonRect(((MacOSTitlePane) customTitlePane).windowHandle());
+        return new TitlePaneLayoutInfo(new Rectangle((int) b[0], (int) b[1], (int) b[2], (int) b[3]));
     }
 }

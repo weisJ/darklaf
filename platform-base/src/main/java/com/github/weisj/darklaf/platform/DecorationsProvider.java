@@ -77,4 +77,12 @@ public interface DecorationsProvider {
     default boolean supportsNativeTitleLabel() {
         return false;
     }
+
+    /**
+     * Compute the layout information for the title pane.
+     *
+     * @param customTitlePane the given title pane
+     * @return information about the layout of the title pane
+     */
+    TitlePaneLayoutInfo titlePaneLayoutInfo(final CustomTitlePane customTitlePane);
 }
