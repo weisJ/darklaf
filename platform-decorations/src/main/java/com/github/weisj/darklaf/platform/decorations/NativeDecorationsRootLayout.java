@@ -88,7 +88,7 @@ class NativeDecorationsRootLayout implements LayoutManager2 {
             }
         }
 
-        if (titlePane != null && shouldDisplayTitlePane(root)) {
+        if (titlePane != null && shouldDisplayTitlePane(titlePane)) {
             tpd = measure.apply(titlePane);
             if (tpd != null) {
                 tpWidth = tpd.width;
@@ -176,7 +176,7 @@ class NativeDecorationsRootLayout implements LayoutManager2 {
         int tpHeight = Integer.MAX_VALUE;
         Insets i = target.getInsets();
         JRootPane root = (JRootPane) target;
-        JComponent titlePane = ui.titlePane();
+        CustomTitlePane titlePane = ui.titlePane();
 
         if (root.getContentPane() != null) {
             cpd = root.getContentPane().getMaximumSize();
@@ -193,7 +193,7 @@ class NativeDecorationsRootLayout implements LayoutManager2 {
             }
         }
 
-        if (titlePane != null && shouldDisplayTitlePane(root)) {
+        if (titlePane != null && shouldDisplayTitlePane(titlePane)) {
             tpd = titlePane.getMaximumSize();
             if (tpd != null) {
                 tpHeight = tpd.height;
@@ -215,8 +215,8 @@ class NativeDecorationsRootLayout implements LayoutManager2 {
         return new Dimension(totalWidth, totalHeight);
     }
 
-    private boolean shouldDisplayTitlePane(final JRootPane root) {
-        return root.getWindowDecorationStyle() != JRootPane.NONE;
+    private boolean shouldDisplayTitlePane(final CustomTitlePane customTitlePane) {
+        return customTitlePane.getDecorationStyle() != JRootPane.NONE;
     }
 
     private boolean shouldLayerTitlePane(final JRootPane root) {
