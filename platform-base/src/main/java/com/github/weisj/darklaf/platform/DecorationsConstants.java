@@ -27,4 +27,5 @@ public interface DecorationsConstants {
     String KEY_NO_DECORATIONS = "JRootPane.noDecorations";
     String KEY_UNIFIED_MENUBAR = "JRootPane.unifiedMenuBar";
     String KEY_COLORED_TITLE_BAR = "JRootPane.coloredTitleBar";
+    String KEY_HIDE_TITLE = "JRootPane.hideTitle";
 }

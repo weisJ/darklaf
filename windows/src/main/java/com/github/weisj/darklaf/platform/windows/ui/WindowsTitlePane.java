@@ -124,6 +124,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         installSubcomponents();
         menuBarStealer.install();
         updateTitleBarVisibility();
+        updateTitleVisibility();
         installDefaults();
         setLayout(createLayout());
         setOpaque(true);
@@ -133,6 +134,12 @@ public class WindowsTitlePane extends CustomTitlePane {
         titleBarHidden = PropertyUtil.getBooleanProperty(rootPane, DecorationsConstants.KEY_HIDE_TITLEBAR);
         rootPane.doLayout();
         rootPane.repaint();
+    }
+
+    private void updateTitleVisibility() {
+        titleLabel.setVisible(!PropertyUtil.getBooleanProperty(rootPane, DecorationsConstants.KEY_HIDE_TITLE));
+        doLayout();
+        repaint();
     }
 
     private TitleBarButton createButton(final Icon icon, final Action action) {
@@ -953,6 +960,8 @@ public class WindowsTitlePane extends CustomTitlePane {
                 menuBarStealer.updateMenuBar(true);
             } else if (DecorationsConstants.KEY_HIDE_TITLEBAR.equals(evt.getPropertyName())) {
                 updateTitleBarVisibility();
+            } else if (DecorationsConstants.KEY_HIDE_TITLE.equals(evt.getPropertyName())) {
+                updateTitleVisibility();
             }
         }
     }

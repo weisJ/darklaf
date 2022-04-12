@@ -58,7 +58,7 @@ public final class MacOSDecorationsUtil {
         setFullSizeContent(windowHandle, useColoredTitleBar);
 
         boolean titleVisible = SystemInfo.isMacOSMojave && !UIManager.getBoolean("Theme.macos.useSwingTitleLabel");
-        JNIDecorationsMacOS.setTitleEnabled(windowHandle, titleVisible);
+        setTitleVisible(windowHandle, titleVisible);
         if (titleVisible) {
             boolean isDarkTheme = UIManager.getBoolean("Theme.dark");
             JNIDecorationsMacOS.setDarkTheme(windowHandle, isDarkTheme);
@@ -88,7 +88,7 @@ public final class MacOSDecorationsUtil {
                     isTransparentTitleBarEnabled(information.rootPane));
             window.setBounds(bounds);
         }
-        JNIDecorationsMacOS.setTitleEnabled(information.windowHandle, true);
+        setTitleVisible(information, true);
         JNIDecorationsMacOS.releaseWindow(information.windowHandle);
     }
 
@@ -98,5 +98,13 @@ public final class MacOSDecorationsUtil {
 
     static boolean isTransparentTitleBarEnabled(final JRootPane rootPane) {
         return PropertyUtil.getBooleanProperty(rootPane, TRANSPARENT_TITLE_BAR_KEY);
+    }
+
+    static void setTitleVisible(final DecorationInformation decorationInformation, final boolean visible) {
+        setTitleVisible(decorationInformation.windowHandle, visible);
+    }
+
+    private static void setTitleVisible(final long windowHandle, boolean visible) {
+        JNIDecorationsMacOS.setTitleEnabled(windowHandle, visible);
     }
 }

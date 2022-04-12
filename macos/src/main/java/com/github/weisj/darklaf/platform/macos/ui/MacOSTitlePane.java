@@ -61,6 +61,7 @@ public class MacOSTitlePane extends CustomTitlePane {
         this.window = window;
         determineColors();
         updateTitleBarVisibility();
+        updateTitleVisibility();
         updateOpacity();
     }
 
@@ -102,7 +103,7 @@ public class MacOSTitlePane extends CustomTitlePane {
     @Override
     public void paintComponent(final Graphics g) {
         if (!isOpaque()) return;
-        
+
         int width = getWidth();
         int height = getHeight();
 
@@ -209,6 +210,8 @@ public class MacOSTitlePane extends CustomTitlePane {
             } else if (MacOSDecorationsUtil.TRANSPARENT_TITLE_BAR_KEY.equals(evt.getPropertyName())) {
                 updateOpacity();
                 repaint();
+            } else if (DecorationsConstants.KEY_HIDE_TITLE.equals(evt.getPropertyName())) {
+                updateTitleVisibility();
             }
         }
     }
@@ -256,6 +259,17 @@ public class MacOSTitlePane extends CustomTitlePane {
         titleBarHidden = PropertyUtil.getBooleanProperty(rootPane, DecorationsConstants.KEY_HIDE_TITLEBAR);
         rootPane.doLayout();
         rootPane.repaint();
+    }
+
+    private void updateTitleVisibility() {
+        boolean visible = PropertyUtil.getBooleanProperty(rootPane, DecorationsConstants.KEY_HIDE_TITLE);
+        if (titleLabel != null) {
+            titleLabel.setVisible(visible);
+            doLayout();
+            repaint();
+        } else {
+            MacOSDecorationsUtil.setTitleVisible(decorationInformation, visible);
+        }
     }
 
     private void updateOpacity() {
