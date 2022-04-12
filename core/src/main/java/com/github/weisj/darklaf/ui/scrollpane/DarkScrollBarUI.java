@@ -172,7 +172,6 @@ public class DarkScrollBarUI extends BasicScrollBarUI implements ScrollBarConsta
     }
 
     protected void paintMaxiThumb(final Graphics2D g, final Rectangle rect) {
-        System.out.println(rect);
         g.setComposite(COMPOSITE.derive(thumbAlpha));
         g.setColor(getThumbBorderColor());
         PaintUtil.drawRect(g, rect.x, rect.y, rect.width, rect.height, 1);
