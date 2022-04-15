@@ -140,6 +140,7 @@ public class MacOSTitlePane extends CustomTitlePane {
             titleLabel.setText(getTitle());
             add(titleLabel);
         }
+        updateTitleVisibility();
     }
 
     private boolean isUseColoredTitleBar(final JRootPane rootPane) {

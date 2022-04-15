@@ -101,6 +101,7 @@ public final class MacOSDecorationsUtil {
     }
 
     static void setTitleVisible(final DecorationInformation decorationInformation, final boolean visible) {
+        if (decorationInformation == null) return;
         setTitleVisible(decorationInformation.windowHandle, visible);
     }
 
