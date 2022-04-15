@@ -174,9 +174,13 @@ JNF_COCOA_ENTER(env);
     if (minimizeButton) rect = join(rect, minimizeButton);
     if (zoomButton) rect = join(rect, zoomButton);
 
+    if (rect.size.width >= 0 && rect.size.height >= 0) {
+        rect.origin.y = nsWindow.contentView.bounds.size.height - (rect.origin.y + rect.size.height);
+    }
+
     jfloatArray bounds = env->NewFloatArray(4);
     jfloat rawBounds[4] = {rect.origin.x, rect.origin.y, rect.size.width, rect.size.height};
-    env->SetFloatArrayRegion(bounds, 0, 0, rawBounds);
+    env->SetFloatArrayRegion(bounds, 0, 4, rawBounds);
 
     return bounds;
 JNF_COCOA_EXIT(env);
