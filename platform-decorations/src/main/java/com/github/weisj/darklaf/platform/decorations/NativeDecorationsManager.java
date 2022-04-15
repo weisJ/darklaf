@@ -117,9 +117,13 @@ public class NativeDecorationsManager {
         return decorationsProvider.supportsNativeTitleLabel();
     }
 
-    public TitlePaneLayoutInfo titlePaneLayoutInfo(final RootPaneContainer frameOrDialog) {
-        RootPaneUI ui = frameOrDialog.getRootPane().getUI();
+    public TitlePaneLayoutInfo titlePaneLayoutInfo(final JRootPane rootPane) {
+        RootPaneUI ui = rootPane.getUI();
         if (!(ui instanceof AbstractNativeDecorationsRootPaneUI)) throw new IllegalStateException();
         return decorationsProvider.titlePaneLayoutInfo(((AbstractNativeDecorationsRootPaneUI) ui).titlePane());
+    }
+
+    public TitlePaneLayoutInfo titlePaneLayoutInfo(final RootPaneContainer frameOrDialog) {
+        return titlePaneLayoutInfo(frameOrDialog.getRootPane());
     }
 }
