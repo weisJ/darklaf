@@ -24,8 +24,8 @@
  */
 module darklaf.platform.decorations {
     requires transitive java.desktop;
+    requires transitive darklaf.platform.base;
     requires darklaf.properties;
-    requires darklaf.platform.base;
     requires darklaf.platform.windows;
     requires darklaf.platform.macos;
 

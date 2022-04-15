@@ -4,8 +4,8 @@ plugins {
 }
 
 dependencies {
+    api(projects.darklafPlatformBase)
     implementation(projects.darklafPropertyLoader)
-    implementation(projects.darklafPlatformBase)
     implementation(projects.darklafWindows)
     implementation(projects.darklafMacos)
 }
