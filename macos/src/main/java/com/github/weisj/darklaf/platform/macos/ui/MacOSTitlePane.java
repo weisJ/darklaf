@@ -267,7 +267,7 @@ public class MacOSTitlePane extends CustomTitlePane {
     }
 
     private void updateTitleVisibility() {
-        boolean visible = PropertyUtil.getBooleanProperty(rootPane, DecorationsConstants.KEY_HIDE_TITLE);
+        boolean visible = !PropertyUtil.getBooleanProperty(rootPane, DecorationsConstants.KEY_HIDE_TITLE);
         if (titleLabel != null) {
             titleLabel.setVisible(visible);
             doLayout();
