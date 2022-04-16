@@ -67,7 +67,11 @@ public class MacOSDecorationsProvider implements DecorationsProvider {
     public TitlePaneLayoutInfo titlePaneLayoutInfo(final CustomTitlePane customTitlePane) {
         if (!(customTitlePane instanceof MacOSTitlePane)) throw new IllegalStateException();
         long hwnd = ((MacOSTitlePane) customTitlePane).windowHandle();
-        if (hwnd == 0) return new TitlePaneLayoutInfo(new Rectangle(0, 0, -1, -1));
+        if (hwnd == 0) {
+            throw new IllegalStateException(
+                    "Window isn't displayable (but has to in order to compute the title pane layout."
+                            + " If you need this information before the window is displayed call `frame.addNotify()` to make it displayable.");
+        }
         float[] b = JNIDecorationsMacOS.windowButtonRect(((MacOSTitlePane) customTitlePane).windowHandle());
         return new TitlePaneLayoutInfo(new Rectangle((int) b[0], (int) b[1], (int) b[2], (int) b[3]));
     }

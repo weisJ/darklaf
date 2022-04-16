@@ -200,7 +200,7 @@ public class MacOSTitlePane extends CustomTitlePane {
     }
 
     public long windowHandle() {
-        return decorationInformation.windowHandle;
+        return decorationInformation != null ? decorationInformation.windowHandle : 0;
     }
 
     protected class RootPanePropertyChangeListener implements PropertyChangeListener {

@@ -119,7 +119,8 @@ public class NativeDecorationsManager {
 
     public TitlePaneLayoutInfo titlePaneLayoutInfo(final JRootPane rootPane) {
         RootPaneUI ui = rootPane.getUI();
-        if (!(ui instanceof AbstractNativeDecorationsRootPaneUI)) throw new IllegalStateException();
+        if (!(ui instanceof AbstractNativeDecorationsRootPaneUI))
+            throw new IllegalStateException("UI is not of type " + AbstractNativeDecorationsRootPaneUI.class);
         return decorationsProvider.titlePaneLayoutInfo(((AbstractNativeDecorationsRootPaneUI) ui).titlePane());
     }
 
