@@ -174,7 +174,7 @@ Here is a list of things that currently are not finished or need refinement. Thi
   - `darklaf-native-utils` Loading of native libraries.
   - `darklaf-platform-base` Common classes for the platform modules.
   - `darklaf-platform-decorations` Standalone module to provide custom window decorations on macOS and Windows.
-  - `darklaf-platform-preferences` Standalone module to access and listen to changes to the system theme. 
+  - `darklaf-platform-preferences` Standalone module to access and listen to changes to the system theme.
   - `darklaf-windows` Code specific to Windows.
   - `darklaf-macos` Code specific to macOS.
   - `darklaf-compatiblity` Don't use this. It's only meant to encapsulate code not portable across JVM versions.
