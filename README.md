@@ -26,12 +26,12 @@ This project is available on Maven Central:
 <dependency>
   <groupId>com.github.weisj</groupId>
   <artifactId>darklaf-core</artifactId>
-  <version>2.7.2</version>
+  <version>3.0.0</version>
 </dependency>
 ````
 ### Gradle
 ````kotlin
-implementation("com.github.weisj:darklaf-core:2.7.2")
+implementation("com.github.weisj:darklaf-core:3.0.0")
 ````
 
 You can also use the latest nightly build.
@@ -163,17 +163,22 @@ Here is a list of things that currently are not finished or need refinement. Thi
 
 # Artifacts
 - Group ID: `com.github.weisj`
-- Version: `2.7.2`
+- Version: `3.0.0`
 - Artifact IDs:
   - `darklaf-core` The LaF itself. Include this in your project to use the LaF. Includes all other artifacts.
   - `darklaf-iconset` The icons used by the laf.
   - `darklaf-theme` The themes to use with the LaF.
+  - `darklaf-theme-spec` Relevant classes needed to implement a custom theme.
   - `darklaf-property-loader` Library to load and parse property files and icon.
   - `darklaf-utils` Shared utility classes for other modules.
   - `darklaf-native-utils` Loading of native libraries.
   - `darklaf-platform-base` Common classes for the platform modules.
+  - `darklaf-platform-decorations` Standalone module to provide custom window decorations on macOS and Windows.
+  - `darklaf-platform-preferences` Standalone module to access and listen to changes to the system theme. 
   - `darklaf-windows` Code specific to Windows.
   - `darklaf-macos` Code specific to macOS.
+  - `darklaf-compatiblity` Don't use this. It's only meant to encapsulate code not portable across JVM versions.
+
 
 # Projects using Darklaf
 
