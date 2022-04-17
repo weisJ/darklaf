@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -46,6 +46,8 @@ import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.properties.icons.IconResolver;
 import com.github.weisj.darklaf.ui.cell.CellRenderer;
 import com.github.weisj.darklaf.ui.popupmenu.DarkPopupMenuUI;
+import com.github.weisj.darklaf.ui.popupmenu.MouseGrabber;
+import com.github.weisj.darklaf.ui.popupmenu.MouseGrabberUtil;
 import com.github.weisj.darklaf.ui.table.header.DarkTableHeaderRendererPane;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
@@ -223,7 +225,19 @@ public final class DarkUIUtil {
         if (owner == null) {
             owner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
         }
+        JPopupMenu popupMenu = getOpenPopupMenu();
+        if (popupMenu != null) {
+            owner = popupMenu.getInvoker();
+        }
         return owner != null && isDescendingFrom(owner, c, focusParent);
+    }
+
+    private static JPopupMenu getOpenPopupMenu() {
+        MouseGrabber grabber = MouseGrabberUtil.currentGrabber();
+        if (grabber == null) return null;
+        MenuElement menuElement = grabber.selectedElement();
+        if (menuElement == null) return null;
+        return getParentOfType(JPopupMenu.class, menuElement.getComponent(), 2);
     }
 
     private static boolean isDescendingFrom(final Component a, final Component b1, final Component b2) {

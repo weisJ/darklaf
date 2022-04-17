@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -46,6 +46,12 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
         if (this.lastPathSelected.length != 0) {
             grabWindow(this.lastPathSelected);
         }
+    }
+
+    public MenuElement selectedElement() {
+        if (lastPathSelected == null) return null;
+        if (lastPathSelected.length == 0) return null;
+        return lastPathSelected[lastPathSelected.length - 1];
     }
 
     protected void grabWindow(final MenuElement[] newPath) {
