@@ -34,6 +34,7 @@ import com.github.weisj.jsvg.attributes.paint.DefaultPaintParser;
 import com.github.weisj.jsvg.attributes.paint.SimplePaintSVGPaint;
 import com.github.weisj.jsvg.nodes.Defs;
 import com.github.weisj.jsvg.nodes.LinearGradient;
+import com.github.weisj.jsvg.nodes.SolidColor;
 import com.github.weisj.jsvg.parser.AttributeNode;
 import com.github.weisj.jsvg.parser.DefaultParserProvider;
 import com.github.weisj.jsvg.parser.DomProcessor;
@@ -62,30 +63,32 @@ public class ThemedSVGIconParserProvider extends DefaultParserProvider {
             super.process(root);
             for (ParsedElement child : root.children()) {
                 if ("colors".equals(child.id()) && child.node() instanceof Defs) {
-                    replaceGradients(child);
+                    replaceColorDefinitions(child);
                     return;
                 }
             }
         }
 
-        private void replaceGradients(final ParsedElement element) {
+        private void replaceColorDefinitions(final ParsedElement element) {
             for (ParsedElement child : element.children()) {
-                if (child.node() instanceof LinearGradient) {
-                    replaceSingleGradient(child);
+                if (child.node() instanceof LinearGradient || child.node() instanceof SolidColor) {
+                    replaceGradientColor(child, "opacity");
+                } else if (child.node() instanceof SolidColor) {
+                    replaceGradientColor(child, "solid-opacity");
                 }
             }
         }
 
-        private void replaceSingleGradient(final ParsedElement gradient) {
-            String id = gradient.id();
+        private void replaceGradientColor(final ParsedElement colorElement, final String opacityTag) {
+            String id = colorElement.id();
             if (id == null) return;
 
-            AttributeNode attributeNode = gradient.attributeNode();
+            AttributeNode attributeNode = colorElement.attributeNode();
             String[] fallbacks = attributeNode.getStringList("fallback");
-            String opacityKey = attributeNode.getValue("opacity");
+            String opacityKey = attributeNode.getValue(opacityTag);
             String[] opacityFallback = attributeNode.getStringList("opacity-fallback");
 
-            List<ParsedElement> stops = gradient.children();
+            List<ParsedElement> stops = colorElement.children();
             float originalOpacity = 1;
             if (!stops.isEmpty()) {
                 originalOpacity = stops.get(0).attributeNode().getPercentage("stop-opacity", originalOpacity);
@@ -94,7 +97,7 @@ public class ThemedSVGIconParserProvider extends DefaultParserProvider {
             ThemedSVGIconParserProvider.ThemedSolidColorPaint themedPaint =
                     new ThemedSVGIconParserProvider.ThemedSolidColorPaint(
                             id, fallbacks, opacityKey, opacityFallback, originalOpacity);
-            gradient.registerNamedElement(id, themedPaint);
+            colorElement.registerNamedElement(id, themedPaint);
             icon.registerPaint(themedPaint);
         }
     }
