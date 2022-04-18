@@ -27,6 +27,7 @@ import java.util.function.Consumer;
 
 import javax.swing.*;
 
+
 public final class DynamicUI {
 
     private static final Map<Object, List<Consumer<Object>>> listeners = new WeakHashMap<>();
@@ -65,6 +66,18 @@ public final class DynamicUI {
             });
         }
         return object;
+    }
+
+    public static <T> void removeCallback(final T object, final Consumer<T> callback) {
+        synchronized (listeners) {
+            listeners.compute(object, (k, v) -> {
+                if (v == null) return null;
+                if (!v.remove(callback)) return v;
+                if (v.size() == 0) return null;
+                if (v.size() == 1) return Collections.singletonList(v.get(0));
+                return v;
+            });
+        }
     }
 
     public static <T extends AbstractButton> T withLocalizedText(final T comp, final String textKey) {

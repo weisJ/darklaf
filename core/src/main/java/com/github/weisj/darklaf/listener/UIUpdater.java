@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -20,22 +20,18 @@
  */
 package com.github.weisj.darklaf.listener;
 
-import java.awt.*;
-import java.lang.ref.WeakReference;
+import java.util.function.Consumer;
 
 import javax.swing.*;
 
-import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.theme.event.ThemeChangeEvent;
-import com.github.weisj.darklaf.theme.event.ThemeChangeListener;
+import com.github.weisj.darklaf.components.DynamicUI;
 
 /**
- * Listener that updates the component ui after a new theme has been installed. This listener only
+ * Listener that updates the component ui after a new laf has been installed. This listener only
  * needs to be used with the top most component. This listener isn't needed for components that are
- * part of a visible ui hierarchy. The listener has to be added with
- * {@link LafManager#addThemeChangeListener(ThemeChangeListener)}
+ * part of a visible ui hierarchy.
  */
-public class UIUpdater implements ThemeChangeListener {
+public final class UIUpdater implements Consumer<JComponent> {
 
     private static final String KEY_UPDATER = "JComponent.uiUpdaterLister";
 
@@ -47,18 +43,18 @@ public class UIUpdater implements ThemeChangeListener {
     public static void registerComponent(final JComponent component) {
         if (component == null) return;
         removeComponent(component);
-        UIUpdater updater = new UIUpdater(component);
+        UIUpdater updater = new UIUpdater();
         component.putClientProperty(KEY_UPDATER, updater);
-        LafManager.addThemeChangeListener(new UIUpdater(component));
+        DynamicUI.registerCallback(component, updater, false);
     }
 
     /**
-     * Remove the registered {@link UIUpdater} from the component. This needs to be called in order for
-     * the component to be garbage collected.
+     * Remove the registered {@link UIUpdater} from the component.
      *
      * @param component the component to unregister.
      */
     public static void removeComponent(final JComponent component) {
+        if (component == null) return;
         Object updater = component.getClientProperty(KEY_UPDATER);
         if (updater instanceof UIUpdater) {
             removeComponent(component, (UIUpdater) updater);
@@ -66,34 +62,14 @@ public class UIUpdater implements ThemeChangeListener {
     }
 
     private static void removeComponent(final JComponent component, final UIUpdater updater) {
-        if (component != null) component.putClientProperty(KEY_UPDATER, null);
-        LafManager.removeThemeChangeListener(updater);
+        component.putClientProperty(KEY_UPDATER, null);
+        DynamicUI.removeCallback(component, updater);
     }
 
-    private final WeakReference<JComponent> component;
-
-    /**
-     * Creates a new ui updater for the given component. After a new theme has been installed This
-     * listener only needs to be used with the top most component. This listener isn't needed for
-     * components that are part of a visible ui hierarchy. The listener has to be added with
-     * {@link LafManager#addThemeChangeListener(ThemeChangeListener)}
-     *
-     * @param component the component to update.
-     */
-    public UIUpdater(final JComponent component) {
-        this.component = new WeakReference<>(component);
-    }
+    private UIUpdater() {}
 
     @Override
-    public void themeChanged(final ThemeChangeEvent e) {}
-
-    @Override
-    public void themeInstalled(final ThemeChangeEvent e) {
-        JComponent comp = component.get();
-        if (comp != null) {
-            SwingUtilities.updateComponentTreeUI(comp);
-        } else {
-            removeComponent(null, this);
-        }
+    public void accept(final JComponent c) {
+        SwingUtilities.updateComponentTreeUI(c);
     }
 }
