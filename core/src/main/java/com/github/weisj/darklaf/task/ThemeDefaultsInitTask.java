@@ -48,7 +48,7 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
             "scrollPane", "separator", "slider", "spinner", "splitPane", "statusBar", "tabbedPane", "tabFrame", "table",
             "taskPane", "text", "toggleButton", "toolBar", "toolTip", "tree", "misc"};
     private static final String[] ICON_PROPERTIES =
-            new String[] {"checkBox", "radioButton", "slider", "files", "frame"};
+            new String[] {"checkBox", "radioButton", "slider", "frame"};
     private static final String ACCENT_COLOR_KEY = "effectiveAccentColor";
     private static final String ACCENT_COLOR_BACKUP_KEY = "themeAccentColor";
     private static final String ACCENT_COLOR_SOURCE_KEY = "widgetFillDefault";
