@@ -83,7 +83,7 @@ public class DarkButtonBorder implements Border, UIResource, VisualPaddingProvid
     }
 
     public static AlignmentExt getCornerFlag(final Component component) {
-        return PropertyUtil.getObject(component, DarkButtonUI.KEY_CORNER, AlignmentExt.class, null);
+        return PropertyUtil.getObject(component, ButtonConstants.KEY_CORNER, AlignmentExt.class, null);
     }
 
     protected int getShadowSize(final JComponent c) {
@@ -165,7 +165,7 @@ public class DarkButtonBorder implements Border, UIResource, VisualPaddingProvid
     }
 
     protected void paintNeighbourFocus(final Graphics2D g2, final Component c, final int width, final int height) {
-        JComponent left = ButtonConstants.getNeighbour(DarkButtonUI.KEY_LEFT_NEIGHBOUR, c);
+        JComponent left = ButtonConstants.getNeighbour(ButtonConstants.KEY_LEFT_NEIGHBOUR, c);
         boolean paintLeft = DarkUIUtil.hasFocus(left);
         if (paintLeft) {
             AlignmentExt corner = getCornerFlag(left);
@@ -176,7 +176,7 @@ public class DarkButtonBorder implements Border, UIResource, VisualPaddingProvid
             paintFocusBorder(g2, getFocusArc(left), borderSize, -3 * borderSize + 1, -ins.top, 4 * borderSize,
                     h + ins.top + ins.bottom);
         }
-        JComponent right = ButtonConstants.getNeighbour(DarkButtonUI.KEY_RIGHT_NEIGHBOUR, c);
+        JComponent right = ButtonConstants.getNeighbour(ButtonConstants.KEY_RIGHT_NEIGHBOUR, c);
         boolean paintRight = DarkUIUtil.hasFocus(right);
         if (paintRight) {
             AlignmentExt corner = getCornerFlag(right);
@@ -188,7 +188,7 @@ public class DarkButtonBorder implements Border, UIResource, VisualPaddingProvid
                     h + ins.top + ins.bottom);
         }
 
-        JComponent top = ButtonConstants.getNeighbour(DarkButtonUI.KEY_TOP_NEIGHBOUR, c);
+        JComponent top = ButtonConstants.getNeighbour(ButtonConstants.KEY_TOP_NEIGHBOUR, c);
         boolean paintTop = DarkUIUtil.hasFocus(top);
         if (paintTop) {
             AlignmentExt corner = getCornerFlag(top);
@@ -199,21 +199,21 @@ public class DarkButtonBorder implements Border, UIResource, VisualPaddingProvid
                     width + ins.right + ins.left, 4 * borderSize);
         }
 
-        JComponent topLeft = ButtonConstants.getNeighbour(DarkButtonUI.KEY_TOP_LEFT_NEIGHBOUR, c);
+        JComponent topLeft = ButtonConstants.getNeighbour(ButtonConstants.KEY_TOP_LEFT_NEIGHBOUR, c);
         boolean paintTopLeft = DarkUIUtil.hasFocus(topLeft);
         if (paintTopLeft) {
             paintFocusBorder(g2, getFocusArc(topLeft), borderSize, -3 * borderSize + 1, -3 * borderSize + 1,
                     4 * borderSize, 4 * borderSize);
         }
 
-        JComponent topRight = ButtonConstants.getNeighbour(DarkButtonUI.KEY_TOP_RIGHT_NEIGHBOUR, c);
+        JComponent topRight = ButtonConstants.getNeighbour(ButtonConstants.KEY_TOP_RIGHT_NEIGHBOUR, c);
         boolean paintTopRight = DarkUIUtil.hasFocus(topRight);
         if (paintTopRight) {
             paintFocusBorder(g2, getFocusArc(topRight), borderSize, width - borderSize - 1, -3 * borderSize + 1,
                     4 * borderSize, 4 * borderSize);
         }
 
-        JComponent bottom = ButtonConstants.getNeighbour(DarkButtonUI.KEY_BOTTOM_NEIGHBOUR, c);
+        JComponent bottom = ButtonConstants.getNeighbour(ButtonConstants.KEY_BOTTOM_NEIGHBOUR, c);
         boolean paintBottom = DarkUIUtil.hasFocus(bottom);
         if (paintBottom) {
             AlignmentExt corner = getCornerFlag(bottom);
@@ -224,14 +224,14 @@ public class DarkButtonBorder implements Border, UIResource, VisualPaddingProvid
                     width + ins.left + ins.right, 4 * borderSize);
         }
 
-        JComponent bottomLeft = ButtonConstants.getNeighbour(DarkButtonUI.KEY_BOTTOM_LEFT_NEIGHBOUR, c);
+        JComponent bottomLeft = ButtonConstants.getNeighbour(ButtonConstants.KEY_BOTTOM_LEFT_NEIGHBOUR, c);
         boolean paintBottomLeft = DarkUIUtil.hasFocus(bottomLeft);
         if (paintBottomLeft) {
             paintFocusBorder(g2, getFocusArc(bottomLeft), borderSize, -3 * borderSize + 1, height - borderSize - 1,
                     4 * borderSize, 4 * borderSize);
         }
 
-        JComponent bottomRight = ButtonConstants.getNeighbour(DarkButtonUI.KEY_BOTTOM_RIGHT_NEIGHBOUR, c);
+        JComponent bottomRight = ButtonConstants.getNeighbour(ButtonConstants.KEY_BOTTOM_RIGHT_NEIGHBOUR, c);
         boolean paintBottomRight = DarkUIUtil.hasFocus(bottomRight);
         if (paintBottomRight) {
             paintFocusBorder(g2, getFocusArc(bottomRight), borderSize, width - borderSize - 1, height - borderSize - 1,
