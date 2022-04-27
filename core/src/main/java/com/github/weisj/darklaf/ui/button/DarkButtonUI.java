@@ -209,7 +209,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         Graphics2D g2 = (Graphics2D) g;
         AbstractButton b = (AbstractButton) c;
         if (shouldDrawBackground(b)) {
-            int arc = getArc(c);
+            int arcSize = getArc(c);
             int width = c.getWidth();
             int height = c.getHeight();
             Insets margin = b.getMargin();
@@ -217,9 +217,9 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
                 margin = null;
             }
             if (ButtonConstants.isBorderlessVariant(c)) {
-                paintBorderlessBackground(b, g2, arc, width, height, margin);
+                paintBorderlessBackground(b, g2, arcSize, width, height, margin);
             } else if (b.getBorder() instanceof DarkButtonBorder) {
-                paintDarklafBorderBackground(b, g2, arc, width, height);
+                paintDarklafBorderBackground(b, g2, arcSize, width, height);
             } else {
                 paintDefaultBackground(b, g2, width, height);
             }

@@ -108,21 +108,21 @@ public class DarkButtonBorder implements Border, UIResource, VisualPaddingProvid
         Graphics2D g2 = (Graphics2D) g;
         g2.translate(x, y);
 
-        int arc = getArc(c);
-        int focusArc = getFocusArc(c);
+        int arcSize = getArc(c);
+        int focusArcSize = getFocusArc(c);
         GraphicsContext config = new GraphicsContext(g);
         AlignmentExt corner = getCornerFlag(c);
 
         boolean paintShadow = showDropShadow(corner);
         boolean focus = paintFocus(c);
         int shadowHeight = paintShadow ? getShadowSize() : 0;
-        int borderSize = getBorderSize();
+        int bs = getBorderSize();
 
-        Insets insetMask = new Insets(borderSize, borderSize, Math.max(borderSize, shadowHeight), borderSize);
+        Insets insetMask = new Insets(bs, bs, Math.max(bs, shadowHeight), bs);
         Insets focusIns = new Insets(0, 0, 0, 0);
         if (corner != null) {
-            focusIns = corner.maskInsets(focusIns, -borderSize - focusArc);
-            insetMask = corner.maskInsets(insetMask, -arc);
+            focusIns = corner.maskInsets(focusIns, -bs - focusArcSize);
+            insetMask = corner.maskInsets(insetMask, -arcSize);
         }
 
         int bx = insetMask.left;
@@ -132,13 +132,13 @@ public class DarkButtonBorder implements Border, UIResource, VisualPaddingProvid
         int fx = focusIns.left;
         int fy = focusIns.top;
         int fw = width - focusIns.left - focusIns.right;
-        int fh = by + bh + borderSize - focusIns.top - focusIns.bottom;
+        int fh = by + bh + bs - focusIns.top - focusIns.bottom;
 
         if (paintFocus(c)) {
-            paintFocusBorder(g2, focusArc, borderSize, fx, fy, fw, fh);
+            paintFocusBorder(g2, focusArcSize, bs, fx, fy, fw, fh);
         }
 
-        paintLineBorder(c, g2, arc, focus, bx, by, bw, bh);
+        paintLineBorder(c, g2, arcSize, focus, bx, by, bw, bh);
 
         if (corner != null) {
             paintNeighbourFocus(g2, c, width, height);
