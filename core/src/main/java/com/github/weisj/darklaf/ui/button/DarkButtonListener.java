@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -87,6 +87,16 @@ public class DarkButtonListener<T extends DarkButtonUI> extends BasicButtonListe
             ui.updateMargins(b);
             b.doLayout();
             b.repaint();
+            if (ButtonConstants.KEY_VARIANT.equals(key)) {
+                // We only have to check the explicit variant, as automatic conversion implies the button is
+                // non-focusable anyway.
+                boolean oldWasBorderless = ButtonConstants.VARIANT_BORDERLESS.equals(e.getOldValue())
+                        || ButtonConstants.VARIANT_BORDERLESS_RECTANGULAR.equals(e.getOldValue());
+                boolean newIsBorderless = ButtonConstants.isBorderless(b) || ButtonConstants.isBorderlessRectangular(b);
+                if (oldWasBorderless || newIsBorderless) {
+                    b.setRequestFocusEnabled(!newIsBorderless);
+                }
+            }
         }
     }
 }
