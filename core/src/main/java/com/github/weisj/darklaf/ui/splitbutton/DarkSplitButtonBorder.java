@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -59,8 +59,7 @@ public class DarkSplitButtonBorder extends DarkButtonBorder {
 
         DarkSplitButtonUI ui = DarkUIUtil.getUIOfType(((JSplitButton) c).getUI(), DarkSplitButtonUI.class);
         if (ui != null && ui.getDrawOutline(c)) {
-            boolean armed = ui.isArmedBorderless(ui.splitButton)
-                    || (ui.useArrowButton() && ui.isArmedBorderless(ui.arrowButton));
+            boolean armed = ui.isArmedBorderless(ui.splitButton);
             g.setColor(ui.getBorderlessOutline(armed));
         } else {
             g.setColor(getBorderColor(c, false));
@@ -75,7 +74,8 @@ public class DarkSplitButtonBorder extends DarkButtonBorder {
         if (!borderless) return hasDefaultAction;
         if (hasDefaultAction && ButtonConstants.isBorderlessVariant(c)) {
             DarkSplitButtonUI ui = DarkUIUtil.getUIOfType(((JSplitButton) c).getUI(), DarkSplitButtonUI.class);
-            return ui != null && ui.isRolloverBorderless((AbstractButton) c);
+            return ui != null &&
+                    (ui.isRolloverBorderless((AbstractButton) c) || ui.isArmedBorderless((AbstractButton) c));
         }
         return false;
     }

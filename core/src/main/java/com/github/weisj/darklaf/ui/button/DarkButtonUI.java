@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -290,29 +290,40 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         return new Rectangle(bx, by, bw, bh);
     }
 
+    protected Rectangle backgroundContentRect(final AbstractButton b, final int width, final int height,
+            final Insets m) {
+        Border border = b.getBorder();
+        Insets ins = border != null ? border.getBorderInsets(b) : new Insets(0, 0, 0, 0);
+        Insets margin = m;
+        if (margin == null) {
+            margin = new Insets(0, 0, 0, 0);
+        } else {
+            // Ensure margins really only affect the size of the background around the content.
+            // If the button is larger than expected adjust the margin s.t. the shadow background is
+            // only painted in the area around the viewRect specified by the margin.
+            Rectangle r = iconRect.union(textRect);
+            margin.left = r.x - margin.left;
+            margin.right = width - (r.x + r.width + margin.right);
+            margin.top = r.y - margin.top;
+            margin.bottom = height - (r.y + r.height + margin.bottom);
+        }
+
+        int x = Math.max(ins.left, margin.left);
+        int y = Math.max(ins.top, margin.top);
+        int w = width - x - Math.max(ins.right, margin.right);
+        int h = height - y - Math.max(ins.bottom, margin.bottom);
+        return new Rectangle(x, y, w, h);
+    }
+
     protected void paintBorderlessBackground(final AbstractButton b, final Graphics2D g, final int arc, final int width,
             final int height, final Insets m) {
-        if (isRolloverBorderless(b)) {
-            Border border = b.getBorder();
-            Insets ins = border != null ? border.getBorderInsets(b) : new Insets(0, 0, 0, 0);
-            Insets margin = m;
-            if (margin == null) {
-                margin = new Insets(0, 0, 0, 0);
-            } else {
-                // Ensure margins really only affect the size of the background around the content.
-                // If the button is larger than expected adjust the margin s.t. the shadow background is
-                // only painted in the area around the viewRect specified by the margin.
-                Rectangle r = iconRect.union(textRect);
-                margin.left = r.x - margin.left;
-                margin.right = width - (r.x + r.width + margin.right);
-                margin.top = r.y - margin.top;
-                margin.bottom = height - (r.y + r.height + margin.bottom);
-            }
+        if (isRolloverBorderless(b) || isArmedBorderless(b)) {
+            Rectangle backgroundRect = backgroundContentRect(b, width, height, m);
 
-            int x = Math.max(ins.left, margin.left);
-            int y = Math.max(ins.top, margin.top);
-            int w = width - x - Math.max(ins.right, margin.right);
-            int h = height - y - Math.max(ins.bottom, margin.bottom);
+            int x = backgroundRect.x;
+            int y = backgroundRect.y;
+            int w = backgroundRect.width;
+            int h = backgroundRect.height;
 
             GraphicsUtil.setupStrokePainting(g);
             if (ButtonConstants.isBorderlessRectangular(b)) {

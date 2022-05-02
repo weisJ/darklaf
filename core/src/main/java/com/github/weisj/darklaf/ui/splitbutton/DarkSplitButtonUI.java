@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -186,6 +186,11 @@ public class DarkSplitButtonUI extends DarkButtonUI {
     @Override
     public boolean isRolloverBorderless(final AbstractButton b) {
         return super.isRolloverBorderless(b) || (useArrowButton() && arrowButton.getModel().isRollover());
+    }
+
+    @Override
+    public boolean isArmedBorderless(final AbstractButton b) {
+        return super.isArmedBorderless(b) || (useArrowButton() && arrowButton.getModel().isArmed());
     }
 
     @Override

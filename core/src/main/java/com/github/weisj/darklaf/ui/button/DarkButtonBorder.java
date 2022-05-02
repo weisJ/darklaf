@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -32,7 +32,9 @@ import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.AlignmentExt;
 import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
+import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 import com.github.weisj.swingdsl.visualpadding.VisualPaddingProvider;
+import org.jetbrains.annotations.NotNull;
 
 /** @author Jannis Weis */
 public class DarkButtonBorder implements Border, UIResource, VisualPaddingProvider {
@@ -148,7 +150,22 @@ public class DarkButtonBorder implements Border, UIResource, VisualPaddingProvid
 
     protected void paintBorderlessBorder(final Component c, final Graphics g, final int x, final int y, final int width,
             final int height) {
+        if (paintFocus(c)) {
+            AbstractButton b = (AbstractButton) c;
+            DarkButtonUI ui = DarkUIUtil.getUIOfType(b.getUI(), DarkButtonUI.class);
+            if (ui == null) return;
+            Insets margin = b.getMargin();
+            if (margin instanceof UIResource) {
+                margin = null;
+            }
+            Rectangle r = ui.backgroundContentRect(b, width, height, margin);
 
+            GraphicsContext context = GraphicsUtil.setupStrokePainting(g);
+            g.translate(x, y);
+            g.setColor(getBorderColor(c, true));
+            PaintUtil.paintLineBorder((Graphics2D) g, r.x, r.y, r.width, r.height, getArc(c));
+            context.restore();
+        }
     }
 
     protected void paintLineBorder(final Component c, final Graphics2D g2, final int arc, final boolean focus,
@@ -287,7 +304,7 @@ public class DarkButtonBorder implements Border, UIResource, VisualPaddingProvid
     }
 
     @Override
-    public Insets getVisualPaddings(final Component c) {
+    public @NotNull Insets getVisualPaddings(@NotNull final Component c) {
         return getBorderInsets(c);
     }
 }
