@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -79,7 +79,8 @@ public class DarkSplitButtonListener implements ActionListener, PropertyChangeLi
     @Override
     public void stateChanged(final ChangeEvent e) {
         ui.splitButton.repaint();
-        if (!ui.splitButton.hasFocus() && ui.arrowButton.getModel().isPressed()) {
+        if (!ui.splitButton.hasFocus() && ui.arrowButton.isRequestFocusEnabled()
+                && ui.arrowButton.getModel().isPressed()) {
             ui.splitButton.requestFocusInWindow();
         }
     }
