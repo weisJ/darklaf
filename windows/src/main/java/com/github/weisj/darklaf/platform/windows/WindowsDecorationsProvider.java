@@ -59,14 +59,14 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
         if (!window.isDisplayable()) {
             window.addNotify();
         }
-        long hwnd = PointerUtil.getHWND(window);
-        if (hwnd > 0) {
-            JNIDecorationsWindows.installPopupMenuDecorations(hwnd);
+        PointerUtil.WindowPointer hwnd = PointerUtil.getHWND(window);
+        if (hwnd.isValid()) {
+            JNIDecorationsWindows.installPopupMenuDecorations(hwnd.value());
             if (window instanceof RootPaneContainer) {
                 JRootPane rootPane = ((RootPaneContainer) window).getRootPane();
                 Color bg = rootPane != null ? rootPane.getBackground() : null;
                 if (bg != null) {
-                    JNIDecorationsWindows.setBackground(hwnd, bg.getRed(), bg.getGreen(), bg.getBlue());
+                    JNIDecorationsWindows.setBackground(hwnd.value(), bg.getRed(), bg.getGreen(), bg.getBlue());
                 }
             }
         }
@@ -75,9 +75,9 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
     @Override
     public void uninstallPopupWindow(final Window window) {
         if (window.isDisplayable()) {
-            long hwnd = PointerUtil.getHWND(window);
-            if (hwnd != 0) {
-                JNIDecorationsWindows.uninstallDecorations(hwnd, false);
+            PointerUtil.WindowPointer hwnd = PointerUtil.getHWND(window);
+            if (hwnd.isValid()) {
+                JNIDecorationsWindows.uninstallDecorations(hwnd.value(), false);
             }
             window.dispose();
         }

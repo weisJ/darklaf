@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -46,7 +46,7 @@ class PointerUtilTest {
             Window frame = new JWindow();
             frame.setAutoRequestFocus(false);
             SwingUtilities.invokeAndWait(() -> frame.setVisible(true));
-            Assertions.assertEquals(Native.getWindowID(frame), PointerUtil.getHWND(frame));
+            Assertions.assertEquals(Native.getWindowID(frame), PointerUtil.getHWND(frame).value());
             SwingUtilities.invokeLater(() -> {
                 frame.setVisible(false);
                 frame.dispose();
