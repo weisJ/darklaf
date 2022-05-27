@@ -131,7 +131,7 @@ static bool IsLeftMousePressed(WindowWrapper *wrapper) {
             && ptMouse.x <= rcWindow.right - wrapper->right) {
             return HTCAPTION;
         }
-        if (x_in_button_area && y_in_title_area) {
+        if (is_windows_11 && x_in_button_area && y_in_title_area) {
             if (ptMouse.x < rcWindow.right - 2 * wrapper->button_width) {
                 return HTCLIENT;
             } else if (ptMouse.x < rcWindow.right - wrapper->button_width) {
