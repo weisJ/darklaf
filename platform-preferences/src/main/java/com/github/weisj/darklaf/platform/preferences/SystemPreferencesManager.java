@@ -39,6 +39,7 @@ public class SystemPreferencesManager {
     public SystemPreferencesManager(final boolean allowNativeReporting) {
         preferenceProvider = createProvider(allowNativeReporting);
         preferenceProvider.setCallback(this::onPreferenceChange);
+        preferenceProvider.initialize();
     }
 
     public SystemPreferencesManager() {
