@@ -41,6 +41,7 @@ import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.properties.icons.IconLoader;
+import com.github.weisj.darklaf.settings.ThemeSettings;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.theme.spec.PreferredThemeStyle;
 import com.github.weisj.swingdsl.inspector.InspectorKt;
@@ -74,7 +75,10 @@ public final class DemoExecutor {
     public static AtomicReference<Window> showDemo(final ComponentDemo demo, final boolean asDialog) {
         InspectorKt.installInspector();
         LafManager.enabledPreferenceChangeReporting(false);
-        LafManager.addThemePreferenceChangeListener(LafManager::installTheme);
+        LafManager.addThemePreferenceChangeListener(e -> {
+            if (ThemeSettings.isInitialized() && ThemeSettings.getInstance().isSystemPreferencesEnabled()) return;
+            LafManager.installTheme(e);
+        });
         return showDemoWithoutSetup(demo, asDialog);
     }
 
