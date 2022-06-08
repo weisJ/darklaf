@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -26,7 +26,6 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Rectangle;
-import java.util.Arrays;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonModel;
@@ -258,17 +257,22 @@ public interface MenuItemUI {
         result.width = lh.getLeadingGap();
         MenuItemLayoutHelper.addMaxWidth(lh.getCheckSize(), lh.getAfterCheckIconGap(), result);
         // Take into account minimal text offset.
-        if (!lh.isTopLevelMenu() && (lh.getMinTextOffset() > 0) && (result.width < lh.getMinTextOffset())) {
-            result.width = lh.getMinTextOffset();
+        if (!lh.isTopLevelMenu() && lh.getMinTextOffset() > 0) {
+            result.width = Math.max(lh.getMinTextOffset(), result.width);
         }
         int acceleratorTextOffset = getAcceleratorTextOffset();
-        MenuItemLayoutHelper.addMaxWidth(lh.getLabelSize(), acceleratorTextOffset, result);
+        MenuItemLayoutHelper.addMaxWidth(lh.getLabelSize(), 0, result);
         MenuItemLayoutHelper.addMaxWidth(lh.getAccSize(), acceleratorTextOffset, result);
         MenuItemLayoutHelper.addMaxWidth(lh.getArrowSize(), lh.getGap(), result);
 
+        if (lh.isTopLevelMenu()) result.width += lh.getLeadingGap();
+
         // Calculate the result height
-        result.height = Arrays.stream(new int[] {lh.getCheckSize().getHeight(), lh.getLabelSize().getHeight(),
-                lh.getAccSize().getHeight(), lh.getArrowSize().getHeight()}).max().orElse(Integer.MIN_VALUE);
+        result.height = Integer.MIN_VALUE;
+        result.height = Math.max(result.height, lh.getCheckSize().getHeight());
+        result.height = Math.max(result.height, lh.getLabelSize().getHeight());
+        result.height = Math.max(result.height, lh.getAccSize().getHeight());
+        result.height = Math.max(result.height, lh.getArrowSize().getHeight());
 
         // Take into account menu item insets
         Insets insets = mi.getInsets();
@@ -277,8 +281,7 @@ public interface MenuItemUI {
             result.height += insets.top + insets.bottom;
         }
 
-        // if the height is even, bump it up one. This is critical.
-        // for the text to center properly
+        // If the height is even, bump it up by one. This is critical for the text to center properly
         if (result.height % 2 == 0 && isUseEvenHeight()) {
             result.height++;
         }
