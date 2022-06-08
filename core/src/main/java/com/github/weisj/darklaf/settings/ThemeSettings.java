@@ -38,6 +38,7 @@ import com.github.weisj.darklaf.theme.event.ThemePreferenceListener;
 import com.github.weisj.darklaf.theme.spec.AccentColorRule;
 import com.github.weisj.darklaf.theme.spec.FontPrototype;
 import com.github.weisj.darklaf.theme.spec.FontSizeRule;
+import com.github.weisj.darklaf.theme.spec.PreferredThemeStyle;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.ui.util.UIThread;
 import com.github.weisj.darklaf.util.LazyValue;
@@ -494,6 +495,16 @@ public class ThemeSettings implements ThemePreferenceListener {
     /** Sets the theme according to the selected options. Does not save the settings. */
     public void peek() {
         applyTheme(currentConfiguration.getEffectiveTheme());
+    }
+
+    /**
+     * Compute the effective preferred theme style adhering to the current ThemeSettings
+     *
+     * @param style the preferred theme style prototype
+     * @return the effective preferred theme style
+     */
+    public PreferredThemeStyle computeEffectiveStyle(final PreferredThemeStyle style) {
+        return currentConfiguration.getEffectiveThemeStyle(style);
     }
 
     /**

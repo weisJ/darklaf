@@ -73,6 +73,16 @@ public class SettingsConfiguration implements Serializable {
         return baseTheme.derive(fontSizeRule, getFontPrototype(), accentColorRule);
     }
 
+    public final PreferredThemeStyle getEffectiveThemeStyle(final PreferredThemeStyle themeStyle) {
+        Theme baseTheme = getEffectiveBaseTheme(themeStyle);
+
+        FontSizeRule fontSizeRule = getEffectiveFontSizeRule(themeStyle);
+        AccentColorRule accentColorRule = getEffectiveAccentColorRule(baseTheme, themeStyle);
+
+        return new PreferredThemeStyle(themeStyle.getContrastRule(), themeStyle.getColorToneRule(),
+                accentColorRule, fontSizeRule);
+    }
+
     private AccentColorRule getEffectiveAccentColorRule(final Theme baseTheme,
             final PreferredThemeStyle preferredThemeStyle) {
         AccentColorRule accentColorRule = getAccentColorRule();
@@ -81,10 +91,10 @@ public class SettingsConfiguration implements Serializable {
         AccentColorRule systemAccentColorRule = preferredThemeStyle.getAccentColorRule();
         Color accentColor = accentColorRule.getAccentColor();
         Color selectionColor = accentColorRule.getSelectionColor();
-        if (isAccentColorFollowsSystem() && baseTheme.supportsCustomAccentColor()) {
+        if (isAccentColorFollowsSystem() && (baseTheme == null || baseTheme.supportsCustomAccentColor())) {
             accentColor = systemAccentColorRule.getAccentColor();
         }
-        if (isSelectionColorFollowsSystem() && baseTheme.supportsCustomSelectionColor()) {
+        if (isSelectionColorFollowsSystem() && (baseTheme == null || baseTheme.supportsCustomSelectionColor())) {
             selectionColor = systemAccentColorRule.getSelectionColor();
         }
 
