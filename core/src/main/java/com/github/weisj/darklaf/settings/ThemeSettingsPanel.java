@@ -76,7 +76,7 @@ public class ThemeSettingsPanel extends JPanel {
     }
 
     protected void updateConfiguration() {
-        ThemeSettings.getInstance().setConfiguration(getSettingsConfiguration());
+        ThemeSettings.getInstance().setCurrentConfiguration(getSettingsConfiguration());
     }
 
     public SettingsConfiguration getSettingsConfiguration() {

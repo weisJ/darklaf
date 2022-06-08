@@ -462,9 +462,12 @@ public class ThemeSettings implements ThemePreferenceListener {
      * @param configuration the {@link SettingsConfiguration}.
      */
     public void setConfiguration(final SettingsConfiguration configuration) {
-        this.currentConfiguration.load(configuration);
-        updateSettingsPanel();
+        setCurrentConfiguration(configuration);
         save(false);
+    }
+
+    void setCurrentConfiguration(final SettingsConfiguration configuration) {
+        this.currentConfiguration.load(configuration);
     }
 
     /**
