@@ -388,8 +388,13 @@ public final class LafManager {
      * @param changeEvent the change event.
      */
     public static void installTheme(final ThemePreferenceChangeEvent changeEvent) {
-        setTheme(changeEvent.getPreferredThemeStyle());
+        setTheme(effectivePreferredThemeStyle(changeEvent.getPreferredThemeStyle()));
         install();
+    }
+
+    private static PreferredThemeStyle effectivePreferredThemeStyle(PreferredThemeStyle preferredThemeStyle) {
+        if (!ThemeSettings.isInitialized()) return preferredThemeStyle;
+        return ThemeSettings.getInstance().computeEffectiveStyle(preferredThemeStyle);
     }
 
     /**
