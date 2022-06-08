@@ -56,6 +56,7 @@ import com.github.weisj.darklaf.ui.combobox.ComboBoxConstants;
 import com.github.weisj.darklaf.ui.slider.DarkSliderUI;
 import com.github.weisj.darklaf.ui.tooltip.ToolTipConstants;
 import com.github.weisj.darklaf.util.Alignment;
+import com.github.weisj.darklaf.util.StringUtil;
 
 public class ThemeSettingsUI {
 
@@ -108,6 +109,9 @@ public class ThemeSettingsUI {
         fontSlider = createFontSlider();
         useCustomFontPrototype = DynamicUI.withLocalizedText(new JCheckBox(), "settings.label_font_prototype");
         fontPrototypeChooser = new JComboBox<>(FontFamiliesCache.families);
+
+        // Value is based on length of "Helvetica Neue"
+        fontPrototypeChooser.setPrototypeDisplayValue(FontEntry.createDisplayValue(15));
         // noinspection unchecked
         fontPrototypeChooser.setRenderer(new ListCellRendererDelegate<FontEntry>(
                 (ListCellRenderer<FontEntry>) fontPrototypeChooser.getRenderer()) {
@@ -431,6 +435,15 @@ public class ThemeSettingsUI {
         private FontEntry(String family) {
             this.font = new Font(family, Font.PLAIN, 12);
             this.name = font.getFontName();
+        }
+
+        private static FontEntry createDisplayValue(int displayLength) {
+            return new FontEntry(displayLength);
+        }
+
+        private FontEntry(int displayLength) {
+            this.font = null;
+            this.name = StringUtil.repeat("A", displayLength);
         }
 
         @Override
