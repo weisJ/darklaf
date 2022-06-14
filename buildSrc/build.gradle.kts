@@ -1,22 +1,17 @@
-apply(from= "../gradle/loadProps.gradle.kts")
-
 plugins {
     `kotlin-dsl`
     `java-gradle-plugin`
 }
 
-val nokeeVersion = extra["nokee.version"]
-
 dependencies {
-    implementation(platform("dev.nokee:nokee-gradle-plugins:$nokeeVersion"))
+    implementation(nokeeApi())
     implementation(gradleApi())
 }
 
 repositories {
     mavenCentral()
     gradlePluginPortal()
-    maven { url = uri("https://repo.nokee.dev/release") }
-    maven { url = uri("https://repo.nokee.dev/snapshot") }
+    nokee()
 }
 
 gradlePlugin {
