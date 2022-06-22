@@ -77,8 +77,11 @@ public final class IconLoader implements IconResolver {
         loader = new SVGLoader();
     }
 
-    static SVGLoader svgLoader() {
-        return loader;
+    static @NotNull SVGLoader svgLoader() {
+        // SVGLoader is not thread safe. For the EDT we use a cached version to avoid UI slow downs.
+        // All other cases are probably fine with the overhead of creating a new SVGLoader instance.
+        if (SwingUtilities.isEventDispatchThread()) return loader;
+        return new SVGLoader();
     }
 
     /**
