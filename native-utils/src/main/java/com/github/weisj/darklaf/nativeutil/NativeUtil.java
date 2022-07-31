@@ -145,6 +145,7 @@ public final class NativeUtil {
         Path tempDir = getTemporaryDirectory();
         Path temp = tempDir.resolve(filename);
 
+        deleteLeftoverTempFiles();
         extractFile(loaderClass, path, tempDir, temp);
 
         try {
@@ -167,6 +168,27 @@ public final class NativeUtil {
         } catch (final IOException e) {
             delete(destinationPath);
             throw e;
+        }
+    }
+
+    private static void deleteLeftoverTempFiles()  {
+        deleteFolder(new File(System.getProperty("java.io.tmpdir")));
+    }
+
+    /**
+     * Recursively deletes a folder and it's files
+     * @param folder the target folder as {@link File}
+     */
+    private static void deleteFolder(File folder) {
+        File[] files = folder.listFiles((dir, name) -> name.startsWith(NATIVE_FOLDER_PATH_PREFIX));
+        if (files != null) { // File#listFiles might be null if empty
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    deleteFolder(file);
+                } else {
+                    delete(file.toPath());
+                }
+            }
         }
     }
 
