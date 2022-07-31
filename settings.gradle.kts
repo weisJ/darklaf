@@ -15,10 +15,6 @@ pluginManagement {
     }
 }
 
-plugins {
-    id("dev.nokee.nokee-version-management") version("1.0.0")
-}
-
 dependencyResolutionManagement {
     versionCatalogs {
         fun VersionCatalogBuilder.idv(name: String, coordinates: String, versionRef: String = name) {
