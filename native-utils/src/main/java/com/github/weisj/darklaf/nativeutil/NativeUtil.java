@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -26,10 +26,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 
 /**
@@ -45,7 +47,7 @@ import java.util.logging.Logger;
 public final class NativeUtil {
 
     private static final Logger LOGGER = Logger.getLogger(NativeUtil.class.getName());
-    public static final String NATIVE_FOLDER_PATH_PREFIX = "nativeutils";
+    public static final String NATIVE_FOLDER_PATH_PREFIX = "com-weisj-darklaf-nativeutils";
     /**
      * The minimum length a prefix for a file has to have according to
      * {@link File#createTempFile(String, String)}}.
@@ -77,6 +79,7 @@ public final class NativeUtil {
      * @param loaderClass the class to use for loading.
      * @param path The path of file inside JAR as absolute path (beginning with '/'), e.g.
      *        /package/File.ext
+     * @param identifier The library identifier for clean-up purposes
      * @throws IOException If temporary file creation or read/write operation fails
      * @throws IllegalArgumentException If source file (param path) does not exist
      * @throws IllegalArgumentException If the path is not absolute or if the filename is shorter than
@@ -85,20 +88,25 @@ public final class NativeUtil {
      * @throws FileNotFoundException If the file could not be found inside the JAR.
      */
     public static void loadLibraryFromJarWithExtraResources(final Class<?> loaderClass, final String path,
-            final List<Resource> resources)
+            final List<Resource> resources, final String identifier)
             throws IOException {
-        List<Path> resourcePaths = extractResources(loaderClass, resources);
+
+        String libraryIdentifier = getFullLibraryIdentifier(identifier);
+        Path tempDir = getTemporaryDirectory(libraryIdentifier);
+
+        List<Path> resourcePaths = extractResources(loaderClass, resources, tempDir);
         try {
-            loadLibraryFromJar(loaderClass, path);
+            doLoadLibraryFromJar(loaderClass, path, identifier, tempDir);
         } finally {
             resourcePaths.forEach(NativeUtil::releaseResource);
         }
     }
 
-    private static List<Path> extractResources(final Class<?> caller, final List<Resource> resources)
+    private static List<Path> extractResources(final Class<?> caller, final List<Resource> resources,
+            final Path tempDir)
             throws IOException {
         List<Path> paths = new ArrayList<>(resources.size());
-        Path tempDir = getTemporaryDirectory();
+
         for (Resource resource : resources) {
             String filename = getFileNameFromPath(resource.filePath);
             Path destinationDir = tempDir.resolve(resource.destinationDirectoryPath);
@@ -126,6 +134,7 @@ public final class NativeUtil {
      * @param loaderClass the class to use for loading.
      * @param path The path of file inside JAR as absolute path (beginning with '/'), e.g.
      *        /package/File.ext
+     * @param identifier The library identifier for clean-up purposes
      * @throws IOException If temporary file creation or read/write operation fails
      * @throws IllegalArgumentException If source file (param path) does not exist
      * @throws IllegalArgumentException If the path is not absolute or if the filename is shorter than
@@ -133,7 +142,15 @@ public final class NativeUtil {
      *         {@link File#createTempFile(java.lang.String, java.lang.String)}).
      * @throws FileNotFoundException If the file could not be found inside the JAR.
      */
-    public static void loadLibraryFromJar(final Class<?> loaderClass, final String path) throws IOException {
+    public static void loadLibraryFromJar(final Class<?> loaderClass, final String path, final String identifier)
+            throws IOException {
+        String libraryIdentifier = getFullLibraryIdentifier(identifier);
+        Path tempDir = getTemporaryDirectory(libraryIdentifier);
+        doLoadLibraryFromJar(loaderClass, path, identifier, tempDir);
+    }
+
+    private static void doLoadLibraryFromJar(final Class<?> loaderClass, final String path, final String identifier,
+            final Path tempDir) throws IOException {
         String filename = getFileNameFromPath(path);
 
         // Check if the filename is okay
@@ -142,9 +159,12 @@ public final class NativeUtil {
         }
 
         // Prepare temporary file
-        Path tempDir = getTemporaryDirectory();
+        String libraryIdentifier = getFullLibraryIdentifier(identifier);
         Path temp = tempDir.resolve(filename);
 
+        if (!isPosixCompliant()) {
+            deleteLeftoverTempFiles(tempDir, libraryIdentifier);
+        }
         extractFile(loaderClass, path, tempDir, temp);
 
         try {
@@ -161,12 +181,36 @@ public final class NativeUtil {
             if (is == null) throw new FileNotFoundException("File " + path + " was not found inside JAR.");
             if (!destinationDir.toFile().canWrite()) throw new IOException("Can't write to temporary directory.");
             if (!Files.exists(destinationPath)) {
-                // Otherwise the file is already existent and most probably loaded.
+                // Otherwise, the file is already existent and most probably loaded.
                 Files.copy(is, destinationPath.toAbsolutePath(), StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (final IOException e) {
             delete(destinationPath);
             throw e;
+        }
+    }
+
+    private static void deleteLeftoverTempFiles(Path tempDir, String identifier) throws IOException {
+        try (Stream<Path> files = Files.list(tempDir.getParent())) {
+            files.filter(Files::isDirectory)
+                    .filter(p -> !tempDir.equals(p))
+                    .filter(p -> p.getFileName().toString().startsWith(identifier))
+                    .forEach(NativeUtil::deleteFolder);
+        }
+    }
+
+    /**
+     * Recursively deletes a folder and it's files
+     *
+     * @param folder the target folder as {@link File}
+     */
+    private static void deleteFolder(Path folder) {
+        LOGGER.fine("Removing " + folder);
+        try (Stream<Path> walk = Files.walk(folder)) {
+            walk.sorted(Comparator.reverseOrder())
+                    .forEach(NativeUtil::delete);
+        } catch (IOException e) {
+            LOGGER.log(Level.WARNING, "Could not delete directory", e);
         }
     }
 
@@ -182,9 +226,13 @@ public final class NativeUtil {
         }
     }
 
-    private static Path getTemporaryDirectory() throws IOException {
+    private static String getFullLibraryIdentifier(final String identifier) {
+        return NATIVE_FOLDER_PATH_PREFIX + "-" + identifier;
+    }
+
+    private static Path getTemporaryDirectory(final String libraryIdentifier) throws IOException {
         if (temporaryDir == null) {
-            temporaryDir = createTempDirectory(NATIVE_FOLDER_PATH_PREFIX);
+            temporaryDir = createTempDirectory(libraryIdentifier);
             temporaryDir.toFile().deleteOnExit();
         }
         return temporaryDir;

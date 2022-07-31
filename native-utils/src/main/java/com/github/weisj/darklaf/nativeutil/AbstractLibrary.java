@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 
 public abstract class AbstractLibrary {
 
+    private static final String ILLEGAL_PATH_CHARACTERS = "[\\\\/:*?\"<>|]";
     private final String name;
     protected final Logger logger;
     private boolean loaded;
@@ -60,10 +61,12 @@ public abstract class AbstractLibrary {
             String path = getLibraryPath();
             if (path != null && !path.isEmpty()) {
                 List<NativeUtil.Resource> resources = getResourcePaths();
+                String libraryIdentifier = name.replaceAll(ILLEGAL_PATH_CHARACTERS, "");
                 if (resources == null || resources.isEmpty()) {
-                    NativeUtil.loadLibraryFromJar(getLoaderClass(), path);
+                    NativeUtil.loadLibraryFromJar(getLoaderClass(), path, libraryIdentifier);
                 } else {
-                    NativeUtil.loadLibraryFromJarWithExtraResources(getLoaderClass(), path, resources);
+                    NativeUtil.loadLibraryFromJarWithExtraResources(getLoaderClass(), path, resources,
+                            libraryIdentifier);
                 }
                 loaded = true;
                 info("Loaded " + name + " at " + path + ".");
