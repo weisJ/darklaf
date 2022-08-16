@@ -43,6 +43,12 @@ public class AbstractButtonLayoutDelegate extends AbstractButton implements Clea
             putClientProperty(KEY_TEXT_ANTIALIASING, delegate.getClientProperty(KEY_TEXT_ANTIALIASING));
             putClientProperty(KEY_TEXT_LCD_CONTRAST, delegate.getClientProperty(KEY_TEXT_LCD_CONTRAST));
             putClientProperty(KEY_FRACTIONALMETRICS, delegate.getClientProperty(KEY_FRACTIONALMETRICS));
+        } else {
+            putClientProperty(PropertyKey.HTML, null);
+            putClientProperty(TextAttribute.NUMERIC_SHAPING, null);
+            putClientProperty(KEY_TEXT_ANTIALIASING, null);
+            putClientProperty(KEY_TEXT_LCD_CONTRAST, null);
+            putClientProperty(KEY_FRACTIONALMETRICS, null);
         }
     }
 
