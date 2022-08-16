@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -32,6 +32,7 @@ import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.listener.PopupMenuAdapter;
 import com.github.weisj.darklaf.ui.scrollpane.DarkScrollBarUI;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.OneTimeExecutionLock;
 
 public class PopupMenuContainer extends JPanel {
 
@@ -190,12 +191,12 @@ public class PopupMenuContainer extends JPanel {
     private static class ViewPanel extends JPanel {
 
         private JPopupMenu content;
-        private DarkPopupMenuUI.SizeLock sizeLock;
+        private OneTimeExecutionLock sizeLock;
 
         public void setContent(JPopupMenu content) {
             this.content = content;
             DarkPopupMenuUI ui = DarkUIUtil.getUIOfType(content.getUI(), DarkPopupMenuUI.class);
-            this.sizeLock = ui != null ? ui.sizeLock : new DarkPopupMenuUI.SizeLock();
+            this.sizeLock = ui != null ? ui.sizeLock : new OneTimeExecutionLock();
             removeAll();
             add(content);
         }
@@ -203,7 +204,7 @@ public class PopupMenuContainer extends JPanel {
         @Override
         public Dimension getMinimumSize() {
             if (content != null) {
-                try (DarkPopupMenuUI.SizeLock l = sizeLock.lock()) {
+                try (OneTimeExecutionLock l = sizeLock.lock()) {
                     return content.getMinimumSize();
                 }
             }
@@ -213,7 +214,7 @@ public class PopupMenuContainer extends JPanel {
         @Override
         public Dimension getPreferredSize() {
             if (content != null) {
-                try (DarkPopupMenuUI.SizeLock l = sizeLock.lock()) {
+                try (OneTimeExecutionLock l = sizeLock.lock()) {
                     return content.getPreferredSize();
                 }
             }
@@ -223,7 +224,7 @@ public class PopupMenuContainer extends JPanel {
         @Override
         public Dimension getMaximumSize() {
             if (content != null) {
-                try (DarkPopupMenuUI.SizeLock l = sizeLock.lock()) {
+                try (OneTimeExecutionLock l = sizeLock.lock()) {
                     return content.getMaximumSize();
                 }
             }

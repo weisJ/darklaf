@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -23,7 +23,6 @@ package com.github.weisj.darklaf.ui.popupmenu;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -31,6 +30,7 @@ import javax.swing.plaf.basic.BasicPopupMenuUI;
 
 import com.github.weisj.darklaf.ui.DarkPopupFactory;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
+import com.github.weisj.darklaf.ui.util.OneTimeExecutionLock;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
@@ -48,7 +48,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
     public static final String HIDE_POPUP_VALUE = "doNotCancelPopup";
     public static final String KEY_DEFAULT_LIGHTWEIGHT_POPUPS = "PopupMenu.defaultLightWeightPopups";
     public static final String KEY_MAX_POPUP_SIZE = "maxPopupSize";
-    final SizeLock sizeLock = new SizeLock();
+    final OneTimeExecutionLock sizeLock = new OneTimeExecutionLock();
     private PopupMenuContainer popupMenuContainer;
 
     public static ComponentUI createUI(final JComponent x) {
@@ -121,7 +121,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
         PopupMenuContainer container = getPopupMenuContainer();
         if (container == null) return super.getPopup(popup, x, y);
         Dimension constraintSize = getConstraintSizes(popup, new Point(x, y));
-        try (SizeLock l = sizeLock.lock()) {
+        try (OneTimeExecutionLock l = sizeLock.lock()) {
             Dimension prefSize = popup.getPreferredSize();
             return container.createPopup(popup, prefSize, x, y, constraintSize.width, constraintSize.height);
         }
@@ -130,7 +130,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
     @Override
     public Dimension getPreferredSize(JComponent c) {
         if (sizeLock.isLocked()) return null;
-        try (SizeLock l = sizeLock.lock()) {
+        try (OneTimeExecutionLock l = sizeLock.lock()) {
             Dimension prefSize = c.getPreferredSize();
             Dimension constraintSize = getConstraintSizes(c, null);
             return getPopupMenuContainer().adjustSize(prefSize, constraintSize.width, constraintSize.height);
@@ -140,7 +140,7 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
     @Override
     public Dimension getMinimumSize(JComponent c) {
         if (sizeLock.isLocked()) return null;
-        try (SizeLock l = sizeLock.lock()) {
+        try (OneTimeExecutionLock l = sizeLock.lock()) {
             Dimension prefSize = c.getMinimumSize();
             Dimension constraintSize = getConstraintSizes(c, null);
             return getPopupMenuContainer().adjustSize(prefSize, constraintSize.width, constraintSize.height);
@@ -150,27 +150,11 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
     @Override
     public Dimension getMaximumSize(JComponent c) {
         if (sizeLock.isLocked()) return null;
-        try (SizeLock l = sizeLock.lock()) {
+        try (OneTimeExecutionLock l = sizeLock.lock()) {
             Dimension prefSize = c.getMaximumSize();
             Dimension constraintSize = getConstraintSizes(c, null);
             return getPopupMenuContainer().adjustSize(prefSize, constraintSize.width, constraintSize.height);
         }
     }
 
-    static class SizeLock extends AtomicBoolean implements AutoCloseable {
-
-        boolean isLocked() {
-            return get();
-        }
-
-        SizeLock lock() {
-            set(true);
-            return this;
-        }
-
-        @Override
-        public void close() {
-            set(false);
-        }
-    }
 }
