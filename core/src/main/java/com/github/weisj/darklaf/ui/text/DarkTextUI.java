@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2022 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -133,6 +133,11 @@ public abstract class DarkTextUI extends BasicTextUI implements OpacityBufferedU
         return "javax.swing.plaf.basic.BasicComboBoxEditor$BorderlessTextField".equals(className);
     }
 
+    public static boolean isSpinnerEditor(final JTextComponent textComponent) {
+        if (textComponent == null) return false;
+        return DarkUIUtil.getParentOfType(JSpinner.class, textComponent, 2) != null;
+    }
+
     protected void installPopupMenu() {
         JPopupMenu popupMenu = editor.getComponentPopupMenu();
         if (popupMenu == null || popupMenu instanceof UIResource) {
@@ -153,10 +158,15 @@ public abstract class DarkTextUI extends BasicTextUI implements OpacityBufferedU
 
     protected void installBorder() {
         if (isBorderlessTextField(editor)) {
-            // OpenJDK BorderlessTextField has a bug with its setBorder implementation
+            // OpenJDK BorderlessTextField has a bug with its setBorder implementation,
             // so we reset the border
             // See https://mail.openjdk.java.net/pipermail/swing-dev/2020-March/010226.html
             if (editor.getBorder() != null) editor.setBorder(null);
+            return;
+        }
+        // Prevent BasicSpinnerUI from entering a recursion loop setting the border to null in response
+        // to us wrapping it with a MarginBorder.
+        if (isSpinnerEditor(editor) && !UIManager.getBoolean("Spinner.editorBorderPainted")) {
             return;
         }
         if (uninstalling) return;
