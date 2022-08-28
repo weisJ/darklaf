@@ -152,9 +152,9 @@ public class DarkSVGIcon
     @Override
     public Image createImage(final Dimension size) {
         ensureLoaded(false);
+        BufferedImage bi = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = (Graphics2D) bi.getGraphics();
         try {
-            BufferedImage bi = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g = (Graphics2D) bi.getGraphics();
             g.setRenderingHint(
                     RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g.setRenderingHint(
@@ -162,11 +162,12 @@ public class DarkSVGIcon
             Object aaHint = UIManager.get(RenderingHints.KEY_TEXT_ANTIALIASING);
             if (aaHint != null) g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, aaHint);
             svgDocumentHolder.svgDocument.render(null, g, new ViewBox(0, 0, size.width, size.height));
-            g.dispose();
-            return bi;
         } catch (final RuntimeException e) {
-            throw new RuntimeException("Exception while painting '" + getURI().toASCIIString() + "'.", e);
+            LOGGER.log(Level.SEVERE, "Exception while painting '" + getURI().toASCIIString() + "'.", e);
+        } finally {
+            g.dispose();
         }
+        return bi;
     }
 
     protected String getName(final URI uri) {
