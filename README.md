@@ -26,12 +26,12 @@ This project is available on Maven Central:
 <dependency>
   <groupId>com.github.weisj</groupId>
   <artifactId>darklaf-core</artifactId>
-  <version>3.0.0</version>
+  <version>3.0.2</version>
 </dependency>
 ````
 ### Gradle
 ````kotlin
-implementation("com.github.weisj:darklaf-core:3.0.0")
+implementation("com.github.weisj:darklaf-core:3.0.2")
 ````
 
 You can also use the latest nightly build.
@@ -163,7 +163,7 @@ Here is a list of things that currently are not finished or need refinement. Thi
 
 # Artifacts
 - Group ID: `com.github.weisj`
-- Version: `3.0.0`
+- Version: `3.0.2`
 - Artifact IDs:
   - `darklaf-core` The LaF itself. Include this in your project to use the LaF. Includes all other artifacts.
   - `darklaf-iconset` The icons used by the laf.
