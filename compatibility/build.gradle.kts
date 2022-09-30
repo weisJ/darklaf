@@ -10,7 +10,8 @@ plugins {
 configure<ModuleInfoExtension> {
     version = JavaVersion.VERSION_11
     extraArgs = listOf(
-        "--add-exports", "java.desktop/sun.awt=darklaf.compatibility"
+        "--add-exports",
+        "java.desktop/sun.awt=darklaf.compatibility"
     )
     stubModule("darklaf.core")
 }

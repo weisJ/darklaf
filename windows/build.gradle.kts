@@ -31,8 +31,11 @@ library {
                         when (it) {
                             is Gcc, is Clang -> listOf(
                                 "--std=c++17",
-                                "-Wall", "-Wextra", "-pedantic",
-                                "-Wno-language-extension-token", "-Wno-ignored-attributes"
+                                "-Wall",
+                                "-Wextra",
+                                "-pedantic",
+                                "-Wno-language-extension-token",
+                                "-Wno-ignored-attributes"
                             )
                             is VisualCpp -> listOf("/std:c++17", "/EHsc", "/W4", "/permissive", "/WX")
                             else -> emptyList()
@@ -46,12 +49,18 @@ library {
                     toolChain.map {
                         when (it) {
                             is Gcc, is Clang -> listOf(
-                                "-ldwmapi", "-lGdi32", "-luser32",
-                                "-ladvapi32", "-lShell32"
+                                "-ldwmapi",
+                                "-lGdi32",
+                                "-luser32",
+                                "-ladvapi32",
+                                "-lShell32"
                             )
                             is VisualCpp -> listOf(
-                                "dwmapi.lib", "user32.lib", "Gdi32.lib",
-                                "Advapi32.lib", "Shell32.lib"
+                                "dwmapi.lib",
+                                "user32.lib",
+                                "Gdi32.lib",
+                                "Advapi32.lib",
+                                "Shell32.lib"
                             )
                             else -> emptyList()
                         }
