@@ -123,6 +123,6 @@ public class ThemedSVGIcon extends DarkSVGIcon implements ThemedIcon {
     }
 
     protected void patchColors() {
-        ThemedSVGIconParserProvider.patchColors(paints, getContextDefaults(), null);
+        ThemedSVGIconParserProvider.patchColors(paints(), getContextDefaults(), null);
     }
 }

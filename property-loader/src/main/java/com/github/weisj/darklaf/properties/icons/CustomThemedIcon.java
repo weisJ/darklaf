@@ -131,7 +131,6 @@ public class CustomThemedIcon extends ThemedSVGIcon implements MutableThemedIcon
 
     @Override
     protected void patchColors() {
-        super.patchColors();
         ThemedSVGIconParserProvider.patchColors(paints(), getProperties(), getContextProperties());
     }
 
