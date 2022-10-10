@@ -274,7 +274,7 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
         boolean scrollVisible = scrollBarVisible();
         if (table.getShowVerticalLines()) {
             TableColumnModel cm = table.getColumnModel();
-            int tableHeight = PropertyUtil.getBooleanProperty(table, KEY_VERTICAL_LINES_THROUGH, false) ? maxCell.y + maxCell.height - minCell.y : table.getHeight();
+            int tableHeight = PropertyUtil.getBooleanProperty(table, KEY_FULL_HEIGHT_VERTICAL_LINES, false) ? maxCell.y + maxCell.height - minCell.y : table.getHeight();
             int x;
             boolean ltr = table.getComponentOrientation().isLeftToRight();
             x = damagedArea.x;
