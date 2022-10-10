@@ -42,7 +42,7 @@ public interface TableConstants extends CellConstants {
     String KEY_IS_FILE_LIST = "Table.isFileList";
     String KEY_IS_PRINT_MODE = "Table.printMode";
     String KEY_CELL_VALUE_DETERMINES_EDITOR_CLASS = "Table.cellDeterminesClass";
-    String KEY_VERTICAL_LINES_THROUGH = "throughVerticalLines";
+    String KEY_FULL_HEIGHT_VERTICAL_LINES = "Table.fullHeightVerticalLines";
 
     static boolean isBooleanRenderingEnabled(final JTable table) {
         return PropertyUtil.getBooleanProperty(table, TableConstants.KEY_RENDER_BOOLEAN_AS_CHECKBOX);
