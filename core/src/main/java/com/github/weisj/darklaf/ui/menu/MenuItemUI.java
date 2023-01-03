@@ -275,7 +275,7 @@ public interface MenuItemUI {
         if (lh.isTopLevelMenu()) result.width += lh.getLeadingGap();
 
         // Calculate the result height
-        result.height = Integer.MIN_VALUE;
+        result.height = UIManager.getInt("MenuItem.minPrefHeight");
         result.height = Math.max(result.height, lh.getCheckSize().getHeight());
         result.height = Math.max(result.height, lh.getLabelSize().getHeight());
         result.height = Math.max(result.height, lh.getAccSize().getHeight());
