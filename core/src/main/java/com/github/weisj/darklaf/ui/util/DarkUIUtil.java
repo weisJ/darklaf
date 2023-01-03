@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -27,7 +27,6 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.beans.PropertyChangeEvent;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import javax.swing.*;
@@ -106,30 +105,6 @@ public final class DarkUIUtil {
         return ins;
     }
 
-    public static Insets addInsets(final Insets ins1, final Insets ins2, final boolean createNew) {
-        if (createNew) {
-            return addInsets(addInsets(new Insets(0, 0, 0, 0), ins1), ins2);
-        } else {
-            return addInsets(ins1, ins2);
-        }
-    }
-
-    public static Insets addInsets(final Insets ins1, final int extra) {
-        ins1.left += extra;
-        ins1.right += extra;
-        ins1.top += extra;
-        ins1.bottom += extra;
-        return ins1;
-    }
-
-    public static Insets addInsets(final Insets ins1, final int extra, final boolean createNew) {
-        if (createNew) {
-            return addInsets(addInsets(new Insets(0, 0, 0, 0), ins1), extra);
-        } else {
-            return addInsets(ins1, extra);
-        }
-    }
-
     public static Insets addInsets(final Insets ins1, final Insets ins2) {
         if (ins2 == null) return ins1;
         if (ins1 != null) {
@@ -147,15 +122,6 @@ public final class DarkUIUtil {
         dim.width += ins.left + ins.right;
         dim.height += ins.top + ins.bottom;
         return dim;
-    }
-
-    public static void removeInsets(final Rectangle rectangle, final Insets insets) {
-        if (insets != null && rectangle != null) {
-            rectangle.x -= insets.left;
-            rectangle.y -= insets.top;
-            rectangle.width += insets.left + insets.right;
-            rectangle.height += insets.top + insets.bottom;
-        }
     }
 
     public static void repaint(final Component component) {
@@ -178,21 +144,6 @@ public final class DarkUIUtil {
             } else {
                 component.repaint(x, y, width, height);
             }
-        }
-    }
-
-    public static <T extends Component> void repaintChild(final T component, final Function<T, JComponent> func,
-            final Rectangle bounds) {
-        repaintChild(component, func, bounds, false);
-    }
-
-    public static <T extends Component> void repaintChild(final T component, final Function<T, JComponent> func,
-            final Rectangle bounds, final boolean immediately) {
-        if (component != null) {
-            JComponent c = func.apply(component);
-            Rectangle r = SwingUtilities.convertRectangle(component, bounds, c);
-            r = r.intersection(new Rectangle(0, 0, c.getWidth(), c.getHeight()));
-            repaint(c, r, immediately);
         }
     }
 
@@ -259,17 +210,6 @@ public final class DarkUIUtil {
         return SwingUtilities.getUnwrappedParent(comp);
     }
 
-    public static Component unwrapComponent(final Component component) {
-        if (component == null) return null;
-        if (!(component.getParent() instanceof JLayer) && !(component.getParent() instanceof JViewport))
-            return component;
-        Container parent = component.getParent();
-        while (parent instanceof JLayer || parent instanceof JViewport) {
-            parent = parent.getParent();
-        }
-        return parent;
-    }
-
     public static <T> T getUIOfType(final ComponentUI ui, final Class<T> klass) {
         if (klass.isAssignableFrom(ui.getClass())) {
             return klass.cast(ui);
@@ -306,11 +246,6 @@ public final class DarkUIUtil {
     }
 
     @SafeVarargs
-    public static <T> T getParentOfType(final Component c, final Class<? extends T>... classes) {
-        return getParentOfType(c, Integer.MAX_VALUE, classes);
-    }
-
-    @SafeVarargs
     public static <T> T getParentOfType(final Component c, final int searchDepth, final Class<? extends T>... classes) {
         int depth = 0;
         for (Component eachParent = c; eachParent != null; eachParent = eachParent.getParent()) {
@@ -330,71 +265,6 @@ public final class DarkUIUtil {
             return null;
         }
         return component instanceof Window ? (Window) component : SwingUtilities.getWindowAncestor(component);
-    }
-
-    public static boolean isTooltipShowing(final JComponent component) {
-        AbstractAction hideTipAction = (AbstractAction) component.getActionMap().get("hideTip");
-        return hideTipAction.isEnabled();
-    }
-
-    public static MenuElement findEnabledChild(final MenuElement[] e, final MenuElement elem, final boolean forward) {
-        for (int i = 0; i < e.length; i++) {
-            if (e[i] == elem) {
-                return findEnabledChild(e, i, forward);
-            }
-        }
-        return null;
-    }
-
-    public static MenuElement findEnabledChild(final MenuElement[] e, final int fromIndex, final boolean forward) {
-        MenuElement result;
-        if (forward) {
-            result = nextEnabledChild(e, fromIndex + 1, e.length - 1);
-            if (result == null) result = nextEnabledChild(e, 0, fromIndex - 1);
-        } else {
-            result = previousEnabledChild(e, fromIndex - 1, 0);
-            if (result == null) result = previousEnabledChild(e, e.length - 1, fromIndex + 1);
-        }
-        return result;
-    }
-
-    private static MenuElement nextEnabledChild(final MenuElement[] e, final int fromIndex, final int toIndex) {
-        for (int i = fromIndex; i <= toIndex; i++) {
-            if (e[i] != null) {
-                Component comp = e[i].getComponent();
-                if (comp != null && (comp.isEnabled() || UIManager.getBoolean("MenuItem.disabledAreNavigable"))
-                        && comp.isVisible()) {
-                    return e[i];
-                }
-            }
-        }
-        return null;
-    }
-
-    private static MenuElement previousEnabledChild(final MenuElement[] e, final int fromIndex, final int toIndex) {
-        for (int i = fromIndex; i >= toIndex; i--) {
-            if (e[i] != null) {
-                Component comp = e[i].getComponent();
-                if (comp != null && (comp.isEnabled() || UIManager.getBoolean("MenuItem.disabledAreNavigable"))
-                        && comp.isVisible()) {
-                    return e[i];
-                }
-            }
-        }
-        return null;
-    }
-
-    public static boolean isOverText(final MouseEvent e, final int index, final JList<?> list) {
-        Rectangle bounds = list.getCellBounds(index, index);
-        if (!bounds.contains(e.getPoint())) return false;
-        // noinspection unchecked
-        Component cellRenderer = ((ListCellRenderer<Object>) list.getCellRenderer()).getListCellRendererComponent(list,
-                list.getModel().getElementAt(index), index, false, false);
-        if (cellRenderer instanceof JLabel) {
-            return isOverText((JLabel) cellRenderer, bounds, e.getPoint());
-        } else {
-            return true;
-        }
     }
 
     public static boolean isOverText(final JLabel label, final Rectangle bounds, final Point p) {
@@ -499,10 +369,6 @@ public final class DarkUIUtil {
         return null;
     }
 
-    public static int setAltGraphMask(final int modifier) {
-        return modifier | InputEvent.ALT_GRAPH_DOWN_MASK;
-    }
-
     public static boolean isScaleChanged(final PropertyChangeEvent ev) {
         return isScaleChanged(ev.getPropertyName(), ev.getOldValue(), ev.getNewValue());
     }
@@ -517,15 +383,6 @@ public final class DarkUIUtil {
         } else {
             return false;
         }
-    }
-
-    public static boolean isUndecorated(final Window window) {
-        if (window instanceof Frame) {
-            return ((Frame) window).isUndecorated();
-        } else if (window instanceof Dialog) {
-            return ((Dialog) window).isUndecorated();
-        }
-        return false;
     }
 
     public static Container getParentMatching(final Container parent, final Predicate<Container> test) {
@@ -544,10 +401,6 @@ public final class DarkUIUtil {
             p = prev.getParent();
         }
         return prev;
-    }
-
-    public static Container getOpaqueParent(final Container parent) {
-        return getParentMatching(parent, Container::isOpaque);
     }
 
     public static Dimension getPreferredSize(final JComponent component) {
