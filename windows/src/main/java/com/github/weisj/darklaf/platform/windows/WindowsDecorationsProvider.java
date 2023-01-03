@@ -78,7 +78,7 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
     private boolean useSmallCornerRadiusForWindow(final Window w) {
         if (!(w instanceof RootPaneContainer)) return false;
         return PropertyUtil.getBooleanProperty(((RootPaneContainer) w).getRootPane(),
-                DecorationsConstants.KEY_WINDOWS_SMALL_CORNER_RADIUS, true);
+                DecorationsConstants.KEY_WINDOWS_SMALL_CORNER_RADIUS, false);
     }
 
     @Override
