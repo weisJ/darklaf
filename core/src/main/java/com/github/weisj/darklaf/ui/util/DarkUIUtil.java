@@ -39,6 +39,8 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreeCellRenderer;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.github.weisj.darklaf.focus.FocusParentHelper;
 import com.github.weisj.darklaf.iconset.IconSet;
 import com.github.weisj.darklaf.properties.icons.IconLoader;
@@ -426,6 +428,10 @@ public final class DarkUIUtil {
     public static <T> T nullableCast(final Class<T> type, final Object o) {
         if (type != null && type.isInstance(o)) return type.cast(o);
         return null;
+    }
+
+    public static <T> @NotNull T notNullOrElse(final T value, final @NotNull T fallback) {
+        return value == null ? fallback : value;
     }
 
     public static boolean isDecorated(final Window window) {

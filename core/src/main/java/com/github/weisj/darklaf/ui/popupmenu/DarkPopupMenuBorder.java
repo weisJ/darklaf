@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -23,14 +23,22 @@ package com.github.weisj.darklaf.ui.popupmenu;
 import java.awt.*;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.UIResource;
 
 import com.github.weisj.darklaf.components.border.MutableLineBorder;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 /** @author Jannis Weis */
-public class DarkPopupMenuBorder extends MutableLineBorder implements UIResource {
+public class DarkPopupMenuBorder extends CompoundBorder implements UIResource {
 
     public DarkPopupMenuBorder() {
-        super(UIManager.getInsets("PopupMenu.borderInsets"), UIManager.getColor("PopupMenu.borderColor"));
+        super(new MutableLineBorder(
+                UIManager.getInsets("PopupMenu.borderInsets"),
+                UIManager.getColor("PopupMenu.borderColor")),
+                new EmptyBorder(DarkUIUtil.notNullOrElse(
+                        UIManager.getInsets("PopupMenu.border.margins"),
+                        new Insets(0, 0, 0, 0))));
     }
 }
