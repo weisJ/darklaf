@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -28,10 +28,12 @@ public final class Parser {
 
     public static final Object EMPTY_VALUE = new Object();
 
+    private static final List<PropertyParser> preprocessorSteps = Arrays.asList(
+            new FallbackParser(),
+            new ReferenceParser());
+    static final PropertyParser PREPROCESSOR = Parser::applyPreprocessors;
     private static final List<PropertyParser> steps = Arrays.asList(
             new NullParser(),
-            new FallbackParser(),
-            new ReferenceParser(),
             new PrimitiveParser(),
             new InsetParser(),
             new LazyObjectParser(),
@@ -52,13 +54,28 @@ public final class Parser {
         return debugMode;
     }
 
-    public static ParseResult parse(final ParseResult parseResult, final ParserContext context) {
+    private static ParseResult applySteps(final ParseResult parseResult,
+            final ParserContext context,
+            final List<PropertyParser> parsers) {
         ParseResult p = parseResult;
-        String savedValue = parseResult.value;
-        for (PropertyParser step : steps) {
+
+        for (PropertyParser step : parsers) {
             if (p.finished) return p;
             p = step.parse(p, context);
         }
+        return p;
+    }
+
+    public static ParseResult applyPreprocessors(final ParseResult parseResult, final ParserContext context) {
+        return applySteps(parseResult, context, preprocessorSteps);
+    }
+
+    public static ParseResult parse(final ParseResult parseResult, final ParserContext context) {
+        ParseResult p = parseResult;
+        String savedValue = parseResult.value;
+        p = applyPreprocessors(p, context);
+        if (p.finished) return p;
+        p = applySteps(p, context, steps);
         if (!p.finished) {
             for (String warning : p.warnings) {
                 ParserUtil.warning(warning);

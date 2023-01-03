@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Jannis Weis
+ * Copyright (c) 2021-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -54,7 +54,8 @@ public class IconParser extends KeyFilteredParser implements Delimiters {
         Dimension dim = new Dimension(-1, -1);
         if (parseResult.value.endsWith(String.valueOf(ARG_END))) {
             List<Integer> dimensions = ParserUtil.parseDelimited(ARG_START, ARG_END, ARG_SEPARATOR, false,
-                    PropertyParser.of(Integer::parseInt), Integer.class, parseResult, context);
+                    Parser.PREPROCESSOR.andThen(PropertyParser.of(Integer::parseInt)),
+                    Integer.class, parseResult, context);
             if (dimensions.size() != 2) return ParserUtil.error(parseResult, "Invalid dimension.");
             dim.width = dimensions.get(0);
             dim.height = dimensions.get(1);
@@ -63,7 +64,7 @@ public class IconParser extends KeyFilteredParser implements Delimiters {
         List<String> modifiers;
         if (parseResult.value.endsWith(String.valueOf(MODIFIER_END))) {
             modifiers = ParserUtil.parseDelimited(MODIFIER_START, MODIFIER_END, MODIFIER_DELIMITER, false,
-                    PropertyParser.of(s -> s), String.class, parseResult, context);
+                    Parser.PREPROCESSOR.andThen(PropertyParser.of(s -> s)), String.class, parseResult, context);
 
         } else {
             modifiers = Collections.emptyList();
