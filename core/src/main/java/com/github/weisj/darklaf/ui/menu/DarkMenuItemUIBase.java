@@ -39,7 +39,7 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 public class DarkMenuItemUIBase extends BasicMenuItemUI implements MenuItemUI {
 
     protected int acceleratorTextOffset;
-    protected boolean useEvenHeight;
+    protected boolean forceOddMenuHeight;
     private boolean closeOnClick;
 
     public static ComponentUI createUI(final JComponent c) {
@@ -54,7 +54,8 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI implements MenuItemUI {
     public void installUI(final JComponent c) {
         super.installUI(c);
         closeOnClick = !UIManager.getBoolean(getPropertyPrefix() + ".doNotCloseOnMouseClick");
-        useEvenHeight = PropertyUtil.parseBooleanProperty(UIManager.get(getPropertyPrefix() + ".evenHeight"), true);
+        forceOddMenuHeight =
+                PropertyUtil.parseBooleanProperty(UIManager.get(getPropertyPrefix() + ".evenHeight"), true);
         acceleratorTextOffset = UIManager.getInt(getPropertyPrefix() + ".acceleratorTextOffset");
         acceleratorFont = UIManager.getFont("MenuItem.font");
         acceleratorForeground = UIManager.getColor("MenuItem.foreground");
@@ -140,8 +141,8 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI implements MenuItemUI {
     }
 
     @Override
-    public boolean isUseEvenHeight() {
-        return useEvenHeight;
+    public boolean forceOddMenuHeight() {
+        return forceOddMenuHeight;
     }
 
     protected static MenuItemLayoutHelper getMenuItemLayoutHelperImpl(

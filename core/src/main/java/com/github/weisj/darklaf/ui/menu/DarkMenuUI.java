@@ -35,7 +35,7 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
 
     protected int acceleratorTextOffset;
-    protected boolean useEvenHeight;
+    protected boolean forceOddMenuHeight;
     protected Icon arrowIconHover;
     protected Icon arrowIconDisabled;
     protected JMenu menu;
@@ -104,7 +104,8 @@ public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
         acceleratorSelectionForeground = UIManager.getColor("Menu.selectionForeground");
         arrowIconHover = UIManager.getIcon("Menu.arrowHover.icon");
         arrowIconDisabled = UIManager.getIcon("Menu.arrowDisabled.icon");
-        useEvenHeight = PropertyUtil.parseBooleanProperty(UIManager.get(getPropertyPrefix() + ".evenHeight"), true);
+        forceOddMenuHeight =
+                PropertyUtil.parseBooleanProperty(UIManager.get(getPropertyPrefix() + ".evenHeight"), true);
         acceleratorTextOffset = UIManager.getInt(getPropertyPrefix() + ".acceleratorTextOffset");
     }
 
@@ -175,8 +176,8 @@ public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
     }
 
     @Override
-    public boolean isUseEvenHeight() {
-        return useEvenHeight;
+    public boolean forceOddMenuHeight() {
+        return forceOddMenuHeight;
     }
 
 }

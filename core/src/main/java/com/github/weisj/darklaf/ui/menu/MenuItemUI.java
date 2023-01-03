@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -85,7 +85,7 @@ public interface MenuItemUI {
 
     int getAcceleratorTextOffset();
 
-    boolean isUseEvenHeight();
+    boolean forceOddMenuHeight();
 
     default void paintMenuItemImpl(final Graphics g, final JComponent c, final Icon checkIcon,
             final Icon arrowIcon, final int defaultTextIconGap) {
@@ -282,7 +282,7 @@ public interface MenuItemUI {
         }
 
         // If the height is even, bump it up by one. This is critical for the text to center properly
-        if (result.height % 2 == 0 && isUseEvenHeight()) {
+        if (result.height % 2 == 0 && forceOddMenuHeight()) {
             result.height++;
         }
 
