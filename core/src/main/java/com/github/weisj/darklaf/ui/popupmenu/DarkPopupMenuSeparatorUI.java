@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -38,13 +38,16 @@ public class DarkPopupMenuSeparatorUI extends DarkSeparatorUI {
     protected void installDefaults(final JSeparator s) {
         super.installDefaults(s);
         size = UIManager.getDimension("PopupMenuDivider.size");
+        color = UIManager.getColor("PopupMenu.borderColor");
+        insets = UIManager.getInsets("PopupMenuDivider.insets");
+        if (insets == null) insets = new Insets(0, 0, 0, 0);
     }
 
     @Override
     public void paint(final Graphics g, final JComponent c) {
         Dimension s = c.getSize();
-        g.setColor(UIManager.getDefaults().getColor("PopupMenu.borderColor"));
-        g.fillRect(0, size.height / 2, s.width, 1);
+        g.setColor(color);
+        g.fillRect(insets.left, size.height / 2, s.width - insets.left - insets.right, 1);
     }
 
     @Override
