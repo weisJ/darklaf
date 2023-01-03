@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -30,6 +30,7 @@ import javax.swing.plaf.basic.BasicMenuUI;
 
 import com.github.weisj.darklaf.compatibility.MenuItemLayoutHelper;
 import com.github.weisj.darklaf.delegate.MouseInputDelegate;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
 
@@ -103,7 +104,7 @@ public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
         acceleratorSelectionForeground = UIManager.getColor("Menu.selectionForeground");
         arrowIconHover = UIManager.getIcon("Menu.arrowHover.icon");
         arrowIconDisabled = UIManager.getIcon("Menu.arrowDisabled.icon");
-        useEvenHeight = !Boolean.TRUE.equals(UIManager.get(getPropertyPrefix() + ".evenHeight"));
+        useEvenHeight = PropertyUtil.parseBooleanProperty(UIManager.get(getPropertyPrefix() + ".evenHeight"), true);
         acceleratorTextOffset = UIManager.getInt(getPropertyPrefix() + ".acceleratorTextOffset");
     }
 

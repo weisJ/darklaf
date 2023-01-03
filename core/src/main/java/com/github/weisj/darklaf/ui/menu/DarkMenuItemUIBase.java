@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -30,6 +30,7 @@ import javax.swing.plaf.basic.BasicMenuItemUI;
 import com.github.weisj.darklaf.compatibility.MenuItemLayoutHelper;
 import com.github.weisj.darklaf.ui.UIAction;
 import com.github.weisj.darklaf.ui.util.LazyActionMap;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 /**
  * @author Konstantin Bulenkov
@@ -53,7 +54,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI implements MenuItemUI {
     public void installUI(final JComponent c) {
         super.installUI(c);
         closeOnClick = !UIManager.getBoolean(getPropertyPrefix() + ".doNotCloseOnMouseClick");
-        useEvenHeight = !Boolean.TRUE.equals(UIManager.get(getPropertyPrefix() + ".evenHeight"));
+        useEvenHeight = PropertyUtil.parseBooleanProperty(UIManager.get(getPropertyPrefix() + ".evenHeight"), true);
         acceleratorTextOffset = UIManager.getInt(getPropertyPrefix() + ".acceleratorTextOffset");
         acceleratorFont = UIManager.getFont("MenuItem.font");
         acceleratorForeground = UIManager.getColor("MenuItem.foreground");
