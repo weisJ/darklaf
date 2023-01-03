@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -51,7 +51,7 @@ public class DarkLaf extends ThemedLookAndFeel {
      * All tasks for initializing the ui defaults in order of execution.
      */
     private static final DefaultsInitTask[] INIT_TASKS = new DefaultsInitTask[] {
-            new RemoveUnusedInitTask(),
+            new RemovePropertiesTask("unused"),
             new ThemeDefaultsInitTask(),
             new InputDefaultsInitTask(),
             new IdeaDefaultsInitTask(),
@@ -61,7 +61,9 @@ public class DarkLaf extends ThemedLookAndFeel {
             new SystemDefaultsInitTask(),
             new PlatformDefaultsInitTask(),
             new UserInitTask(),
-            new UtilityDefaultsInitTask()};
+            new UtilityDefaultsInitTask(),
+            new RemovePropertiesTask("tmp")
+    };
 
     /*
      * The base look and feel. This may vary to handle different platform support.

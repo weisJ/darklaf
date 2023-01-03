@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2022 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -83,6 +83,7 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
         foregroundGeneration.run(currentTheme, uiProps);
 
         initGlobals(currentTheme, defaults, uiProps);
+        initTemporaryBindings(defaults, uiProps);
         initUIProperties(currentTheme, defaults, uiProps);
         initIconTheme(currentTheme, defaults, uiProps);
         initPlatformProperties(currentTheme, defaults, uiProps);
@@ -151,6 +152,12 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
                     uiProps, defaults, iconResolver);
         }
         currentTheme.customizeIconTheme(uiProps, defaults, iconResolver);
+    }
+
+    private void initTemporaryBindings(final UIDefaults defaults, final Properties uiProps) {
+        PropertyLoader.putProperties(
+                PropertyLoader.loadProperties(DarkLaf.class, "tmp", ""),
+                uiProps, defaults, DarkUIUtil.iconResolver());
     }
 
     private void initPlatformProperties(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {

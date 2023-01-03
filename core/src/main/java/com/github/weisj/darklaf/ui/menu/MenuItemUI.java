@@ -95,6 +95,7 @@ public interface MenuItemUI {
 
         Rectangle viewRect = new Rectangle(0, 0, mi.getWidth(), mi.getHeight());
         DarkUIUtil.applyInsets(viewRect, mi.getInsets());
+        DarkUIUtil.applyInsets(viewRect, mi.getMargin());
 
         MenuItemLayoutHelper lh = getMenuItemLayoutHelper(checkIcon, arrowIcon, defaultTextIconGap, mi, viewRect);
         MenuItemLayoutHelper.MILayoutResult lr = lh.layoutMenuItem();
@@ -283,6 +284,12 @@ public interface MenuItemUI {
         if (insets != null) {
             result.width += insets.left + insets.right;
             result.height += insets.top + insets.bottom;
+        }
+
+        Insets margin = mi.getMargin();
+        if (margin != null) {
+            result.width += margin.left + margin.right;
+            result.height += margin.top + margin.bottom;
         }
 
         // If the height is even, bump it up by one. This is critical for the text to center properly

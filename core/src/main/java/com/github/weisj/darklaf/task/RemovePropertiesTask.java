@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -28,11 +28,17 @@ import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.properties.PropertyLoader;
 import com.github.weisj.darklaf.theme.Theme;
 
-public class RemoveUnusedInitTask implements DefaultsInitTask {
+public class RemovePropertiesTask implements DefaultsInitTask {
+
+    private final String propertiesFileName;
+
+    public RemovePropertiesTask(final String propertiesFileName) {
+        this.propertiesFileName = propertiesFileName;
+    }
 
     @Override
     public void run(final Theme currentTheme, final UIDefaults defaults) {
-        Properties props = PropertyLoader.loadProperties(DarkLaf.class, "unused", "");
+        Properties props = PropertyLoader.loadProperties(DarkLaf.class, propertiesFileName, "");
         props.keySet().forEach(defaults::remove);
     }
 }
