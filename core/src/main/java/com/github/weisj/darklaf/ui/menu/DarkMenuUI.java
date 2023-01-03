@@ -75,7 +75,16 @@ public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
                         }
                     }
                 }
+                if (menu.isTopLevelMenu()) {
+                    menu.getModel().setRollover(true);
+                }
                 super.mouseEntered(e);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                menu.getModel().setRollover(false);
+                super.mouseExited(e);
             }
 
             @Override
@@ -100,6 +109,9 @@ public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
     @Override
     protected void installDefaults() {
         super.installDefaults();
+        LookAndFeel.installProperty(
+                menu, "rolloverEnabled",
+                UIManager.getBoolean("Menu.rollOverEnabled"));
         acceleratorFont = UIManager.getFont("Menu.font");
         acceleratorForeground = UIManager.getColor("Menu.foreground");
         acceleratorSelectionForeground = UIManager.getColor("Menu.selectionForeground");
@@ -179,7 +191,7 @@ public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
 
     @Override
     public int getArc() {
-        return menu.isTopLevelMenu() ? 0 : arc;
+        return arc;
     }
 
     @Override

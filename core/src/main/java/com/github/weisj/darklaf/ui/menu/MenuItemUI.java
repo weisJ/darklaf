@@ -22,12 +22,7 @@ package com.github.weisj.darklaf.ui.menu;
 
 import java.awt.*;
 
-import javax.swing.AbstractButton;
-import javax.swing.ButtonModel;
-import javax.swing.Icon;
-import javax.swing.JComponent;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
+import javax.swing.*;
 
 import com.github.weisj.darklaf.compatibility.MenuItemLayoutHelper;
 import com.github.weisj.darklaf.compatibility.SwingUtil;
@@ -67,15 +62,22 @@ public interface MenuItemUI {
 
     default Color getBackground(final JMenuItem item) {
         boolean enabled = item.isEnabled();
-        boolean armed = item.isArmed() || (item instanceof JMenu && item.isSelected());
         if (enabled) {
-            return armed ? getSelectionBackground() : item.getBackground();
+            boolean armed = item.isArmed() || (item instanceof JMenu && item.isSelected());
+            if (armed) return getSelectionBackground();
+            boolean hover = item.isRolloverEnabled() && item.getModel().isRollover();
+            if (hover) return getHoverBackground();
+            return item.getBackground();
         } else {
             return getDisabledBackground();
         }
     }
 
     Color getSelectionBackground();
+
+    default Color getHoverBackground() {
+        return getSelectionBackground();
+    }
 
     Color getDisabledBackground();
 
