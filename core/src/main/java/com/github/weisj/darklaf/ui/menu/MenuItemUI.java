@@ -20,12 +20,7 @@
  */
 package com.github.weisj.darklaf.ui.menu;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Insets;
-import java.awt.Rectangle;
+import java.awt.*;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonModel;
@@ -36,6 +31,7 @@ import javax.swing.JMenuItem;
 
 import com.github.weisj.darklaf.compatibility.MenuItemLayoutHelper;
 import com.github.weisj.darklaf.compatibility.SwingUtil;
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.StringUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
@@ -85,6 +81,8 @@ public interface MenuItemUI {
 
     int getAcceleratorTextOffset();
 
+    int getArc();
+
     boolean forceOddMenuHeight();
 
     default void paintMenuItemImpl(final Graphics g, final JComponent c, final Icon checkIcon,
@@ -122,14 +120,20 @@ public interface MenuItemUI {
     default void paintBackgroundImpl(final Graphics g, final JMenuItem menuItem, final Color bgColor) {
         int menuWidth = menuItem.getWidth();
         int menuHeight = menuItem.getHeight() + 1;
+        int arc = getArc();
 
         boolean armed = menuItem.isArmed()
                 || (menuItem instanceof JMenu && menuItem.isSelected())
                 || (menuItem.isRolloverEnabled() && menuItem.getModel().isRollover());
         boolean parentOpaque = menuItem.getParent().isOpaque();
+
         if (armed || (menuItem.isOpaque() && parentOpaque)) {
+            if (arc > 0) {
+                g.setColor(menuItem.getBackground());
+                g.fillRect(0, 0, menuWidth, menuHeight);
+            }
             g.setColor(bgColor);
-            g.fillRect(0, 0, menuWidth, menuHeight);
+            PaintUtil.fillRoundRect((Graphics2D) g, 0, 0, menuWidth, menuHeight, arc);
         }
     }
 

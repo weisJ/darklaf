@@ -39,6 +39,7 @@ public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
     protected Icon arrowIconHover;
     protected Icon arrowIconDisabled;
     protected JMenu menu;
+    private int arc;
 
     public static ComponentUI createUI(final JComponent x) {
         return new DarkMenuUI();
@@ -107,6 +108,7 @@ public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
         forceOddMenuHeight =
                 PropertyUtil.parseBooleanProperty(UIManager.get(getPropertyPrefix() + ".evenHeight"), true);
         acceleratorTextOffset = UIManager.getInt(getPropertyPrefix() + ".acceleratorTextOffset");
+        arc = UIManager.getInt("MenuItem.arc");
     }
 
     @Override
@@ -173,6 +175,11 @@ public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
     @Override
     public int getAcceleratorTextOffset() {
         return acceleratorTextOffset;
+    }
+
+    @Override
+    public int getArc() {
+        return menu.isTopLevelMenu() ? 0 : arc;
     }
 
     @Override

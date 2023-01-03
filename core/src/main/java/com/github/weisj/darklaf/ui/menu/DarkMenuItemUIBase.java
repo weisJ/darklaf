@@ -41,6 +41,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI implements MenuItemUI {
     protected int acceleratorTextOffset;
     protected boolean forceOddMenuHeight;
     private boolean closeOnClick;
+    private int arc;
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkMenuItemUIBase();
@@ -61,6 +62,7 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI implements MenuItemUI {
         acceleratorForeground = UIManager.getColor("MenuItem.foreground");
         acceleratorSelectionForeground = UIManager.getColor("MenuItem.selectionForeground");
         disabledForeground = UIManager.getColor("MenuItem.disabledForeground");
+        arc = UIManager.getInt("MenuItem.arc");
     }
 
     @Override
@@ -138,6 +140,11 @@ public class DarkMenuItemUIBase extends BasicMenuItemUI implements MenuItemUI {
     @Override
     public int getAcceleratorTextOffset() {
         return acceleratorTextOffset;
+    }
+
+    @Override
+    public int getArc() {
+        return arc;
     }
 
     @Override
