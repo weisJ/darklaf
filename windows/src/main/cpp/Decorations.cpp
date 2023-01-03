@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -316,14 +316,14 @@ static void SetupWindowStyle(HWND handle) {
     SetWindowLongPtr(handle, GWL_STYLE, style);
 }
 
-static bool InstallDecorations(HWND handle, bool is_popup) {
+static bool InstallDecorations(HWND handle, bool is_popup, bool use_small_corner_arc = false) {
     // Prevent multiple installations overriding the real window procedure.
     auto it = wrapper_map.find(handle);
     if (it != wrapper_map.end()) return false;
 
     SetupWindowStyle(handle);
     ExtendClientFrame(handle);
-    if (is_popup) {
+    if (use_small_corner_arc) {
         auto attribute = DWMWINDOWATTRIBUTE::DWMWA_WINDOW_CORNER_PREFERENCE;
         auto preference = DWM_WINDOW_CORNER_PREFERENCE::DWMWCP_ROUNDSMALL;
         DwmSetWindowAttribute(handle, attribute, &preference, sizeof(preference));
@@ -509,9 +509,9 @@ Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_uninstallDe
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_installPopupMenuDecorations(JNIEnv*, jclass, jlong hwnd) {
+Java_com_github_weisj_darklaf_platform_windows_JNIDecorationsWindows_installPopupMenuDecorations(JNIEnv*, jclass, jlong hwnd, jboolean useSmallCornerArc) {
     HWND handle = reinterpret_cast<HWND>(hwnd);
-    return static_cast<jboolean>(InstallDecorations(handle, true));
+    return static_cast<jboolean>(InstallDecorations(handle, true, useSmallCornerArc));
 }
 
 //Window functions.

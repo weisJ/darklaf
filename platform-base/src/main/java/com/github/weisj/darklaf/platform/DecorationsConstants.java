@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Jannis Weis
+ * Copyright (c) 2022-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -28,4 +28,5 @@ public interface DecorationsConstants {
     String KEY_UNIFIED_MENUBAR = "JRootPane.unifiedMenuBar";
     String KEY_COLORED_TITLE_BAR = "JRootPane.coloredTitleBar";
     String KEY_HIDE_TITLE = "JRootPane.hideTitle";
+    String KEY_WINDOWS_SMALL_CORNER_RADIUS = "JRootPane.windows.smallCornerRadius";
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -29,6 +29,7 @@ import javax.swing.border.Border;
 
 import com.github.weisj.darklaf.platform.*;
 import com.github.weisj.darklaf.platform.windows.ui.WindowsTitlePane;
+import com.github.weisj.darklaf.util.PropertyUtil;
 
 public class WindowsDecorationsProvider implements DecorationsProvider {
 
@@ -61,7 +62,9 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
         }
         PointerUtil.WindowPointer hwnd = PointerUtil.getHWND(window);
         if (hwnd.isValid()) {
-            JNIDecorationsWindows.installPopupMenuDecorations(hwnd.value());
+
+            JNIDecorationsWindows.installPopupMenuDecorations(hwnd.value(),
+                    useSmallCornerRadiusForWindow(window));
             if (window instanceof RootPaneContainer) {
                 JRootPane rootPane = ((RootPaneContainer) window).getRootPane();
                 Color bg = rootPane != null ? rootPane.getBackground() : null;
@@ -70,6 +73,12 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
                 }
             }
         }
+    }
+
+    private boolean useSmallCornerRadiusForWindow(final Window w) {
+        if (!(w instanceof RootPaneContainer)) return false;
+        return PropertyUtil.getBooleanProperty(((RootPaneContainer) w).getRootPane(),
+                DecorationsConstants.KEY_WINDOWS_SMALL_CORNER_RADIUS, true);
     }
 
     @Override
