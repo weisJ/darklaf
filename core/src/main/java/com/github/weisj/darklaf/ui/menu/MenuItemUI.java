@@ -97,7 +97,7 @@ public interface MenuItemUI {
 
         Rectangle viewRect = new Rectangle(0, 0, mi.getWidth(), mi.getHeight());
         DarkUIUtil.applyInsets(viewRect, mi.getInsets());
-        DarkUIUtil.applyInsets(viewRect, mi.getMargin());
+        DarkUIUtil.applyInsets(viewRect, getMargin(mi));
 
         MenuItemLayoutHelper lh = getMenuItemLayoutHelper(checkIcon, arrowIcon, defaultTextIconGap, mi, viewRect);
         MenuItemLayoutHelper.MILayoutResult lr = lh.layoutMenuItem();
@@ -252,6 +252,11 @@ public interface MenuItemUI {
         }
     }
 
+    static Insets getMargin(JMenuItem item) {
+        if (item instanceof JMenu && ((JMenu) item).isTopLevelMenu()) return null;
+        return item.getMargin();
+    }
+
     default Dimension getPreferredMenuItemSizeImpl(final JComponent c, final Icon checkIcon, final Icon arrowIcon,
             final int defaultTextIconGap) {
 
@@ -288,7 +293,7 @@ public interface MenuItemUI {
             result.height += insets.top + insets.bottom;
         }
 
-        Insets margin = mi.getMargin();
+        Insets margin = getMargin(mi);
         if (margin != null) {
             result.width += margin.left + margin.right;
             result.height += margin.top + margin.bottom;
