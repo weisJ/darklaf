@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -38,6 +38,7 @@ import javax.swing.tree.TreePath;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.platform.SystemInfo;
+import com.github.weisj.darklaf.properties.icons.EmptyIcon;
 import com.github.weisj.darklaf.properties.icons.RotatableIcon;
 import com.github.weisj.darklaf.ui.HasRendererPane;
 import com.github.weisj.darklaf.ui.cell.CellConstants;
@@ -66,7 +67,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     public static final String KEY_IS_TREE_RENDERER = "JComponent.isTreeRenderer";
     public static final String KEY_IS_TABLE_TREE = "JComponent.isTableTree";
 
-    protected static final Rectangle boundsBuffer = new Rectangle();
+    protected static final Rectangle cellBoundsBuffer = new Rectangle();
     protected static final RotatableIcon paintingIcon = new RotatableIcon();
 
     protected MouseListener selectionListener;
@@ -94,6 +95,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
 
     private int dashLength;
     private int dashGapLength;
+    private int arc;
+    private Insets selectionMargin;
     private DarkTreeExpansionAnimationListener treeExpansionAnimationListener;
 
     public static ComponentUI createUI(final JComponent c) {
@@ -149,6 +152,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         LookAndFeel.installProperty(tree, JTree.SHOWS_ROOT_HANDLES_PROPERTY, true);
         dashLength = UIManager.getInt("Tree.dash.length");
         dashGapLength = UIManager.getInt("Tree.dash.gaplength");
+        arc = UIManager.getInt("Tree.selection.arc");
+        selectionMargin = UIManager.getInsets("Tree.selection.margin");
     }
 
     @Override
@@ -306,7 +311,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         TreePath path = getPathForRow(tree, row);
         Rectangle paintBounds = g.getClipBounds();
         Insets insets = tree.getInsets();
-        Rectangle rowBounds = getPathBounds(path, insets, boundsBuffer);
+        Rectangle rowBounds = getPathBounds(path, insets, cellBoundsBuffer);
         g.translate(0, -rowBounds.y);
         paintBounds.y += rowBounds.y;
         paintSingleRow(g, paintBounds, insets, path, row);
@@ -321,48 +326,92 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
                 tree.getParent() instanceof JViewport ? ((JViewport) tree.getParent()).getViewPosition().x : 0;
         final int containerWidth =
                 tree.getParent() instanceof JViewport ? tree.getParent().getWidth() : tree.getWidth();
-        final Rectangle cellBounds = getPathBounds(path, insets, boundsBuffer);
+        final Rectangle cellBounds = getPathBounds(path, insets, cellBoundsBuffer);
         if (cellBounds == null) return null;
-        final int boundsX = cellBounds.x;
-        final int boundsWidth = cellBounds.width;
 
-        final boolean selected = tree.isPathSelected(path);
+        boolean selected = tree.isPathSelected(path);
+        boolean isFocused = hasFocus();
+        boolean isLeaf = treeModel.isLeaf(path.getLastPathComponent());
+        boolean isExpanded = !isLeaf && treeState.getExpandedState(path);
+        boolean hasBeenExpanded = !isLeaf && tree.hasBeenExpanded(path);
 
-        cellBounds.x = xOffset;
-        cellBounds.width = containerWidth;
-        paintRowBackground(g, cellBounds, path, row, selected);
-        cellBounds.x = boundsX;
-        cellBounds.width = boundsWidth;
+        boolean expandControlsVisible = shouldPaintExpandControl(path, row, isExpanded, hasBeenExpanded, isLeaf);
+        Icon expandControlIcon = expandControlsVisible
+                ? prepareExpandControlIcon(path, row, isLeaf, isExpanded, isFocused)
+                : EmptyIcon.create(0);
+        Rectangle expandControlBounds = getExpandControlBounds(cellBounds, expandControlIcon);
+
+        Rectangle rowBounds = new Rectangle(xOffset, cellBounds.y, containerWidth, cellBounds.height);
+        Rectangle effectiveCellBounds = new Rectangle();
+        Rectangle.union(cellBounds, expandControlBounds, effectiveCellBounds);
+        paintRowBackground(g, rowBounds, effectiveCellBounds, path, row, selected);
 
         if (path.getParentPath() != null) {
             paintVerticalLegs(g, paintBounds, cellBounds, insets, path);
         }
 
-        boolean isLeaf = treeModel.isLeaf(path.getLastPathComponent());
-        boolean isExpanded = !isLeaf && treeState.getExpandedState(path);
-        boolean hasBeenExpanded = !isLeaf && tree.hasBeenExpanded(path);
-
-        boolean isFocused = hasFocus();
-        if (shouldPaintExpandControl(path, row, isExpanded, hasBeenExpanded, isLeaf)) {
-            paintExpandControl(g, cellBounds, path, row, isExpanded, isLeaf, isFocused);
+        if (expandControlsVisible) {
+            expandControlIcon.paintIcon(tree, g, expandControlBounds.x, expandControlBounds.y);
         }
         paintRow(g, paintBounds, insets, cellBounds, path, row, isExpanded, hasBeenExpanded, isLeaf);
 
         if (!selected && tree.getLeadSelectionRow() == row && isFocused) {
             g.setColor(CellUtil.getTreeBackground(tree, true, row));
-            cellBounds.x = xOffset;
-            cellBounds.width = containerWidth;
-            PaintUtil.drawRect(g, cellBounds, leadSelectionBorderInsets);
+            PaintUtil.drawRect(g, rowBounds, leadSelectionBorderInsets);
         }
 
         return cellBounds;
     }
 
-    protected void paintRowBackground(final Graphics g, final Rectangle bounds, final TreePath path, final int row,
-            final boolean selected) {
+    protected void paintRowBackground(final Graphics g, final Rectangle rowBounds, final Rectangle cellBounds,
+            final TreePath path, final int row, final boolean selected) {
         if (path != null) {
             g.setColor(CellUtil.getTreeBackground(tree, selected, row));
-            g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+
+            if (!selected || selectionMargin == null) {
+                PaintUtil.fillRect(g, rowBounds);
+                return;
+            }
+
+            int minX = rowBounds.x;
+            int maxX = minX + rowBounds.width;
+
+            int rowLeft = minX + selectionMargin.left;
+            int rowRight = maxX - selectionMargin.right;
+
+            int arcLeft = Math.min(arc, Math.max(0, cellBounds.x - minX));
+            int arcRight = Math.min(arc, Math.max(0, maxX - (cellBounds.x + cellBounds.width)));
+
+            if (cellBounds.x < rowLeft) {
+                rowLeft = Math.max(minX, cellBounds.x);
+            }
+            if (cellBounds.x + cellBounds.width > rowRight) {
+                rowRight = Math.min(maxX, cellBounds.x + cellBounds.width);
+            }
+
+            rowBounds.x = rowLeft;
+            rowBounds.width = rowRight - rowLeft;
+
+            if (arcLeft == 0 && arcRight == 0) {
+                PaintUtil.fillRect(g, rowBounds);
+            } else {
+                if (arcLeft == arcRight) {
+                    PaintUtil.fillRoundRect((Graphics2D) g, rowBounds.x, rowBounds.y, rowBounds.width, rowBounds.height,
+                            arcLeft, false);
+                } else {
+                    Shape clip = g.getClip();
+                    Rectangle clipBounds = clip.getBounds();
+                    g.clipRect(0, clipBounds.y, rowBounds.x + rowBounds.width / 2, clipBounds.height);
+                    PaintUtil.fillRoundRect((Graphics2D) g, rowBounds.x, rowBounds.y, rowBounds.width, rowBounds.height,
+                            arcLeft, false);
+
+                    g.setClip(clip);
+                    g.clipRect(rowBounds.x + rowBounds.width / 2, clipBounds.y, clipBounds.width, clipBounds.height);
+                    PaintUtil.fillRoundRect((Graphics2D) g, rowBounds.x, rowBounds.y, rowBounds.width, rowBounds.height,
+                            arcRight, false);
+                    g.setClip(clip);
+                }
+            }
         }
     }
 
@@ -526,13 +575,60 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         throw new UnsupportedOperationException("Use own implementation");
     }
 
-    protected void paintExpandControl(final Graphics g, final Rectangle bounds, final TreePath path,
-            final int row, final boolean isExpanded, final boolean isLeaf, final boolean isFocused) {
+    private Icon prepareExpandControlIcon(final TreePath path, final int row,
+            final boolean isLeaf, final boolean isExpanded, final boolean isFocused) {
         if (!isLeaf(row)) {
             boolean isPathSelected = tree.isPathSelected(path);
             setExpandedIcon(getExpandedIcon(isPathSelected, isFocused || tree.isEditing()));
             setCollapsedIcon(getCollapsedIcon(isPathSelected, isFocused || tree.isEditing()));
         }
+        // Draw icons if not a leaf and either hasn't been loaded,
+        // or the model child count is > 0.
+        if (!isLeaf) {
+            if (isExpanded) {
+                Icon expIcon = getExpandedIcon();
+                if (expIcon != null) {
+                    if (Objects.equals(treeExpansionAnimationListener.getAnimationPath(), path)) {
+                        paintingIcon.setIcon(expIcon);
+                        paintingIcon.setRotation(
+                                (treeExpansionAnimationListener.getAnimationState() - 1) * Math.PI / 2.0);
+                        expIcon = paintingIcon;
+                    }
+                    return expIcon;
+                }
+            } else {
+                Icon collIcon = getCollapsedIcon();
+                if (collIcon != null) {
+                    if (Objects.equals(treeExpansionAnimationListener.getAnimationPath(), path)) {
+                        paintingIcon.setIcon(collIcon);
+                        paintingIcon.setRotation(
+                                (1 - treeExpansionAnimationListener.getAnimationState()) * Math.PI / 2.0);
+                        collIcon = paintingIcon;
+                    }
+                    return collIcon;
+                }
+            }
+        }
+        return EmptyIcon.create(0);
+    }
+
+    private Rectangle getExpandControlBounds(final Rectangle cellBounds, final Icon icon) {
+        int iconCenterX;
+        if (tree.getComponentOrientation().isLeftToRight()) {
+            iconCenterX = cellBounds.x - getRightChildIndent() + 1;
+        } else {
+            iconCenterX = cellBounds.x + cellBounds.width + getRightChildIndent() - 1;
+        }
+        int iconCenterY = cellBounds.y + (cellBounds.height / 2);
+        int w = icon.getIconWidth();
+        int h = icon.getIconHeight();
+        int x = tree.getComponentOrientation().isLeftToRight()
+                ? iconCenterX - (int) Math.ceil(w / 2.0)
+                : iconCenterX - (int) Math.floor(w / 2.0);
+        return new Rectangle(x, iconCenterY - h / 2, w, h);
+    }
+
+    protected void paintExpandControl(final Graphics g, final Rectangle bounds, final Icon icon, final boolean isLeaf) {
         // Draw icons if not a leaf and either hasn't been loaded,
         // or the model child count is > 0.
         if (!isLeaf) {
@@ -544,29 +640,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
             }
             int iconCenterY = bounds.y + (bounds.height / 2);
 
-            if (isExpanded) {
-                Icon expIcon = getExpandedIcon();
-                if (expIcon != null) {
-                    if (Objects.equals(treeExpansionAnimationListener.getAnimationPath(), path)) {
-                        paintingIcon.setIcon(expIcon);
-                        paintingIcon.setRotation(
-                                (treeExpansionAnimationListener.getAnimationState() - 1) * Math.PI / 2.0);
-                        expIcon = paintingIcon;
-                    }
-                    drawCentered(tree, g, expIcon, iconCenterX, iconCenterY);
-                }
-            } else {
-                Icon collIcon = getCollapsedIcon();
-                if (collIcon != null) {
-                    if (Objects.equals(treeExpansionAnimationListener.getAnimationPath(), path)) {
-                        paintingIcon.setIcon(collIcon);
-                        paintingIcon.setRotation(
-                                (1 - treeExpansionAnimationListener.getAnimationState()) * Math.PI / 2.0);
-                        collIcon = paintingIcon;
-                    }
-                    drawCentered(tree, g, collIcon, iconCenterX, iconCenterY);
-                }
-            }
+            drawCentered(tree, g, icon, iconCenterX, iconCenterY);
         }
     }
 
