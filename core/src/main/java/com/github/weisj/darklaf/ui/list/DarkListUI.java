@@ -109,6 +109,8 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
 
         // Determine how many columns we need to paint
         Rectangle paintBounds = g.getClipBounds();
+        paintBounds = paintBounds.intersection(DarkUIUtil.applyInsets(
+                new Rectangle(0, 0, list.getWidth(), list.getHeight()), list.getInsets()));
 
         int startColumn, endColumn;
         if (c.getComponentOrientation().isLeftToRight()) {
