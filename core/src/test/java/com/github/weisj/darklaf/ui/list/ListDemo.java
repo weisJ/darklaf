@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -26,6 +26,7 @@ import java.util.Map;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.ui.DemoPanel;
 import com.github.weisj.darklaf.ui.demo.BaseComponentDemo;
 import com.github.weisj.darklaf.ui.demo.DemoExecutor;
@@ -40,9 +41,15 @@ public final class ListDemo extends BaseComponentDemo {
     @Override
     public JComponent createComponent() {
         String[] week = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
-        JList<String> list = new JList<>(week);
+        DefaultListModel<String> model = new DefaultListModel<>();
+        for (int i = 0; i < 7; i++) {
+            for (String s : week) {
+                model.addElement(s);
+            }
+        }
+        JList<String> list = new JList<>(model);
         list.setSelectedIndex(2);
-        DemoPanel panel = new DemoPanel(list, new BorderLayout(), 0);
+        DemoPanel panel = new DemoPanel(new OverlayScrollPane(list), new BorderLayout(), 0);
 
         JPanel controlPanel = panel.addControls();
         controlPanel.add(new JCheckBox("enabled") {
