@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -23,4 +23,5 @@ package com.github.weisj.darklaf.ui.cell;
 public interface CellConstants {
     String RENDER_TYPE_CHECKBOX = "checkBox";
     String RENDER_TYPE_RADIOBUTTON = "radioButton";
+    String SELECTION_RECT = "Cell.selectionBackgroundRect";
 }

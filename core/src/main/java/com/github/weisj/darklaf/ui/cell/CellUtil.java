@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -37,6 +37,8 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 public final class CellUtil {
 
     public static final String KEY_SELECTED_CELL_RENDERER = "JComponent.selectedCellRenderer";
+
+    private static boolean alternateListRowColorOnlyInNonWrapMode;
 
     // Default Colors
     private static Color cellForeground;
@@ -243,6 +245,8 @@ public final class CellUtil {
         listCellInactiveBackgroundNoFocus = d.getColor("List.inactiveBackgroundNoFocus");
         listCellInactiveBackgroundNoFocusAlternative = d.getColor("List.inactiveBackgroundNoFocusAlternative");
         listCellInactiveBackgroundSelectedNoFocus = d.getColor("List.inactiveBackgroundSelectedNoFocus");
+
+        alternateListRowColorOnlyInNonWrapMode = d.getBoolean("List.alternateListRowColorOnlyInNonWrapMode");
     }
 
     public static void setupTableForeground(final Component comp, final JTable parent, final boolean selected,
@@ -351,8 +355,10 @@ public final class CellUtil {
         int layout = parent.getLayoutOrientation();
         int row = index;
         boolean altRow = true;
-        if ((layout == JList.VERTICAL_WRAP || layout == JList.HORIZONTAL_WRAP)
-                && index >= 0 && index < parent.getModel().getSize()) {
+        boolean isWrapLayout = layout == JList.VERTICAL_WRAP || layout == JList.HORIZONTAL_WRAP;
+        if (isWrapLayout && alternateListRowColorOnlyInNonWrapMode) {
+            altRow = false;
+        } else if (isWrapLayout && index >= 0 && index < parent.getModel().getSize()) {
             DarkListUI ui = DarkUIUtil.getUIOfType(parent.getUI(), DarkListUI.class);
             if (ui != null) {
                 row = ui.convertModelToRow(index);

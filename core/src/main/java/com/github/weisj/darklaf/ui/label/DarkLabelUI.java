@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -29,6 +29,7 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicLabelUI;
 
 import com.github.weisj.darklaf.compatibility.SwingUtil;
+import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.graphics.StringPainter;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
@@ -63,6 +64,15 @@ public class DarkLabelUI extends BasicLabelUI implements PropertyChangeListener 
         super.installDefaults(c);
         LookAndFeel.installProperty(c, PropertyKey.OPAQUE, false);
         inactiveForeground = UIManager.getColor("Label.inactiveForeground");
+    }
+
+    @Override
+    public void update(Graphics g, JComponent c) {
+        if (c.isOpaque()) {
+            g.setColor(c.getBackground());
+            PaintUtil.drawCellBackground((Graphics2D) g, c);
+        }
+        paint(g, c);
     }
 
     @Override

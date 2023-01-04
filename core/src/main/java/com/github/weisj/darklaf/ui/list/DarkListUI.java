@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -22,6 +22,7 @@ package com.github.weisj.darklaf.ui.list;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.geom.RoundRectangle2D;
 import java.beans.PropertyChangeEvent;
 
 import javax.swing.*;
@@ -45,6 +46,7 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
     public static final String KEY_IS_LIST_EDITOR = "JComponent.listCellEditor";
 
     protected DarkListCellRendererDelegate rendererDelegate;
+    private int selectionArc;
 
     public static ComponentUI createUI(final JComponent list) {
         return new DarkListUI();
@@ -62,6 +64,7 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
     protected void installDefaults() {
         super.installDefaults();
         rendererDelegate = new DarkListCellRendererDelegate();
+        selectionArc = UIManager.getInt("List.selectionArc");
         PropertyUtil.installBooleanProperty(list, KEY_ALTERNATE_ROW_COLOR, "List.alternateRowColor");
     }
 
@@ -163,9 +166,13 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
         rendererPane.removeAll();
     }
 
-    protected ListCellRenderer<Object> getCellRenderer(final JList<Object> list) {
-        ListCellRenderer<Object> renderer = list.getCellRenderer();
-        rendererDelegate.setDelegate(renderer);
+    protected ListCellRenderer<Object> getCellRenderer(final JList<Object> list, final boolean empty) {
+        if (empty) {
+            rendererDelegate.setDelegate(null);
+        } else {
+            ListCellRenderer<Object> renderer = list.getCellRenderer();
+            rendererDelegate.setDelegate(renderer);
+        }
         return rendererDelegate;
     }
 
@@ -183,14 +190,18 @@ public class DarkListUI extends DarkListUIBridge implements CellConstants {
         int cw = empty && bgWidth > 0 ? bgWidth : rowBounds.width;
         int ch = rowBounds.height;
 
-        ListCellRenderer<Object> renderer = getCellRenderer(list);
-        if (empty) {
-            rendererDelegate.setDelegate(null);
-            renderer = rendererDelegate;
-        }
+        ListCellRenderer<Object> renderer = getCellRenderer(list, empty);
 
         Component rendererComponent =
                 renderer.getListCellRendererComponent(list, value, cellIndex, isSelected, cellHasFocus);
+
+        if (isSelected) {
+            RoundRectangle2D.Float bgRect = new RoundRectangle2D.Float(0, 0, cw, ch, selectionArc, selectionArc);
+            ((JComponent) rendererComponent).putClientProperty(CellConstants.SELECTION_RECT, bgRect);
+        } else {
+            ((JComponent) rendererComponent).putClientProperty(CellConstants.SELECTION_RECT, null);
+        }
+
         rendererPane.paintComponent(g, rendererComponent, list, cx, cy, cw, ch, true);
     }
 

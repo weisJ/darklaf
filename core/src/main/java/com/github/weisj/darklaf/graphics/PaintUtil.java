@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -26,6 +26,10 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
+import javax.swing.*;
+
+import com.github.weisj.darklaf.ui.cell.CellConstants;
+import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.Scale;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
@@ -291,5 +295,29 @@ public final class PaintUtil {
             x1 = temp;
         }
         g.fillRect(x1, y, x2 - x1 + 1, 1);
+    }
+
+    public static void drawCellBackground(final Graphics2D g, final JComponent c) {
+        RoundRectangle2D backgroundRect =
+                PropertyUtil.getObject(c, CellConstants.SELECTION_RECT, RoundRectangle2D.class);
+        if (backgroundRect != null) {
+            fillRoundRect(g, (float) backgroundRect.getX(), (float) backgroundRect.getY(),
+                    (float) backgroundRect.getWidth(), (float) backgroundRect.getHeight(),
+                    (int) backgroundRect.getArcWidth());
+        } else {
+            g.fillRect(0, 0, c.getWidth(), c.getHeight());
+        }
+    }
+
+    public static void drawCellBackgroundBorder(final Graphics2D g, final Component c) {
+        RoundRectangle2D backgroundRect =
+                PropertyUtil.getObject(c, CellConstants.SELECTION_RECT, RoundRectangle2D.class);
+        if (backgroundRect != null) {
+            paintLineBorder(g, (float) backgroundRect.getX(), (float) backgroundRect.getY(),
+                    (float) backgroundRect.getWidth(), (float) backgroundRect.getHeight(),
+                    (int) backgroundRect.getArcWidth());
+        } else {
+            PaintUtil.drawRect(g, 0, 0, c.getWidth(), c.getHeight(), 1);
+        }
     }
 }
