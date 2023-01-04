@@ -26,6 +26,7 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.cell.DarkCellBorderUIResource;
+import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 public class DarkListCellFocusBorder extends DarkCellBorderUIResource {
 
@@ -38,8 +39,13 @@ public class DarkListCellFocusBorder extends DarkCellBorderUIResource {
     @Override
     public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width,
             final int height) {
-        super.paintBorder(c, g, x, y, width, height);
-        g.setColor(borderColor);
-        PaintUtil.drawCellBackgroundBorder((Graphics2D) g, c);
+        JList<?> list = DarkUIUtil.getParentOfType(JList.class, c, DarkUIUtil.CELL_SEARCH_DEPTH);
+        if (list == null) return;
+        ListSelectionModel selectionModel = list.getSelectionModel();
+        if (selectionModel.getMinSelectionIndex() != selectionModel.getMaxSelectionIndex()) {
+            // Only paint if it is necessary to distinguish the lead selection cell
+            g.setColor(borderColor);
+            PaintUtil.drawCellBackgroundBorder((Graphics2D) g, c);
+        }
     }
 }

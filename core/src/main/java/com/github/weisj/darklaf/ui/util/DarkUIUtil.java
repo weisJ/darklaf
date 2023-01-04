@@ -58,7 +58,7 @@ import com.github.weisj.darklaf.util.PropertyUtil;
  */
 public final class DarkUIUtil {
 
-    private static final int CELL_SEARCH_DEPTH = 3;
+    public static final int CELL_SEARCH_DEPTH = 3;
 
     public static IconResolver iconResolver() {
         return IconSet.iconLoader();
