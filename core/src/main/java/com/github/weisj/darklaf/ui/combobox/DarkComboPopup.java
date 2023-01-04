@@ -112,6 +112,7 @@ public class DarkComboPopup extends BasicComboPopup {
         setOpaque(false);
         add(overlayScrollPane);
         setFocusable(false);
+        setOpaque(true);
     }
 
     @Override
