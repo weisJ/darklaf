@@ -45,7 +45,7 @@ public class DarkLaf extends ThemedLookAndFeel {
 
     private static final float DEFAULTS_LOAD_FACTOR = 0.75f;
     // Ensure we don't have to resize during installation.
-    private static final int DEFAULTS_CAPACITY = (int) Math.ceil(1430 / DEFAULTS_LOAD_FACTOR);
+    private static final int DEFAULTS_CAPACITY = (int) Math.ceil(1454 / DEFAULTS_LOAD_FACTOR);
 
     /*
      * All tasks for initializing the ui defaults in order of execution.
