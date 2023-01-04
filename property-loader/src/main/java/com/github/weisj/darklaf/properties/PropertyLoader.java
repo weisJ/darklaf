@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -42,17 +42,30 @@ import com.github.weisj.darklaf.util.*;
  * @author Jannis Weis
  */
 public final class PropertyLoader {
+
+    public enum LoadMode {
+        Strict,
+        AllowMissing
+    }
+
     private static final Logger LOGGER = LogUtil.getLogger(PropertyLoader.class);
 
     private static final char REFERENCE_PREFIX = '%';
 
     public static Properties loadProperties(final Class<?> clazz, final String name, final String path) {
+        return loadProperties(clazz, name, path, LoadMode.Strict);
+    }
+
+    public static Properties loadProperties(final Class<?> clazz, final String name, final String path,
+            final LoadMode mode) {
         final Properties properties = new Properties();
         String p = path + name + ".properties";
         try (InputStream stream = clazz.getResourceAsStream(p)) {
             properties.load(stream);
         } catch (IOException | NullPointerException e) {
-            LOGGER.log(Level.SEVERE, "Could not load " + p + " " + e.getMessage(), e);
+            if (mode == LoadMode.Strict) {
+                LOGGER.log(Level.SEVERE, "Could not load " + p + " " + e.getMessage(), e);
+            }
         }
         return properties;
     }

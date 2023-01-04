@@ -66,8 +66,9 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
 
     private void loadThemeDefaults(final Theme currentTheme, final UIDefaults defaults) {
         Properties uiProps = new Properties();
-        currentTheme.loadDefaults(uiProps, defaults, DarkUIUtil.iconResolver());
+        initPlatformPredefinitions(uiProps, defaults);
 
+        currentTheme.loadDefaults(uiProps, defaults, DarkUIUtil.iconResolver());
         backupAccentColors(uiProps);
 
         /*
@@ -94,6 +95,17 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
         initAccentProperties(currentTheme, uiProps);
 
         defaults.putAll(uiProps);
+    }
+
+    private void initPlatformPredefinitions(final Properties uiProps, final UIDefaults defaults) {
+        IconResolver iconResolver = DarkUIUtil.iconResolver();
+        Consumer<String> osPlatformLoader = osName -> PropertyLoader.putProperties(
+                PropertyLoader.loadProperties(
+                        DarkLaf.class, osName, "nativelaf/",
+                        PropertyLoader.LoadMode.AllowMissing),
+                uiProps, defaults, iconResolver);
+        osPlatformLoader.accept("predef_base");
+        setupOSSpecific("predef_", osPlatformLoader);
     }
 
     private void backupAccentColors(final Properties uiProps) {
@@ -162,19 +174,22 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
 
     private void initPlatformProperties(final Theme currentTheme, final UIDefaults defaults, final Properties uiProps) {
         IconResolver iconResolver = DarkUIUtil.iconResolver();
-        Consumer<String> osPlatformLoader = osName -> PropertyLoader.putProperties(
+        setupOSSpecific("", osName -> PropertyLoader.putProperties(
                 PropertyLoader.loadProperties(DarkLaf.class, osName, "nativelaf/"),
-                uiProps, defaults, iconResolver);
-        osPlatformLoader.accept(getOsName());
-        if (SystemInfo.isWindows11()) {
-            osPlatformLoader.accept("windows11");
-        }
+                uiProps, defaults, iconResolver));
         currentTheme.customizePlatformProperties(uiProps, defaults, iconResolver);
     }
 
     private String getOsName() {
         String osName = System.getProperty("darklaf.internal.osname");
         return osName != null ? osName : SystemInfo.getOsName();
+    }
+
+    private void setupOSSpecific(final String prefix, final Consumer<String> setupFunction) {
+        setupFunction.accept(prefix + getOsName());
+        if (SystemInfo.isWindows11()) {
+            setupFunction.accept(prefix + "windows11");
+        }
     }
 
     private void adjustPlatformSpecifics(final Properties uiProps) {
