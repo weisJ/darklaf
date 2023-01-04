@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -33,20 +33,24 @@ import com.github.weisj.darklaf.platform.CustomTitlePane;
 public class DarkMenuBarBorder implements Border, UIResource, CustomTitlePane.BorderCollapseHint {
 
     protected final Color borderColor;
+    private final Insets margins;
 
     public DarkMenuBarBorder() {
         borderColor = UIManager.getColor("MenuBar.borderColor");
+        Insets m = UIManager.getInsets("MenuBar.border.margins");
+        if (m == null) m = new Insets(0, 0, 0, 0);
+        margins = m;
     }
 
     @Override
     public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int w, final int h) {
         g.setColor(borderColor);
-        g.fillRect(x, y + h - 1, w, 1);
+        g.fillRect(x, y + h - 1, w, getBottomCollapse());
     }
 
     @Override
     public Insets getBorderInsets(final Component c) {
-        return new InsetsUIResource(0, 0, 1, 0);
+        return new InsetsUIResource(margins.top, margins.left, margins.bottom + getBottomCollapse(), margins.right);
     }
 
     @Override
