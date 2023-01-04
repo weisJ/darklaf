@@ -28,6 +28,7 @@ import java.util.Enumeration;
 import java.util.Objects;
 
 import javax.swing.*;
+import javax.swing.plaf.BorderUIResource;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicTreeUI;
@@ -154,6 +155,9 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         dashGapLength = UIManager.getInt("Tree.dash.gaplength");
         arc = UIManager.getInt("Tree.selection.arc");
         selectionMargin = UIManager.getInsets("Tree.selection.margin");
+        if (selectionMargin != null) {
+            PropertyUtil.installBorder(tree, new BorderUIResource.EmptyBorderUIResource(selectionMargin));
+        }
     }
 
     @Override
@@ -250,6 +254,7 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
     protected void uninstallDefaults() {
         super.uninstallDefaults();
         UIManager.put("Tree.repaintWholeRow", oldRepaintAllRowValue);
+        LookAndFeel.uninstallBorder(tree);
     }
 
     @Override
