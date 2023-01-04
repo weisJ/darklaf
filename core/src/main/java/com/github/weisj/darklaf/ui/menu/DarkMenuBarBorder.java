@@ -27,8 +27,10 @@ import javax.swing.border.Border;
 import javax.swing.plaf.InsetsUIResource;
 import javax.swing.plaf.UIResource;
 
+import com.github.weisj.darklaf.platform.CustomTitlePane;
+
 /** @author Jannis Weis */
-public class DarkMenuBarBorder implements Border, UIResource {
+public class DarkMenuBarBorder implements Border, UIResource, CustomTitlePane.BorderCollapseHint {
 
     protected final Color borderColor;
 
@@ -50,5 +52,10 @@ public class DarkMenuBarBorder implements Border, UIResource {
     @Override
     public boolean isBorderOpaque() {
         return true;
+    }
+
+    @Override
+    public int getBottomCollapse() {
+        return 1;
     }
 }

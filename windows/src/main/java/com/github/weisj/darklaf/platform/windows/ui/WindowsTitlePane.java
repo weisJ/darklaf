@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -865,7 +865,7 @@ public class WindowsTitlePane extends CustomTitlePane {
             int w = getWidth();
             int x;
             int start = 0;
-            int y = 0;
+            final int y = 0;
             height = computeHeight();
             left = 0;
             right = 0;
@@ -881,8 +881,13 @@ public class WindowsTitlePane extends CustomTitlePane {
 
             if (menuBarStealer.hasMenuBar()) {
                 int menuWidth = getPreferredMenuSize().width;
-                Insets menuInsets = menuBarStealer.getMenuBar().getInsets();
-                menuBarStealer.getMenuBar().setBounds(start, y, menuWidth, height + menuInsets.bottom);
+                JMenuBar menuBar = menuBarStealer.getMenuBar();
+                Border b = menuBar.getBorder();
+                int menuHeight = height;
+                if (b instanceof BorderCollapseHint) {
+                    menuHeight += ((BorderCollapseHint) b).getBottomCollapse();
+                }
+                menuBarStealer.getMenuBar().setBounds(start, y, menuWidth, menuHeight);
                 start += menuWidth + PAD;
                 left += menuWidth;
             }
