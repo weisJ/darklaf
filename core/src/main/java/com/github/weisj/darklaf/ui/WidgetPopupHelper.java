@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -50,37 +50,37 @@ public final class WidgetPopupHelper {
 
         int x = ltr ? parentIns.left : parentSize.width - parentIns.right - popupSize.width;
 
-        return computePopupBounds(parent, x, parentSize.height - parentIns.bottom, popupSize.width, popupSize.height);
+        return computePopupBounds(parent,
+                new Rectangle(x, parentSize.height - parentIns.bottom, popupSize.width, popupSize.height));
     }
 
-    private static Rectangle computePopupBounds(final JComponent parent, final int px, final int py, final int pw,
-            final int ph) {
+    private static Rectangle computePopupBounds(final JComponent parent,
+            final Rectangle popupTargetBounds) {
         Rectangle screenBounds = DarkUIUtil.getScreenBounds(parent, null);
 
         Point pos = parent.getLocationOnScreen();
 
         Insets ins = parent.getInsets();
-        Rectangle rect = new Rectangle(pos.x + px, pos.y + py, pw, ph);
+        popupTargetBounds.translate(pos.x, pos.y);
 
-        adjustYCoordinate(screenBounds, pos, ins, rect);
-        adjustXCoordinate(screenBounds, rect);
-        rect.x -= pos.x;
-        rect.y -= pos.y;
+        adjustYCoordinate(screenBounds, pos, ins, popupTargetBounds);
+        adjustXCoordinate(screenBounds, popupTargetBounds);
+        popupTargetBounds.translate(-pos.x, -pos.y);
 
-        return rect;
+        return popupTargetBounds;
     }
 
-    private static void adjustYCoordinate(final Rectangle screenBounds, final Point pos, final Insets ins,
-            final Rectangle rect) {
-        if (rect.y + rect.height > screenBounds.y + screenBounds.height) {
+    private static void adjustYCoordinate(final Rectangle screenBounds,
+            final Point parentPosition, final Insets parentInsets, final Rectangle targetRect) {
+        if (targetRect.y + targetRect.height > screenBounds.y + screenBounds.height) {
             // Popup would be covered by bottom screen edge.
-            if (pos.y - rect.height - ins.top >= screenBounds.y) {
+            if (parentPosition.y - targetRect.height - parentInsets.top >= screenBounds.y) {
                 // popup goes above
-                rect.y = pos.y - rect.height - ins.top;
+                targetRect.y = parentPosition.y + parentInsets.top - targetRect.height;
             } else {
                 // popup will be vertically centered on screen
-                rect.y = screenBounds.y + Math.max(0, (screenBounds.height - rect.height) / 2);
-                rect.height = Math.min(screenBounds.height, rect.height);
+                targetRect.y = screenBounds.y + Math.max(0, (screenBounds.height - targetRect.height) / 2);
+                targetRect.height = Math.min(screenBounds.height, targetRect.height);
             }
         }
     }
