@@ -134,11 +134,13 @@ public class DarkComboPopup extends BasicComboPopup {
 
     protected Point getPopupLocation() {
         scroller.setPreferredSize(null);
+        Insets ins = getInsets();
+
         Dimension dim = getPreferredSize();
-        dim.height = getPopupHeightForRowCount(comboBox.getMaximumRowCount());
+        int scrollHeight = getPopupHeightForRowCount(comboBox.getMaximumRowCount());
+        dim.height = scrollHeight + ins.top + ins.bottom;
 
         Dimension parentSize = comboBox.getSize();
-        Insets ins = getInsets();
         parentSize.width -= ins.left + ins.right;
         dim.width -= ins.left + ins.right;
 
