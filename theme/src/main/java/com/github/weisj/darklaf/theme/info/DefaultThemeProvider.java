@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2022 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -35,7 +35,7 @@ public class DefaultThemeProvider implements ThemeProvider {
     private final Theme darkHighContrastTheme;
 
     public DefaultThemeProvider() {
-        this(new IntelliJTheme(), new DarculaTheme(), new HighContrastLightTheme(), new HighContrastDarkTheme());
+        this(new IntelliJTheme(), new OneDarkTheme(), new HighContrastLightTheme(), new HighContrastDarkTheme());
     }
 
     public DefaultThemeProvider(final Theme lightTheme, final Theme darkTheme) {
