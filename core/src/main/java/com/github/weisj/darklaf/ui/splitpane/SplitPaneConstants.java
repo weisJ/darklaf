@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -20,10 +20,7 @@
  */
 package com.github.weisj.darklaf.ui.splitpane;
 
-public interface SplitPaneConstants {
-    String KEY_STYLE = "JSplitPane.style";
-    String STYLE_GRIP = "grip";
-    String STYLE_GRIP_BORDERLESS = "gripBorderless";
-    String STYLE_LINE = "line";
-    String STYLE_INVISIBLE = "invisible";
+import com.github.weisj.darklaf.Customization;
+
+public interface SplitPaneConstants extends Customization.SplitPane {
 }

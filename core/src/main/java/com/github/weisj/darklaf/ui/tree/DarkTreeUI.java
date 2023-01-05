@@ -37,6 +37,7 @@ import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 
+import com.github.weisj.darklaf.Customization;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.properties.icons.EmptyIcon;
@@ -54,17 +55,10 @@ import com.github.weisj.darklaf.util.graphics.GraphicsContext;
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
-public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, CellConstants, HasRendererPane {
+public class DarkTreeUI extends BasicTreeUI
+        implements PropertyChangeListener, CellConstants, HasRendererPane, Customization.Tree {
 
-    protected static final String KEY_PREFIX = "JTree.";
-    public static final String KEY_ALTERNATE_ROW_COLOR = KEY_PREFIX + "alternateRowColor";
-    public static final String KEY_RENDER_BOOLEAN_AS_CHECKBOX = KEY_PREFIX + "renderBooleanAsCheckBox";
-    public static final String KEY_BOOLEAN_RENDER_TYPE = KEY_PREFIX + "booleanRenderType";
-    public static final String KEY_LINE_STYLE = KEY_PREFIX + "lineStyle";
     public static final String KEY_MAC_ACTIONS_INSTALLED = "MacTreeUi.actionsInstalled";
-    public static final String STYLE_LINE = "line";
-    public static final String STYLE_DASHED = "dashed";
-    public static final String STYLE_NONE = "none";
     public static final String KEY_IS_TREE_EDITOR = "JComponent.isTreeEditor";
     public static final String KEY_IS_TREE_RENDERER = "JComponent.isTreeRenderer";
     public static final String KEY_IS_TABLE_TREE = "JComponent.isTableTree";

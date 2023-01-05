@@ -28,22 +28,20 @@ import java.beans.PropertyChangeEvent;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 
+import com.github.weisj.darklaf.Customization;
 import com.github.weisj.darklaf.ui.cell.CellConstants;
 import com.github.weisj.darklaf.ui.cell.DarkCellRendererPane;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /** @author Jannis Weis */
-public class DarkListUI extends DarkListUIBridge implements CellConstants {
+public class DarkListUI extends DarkListUIBridge implements CellConstants, Customization.List {
 
-    protected static final String KEY_PREFIX = "JList.";
-    public static final String KEY_IS_COMBO_LIST = KEY_PREFIX + ".isComboList";
-    public static final String KEY_ALTERNATE_ROW_COLOR = KEY_PREFIX + "alternateRowColor";
-    public static final String KEY_RENDER_BOOLEAN_AS_CHECKBOX = KEY_PREFIX + "renderBooleanAsCheckBox";
-    public static final String KEY_BOOLEAN_RENDER_TYPE = KEY_PREFIX + "booleanRenderType";
-    public static final String KEY_FULL_ROW_SELECTION = KEY_PREFIX + "fullRowSelection";
-    public static final String KEY_IS_EDITING = KEY_PREFIX + "isEditing";
+    public static final String KEY_IS_COMBO_LIST = "JList.isComboList";
+    public static final String KEY_IS_EDITING = "JList.isEditing";
     public static final String KEY_IS_LIST_EDITOR = "JComponent.listCellEditor";
+    public static final String KEY_FULL_ROW_SELECTION = "JList.fullRowSelection";
+
 
     protected DarkListCellRendererDelegate rendererDelegate;
     private int selectionArc;

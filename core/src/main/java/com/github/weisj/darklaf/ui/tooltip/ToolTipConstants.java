@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -20,16 +20,12 @@
  */
 package com.github.weisj.darklaf.ui.tooltip;
 
-public interface ToolTipConstants {
-    String KEY_STYLE = "JToolTip.style";
+import com.github.weisj.darklaf.Customization;
+
+public interface ToolTipConstants extends Customization.ToolTip {
     String KEY_INSETS = "JToolTip.insets";
     String KEY_POINTER_LOCATION = "JToolTip.pointerLocation";
-    String KEY_POINTER_WIDTH = "JToolTip.pointerWidth";
-    String KEY_POINTER_HEIGHT = "JToolTip.pointerHeight";
-    String VARIANT_PLAIN = "plain";
-    String VARIANT_BALLOON = "balloon";
-    String VARIANT_PLAIN_BALLOON = "plainBalloon";
+
     String TIP_TEXT_PROPERTY = "tiptext";
-    String KEY_CONTEXT = "JToolTip.toolTipContext";
     String NO_TEXT = "NO_TEXT";
 }

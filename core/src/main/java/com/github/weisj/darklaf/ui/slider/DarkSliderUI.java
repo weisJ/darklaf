@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -30,6 +30,7 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicSliderUI;
 
+import com.github.weisj.darklaf.Customization;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.properties.icons.RotatableIcon;
 import com.github.weisj.darklaf.swingdsl.VisualPaddingUtil;
@@ -42,16 +43,7 @@ import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 import com.github.weisj.swingdsl.visualpadding.VisualPaddingProvider;
 
 /** @author Jannis Weis */
-public class DarkSliderUI extends BasicSliderUI {
-
-    protected static final String KEY_PREFIX = "JSlider.";
-    public static final String KEY_THUMB_ARROW_SHAPE = KEY_PREFIX + "paintThumbArrowShape";
-    public static final String KEY_SHOW_VOLUME_ICON = KEY_PREFIX + "volume.showIcon";
-    public static final String KEY_VARIANT = KEY_PREFIX + "variant";
-    public static final String KEY_INSTANT_SCROLL = KEY_PREFIX + "instantScrollEnabled";
-    public static final String KEY_MANUAL_LABEL_ALIGN = KEY_PREFIX + "manualLabelAlign";
-    public static final String KEY_USE_TRACK_AS_BASELINE = KEY_PREFIX + "useTrackAsBaseline";
-    public static final String VARIANT_VOLUME = "volume";
+public class DarkSliderUI extends BasicSliderUI implements Customization.Slider {
 
     protected final Rectangle iconRect = new Rectangle(0, 0, 0, 0);
     private DarkSliderListener sliderListener;

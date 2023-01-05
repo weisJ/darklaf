@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -22,16 +22,14 @@ package com.github.weisj.darklaf.ui.table;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.Customization;
 import com.github.weisj.darklaf.ui.cell.CellConstants;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-public interface TableConstants extends CellConstants {
+public interface TableConstants extends CellConstants, Customization.Table {
 
     String KEY_IS_TABLE_EDITOR = "JComponent.isTableEditor";
     String KEY_IS_TABLE_RENDERER = "JComponent.isTableRenderer";
-    String KEY_ALTERNATE_ROW_COLOR = "JTable.alternateRowColor";
-    String KEY_RENDER_BOOLEAN_AS_CHECKBOX = "JTable.renderBooleanAsCheckBox";
-    String KEY_BOOLEAN_RENDER_TYPE = "JTable.booleanRenderType";
     String KEY_FULL_ROW_FOCUS_BORDER = "JTable.rowFocusBorder";
     String KEY_FORCE_LEFT_BORDER = "JTable.forcePaintLeft";
     String KEY_FORCE_RIGHT_BORDER = "JTable.forcePaintRight";

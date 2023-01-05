@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -30,6 +30,7 @@ import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicTextUI;
 import javax.swing.text.*;
 
+import com.github.weisj.darklaf.Customization;
 import com.github.weisj.darklaf.components.border.MarginBorderWrapper;
 import com.github.weisj.darklaf.components.tooltip.ToolTipStyle;
 import com.github.weisj.darklaf.graphics.PaintUtil;
@@ -50,17 +51,11 @@ import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
 /** @author Jannis Weis */
-public abstract class DarkTextUI extends BasicTextUI implements OpacityBufferedUI {
+public abstract class DarkTextUI extends BasicTextUI implements OpacityBufferedUI, Customization.Text {
 
-    protected static final String KEY_PREFIX = "JTextComponent.";
-    public static final String KEY_ROUNDED_SELECTION = KEY_PREFIX + "roundedSelection";
-    public static final String KEY_EXTEND_LINE_SELECTION = KEY_PREFIX + "extendSelection";
-    public static final String KEY_HAS_ERROR = KEY_PREFIX + "hasError";
-    public static final String KEY_HAS_WARNING = KEY_PREFIX + "hasWarning";
     public static final String KEY_IS_TREE_EDITOR = DarkTreeUI.KEY_IS_TREE_EDITOR;
     public static final String KEY_IS_TABLE_EDITOR = DarkTableUI.KEY_IS_TABLE_EDITOR;
     public static final String KEY_IS_LIST_EDITOR = DarkListUI.KEY_IS_LIST_EDITOR;
-    public static final String KEY_DEFAULT_TEXT = KEY_PREFIX + "defaultText";
 
     protected static final String TOGGLE_INSERT = "toggle_insert";
 

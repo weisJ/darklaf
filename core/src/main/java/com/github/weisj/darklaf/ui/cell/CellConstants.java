@@ -20,8 +20,8 @@
  */
 package com.github.weisj.darklaf.ui.cell;
 
-public interface CellConstants {
-    String RENDER_TYPE_CHECKBOX = "checkBox";
-    String RENDER_TYPE_RADIOBUTTON = "radioButton";
+import com.github.weisj.darklaf.Customization;
+
+public interface CellConstants extends Customization.Cell {
     String SELECTION_RECT = "Cell.selectionBackgroundRect";
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -31,6 +31,7 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicProgressBarUI;
 
+import com.github.weisj.darklaf.Customization;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyKey;
 import com.github.weisj.darklaf.util.PropertyUtil;
@@ -41,11 +42,7 @@ import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
  * @author Konstantin Bulenkov
  * @author Jannis Weis
  */
-public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyChangeListener {
-
-    protected static final String KEY_PREFIX = "JProgressBar.";
-    public static final String KEY_FAILED = KEY_PREFIX + "failed";
-    public static final String KEY_PASSED = KEY_PREFIX + "passed";
+public class DarkProgressBarUI extends BasicProgressBarUI implements PropertyChangeListener, Customization.ProgressBar {
 
     private static final int CYCLE_TIME_DEFAULT = 800;
     private static final int REPAINT_INTERVAL_DEFAULT = 50;

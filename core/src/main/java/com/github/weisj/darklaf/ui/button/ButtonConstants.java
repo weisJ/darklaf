@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -25,34 +25,10 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 
+import com.github.weisj.darklaf.Customization;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-public interface ButtonConstants {
-    String KEY_VARIANT = "JButton.variant";
-    String KEY_HOVER_COLOR = "JButton.borderless.hover";
-    String KEY_CLICK_COLOR = "JButton.borderless.click";
-    String KEY_ALT_ARC = "JButton.alternativeArc";
-    String KEY_NO_ARC = "JButton.noArc";
-    String KEY_SQUARE = "JButton.square";
-    String KEY_THIN = "JButton.thin";
-    String KEY_NO_BORDERLESS_OVERWRITE = "JButton.noBorderlessOverwrite";
-    String KEY_CORNER = "JButton.cornerFlag";
-    String KEY_ROUND = "JButton.round";
-    String KEY_ARC_MULTIPLIER = "JButton.arcMultiplier";
-
-    String KEY_LEFT_NEIGHBOUR = "JButton.leftNeighbour";
-    String KEY_RIGHT_NEIGHBOUR = "JButton.rightNeighbour";
-    String KEY_TOP_NEIGHBOUR = "JButton.topNeighbour";
-    String KEY_TOP_LEFT_NEIGHBOUR = "JButton.topLeftNeighbour";
-    String KEY_TOP_RIGHT_NEIGHBOUR = "JButton.topRightNeighbour";
-    String KEY_BOTTOM_NEIGHBOUR = "JButton.bottomNeighbour";
-    String KEY_BOTTOM_LEFT_NEIGHBOUR = "JButton.bottomLeftNeighbour";
-    String KEY_BOTTOM_RIGHT_NEIGHBOUR = "JButton.bottomRightNeighbour";
-
-    String VARIANT_BORDERLESS_RECTANGULAR = "borderlessRectangular";
-    String VARIANT_BORDERLESS = "borderless";
-    String VARIANT_NONE = "none";
-
+public interface ButtonConstants extends Customization.Button {
     static boolean chooseAlternativeArc(final Component c) {
         return PropertyUtil.getBooleanProperty(c, KEY_ALT_ARC);
     }

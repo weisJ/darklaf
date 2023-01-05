@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -35,16 +35,15 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicToolBarUI;
 
+import com.github.weisj.darklaf.Customization;
 import com.github.weisj.darklaf.listener.MouseResponder;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.LogUtil;
 
 /** @author Jannis Weis */
-public class DarkToolBarUI extends BasicToolBarUI {
+public class DarkToolBarUI extends BasicToolBarUI implements Customization.ToolBar {
 
     private static final Logger LOGGER = LogUtil.getLogger(DarkToolBarUI.class);
-    protected static final String KEY_PREFIX = "JToolBar.";
-    public static final String KEY_USE_TOOL_BAR_BACKGROUND = KEY_PREFIX + "drag.useToolbarBackground";
     private static final Robot robot = createRobot();
 
     private final DropPreviewPanel previewPanel = new DropPreviewPanel();

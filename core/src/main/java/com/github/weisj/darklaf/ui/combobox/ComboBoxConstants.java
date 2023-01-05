@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -22,15 +22,15 @@ package com.github.weisj.darklaf.ui.combobox;
 
 import java.awt.*;
 
+import com.github.weisj.darklaf.Customization;
 import com.github.weisj.darklaf.ui.DividedWidgetPainter;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.tree.DarkTreeUI;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-public interface ComboBoxConstants {
+public interface ComboBoxConstants extends Customization.ComboBox {
     String KEY_IS_TREE_EDITOR = DarkTreeUI.KEY_IS_TREE_EDITOR;
     String KEY_IS_TABLE_EDITOR = DarkTableUI.KEY_IS_TABLE_EDITOR;
-    String KEY_DO_NOT_UPDATE_WHEN_SCROLLED = "JComboBox.isTableCellEditor";
 
     static boolean isTreeOrTableCellEditor(final Component c) {
         return isTreeCellEditor(c) || isTableCellEditor(c);

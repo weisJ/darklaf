@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -31,6 +31,7 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.text.View;
 
+import com.github.weisj.darklaf.Customization;
 import com.github.weisj.darklaf.components.uiresource.UIResourceWrapper;
 import com.github.weisj.darklaf.focus.FocusParentHelper;
 import com.github.weisj.darklaf.graphics.PaintUtil;
@@ -40,28 +41,10 @@ import com.github.weisj.darklaf.util.PropertyUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 
 /** @author Jannis Weis */
-public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge {
+public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge implements Customization.TabbedPane {
 
-    protected static final String KEY_PREFIX = "JTabbedPane.";
-    /*
-     * Centering tabs only applies if in - WRAP_TAB_LAYOUT there is only one tab run. -
-     * SCROLL_TAB_LAYOUT the viewport doesn't need to be scrolled.
-     */
-    public static final String KEY_CENTER_TABS = KEY_PREFIX + "centerTabs";
-    public static final String KEY_DND = KEY_PREFIX + "dndEnabled";
-    public static final String KEY_NORTH_COMP = KEY_PREFIX + "northComponent";
-    public static final String KEY_WEST_COMP = KEY_PREFIX + "westComponent";
-    public static final String KEY_EAST_COMP = KEY_PREFIX + "eastComponent";
-    public static final String KEY_SOUTH_COMP = KEY_PREFIX + "southComponent";
-    public static final String KEY_LEADING_COMP = KEY_PREFIX + "leadingComponent";
-    public static final String KEY_TRAILING_COMP = KEY_PREFIX + "trailingComponent";
-    public static final String KEY_SHOW_NEW_TAB_BUTTON = KEY_PREFIX + "showNewTabButton";
-    public static final String KEY_DRAW_FOCUS_BAR = KEY_PREFIX + "drawFocusBar";
-    public static final String KEY_TAB_PLACEMENT = "tabPlacement";
-    public static final String KEY_CONTENT_BORDER_INSETS = KEY_PREFIX + "contentBorderInsets";
-    public static final String KEY_TAB_AREA_INSETS = KEY_PREFIX + "tabAreaInsets";
-    public static final String KEY_NEW_TAB_ACTION = KEY_PREFIX + "newTabAction";
-    public static final String KEY_ROTATE_TAB_RUNS = KEY_PREFIX + "rotateTabRuns";
+    public static final String KEY_TAB_PLACEMENT = "JTabbedPane.tabPlacement";
+    public static final String KEY_ROTATE_TAB_RUNS = "JTabbedPane.rotateTabRuns";
 
     protected static final TabbedPaneTransferHandler TRANSFER_HANDLER = new TabbedPaneTransferHandler.UIResource();
     protected final Rectangle tabAreaBounds = new Rectangle(0, 0, 0, 0);

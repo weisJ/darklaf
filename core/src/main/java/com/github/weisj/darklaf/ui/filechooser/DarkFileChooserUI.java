@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -66,6 +66,7 @@ import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.listener.AncestorAdapter;
 import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.ui.button.DarkButtonUI;
+import com.github.weisj.darklaf.ui.list.DarkListUI;
 import com.github.weisj.darklaf.ui.table.DarkTableUI;
 import com.github.weisj.darklaf.ui.table.TextTableCellEditorBorder;
 import com.github.weisj.darklaf.ui.table.renderer.DarkTableCellEditor;
@@ -276,7 +277,7 @@ public class DarkFileChooserUI extends MetalFileChooserUI {
 
     private void patchListView(final JList<?> list) {
         list.setCellRenderer(new DarkFileRenderer());
-        list.putClientProperty("JList.fullRowSelection", true);
+        list.putClientProperty(DarkListUI.KEY_FULL_ROW_SELECTION, true);
         list.addContainerListener(new ContainerAdapter() {
             @Override
             public void componentAdded(final ContainerEvent e) {

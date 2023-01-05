@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -22,14 +22,11 @@ package com.github.weisj.darklaf.ui.scrollpane;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.Customization;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
-public interface ScrollBarConstants {
+public interface ScrollBarConstants extends Customization.ScrollPane {
     String KEY_SCROLL_PANE_PARENT = "JScrollBar.scrollPaneParent";
-    String KEY_FAST_WHEEL_SCROLLING = "JScrollBar.fastWheelScrolling";
-    String KEY_HIGHLIGHT_ON_SCROLL = "JScrollBar.highlightOnScroll";
-    String KEY_SMALL = "JComponent.small";
-    String KEY_BACKGROUND_PAINTER = "JScrollBar.backgroundPainter";
 
     static boolean isSmall(final JScrollBar scrollBar) {
         return PropertyUtil.getBooleanProperty(scrollBar, KEY_SMALL);

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -23,13 +23,14 @@ package com.github.weisj.darklaf.ui.rootpane;
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 
+import com.github.weisj.darklaf.Customization;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.nativelaf.DecorationsHandler;
 import com.github.weisj.darklaf.platform.decorations.AbstractNativeDecorationsRootPaneUI;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
 /** @author Jannis Weis */
-public class DarkRootPaneUI extends AbstractNativeDecorationsRootPaneUI {
+public class DarkRootPaneUI extends AbstractNativeDecorationsRootPaneUI implements Customization.RootPane {
 
     private static final String[] borderKeys = new String[] {"RootPane.border", "RootPane.frameBorder"};
 
