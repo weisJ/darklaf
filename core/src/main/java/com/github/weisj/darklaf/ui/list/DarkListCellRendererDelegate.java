@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -23,6 +23,7 @@ package com.github.weisj.darklaf.ui.list;
 import java.awt.*;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 
 import com.github.weisj.darklaf.delegate.ListCellRendererDelegate;
 import com.github.weisj.darklaf.ui.cell.CellUtil;
@@ -34,8 +35,13 @@ public class DarkListCellRendererDelegate extends ListCellRendererDelegate<Objec
     private static final LazyValue<DefaultListCellRenderer> DEFAULT_RENDERER =
             new LazyValue<>(DefaultListCellRenderer::new);
 
+    private final Border cellBorder;
+    private final Border cellFocusBorder;
+
     public DarkListCellRendererDelegate() {
         super(null);
+        cellBorder = UIManager.getBorder("List.cellNoFocusBorder");
+        cellFocusBorder = UIManager.getBorder("List.focusSelectedCellHighlightBorder");
     }
 
     @Override
@@ -64,6 +70,16 @@ public class DarkListCellRendererDelegate extends ListCellRendererDelegate<Objec
         }
         CellUtil.setupListBackground(renderer, list, isSelected, index);
         CellUtil.setupListForeground(renderer, list, isSelected);
+        PropertyUtil.installBorder((JComponent) renderer, setupBorder(list, isSelected, cellHasFocus, index));
         return renderer;
+    }
+
+    private Border setupBorder(final JList<?> list, final boolean isSelected, final boolean cellHasFocus,
+            final int index) {
+        if (cellHasFocus && !isSelected && list.getLeadSelectionIndex() == index) {
+            return cellFocusBorder;
+        } else {
+            return cellBorder;
+        }
     }
 }

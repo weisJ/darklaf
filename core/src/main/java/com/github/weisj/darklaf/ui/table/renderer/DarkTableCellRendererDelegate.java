@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -63,14 +63,13 @@ public class DarkTableCellRendererDelegate extends TableCellRendererDelegate imp
             columnLeadSelection = true;
         }
         boolean isLeadSelectionCell = DarkUIUtil.hasFocus(table) && rowLeadSelection && columnLeadSelection;
-        boolean paintSelected = isSelected && !isLeadSelectionCell;
 
         Component delegateComp = getDelegate()
                 .getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         Component component;
         if (booleanRenderer) {
             Component booleanComp = getBooleanRenderer()
-                    .getTableCellRendererComponent(table, value, paintSelected, hasFocus, row, column);
+                    .getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             booleanComp.setForeground(delegateComp.getForeground());
             booleanComp.setBackground(delegateComp.getBackground());
             booleanComp.setFont(delegateComp.getFont());
@@ -79,12 +78,11 @@ public class DarkTableCellRendererDelegate extends TableCellRendererDelegate imp
             component = delegateComp;
         }
 
-
         if (component instanceof JComponent) {
-            setupBorderStyle(table, row, column, (JComponent) component, isLeadSelectionCell, isRowFocus);
+            setupBorderStyle(table, column, (JComponent) component, isLeadSelectionCell, isRowFocus, isSelected);
         }
-        CellUtil.setupTableForeground(component, table, paintSelected, row);
-        CellUtil.setupTableBackground(component, table, paintSelected, row);
+        CellUtil.setupTableForeground(component, table, isSelected, row);
+        CellUtil.setupTableBackground(component, table, isSelected, row);
         return component;
     }
 
@@ -96,10 +94,14 @@ public class DarkTableCellRendererDelegate extends TableCellRendererDelegate imp
         return TableConstants.useBooleanEditorForValue(value, table, column);
     }
 
-    public void setupBorderStyle(final JTable table, final int row, final int column, final JComponent component,
-            final boolean isLeadSelectionCell, final boolean isRowFocus) {
+    public void setupBorderStyle(final JTable table, final int column, final JComponent component,
+            final boolean isLeadSelectionCell, final boolean isRowFocus, final boolean isSelected) {
         Border focusBorder = UIManager.getBorder("Table.focusSelectedCellHighlightBorder");
-        if ((isRowFocus || isLeadSelectionCell) && !table.isEditing()) {
+        boolean belongsToLeadSelection = isRowFocus || isLeadSelectionCell;
+        boolean showLeadFocusBorder = !table.isEditing()
+                && belongsToLeadSelection
+                && !isSelected;
+        if (showLeadFocusBorder) {
             PropertyUtil.installBorder(component, focusBorder);
             if (isRowFocus) {
                 component.putClientProperty(KEY_FULL_ROW_FOCUS_BORDER, true);
