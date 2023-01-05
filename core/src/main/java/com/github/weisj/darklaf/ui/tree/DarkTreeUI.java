@@ -48,6 +48,7 @@ import com.github.weisj.darklaf.ui.cell.DarkCellRendererPane;
 import com.github.weisj.darklaf.ui.cell.hint.CellHintPopupListener;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
+import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 
 /**
  * @author Konstantin Bulenkov
@@ -388,6 +389,9 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
             int arcLeft = Math.min(arc, Math.max(0, cellBounds.x - minX));
             int arcRight = Math.min(arc, Math.max(0, maxX - (cellBounds.x + cellBounds.width)));
 
+            boolean arcTop = !tree.isRowSelected(row - 1);
+            boolean arcBottom = !tree.isRowSelected(row + 1);
+
             if (cellBounds.x < rowLeft) {
                 rowLeft = Math.max(minX, cellBounds.x);
             }
@@ -395,29 +399,44 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
                 rowRight = Math.min(maxX, cellBounds.x + cellBounds.width);
             }
 
-            rowBounds.x = rowLeft;
-            rowBounds.width = rowRight - rowLeft;
+            Rectangle bounds = new Rectangle(rowBounds);
 
-            if (arcLeft == 0 && arcRight == 0) {
+            bounds.x = rowLeft;
+            bounds.width = rowRight - rowLeft;
+
+            GraphicsContext context = new GraphicsContext(g);
+
+            g.clipRect(bounds.x, bounds.y, bounds.width, bounds.height);
+
+            if ((arcLeft == 0 && arcRight == 0) || (!arcTop && !arcBottom)) {
                 PaintUtil.fillRect(g, rowBounds);
             } else {
+                int maxArc = Math.max(arcLeft, arcRight);
+                if (!arcTop) {
+                    bounds.y -= maxArc;
+                    bounds.height += maxArc;
+                }
+                if (!arcBottom) {
+                    bounds.height += maxArc;
+                }
                 if (arcLeft == arcRight) {
-                    PaintUtil.fillRoundRect((Graphics2D) g, rowBounds.x, rowBounds.y, rowBounds.width, rowBounds.height,
+                    PaintUtil.fillRoundRect((Graphics2D) g, bounds.x, bounds.y, bounds.width, bounds.height,
                             arcLeft, false);
                 } else {
                     Shape clip = g.getClip();
                     Rectangle clipBounds = clip.getBounds();
-                    g.clipRect(0, clipBounds.y, rowBounds.x + rowBounds.width / 2, clipBounds.height);
-                    PaintUtil.fillRoundRect((Graphics2D) g, rowBounds.x, rowBounds.y, rowBounds.width, rowBounds.height,
+                    g.clipRect(0, clipBounds.y, bounds.x + bounds.width / 2, clipBounds.height);
+                    PaintUtil.fillRoundRect((Graphics2D) g, bounds.x, bounds.y, bounds.width, bounds.height,
                             arcLeft, false);
 
                     g.setClip(clip);
-                    g.clipRect(rowBounds.x + rowBounds.width / 2, clipBounds.y, clipBounds.width, clipBounds.height);
-                    PaintUtil.fillRoundRect((Graphics2D) g, rowBounds.x, rowBounds.y, rowBounds.width, rowBounds.height,
+                    g.clipRect(bounds.x + bounds.width / 2, clipBounds.y, clipBounds.width, clipBounds.height);
+                    PaintUtil.fillRoundRect((Graphics2D) g, bounds.x, bounds.y, bounds.width, bounds.height,
                             arcRight, false);
                     g.setClip(clip);
                 }
             }
+            context.restore();
         }
     }
 
