@@ -98,13 +98,18 @@ public final class DarkUIUtil {
         return scale(ins, -1);
     }
 
-    public static Insets scale(final Insets ins, final int factor) {
+    public static Insets scale(final Insets ins, final float factor) {
+        return scale(ins, factor, ins);
+    }
+
+    public static Insets scale(final Insets ins, final float factor, final Insets out) {
         if (ins == null) return null;
-        ins.left *= factor;
-        ins.right *= factor;
-        ins.top *= factor;
-        ins.bottom *= factor;
-        return ins;
+        Insets result = out != null ? out : new Insets(0, 0, 0, 0);
+        result.left = (int) (ins.left * factor);
+        result.right = (int) (ins.right * factor);
+        result.top = (int) (ins.top * factor);
+        result.bottom = (int) (ins.bottom * factor);
+        return result;
     }
 
     public static Insets addInsets(final Insets ins1, final Insets ins2) {

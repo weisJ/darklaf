@@ -156,7 +156,8 @@ public class DarkTreeUI extends BasicTreeUI implements PropertyChangeListener, C
         arc = UIManager.getInt("Tree.selection.arc");
         selectionMargin = UIManager.getInsets("Tree.selection.margin");
         if (selectionMargin != null) {
-            PropertyUtil.installBorder(tree, new BorderUIResource.EmptyBorderUIResource(selectionMargin));
+            PropertyUtil.installBorder(tree,
+                    new BorderUIResource.EmptyBorderUIResource(DarkUIUtil.scale(selectionMargin, 0.5f, null)));
         }
     }
 
