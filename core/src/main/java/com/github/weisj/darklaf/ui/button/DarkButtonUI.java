@@ -229,7 +229,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
     protected void paintDefaultBackground(final AbstractButton b, final Graphics2D g, final int width,
             final int height) {
         Insets ins = b.getInsets();
-        g.setColor(getBackgroundColor(b));
+        g.setColor(getBackgroundColor(b, true));
         PaintUtil.fillRect(g, ins.left, ins.top, width - ins.left - ins.right, height - ins.top - ins.bottom);
     }
 
@@ -239,20 +239,32 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         int shadow = showShadow ? shadowHeight : 0;
         int effectiveArc = ButtonConstants.chooseArcWithBorder(c, arc, 0, 0, borderSize);
         AlignmentExt corner = DarkButtonBorder.getCornerFlag(c);
-
-        Rectangle bgRect = ((DarkButtonBorder) c.getBorder()).getEffectiveRect(c, width, height, effectiveArc, corner);
-
-        paintDarklafBorderBgImpl(c, g, showShadow, shadow, effectiveArc, bgRect);
+        DarkButtonBorder border = ((DarkButtonBorder) c.getBorder());
+        Rectangle bgRect = border.getEffectiveRect(c, width, height, effectiveArc, corner);
+        paintDarklafBorderBgImpl(c, g, width, height, shadow, effectiveArc, bgRect);
     }
 
-    protected void paintDarklafBorderBgImpl(final AbstractButton c, final Graphics2D g, final boolean showShadow,
-            final int shadow, final int effectiveArc, final Rectangle bgRect) {
-        if (c.isEnabled() && showShadow && PaintUtil.getShadowComposite().getAlpha() != 0) {
+    protected void paintDarklafBorderBgImpl(final AbstractButton c, final Graphics2D g, final int width,
+            final int height, final int shadow, final int effectiveArc, final Rectangle bgRect) {
+        DarkButtonBorder border = ((DarkButtonBorder) c.getBorder());
+
+        if (c.isEnabled() && shadow > 0 && PaintUtil.getShadowComposite().getAlpha() != 0) {
             paintShadow(g, shadow, effectiveArc, bgRect);
         }
 
-        g.setColor(getBackgroundColor(c));
-        paintBackgroundRect(g, effectiveArc, bgRect);
+        Color bg1 = getBackgroundColor(c, false);
+        Color bg2 = getBackgroundColor(c, true);
+
+        if (!bg1.equals(bg2)) {
+            Rectangle bg2Rect = border.getEffectiveRect(c, width, height, effectiveArc, null);
+            g.setColor(bg1);
+            paintBackgroundRect(g, effectiveArc, bgRect);
+            g.setColor(bg2);
+            paintBackgroundRect(g, effectiveArc, bg2Rect);
+        } else {
+            g.setColor(bg2);
+            paintBackgroundRect(g, effectiveArc, bgRect);
+        }
     }
 
     protected void paintShadow(final Graphics2D g, final int shadow, final int effectiveArc, final Rectangle bgRect) {
@@ -396,16 +408,17 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         return PropertyUtil.chooseColor(b.getForeground(), fg);
     }
 
-    protected Color getBackgroundColor(final AbstractButton b) {
+    protected Color getBackgroundColor(final AbstractButton b, final boolean highlightBackground) {
         boolean defaultButton = isDefaultButton;
-        boolean rollOver = b.isRolloverEnabled() && b.getModel().isRollover();
-        boolean clicked = b.getModel().isArmed();
+        boolean rollOver = highlightBackground && b.isRolloverEnabled() && b.getModel().isRollover();
+        boolean clicked = highlightBackground && b.getModel().isArmed();
+        boolean selected = highlightBackground && b.getModel().isSelected();
         boolean enabled = b.isEnabled();
-        return getBackgroundColor(b, defaultButton, rollOver, clicked, enabled);
+        return getBackgroundColor(b, defaultButton, rollOver, clicked, enabled, selected);
     }
 
     protected Color getBackgroundColor(final AbstractButton b, final boolean defaultButton, final boolean rollOver,
-            final boolean clicked, final boolean enabled) {
+            final boolean clicked, final boolean enabled, final boolean selected) {
         if (enabled) {
             if (defaultButton) {
                 if (clicked) {

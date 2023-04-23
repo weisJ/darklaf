@@ -138,13 +138,11 @@ public class DarkButtonBorder implements Border, UIResource, VisualPaddingProvid
             final AlignmentExt corner) {
         Insets focusIns = new Insets(0, 0, Math.max(shadowSize - getBorderSize(), 0), 0);
         if (corner != null) {
-            focusIns = corner.maskInsets(focusIns, -getBorderSize());
+            focusIns = corner.maskInsets(focusIns, -getBorderSize() + 1);
         }
-        int fx = focusIns.left;
-        int fy = focusIns.top;
-        int fw = width - focusIns.left - focusIns.right;
-        int fh = height - focusIns.top - focusIns.bottom;
-        return new Rectangle(fx, fy, fw, fh);
+        return new Rectangle(focusIns.left, focusIns.top,
+                width - focusIns.left - focusIns.right,
+                height - focusIns.top - focusIns.bottom);
     }
 
     public Rectangle getEffectiveRect(final Component c, final int width, final int height, int arcSize,
@@ -155,11 +153,9 @@ public class DarkButtonBorder implements Border, UIResource, VisualPaddingProvid
         if (corner != null) {
             insetMask = corner.maskInsets(insetMask, -arcSize);
         }
-        int bx = insetMask.left;
-        int by = insetMask.top;
-        int bw = width - insetMask.left - insetMask.right;
-        int bh = height - insetMask.top - insetMask.bottom;
-        return new Rectangle(bx, by, bw, bh);
+        return new Rectangle(insetMask.left, insetMask.top,
+                width - insetMask.left - insetMask.right,
+                height - insetMask.top - insetMask.bottom);
     }
 
     protected void paintBorderlessBorder(final Component c, final Graphics g, final int x, final int y, final int width,

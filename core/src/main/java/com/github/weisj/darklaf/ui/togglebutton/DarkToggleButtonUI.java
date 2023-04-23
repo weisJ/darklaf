@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -192,7 +192,7 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
 
     @Override
     protected Color getBackgroundColor(final AbstractButton b, final boolean defaultButton, final boolean rollOver,
-            final boolean clicked, final boolean enabled) {
+            final boolean clicked, final boolean enabled, final boolean selected) {
         boolean effectiveRollover = rollOver;
         boolean effectiveArmed = clicked;
         if (effectiveRollover || effectiveArmed) {
@@ -200,15 +200,14 @@ public class DarkToggleButtonUI extends DarkButtonUI implements ToggleButtonCons
             effectiveArmed &= slider;
             effectiveRollover &= slider;
         }
-        return getBackgroundColor(b, defaultButton, effectiveRollover, effectiveArmed, enabled,
-                b.getModel().isSelected());
+        return getBackgroundColorImpl(b, defaultButton, effectiveRollover, effectiveArmed, enabled, selected);
     }
 
-    protected Color getBackgroundColor(final AbstractButton b, final boolean defaultButton, final boolean rollOver,
+    protected Color getBackgroundColorImpl(final AbstractButton b, final boolean defaultButton, final boolean rollOver,
             final boolean clicked, final boolean enabled, final boolean selected) {
         if (!enabled) return backgroundInactive;
         if (selected) return selectedBackground;
-        return super.getBackgroundColor(b, defaultButton, rollOver, clicked, true);
+        return super.getBackgroundColor(b, defaultButton, rollOver, clicked, true, false);
     }
 
     @Override

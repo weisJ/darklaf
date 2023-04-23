@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2022 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -194,15 +194,15 @@ public class DarkSplitButtonUI extends DarkButtonUI {
     }
 
     @Override
-    protected void paintDarklafBorderBgImpl(final AbstractButton c, final Graphics2D g, final boolean showShadow,
-            final int shadow, final int effectiveArc, final Rectangle bgRect) {
-        super.paintDarklafBorderBgImpl(c, g, showShadow, shadow, effectiveArc, bgRect);
+    protected void paintDarklafBorderBgImpl(final AbstractButton c, final Graphics2D g, final int width,
+            final int height, final int shadow, final int effectiveArc, final Rectangle bgRect) {
+        super.paintDarklafBorderBgImpl(c, g, width, height, shadow, effectiveArc, bgRect);
         if (useArrowButton()) {
             boolean isDefault = splitButton.isDefaultButton();
             boolean enabled = splitButton.isEnabled();
             boolean rollover = c.isRolloverEnabled() && arrowButton.getModel().isRollover();
             boolean clicked = arrowButton.getModel().isArmed();
-            g.setColor(getBackgroundColor(splitButton, isDefault, rollover, clicked, enabled));
+            g.setColor(getBackgroundColor(splitButton, isDefault, rollover, clicked, enabled, false));
             Shape clip = g.getClip();
             boolean ltr = c.getComponentOrientation().isLeftToRight();
             if (ltr) {
