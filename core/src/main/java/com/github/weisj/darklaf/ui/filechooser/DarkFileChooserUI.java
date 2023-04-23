@@ -60,6 +60,7 @@ import javax.swing.plaf.metal.MetalFileChooserUI;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.text.JTextComponent;
 
 import com.github.weisj.darklaf.components.OverlayScrollPane;
@@ -248,7 +249,17 @@ public class DarkFileChooserUI extends MetalFileChooserUI {
                 }
             }
         });
-        TableColumn column = table.getColumnModel().getColumn(0);
+        setupColumnModel(table.getColumnModel());
+        table.addPropertyChangeListener(e -> {
+            if ("columnModel".equals(e.getPropertyName())) {
+                setupColumnModel(table.getColumnModel());
+            }
+        });
+        table.setShowGrid(false);
+    }
+
+    private void setupColumnModel(TableColumnModel columnModel) {
+        TableColumn column = columnModel.getColumn(COLUMN_FILENAME);
         column.setCellEditor(new FileTableEditor(column.getCellEditor()));
         column.addPropertyChangeListener(e -> {
             if ("cellEditor".equals(e.getPropertyName())) {
@@ -257,8 +268,6 @@ public class DarkFileChooserUI extends MetalFileChooserUI {
                 }
             }
         });
-        table.setShowGrid(true);
-        table.setShowGrid(false);
     }
 
     @Override
