@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -489,7 +489,6 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
     @Override
     protected void paintCell(final Graphics g, final Rectangle r, final int row, final int column, final int cMin,
             final int cMax) {
-        // if (true) return;
         boolean isEditorCell = table.isEditing() && table.getEditingRow() == row && table.getEditingColumn() == column;
 
         int x = r.x;
@@ -518,6 +517,7 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
             Component component = table.prepareRenderer(renderer, row, column);
             CellUtil.setSelectedFlag(component, table.isCellSelected(row, column));
             rendererPane.paintComponent(g, component, table, x, y, w, h, true);
+            ((JComponent) component).setBorder(null);
         }
     }
 
@@ -609,6 +609,12 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
             super.keyTyped(e);
         }
 
+        private void updateColumnMargin() {
+            boolean b = Boolean.TRUE.equals(table.getClientProperty(KEY_VERTICAL_LINES));
+            TableColumnModel cm = table.getColumnModel();
+            cm.setColumnMargin(b ? 1 : 0);
+        }
+
         @Override
         public void propertyChange(final PropertyChangeEvent e) {
             super.propertyChange(e);
@@ -616,10 +622,8 @@ public class DarkTableUI extends DarkTableUIBridge implements TableConstants, Ha
             if (KEY_HORIZONTAL_LINES.equals(key)) {
                 boolean b = Boolean.TRUE.equals(e.getNewValue());
                 table.setRowMargin(b ? 1 : 0);
-            } else if (KEY_VERTICAL_LINES.equals(key)) {
-                boolean b = Boolean.TRUE.equals(e.getNewValue());
-                TableColumnModel cm = table.getColumnModel();
-                cm.setColumnMargin(b ? 1 : 0);
+            } else if ("columnModel".equals(key) || KEY_VERTICAL_LINES.equals(key)) {
+                updateColumnMargin();
             } else if (PropertyKey.ANCESTOR.equals(key)) {
                 Object oldVal = e.getOldValue();
                 Object newVal = e.getNewValue();
