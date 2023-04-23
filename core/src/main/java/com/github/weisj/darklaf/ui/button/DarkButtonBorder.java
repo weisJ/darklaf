@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -64,10 +64,10 @@ public class DarkButtonBorder implements Border, UIResource, VisualPaddingProvid
         altArc = UIManager.getInt("Button.altArc");
         minimumArc = UIManager.getInt("Button.minimumArc");
         borderSize = UIManager.getInt("Button.borderThickness");
-        shadowSize = UIManager.getInt("Button.shadowHeight");
+        shadowSize = UIManager.getInt("Button.shadowHeight") + 20;
     }
 
-    public static boolean showDropShadow(final JComponent c) {
+    public static boolean showDropShadow(final Component c) {
         return showDropShadow(getCornerFlag(c)) && !ButtonConstants.isBorderlessVariant(c);
     }
 
@@ -89,7 +89,7 @@ public class DarkButtonBorder implements Border, UIResource, VisualPaddingProvid
         return PropertyUtil.getObject(component, ButtonConstants.KEY_CORNER, AlignmentExt.class, null);
     }
 
-    protected int getShadowSize(final JComponent c) {
+    protected int getShadowSize(final Component c) {
         return showDropShadow(c) ? getShadowSize() : 0;
     }
 
@@ -116,37 +116,50 @@ public class DarkButtonBorder implements Border, UIResource, VisualPaddingProvid
         GraphicsContext config = new GraphicsContext(g);
         AlignmentExt corner = getCornerFlag(c);
 
-        boolean paintShadow = showDropShadow(corner);
         boolean focus = paintFocus(c);
-        int shadowHeight = paintShadow ? getShadowSize() : 0;
         int bs = getBorderSize();
 
-        Insets insetMask = new Insets(bs, bs, Math.max(bs, shadowHeight), bs);
-        Insets focusIns = new Insets(0, 0, 0, 0);
-        if (corner != null) {
-            focusIns = corner.maskInsets(focusIns, -bs - focusArcSize);
-            insetMask = corner.maskInsets(insetMask, -arcSize);
-        }
-
-        int bx = insetMask.left;
-        int by = insetMask.top;
-        int bw = width - insetMask.left - insetMask.right;
-        int bh = height - insetMask.top - insetMask.bottom;
-        int fx = focusIns.left;
-        int fy = focusIns.top;
-        int fw = width - focusIns.left - focusIns.right;
-        int fh = by + bh + bs - focusIns.top - focusIns.bottom;
+        Rectangle bgRect = getEffectiveRect(c, width, height, arcSize, corner);
+        Rectangle focusRect = getFocusRect(c, width, height, arcSize, corner);
 
         if (paintFocus(c)) {
-            paintFocusBorder(g2, focusArcSize, bs, fx, fy, fw, fh);
+            paintFocusBorder(g2, focusArcSize, bs, focusRect);
         }
 
-        paintLineBorder(c, g2, arcSize, focus, bx, by, bw, bh);
+        paintLineBorder(c, g2, arcSize, focus, bgRect.x, bgRect.y, bgRect.width, bgRect.height);
 
         if (corner != null) {
             paintNeighbourFocus(g2, c, width, height);
         }
         config.restore();
+    }
+
+    public Rectangle getFocusRect(final Component c, final int width, final int height, int arcSize,
+            final AlignmentExt corner) {
+        Insets focusIns = new Insets(0, 0, Math.max(shadowSize - getBorderSize(), 0), 0);
+        if (corner != null) {
+            focusIns = corner.maskInsets(focusIns, -getBorderSize());
+        }
+        int fx = focusIns.left;
+        int fy = focusIns.top;
+        int fw = width - focusIns.left - focusIns.right;
+        int fh = height - focusIns.top - focusIns.bottom;
+        return new Rectangle(fx, fy, fw, fh);
+    }
+
+    public Rectangle getEffectiveRect(final Component c, final int width, final int height, int arcSize,
+            final AlignmentExt corner) {
+        int bs = getBorderSize();
+        int shadowHeight = getShadowSize(c);
+        Insets insetMask = new Insets(bs, bs, Math.max(bs, shadowHeight), bs);
+        if (corner != null) {
+            insetMask = corner.maskInsets(insetMask, -arcSize);
+        }
+        int bx = insetMask.left;
+        int by = insetMask.top;
+        int bw = width - insetMask.left - insetMask.right;
+        int bh = height - insetMask.top - insetMask.bottom;
+        return new Rectangle(bx, by, bw, bh);
     }
 
     protected void paintBorderlessBorder(final Component c, final Graphics g, final int x, final int y, final int width,
@@ -175,86 +188,34 @@ public class DarkButtonBorder implements Border, UIResource, VisualPaddingProvid
         PaintUtil.paintLineBorder(g2, bx, by, bw, bh, arc);
     }
 
-    protected void paintFocusBorder(final Graphics2D g2, final int focusArc, final int borderSize, final int fx,
-            final int fy, final int fw, final int fh) {
-        g2.translate(fx, fy);
-        PaintUtil.paintFocusBorder(g2, fw, fh, focusArc, borderSize);
-        g2.translate(-fx, -fy);
+    protected void paintFocusBorder(final Graphics2D g2, final int focusArc, final int borderSize,
+            final Rectangle focusRect) {
+        g2.translate(focusRect.x, focusRect.y);
+        PaintUtil.paintFocusBorder(g2, focusRect.width, focusRect.height, focusArc, borderSize);
+        g2.translate(-focusRect.x, -focusRect.y);
+    }
+
+    private void paintNeighbourBorder(final Graphics2D g2, final Component c, final JComponent neighbour) {
+        if (neighbour == null || !DarkUIUtil.hasFocus(neighbour)) return;
+        Graphics2D g = (Graphics2D) g2.create();
+        g.translate(neighbour.getX() - c.getX(), neighbour.getY() - c.getY());
+        AlignmentExt corner = getCornerFlag(neighbour);
+        DarkButtonBorder b = (DarkButtonBorder) neighbour.getBorder();
+        int fa = getFocusArc(neighbour);
+        Rectangle focusRect = b.getFocusRect(neighbour, neighbour.getWidth(), neighbour.getHeight(), fa, corner);
+        b.paintFocusBorder(g, fa, getBorderSize(), focusRect);
+        g.dispose();
     }
 
     protected void paintNeighbourFocus(final Graphics2D g2, final Component c, final int width, final int height) {
-        JComponent left = ButtonConstants.getNeighbour(ButtonConstants.KEY_LEFT_NEIGHBOUR, c);
-        boolean paintLeft = DarkUIUtil.hasFocus(left);
-        if (paintLeft) {
-            AlignmentExt corner = getCornerFlag(left);
-            Insets ins = new Insets(0, 0, 0, 0);
-            if (corner != null) ins = corner.maskInsets(ins, borderSize);
-
-            int h = height - Math.max(0, getShadowSize(left) - borderSize);
-            paintFocusBorder(g2, getFocusArc(left), borderSize, -3 * borderSize + 1, -ins.top, 4 * borderSize,
-                    h + ins.top + ins.bottom);
-        }
-        JComponent right = ButtonConstants.getNeighbour(ButtonConstants.KEY_RIGHT_NEIGHBOUR, c);
-        boolean paintRight = DarkUIUtil.hasFocus(right);
-        if (paintRight) {
-            AlignmentExt corner = getCornerFlag(right);
-            Insets ins = new Insets(0, 0, 0, 0);
-            if (corner != null) ins = corner.maskInsets(ins, borderSize);
-
-            int h = height - Math.max(0, getShadowSize(right) - borderSize);
-            paintFocusBorder(g2, getFocusArc(right), borderSize, width - borderSize - 1, -ins.top, 4 * borderSize,
-                    h + ins.top + ins.bottom);
-        }
-
-        JComponent top = ButtonConstants.getNeighbour(ButtonConstants.KEY_TOP_NEIGHBOUR, c);
-        boolean paintTop = DarkUIUtil.hasFocus(top);
-        if (paintTop) {
-            AlignmentExt corner = getCornerFlag(top);
-            Insets ins = new Insets(0, 0, 0, 0);
-            if (corner != null) ins = corner.maskInsets(ins, borderSize);
-
-            paintFocusBorder(g2, getFocusArc(top), borderSize, -ins.left, -3 * borderSize + 1,
-                    width + ins.right + ins.left, 4 * borderSize);
-        }
-
-        JComponent topLeft = ButtonConstants.getNeighbour(ButtonConstants.KEY_TOP_LEFT_NEIGHBOUR, c);
-        boolean paintTopLeft = DarkUIUtil.hasFocus(topLeft);
-        if (paintTopLeft) {
-            paintFocusBorder(g2, getFocusArc(topLeft), borderSize, -3 * borderSize + 1, -3 * borderSize + 1,
-                    4 * borderSize, 4 * borderSize);
-        }
-
-        JComponent topRight = ButtonConstants.getNeighbour(ButtonConstants.KEY_TOP_RIGHT_NEIGHBOUR, c);
-        boolean paintTopRight = DarkUIUtil.hasFocus(topRight);
-        if (paintTopRight) {
-            paintFocusBorder(g2, getFocusArc(topRight), borderSize, width - borderSize - 1, -3 * borderSize + 1,
-                    4 * borderSize, 4 * borderSize);
-        }
-
-        JComponent bottom = ButtonConstants.getNeighbour(ButtonConstants.KEY_BOTTOM_NEIGHBOUR, c);
-        boolean paintBottom = DarkUIUtil.hasFocus(bottom);
-        if (paintBottom) {
-            AlignmentExt corner = getCornerFlag(bottom);
-            Insets ins = new Insets(0, 0, 0, 0);
-            if (corner != null) ins = corner.maskInsets(ins, borderSize);
-
-            paintFocusBorder(g2, getFocusArc(bottom), borderSize, -ins.left, height - borderSize - 1,
-                    width + ins.left + ins.right, 4 * borderSize);
-        }
-
-        JComponent bottomLeft = ButtonConstants.getNeighbour(ButtonConstants.KEY_BOTTOM_LEFT_NEIGHBOUR, c);
-        boolean paintBottomLeft = DarkUIUtil.hasFocus(bottomLeft);
-        if (paintBottomLeft) {
-            paintFocusBorder(g2, getFocusArc(bottomLeft), borderSize, -3 * borderSize + 1, height - borderSize - 1,
-                    4 * borderSize, 4 * borderSize);
-        }
-
-        JComponent bottomRight = ButtonConstants.getNeighbour(ButtonConstants.KEY_BOTTOM_RIGHT_NEIGHBOUR, c);
-        boolean paintBottomRight = DarkUIUtil.hasFocus(bottomRight);
-        if (paintBottomRight) {
-            paintFocusBorder(g2, getFocusArc(bottomRight), borderSize, width - borderSize - 1, height - borderSize - 1,
-                    4 * borderSize, 4 * borderSize);
-        }
+        paintNeighbourBorder(g2, c, ButtonConstants.getNeighbour(ButtonConstants.KEY_LEFT_NEIGHBOUR, c));
+        paintNeighbourBorder(g2, c, ButtonConstants.getNeighbour(ButtonConstants.KEY_RIGHT_NEIGHBOUR, c));
+        paintNeighbourBorder(g2, c, ButtonConstants.getNeighbour(ButtonConstants.KEY_TOP_NEIGHBOUR, c));
+        paintNeighbourBorder(g2, c, ButtonConstants.getNeighbour(ButtonConstants.KEY_TOP_LEFT_NEIGHBOUR, c));
+        paintNeighbourBorder(g2, c, ButtonConstants.getNeighbour(ButtonConstants.KEY_TOP_RIGHT_NEIGHBOUR, c));
+        paintNeighbourBorder(g2, c, ButtonConstants.getNeighbour(ButtonConstants.KEY_BOTTOM_NEIGHBOUR, c));
+        paintNeighbourBorder(g2, c, ButtonConstants.getNeighbour(ButtonConstants.KEY_BOTTOM_LEFT_NEIGHBOUR, c));
+        paintNeighbourBorder(g2, c, ButtonConstants.getNeighbour(ButtonConstants.KEY_BOTTOM_RIGHT_NEIGHBOUR, c));
     }
 
     protected boolean paintFocus(final Component c) {
@@ -286,26 +247,13 @@ public class DarkButtonBorder implements Border, UIResource, VisualPaddingProvid
         if (ButtonConstants.isBorderlessVariant(c)) {
             return new InsetsUIResource(0, 0, 0, 0);
         }
-        boolean shadowVariant = ButtonConstants.isBorderless(c);
-        int shadow = shadowVariant ? 0 : getShadowSize();
-        return maskInsets(new InsetsUIResource(borderSize, borderSize, Math.max(borderSize, shadow), borderSize), c,
-                shadow);
-    }
-
-    protected Insets maskInsets(final Insets ins, final Component c, final int shadow) {
-        AlignmentExt alignment = getCornerFlag(c);
-        if (alignment == null) return ins;
-        Insets insetMask = new Insets(borderSize, borderSize, Math.max(borderSize, shadow), borderSize);
-        insetMask = alignment.maskInsetsInverted(insetMask);
-        ins.top -= insetMask.top;
-        ins.bottom -= insetMask.bottom;
-        ins.left -= insetMask.left;
-        ins.right -= insetMask.right;
-        return ins;
+        int shadow = getShadowSize(c);
+        return new InsetsUIResource(borderSize, borderSize, Math.max(borderSize, shadow), borderSize);
     }
 
     @Override
     public @NotNull Insets getVisualPaddings(@NotNull final Component c) {
         return getBorderInsets(c);
     }
+
 }

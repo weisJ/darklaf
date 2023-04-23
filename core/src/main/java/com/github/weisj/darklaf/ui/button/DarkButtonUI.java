@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -240,7 +240,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         int effectiveArc = ButtonConstants.chooseArcWithBorder(c, arc, 0, 0, borderSize);
         AlignmentExt corner = DarkButtonBorder.getCornerFlag(c);
 
-        Rectangle bgRect = getEffectiveRect(width, height, -(effectiveArc + 1), corner);
+        Rectangle bgRect = ((DarkButtonBorder) c.getBorder()).getEffectiveRect(c, width, height, effectiveArc, corner);
 
         paintDarklafBorderBgImpl(c, g, showShadow, shadow, effectiveArc, bgRect);
     }
@@ -275,19 +275,6 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         } else {
             PaintUtil.fillRoundRect(g2, x, y, width, height, effectiveArc, false);
         }
-    }
-
-    protected Rectangle getEffectiveRect(final int width, final int height, final int adjustment,
-            final AlignmentExt corner) {
-        Insets insetMask = new Insets(borderSize, borderSize, Math.max(borderSize, shadowHeight), borderSize);
-        if (corner != null) {
-            insetMask = corner.maskInsets(insetMask, adjustment);
-        }
-        int bx = insetMask.left;
-        int by = insetMask.top;
-        int bw = width - insetMask.left - insetMask.right;
-        int bh = height - insetMask.top - insetMask.bottom;
-        return new Rectangle(bx, by, bw, bh);
     }
 
     protected Rectangle backgroundContentRect(final AbstractButton b, final int width, final int height,
