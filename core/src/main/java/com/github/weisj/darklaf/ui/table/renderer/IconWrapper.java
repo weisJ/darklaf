@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -35,6 +35,7 @@ public class IconWrapper extends JPanel {
         setLayout(new BorderLayout());
         label = new JLabel();
         label.setIconTextGap(0);
+        setOpaque(true);
         add(label);
     }
 
@@ -44,13 +45,15 @@ public class IconWrapper extends JPanel {
 
     protected void init(final JComponent component, final Icon icon, final ComponentOrientation orientation) {
         setComponentOrientation(orientation);
-        if (c != null) {
+        if (c != null && c != component) {
             remove(c);
         }
-        add(component);
-        setComponentZOrder(component, 0);
-        setComponentZOrder(label, 1);
-        this.c = component;
+        if (c != component) {
+            add(component);
+            setComponentZOrder(component, 0);
+            setComponentZOrder(label, 1);
+            this.c = component;
+        }
         label.setIcon(icon);
     }
 

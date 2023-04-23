@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -108,7 +108,7 @@ public class DarkTableCellEditorDelegate extends TableCellEditorDelegate {
                 false, row, column);
         setupEditorComponent(editor, value, renderer);
         Component comp = applyRendererIcon(editor, renderer);
-        CellUtil.setupTableBackground(comp, table, false, row);
+        CellUtil.setupTableBackground(comp, table, isSelected && comp instanceof IconWrapper, row);
         return comp;
     }
 
