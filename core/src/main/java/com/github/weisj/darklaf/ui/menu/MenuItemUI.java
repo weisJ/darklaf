@@ -130,11 +130,13 @@ public interface MenuItemUI {
                 || (menuItem.isRolloverEnabled() && menuItem.getModel().isRollover());
         boolean parentOpaque = menuItem.getParent().isOpaque();
 
-        if (armed || (menuItem.isOpaque() && parentOpaque)) {
-            if (arc > 0) {
-                g.setColor(menuItem.getBackground());
-                g.fillRect(0, 0, menuWidth, menuHeight);
-            }
+
+        if (menuItem.isOpaque() && parentOpaque) {
+            g.setColor(menuItem.getBackground());
+            g.fillRect(0, 0, menuWidth, menuHeight);
+        }
+
+        if (armed) {
             g.setColor(bgColor);
             PaintUtil.fillRoundRect((Graphics2D) g, 0, 0, menuWidth, menuHeight, arc);
         }
