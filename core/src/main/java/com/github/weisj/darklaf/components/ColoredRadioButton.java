@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2022 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -37,6 +37,7 @@ import com.github.weisj.darklaf.properties.icons.IconResolver;
 import com.github.weisj.darklaf.properties.icons.StateIcon;
 import com.github.weisj.darklaf.task.AccentColorAdjustmentTask;
 import com.github.weisj.darklaf.task.ForegroundColorGenerationTask;
+import com.github.weisj.darklaf.task.ThemeDefaultsInitTask;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.togglebutton.radiobutton.DarkRadioButtonUI;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
@@ -200,6 +201,7 @@ public class ColoredRadioButton extends JRadioButton {
             Theme theme = LafManager.getInstalledTheme();
             Properties props = new Properties();
             UIDefaults defaults = UIManager.getLookAndFeelDefaults();
+            ThemeDefaultsInitTask.initPlatformPredefinitions(props, defaults);
             theme.loadDefaults(props, defaults, iconResolver);
             Color accentCol = DEFAULT_COLOR.equals(color) ? (Color) props.get("widgetFillDefault") : color;
             Color focusCol = DEFAULT_COLOR.equals(focusColor) ? accentCol : focusColor;

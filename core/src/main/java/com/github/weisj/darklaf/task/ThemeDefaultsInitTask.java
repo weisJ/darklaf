@@ -97,7 +97,7 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
         defaults.putAll(uiProps);
     }
 
-    private void initPlatformPredefinitions(final Properties uiProps, final UIDefaults defaults) {
+    public static void initPlatformPredefinitions(final Properties uiProps, final UIDefaults defaults) {
         IconResolver iconResolver = DarkUIUtil.iconResolver();
         Consumer<String> osPlatformLoader = osName -> PropertyLoader.putProperties(
                 PropertyLoader.loadProperties(
@@ -180,12 +180,12 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
         currentTheme.customizePlatformProperties(uiProps, defaults, iconResolver);
     }
 
-    private String getOsName() {
+    private static String getOsName() {
         String osName = System.getProperty("darklaf.internal.osname");
         return osName != null ? osName : SystemInfo.getOsName();
     }
 
-    private void setupOSSpecific(final String prefix, final Consumer<String> setupFunction) {
+    private static void setupOSSpecific(final String prefix, final Consumer<String> setupFunction) {
         setupFunction.accept(prefix + getOsName());
         if (SystemInfo.isWindows11()) {
             setupFunction.accept(prefix + "windows11");
