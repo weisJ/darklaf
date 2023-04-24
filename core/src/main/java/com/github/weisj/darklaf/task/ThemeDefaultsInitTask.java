@@ -180,14 +180,14 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
         currentTheme.customizePlatformProperties(uiProps, defaults, iconResolver);
     }
 
-    private static String getOsName() {
-        String osName = System.getProperty("darklaf.internal.osname");
-        return osName != null ? osName : SystemInfo.getOsName();
+    private static String getOsName(String customOsName) {
+        return customOsName != null ? customOsName : SystemInfo.getOsName();
     }
 
     private static void setupOSSpecific(final String prefix, final Consumer<String> setupFunction) {
-        setupFunction.accept(prefix + getOsName());
-        if (SystemInfo.isWindows11()) {
+        String customOsName = System.getProperty("darklaf.internal.osname");
+        setupFunction.accept(prefix + getOsName(customOsName));
+        if (("windows".equals(customOsName) || customOsName == null) && SystemInfo.isWindows11()) {
             setupFunction.accept(prefix + "windows11");
         }
     }
