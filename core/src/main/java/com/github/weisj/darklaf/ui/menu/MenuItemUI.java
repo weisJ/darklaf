@@ -26,6 +26,7 @@ import javax.swing.*;
 
 import com.github.weisj.darklaf.compatibility.MenuItemLayoutHelper;
 import com.github.weisj.darklaf.compatibility.SwingUtil;
+import com.github.weisj.darklaf.components.OverlayScrollPane;
 import com.github.weisj.darklaf.graphics.PaintUtil;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.StringUtil;
@@ -122,9 +123,9 @@ public interface MenuItemUI {
     }
 
     default void paintBackgroundImpl(final Graphics g, final JMenuItem menuItem, final Color bgColor) {
-        int menuWidth = menuItem.getWidth();
-        int menuHeight = menuItem.getHeight() + 1;
         int arc = getArc();
+        int menuWidth = menuItem.getWidth() - getScrollbarCompensation(menuItem, arc);
+        int menuHeight = menuItem.getHeight() + 1;
 
         boolean armed = menuItem.isArmed()
                 || (menuItem instanceof JMenu && menuItem.isSelected())
@@ -254,8 +255,19 @@ public interface MenuItemUI {
         }
     }
 
+    static int getScrollbarCompensation(JMenuItem item, int arc) {
+        if (arc == 0) return 0;
+        OverlayScrollPane scrollPane = DarkUIUtil.getParentOfType(OverlayScrollPane.class, item, 5);
+        if (scrollPane != null) {
+            return scrollPane.getVerticalScrollBar().getPreferredSize().width;
+        }
+        return 0;
+    }
+
     default Insets getMargin(JMenuItem item) {
-        return item.getMargin();
+        Insets margin = item.getMargin();
+        margin.right += getScrollbarCompensation(item, getArc());
+        return margin;
     }
 
     default Dimension getPreferredMenuItemSizeImpl(final JComponent c, final Icon checkIcon, final Icon arrowIcon,

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -21,6 +21,8 @@
 package com.github.weisj.darklaf.ui.popupmenu;
 
 import java.awt.*;
+import java.awt.event.ContainerAdapter;
+import java.awt.event.ContainerEvent;
 
 import javax.swing.*;
 import javax.swing.event.MenuKeyEvent;
@@ -42,6 +44,7 @@ public class PopupMenuContainer extends JPanel {
     private MenuKeyListener menuKeyListener;
     private PopupMenuListener menuListener;
     private JPopupMenu popupMenu;
+    private boolean hasPopupMenuBorder;
 
     public PopupMenuContainer() {
         super(new BorderLayout());
@@ -50,6 +53,14 @@ public class PopupMenuContainer extends JPanel {
     private void initComponents() {
         if (view == null) {
             view = new ViewPanel();
+            view.addContainerListener(new ContainerAdapter() {
+                @Override
+                public void componentRemoved(ContainerEvent e) {
+                    if (e.getChild() == popupMenu) {
+                        restoreBorderIfNeeded();
+                    }
+                }
+            });
             OverlayScrollPane overlayScrollPane = createScrollPane(view);
             scrollPane = overlayScrollPane.getScrollPane();
             add(overlayScrollPane, BorderLayout.CENTER);
@@ -125,13 +136,23 @@ public class PopupMenuContainer extends JPanel {
         }
     }
 
+    private void restoreBorderIfNeeded() {
+        if (hasPopupMenuBorder && popupMenu != null) {
+            popupMenu.setBorderPainted(true);
+            popupMenu.setBorder(getBorder());
+            hasPopupMenuBorder = false;
+        }
+    }
+
     public Popup createPopup(final JPopupMenu popupMenu, final Dimension prefSize,
             final int posX, final int posY, final int maxWidth, final int maxHeight) {
         uninstallListeners();
         Dimension adjustedSize = adjustSize(prefSize, maxWidth, maxHeight);
+
+        restoreBorderIfNeeded();
+
         if (adjustedSize.width == prefSize.width && adjustedSize.height == prefSize.height) {
             setBounds(0, 0, prefSize.width, prefSize.height);
-            popupMenu.setBorderPainted(true);
             return PopupFactory.getSharedInstance().getPopup(popupMenu.getInvoker(), popupMenu, posX, posY);
         } else {
             setPopupMenu(popupMenu);
@@ -148,8 +169,11 @@ public class PopupMenuContainer extends JPanel {
             horizontalBar.setUnitIncrement(increment);
 
             view.setContent(popupMenu);
+
             setBorder(popupMenu.getBorder());
             popupMenu.setBorderPainted(false);
+            popupMenu.setBorder(null);
+            hasPopupMenuBorder = true;
 
             setPreferredSize(adjustedSize);
             return PopupFactory.getSharedInstance().getPopup(popupMenu.getInvoker(), this, posX, posY);
