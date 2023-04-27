@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -30,6 +30,7 @@ import com.github.weisj.darklaf.listener.MouseClickListener;
 import com.github.weisj.darklaf.ui.menu.DarkMenuItemUIBase;
 import com.github.weisj.darklaf.ui.menu.MenuItemLayoutDelegate;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonMenuItemConstants;
+import com.github.weisj.swingdsl.visualpadding.VisualPaddingProvider;
 
 /** @author Jannis Weis */
 public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements ToggleButtonMenuItemConstants {
@@ -97,6 +98,17 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements Tog
             rect.height = lr.getIconRect().height;
         }
         getStateIcon(mi).paintIcon(mi, g2, rect.x, rect.y);
+    }
+
+    @Override
+    public Insets getMargin(JMenuItem item) {
+        Insets margin = super.getMargin(item);
+        Icon icon = getStateIcon(item);
+        if (icon instanceof VisualPaddingProvider) {
+            int padding = ((VisualPaddingProvider) icon).getVisualPaddings(item).left;
+            margin.left -= padding;
+        }
+        return margin;
     }
 
     protected Icon getStateIcon(final AbstractButton b) {

@@ -96,17 +96,18 @@ public interface MenuItemUI {
         g.setFont(mi.getFont());
 
         Rectangle viewRect = new Rectangle(0, 0, mi.getWidth(), mi.getHeight());
-        DarkUIUtil.applyInsets(viewRect, mi.getInsets());
-        DarkUIUtil.applyInsets(viewRect, getMargin(mi));
-
-        MenuItemLayoutHelper lh = getMenuItemLayoutHelper(checkIcon, arrowIcon, defaultTextIconGap, mi, viewRect);
-        MenuItemLayoutHelper.MILayoutResult lr = lh.layoutMenuItem();
 
         Color background = getBackground(mi);
         Color foreground = getForeground(mi);
 
         paintBackgroundImpl(g, mi, background);
         context.restore();
+
+        DarkUIUtil.applyInsets(viewRect, mi.getInsets());
+        DarkUIUtil.applyInsets(viewRect, getMargin(mi));
+
+        MenuItemLayoutHelper lh = getMenuItemLayoutHelper(checkIcon, arrowIcon, defaultTextIconGap, mi, viewRect);
+        MenuItemLayoutHelper.MILayoutResult lr = lh.layoutMenuItem();
 
         paintCheckIcon(g, mi, lh, lr, foreground);
         context.restore();
@@ -129,7 +130,6 @@ public interface MenuItemUI {
                 || (menuItem instanceof JMenu && menuItem.isSelected())
                 || (menuItem.isRolloverEnabled() && menuItem.getModel().isRollover());
         boolean parentOpaque = menuItem.getParent().isOpaque();
-
 
         if (menuItem.isOpaque() && parentOpaque) {
             g.setColor(menuItem.getBackground());
@@ -254,8 +254,7 @@ public interface MenuItemUI {
         }
     }
 
-    static Insets getMargin(JMenuItem item) {
-        if (item instanceof JMenu && ((JMenu) item).isTopLevelMenu()) return null;
+    default Insets getMargin(JMenuItem item) {
         return item.getMargin();
     }
 

@@ -31,6 +31,7 @@ import javax.swing.plaf.basic.BasicMenuUI;
 import com.github.weisj.darklaf.compatibility.MenuItemLayoutHelper;
 import com.github.weisj.darklaf.delegate.MouseInputDelegate;
 import com.github.weisj.darklaf.util.PropertyUtil;
+import com.github.weisj.swingdsl.visualpadding.VisualPaddingProvider;
 
 public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
 
@@ -149,6 +150,21 @@ public class DarkMenuUI extends BasicMenuUI implements MenuItemUI {
             JMenuItem mi, Rectangle viewRect) {
         return DarkMenuItemUIBase.getMenuItemLayoutHelperImpl(acceleratorDelimiter, acceleratorFont,
                 getPropertyPrefix(), checkIcon, arrowIcon, defaultTextIconGap, mi, viewRect);
+    }
+
+    @Override
+    public Insets getMargin(JMenuItem item) {
+        if (((JMenu) item).isTopLevelMenu()) {
+            int gap = item.getIconTextGap();
+            return new Insets(0, gap, 0, gap);
+        }
+        Insets margin = MenuItemUI.super.getMargin(item);
+        Icon arrow = getArrowIcon();
+        if (arrow instanceof VisualPaddingProvider) {
+            int right = ((VisualPaddingProvider) arrow).getVisualPaddings(item).right;
+            margin.right -= right;
+        }
+        return margin;
     }
 
     @Override
