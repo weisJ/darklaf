@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -25,8 +25,12 @@ import java.util.List;
 
 import javax.swing.*;
 
+import org.jetbrains.annotations.NotNull;
+
+import com.github.weisj.swingdsl.visualpadding.VisualPaddingProvider;
+
 /** Icon that should be used with JCheckBox or JRadioButton. All icons should have the same size. */
-public class StateIcon implements Icon {
+public class StateIcon implements Icon, VisualPaddingProvider {
 
     private final Icon icon;
     private final Icon disabledIcon;
@@ -86,5 +90,14 @@ public class StateIcon implements Icon {
     @Override
     public int getIconHeight() {
         return icon.getIconHeight();
+    }
+
+    @Override
+    public @NotNull Insets getVisualPaddings(@NotNull Component component) {
+        Icon icon = getIcon(component);
+        if (icon instanceof VisualPaddingProvider) {
+            return ((VisualPaddingProvider) icon).getVisualPaddings(component);
+        }
+        return new Insets(0, 0, 0, 0);
     }
 }
