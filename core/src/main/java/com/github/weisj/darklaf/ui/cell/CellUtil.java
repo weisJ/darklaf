@@ -352,28 +352,31 @@ public final class CellUtil {
 
     public static Color getListBackground(final Component comp, final JList<?> parent, final boolean selected,
             final int index) {
-        int layout = parent.getLayoutOrientation();
-        int row = index;
-        boolean altRow = true;
-        boolean isWrapLayout = layout == JList.VERTICAL_WRAP || layout == JList.HORIZONTAL_WRAP;
-        if (isWrapLayout && alternateListRowColorOnlyInNonWrapMode) {
-            altRow = false;
-        } else if (isWrapLayout && index >= 0 && index < parent.getModel().getSize()) {
-            DarkListUI ui = DarkUIUtil.getUIOfType(parent.getUI(), DarkListUI.class);
-            if (ui != null) {
-                row = ui.convertModelToRow(index);
-                if (row == -1 && index >= parent.getModel().getSize()) {
-                    row = ui.convertModelToRow(index - ui.getRowCount(ui.getColumnCount() - 1));
-                }
-                if (row == -1) {
-                    row = index;
-                }
-            } else {
-                row = -1;
+        boolean comboList = PropertyUtil.getBooleanProperty(parent, DarkListUI.KEY_IS_COMBO_LIST);
+        boolean altRow = !comboList;
+        if (altRow) {
+            int layout = parent.getLayoutOrientation();
+            int row = index;
+            boolean isWrapLayout = layout == JList.VERTICAL_WRAP || layout == JList.HORIZONTAL_WRAP;
+            if (isWrapLayout && alternateListRowColorOnlyInNonWrapMode) {
                 altRow = false;
+            } else if (isWrapLayout && index >= 0 && index < parent.getModel().getSize()) {
+                DarkListUI ui = DarkUIUtil.getUIOfType(parent.getUI(), DarkListUI.class);
+                if (ui != null) {
+                    row = ui.convertModelToRow(index);
+                    if (row == -1 && index >= parent.getModel().getSize()) {
+                        row = ui.convertModelToRow(index - ui.getRowCount(ui.getColumnCount() - 1));
+                    }
+                    if (row == -1) {
+                        row = index;
+                    }
+                } else {
+                    row = -1;
+                    altRow = false;
+                }
             }
+            altRow &= Math.abs(row) % 2 == 1;
         }
-        altRow &= Math.abs(row) % 2 == 1;
         return getListBackground(comp, parent, selected, altRow);
     }
 
