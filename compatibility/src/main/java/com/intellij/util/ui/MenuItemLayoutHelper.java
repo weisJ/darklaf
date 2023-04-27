@@ -25,25 +25,13 @@ import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.Icon;
-import javax.swing.JComponent;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.text.View;
 
 import com.github.weisj.darklaf.util.Types;
 
 @SuppressWarnings("unused")
 public class MenuItemLayoutHelper implements com.github.weisj.darklaf.compatibility.MenuItemLayoutHelper {
-    public static final StringUIClientPropertyKey MAX_ARROW_WIDTH = new StringUIClientPropertyKey("maxArrowWidth");
-    public static final StringUIClientPropertyKey MAX_CHECK_WIDTH = new StringUIClientPropertyKey("maxCheckWidth");
-    public static final StringUIClientPropertyKey MAX_ICON_WIDTH = new StringUIClientPropertyKey("maxIconWidth");
-    public static final StringUIClientPropertyKey MAX_TEXT_WIDTH = new StringUIClientPropertyKey("maxTextWidth");
-    public static final StringUIClientPropertyKey MAX_ACC_WIDTH = new StringUIClientPropertyKey("maxAccWidth");
-    public static final StringUIClientPropertyKey MAX_LABEL_WIDTH = new StringUIClientPropertyKey("maxLabelWidth");
     private JMenuItem mi;
     private JComponent miParent;
     private Font font;
@@ -277,6 +265,9 @@ public class MenuItemLayoutHelper implements com.github.weisj.darklaf.compatibil
         if (this.isColumnLayout) {
             this.calcMaxWidth(this.iconSize, MAX_ICON_WIDTH);
             this.calcMaxWidth(this.textSize, MAX_TEXT_WIDTH);
+            if (!(this.mi instanceof CheckBoxMarker)) {
+                this.calcMaxWidth(this.iconSize, MAX_NON_CHECK_ICON_WIDTH);
+            }
             curGap = this.gap;
             if (this.iconSize.getMaxWidth() == 0 || this.textSize.getMaxWidth() == 0) {
                 curGap = 0;

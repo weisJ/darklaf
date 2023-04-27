@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Jannis Weis
+ * Copyright (c) 2021-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -29,8 +29,18 @@ import javax.swing.Icon;
 import javax.swing.JMenuItem;
 import javax.swing.text.View;
 
+import com.intellij.util.ui.StringUIClientPropertyKey;
+
 
 public interface MenuItemLayoutHelper {
+
+    StringUIClientPropertyKey MAX_ARROW_WIDTH = new StringUIClientPropertyKey("maxArrowWidth");
+    StringUIClientPropertyKey MAX_CHECK_WIDTH = new StringUIClientPropertyKey("maxCheckWidth");
+    StringUIClientPropertyKey MAX_ICON_WIDTH = new StringUIClientPropertyKey("maxIconWidth");
+    StringUIClientPropertyKey MAX_NON_CHECK_ICON_WIDTH = new StringUIClientPropertyKey("maxNonCheckIconWidth");
+    StringUIClientPropertyKey MAX_TEXT_WIDTH = new StringUIClientPropertyKey("maxTextWidth");
+    StringUIClientPropertyKey MAX_ACC_WIDTH = new StringUIClientPropertyKey("maxAccWidth");
+    StringUIClientPropertyKey MAX_LABEL_WIDTH = new StringUIClientPropertyKey("maxLabelWidth");
 
     static MenuItemLayoutHelper create(final JMenuItem mi, final Icon checkIcon, final Icon arrowIcon,
             final Rectangle viewRect, final int defaultTextIconGap,
@@ -128,5 +138,8 @@ public interface MenuItemLayoutHelper {
         void setWidth(final int width);
 
         void setHeight(final int height);
+    }
+
+    interface CheckBoxMarker {
     }
 }

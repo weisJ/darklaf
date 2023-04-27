@@ -30,6 +30,8 @@ import com.github.weisj.darklaf.listener.MouseClickListener;
 import com.github.weisj.darklaf.ui.menu.DarkMenuItemUIBase;
 import com.github.weisj.darklaf.ui.menu.MenuItemLayoutDelegate;
 import com.github.weisj.darklaf.ui.togglebutton.ToggleButtonMenuItemConstants;
+import com.github.weisj.darklaf.util.PropertyUtil;
+import com.github.weisj.swingdsl.visualpadding.VisualPaddingProvider;
 
 /** @author Jannis Weis */
 public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements ToggleButtonMenuItemConstants {
@@ -99,11 +101,29 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements Tog
         getStateIcon(mi).paintIcon(mi, g2, rect.x, rect.y);
     }
 
+    @Override
+    public Insets getMargin(JMenuItem item) {
+        Insets margin = super.getMargin(item);
+        Icon icon = getStateIcon(item);
+        if (icon instanceof VisualPaddingProvider) {
+            JComponent parent = (JComponent) item.getParent();
+            boolean noIcon = parent == null
+                    || PropertyUtil.getObject(parent,
+                            MenuItemLayoutHelper.MAX_NON_CHECK_ICON_WIDTH, Integer.class, 0) == 0;
+            if (noIcon) {
+                int padding = ((VisualPaddingProvider) icon).getVisualPaddings(item).left;
+                margin.left -= padding;
+            }
+        }
+        return margin;
+    }
+
     protected Icon getStateIcon(final AbstractButton b) {
         return stateIcon;
     }
 
-    protected class ToggleButtonMenuItemLayoutDelegate extends MenuItemLayoutDelegate {
+    protected class ToggleButtonMenuItemLayoutDelegate extends MenuItemLayoutDelegate
+            implements MenuItemLayoutHelper.CheckBoxMarker {
 
         public ToggleButtonMenuItemLayoutDelegate(final JMenuItem delegate) {
             super(delegate);

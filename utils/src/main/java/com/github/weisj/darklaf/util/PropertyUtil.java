@@ -125,12 +125,12 @@ public final class PropertyUtil {
         return Objects.equals(checkValue, obj);
     }
 
-    public static <T> T getObject(final Component c, final String key, final Class<T> type, final T defaultValue) {
+    public static <T> T getObject(final Component c, final Object key, final Class<T> type, final T defaultValue) {
         if (!(c instanceof JComponent)) return defaultValue;
         return getObject((JComponent) c, key, type, defaultValue);
     }
 
-    public static <T> T getObject(final JComponent c, final String key, final Class<T> type, final T defaultValue) {
+    public static <T> T getObject(final JComponent c, final Object key, final Class<T> type, final T defaultValue) {
         Object obj = c.getClientProperty(key);
         if (type.isInstance(obj)) return type.cast(obj);
         return defaultValue;
