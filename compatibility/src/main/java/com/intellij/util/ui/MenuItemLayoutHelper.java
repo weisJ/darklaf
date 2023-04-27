@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Jannis Weis
+ * Copyright (c) 2021-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -20,10 +20,7 @@
  */
 package com.intellij.util.ui;
 
-import java.awt.Container;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
@@ -201,7 +198,12 @@ public class MenuItemLayoutHelper implements com.github.weisj.darklaf.compatibil
     }
 
     private int getLeadingGap(String propertyPrefix) {
-        return this.checkSize.getMaxWidth() > 0 ? this.getCheckOffset(propertyPrefix) : this.gap;
+        int leadingGap = this.checkSize.getMaxWidth() > 0 ? this.getCheckOffset(propertyPrefix) : this.gap;
+        Insets margin = mi.getMargin();
+        if (leadingGap > margin.left) {
+            return leadingGap - margin.left;
+        }
+        return 0;
     }
 
     private int getCheckOffset(String propertyPrefix) {
@@ -453,20 +455,20 @@ public class MenuItemLayoutHelper implements com.github.weisj.darklaf.compatibil
         lr.iconRect.width = this.iconSize.maxWidth;
         lr.textRect.width = this.textSize.maxWidth;
         this.calcXPositionsLTR(this.viewRect.x, this.leadingGap, this.gap, lr.checkRect, lr.iconRect, lr.textRect);
-        Rectangle var10000;
+        Rectangle r;
         if (lr.checkRect.width > 0) {
-            var10000 = lr.iconRect;
-            var10000.x += this.afterCheckIconGap - this.gap;
-            var10000 = lr.textRect;
-            var10000.x += this.afterCheckIconGap - this.gap;
+            r = lr.iconRect;
+            r.x += this.afterCheckIconGap - this.gap;
+            r = lr.textRect;
+            r.x += this.afterCheckIconGap - this.gap;
         }
 
         this.calcXPositionsRTL(this.viewRect.x + this.viewRect.width, this.leadingGap, this.gap, lr.arrowRect,
                 lr.accRect);
         int textOffset = lr.textRect.x - this.viewRect.x;
         if (!this.isTopLevelMenu && textOffset < this.minTextOffset) {
-            var10000 = lr.textRect;
-            var10000.x += this.minTextOffset - textOffset;
+            r = lr.textRect;
+            r.x += this.minTextOffset - textOffset;
         }
 
         this.alignRects(lr, alignment);
