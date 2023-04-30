@@ -20,9 +20,15 @@
  */
 package com.github.weisj.darklaf.ui.bundles;
 
+import com.github.weisj.darklaf.ui.bundles.jdk.JdkBundles;
+
 public final class ResourceUtil {
 
     public static String getBundleName(final String name) {
         return ResourceUtil.class.getPackage().getName() + "." + name.replace('/', '.');
+    }
+
+    public static String getJdkBundleName(final String name) {
+        return JdkBundles.class.getPackage().getName() + "." + name.replace('/', '.');
     }
 }

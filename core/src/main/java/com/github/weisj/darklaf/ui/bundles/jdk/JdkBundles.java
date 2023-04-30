@@ -20,7 +20,6 @@
  */
 package com.github.weisj.darklaf.ui.bundles.jdk;
 
-@SuppressWarnings("unused")
-class JdkBundles {
+public class JdkBundles {
     // Note: This class only exists to appease the compiler when compiling module-info.java
 }

@@ -34,8 +34,8 @@ public class ResourceBundleInitTask implements DefaultsInitTask {
     private static final String SETTING_BUNDLE_NAME = ResourceUtil.getBundleName("theme_settings");
     private static final String TAB_FRAME_BUNDLE_NAME = ResourceUtil.getBundleName("tabFrame");
     // Note: These two bundles are pulled from the jdk.
-    private static final String BASIC_BUNDLE_NAME = ResourceUtil.getBundleName("jdk/basic");
-    private static final String METAL_BUNDLE_NAME = ResourceUtil.getBundleName("jdk/metal");
+    private static final String BASIC_BUNDLE_NAME = ResourceUtil.getJdkBundleName("basic");
+    private static final String METAL_BUNDLE_NAME = ResourceUtil.getJdkBundleName("metal");
 
     @Override
     public void run(final Theme currentTheme, final UIDefaults defaults) {
