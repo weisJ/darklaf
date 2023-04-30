@@ -2,7 +2,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.util.*
 
-fun createIconAccessor(propertyFile: File, packageName : String, className: String): String {
+fun createIconAccessor(propertyFile: File, packageName: String, className: String): String {
     class Property(val name: String?, val path: String)
     class AccessorTreeNode(
         val nodes: MutableMap<String, AccessorTreeNode>,
@@ -50,9 +50,13 @@ fun createIconAccessor(propertyFile: File, packageName : String, className: Stri
         val subNodes = node.nodes.entries.asSequence().sortedBy { it.key }.joinToString(separator = "\n\n") {
             createAccessorClass(it.key, it.value)
         }.replace("\n", "\n    ")
+        val capitalizedName = name.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(Locale.getDefault())
+            else it.toString()
+        }
         return """
             |@javax.annotation.Generated(value = {"GenerateIconAccessor"})
-            |public ${if (topLevel) "" else "static "}final class ${name.capitalize()} {
+            |public ${if (topLevel) "" else "static "}final class ${capitalizedName} {
             |    $properties
             |    $subNodes
             |}

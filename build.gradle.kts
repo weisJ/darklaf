@@ -7,6 +7,7 @@ import com.github.vlsi.gradle.publishing.dsl.simplifyXml
 import com.github.vlsi.gradle.publishing.dsl.versionFromResolution
 import net.ltgt.gradle.errorprone.errorprone
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import java.util.*
 
 plugins {
     idea
@@ -325,7 +326,12 @@ allprojects {
                         )
                         name.set(
                             (project.findProperty("artifact.name") as? String)
-                                ?: project.name.capitalize().replace("-", " ")
+                                ?: project.name
+                                    .replaceFirstChar {
+                                        if (it.isLowerCase()) it.titlecase(Locale.getDefault())
+                                        else it.toString()
+                                    }
+                                    .replace("-", " ")
                         )
                         url.set("https://github.com/weisJ/darklaf")
                         organization {

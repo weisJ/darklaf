@@ -11,6 +11,7 @@ import org.gradle.api.provider.Provider
 import org.gradle.nativeplatform.toolchain.Clang
 import org.gradle.nativeplatform.toolchain.Gcc
 import org.gradle.nativeplatform.toolchain.VisualCpp
+import java.util.*
 
 typealias OSFamily = org.gradle.nativeplatform.OperatingSystemFamily
 
@@ -48,7 +49,7 @@ val TargetMachine.architectureString: String
 
 val TargetMachine.targetsHost: Boolean
     get() {
-        val osName = System.getProperty("os.name").toLowerCase().replace(" ", "")
+        val osName = System.getProperty("os.name").lowercase(Locale.getDefault()).replace(" ", "")
         val osFamily = operatingSystemFamily
         return when {
             osFamily.isWindows && osName.contains(OSFamily.WINDOWS) -> true
