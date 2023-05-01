@@ -97,7 +97,7 @@ public class DarkSpinnerUI extends BasicSpinnerUI implements SpinnerConstants {
         super.installListeners();
         spinnerListener = createSpinnerListener();
         spinnerListener.install();
-        visualPaddingListener = new VisualPaddingListener();
+        visualPaddingListener = new VisualPaddingListener(spinner);
         spinner.addPropertyChangeListener(visualPaddingListener);
     }
 

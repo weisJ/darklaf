@@ -112,7 +112,7 @@ public class DarkComboBoxUI extends BasicComboBoxUI implements ComboBoxConstants
         comboBoxListener = createComboBoxListener();
         comboBox.addMouseListener(comboBoxListener);
         comboBox.addPropertyChangeListener(comboBoxListener);
-        visualPaddingListener = new VisualPaddingListener();
+        visualPaddingListener = new VisualPaddingListener(comboBox);
         comboBox.addPropertyChangeListener(visualPaddingListener);
     }
 

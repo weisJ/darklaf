@@ -96,7 +96,7 @@ public class DarkRadioButtonUI extends MetalRadioButtonUI implements PropertyCha
         button.addPropertyChangeListener(this);
         keyboardAction = new ToggleButtonFocusNavigationActions(button);
         keyboardAction.installActions();
-        visualPaddingListener = new VisualPaddingListener();
+        visualPaddingListener = new VisualPaddingListener(button);
         button.addPropertyChangeListener(visualPaddingListener);
     }
 

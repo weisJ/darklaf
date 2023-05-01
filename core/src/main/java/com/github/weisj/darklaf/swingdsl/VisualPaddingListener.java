@@ -30,6 +30,10 @@ import com.github.weisj.darklaf.util.Types;
 
 public class VisualPaddingListener implements PropertyChangeListener {
 
+    public VisualPaddingListener(final JComponent c) {
+        VisualPaddingUtil.updateProperty(c);
+    }
+
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         if (PropertyKey.BORDER.equals(evt.getPropertyName())) {

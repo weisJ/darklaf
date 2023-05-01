@@ -190,7 +190,7 @@ public abstract class DarkTextUI extends BasicTextUI implements OpacityBufferedU
         textListener = createTextListener();
         editor.addFocusListener(textListener);
         editor.addPropertyChangeListener(textListener);
-        visualPaddingListener = new VisualPaddingListener();
+        visualPaddingListener = new VisualPaddingListener(editor);
         editor.addPropertyChangeListener(visualPaddingListener);
     }
 

@@ -152,7 +152,7 @@ public class DarkButtonUI extends BasicButtonUI implements ButtonConstants {
         super.installListeners(b);
         keyboardActions = new ToggleButtonFocusNavigationActions(b);
         keyboardActions.installActions();
-        visualPaddingListener = new VisualPaddingListener();
+        visualPaddingListener = new VisualPaddingListener(b);
         b.addPropertyChangeListener(visualPaddingListener);
     }
 
