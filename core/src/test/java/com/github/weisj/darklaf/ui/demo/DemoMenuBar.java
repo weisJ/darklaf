@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -174,7 +174,7 @@ public class DemoMenuBar extends JMenuBar {
         });
         osModeBg.add(host);
         osMode.add(host);
-        Arrays.asList("windows", "mac", "linux").forEach(s -> {
+        Arrays.asList("windows", "windows11", "mac", "linux").forEach(s -> {
             JMenuItem item = new JRadioButtonMenuItem(s);
             item.addActionListener(e -> {
                 System.setProperty("darklaf.internal.osname", s);

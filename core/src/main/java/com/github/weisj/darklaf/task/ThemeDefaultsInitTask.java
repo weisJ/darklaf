@@ -187,7 +187,7 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
     private static void setupOSSpecific(final String prefix, final Consumer<String> setupFunction) {
         String customOsName = System.getProperty("darklaf.internal.osname");
         setupFunction.accept(prefix + getOsName(customOsName));
-        if (("windows".equals(customOsName) || customOsName == null) && SystemInfo.isWindows11()) {
+        if ((customOsName == null && SystemInfo.isWindows11()) || "windows11".equals(customOsName)) {
             setupFunction.accept(prefix + "windows11");
         }
     }
