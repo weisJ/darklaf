@@ -139,7 +139,11 @@ public interface MenuItemUI {
 
         if (armed) {
             g.setColor(bgColor);
-            PaintUtil.fillRoundRect((Graphics2D) g, 0, 0, menuWidth, menuHeight, arc);
+            if (arc > 0) {
+                PaintUtil.fillRoundRect((Graphics2D) g, 0, 0, menuWidth, menuHeight, arc);
+            } else {
+                PaintUtil.fillRect(g, 0, 0, menuWidth, menuHeight);
+            }
         }
     }
 
