@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -22,6 +22,8 @@ package com.github.weisj.darklaf.task;
 
 import javax.swing.*;
 
+import com.github.weisj.darklaf.DarkLaf;
+import com.github.weisj.darklaf.defaults.UIDefaultsWithResourceBundleCache;
 import com.github.weisj.darklaf.theme.Theme;
 import com.github.weisj.darklaf.ui.bundles.ResourceUtil;
 
@@ -39,10 +41,14 @@ public class ResourceBundleInitTask implements DefaultsInitTask {
 
     @Override
     public void run(final Theme currentTheme, final UIDefaults defaults) {
-        defaults.addResourceBundle(BASIC_BUNDLE_NAME);
-        defaults.addResourceBundle(METAL_BUNDLE_NAME);
-        defaults.addResourceBundle(DARKLAF_BUNDLE_NAME);
-        defaults.addResourceBundle(SETTING_BUNDLE_NAME);
-        defaults.addResourceBundle(TAB_FRAME_BUNDLE_NAME);
+        if (!(defaults instanceof UIDefaultsWithResourceBundleCache)) {
+            throw new IllegalStateException();
+        }
+        UIDefaultsWithResourceBundleCache defs = (UIDefaultsWithResourceBundleCache) defaults;
+        defs.addResourceBundle(DarkLaf.class, BASIC_BUNDLE_NAME);
+        defs.addResourceBundle(DarkLaf.class, METAL_BUNDLE_NAME);
+        defs.addResourceBundle(DarkLaf.class, DARKLAF_BUNDLE_NAME);
+        defs.addResourceBundle(DarkLaf.class, SETTING_BUNDLE_NAME);
+        defs.addResourceBundle(DarkLaf.class, TAB_FRAME_BUNDLE_NAME);
     }
 }

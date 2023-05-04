@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
+import com.github.weisj.darklaf.defaults.UIDefaultsWithResourceBundleCache;
 import com.github.weisj.darklaf.nativelaf.DecorationsHandler;
 import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.task.*;
@@ -159,7 +160,7 @@ public class DarkLaf extends ThemedLookAndFeel {
     @Override
     public UIDefaults getDefaults() {
         final UIDefaults baseDefaults = base.getDefaults();
-        final UIDefaults defaults = new UIDefaults(DEFAULTS_CAPACITY, DEFAULTS_LOAD_FACTOR);
+        final UIDefaults defaults = new UIDefaultsWithResourceBundleCache(DEFAULTS_CAPACITY, DEFAULTS_LOAD_FACTOR);
         defaults.putAll(baseDefaults);
 
         final Theme currentTheme = getTheme();
