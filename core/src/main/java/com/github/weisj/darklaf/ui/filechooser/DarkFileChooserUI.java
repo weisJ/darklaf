@@ -29,7 +29,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ContainerAdapter;
 import java.awt.event.ContainerEvent;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.util.function.Supplier;
 
@@ -392,7 +391,7 @@ public class DarkFileChooserUI extends MetalFileChooserUI {
                         } else if (mimeType.startsWith(MIME_TEXT)) {
                             icon = textFileIcon;
                         }
-                    } catch (final IOException e) {
+                    } catch (final Exception e) {
                         icon = fileIcon;
                     }
                 }
