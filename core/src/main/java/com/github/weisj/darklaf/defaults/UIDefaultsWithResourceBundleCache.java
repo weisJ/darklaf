@@ -34,6 +34,7 @@ public class UIDefaultsWithResourceBundleCache extends UIDefaults {
     }
 
     @Override
+    @SuppressWarnings("UnsynchronizedOverridesSynchronized")
     public Object get(final Object key) {
         Object value = super.get(key);
         return (value != null) ? value : getFromResourceBundle(key, null);

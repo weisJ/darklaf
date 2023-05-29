@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2022 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -376,17 +376,16 @@ public class SmallColorChooser extends JPanel implements ChooserComponent<Color>
 
                         private final DocumentFilter documentFilter = new DocumentFilter() {
                             @Override
-                            public void insertString(final FilterBypass fb, final int offset, final String string,
-                                    final AttributeSet attr)
+                            public void insertString(final DocumentFilter.FilterBypass fb, final int offset,
+                                    final String string, final AttributeSet attr)
                                     throws BadLocationException {
                                 if (!isValidString(string)) return;
                                 super.insertString(fb, offset, string, attr);
                             }
 
                             @Override
-                            public void replace(final FilterBypass fb, final int offset, final int length,
-                                    final String text,
-                                    final AttributeSet attrs)
+                            public void replace(final DocumentFilter.FilterBypass fb, final int offset,
+                                    final int length, final String text, final AttributeSet attrs)
                                     throws BadLocationException {
                                 if (!isValidString(text)) return;
                                 super.replace(fb, offset, length, text, attrs);
@@ -403,12 +402,14 @@ public class SmallColorChooser extends JPanel implements ChooserComponent<Color>
 
                         private final NavigationFilter navigationFilter = new NavigationFilter() {
                             @Override
-                            public void setDot(final FilterBypass fb, final int dot, final Position.Bias bias) {
+                            public void setDot(final NavigationFilter.FilterBypass fb, final int dot,
+                                    final Position.Bias bias) {
                                 super.setDot(fb, clampDot(dot, tf), bias);
                             }
 
                             @Override
-                            public void moveDot(final FilterBypass fb, final int dot, final Position.Bias bias) {
+                            public void moveDot(final NavigationFilter.FilterBypass fb, final int dot,
+                                    final Position.Bias bias) {
                                 super.moveDot(fb, clampDot(dot, tf), bias);
                             }
 

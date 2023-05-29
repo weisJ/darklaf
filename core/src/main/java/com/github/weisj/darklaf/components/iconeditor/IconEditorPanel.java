@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -147,8 +147,8 @@ public class IconEditorPanel extends JPanel {
         List<String> keys = props.entrySet().stream().sorted((e1, e2) -> {
             boolean color1 = e1.getValue() instanceof Color;
             boolean color2 = e2.getValue() instanceof Color;
-            if (color1 && !color2) return -1;
-            if (color2 && !color1) return 1;
+            if (!color2) return -1;
+            if (!color1) return 1;
             return e1.getKey().toString().compareTo(e2.getKey().toString());
         }).map(e -> e.getKey().toString()).collect(Collectors.toList());
         valuePanel.add(LayoutHelper.createTitledColumn(

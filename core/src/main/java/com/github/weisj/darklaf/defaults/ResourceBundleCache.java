@@ -25,7 +25,7 @@ import java.util.*;
 
 class ResourceBundleCache {
 
-    private static class ResourceBundleEntry {
+    private static final class ResourceBundleEntry {
         private final WeakReference<ClassLoader> classLoader;
         private final String path;
 
@@ -37,7 +37,7 @@ class ResourceBundleCache {
         @Override
         public boolean equals(final Object o) {
             if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (!(o instanceof ResourceBundleEntry)) return false;
             ResourceBundleEntry that = (ResourceBundleEntry) o;
             ClassLoader loaderA = classLoader.get();
             ClassLoader loaderB = that.classLoader.get();
