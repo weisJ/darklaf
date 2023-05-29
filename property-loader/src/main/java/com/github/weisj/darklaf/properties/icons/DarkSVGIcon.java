@@ -374,7 +374,7 @@ public class DarkSVGIcon
         public String toString() {
             return "SVGDocumentHolder{" +
                     "loaded=" + loaded +
-                    ", svgDocument=" + svgDocument +
+                    ", svgDocument=" + Objects.hash(svgDocument) +
                     ", uri=" + uri +
                     ", visualPadding=" + visualPadding +
                     '}';
