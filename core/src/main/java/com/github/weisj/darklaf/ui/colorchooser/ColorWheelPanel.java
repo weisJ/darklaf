@@ -49,7 +49,7 @@ public class ColorWheelPanel extends JPanel {
             opacitySlider.setToolTipText("Opacity");
             opacitySlider.setUnits(opacityInPercent ? SlideComponent.Unit.PERCENT : SlideComponent.Unit.LEVEL);
             opacitySlider.addListener(integer -> {
-                colorWheel.setOpacity(integer / 255.0);
+                colorWheel.setOpacity(opacitySlider, integer / 255.0);
                 ColorWheelPanel.this.repaint();
             });
             add(opacitySlider, BorderLayout.SOUTH);
