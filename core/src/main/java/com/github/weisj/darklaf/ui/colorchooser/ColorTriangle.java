@@ -262,8 +262,9 @@ public class ColorTriangle extends JComponent {
         return opacity;
     }
 
-    public void setOpacity(final double opacity) {
+    public void setOpacity(final Object source, final double opacity) {
         this.opacity = opacity;
+        fireColorChanged(source);
     }
 
     public int[] getValuesForModel(final DarkColorModel model) {
