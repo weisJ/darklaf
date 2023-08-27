@@ -39,6 +39,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreeCellRenderer;
 
+import com.github.weisj.darklaf.platform.SystemInfo;
 import org.jetbrains.annotations.NotNull;
 
 import com.github.weisj.darklaf.focus.FocusParentHelper;
@@ -297,7 +298,11 @@ public final class DarkUIUtil {
     }
 
     public static boolean isMenuShortcutKeyDown(final InputEvent event) {
-        return (event.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) != 0;
+        if (SystemInfo.isMac) {
+            return (event.getModifiersEx() & InputEvent.META_DOWN_MASK) != 0;
+        } else {
+            return (event.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) != 0;
+        }
     }
 
     @SuppressWarnings("SuspiciousNameCombination")
