@@ -189,6 +189,7 @@ Here is a list of things that currently are not finished or need refinement. Thi
 - [HO](https://github.com/akasolace/HO)
 - [Bytecode viewer](https://github.com/Konloch/bytecode-viewer)
 - [Remote Hacker Probe](https://github.com/quantumcore/remote_hacker_probe)
+- [OpenRocket](https://github.com/openrocket/openrocket)
 
 Please send me your project, and I'll add it here.
 
