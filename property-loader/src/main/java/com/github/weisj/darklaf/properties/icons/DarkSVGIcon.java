@@ -22,6 +22,7 @@ package com.github.weisj.darklaf.properties.icons;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BaseMultiResolutionImage;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.net.MalformedURLException;
@@ -50,7 +51,7 @@ import com.github.weisj.swingdsl.visualpadding.VisualPaddingProvider;
  * @author Jannis Weis
  * @since 2019
  */
-public class DarkSVGIcon
+public class DarkSVGIcon extends ImageIcon
         implements DerivableIcon<DarkSVGIcon>, IconLoader.CacheableIcon, RotateIcon, Serializable, ImageSource,
         VisualPaddingProvider {
 
@@ -76,6 +77,7 @@ public class DarkSVGIcon
     private double scaleX;
     private double scaleY;
     private Image image;
+    private BaseMultiResolutionImage multiResolutionImage;
 
     /**
      * Method to fetch the SVG icon from an url.
@@ -147,6 +149,9 @@ public class DarkSVGIcon
         LOGGER.finer(() -> String.format("Creating Image with size (w=%s, h=%s, scaleW=%s, scaleH=%s) for icon '%s'",
                 getSize().width, getSize().height, effectiveScaleX, effectiveScaleX, getName(getURI())));
         image = createImage(Scale.scale(effectiveScaleX, effectiveScaleY, getSize()));
+
+        // Invalidate the multi resolution image
+        multiResolutionImage = null;
     }
 
     @Override
@@ -168,6 +173,17 @@ public class DarkSVGIcon
             g.dispose();
         }
         return bi;
+    }
+
+    @Override
+    public @NotNull Image getImage() {
+        if (multiResolutionImage == null) {
+            multiResolutionImage = new BaseMultiResolutionImage(
+                createImage(getSize()),
+                createImage(Scale.scale(2, 2, getSize()))
+            );
+        }
+        return multiResolutionImage;
     }
 
     protected String getName(final URI uri) {
