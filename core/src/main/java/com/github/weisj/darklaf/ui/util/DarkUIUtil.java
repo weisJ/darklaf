@@ -226,7 +226,7 @@ public final class DarkUIUtil {
     }
 
     public static void doNotCancelPopupSetup(final JComponent component) {
-        component.putClientProperty(DarkPopupMenuUI.KEY_DO_NOT_CANCEL_POPUP, DarkPopupMenuUI.HIDE_POPUP_VALUE);
+        component.putClientProperty(DarkPopupMenuUI.KEY_DO_NOT_CANCEL_POPUP, DarkPopupMenuUI.hidePopupValue());
         component.putClientProperty(DarkPopupMenuUI.KEY_DO_NOT_CANCEL_ON_SCROLL, Boolean.TRUE);
     }
 

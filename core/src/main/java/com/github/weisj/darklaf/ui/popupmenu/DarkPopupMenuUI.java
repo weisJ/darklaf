@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -50,6 +50,10 @@ public class DarkPopupMenuUI extends BasicPopupMenuUI {
     public static final String KEY_MAX_POPUP_SIZE = "maxPopupSize";
     final OneTimeExecutionLock sizeLock = new OneTimeExecutionLock();
     private PopupMenuContainer popupMenuContainer;
+
+    public static Object hidePopupValue() {
+        return HIDE_POPUP_VALUE;
+    }
 
     public static ComponentUI createUI(final JComponent x) {
         return new DarkPopupMenuUI();
