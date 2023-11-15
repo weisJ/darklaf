@@ -40,13 +40,6 @@ dependencies {
     testCompileOnly(libs.nullabilityAnnotations)
 }
 
-// moduleInfo {
-//    modularExec {
-//        addExports.add("java.desktop/com.sun.java.swing=darklaf.core")
-//        openTestPackagesTo("darklaf.properties")
-//    }
-// }
-
 tasks.test {
     doFirst {
         workingDir = File(project.rootDir, "build/test_results")
