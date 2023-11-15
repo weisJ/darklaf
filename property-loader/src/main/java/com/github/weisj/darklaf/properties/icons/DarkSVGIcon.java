@@ -179,9 +179,8 @@ public class DarkSVGIcon extends ImageIcon
     public @NotNull Image getImage() {
         if (multiResolutionImage == null) {
             multiResolutionImage = new BaseMultiResolutionImage(
-                createImage(getSize()),
-                createImage(Scale.scale(2, 2, getSize()))
-            );
+                    createImage(getSize()),
+                    createImage(Scale.scale(2, 2, getSize())));
         }
         return multiResolutionImage;
     }
