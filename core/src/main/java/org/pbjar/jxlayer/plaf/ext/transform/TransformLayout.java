@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -109,8 +109,7 @@ public class TransformLayout extends DefaultLayerLayout {
     private Dimension transform(final Container parent, final Dimension size) {
         JLayer<JComponent> layer = (JLayer<JComponent>) parent;
         LayerUI<?> ui = layer.getUI();
-        if (ui instanceof TransformUI) {
-            TransformUI transformUI = (TransformUI) ui;
+        if (ui instanceof TransformUI transformUI) {
             AffineTransform transform = transformUI.getPreferredTransform(size, layer);
             if (transform != null) {
                 Area area = new Area(new Rectangle2D.Double(0, 0, size.getWidth(), size.getHeight()));

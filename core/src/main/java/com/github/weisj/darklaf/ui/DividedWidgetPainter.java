@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -85,8 +85,7 @@ public final class DividedWidgetPainter {
     private static void paintCellBorder(final Graphics2D g, final Component c, final int width, final int height,
             final Insets ins, final WidgetBorderType borderType) {
         Component parent = c.getParent();
-        if (borderType == WidgetBorderType.Table && parent instanceof JTable) {
-            JTable table = (JTable) parent;
+        if (borderType == WidgetBorderType.Table && parent instanceof JTable table) {
             CellUtil.paintTableEditorBorder(g, c, table, width, height);
         } else {
             PaintUtil.drawRect(g, ins.left, ins.top, width - ins.left - ins.right, height - ins.top - ins.bottom,
@@ -100,8 +99,7 @@ public final class DividedWidgetPainter {
             return WidgetBorderType.Table;
         } else if (isTreeEditor) {
             return WidgetBorderType.Rect;
-        } else if (c.getParent() instanceof JPopupMenu) {
-            JPopupMenu parent = (JPopupMenu) c.getParent();
+        } else if (c.getParent()instanceof JPopupMenu parent) {
             int compCount = parent.getComponentCount();
             if (compCount == 1) return WidgetBorderType.None;
 

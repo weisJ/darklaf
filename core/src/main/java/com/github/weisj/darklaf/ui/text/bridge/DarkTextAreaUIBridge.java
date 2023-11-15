@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -75,8 +75,7 @@ public abstract class DarkTextAreaUIBridge extends DarkTextUI {
     @Override
     public View create(final Element elem) {
         JTextComponent editor = getComponent();
-        if (editor instanceof JTextArea) {
-            JTextArea c = (JTextArea) editor;
+        if (editor instanceof JTextArea c) {
             textArea.setLineWrap(c.getLineWrap());
             textArea.setWrapStyleWord(c.getWrapStyleWord());
             basicTextAreaUI.installUI(textArea);

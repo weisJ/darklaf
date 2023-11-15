@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -50,8 +50,8 @@ public class ScrollBarUtil implements ScrollBarConstants {
             boolean limitScroll = Math.abs(e.getWheelRotation()) == 1;
 
             Component comp = vp == null ? null : vp.getView();
-            if (comp instanceof Scrollable && PropertyUtil.getBooleanProperty(toScroll, KEY_FAST_WHEEL_SCROLLING)) {
-                Scrollable scrollComp = (Scrollable) comp;
+            if (comp instanceof Scrollable scrollComp
+                    && PropertyUtil.getBooleanProperty(toScroll, KEY_FAST_WHEEL_SCROLLING)) {
                 Rectangle viewRect = vp.getViewRect();
                 int startingX = viewRect.x;
                 int scrollMin = toScroll.getMinimum();

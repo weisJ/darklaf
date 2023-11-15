@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -75,8 +75,7 @@ public class DarkSpinnerBorder implements Border, UIResource, VisualPaddingProvi
 
     public int getDividerLocation(final Component c) {
         int dividerLocation = -1;
-        if (c instanceof JSpinner) {
-            JSpinner spinner = (JSpinner) c;
+        if (c instanceof JSpinner spinner) {
             JComponent editor = spinner.getEditor();
             if (editor != null) {
                 boolean ltr = spinner.getComponentOrientation().isLeftToRight();

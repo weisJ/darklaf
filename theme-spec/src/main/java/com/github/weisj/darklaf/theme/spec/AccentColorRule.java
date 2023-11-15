@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -62,8 +62,7 @@ public class AccentColorRule implements Serializable {
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (!(o instanceof AccentColorRule)) return false;
-        AccentColorRule that = (AccentColorRule) o;
+        if (!(o instanceof AccentColorRule that)) return false;
         if (!Objects.equals(accentColor, that.accentColor)) return false;
         return Objects.equals(selectionColor, that.selectionColor);
     }

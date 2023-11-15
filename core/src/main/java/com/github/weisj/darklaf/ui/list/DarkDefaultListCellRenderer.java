@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -30,8 +30,7 @@ public class DarkDefaultListCellRenderer extends DefaultListCellRenderer {
     public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,
             final boolean isSelected, final boolean cellHasFocus) {
         Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        if (component instanceof JLabel) {
-            JLabel label = (JLabel) component;
+        if (component instanceof JLabel label) {
             if (label.getHorizontalAlignment() != CENTER) {
                 if (list.getComponentOrientation().isLeftToRight()) {
                     label.setHorizontalAlignment(LEFT);

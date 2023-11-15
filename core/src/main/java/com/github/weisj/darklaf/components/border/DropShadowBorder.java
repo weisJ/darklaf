@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -297,33 +297,17 @@ public class DropShadowBorder implements Border, Serializable {
         }
     }
 
-    private static final class ImageHashKey {
-        private final int shadowSize;
-        private final int cornerSize;
-        private final Color shadowColor;
-        private final float opacity;
-
-        private ImageHashKey(final int shadowSize, final int cornerSize, final Color shadowColor, final float opacity) {
-            this.shadowSize = shadowSize;
-            this.cornerSize = cornerSize;
-            this.shadowColor = shadowColor;
-            this.opacity = opacity;
-        }
+    private record ImageHashKey(int shadowSize, int cornerSize, Color shadowColor, float opacity) {
 
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof ImageHashKey)) return false;
-            ImageHashKey that = (ImageHashKey) o;
+            if (!(o instanceof ImageHashKey that)) return false;
             return shadowSize == that.shadowSize
                     && cornerSize == that.cornerSize
                     && Float.compare(that.opacity, opacity) == 0
                     && Objects.equals(shadowColor, that.shadowColor);
         }
 
-        @Override
-        public int hashCode() {
-            return Objects.hash(shadowSize, cornerSize, shadowColor, opacity);
-        }
     }
 }

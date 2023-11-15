@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -49,7 +49,7 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
         this.textField = textField;
         textField.addSearchListener(this);
         setCapacity(capacity);
-        this.history = Collections.newSetFromMap(new LinkedHashMap<String, Boolean>() {
+        this.history = Collections.newSetFromMap(new LinkedHashMap<>() {
             @Override
             protected boolean removeEldestEntry(final Map.Entry<String, Boolean> eldest) {
                 return size() > capacity;

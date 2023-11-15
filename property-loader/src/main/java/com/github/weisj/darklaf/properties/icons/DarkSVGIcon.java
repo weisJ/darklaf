@@ -372,9 +372,8 @@ public class DarkSVGIcon extends ImageIcon
         @Override
         public boolean equals(final Object o) {
             if (this == o) return true;
-            if (!(o instanceof SVGDocumentHolder)) return false;
-            SVGDocumentHolder that = (SVGDocumentHolder) o;
-            return loaded.equals(that.loaded)
+            if (!(o instanceof SVGDocumentHolder that)) return false;
+            return (loaded.get() == that.loaded.get())
                     && Objects.equals(svgDocument, that.svgDocument)
                     && uri.equals(that.uri)
                     && Objects.equals(visualPadding, that.visualPadding);

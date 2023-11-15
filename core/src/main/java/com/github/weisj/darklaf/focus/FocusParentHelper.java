@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -38,8 +38,7 @@ public final class FocusParentHelper {
 
     static {
         Toolkit.getDefaultToolkit().addAWTEventListener(event -> {
-            if (!(event instanceof FocusEvent)) return;
-            FocusEvent e = (FocusEvent) event;
+            if (!(event instanceof FocusEvent e)) return;
             if (e.getID() != FocusEvent.FOCUS_GAINED && e.getID() != FocusEvent.FOCUS_LOST) return;
             Component comp = e.getComponent();
             listeners.forEach((c, focusParent) -> {

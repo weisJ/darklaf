@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -259,22 +259,13 @@ public class TabFrameLayout implements LayoutManager {
     }
 
     protected int getIndex(final Alignment a) {
-        switch (a) {
-            case NORTH:
-            case NORTH_EAST:
-                return 0;
-            case EAST:
-            case SOUTH_EAST:
-                return 1;
-            case SOUTH:
-            case SOUTH_WEST:
-                return 2;
-            case WEST:
-            case NORTH_WEST:
-                return 3;
-            default:
-                throw new IllegalStateException("Unexpected alignment " + a);
-        }
+        return switch (a) {
+            case NORTH, NORTH_EAST -> 0;
+            case EAST, SOUTH_EAST -> 1;
+            case SOUTH, SOUTH_WEST -> 2;
+            case WEST, NORTH_WEST -> 3;
+            default -> throw new IllegalStateException("Unexpected alignment " + a);
+        };
     }
 
     public void setDraggedOver(final Alignment a, final boolean b) {

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -47,8 +47,7 @@ public class PopupContainer extends JPanel {
 
     public void setPopup(final Component component) {
         removeAll();
-        if (component instanceof JComponent) {
-            JComponent c = (JComponent) component;
+        if (component instanceof JComponent c) {
             setActionMap(c.getActionMap());
             setInputMap(JComponent.WHEN_FOCUSED, c.getInputMap(JComponent.WHEN_FOCUSED));
             setInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT,

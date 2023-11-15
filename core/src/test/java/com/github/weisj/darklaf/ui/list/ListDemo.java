@@ -69,7 +69,7 @@ public final class ListDemo extends BaseComponentDemo {
         controlPanel.add(new JLabel("Layout orientation:", JLabel.RIGHT));
         controlPanel.add(new JComboBox<String>() {
             {
-                Map<String, Integer> mapping = new HashMap<String, Integer>() {
+                Map<String, Integer> mapping = new HashMap<>() {
                     {
                         put("VERTICAL", JList.VERTICAL);
                         put("VERTICAL_WRAP", JList.VERTICAL_WRAP);
@@ -87,7 +87,7 @@ public final class ListDemo extends BaseComponentDemo {
         controlPanel.add(new JLabel("Selection mode:", JLabel.RIGHT));
         controlPanel.add(new JComboBox<String>() {
             {
-                Map<String, Integer> mapping = new HashMap<String, Integer>() {
+                Map<String, Integer> mapping = new HashMap<>() {
                     {
                         put("SINGLE_SELECTION", ListSelectionModel.SINGLE_SELECTION);
                         put("MULTIPLE_INTERVAL_SELECTION", ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);

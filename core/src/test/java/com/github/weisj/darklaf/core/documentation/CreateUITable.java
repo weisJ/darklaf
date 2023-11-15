@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2022 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -204,9 +204,8 @@ public class CreateUITable {
         }
         appendData(builder, key, ident + 1);
         Object value = entry.getValue();
-        if (value instanceof Parser.DebugParseResult
+        if (value instanceof Parser.DebugParseResult debugResult
                 && ((Parser.DebugParseResult) value).referenceKey != null) {
-            Parser.DebugParseResult debugResult = (Parser.DebugParseResult) value;
             appendData(builder, parseValue(debugResult.result), ident + 1); // Value
             appendData(builder, debugResult.referenceKey, ident + 1); // Reference
             builder.append(parsePreview(key, debugResult.result, ident + 1));
@@ -349,19 +348,15 @@ public class CreateUITable {
 
     private String parseValue(final Object val) {
         Object value = getValue(val);
-        if (value instanceof Color) {
-            Color color = (Color) value;
+        if (value instanceof Color color) {
             return String.format("%s%s [%03d,%03d,%03d]",
                     PrimitiveParser.COLOR_PREFIX, ColorUtil.toHex(color),
                     color.getRed(), color.getGreen(), color.getBlue());
-        } else if (value instanceof Insets) {
-            Insets insets = (Insets) value;
+        } else if (value instanceof Insets insets) {
             return String.format("Insets [%d,%d,%d,%d]", insets.top, insets.left, insets.bottom, insets.right);
-        } else if (value instanceof Dimension) {
-            Dimension dim = (Dimension) value;
+        } else if (value instanceof Dimension dim) {
             return String.format("Dimension [%d,%d]", dim.width, dim.height);
-        } else if (value instanceof Icon) {
-            Icon icon = (Icon) value;
+        } else if (value instanceof Icon icon) {
             return String.format("Icon [%d,%d]", icon.getIconWidth(), icon.getIconHeight());
         } else if (value instanceof Font) {
             String font = value.toString();

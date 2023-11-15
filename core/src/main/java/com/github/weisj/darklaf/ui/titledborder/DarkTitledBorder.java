@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -51,8 +51,7 @@ public class DarkTitledBorder extends MutableLineBorder implements UIResource {
 
     protected void checkInsets(final Component c) {
         setInsets(1, 0, 0, 0);
-        if (c instanceof JComponent) {
-            JComponent component = (JComponent) c;
+        if (c instanceof JComponent component) {
             Border border = component.getBorder();
             if (border instanceof TitledBorder) {
                 String text = ((TitledBorder) border).getTitle();

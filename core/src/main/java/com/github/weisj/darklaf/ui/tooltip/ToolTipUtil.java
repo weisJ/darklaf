@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2022 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -223,32 +223,11 @@ public final class ToolTipUtil {
         WindowUtil.moveWindow(window, toolTip, result.point.x, result.point.y);
     }
 
-    private static class LocationResult {
-        private final Point point;
-        private final boolean isRelative;
-
-        private LocationResult(Point point, boolean isRelative) {
-            this.point = point;
-            this.isRelative = isRelative;
-        }
+    private record LocationResult(Point point, boolean isRelative) {
     }
 
-    private static final class LayoutConstraints {
-
-        private final Rectangle tooltipBounds;
-        private final Rectangle windowBounds;
-        private final Window window;
-        private final Rectangle screenBoundary;
-        private final Insets layoutInsets;
-
-        private LayoutConstraints(final Rectangle tooltipBounds, final Rectangle windowBounds,
-                final Window window, final Rectangle screenBoundary, Insets layoutInsets) {
-            this.tooltipBounds = tooltipBounds;
-            this.windowBounds = windowBounds;
-            this.window = window;
-            this.screenBoundary = screenBoundary;
-            this.layoutInsets = layoutInsets;
-        }
+    private record LayoutConstraints(Rectangle tooltipBounds, Rectangle windowBounds, Window window,
+            Rectangle screenBoundary, Insets layoutInsets) {
 
         public Rectangle testRectangle() {
             return DarkUIUtil.applyInsets(new Rectangle(tooltipBounds), layoutInsets);

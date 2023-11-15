@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -152,8 +152,10 @@ public class DialogDemo extends JPanel {
             } else if (Objects.equals(command, nonAutoCommand)) {
                 final JOptionPane optionPane =
                         new JOptionPane(
-                                "The only way to close this dialog is by\n" + "pressing one of the following buttons.\n"
-                                        + "Do you understand?",
+                                """
+                                        The only way to close this dialog is by
+                                        pressing one of the following buttons.
+                                        Do you understand?""",
                                 JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
 
                 // You can't use pane.createDialog() because that

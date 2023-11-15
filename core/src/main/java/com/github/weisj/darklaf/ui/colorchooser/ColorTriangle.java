@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -653,21 +653,7 @@ public class ColorTriangle extends JComponent {
         }
     }
 
-    protected static class PickResult {
-        protected final PickArea area;
-        protected final double rotation;
-        protected final double saturation;
-        protected final double value;
-        protected final double hue;
-
-        public PickResult(final PickArea area, final double rotation, final double hue, final double saturation,
-                final double value) {
-            this.area = area;
-            this.hue = hue;
-            this.rotation = rotation;
-            this.saturation = saturation;
-            this.value = value;
-        }
+    protected record PickResult(PickArea area, double rotation, double hue, double saturation, double value) {
     }
 
     protected enum PickArea {

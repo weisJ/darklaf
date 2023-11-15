@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -136,80 +136,50 @@ public enum Alignment {
      */
     @SuppressWarnings("Duplicates")
     public Alignment opposite() {
-        switch (this) {
-            case NORTH:
-                return SOUTH;
-            case NORTH_EAST:
-                return SOUTH_WEST;
-            case EAST:
-                return WEST;
-            case SOUTH_EAST:
-                return NORTH_WEST;
-            case SOUTH:
-                return NORTH;
-            case SOUTH_WEST:
-                return NORTH_EAST;
-            case WEST:
-                return EAST;
-            case NORTH_WEST:
-                return SOUTH_EAST;
-            case CENTER:
-                return CENTER;
-            default:
-                throw new IllegalArgumentException();
-        }
+        return switch (this) {
+            case NORTH -> SOUTH;
+            case NORTH_EAST -> SOUTH_WEST;
+            case EAST -> WEST;
+            case SOUTH_EAST -> NORTH_WEST;
+            case SOUTH -> NORTH;
+            case SOUTH_WEST -> NORTH_EAST;
+            case WEST -> EAST;
+            case NORTH_WEST -> SOUTH_EAST;
+            case CENTER -> CENTER;
+            default -> throw new IllegalArgumentException();
+        };
     }
 
     @SuppressWarnings("Duplicates")
     public Alignment anticlockwise() {
-        switch (this) {
-            case NORTH:
-                return NORTH_WEST;
-            case NORTH_EAST:
-                return NORTH;
-            case EAST:
-                return NORTH_EAST;
-            case SOUTH_EAST:
-                return EAST;
-            case SOUTH:
-                return SOUTH_EAST;
-            case SOUTH_WEST:
-                return SOUTH;
-            case WEST:
-                return SOUTH_WEST;
-            case NORTH_WEST:
-                return WEST;
-            case CENTER:
-                return CENTER;
-            default:
-                throw new IllegalArgumentException();
-        }
+        return switch (this) {
+            case NORTH -> NORTH_WEST;
+            case NORTH_EAST -> NORTH;
+            case EAST -> NORTH_EAST;
+            case SOUTH_EAST -> EAST;
+            case SOUTH -> SOUTH_EAST;
+            case SOUTH_WEST -> SOUTH;
+            case WEST -> SOUTH_WEST;
+            case NORTH_WEST -> WEST;
+            case CENTER -> CENTER;
+            default -> throw new IllegalArgumentException();
+        };
     }
 
     @SuppressWarnings("Duplicates")
     public Alignment clockwise() {
-        switch (this) {
-            case NORTH:
-                return NORTH_EAST;
-            case NORTH_EAST:
-                return EAST;
-            case EAST:
-                return SOUTH_EAST;
-            case SOUTH_EAST:
-                return SOUTH;
-            case SOUTH:
-                return SOUTH_WEST;
-            case SOUTH_WEST:
-                return WEST;
-            case WEST:
-                return NORTH_WEST;
-            case NORTH_WEST:
-                return NORTH;
-            case CENTER:
-                return CENTER;
-            default:
-                throw new IllegalArgumentException();
-        }
+        return switch (this) {
+            case NORTH -> NORTH_EAST;
+            case NORTH_EAST -> EAST;
+            case EAST -> SOUTH_EAST;
+            case SOUTH_EAST -> SOUTH;
+            case SOUTH -> SOUTH_WEST;
+            case SOUTH_WEST -> WEST;
+            case WEST -> NORTH_WEST;
+            case NORTH_WEST -> NORTH;
+            case CENTER -> CENTER;
+            default -> throw new IllegalArgumentException();
+        };
     }
 
     public Insets maskInsets(final Insets insets) {
@@ -221,28 +191,18 @@ public enum Alignment {
     }
 
     public Insets maskInsets(final int top, final int left, final int bottom, final int right, final int mask) {
-        switch (this) {
-            case NORTH:
-                return new Insets(top, mask, mask, mask);
-            case NORTH_EAST:
-                return new Insets(top, mask, mask, right);
-            case EAST:
-                return new Insets(mask, mask, mask, right);
-            case SOUTH_EAST:
-                return new Insets(mask, mask, bottom, right);
-            case SOUTH:
-                return new Insets(mask, mask, bottom, mask);
-            case SOUTH_WEST:
-                return new Insets(mask, left, bottom, mask);
-            case WEST:
-                return new Insets(mask, left, mask, mask);
-            case NORTH_WEST:
-                return new Insets(top, left, mask, mask);
-            case CENTER:
-                return new Insets(mask, mask, mask, mask);
-            default:
-                throw new IllegalArgumentException();
-        }
+        return switch (this) {
+            case NORTH -> new Insets(top, mask, mask, mask);
+            case NORTH_EAST -> new Insets(top, mask, mask, right);
+            case EAST -> new Insets(mask, mask, mask, right);
+            case SOUTH_EAST -> new Insets(mask, mask, bottom, right);
+            case SOUTH -> new Insets(mask, mask, bottom, mask);
+            case SOUTH_WEST -> new Insets(mask, left, bottom, mask);
+            case WEST -> new Insets(mask, left, mask, mask);
+            case NORTH_WEST -> new Insets(top, left, mask, mask);
+            case CENTER -> new Insets(mask, mask, mask, mask);
+            default -> throw new IllegalArgumentException();
+        };
     }
 
     public Insets maskInsetsInverted(final Insets insets) {
@@ -314,35 +274,16 @@ public enum Alignment {
     }
 
     public int getDegreeAngle() {
-        int angle;
-        switch (this) {
-            case SOUTH:
-                angle = 180;
-                break;
-            case EAST:
-                angle = 90;
-                break;
-            case WEST:
-                angle = 270;
-                break;
-            case NORTH_EAST:
-                angle = 45;
-                break;
-            case NORTH_WEST:
-                angle = 315;
-                break;
-            case SOUTH_EAST:
-                angle = 135;
-                break;
-            case SOUTH_WEST:
-                angle = 225;
-                break;
-            case NORTH:
-            case CENTER:
-            default:
-                angle = 0;
-                break;
-        }
+        int angle = switch (this) {
+            case SOUTH -> 180;
+            case EAST -> 90;
+            case WEST -> 270;
+            case NORTH_EAST -> 45;
+            case NORTH_WEST -> 315;
+            case SOUTH_EAST -> 135;
+            case SOUTH_WEST -> 225;
+            default -> 0;
+        };
         return angle;
     }
 }

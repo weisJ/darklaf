@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -22,14 +22,7 @@ package com.github.weisj.darklaf.components.iconeditor;
 
 import java.util.Objects;
 
-class NamedInt implements Named {
-    private final String name;
-    private final int value;
-
-    NamedInt(final String name, final int value) {
-        this.name = name;
-        this.value = value;
-    }
+record NamedInt(String name, int value) implements Named {
 
     @Override
     public boolean equals(final Object o) {
@@ -42,19 +35,4 @@ class NamedInt implements Named {
         return Objects.equals(name, namedInt.name);
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    public int getValue() {
-        return value;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + value;
-        return result;
-    }
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -360,24 +360,14 @@ public class JTabFrame extends JComponent {
      * @return the tab container.
      */
     public JComponent getTabContainer(final Alignment a) {
-        switch (a) {
-            case NORTH:
-            case NORTH_EAST:
-                return getTopTabContainer();
-            case SOUTH:
-            case SOUTH_WEST:
-                return getBottomTabContainer();
-            case EAST:
-            case SOUTH_EAST:
-                return getRightTabContainer();
-            case WEST:
-            case NORTH_WEST:
-                return getLeftTabContainer();
-            case CENTER:
-                throw new IllegalArgumentException("invalid alignment: " + a);
-            default:
-                throw new IllegalArgumentException();
-        }
+        return switch (a) {
+            case NORTH, NORTH_EAST -> getTopTabContainer();
+            case SOUTH, SOUTH_WEST -> getBottomTabContainer();
+            case EAST, SOUTH_EAST -> getRightTabContainer();
+            case WEST, NORTH_WEST -> getLeftTabContainer();
+            case CENTER -> throw new IllegalArgumentException("invalid alignment: " + a);
+            default -> throw new IllegalArgumentException();
+        };
     }
 
     /**
@@ -889,20 +879,11 @@ public class JTabFrame extends JComponent {
      * @return the peer position.{@link TabFramePosition#getAlignment()}
      */
     public Alignment getPeer(final Alignment a) {
-        switch (a) {
-            case NORTH:
-            case SOUTH:
-            case WEST:
-            case EAST:
-                return a.clockwise();
-            case NORTH_EAST:
-            case NORTH_WEST:
-            case SOUTH_EAST:
-            case SOUTH_WEST:
-                return a.anticlockwise();
-            default:
-                return a;
-        }
+        return switch (a) {
+            case NORTH, SOUTH, WEST, EAST -> a.clockwise();
+            case NORTH_EAST, NORTH_WEST, SOUTH_EAST, SOUTH_WEST -> a.anticlockwise();
+            default -> a;
+        };
     }
 
     /**

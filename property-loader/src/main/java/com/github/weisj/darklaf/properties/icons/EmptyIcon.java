@@ -82,10 +82,9 @@ public final class EmptyIcon implements Icon, UIResource {
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
-        } else if (!(o instanceof EmptyIcon)) {
+        } else if (!(o instanceof EmptyIcon icon)) {
             return false;
         } else {
-            EmptyIcon icon = (EmptyIcon) o;
             return this.height == icon.height && this.width == icon.width;
         }
     }

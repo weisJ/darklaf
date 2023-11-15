@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -452,19 +452,10 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
     }
 
     protected boolean isForward(final Alignment a) {
-        switch (a) {
-            case NORTH:
-            case EAST:
-            case WEST:
-            case SOUTH_WEST:
-                return true;
-            case NORTH_WEST:
-            case SOUTH:
-            case NORTH_EAST:
-            case SOUTH_EAST:
-            default:
-                return false;
-        }
+        return switch (a) {
+            case NORTH, EAST, WEST, SOUTH_WEST -> true;
+            default -> false;
+        };
     }
 
     protected Pair<JTabFrame.TabFramePosition, Point> getNearestTabIndexAtImpl(final JTabFrame tabFrame,
@@ -513,22 +504,13 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
     }
 
     protected Component getTabContainer(final Alignment a) {
-        switch (a) {
-            case NORTH:
-            case NORTH_EAST:
-                return getTopContainer();
-            case EAST:
-            case SOUTH_EAST:
-                return getRightContainer();
-            case SOUTH:
-            case SOUTH_WEST:
-                return getBottomContainer();
-            case WEST:
-            case NORTH_WEST:
-                return getLeftContainer();
-            default:
-                return null;
-        }
+        return switch (a) {
+            case NORTH, NORTH_EAST -> getTopContainer();
+            case EAST, SOUTH_EAST -> getRightContainer();
+            case SOUTH, SOUTH_WEST -> getBottomContainer();
+            case WEST, NORTH_WEST -> getLeftContainer();
+            default -> null;
+        };
     }
 
     public Alignment getSourceAlign() {
@@ -563,22 +545,12 @@ public class DarkTabFrameUI extends TabFrameUI implements AWTEventListener {
     }
 
     public JComponent getDropComponent(final Alignment a) {
-        switch (a) {
-            default:
-            case CENTER:
-            case NORTH:
-            case NORTH_EAST:
-                return getDropComponentTop();
-            case EAST:
-            case SOUTH_EAST:
-                return getDropComponentRight();
-            case SOUTH:
-            case SOUTH_WEST:
-                return getDropComponentBottom();
-            case WEST:
-            case NORTH_WEST:
-                return getDropComponentLeft();
-        }
+        return switch (a) {
+            default -> getDropComponentTop();
+            case EAST, SOUTH_EAST -> getDropComponentRight();
+            case SOUTH, SOUTH_WEST -> getDropComponentBottom();
+            case WEST, NORTH_WEST -> getDropComponentLeft();
+        };
     }
 
     public JComponent getDropComponentTop() {

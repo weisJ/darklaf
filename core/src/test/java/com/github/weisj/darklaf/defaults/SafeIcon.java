@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -30,7 +30,8 @@ import javax.swing.*;
  * Thanks to Jeanette for the use of this code found at:
  *
  * <p>
- * https://jdnc-incubator.dev.java.net/source/browse/jdnc-incubator/src/kleopatra/java/org
+ * <a href=
+ * "https://jdnc-incubator.dev.java.net/source/browse/jdnc-incubator/src/kleopatra/java/org">...</a>
  * /jdesktop/swingx/renderer/UIPropertiesViewer.java?rev=1.2&view=markup
  *
  * <p>
@@ -40,7 +41,7 @@ import javax.swing.*;
  *
  * <p>
  * This Icon is an adaption of a cool trick by Darryl Burke found at
- * http://tips4java.wordpress.com/2008/12/18/icon-table-cell-renderer
+ * <a href="http://tips4java.wordpress.com/2008/12/18/icon-table-cell-renderer">...</a>
  *
  * <p>
  * The base idea is to instantiate a component of the type expected by the icon, let it paint into

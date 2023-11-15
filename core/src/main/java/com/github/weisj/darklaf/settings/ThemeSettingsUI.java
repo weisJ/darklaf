@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2022 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -113,7 +113,7 @@ public class ThemeSettingsUI {
         // Value is based on length of "Helvetica Neue"
         fontPrototypeChooser.setPrototypeDisplayValue(FontEntry.createDisplayValue(15));
         // noinspection unchecked
-        fontPrototypeChooser.setRenderer(new ListCellRendererDelegate<FontEntry>(
+        fontPrototypeChooser.setRenderer(new ListCellRendererDelegate<>(
                 (ListCellRenderer<FontEntry>) fontPrototypeChooser.getRenderer()) {
             @Override
             public Component getListCellRendererComponent(final JList<? extends FontEntry> list, final FontEntry value,
@@ -454,8 +454,7 @@ public class ThemeSettingsUI {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof FontEntry)) return false;
-            FontEntry fontEntry = (FontEntry) o;
+            if (!(o instanceof FontEntry fontEntry)) return false;
             return Objects.equals(name, fontEntry.name);
         }
 
@@ -470,18 +469,16 @@ public class ThemeSettingsUI {
 
         static {
             families = getFontFamilies();
-            DynamicUI.registerCallback(FontFamiliesCache.class, c -> {
-                new SwingWorker<Void, FontEntry>() {
-                    @Override
-                    protected Void doInBackground() {
-                        float fontSize = new JLabel().getFont().getSize2D();
-                        for (FontEntry family : families) {
-                            family.font = family.font.deriveFont(fontSize);
-                        }
-                        return null;
+            DynamicUI.registerCallback(FontFamiliesCache.class, c -> new SwingWorker<Void, FontEntry>() {
+                @Override
+                protected Void doInBackground() {
+                    float fontSize = new JLabel().getFont().getSize2D();
+                    for (FontEntry family : families) {
+                        family.font = family.font.deriveFont(fontSize);
                     }
-                }.execute();
-            }, false);
+                    return null;
+                }
+            }.execute(), false);
         }
 
         private static FontEntry[] getFontFamilies() {

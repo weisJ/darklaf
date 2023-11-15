@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -54,32 +54,17 @@ public enum AlignmentExt {
     }
 
     public Insets maskInsets(final int top, final int left, final int bottom, final int right, final int mask) {
-        switch (this) {
-            case NORTH:
-            case NORTH_EAST:
-            case EAST:
-            case SOUTH_EAST:
-            case SOUTH:
-            case SOUTH_WEST:
-            case WEST:
-            case NORTH_WEST:
-            case CENTER:
-                return parent.maskInsets(top, left, bottom, right, mask);
-            case LEFT:
-                return new Insets(top, left, bottom, mask);
-            case MIDDLE_HORIZONTAL:
-                return new Insets(top, mask, bottom, mask);
-            case RIGHT:
-                return new Insets(top, mask, bottom, right);
-            case TOP:
-                return new Insets(top, left, mask, right);
-            case MIDDLE_VERTICAL:
-                return new Insets(mask, left, mask, right);
-            case BOTTOM:
-                return new Insets(mask, left, bottom, right);
-            default:
-                throw new IllegalArgumentException();
-        }
+        return switch (this) {
+            case NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORTH_WEST, CENTER -> parent
+                    .maskInsets(top, left, bottom, right, mask);
+            case LEFT -> new Insets(top, left, bottom, mask);
+            case MIDDLE_HORIZONTAL -> new Insets(top, mask, bottom, mask);
+            case RIGHT -> new Insets(top, mask, bottom, right);
+            case TOP -> new Insets(top, left, mask, right);
+            case MIDDLE_VERTICAL -> new Insets(mask, left, mask, right);
+            case BOTTOM -> new Insets(mask, left, bottom, right);
+            default -> throw new IllegalArgumentException();
+        };
     }
 
     public Insets maskInsetsInverted(final Insets insets) {

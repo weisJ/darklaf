@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -206,20 +206,10 @@ public class DarkTabFrameTabLabelUI extends DarkLabelUI implements PropertyChang
     }
 
     protected Alignment mapOrientation(final Alignment newValue) {
-        switch (newValue) {
-            case CENTER:
-            case NORTH:
-            case NORTH_EAST:
-            case SOUTH:
-            case SOUTH_WEST:
-                return Alignment.NORTH;
-            case EAST:
-            case SOUTH_EAST:
-                return Alignment.WEST;
-            case WEST:
-            case NORTH_WEST:
-                return Alignment.EAST;
-        }
-        return Alignment.NORTH;
+        return switch (newValue) {
+            case CENTER, NORTH, NORTH_EAST, SOUTH, SOUTH_WEST -> Alignment.NORTH;
+            case EAST, SOUTH_EAST -> Alignment.WEST;
+            case WEST, NORTH_WEST -> Alignment.EAST;
+        };
     }
 }

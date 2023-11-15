@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -39,17 +39,11 @@ public final class ArrowButton implements SwingConstants {
 
     public static JButton createUpDownArrow(final JComponent parent, final int orientation, final boolean center,
             final boolean applyInsetsOnSize, final Insets insets) {
-        Icon icon;
-        switch (orientation) {
-            case NORTH:
-                icon = UIManager.getIcon("ArrowButton.up.icon");
-                break;
-            case SOUTH:
-                icon = UIManager.getIcon("ArrowButton.down.icon");
-                break;
-            default:
-                throw new IllegalStateException("Invalid button orientation: " + orientation);
-        }
+        Icon icon = switch (orientation) {
+            case NORTH -> UIManager.getIcon("ArrowButton.up.icon");
+            case SOUTH -> UIManager.getIcon("ArrowButton.down.icon");
+            default -> throw new IllegalStateException("Invalid button orientation: " + orientation);
+        };
         return createUpDownArrow(parent, icon, icon, orientation, center, applyInsetsOnSize, insets);
     }
 

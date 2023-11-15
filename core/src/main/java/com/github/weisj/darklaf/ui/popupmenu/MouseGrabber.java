@@ -122,8 +122,7 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
 
     protected void repaintIfNecessary(final ChangeEvent e) {
         Object source = e.getSource();
-        if (source instanceof MenuSelectionManager) {
-            MenuSelectionManager manager = (MenuSelectionManager) source;
+        if (source instanceof MenuSelectionManager manager) {
             MenuElement[] path = manager.getSelectedPath();
             repaintPath(path);
             repaintPath(lastPathSelected);
@@ -150,11 +149,10 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
             cancelPopupMenu();
             return;
         }
-        if (!(ev instanceof MouseEvent)) {
+        if (!(ev instanceof MouseEvent me)) {
             // We are interested in MouseEvents only
             return;
         }
-        MouseEvent me = (MouseEvent) ev;
         Component src = me.getComponent();
         // If the scroll is done inside a combobox, menuitem,
         // or inside a Popup#HeavyWeightWindow or inside a frame

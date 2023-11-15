@@ -198,8 +198,7 @@ public final class PropertyUtil {
 
     public static <T> List<T> getList(final UIDefaults defaults, final String key, final Class<T> type) {
         Object obj = defaults.get(key);
-        if (!(obj instanceof List)) return Collections.emptyList();
-        List<?> list = (List<?>) obj;
+        if (!(obj instanceof List<?> list)) return Collections.emptyList();
         return asTypedList(list, type);
     }
 
@@ -243,24 +242,13 @@ public final class PropertyUtil {
         }
     }
 
-    private static class UIResourceString implements UIResource {
-        private final String value;
-
-        private UIResourceString(final String value) {
-            this.value = value;
-        }
+    private record UIResourceString(String value) implements UIResource {
 
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof UIResourceString)) return false;
-            UIResourceString that = (UIResourceString) o;
+            if (!(o instanceof UIResourceString that)) return false;
             return Objects.equals(value, that.value);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hashCode(value);
         }
 
         @Override

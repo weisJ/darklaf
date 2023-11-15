@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2022 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -94,9 +94,7 @@ public class AttachedPopupComponent extends JToolTip {
                     () -> isShowing.set(false));
         };
         if (component instanceof AbstractButton) {
-            ((AbstractButton) component).addActionListener(e -> {
-                listener.run();
-            });
+            ((AbstractButton) component).addActionListener(e -> listener.run());
         } else {
             component.addMouseListener((MouseClickListener) e -> {
                 if (e.isConsumed()) return;

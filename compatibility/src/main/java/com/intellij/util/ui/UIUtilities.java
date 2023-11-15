@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Jannis Weis
+ * Copyright (c) 2021-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -195,7 +195,7 @@ public class UIUtilities {
     }
 
     public static int stringWidth(JComponent c, FontMetrics fm, String string) {
-        if (string != null && !string.equals("")) {
+        if (string != null && !string.isEmpty()) {
             boolean needsTextLayout = c != null
                     && c.getClientProperty(TextAttribute.NUMERIC_SHAPING) != null;
             if (needsTextLayout) {
@@ -217,7 +217,7 @@ public class UIUtilities {
     }
 
     public static String clipStringIfNecessary(JComponent c, FontMetrics fm, String string, int availTextWidth) {
-        if (string != null && !string.equals("")) {
+        if (string != null && !string.isEmpty()) {
             int textWidth = stringWidth(c, fm, string);
             return textWidth > availTextWidth ? clipString(c, fm, string, availTextWidth) : string;
         } else {
@@ -351,8 +351,7 @@ public class UIUtilities {
 
     @SuppressWarnings("UnusedReturnValue")
     public static Component compositeRequestFocus(Component component) {
-        if (component instanceof Container) {
-            Container container = (Container) component;
+        if (component instanceof Container container) {
             if (container.isFocusCycleRoot()) {
                 FocusTraversalPolicy policy = container.getFocusTraversalPolicy();
                 Component comp = policy.getDefaultComponent(container);
@@ -448,10 +447,9 @@ public class UIUtilities {
         public boolean equals(Object entry) {
             if (entry == this) {
                 return true;
-            } else if (!(entry instanceof LSBCacheEntry)) {
+            } else if (!(entry instanceof LSBCacheEntry oEntry)) {
                 return false;
             } else {
-                LSBCacheEntry oEntry = (LSBCacheEntry) entry;
                 return this.font.equals(oEntry.font) && this.frc.equals(oEntry.frc);
             }
         }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -434,8 +434,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
 
     protected static boolean isLeftToRight(final Document doc, final int p0, final int p1) {
         if (Boolean.TRUE.equals(doc.getProperty("i18n"))) {
-            if (doc instanceof AbstractDocument) {
-                AbstractDocument adoc = (AbstractDocument) doc;
+            if (doc instanceof AbstractDocument adoc) {
                 Element bidiRoot = adoc.getBidiRootElement();
                 int index = bidiRoot.getElementIndex(p0);
                 Element bidiElem = bidiRoot.getElement(index);

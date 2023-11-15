@@ -164,8 +164,7 @@ public class IconEditorPanel extends JPanel {
     }
 
     private JComponent createValueEditor(final String key, final Object value) {
-        if (value instanceof Color) {
-            Color color = (Color) value;
+        if (value instanceof Color color) {
             JButton palette = createPaletteButton();
             AttachedPopupComponent.attachChooser(palette,
                     () -> IconValues.getSwatchChooser(theme),
@@ -202,7 +201,7 @@ public class IconEditorPanel extends JPanel {
                     () -> IconValues.getOpacityChooser(theme),
                     i -> {
                         if (i != null) {
-                            updateAction.get(key).accept(i.getValue());
+                            updateAction.get(key).accept(i.value());
                             put(key, i);
                         }
                     }, () -> {
@@ -240,7 +239,7 @@ public class IconEditorPanel extends JPanel {
         if (value == null) return;
         Object effectiveValue = value;
         if (value instanceof Named) {
-            effectiveValue = PropertyLoader.getReferencePrefix() + ((Named) value).getName();
+            effectiveValue = PropertyLoader.getReferencePrefix() + ((Named) value).name();
         }
         Object prevEff = properties.put(key, effectiveValue);
         Object prev = propertyBackup.get(key);
@@ -393,8 +392,8 @@ public class IconEditorPanel extends JPanel {
                 defaults.colors = entries.stream()
                         .map(p -> new NamedColor(p.getFirst(), p.getSecond()))
                         .sorted((c1, c2) -> {
-                            String n1 = c1.getName();
-                            String n2 = c2.getName();
+                            String n1 = c1.name();
+                            String n2 = c2.name();
                             boolean p1 = n1.startsWith("palette.");
                             boolean p2 = n2.startsWith("palette.");
                             if (p1 == p2) return n1.compareTo(n2);
@@ -441,7 +440,7 @@ public class IconEditorPanel extends JPanel {
         protected OpacityChooser(final List<NamedInt> values) {
             super(values);
             setBorder(LayoutHelper.createEmptyContainerBorder());
-            listComp.setCellRenderer(SimpleListCellRenderer.create(v -> v.getValue() + "% " + v.getName()));
+            listComp.setCellRenderer(SimpleListCellRenderer.create(v -> v.value() + "% " + v.name()));
         }
     }
 
@@ -455,7 +454,7 @@ public class IconEditorPanel extends JPanel {
             listComp.setCellRenderer(SimpleListCellRenderer.create((c, v) -> {
                 icon.setColor(v.getColor());
                 c.setIcon(icon);
-                c.setText(v.getName());
+                c.setText(v.name());
             }));
             listComp.setVisibleRowCount(15);
         }

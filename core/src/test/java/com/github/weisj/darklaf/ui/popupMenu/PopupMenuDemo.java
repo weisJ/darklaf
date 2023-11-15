@@ -40,6 +40,7 @@ public class PopupMenuDemo extends BaseComponentDemo {
     public JComponent createComponent() {
         JPanel leftPanel = new JPanel();
         leftPanel.setPreferredSize(new Dimension(200, 200));
+        leftPanel.setOpaque(true);
         leftPanel.setLayout(new GridBagLayout());
         leftPanel.add(new JLabel("<html>Right click anywhere <br> to open menu.") {
             {

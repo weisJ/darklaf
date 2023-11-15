@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -42,9 +42,8 @@ public final class IconUtil {
 
     /** Reload all created frame icons if necessary. */
     public static void reloadDynamicFrameIcons() {
-        SwingUtilities.invokeLater(() -> {
-            windowIconSet.forEach((window, icon) -> window.setIconImage(iconToImage(icon, window)));
-        });
+        SwingUtilities.invokeLater(
+                () -> windowIconSet.forEach((window, icon) -> window.setIconImage(iconToImage(icon, window))));
     }
 
     static int getDynamicFrameIconCount() {

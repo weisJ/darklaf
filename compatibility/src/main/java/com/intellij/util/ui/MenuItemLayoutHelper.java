@@ -210,14 +210,14 @@ public class MenuItemLayoutHelper implements com.github.weisj.darklaf.compatibil
             this.iconSize.height = this.icon.getIconHeight();
         }
 
-        if (!this.accText.equals("")) {
+        if (!this.accText.isEmpty()) {
             this.accSize.width = UIUtilities.stringWidth(this.mi, this.accFm, this.accText);
             this.accSize.height = this.accFm.getHeight();
         }
 
         if (this.text == null) {
             this.text = "";
-        } else if (!this.text.equals("")) {
+        } else if (!this.text.isEmpty()) {
             if (this.htmlView != null) {
                 this.textSize.width = (int) this.htmlView.getPreferredSpan(0);
                 this.textSize.height = (int) this.htmlView.getPreferredSpan(1);
@@ -537,11 +537,11 @@ public class MenuItemLayoutHelper implements com.github.weisj.darklaf.compatibil
     }
 
     private void alignRects(LayoutResult lr, ColumnAlignment alignment) {
-        this.alignRect(lr.checkRect, alignment.getCheckAlignment(), this.checkSize.getOrigWidth());
-        this.alignRect(lr.iconRect, alignment.getIconAlignment(), this.iconSize.getOrigWidth());
-        this.alignRect(lr.textRect, alignment.getTextAlignment(), this.textSize.getOrigWidth());
-        this.alignRect(lr.accRect, alignment.getAccAlignment(), this.accSize.getOrigWidth());
-        this.alignRect(lr.arrowRect, alignment.getArrowAlignment(), this.arrowSize.getOrigWidth());
+        this.alignRect(lr.checkRect, alignment.checkAlignment(), this.checkSize.getOrigWidth());
+        this.alignRect(lr.iconRect, alignment.iconAlignment(), this.iconSize.getOrigWidth());
+        this.alignRect(lr.textRect, alignment.textAlignment(), this.textSize.getOrigWidth());
+        this.alignRect(lr.accRect, alignment.accAlignment(), this.accSize.getOrigWidth());
+        this.alignRect(lr.arrowRect, alignment.arrowAlignment(), this.arrowSize.getOrigWidth());
     }
 
     private void alignRect(Rectangle rect, int alignment, int origWidth) {
@@ -989,43 +989,11 @@ public class MenuItemLayoutHelper implements com.github.weisj.darklaf.compatibil
         }
     }
 
-    public static class ColumnAlignment {
-        private final int checkAlignment;
-        private final int iconAlignment;
-        private final int textAlignment;
-        private final int accAlignment;
-        private final int arrowAlignment;
+    public record ColumnAlignment(int checkAlignment, int iconAlignment, int textAlignment, int accAlignment,
+            int arrowAlignment) {
         public static final ColumnAlignment LEFT_ALIGNMENT = new ColumnAlignment(2, 2, 2, 2, 2);
         public static final ColumnAlignment RIGHT_ALIGNMENT = new ColumnAlignment(4, 4, 4, 4, 4);
 
-        public ColumnAlignment(int checkAlignment, int iconAlignment, int textAlignment, int accAlignment,
-                int arrowAlignment) {
-            this.checkAlignment = checkAlignment;
-            this.iconAlignment = iconAlignment;
-            this.textAlignment = textAlignment;
-            this.accAlignment = accAlignment;
-            this.arrowAlignment = arrowAlignment;
-        }
-
-        public int getCheckAlignment() {
-            return this.checkAlignment;
-        }
-
-        public int getIconAlignment() {
-            return this.iconAlignment;
-        }
-
-        public int getTextAlignment() {
-            return this.textAlignment;
-        }
-
-        public int getAccAlignment() {
-            return this.accAlignment;
-        }
-
-        public int getArrowAlignment() {
-            return this.arrowAlignment;
-        }
     }
 
     public static class LayoutResult implements MILayoutResult {

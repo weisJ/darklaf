@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -22,36 +22,5 @@ package com.github.weisj.darklaf.theme.event;
 
 import com.github.weisj.darklaf.theme.Theme;
 
-public class ThemeChangeEvent implements ThemeEvent {
-
-    private final Theme oldTheme;
-    private final Theme newTheme;
-
-    public ThemeChangeEvent(final Theme oldTheme, final Theme newTheme) {
-        this.oldTheme = oldTheme;
-        this.newTheme = newTheme;
-    }
-
-    /**
-     * Gets the old theme.
-     *
-     * @return the old theme.
-     */
-    public Theme getOldTheme() {
-        return oldTheme;
-    }
-
-    /**
-     * Gets the new theme.
-     *
-     * @return the new theme.
-     */
-    public Theme getNewTheme() {
-        return newTheme;
-    }
-
-    @Override
-    public String toString() {
-        return "ThemeChangeEvent{" + "oldTheme=" + oldTheme + ", newTheme=" + newTheme + '}';
-    }
+public record ThemeChangeEvent(Theme oldTheme, Theme newTheme) implements ThemeEvent {
 }

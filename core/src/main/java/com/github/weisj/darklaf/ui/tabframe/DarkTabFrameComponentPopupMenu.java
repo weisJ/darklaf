@@ -86,45 +86,26 @@ public class DarkTabFrameComponentPopupMenu extends JXPopupMenu implements Prope
     }
 
     protected String getDescription(final Alignment a, final Locale l) {
-        switch (a) {
-            case NORTH:
-            case SOUTH:
-            case EAST:
-            case WEST:
-            case NORTH_EAST:
-            case NORTH_WEST:
-            case SOUTH_EAST:
-            case SOUTH_WEST:
-                return UIManager.getString("popup.moveTo." + a.name().toLowerCase(Locale.ENGLISH), l);
-            case CENTER:
-            default:
-                return "";
-        }
+        return switch (a) {
+            case NORTH, SOUTH, EAST, WEST, NORTH_EAST, NORTH_WEST, SOUTH_EAST, SOUTH_WEST -> UIManager
+                    .getString("popup.moveTo." + a.name().toLowerCase(Locale.ENGLISH), l);
+            default -> "";
+        };
     }
 
     protected Icon createIcon(final Alignment a, final boolean enabled) {
         String suffix = enabled ? "" : "Disabled";
-        switch (a) {
-            case NORTH:
-                return UIManager.getIcon("TabFrame.moveToTopLeft" + suffix + ".icon");
-            case SOUTH:
-                return UIManager.getIcon("TabFrame.moveToBottomRight" + suffix + ".icon");
-            case EAST:
-                return UIManager.getIcon("TabFrame.moveToRightTop" + suffix + ".icon");
-            case WEST:
-                return UIManager.getIcon("TabFrame.moveToLeftBottom" + suffix + ".icon");
-            case NORTH_EAST:
-                return UIManager.getIcon("TabFrame.moveToTopRight" + suffix + ".icon");
-            case NORTH_WEST:
-                return UIManager.getIcon("TabFrame.moveToLeftTop" + suffix + ".icon");
-            case SOUTH_EAST:
-                return UIManager.getIcon("TabFrame.moveToRightBottom" + suffix + ".icon");
-            case SOUTH_WEST:
-                return UIManager.getIcon("TabFrame.moveToBottomLeft" + suffix + ".icon");
-            case CENTER:
-            default:
-                return EmptyIcon.create(0);
-        }
+        return switch (a) {
+            case NORTH -> UIManager.getIcon("TabFrame.moveToTopLeft" + suffix + ".icon");
+            case SOUTH -> UIManager.getIcon("TabFrame.moveToBottomRight" + suffix + ".icon");
+            case EAST -> UIManager.getIcon("TabFrame.moveToRightTop" + suffix + ".icon");
+            case WEST -> UIManager.getIcon("TabFrame.moveToLeftBottom" + suffix + ".icon");
+            case NORTH_EAST -> UIManager.getIcon("TabFrame.moveToTopRight" + suffix + ".icon");
+            case NORTH_WEST -> UIManager.getIcon("TabFrame.moveToLeftTop" + suffix + ".icon");
+            case SOUTH_EAST -> UIManager.getIcon("TabFrame.moveToRightBottom" + suffix + ".icon");
+            case SOUTH_WEST -> UIManager.getIcon("TabFrame.moveToBottomLeft" + suffix + ".icon");
+            default -> EmptyIcon.create(0);
+        };
     }
 
     @Override

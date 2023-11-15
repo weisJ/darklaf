@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -609,8 +609,7 @@ public class ToolTipContext {
 
     private Point adjustPoint(final Point p, final Alignment align, final Dimension dim, final boolean outside) {
         Border b = toolTip.getBorder();
-        if (b instanceof AlignableTooltipBorder) {
-            AlignableTooltipBorder border = (AlignableTooltipBorder) b;
+        if (b instanceof AlignableTooltipBorder border) {
             return border.alignTooltip(toolTip, p, align, dim, outside);
         }
         return p;

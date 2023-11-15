@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -552,33 +552,23 @@ public class DarkHighlightPainter extends DefaultHighlighter.DefaultHighlightPai
     }
 
     private Shape getSubtractShape(final Alignment a) {
-        switch (a) {
-            case NORTH_EAST:
-                return new Arc2D.Double(0, 0, 2 * arcSize, 2 * arcSize, 90, 90, Arc2D.PIE);
-            case NORTH_WEST:
-                return new Arc2D.Double(-arcSize, 0, 2 * arcSize, 2 * arcSize, 0, 90, Arc2D.PIE);
-            case SOUTH_EAST:
-                return new Arc2D.Double(0, -arcSize, 2 * arcSize, 2 * arcSize, 180, 90, Arc2D.PIE);
-            case SOUTH_WEST:
-                return new Arc2D.Double(-arcSize, -arcSize, 2 * arcSize, 2 * arcSize, 270, 90, Arc2D.PIE);
-            default:
-                return new Rectangle();
-        }
+        return switch (a) {
+            case NORTH_EAST -> new Arc2D.Double(0, 0, 2 * arcSize, 2 * arcSize, 90, 90, Arc2D.PIE);
+            case NORTH_WEST -> new Arc2D.Double(-arcSize, 0, 2 * arcSize, 2 * arcSize, 0, 90, Arc2D.PIE);
+            case SOUTH_EAST -> new Arc2D.Double(0, -arcSize, 2 * arcSize, 2 * arcSize, 180, 90, Arc2D.PIE);
+            case SOUTH_WEST -> new Arc2D.Double(-arcSize, -arcSize, 2 * arcSize, 2 * arcSize, 270, 90, Arc2D.PIE);
+            default -> new Rectangle();
+        };
     }
 
     private int getIndex(final Alignment a) {
-        switch (a) {
-            case NORTH_EAST:
-                return 0;
-            case NORTH_WEST:
-                return 1;
-            case SOUTH_EAST:
-                return 2;
-            case SOUTH_WEST:
-                return 3;
-            default:
-                throw new IllegalStateException("Did not expect " + a);
-        }
+        return switch (a) {
+            case NORTH_EAST -> 0;
+            case NORTH_WEST -> 1;
+            case SOUTH_EAST -> 2;
+            case SOUTH_WEST -> 3;
+            default -> throw new IllegalStateException("Did not expect " + a);
+        };
     }
 
     public boolean isEnabled() {

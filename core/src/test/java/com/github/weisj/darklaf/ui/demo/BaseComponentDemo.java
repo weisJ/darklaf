@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Jannis Weis
+ * Copyright (c) 2021-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -192,15 +192,8 @@ public abstract class BaseComponentDemo implements ComponentDemo, DemoExecutionS
     }
 
     @SuppressWarnings("unchecked")
-    private static class FunctionBinding<T, C extends JComponent> implements SpecBinding<T> {
-
-        private final BiConsumer<C, T> setter;
-        private final Function<C, T> getter;
-
-        private FunctionBinding(final BiConsumer<C, T> setter, final Function<C, T> getter) {
-            this.setter = setter;
-            this.getter = getter;
-        }
+    private record FunctionBinding<T, C extends JComponent> (BiConsumer<C, T> setter,
+            Function<C, T> getter) implements SpecBinding<T> {
 
         @Override
         public T get(final JComponent component) {

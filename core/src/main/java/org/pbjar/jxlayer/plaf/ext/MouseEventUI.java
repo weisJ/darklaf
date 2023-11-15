@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -100,8 +100,7 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
      */
     @Override
     public void eventDispatched(final AWTEvent event, final JLayer<? extends V> layer) {
-        if (event instanceof MouseEvent) {
-            MouseEvent mouseEvent = (MouseEvent) event;
+        if (event instanceof MouseEvent mouseEvent) {
             if (!dispatchingMode) {
                 // Process an original mouse event
                 dispatchingMode = true;
@@ -220,25 +219,13 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
     @SuppressWarnings("DuplicatedCode")
 
     private Component getListeningComponent(final MouseEvent event, final Component component) {
-        Component comp;
-        switch (event.getID()) {
-            case MouseEvent.MOUSE_CLICKED:
-            case MouseEvent.MOUSE_ENTERED:
-            case MouseEvent.MOUSE_EXITED:
-            case MouseEvent.MOUSE_PRESSED:
-            case MouseEvent.MOUSE_RELEASED:
-                comp = getMouseListeningComponent(component);
-                break;
-            case MouseEvent.MOUSE_DRAGGED:
-            case MouseEvent.MOUSE_MOVED:
-                comp = getMouseMotionListeningComponent(component);
-                break;
-            case MouseEvent.MOUSE_WHEEL:
-                comp = getMouseWheelListeningComponent(component);
-                break;
-            default:
-                comp = null;
-        }
+        Component comp = switch (event.getID()) {
+            case MouseEvent.MOUSE_CLICKED, MouseEvent.MOUSE_ENTERED, MouseEvent.MOUSE_EXITED, MouseEvent.MOUSE_PRESSED, MouseEvent.MOUSE_RELEASED -> getMouseListeningComponent(
+                    component);
+            case MouseEvent.MOUSE_DRAGGED, MouseEvent.MOUSE_MOVED -> getMouseMotionListeningComponent(component);
+            case MouseEvent.MOUSE_WHEEL -> getMouseWheelListeningComponent(component);
+            default -> null;
+        };
         return comp;
     }
 

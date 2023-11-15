@@ -189,11 +189,9 @@ public class DarkToolBarUI extends BasicToolBarUI implements Customization.ToolB
     }
 
     protected boolean isDockable(final Component comp, final Object constraint) {
-        if (comp instanceof Container) {
-            Container cont = (Container) comp;
+        if (comp instanceof Container cont) {
             LayoutManager lm = cont.getLayout();
-            if (lm instanceof BorderLayout) {
-                BorderLayout blm = (BorderLayout) lm;
+            if (lm instanceof BorderLayout blm) {
                 Component c = blm.getLayoutComponent(cont, constraint);
                 return c == null || c == toolBar || c == previewPanel;
             }

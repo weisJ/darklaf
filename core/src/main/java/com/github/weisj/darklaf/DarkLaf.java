@@ -21,6 +21,7 @@
 package com.github.weisj.darklaf;
 
 import java.awt.*;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -127,11 +128,7 @@ public class DarkLaf extends ThemedLookAndFeel {
     }
 
     private LookAndFeel currentOrFallback(final LookAndFeel currentLaf) {
-        if (currentLaf != null) {
-            return currentLaf;
-        } else {
-            return new MetalLookAndFeel();
-        }
+        return Objects.requireNonNullElseGet(currentLaf, MetalLookAndFeel::new);
     }
 
     @Override

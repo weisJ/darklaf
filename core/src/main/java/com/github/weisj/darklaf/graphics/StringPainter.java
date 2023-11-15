@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2022 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -37,7 +37,6 @@ import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.ui.OpacityBufferedUI;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 import com.github.weisj.darklaf.util.*;
-import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.darklaf.util.graphics.GraphicsContext;
 import com.github.weisj.darklaf.util.graphics.GraphicsUtil;
 
@@ -113,7 +112,7 @@ public final class StringPainter {
     public static <T extends JComponent> void drawStringImpl(final Graphics g, final T c, final View view,
             final String text, final Rectangle textRect, final Font font, final FontMetrics fm, final int mnemIndex,
             final Color background) {
-        if (text == null || text.equals("")) return;
+        if (text == null || text.isEmpty()) return;
 
         GraphicsContext context = GraphicsUtil.setupAntialiasing(g);
 

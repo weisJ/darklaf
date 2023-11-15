@@ -61,8 +61,7 @@ public class DarkListCellRendererDelegate extends ListCellRendererDelegate<Objec
         boolean sel = isSelected && !leadIndex;
         boolean focus = cellHasFocus && !leadIndex;
         Component renderer = super.getListCellRendererComponent(list, value, index, sel, focus);
-        if (renderer instanceof JLabel) {
-            JLabel label = (JLabel) renderer;
+        if (renderer instanceof JLabel label) {
             if (label.getText().isEmpty()) {
                 // Fix cell height for empty string.
                 label.setText(" ");

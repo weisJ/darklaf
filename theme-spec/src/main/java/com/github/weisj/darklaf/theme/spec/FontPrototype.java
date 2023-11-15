@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Jannis Weis
+ * Copyright (c) 2022-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -24,19 +24,9 @@ import java.awt.*;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class FontPrototype implements Serializable {
-    private final String family;
-
+public record FontPrototype(String family) implements Serializable {
     public static FontPrototype getDefault() {
         return new FontPrototype(null);
-    }
-
-    public FontPrototype(String family) {
-        this.family = family;
-    }
-
-    public String family() {
-        return family;
     }
 
     public static FontPrototype fromFont(final Font font) {
@@ -53,13 +43,8 @@ public class FontPrototype implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof FontPrototype)) return false;
-        FontPrototype that = (FontPrototype) o;
+        if (!(o instanceof FontPrototype that)) return false;
         return Objects.equals(family, that.family);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(family);
-    }
 }

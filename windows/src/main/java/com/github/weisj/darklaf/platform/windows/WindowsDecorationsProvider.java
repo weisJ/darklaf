@@ -104,8 +104,7 @@ public class WindowsDecorationsProvider implements DecorationsProvider {
 
     @Override
     public TitlePaneLayoutInfo titlePaneLayoutInfo(final CustomTitlePane customTitlePane) {
-        if (!(customTitlePane instanceof WindowsTitlePane)) throw new IllegalStateException();
-        WindowsTitlePane titlePane = (WindowsTitlePane) customTitlePane;
+        if (!(customTitlePane instanceof WindowsTitlePane titlePane)) throw new IllegalStateException();
         return new TitlePaneLayoutInfo(titlePane.windowButtonRect());
     }
 

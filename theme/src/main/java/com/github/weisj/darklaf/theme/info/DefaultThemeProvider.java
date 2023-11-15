@@ -97,8 +97,7 @@ public class DefaultThemeProvider implements ThemeProvider {
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (!(o instanceof DefaultThemeProvider)) return false;
-        DefaultThemeProvider that = (DefaultThemeProvider) o;
+        if (!(o instanceof DefaultThemeProvider that)) return false;
         return lightTheme.appearsEqualTo(that.lightTheme) && darkTheme.appearsEqualTo(that.darkTheme)
                 && lightHighContrastTheme.appearsEqualTo(that.lightHighContrastTheme)
                 && darkHighContrastTheme.appearsEqualTo(that.darkHighContrastTheme);

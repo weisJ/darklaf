@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2022 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -103,8 +103,7 @@ public class FontSizeRule implements Serializable {
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (!(o instanceof FontSizeRule)) return false;
-        FontSizeRule that = (FontSizeRule) o;
+        if (!(o instanceof FontSizeRule that)) return false;
         return that.getPercentage() == getPercentage();
     }
 
@@ -112,7 +111,7 @@ public class FontSizeRule implements Serializable {
     public int hashCode() {
         int result = type != null ? type.hashCode() : 0;
         result = 31 * result + (preset != null ? preset.hashCode() : 0);
-        result = 31 * result + (relativeAdjustment != +0.0f ? Float.floatToIntBits(relativeAdjustment) : 0);
+        result = 31 * result + (relativeAdjustment != 0.0f ? Float.floatToIntBits(relativeAdjustment) : 0);
         return result;
     }
 

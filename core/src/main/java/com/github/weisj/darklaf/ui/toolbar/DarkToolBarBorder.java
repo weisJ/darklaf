@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -90,8 +90,7 @@ public class DarkToolBarBorder extends AbstractBorder implements UIResource, Swi
     private String getDockedConstrains(final Component c) {
         if (c instanceof JComponent) {
             Component parent = c.getParent();
-            if (parent instanceof JComponent && ((JComponent) parent).getLayout() instanceof BorderLayout) {
-                BorderLayout layout = (BorderLayout) ((JComponent) parent).getLayout();
+            if (parent instanceof JComponent && ((JComponent) parent).getLayout()instanceof BorderLayout layout) {
                 Object constraints = layout.getConstraints(c);
                 if (constraints != null) return constraints.toString();
             }

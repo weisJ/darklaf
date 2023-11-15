@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -46,9 +46,11 @@ public class ToolTipDemo extends BaseComponentDemo {
         ToolTipContext context =
                 new ToolTipContext(button).setAlignment(Alignment.CENTER).setCenterAlignment(Alignment.SOUTH);
         ToolTipContext.setDefaultContext(context);
-        button.setToolTipText(StringUtil.toHtml("<p style=\"color:red;\">This is the ToolTip demo text!\n"
-                + "<p style=\"color:blue;\">This is the ToolTip demo text!\n"
-                + "<p style=\"color:green;\">This is the ToolTip demo text!\n"));
+        button.setToolTipText(StringUtil.toHtml("""
+                <p style="color:red;">This is the ToolTip demo text!
+                <p style="color:blue;">This is the ToolTip demo text!
+                <p style="color:green;">This is the ToolTip demo text!
+                """));
         button.putClientProperty(DarkToolTipUI.KEY_STYLE, DarkToolTipUI.VARIANT_BALLOON);
         button.putClientProperty(DarkToolTipUI.KEY_CONTEXT, context);
 
@@ -75,28 +77,28 @@ public class ToolTipDemo extends BaseComponentDemo {
 
         controlPanel = panel.addControls();
         controlPanel.add(new JLabel("Tooltip Style:", JLabel.RIGHT));
-        controlPanel.add(new JComboBox<ToolTipStyle>(ToolTipStyle.values()) {
+        controlPanel.add(new JComboBox<>(ToolTipStyle.values()) {
             {
                 setSelectedItem(ToolTipStyle.BALLOON);
                 addItemListener(e -> button.putClientProperty(DarkToolTipUI.KEY_STYLE, e.getItem()));
             }
         }, "sgx");
         controlPanel.add(new JLabel("Alignment:", JLabel.RIGHT));
-        controlPanel.add(new JComboBox<Alignment>(Alignment.values()) {
+        controlPanel.add(new JComboBox<>(Alignment.values()) {
             {
                 setSelectedItem(context.getAlignment());
                 addItemListener(e -> context.setAlignment((Alignment) e.getItem()));
             }
         }, "sgx");
         controlPanel.add(new JLabel("Center Alignment:", JLabel.RIGHT));
-        controlPanel.add(new JComboBox<Alignment>(Alignment.values()) {
+        controlPanel.add(new JComboBox<>(Alignment.values()) {
             {
                 setSelectedItem(context.getCenterAlignment());
                 addItemListener(e -> context.setCenterAlignment((Alignment) e.getItem()));
             }
         }, "sgx");
         controlPanel.add(new JLabel("Alignment Strategy:", JLabel.RIGHT));
-        controlPanel.add(new JComboBox<AlignmentStrategy>(AlignmentStrategy.values()) {
+        controlPanel.add(new JComboBox<>(AlignmentStrategy.values()) {
             {
                 setSelectedItem(context.getAlignmentStrategy());
                 addItemListener(e -> context.setAlignmentStrategy((AlignmentStrategy) e.getItem()));

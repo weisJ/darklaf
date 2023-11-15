@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -369,15 +369,11 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
     @Override
     public Component.BaselineResizeBehavior getBaselineResizeBehavior(final JComponent c) {
         super.getBaselineResizeBehavior(c);
-        switch (tabPane.getTabPlacement()) {
-            case JTabbedPane.LEFT:
-            case JTabbedPane.RIGHT:
-            case JTabbedPane.TOP:
-                return Component.BaselineResizeBehavior.CONSTANT_ASCENT;
-            case JTabbedPane.BOTTOM:
-                return Component.BaselineResizeBehavior.CONSTANT_DESCENT;
-        }
-        return Component.BaselineResizeBehavior.OTHER;
+        return switch (tabPane.getTabPlacement()) {
+            case JTabbedPane.LEFT, JTabbedPane.RIGHT, JTabbedPane.TOP -> Component.BaselineResizeBehavior.CONSTANT_ASCENT;
+            case JTabbedPane.BOTTOM -> Component.BaselineResizeBehavior.CONSTANT_DESCENT;
+            default -> Component.BaselineResizeBehavior.OTHER;
+        };
     }
 
     /**
@@ -666,16 +662,11 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         String propKey = isSelected ? "selectedLabelShift" : "labelShift";
         int nudge = UIManager.getInt("TabbedPane." + propKey);
 
-        switch (tabPlacement) {
-            case LEFT:
-                return nudge;
-            case RIGHT:
-                return -nudge;
-            case BOTTOM:
-            case TOP:
-            default:
-                return tabRect.width % 2;
-        }
+        return switch (tabPlacement) {
+            case LEFT -> nudge;
+            case RIGHT -> -nudge;
+            default -> tabRect.width % 2;
+        };
     }
 
     /**
@@ -691,16 +682,11 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         int nudge = isSelected ? UIManager.getInt("TabbedPane.selectedLabelShift")
                 : UIManager.getInt("TabbedPane.labelShift");
 
-        switch (tabPlacement) {
-            case BOTTOM:
-                return -nudge;
-            case LEFT:
-            case RIGHT:
-                return tabRect.height % 2;
-            case TOP:
-            default:
-                return nudge;
-        }
+        return switch (tabPlacement) {
+            case BOTTOM -> -nudge;
+            case LEFT, RIGHT -> tabRect.height % 2;
+            default -> nudge;
+        };
     }
 
     /** Install tab container. */
@@ -1667,16 +1653,10 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
         }
         int newIndex;
         Rectangle r = rects[tabIndex];
-        switch (tabPlacement) {
-            case LEFT:
-            case RIGHT:
-                newIndex = tabForCoordinate(tabPane, r.x + r.width / 2 + offset, r.y + r.height / 2);
-                break;
-            case BOTTOM:
-            case TOP:
-            default:
-                newIndex = tabForCoordinate(tabPane, r.x + r.width / 2, r.y + r.height / 2 + offset);
-        }
+        newIndex = switch (tabPlacement) {
+            case LEFT, RIGHT -> tabForCoordinate(tabPane, r.x + r.width / 2 + offset, r.y + r.height / 2);
+            default -> tabForCoordinate(tabPane, r.x + r.width / 2, r.y + r.height / 2 + offset);
+        };
         if (newIndex != -1) {
             while (!tabPane.isEnabledAt(newIndex) && newIndex != tabIndex) {
                 newIndex = getNextTabIndex(newIndex);

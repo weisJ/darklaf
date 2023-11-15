@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2022 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -112,14 +112,7 @@ class FontTest extends AbstractImageTest {
         return new Font(name, Font.PLAIN, 12).deriveFont(kerning);
     }
 
-    private static class FontSpec {
-        private final String fontName;
-        private final boolean useFractionalMetrics;
-
-        private FontSpec(final String fontName, final boolean useFractionalMetrics) {
-            this.fontName = fontName;
-            this.useFractionalMetrics = useFractionalMetrics;
-        }
+    private record FontSpec(String fontName, boolean useFractionalMetrics) {
 
         private String getImageName() {
             String name = fontName.replace(".", "").replace(" ", "_").toLowerCase();

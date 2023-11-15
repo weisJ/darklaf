@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -68,7 +68,7 @@ public final class StringUtil {
         if (a < 'a') {
             return a;
         } else {
-            return a <= 'z' ? (char) (a + -32) : Character.toUpperCase(a);
+            return a <= 'z' ? (char) (a + 32) : Character.toUpperCase(a);
         }
     }
 
@@ -175,9 +175,7 @@ public final class StringUtil {
         if (count <= 0) return "";
         if (count == 1) return s;
         StringBuilder builder = new StringBuilder(s.length() * count);
-        for (int i = 0; i < count; i++) {
-            builder.append(s);
-        }
+        builder.append(s.repeat(count));
         return builder.toString();
     }
 

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2022 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -77,7 +77,7 @@ public class AllIconsDemo extends BaseComponentDemo {
     }
 
     protected static JList<NamedIcon<? extends Icon>> createIconJList(final int displaySize) {
-        JList<NamedIcon<? extends Icon>> list = new JList<>(new ListModel<NamedIcon<? extends Icon>>() {
+        JList<NamedIcon<? extends Icon>> list = new JList<>(new ListModel<>() {
             final List<NamedIcon<? extends Icon>> elements = loadIcons(displaySize, true);
 
             @Override
@@ -162,17 +162,7 @@ public class AllIconsDemo extends BaseComponentDemo {
         }
     }
 
-    private static class CenterIcon implements Icon {
-
-        private final Icon icon;
-        private final int width;
-        private final int height;
-
-        private CenterIcon(final Icon icon, final int width, final int height) {
-            this.icon = icon;
-            this.width = width;
-            this.height = height;
-        }
+    private record CenterIcon(Icon icon, int width, int height) implements Icon {
 
         @Override
         public void paintIcon(final Component c, final Graphics g, final int x, final int y) {

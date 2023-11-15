@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -78,16 +78,8 @@ public class OverlayRSyntaxScrollPane extends BaseComponentDemo {
         return "OverlayRSyntaxScrollPane Demo";
     }
 
-    private static class MarkerBackgroundPainter implements SizedPainter<JScrollBar> {
-
-        private final JTextComponent textComponent;
-        private final List<Pair<Position, Color>> markers;
-
-        private MarkerBackgroundPainter(final JTextComponent textComponent,
-                final List<Pair<Position, Color>> markers) {
-            this.textComponent = textComponent;
-            this.markers = markers;
-        }
+    private record MarkerBackgroundPainter(JTextComponent textComponent,
+            List<Pair<Position, Color>> markers) implements SizedPainter<JScrollBar> {
 
         @Override
         public void paint(final Graphics2D g, final JScrollBar object, final int width, final int height) {

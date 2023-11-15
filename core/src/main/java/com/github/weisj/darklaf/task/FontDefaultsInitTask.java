@@ -236,14 +236,10 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
 
     private boolean isAsianScript() {
         Locale locale = Locale.getDefault();
-        switch (locale.getLanguage()) {
-            case "zh":
-            case "ja":
-            case "ko":
-                return true;
-            default:
-                return false;
-        }
+        return switch (locale.getLanguage()) {
+            case "zh", "ja", "ko" -> true;
+            default -> false;
+        };
     }
 
     private void setupKerningPerFont(final UIDefaults defaults, final Predicate<String> kerningPredicate) {

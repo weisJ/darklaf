@@ -965,8 +965,7 @@ public class WindowsTitlePane extends CustomTitlePane {
                 updateSystemIcon(getGraphicsConfiguration());
                 revalidate();
                 repaint();
-            } else if (PropertyKey.BACKGROUND.equals(name) && pce.getNewValue() instanceof Color) {
-                Color color = (Color) pce.getNewValue();
+            } else if (PropertyKey.BACKGROUND.equals(name) && pce.getNewValue()instanceof Color color) {
                 if (color == null) return;
                 JNIDecorationsWindows.setBackground(windowHandle.value(), color.getRed(), color.getGreen(),
                         color.getBlue());

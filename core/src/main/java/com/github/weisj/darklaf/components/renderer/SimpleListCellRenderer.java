@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -30,7 +30,7 @@ import javax.swing.border.Border;
 public class SimpleListCellRenderer<T> extends JLabel implements ListCellRenderer<T> {
 
     public static <T> SimpleListCellRenderer<T> create(final Function<? super T, String> toText) {
-        return new SimpleListCellRenderer<T>() {
+        return new SimpleListCellRenderer<>() {
             @Override
             protected void customize(final T value) {
                 setText(value != null ? toText.apply(value) : "");
@@ -39,7 +39,7 @@ public class SimpleListCellRenderer<T> extends JLabel implements ListCellRendere
     }
 
     public static <T> SimpleListCellRenderer<T> create(final BiConsumer<JLabel, T> customize) {
-        return new SimpleListCellRenderer<T>() {
+        return new SimpleListCellRenderer<>() {
             @Override
             protected void customize(final T value) {
                 customize.accept(this, value);

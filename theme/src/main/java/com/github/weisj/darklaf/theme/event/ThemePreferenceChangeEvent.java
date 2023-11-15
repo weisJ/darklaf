@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -22,17 +22,7 @@ package com.github.weisj.darklaf.theme.event;
 
 import com.github.weisj.darklaf.theme.spec.PreferredThemeStyle;
 
-public class ThemePreferenceChangeEvent implements ThemeEvent {
-
-    private final PreferredThemeStyle preferredThemeStyle;
-
-    public ThemePreferenceChangeEvent(final PreferredThemeStyle preferredThemeStyle) {
-        this.preferredThemeStyle = preferredThemeStyle;
-    }
-
-    public PreferredThemeStyle getPreferredThemeStyle() {
-        return preferredThemeStyle;
-    }
+public record ThemePreferenceChangeEvent(PreferredThemeStyle preferredThemeStyle) implements ThemeEvent {
 
     @Override
     public String toString() {

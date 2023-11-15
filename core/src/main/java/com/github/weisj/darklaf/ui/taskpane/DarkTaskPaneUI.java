@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -92,14 +92,7 @@ public class DarkTaskPaneUI extends MetalTaskPaneUI {
         return isCollapsed;
     }
 
-    protected static class DarkContentPaneBorder implements Border, UIResource {
-        protected final Color color;
-        protected final int arc;
-
-        public DarkContentPaneBorder(final Color color, final int arc) {
-            this.arc = arc;
-            this.color = color;
-        }
+    protected record DarkContentPaneBorder(Color color, int arc) implements Border, UIResource {
 
         @Override
         public void paintBorder(final Component c, final Graphics g, final int x, final int y, final int width,

@@ -39,11 +39,11 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreeCellRenderer;
 
-import com.github.weisj.darklaf.platform.SystemInfo;
 import org.jetbrains.annotations.NotNull;
 
 import com.github.weisj.darklaf.focus.FocusParentHelper;
 import com.github.weisj.darklaf.iconset.IconSet;
+import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.properties.icons.IconResolver;
 import com.github.weisj.darklaf.ui.cell.CellRenderer;

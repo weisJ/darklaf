@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -1062,15 +1062,12 @@ public abstract class DarkListUIBridge extends BasicListUI {
      * @return the model index
      */
     protected int getModelIndex(final int column, final int row) {
-        switch (layoutOrientation) {
-            case JList.VERTICAL_WRAP:
-                return Math.min(list.getModel().getSize() - 1,
-                        rowsPerColumn * column + Math.min(row, rowsPerColumn - 1));
-            case JList.HORIZONTAL_WRAP:
-                return Math.min(list.getModel().getSize() - 1, row * columnCount + column);
-            default:
-                return row;
-        }
+        return switch (layoutOrientation) {
+            case JList.VERTICAL_WRAP -> Math.min(list.getModel().getSize() - 1,
+                    rowsPerColumn * column + Math.min(row, rowsPerColumn - 1));
+            case JList.HORIZONTAL_WRAP -> Math.min(list.getModel().getSize() - 1, row * columnCount + column);
+            default -> row;
+        };
     }
 
     /**
@@ -1571,7 +1568,7 @@ public abstract class DarkListUIBridge extends BasicListUI {
         public void actionPerformed(final ActionEvent e) {
             String name = getName();
             @SuppressWarnings("unchecked")
-            JList<Object> list = (JList) e.getSource();
+            JList<Object> list = (JList<Object>) e.getSource();
             DarkListUIBridge ui = DarkUIUtil.getUIOfType(list.getUI(), DarkListUIBridge.class);
 
             if (Objects.equals(name, SELECT_PREVIOUS_COLUMN)) {

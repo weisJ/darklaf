@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -183,18 +183,11 @@ public abstract class Theme implements Comparable<Theme>, Serializable {
     public void loadIconTheme(final Properties properties, final UIDefaults currentDefaults,
             final IconResolver iconResolver) {
         PresetIconRule iconTheme = getPresetIconRule();
-        Properties props;
-        switch (iconTheme) {
-            case DARK:
-                props = PropertyLoader.loadProperties(Theme.class, "dark_icons", "icon_presets/");
-                break;
-            case LIGHT:
-                props = PropertyLoader.loadProperties(Theme.class, "light_icons", "icon_presets/");
-                break;
-            case NONE:
-            default:
-                props = loadPropertyFile("icons");
-        }
+        Properties props = switch (iconTheme) {
+            case DARK -> PropertyLoader.loadProperties(Theme.class, "dark_icons", "icon_presets/");
+            case LIGHT -> PropertyLoader.loadProperties(Theme.class, "light_icons", "icon_presets/");
+            default -> loadPropertyFile("icons");
+        };
         PropertyLoader.putProperties(props, properties, currentDefaults, iconResolver);
     }
 

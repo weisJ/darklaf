@@ -41,10 +41,9 @@ public class ResourceBundleInitTask implements DefaultsInitTask {
 
     @Override
     public void run(final Theme currentTheme, final UIDefaults defaults) {
-        if (!(defaults instanceof UIDefaultsWithResourceBundleCache)) {
+        if (!(defaults instanceof UIDefaultsWithResourceBundleCache defs)) {
             throw new IllegalStateException();
         }
-        UIDefaultsWithResourceBundleCache defs = (UIDefaultsWithResourceBundleCache) defaults;
         defs.addResourceBundle(DarkLaf.class, BASIC_BUNDLE_NAME);
         defs.addResourceBundle(DarkLaf.class, METAL_BUNDLE_NAME);
         defs.addResourceBundle(DarkLaf.class, DARKLAF_BUNDLE_NAME);

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Jannis Weis
+ * Copyright (c) 2021-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -27,7 +27,7 @@ import com.github.weisj.darklaf.properties.color.DynamicColor;
 /**
  * Convenience accessor for the palette colors defined in all themes. The color references obtained
  * from this class are always valid and don't need to be renewed when the theme changes.
- *
+ * <p>
  * Note that the names for all the colors are only approximating the true color as themes are free
  * to colors different to what the names imply. However the general hue of the color will match the
  * names.

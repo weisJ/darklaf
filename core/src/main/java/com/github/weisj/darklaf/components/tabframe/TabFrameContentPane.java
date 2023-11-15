@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -364,35 +364,17 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
 
     @Override
     public PopupContainer getContainer(final Alignment alignment) {
-        PopupContainer popupComponent;
-        switch (alignment) {
-            case NORTH:
-                popupComponent = (PopupContainer) topSplitter.getLeftComponent();
-                break;
-            case NORTH_EAST:
-                popupComponent = (PopupContainer) topSplitter.getRightComponent();
-                break;
-            case EAST:
-                popupComponent = (PopupContainer) rightSplitter.getTopComponent();
-                break;
-            case SOUTH_EAST:
-                popupComponent = (PopupContainer) rightSplitter.getBottomComponent();
-                break;
-            case SOUTH:
-                popupComponent = (PopupContainer) bottomSplitter.getRightComponent();
-                break;
-            case SOUTH_WEST:
-                popupComponent = (PopupContainer) bottomSplitter.getLeftComponent();
-                break;
-            case WEST:
-                popupComponent = (PopupContainer) leftSplitter.getBottomComponent();
-                break;
-            case NORTH_WEST:
-                popupComponent = (PopupContainer) leftSplitter.getTopComponent();
-                break;
-            default:
-                throw new IllegalArgumentException("CENTER is not supported");
-        }
+        PopupContainer popupComponent = switch (alignment) {
+            case NORTH -> (PopupContainer) topSplitter.getLeftComponent();
+            case NORTH_EAST -> (PopupContainer) topSplitter.getRightComponent();
+            case EAST -> (PopupContainer) rightSplitter.getTopComponent();
+            case SOUTH_EAST -> (PopupContainer) rightSplitter.getBottomComponent();
+            case SOUTH -> (PopupContainer) bottomSplitter.getRightComponent();
+            case SOUTH_WEST -> (PopupContainer) bottomSplitter.getLeftComponent();
+            case WEST -> (PopupContainer) leftSplitter.getBottomComponent();
+            case NORTH_WEST -> (PopupContainer) leftSplitter.getTopComponent();
+            default -> throw new IllegalArgumentException("CENTER is not supported");
+        };
         return popupComponent;
     }
 
@@ -406,34 +388,12 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
         return getContainer(a).getPopup();
     }
 
-    protected static class LayoutProportions {
-        protected final double splitRestore;
-        protected final double splitterPeerDisable;
-        protected final double splitDisable;
-        protected final double splitterDisable;
-
-        public LayoutProportions(final double splitRestore, final double splitterPeerDisable, final double splitDisable,
-                final double splitterDisable) {
-            this.splitRestore = splitRestore;
-            this.splitterPeerDisable = splitterPeerDisable;
-            this.splitDisable = splitDisable;
-            this.splitterDisable = splitterDisable;
-        }
+    protected record LayoutProportions(double splitRestore, double splitterPeerDisable, double splitDisable,
+            double splitterDisable) {
     }
 
-    protected static class LayoutWeights {
-        protected final double splitEnable;
-        protected final double splitterDisable;
-        protected final double splitDisable;
-        protected final double splitterPeerDisable;
-
-        public LayoutWeights(final double splitEnable, final double splitterDisable, final double splitDisable,
-                final double splitterPeerDisable) {
-            this.splitEnable = splitEnable;
-            this.splitterDisable = splitterDisable;
-            this.splitDisable = splitDisable;
-            this.splitterPeerDisable = splitterPeerDisable;
-        }
+    protected record LayoutWeights(double splitEnable, double splitterDisable, double splitDisable,
+            double splitterPeerDisable) {
     }
 
     protected static class TabFrameSplitPane extends ToggleSplitPane {

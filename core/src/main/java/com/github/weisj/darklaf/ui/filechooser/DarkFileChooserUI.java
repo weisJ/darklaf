@@ -126,8 +126,7 @@ public class DarkFileChooserUI extends MetalFileChooserUI {
                 int secondButtonIndex = -1;
                 for (int i = comps.length - 1; i >= 0; i--) {
                     Component c = comps[i];
-                    if (c instanceof AbstractButton) {
-                        AbstractButton b = (AbstractButton) c;
+                    if (c instanceof AbstractButton b) {
                         b.setMargin(null);
                         b.putClientProperty(DarkButtonUI.KEY_NO_BORDERLESS_OVERWRITE, true);
                         b.putClientProperty(DarkButtonUI.KEY_SQUARE, true);
@@ -208,8 +207,7 @@ public class DarkFileChooserUI extends MetalFileChooserUI {
                     // mark characters (see https://en.wikipedia.org/wiki/Left-to-right_mark)
                     // when the "current user" item is selected in the "look in" combobox
                     // --> remove them
-                    if (value instanceof String && ((String) value).startsWith("\u200e")) {
-                        String str = (String) value;
+                    if (value instanceof String str && ((String) value).startsWith("\u200e")) {
                         char[] buf = new char[str.length()];
                         int j = 0;
                         for (int i = 0; i < buf.length; i++) {
@@ -404,11 +402,9 @@ public class DarkFileChooserUI extends MetalFileChooserUI {
     private class FileTableEditor extends DarkTableCellEditorDelegate {
         private FileTableEditor(final TableCellEditor delegate) {
             super(delegate);
-            if (delegate instanceof DefaultCellEditor) {
-                DefaultCellEditor editor = (DefaultCellEditor) delegate;
+            if (delegate instanceof DefaultCellEditor editor) {
                 Component component = editor.getComponent();
-                if (component instanceof JTextField) {
-                    JTextField tf = (JTextField) component;
+                if (component instanceof JTextField tf) {
                     tf.removeAncestorListener(editorAncestorListener);
                     tf.addAncestorListener(editorAncestorListener);
                     setDelegate(new DarkTableCellEditor(tf) {

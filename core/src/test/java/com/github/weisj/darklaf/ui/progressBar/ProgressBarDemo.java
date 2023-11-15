@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -86,7 +86,7 @@ public class ProgressBarDemo extends BaseComponentDemo {
         controlPanel.add(new JLabel("Orientation:", JLabel.RIGHT));
         controlPanel.add(new JComboBox<String>() {
             {
-                Map<String, Integer> mapping = new HashMap<String, Integer>() {
+                Map<String, Integer> mapping = new HashMap<>() {
                     {
                         put("HORIZONTAL", JProgressBar.HORIZONTAL);
                         put("VERTICAL", JProgressBar.VERTICAL);

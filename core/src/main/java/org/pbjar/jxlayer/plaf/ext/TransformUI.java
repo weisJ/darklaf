@@ -401,15 +401,13 @@ public class TransformUI extends MouseEventUI<JComponent> {
      * @param component the component.
      */
     private void setToNoDoubleBuffering(final Component component) {
-        if (component instanceof JComponent) {
-            JComponent comp = (JComponent) component;
+        if (component instanceof JComponent comp) {
             if (comp.isDoubleBuffered()) {
                 originalDoubleBuffered.add(comp);
                 comp.setDoubleBuffered(false);
             }
         }
-        if (component instanceof Container) {
-            Container container = (Container) component;
+        if (component instanceof Container container) {
             for (int index = 0; index < container.getComponentCount(); index++) {
                 setToNoDoubleBuffering(container.getComponent(index));
             }

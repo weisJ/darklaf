@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -228,28 +228,13 @@ public class BubbleBorder extends AbstractBorder {
     }
 
     private double calculatePointerPad(final float width, final float height, final Alignment side) {
-        double pointerPad;
-        switch (side) {
-            case WEST:
-            case EAST:
-                pointerPad = radius + (height - insets.top - insets.bottom - 2 * radius) / 2.0;
-                break;
-            case NORTH_WEST:
-            case SOUTH_WEST:
-                pointerPad = radius + insets.left + pointerWidth;
-                break;
-            case NORTH_EAST:
-            case SOUTH_EAST:
-                pointerPad = width - radius - insets.right - pointerWidth;
-                break;
-            case SOUTH:
-            case NORTH:
-                pointerPad = radius + (0.5 * (width - insets.left - insets.right - 2 * radius));
-                break;
-            default:
-                pointerPad = 0;
-                break;
-        }
+        double pointerPad = switch (side) {
+            case WEST, EAST -> radius + (height - insets.top - insets.bottom - 2 * radius) / 2.0;
+            case NORTH_WEST, SOUTH_WEST -> radius + insets.left + pointerWidth;
+            case NORTH_EAST, SOUTH_EAST -> width - radius - insets.right - pointerWidth;
+            case SOUTH, NORTH -> radius + (0.5 * (width - insets.left - insets.right - 2 * radius));
+            default -> 0;
+        };
         return pointerPad;
     }
 

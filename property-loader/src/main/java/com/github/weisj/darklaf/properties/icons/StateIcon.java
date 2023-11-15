@@ -72,8 +72,7 @@ public class StateIcon implements Icon, VisualPaddingProvider {
     }
 
     public Icon getIcon(final Component c) {
-        if (!(c instanceof AbstractButton)) return icon != null ? icon : EmptyIcon.create(0);
-        AbstractButton b = (AbstractButton) c;
+        if (!(c instanceof AbstractButton b)) return icon != null ? icon : EmptyIcon.create(0);
         boolean selected = b.isSelected();
         boolean enabled = b.isEnabled();
         boolean hasFocus = b.isFocusPainted() && b.hasFocus();

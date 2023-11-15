@@ -37,8 +37,7 @@ class ResourceBundleCache {
         @Override
         public boolean equals(final Object o) {
             if (this == o) return true;
-            if (!(o instanceof ResourceBundleEntry)) return false;
-            ResourceBundleEntry that = (ResourceBundleEntry) o;
+            if (!(o instanceof ResourceBundleEntry that)) return false;
             ClassLoader loaderA = classLoader.get();
             ClassLoader loaderB = that.classLoader.get();
             return Objects.equals(loaderA, loaderB) && Objects.equals(path, that.path);

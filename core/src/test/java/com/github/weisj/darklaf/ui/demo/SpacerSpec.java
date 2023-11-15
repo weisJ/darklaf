@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Jannis Weis
+ * Copyright (c) 2021-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -27,7 +27,7 @@ import javax.swing.JComponent;
 public final class SpacerSpec extends DemoSpec<Void> {
 
     public SpacerSpec() {
-        super("", Collections.emptyList(), new SpecBinding<Void>() {
+        super("", Collections.emptyList(), new SpecBinding<>() {
             @Override
             public Void get(final JComponent component) {
                 return null;

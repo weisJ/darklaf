@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -71,12 +71,16 @@ public class PreferenceChangeDemo extends BaseComponentDemo {
             {
                 setMargin(new Insets(5, 5, 5, 5));
                 setEditable(false);
-                setText("Press start/stop to enable/disable preference monitoring.\n" + "Then do one of the following\n"
-                        + " - switch between dark/light theme (Windows/macOS)\n"
-                        + " - toggle high contrast mode (Windows/macOS)\n"
-                        + " - change accent color (Windows/macOS)\n"
-                        + " - change selection color (macOS)\n" + " - change font scaling (Windows)\n"
-                        + "The theme should then adjust automatically (if monitoring is started).\n");
+                setText("""
+                        Press start/stop to enable/disable preference monitoring.
+                        Then do one of the following
+                         - switch between dark/light theme (Windows/macOS)
+                         - toggle high contrast mode (Windows/macOS)
+                         - change accent color (Windows/macOS)
+                         - change selection color (macOS)
+                         - change font scaling (Windows)
+                        The theme should then adjust automatically (if monitoring is started).
+                        """);
             }
         });
         return panel;

@@ -52,26 +52,17 @@ public final class JNIThemeInfoMacOS {
      */
     public static Color getAccentColor() {
         int index = nativeGetAccentColor();
-        switch (index) {
-            case -2:
-                return MacOSColors.ACCENT_BLUE;
-            case -1:
-                return MacOSColors.ACCENT_GRAPHITE;
-            case 0:
-                return MacOSColors.ACCENT_RED;
-            case 1:
-                return MacOSColors.ACCENT_ORANGE;
-            case 2:
-                return MacOSColors.ACCENT_YELLOW;
-            case 3:
-                return MacOSColors.ACCENT_GREEN;
-            case 5:
-                return MacOSColors.ACCENT_LILAC;
-            case 6:
-                return MacOSColors.ACCENT_ROSE;
-            default:
-                return null;
-        }
+        return switch (index) {
+            case -2 -> MacOSColors.ACCENT_BLUE;
+            case -1 -> MacOSColors.ACCENT_GRAPHITE;
+            case 0 -> MacOSColors.ACCENT_RED;
+            case 1 -> MacOSColors.ACCENT_ORANGE;
+            case 2 -> MacOSColors.ACCENT_YELLOW;
+            case 3 -> MacOSColors.ACCENT_GREEN;
+            case 5 -> MacOSColors.ACCENT_LILAC;
+            case 6 -> MacOSColors.ACCENT_ROSE;
+            default -> null;
+        };
     }
 
     /*

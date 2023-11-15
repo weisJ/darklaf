@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -65,12 +65,11 @@ public class ButtonGroupInfo {
 
         // Get the button model from the source.
         ButtonModel model = activeButton.getModel();
-        if (!(model instanceof DefaultButtonModel)) {
+        if (!(model instanceof DefaultButtonModel bm)) {
             return false;
         }
 
         // If the button model is DefaultButtonModel, and use it, otherwise return.
-        DefaultButtonModel bm = (DefaultButtonModel) model;
 
         // get the ButtonGroup of the button from the button model
         ButtonGroup group = bm.getGroup();

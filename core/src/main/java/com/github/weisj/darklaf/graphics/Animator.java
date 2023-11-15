@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -40,13 +40,10 @@ public abstract class Animator {
         CYCLE_FLIP;
 
         public boolean isRepeating() {
-            switch (this) {
-                case DO_NOT_REPEAT:
-                case DO_NOT_REPEAT_FREEZE:
-                    return false;
-                default:
-                    return true;
-            }
+            return switch (this) {
+                case DO_NOT_REPEAT, DO_NOT_REPEAT_FREEZE -> false;
+                default -> true;
+            };
         }
     }
 
