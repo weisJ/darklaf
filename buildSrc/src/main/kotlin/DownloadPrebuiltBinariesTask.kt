@@ -2,6 +2,8 @@ import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
+import org.gradle.api.file.Directory
+import org.gradle.api.file.RegularFile
 import org.gradle.api.tasks.OutputFile
 import java.io.File
 import java.net.HttpURLConnection
@@ -40,11 +42,11 @@ open class DownloadPrebuiltBinariesTask @Inject constructor(
             URL("https://api.github.com/repos/$user/$repository/actions/workflows/$workflow/runs")
         }
 
-    private val prebuiltDirectoryPath = "${project.buildDir}/$PRE_BUILD_PATH/$variantName"
+    private val prebuiltDirectoryPath = project.layout.buildDirectory.dir("$PRE_BUILD_PATH/$variantName")
 
     private val cacheFile: File by lazy {
-        val cachePath = "${project.buildDir}/$PRE_BUILD_PATH/$variantName/$VERSION_INFO_FILE_NAME"
-        fileOf(cachePath) {
+        val cachePath = project.layout.buildDirectory.file("$PRE_BUILD_PATH/$variantName/$VERSION_INFO_FILE_NAME")
+        fileOf(cachePath.get()) {
             it.writeText("{}")
         }
     }
@@ -67,7 +69,7 @@ open class DownloadPrebuiltBinariesTask @Inject constructor(
                     errorLog(errorMessage)
                 }.execute()
             }
-            directoryOf(tempFilePath("dummy/"))
+            directoryOf(tempDirPath("dummy/").get())
         }
     }
 
@@ -127,10 +129,10 @@ open class DownloadPrebuiltBinariesTask @Inject constructor(
     private fun downloadBinary(url: String): File? {
         infoLog("Downloading binary for variant '$variantName' from $url")
         return URL(url).fetch {
-            val artifact = fileOf(tempFilePath("$variantName.zip"))
+            val artifact = fileOf(tempFilePath("$variantName.zip").get())
             Files.copy(it.inputStream, artifact.toPath(), StandardCopyOption.REPLACE_EXISTING)
             infoLog("Finished download for variant '$variantName'")
-            ZipFile(artifact).unzip(directoryOf(prebuiltDirectoryPath)).firstOrNull()
+            ZipFile(artifact).unzip(directoryOf(prebuiltDirectoryPath.get())).firstOrNull()
         }
     }
 
@@ -172,12 +174,20 @@ open class DownloadPrebuiltBinariesTask @Inject constructor(
         }
     }
 
-    private fun tempFilePath(name: String) = "${project.buildDir}/$TEMP_PATH/${name}"
+    private fun tempFilePath(name: String) = project.layout.buildDirectory.file("$TEMP_PATH/${name}")
+    private fun tempDirPath(name: String) = project.layout.buildDirectory.dir("$TEMP_PATH/${name}")
 
-    private fun directoryOf(fileName: String) = File(fileName).also { it.mkdirs() }
+    private fun directoryOf(file: Directory) = file.asFile.also { it.mkdirs() }
 
     private fun fileOf(fileName: String, init: (File) -> Unit = {}): File {
-        val file = File(fileName)
+        return fileOfImpl(File(fileName), init)
+    }
+
+    private fun fileOf(file: RegularFile, init: (File) -> Unit = {}): File {
+        return fileOfImpl(file.asFile, init)
+    }
+
+    private fun fileOfImpl(file: File, init: (File) -> Unit = {}): File {
         if (!file.exists()) {
             file.parentFile.mkdirs()
             file.createNewFile()
@@ -199,12 +209,9 @@ open class DownloadPrebuiltBinariesTask @Inject constructor(
         JsonSlurper().parseText(this) as Json
 
     private fun <T> Lock.use(action: () -> T): T {
-        lock()
         try {
+            lock()
             return action()
-        } catch (e: Exception) {
-            unlock()
-            throw e
         } finally {
             unlock()
         }

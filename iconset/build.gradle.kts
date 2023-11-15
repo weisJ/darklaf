@@ -27,21 +27,24 @@ tasks.jar {
 }
 
 val generateIconAccessor by tasks.registering {
-    val generatedDir = project.buildDir.resolve("generated/iconAccessor")
+    val generatedDir = project.layout.buildDirectory.dir("generated/iconAccessor")
     sourceSets.main.configure {
         java.srcDir(generatedDir)
     }
     doFirst {
         sourceSets.main.configure {
+            val generatedDirFile = generatedDir.get().asFile
             val propertyFile = project.file("iconAccessorSpec.properties")
             val allIconsName = "AllIcons"
-            generatedDir.mkdirs()
+            generatedDirFile.mkdirs()
             val packageName = "com.github.weisj.darklaf.iconset"
-            generatedDir.resolve("${packageName.replace('.', '/')}/$allIconsName.java").apply {
-                parentFile.mkdirs()
-                createNewFile()
-                writeText(createIconAccessor(propertyFile, packageName, allIconsName))
-            }
+            generatedDirFile
+                .resolve("${packageName.replace('.', '/')}/$allIconsName.java")
+                .apply {
+                    parentFile.mkdirs()
+                    createNewFile()
+                    writeText(createIconAccessor(propertyFile, packageName, allIconsName))
+                }
         }
     }
 }
