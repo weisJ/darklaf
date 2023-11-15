@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -34,9 +34,7 @@ public final class SystemInfo {
     public static final String X64 = "64";
     public static final String OS_NAME = System.getProperty("os.name");
     public static final String OS_VERSION = System.getProperty("os.version").toLowerCase(Locale.ENGLISH);
-    public static final String JAVA_VERSION = System.getProperty("java.version");
     public static final String JAVA_HOME = System.getProperty("java.home");
-    public static final String JAVA_RUNTIME_VERSION = System.getProperty("java.runtime.version");
 
     public static final boolean isWindows;
     public static final boolean isOS2;
@@ -59,9 +57,6 @@ public final class SystemInfo {
     public static final boolean isX86Compatible;
     public static final boolean isARM;
     public static final boolean isM1;
-
-    public static final boolean isJava9OrGreater;
-    public static final boolean isJava16OrGreater;
 
     private static final String _OS_NAME;
 
@@ -100,8 +95,6 @@ public final class SystemInfo {
 
         isWindows7 = isWindows10OrGreater || (isWindows && isOsVersionAtLeast("6.1"));
         isWindowsVista = isWindows7 || (isWindows && isOsVersionAtLeast("6.0"));
-        isJava9OrGreater = isJavaVersionAtLeast("9");
-        isJava16OrGreater = isJava9OrGreater && isJavaVersionAtLeast("16");
     }
 
     public static String getOsName() {
@@ -159,10 +152,6 @@ public final class SystemInfo {
      */
     public static void setWindows11State(final boolean isWindows11) {
         SystemInfo.isWindows11 = isWindows11;
-    }
-
-    public static boolean isJavaVersionAtLeast(final String v) {
-        return compareVersionNumbers(JAVA_RUNTIME_VERSION, v) >= 0;
     }
 
     private static boolean isOracleJvm() {

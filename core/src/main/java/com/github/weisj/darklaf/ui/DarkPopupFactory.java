@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -21,8 +21,6 @@
 package com.github.weisj.darklaf.ui;
 
 import java.awt.*;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,7 +28,6 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.nativelaf.DecorationsHandler;
-import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.properties.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
@@ -164,7 +161,7 @@ public class DarkPopupFactory extends PopupFactory {
         if (!opaque) {
             boolean doubleBufferHint = PropertyUtil.getBooleanProperty(content, KEY_DOUBLE_BUFFERED);
             LOGGER.fine("Content wants to be double buffered = " + doubleBufferHint);
-            setupDoubleBuffering(rootPane, doubleBufferHint);
+            setupDoubleBuffering(rootPane);
         }
 
         while (p != null && p != window) {
@@ -177,10 +174,9 @@ public class DarkPopupFactory extends PopupFactory {
         window.setBackground(bg);
     }
 
-    private void setupDoubleBuffering(final JRootPane rootPane, final boolean doubleBufferHint) {
+    private void setupDoubleBuffering(final JRootPane rootPane) {
         // On Linux (X11) Java 8 the regular fix doesn't work and the hacky workaround is needed.
-        boolean isLinuxJava8 = !SystemInfo.isJava9OrGreater && SystemInfo.isLinux;
-        boolean useDoubleBuffering = (isLinuxJava8 || doubleBufferHint) && canApplyRootPaneFix();
+        boolean useDoubleBuffering = false;
         LOGGER.fine("Content can use double buffering = " + useDoubleBuffering);
 
         // See: https://bugs.java.com/bugdatabase/view_bug.do?bug_id=6848852
@@ -189,22 +185,6 @@ public class DarkPopupFactory extends PopupFactory {
         setUseDoubleBuffer(rootPane.getGlassPane(), useDoubleBuffering);
         setUseDoubleBuffer(rootPane.getLayeredPane(), useDoubleBuffering);
         setUseDoubleBuffer(rootPane.getContentPane(), useDoubleBuffering);
-
-        if (useDoubleBuffering) {
-            // HeavyWeights popups use rootpanes with double buffering disabled by setting
-            // setUseTrueDoubleBuffering(false). On some Linux window managers (e.g. Gnome) this results
-            // in windows not being transparent if requested.
-            if (canApplyRootPaneFix()) {
-                LOGGER.fine("Applying linux double buffer fix");
-                try {
-                    Method method = JRootPane.class.getDeclaredMethod("setUseTrueDoubleBuffering", boolean.class);
-                    method.setAccessible(true);
-                    method.invoke(rootPane, true);
-                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                    LOGGER.log(Level.SEVERE, "Couldn't apply fix for double buffering", e);
-                }
-            }
-        }
     }
 
     private void setUseDoubleBuffer(final Component c, final boolean enabled) {
@@ -217,10 +197,6 @@ public class DarkPopupFactory extends PopupFactory {
         if (c != null) {
             c.setDoubleBuffered(enabled);
         }
-    }
-
-    public static boolean canApplyRootPaneFix() {
-        return !SystemInfo.isJava9OrGreater;
     }
 
     protected void setupFocusableWindowState(final boolean isFocusable, final Window window) {

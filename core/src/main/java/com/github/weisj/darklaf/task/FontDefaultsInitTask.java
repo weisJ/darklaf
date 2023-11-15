@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2022 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -165,11 +165,6 @@ public class FontDefaultsInitTask implements DefaultsInitTask {
                             + "platform for optimal text antialiasing. Refer to the "
                             + "[documentation](https://docs.oracle.com/javase/8/docs/technotes/guides/2d/flags.html#aaFonts)"
                             + "for more information on the possible values.";
-                    if (!SystemInfo.isJava9OrGreater) {
-                        message += "\n";
-                        message += "If you are using a Java version of 8 or earlier try switching to at least Java 9 "
-                                + "for improved scaling and font rendering support.";
-                    }
                     LOGGER.warning(message);
                 }
             }

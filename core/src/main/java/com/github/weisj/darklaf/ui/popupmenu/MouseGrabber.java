@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2022 Jannis Weis
+ * Copyright (c) 2020-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -169,7 +169,7 @@ public class MouseGrabber implements ChangeListener, AWTEventListener, Component
                     return;
                 }
                 if (!PropertyUtil.isPropertyEqual(src, DarkPopupMenuUI.KEY_DO_NOT_CANCEL_POPUP,
-                        DarkPopupMenuUI.HIDE_POPUP_VALUE)) {
+                        DarkPopupMenuUI.hidePopupValue())) {
                     // Cancel popup only if this property was not set.
                     // If this property is set to TRUE component wants
                     // to deal with this event by himself.

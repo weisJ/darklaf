@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -64,7 +64,6 @@ import org.pbjar.jxlayer.repaint.RepaintManagerProvider;
 import org.pbjar.jxlayer.repaint.RepaintManagerUtils;
 import org.pbjar.jxlayer.repaint.WrappedRepaintManager;
 
-import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.PropertyUtil;
 
@@ -137,7 +136,7 @@ public class TransformUI extends MouseEventUI<JComponent> {
         try {
             // Use leaner java version restriction than in other places due to the effect it has.
             // When using a version < 16 then illegal access has to be declared explicitly.
-            if (!SystemInfo.isJava16OrGreater || bufferFlag) {
+            if (bufferFlag) {
                 Class<?> swingUtilities3 = Class.forName("com.sun.java.swing.SwingUtilities3");
                 setDelegateRepaintManagerMethod = MethodHandles.lookup().findStatic(
                         swingUtilities3, "setDelegateRepaintManager",
@@ -147,10 +146,8 @@ public class TransformUI extends MouseEventUI<JComponent> {
                 value = false;
             }
         } catch (Throwable t) {
-            if (bufferFlag) {
-                LOGGER.log(Level.SEVERE,
-                        "For " + BUFFERED_REPAINT_FLAG + " to work you need to start with " + EXPORTS_FLAG, t);
-            }
+            LOGGER.log(Level.SEVERE,
+                    "For " + BUFFERED_REPAINT_FLAG + " to work you need to start with " + EXPORTS_FLAG, t);
             value = false;
         }
         delegatePossible = value;

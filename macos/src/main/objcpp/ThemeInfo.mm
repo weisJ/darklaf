@@ -235,7 +235,7 @@ JNF_COCOA_EXIT(env);
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_patchAppBundle(JNIEnv *env, jclass obj, jboolean preJava11) {
+Java_com_github_weisj_darklaf_platform_macos_JNIThemeInfoMacOS_patchAppBundle(JNIEnv *env, jclass obj) {
 JNF_COCOA_ENTER(env);
     if (@available(macOS 10.15, *)) {
         NSString *name = [[NSBundle mainBundle] bundleIdentifier];
@@ -244,7 +244,7 @@ JNF_COCOA_ENTER(env);
 
         Boolean exists = false;
         Boolean value = CFPreferencesGetAppBooleanValue(NSRequiresAquaSystemAppearance, bundleName, &exists);
-        isPatched = preJava11 || (value ? YES : NO);
+        isPatched = (value ? YES : NO);
 
         if (!exists) {
             // Only patch if value hasn't been explicitly set

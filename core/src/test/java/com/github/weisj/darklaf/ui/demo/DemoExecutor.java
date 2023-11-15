@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021-2022 Jannis Weis
+ * Copyright (c) 2021-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -24,7 +24,6 @@ import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.Window;
-import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.Icon;
@@ -37,9 +36,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.github.weisj.darklaf.DarkLaf;
 import com.github.weisj.darklaf.LafManager;
-import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.settings.ThemeSettings;
 import com.github.weisj.darklaf.theme.Theme;
@@ -47,20 +44,6 @@ import com.github.weisj.darklaf.theme.spec.PreferredThemeStyle;
 import com.github.weisj.swingdsl.inspector.InspectorKt;
 
 public final class DemoExecutor {
-
-    public static boolean isRunningOnModulePath() {
-        if (SystemInfo.isJava9OrGreater) {
-            try {
-                Object module = Class.class.getMethod("getModule").invoke(DarkLaf.class);
-                Class<?> moduleClass = Class.forName("java.lang.Module");
-                return Boolean.TRUE.equals(moduleClass.getMethod("isNamed").invoke(module));
-            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException
-                    | ClassNotFoundException e) {
-                return false;
-            }
-        }
-        return false;
-    }
 
     public static Theme getPreferredTheme() {
         PreferredThemeStyle themeStyle = LafManager.getPreferredThemeStyle();
@@ -85,10 +68,6 @@ public final class DemoExecutor {
     public static AtomicReference<Window> showDemoWithoutSetup(final ComponentDemo demo, final boolean asDialog) {
         AtomicReference<Window> windowRef = new AtomicReference<>();
         DemoExecutionSpec executionSpec = demo.getExecutionSpec();
-
-        if (SystemInfo.isJava9OrGreater && !isRunningOnModulePath()) {
-            throw new IllegalStateException("Not running on module path");
-        }
 
         Runnable demoRunnable = () -> {
             try {

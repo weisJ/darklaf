@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -84,7 +84,7 @@ public class MacOSThemePreferenceProvider implements ThemePreferenceProvider {
              * catalina algorithm. For everything else we fall back to the Mojave style. This should still give
              * a correct answer most of the time.
              */
-            JNIThemeInfoMacOS.patchAppBundle(!SystemInfo.isJavaVersionAtLeast("12"));
+            JNIThemeInfoMacOS.patchAppBundle();
             SwingUtilities.invokeLater(() -> {
                 /* Do nothing. This simply forces native resources to be loaded */
             });
