@@ -4,7 +4,6 @@ import com.github.vlsi.gradle.properties.dsl.props
 
 plugins {
     `java-library`
-    `module-info-compile`
     id("com.github.vlsi.crlf")
 }
 
@@ -41,12 +40,12 @@ dependencies {
     testCompileOnly(libs.nullabilityAnnotations)
 }
 
-moduleInfo {
-    modularExec {
-        addExports.add("java.desktop/com.sun.java.swing=darklaf.core")
-        openTestPackagesTo("darklaf.properties")
-    }
-}
+// moduleInfo {
+//    modularExec {
+//        addExports.add("java.desktop/com.sun.java.swing=darklaf.core")
+//        openTestPackagesTo("darklaf.properties")
+//    }
+// }
 
 tasks.test {
     doFirst {

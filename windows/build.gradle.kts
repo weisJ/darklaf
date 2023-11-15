@@ -1,16 +1,9 @@
 plugins {
     java
-    `module-info-compile`
     id("dev.nokee.jni-library")
     id("dev.nokee.cpp-language")
     `uber-jni-jar`
     `use-prebuilt-binaries`
-}
-
-moduleInfo {
-    stubModule("darklaf.core")
-    stubModule("darklaf.platform.preferences")
-    stubModule("darklaf.platform.decorations")
 }
 
 library {

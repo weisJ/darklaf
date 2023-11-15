@@ -1,17 +1,10 @@
 plugins {
     java
-    `module-info-compile`
     id("dev.nokee.jni-library")
     id("dev.nokee.objective-cpp-language")
     `uber-jni-jar`
     `use-prebuilt-binaries`
     `apple-m1-toolchain`
-}
-
-moduleInfo {
-    stubModule("darklaf.core")
-    stubModule("darklaf.platform.preferences")
-    stubModule("darklaf.platform.decorations")
 }
 
 val nativeResourcePath = "com/github/weisj/darklaf/platform/${project.name}"
@@ -22,8 +15,8 @@ library {
         jvmImplementation(projects.darklafUtils)
         jvmImplementation(projects.darklafNativeUtils)
         jvmImplementation(projects.darklafPlatformBase)
-        nativeLibImplementation(macOsFrameworks.appKit)
-        nativeLibImplementation(macOsFrameworks.cocoa)
+//        nativeLibImplementation(macOsFrameworks.appKit)
+//        nativeLibImplementation(macOsFrameworks.cocoa)
     }
 
     targetMachines.addAll(machines.macOS.x86_64, machines.macOS.architecture("arm64"))
@@ -40,9 +33,11 @@ library {
             linkTask.configure {
                 linkerArgs.addAll(
                     "-lobjc",
-                    "-mmacosx-version-min=$minOs"
-                    // "-framework", "AppKit",
-                    // "-framework", "Cocoa",
+                    "-mmacosx-version-min=$minOs",
+                    "-framework",
+                    "AppKit",
+                    "-framework",
+                    "Cocoa"
                 )
             }
         }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2023 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -31,9 +31,6 @@ import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 import java.util.logging.Logger;
 
 import javax.swing.JComponent;
@@ -48,9 +45,9 @@ import javax.swing.plaf.synth.SynthContext;
 import javax.swing.plaf.synth.SynthGraphicsUtils;
 import javax.swing.plaf.synth.SynthStyle;
 
+import jdk.swing.interop.SwingInterOpUtils;
+
 import com.github.weisj.darklaf.platform.SystemInfo;
-import com.github.weisj.darklaf.util.Lambdas;
-import com.github.weisj.darklaf.util.LazyValue;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.intellij.util.ui.UIUtilities;
 
@@ -62,31 +59,12 @@ public final class SwingUtil {
 
     private SwingUtil() {}
 
-    private static boolean swingInteropAvailable;
-    private static Class<?> swingInteropClass;
-    private static final LazyValue<MethodHandle> grabMethod = new LazyValue<>(
-            Lambdas.orDefault(() -> MethodHandles.lookup().findStatic(swingInteropClass, "grab",
-                    MethodType.methodType(void.class, Toolkit.class, Window.class)), null));
-    private static final LazyValue<MethodHandle> ungrabMethod = new LazyValue<>(
-            Lambdas.orDefault(() -> MethodHandles.lookup().findStatic(swingInteropClass, "ungrab",
-                    MethodType.methodType(void.class, Toolkit.class, Window.class)), null));
-
-    static {
-        try {
-            swingInteropClass = Class.forName("jdk.swing.interop.SwingInterOpUtils");
-            swingInteropAvailable = true;
-        } catch (Throwable e) {
-            swingInteropAvailable = false;
-        }
-        LOGGER.fine("SwingInterOpUtils available: " + swingInteropAvailable);
-    }
-
     public static boolean isSunToolkit(final Toolkit toolkit) {
         return toolkit != null && isInstanceOf(toolkit.getClass(), "sun.awt.SunToolkit");
     }
 
     public static boolean isUngrabEvent(final AWTEvent event) {
-        return event != null && isInstanceOf(event.getClass(), "sun.awt.UngrabEvent");
+        return SwingInterOpUtils.isUngrabEvent(event);
     }
 
     private static boolean isInstanceOf(final Class<?> cls, final String type) {
@@ -99,31 +77,11 @@ public final class SwingUtil {
     }
 
     public static void grab(final Toolkit toolkit, final Window window) {
-        if (swingInteropAvailable) {
-            try {
-                grabMethod.get().invokeExact(toolkit, window);
-            } catch (Throwable e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            if (toolkit instanceof sun.awt.SunToolkit) {
-                ((sun.awt.SunToolkit) toolkit).grab(window);
-            }
-        }
+        SwingInterOpUtils.grab(toolkit, window);
     }
 
     public static void ungrab(final Toolkit toolkit, final Window window) {
-        if (swingInteropAvailable) {
-            try {
-                ungrabMethod.get().invokeExact(toolkit, window);
-            } catch (Throwable e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            if (toolkit instanceof sun.awt.SunToolkit) {
-                ((sun.awt.SunToolkit) toolkit).ungrab(window);
-            }
-        }
+        SwingInterOpUtils.ungrab(toolkit, window);
     }
 
     public static void drawStringUnderlineCharAt(final JComponent c, final Graphics g,

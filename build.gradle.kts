@@ -172,8 +172,8 @@ allprojects {
 
     plugins.withType<JavaPlugin> {
         configure<JavaPluginExtension> {
-            sourceCompatibility = JavaVersion.VERSION_1_8
-            targetCompatibility = JavaVersion.VERSION_1_8
+            sourceCompatibility = JavaVersion.VERSION_17
+            targetCompatibility = JavaVersion.VERSION_17
             withSourcesJar()
             if (!skipJavadoc && isRelease) {
                 withJavadocJar()
@@ -271,14 +271,6 @@ allprojects {
 
             withType<Javadoc>().configureEach {
                 (options as StandardJavadocDocletOptions).apply {
-                    // -add-exports requires target 9
-                    // The library is built with target=1.8, so add-exports
-                    if (project.the<JavaPluginExtension>().targetCompatibility.isJava9Compatible) {
-                        addStringOption("-add-exports", "java.desktop/sun.swing=ALL-UNNAMED")
-                        addStringOption("-add-exports", "java.desktop/sun.awt=ALL-UNNAMED")
-                        addStringOption("-add-exports", "java.desktop/com.sun.java.swing=ALL-UNNAMED")
-                        addStringOption("-add-exports", "java.desktop/sun.awt.shell=ALL-UNNAMED")
-                    }
                     quiet()
                     locale = "en"
                     docEncoding = "UTF-8"
