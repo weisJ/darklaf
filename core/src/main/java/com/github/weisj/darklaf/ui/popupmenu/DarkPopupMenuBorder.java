@@ -27,16 +27,17 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.UIResource;
 
-import com.github.weisj.darklaf.components.border.MutableLineBorder;
+import com.github.weisj.darklaf.components.border.RoundedLineBorder;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 /** @author Jannis Weis */
 public class DarkPopupMenuBorder extends CompoundBorder implements UIResource {
 
     public DarkPopupMenuBorder() {
-        super(new MutableLineBorder(
-                UIManager.getInsets("PopupMenu.borderInsets"),
-                UIManager.getColor("PopupMenu.borderColor")),
+        super(new RoundedLineBorder(
+                UIManager.getColor("PopupMenu.borderColor"),
+                UIManager.getInt("PopupMenu.borderRadius"),
+                UIManager.getInt("PopupMenu.borderThickness")),
                 new EmptyBorder(DarkUIUtil.notNullOrElse(
                         UIManager.getInsets("PopupMenu.border.margins"),
                         new Insets(0, 0, 0, 0))));
