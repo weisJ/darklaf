@@ -367,12 +367,18 @@ public class DarkTreeUI extends BasicTreeUI
     protected void paintRowBackground(final Graphics g, final Rectangle rowBounds, final Rectangle cellBounds,
             final TreePath path, final int row, final boolean selected) {
         if (path != null) {
-            g.setColor(CellUtil.getTreeBackground(tree, selected, row));
+            Color rowColor = CellUtil.getTreeBackground(tree, selected, row);
+            g.setColor(rowColor);
+
 
             if (!selected || selectionMargin == null) {
                 PaintUtil.fillRect(g, rowBounds);
                 return;
             }
+
+            g.setColor(CellUtil.getTreeBackground(tree, false, row));
+            PaintUtil.fillRect(g, rowBounds);
+            g.setColor(rowColor);
 
             int minX = rowBounds.x;
             int maxX = minX + rowBounds.width;
@@ -401,7 +407,6 @@ public class DarkTreeUI extends BasicTreeUI
             GraphicsContext context = new GraphicsContext(g);
 
             g.clipRect(bounds.x, bounds.y, bounds.width, bounds.height);
-
             if ((arcLeft == 0 && arcRight == 0) || (!arcTop && !arcBottom)) {
                 PaintUtil.fillRect(g, rowBounds);
             } else {
