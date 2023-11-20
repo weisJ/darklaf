@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.nativelaf.DecorationsHandler;
+import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.properties.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;
@@ -45,8 +46,6 @@ public class DarkPopupFactory extends PopupFactory {
     public static final String KEY_START_HIDDEN = "JPopupFactory.startHidden";
     public static final String KEY_DOUBLE_BUFFERED = "JPopupFactory.doubleBuffered";
 
-    private HeavyWeightParent heavyWeightParent;
-
     public static Popup createNoOpPopup() {
         return new NoOpPopup();
     }
@@ -63,18 +62,9 @@ public class DarkPopupFactory extends PopupFactory {
 
     protected Pair<Popup, PopupType> getEffectivePopup(final Component owner, final Component contents,
             final int x, final int y) {
-        Popup popup = super.getPopup(owner, contents, x, y);
+        boolean forceHeavyWeight = PropertyUtil.getBooleanProperty(contents, KEY_FORCE_HEAVYWEIGHT);
+        Popup popup = super.getPopup(owner, contents, x, y, forceHeavyWeight);
         PopupType type = getPopupType(popup);
-        boolean forceHeavy = type != PopupType.HEAVY_WEIGHT
-                && PropertyUtil.getBooleanProperty(contents, KEY_FORCE_HEAVYWEIGHT);
-        LOGGER.fine("Received popup of type " + type + "  but requested a heavy weight popup.");
-        if (forceHeavy) {
-            LOGGER.fine("Forcing heavy weight popup");
-            // Heavy weight owner forces a heavyweight popup.
-            Window targetWindow = DarkUIUtil.getWindow(owner);
-            popup = super.getPopup(getHeavyWeightParent(targetWindow), contents, x, y);
-            type = PopupType.HEAVY_WEIGHT;
-        }
         if (type == PopupType.HEAVY_WEIGHT) {
             Window window = DarkUIUtil.getWindow(contents);
             if (owner != null && window != null
@@ -84,7 +74,7 @@ public class DarkPopupFactory extends PopupFactory {
                  * PopupFactory to dispose it and create a new window.
                  */
                 window.setFocusableWindowState(true);
-                popup = super.getPopup(getHeavyWeightParent(DarkUIUtil.getWindow(owner)), contents, x, y);
+                popup = super.getPopup(owner, contents, x, y, forceHeavyWeight);
                 window = DarkUIUtil.getWindow(contents);
             }
             if (window != null) {
@@ -206,7 +196,8 @@ public class DarkPopupFactory extends PopupFactory {
         }
     }
 
-    protected void setupWindowDecorations(final Window window, final JRootPane rootPane, final boolean noDecorations) {
+    protected void setupWindowDecorations(final Window window, final JRootPane rootPane,
+            final boolean noDecorations) {
         if (rootPane != null) {
             /*
              * To ensure truly undecorated windows we need to specify the Window.shadow property to remove
@@ -236,53 +227,12 @@ public class DarkPopupFactory extends PopupFactory {
         }
     }
 
-    private HeavyWeightParent getHeavyWeightParent(final Container owner) {
-        if (heavyWeightParent == null) {
-            JComponent box = Box.createHorizontalBox();
-            super.getPopup(null, box, 0, 0);
-            heavyWeightParent = new HeavyWeightParent(DarkUIUtil.getWindow(box));
-        }
-        heavyWeightParent.setOwner(owner);
-        return heavyWeightParent;
-    }
-
-    protected Color getTranslucentPopupBackground(final boolean decorated) {
+    protected static Color getTranslucentPopupBackground(final boolean decorated) {
         Color c = UIManager.getColor("PopupMenu.translucentBackground");
         if (!decorated) {
             c = new DarkColorUIResource(ColorUtil.toAlpha(c, 0));
         }
         return c;
-    }
-
-
-    private static class HeavyWeightParent extends JComponent {
-
-        private int parentRequestCount = 0;
-        private final Window heavyWeightParent;
-        private Container owner;
-
-        private HeavyWeightParent(final Window heavyWeightParent) {
-            this.heavyWeightParent = heavyWeightParent;
-        }
-
-        public void setOwner(final Container owner) {
-            parentRequestCount = 0;
-            this.owner = owner;
-        }
-
-        @Override
-        public GraphicsConfiguration getGraphicsConfiguration() {
-            return super.getGraphicsConfiguration();
-        }
-
-        @Override
-        public Container getParent() {
-            if (parentRequestCount == 0) {
-                parentRequestCount++;
-                return heavyWeightParent;
-            }
-            return owner;
-        }
     }
 
     public enum PopupType {
