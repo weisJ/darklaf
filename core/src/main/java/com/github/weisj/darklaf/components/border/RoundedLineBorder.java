@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Jannis Weis
+ * Copyright (c) 2023-2024 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -25,8 +25,9 @@ import java.awt.*;
 import javax.swing.border.Border;
 
 import com.github.weisj.darklaf.graphics.PaintUtil;
+import com.github.weisj.darklaf.platform.RoundedFrame;
 
-public class RoundedLineBorder implements Border {
+public class RoundedLineBorder implements Border, RoundedFrame {
 
     private final Color color;
     private final int arc;
@@ -36,6 +37,21 @@ public class RoundedLineBorder implements Border {
         this.color = color;
         this.arc = arc;
         this.thickness = thickness;
+    }
+
+    @Override
+    public int getRadius() {
+        return arc;
+    }
+
+    @Override
+    public Color getColor() {
+        return color;
+    }
+
+    @Override
+    public int getThickness() {
+        return thickness;
     }
 
     @Override

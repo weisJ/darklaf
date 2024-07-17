@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2024 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -25,8 +25,11 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 
 import com.github.weisj.darklaf.platform.*;
+import com.github.weisj.darklaf.platform.macos.ui.MacOSDecorationsUtil;
 import com.github.weisj.darklaf.platform.macos.ui.MacOSTitlePane;
 
 public class MacOSDecorationsProvider implements DecorationsProvider {
@@ -56,6 +59,40 @@ public class MacOSDecorationsProvider implements DecorationsProvider {
     @Override
     public List<String> getPropertyResourcePaths() {
         return Collections.singletonList("macos_decorations");
+    }
+
+    @Override
+    public void installPopupWindow(final Window window) {
+        if (!window.isDisplayable()) {
+            window.addNotify();
+        }
+        if (window instanceof RootPaneContainer) {
+            JRootPane rootPane = ((RootPaneContainer) window).getRootPane();
+            Border border = getOutermostBorder((JComponent) rootPane.getContentPane());
+            while (border instanceof CompoundBorder) {
+                border = ((CompoundBorder) border).getOutsideBorder();
+            }
+            if (border instanceof RoundedFrame) {
+                MacOSDecorationsUtil.installPopupWindow(window,
+                        ((RoundedFrame) border).getRadius(),
+                        ((RoundedFrame) border).getThickness(),
+                        ((RoundedFrame) border).getColor().getRGB());
+                window.repaint();
+            }
+        }
+    }
+
+    private static Border getOutermostBorder(final JComponent component) {
+        JComponent c = component;
+        while (c.getComponentCount() == 1 && c.getBorder() == null) {
+            JComponent child = (JComponent) c.getComponent(0);
+            if (child.getWidth() == c.getWidth() && child.getHeight() == c.getHeight()) {
+                c = child;
+            } else {
+                break;
+            }
+        }
+        return c.getBorder();
     }
 
     @Override

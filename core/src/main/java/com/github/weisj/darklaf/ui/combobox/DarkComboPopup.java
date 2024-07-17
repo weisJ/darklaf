@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2023 Jannis Weis
+ * Copyright (c) 2019-2024 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -109,7 +109,6 @@ public class DarkComboPopup extends BasicComboPopup {
     protected void configurePopup() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorderPainted(true);
-        setOpaque(false);
         add(overlayScrollPane);
         setFocusable(false);
         setOpaque(true);
@@ -117,6 +116,7 @@ public class DarkComboPopup extends BasicComboPopup {
 
     @Override
     public void show() {
+        setBackground(new Color(list.getBackground().getRGB()));
         comboBox.firePopupMenuWillBecomeVisible();
         setListSelection(comboBox.getSelectedIndex());
         Point location = getPopupLocation();

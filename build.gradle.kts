@@ -7,7 +7,7 @@ import com.github.vlsi.gradle.publishing.dsl.simplifyXml
 import com.github.vlsi.gradle.publishing.dsl.versionFromResolution
 import net.ltgt.gradle.errorprone.errorprone
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import java.util.*
+import java.util.Locale
 
 plugins {
     idea
@@ -96,7 +96,7 @@ allprojects {
             github(
                 user = "weisj",
                 repository = "darklaf",
-                workflow = "libs.yml"
+                workflow = "libs.yml",
             ) {
                 branches = listOfNotNull(currentBranch, "master", "v$projectVersion", projectVersion)
                 accessToken = githubAccessToken
@@ -188,7 +188,7 @@ allprojects {
             configure<SigningExtension> {
                 useInMemoryPgpKeys(
                     project.stringProperty("signing.inMemoryKey")?.replace("#", "\n"),
-                    project.stringProperty("signing.password")
+                    project.stringProperty("signing.password"),
                 )
             }
         }
@@ -213,7 +213,7 @@ allprojects {
                     disable(
                         "StringSplitter",
                         "InlineMeSuggester",
-                        "MissingSummary"
+                        "MissingSummary",
                     )
                 }
             }
@@ -314,16 +314,18 @@ allprojects {
 
                         description.set(
                             project.description
-                                ?: "A themeable Look and Feel for java swing"
+                                ?: "A themeable Look and Feel for java swing",
                         )
                         name.set(
                             (project.findProperty("artifact.name") as? String)
                                 ?: project.name
                                     .replaceFirstChar {
-                                        if (it.isLowerCase()) it.titlecase(Locale.getDefault())
-                                        else it.toString()
-                                    }
-                                    .replace("-", " ")
+                                        if (it.isLowerCase()) {
+                                            it.titlecase(Locale.getDefault())
+                                        } else {
+                                            it.toString()
+                                        }
+                                    }.replace("-", " "),
                         )
                         url.set("https://github.com/weisJ/darklaf")
                         organization {

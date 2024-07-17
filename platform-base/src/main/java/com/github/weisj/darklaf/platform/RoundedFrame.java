@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2024 Jannis Weis
+ * Copyright (c) 2024 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,34 +18,14 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.github.weisj.darklaf.platform.macos;
+package com.github.weisj.darklaf.platform;
 
 import java.awt.*;
 
-public final class JNIDecorationsMacOS {
+public interface RoundedFrame {
+    int getRadius();
 
-    public static native long getComponentPointer(final Window window);
+    Color getColor();
 
-    public static native void retainWindow(final long hwnd);
-
-    public static native void releaseWindow(final long hwnd);
-
-    public static native double getTitleBarHeight(final long hwnd);
-
-    public static native void installDecorations(final long hwnd);
-
-    public static native void installPopup(final long hwnd, final int radius, final int thickness, final int rgb);
-
-    public static native void uninstallDecorations(final long hwnd,
-            final boolean fullSizeContent, final boolean transparentTitleBar);
-
-    public static native void setTitleEnabled(final long hwnd, final boolean enabled);
-
-    public static native void setDarkTheme(final long hwnd, final boolean darkEnabled);
-
-    public static native boolean isFullscreen(final long hwnd);
-
-    public static native double getTitleFontSize(final long hwnd);
-
-    public static native float[] windowButtonRect(final long hwnd);
+    int getThickness();
 }

@@ -156,6 +156,36 @@ JNF_COCOA_ENTER(env);
 JNF_COCOA_EXIT(env);
 }
 
+JNIEXPORT void JNICALL
+Java_com_github_weisj_darklaf_platform_macos_JNIDecorationsMacOS_installPopup(JNIEnv *env, jclass obj, jlong hwnd, jint radius, jint borderWidth, jint borderColor) {
+JNF_COCOA_ENTER(env);
+    NSWindow *nsWindow = OBJC(hwnd);
+    [JNF_RunLoop performOnMainThreadWaiting:YES withBlock:^{
+        nsWindow.hasShadow = YES;
+        nsWindow.contentView.wantsLayer = YES;
+        nsWindow.contentView.layer.cornerRadius = radius;
+        nsWindow.contentView.layer.masksToBounds = YES;
+
+        nsWindow.backgroundColor = NSColor.clearColor;
+        nsWindow.opaque = NO;
+
+        nsWindow.contentView.layer.borderWidth = borderWidth;
+        if( borderWidth > 0 ) {
+            CGFloat red   = ((borderColor >> 16) & 0xff) / 255.;
+            CGFloat green = ((borderColor >> 8) & 0xff) / 255.;
+            CGFloat blue  = (borderColor & 0xff) / 255.;
+            CGFloat alpha = ((borderColor >> 24) & 0xff) / 255.;
+
+            nsWindow.contentView.layer.borderColor = [[NSColor colorWithDeviceRed:red green:green blue:blue alpha:alpha] CGColor];
+        }
+
+        nsWindow.contentView.needsDisplay = YES;
+        [nsWindow.contentView.layer removeAllAnimations];
+        [nsWindow invalidateShadow];
+    }];
+JNF_COCOA_EXIT(env);
+}
+
 NSRect join(NSRect r, NSButton* button) {
     NSRect buttonRect = [button convertRect: [button bounds] toView: nil];
     return NSUnionRect(r, buttonRect);
