@@ -37,7 +37,7 @@ library {
                     "-framework",
                     "AppKit",
                     "-framework",
-                    "Cocoa"
+                    "Cocoa",
                 )
             }
         }

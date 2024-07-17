@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2023 Jannis Weis
+ * Copyright (c) 2019-2024 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -220,8 +220,10 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
 
     private Component getListeningComponent(final MouseEvent event, final Component component) {
         Component comp = switch (event.getID()) {
-            case MouseEvent.MOUSE_CLICKED, MouseEvent.MOUSE_ENTERED, MouseEvent.MOUSE_EXITED, MouseEvent.MOUSE_PRESSED, MouseEvent.MOUSE_RELEASED -> getMouseListeningComponent(
-                    component);
+            case MouseEvent.MOUSE_CLICKED, MouseEvent.MOUSE_ENTERED, MouseEvent.MOUSE_EXITED, MouseEvent.MOUSE_PRESSED,
+                    MouseEvent.MOUSE_RELEASED ->
+                getMouseListeningComponent(
+                        component);
             case MouseEvent.MOUSE_DRAGGED, MouseEvent.MOUSE_MOVED -> getMouseMotionListeningComponent(component);
             case MouseEvent.MOUSE_WHEEL -> getMouseWheelListeningComponent(component);
             default -> null;

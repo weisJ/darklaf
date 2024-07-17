@@ -86,7 +86,7 @@ abstract class DemoTask : JavaExec() {
 
     @Option(
         option = "class",
-        description = "Specifies the main class to run (e.g. com.github.weisj.darklaf.ui.table.TableDemo, com.github.weisj.ui.button.ButtonDemo, ...)"
+        description = "Specifies the main class to run (e.g. com.github.weisj.darklaf.ui.table.TableDemo, com.github.weisj.ui.button.ButtonDemo, ...)",
     )
     fun setMainClass(mainClassName: String?) = mainClass.set(mainClassName)
 }

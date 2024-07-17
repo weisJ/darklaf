@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2023 Jannis Weis
+ * Copyright (c) 2019-2024 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -28,7 +28,6 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 import com.github.weisj.darklaf.nativelaf.DecorationsHandler;
-import com.github.weisj.darklaf.platform.SystemInfo;
 import com.github.weisj.darklaf.properties.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.ui.rootpane.DarkRootPaneUI;
 import com.github.weisj.darklaf.ui.util.DarkUIUtil;

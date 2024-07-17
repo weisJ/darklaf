@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2023 Jannis Weis
+ * Copyright (c) 2019-2024 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -31,7 +31,7 @@ public final class SwingXUtil {
 
     public static <T extends JComponent> Point convertPointToParent(final Component source, final JLayer<T> layer,
             final Point p) {
-        if (layer != null && layer.getUI()instanceof TransformUI ui) {
+        if (layer != null && layer.getUI() instanceof TransformUI ui) {
             Point pos = SwingUtilities.convertPoint(source, p, layer);
             AffineTransform transform = ui.getPreferredTransform(layer.getSize(), layer);
             transform.transform(pos, pos);

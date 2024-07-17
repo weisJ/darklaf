@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2023 Jannis Weis
+ * Copyright (c) 2019-2024 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -296,8 +296,8 @@ public class DarkToolTipUI extends BasicToolTipUI
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         String key = evt.getPropertyName();
-        if (evt.getSource()instanceof JToolTip tooltip) {
-            if (tooltip.getBorder()instanceof AlignableTooltipBorder b) {
+        if (evt.getSource() instanceof JToolTip tooltip) {
+            if (tooltip.getBorder() instanceof AlignableTooltipBorder b) {
                 Object newVal = evt.getNewValue();
                 if (KEY_POINTER_LOCATION.equals(key)) {
                     if (newVal instanceof Alignment) {

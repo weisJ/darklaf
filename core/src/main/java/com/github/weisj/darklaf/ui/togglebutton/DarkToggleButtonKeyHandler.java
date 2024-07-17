@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2023 Jannis Weis
+ * Copyright (c) 2019-2024 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -35,7 +35,7 @@ public class DarkToggleButtonKeyHandler implements KeyListener {
     @Override
     public void keyPressed(final KeyEvent e) {
         AWTKeyStroke stroke = AWTKeyStroke.getAWTKeyStrokeForEvent(e);
-        if (stroke != null && e.getSource()instanceof AbstractButton source) {
+        if (stroke != null && e.getSource() instanceof AbstractButton source) {
             ButtonModel model = source.getModel();
             if (!(model instanceof DefaultButtonModel)) model = null;
 
