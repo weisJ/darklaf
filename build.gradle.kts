@@ -67,6 +67,9 @@ println("Building: Darklaf $buildVersion")
 println("     JDK: " + System.getProperty("java.home"))
 println("  Gradle: " + gradle.gradleVersion)
 
+val githubAccessToken by props("")
+val currentBranch = System.getenv("GITHUB_HEAD_REF") ?: grgit.branch.current()?.name
+
 allprojects {
     group = "com.github.weisj"
     version = buildVersion
@@ -85,8 +88,6 @@ allprojects {
         resolutionStrategy.cacheChangingModulesFor(0, "seconds")
     }
 
-    val githubAccessToken by props("")
-
     plugins.withType<UsePrebuiltBinariesWhenUnbuildablePlugin> {
         val failIfLibraryMissing by props(false)
         prebuiltBinaries {
@@ -97,7 +98,6 @@ allprojects {
                 repository = "darklaf",
                 workflow = "libs.yml"
             ) {
-                val currentBranch = System.getenv("GITHUB_HEAD_REF") ?: grgit.branch.current()?.name
                 branches = listOfNotNull(currentBranch, "master", "v$projectVersion", projectVersion)
                 accessToken = githubAccessToken
                 manualDownloadUrl =
