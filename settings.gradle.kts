@@ -87,7 +87,7 @@ include(
     "macos",
     "platform-base",
     "platform-decorations",
-    "platform-preferences"
+    "platform-preferences",
 )
 
 for (p in rootProject.children) {

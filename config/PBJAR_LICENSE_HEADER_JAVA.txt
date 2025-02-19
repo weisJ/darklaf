@@ -28,33 +28,3 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.pbjar.jxlayer.repaint;
-
-import javax.swing.*;
-
-/**
- * To be implemented by classes that provide for a custom RepaintManager.
- *
- * @author Piet Blok
- * @see RepaintManagerUtils
- */
-public interface RepaintManagerProvider {
-    /**
-     * Get the class of a {@link RepaintManager} that extends {@link WrappedRepaintManager}.
-     * <p>
-     * <b>Note:</b> the class must provide for a public constructor that takes a delegate
-     * {@link RepaintManager} as its only argument.
-     *
-     * @return a class object
-     */
-    RepaintManager createWrappedRepaintManager(final RepaintManager delegate);
-
-    /**
-     * Checks whether or not the argument class is a {@link RepaintManager} class that will do the
-     * required job.
-     *
-     * @param rpm a {@link RepaintManager}
-     * @return {@code true} if the argument class will do the required job, {@code false} otherwise
-     */
-    boolean isAdequate(final RepaintManager rpm);
-}

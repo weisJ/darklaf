@@ -1,3 +1,4 @@
+import com.diffplug.spotless.generic.LicenseHeaderStep.DEFAULT_JAVA_HEADER_DELIMITER
 import com.github.vlsi.gradle.crlf.CrLfSpec
 import com.github.vlsi.gradle.crlf.LineEndings
 import com.github.vlsi.gradle.properties.dsl.props
@@ -150,7 +151,22 @@ allprojects {
                     endWithNewline()
                     trimTrailingWhitespace()
                     eclipse().configFile("${project.rootDir}/config/darklaf_java.eclipseformat.xml")
-                    licenseHeaderFile("${project.rootDir}/config/LICENSE_HEADER_JAVA.txt")
+                }
+                format("license-java") {
+                    target("**/*.java")
+                    targetExclude(
+                        "**/org/pbjar/jxlayer/**/*.java",
+                        "**/com/intellij/util/ui/**/*.java",
+                    )
+                    licenseHeaderFile("${project.rootDir}/config/LICENSE_HEADER_JAVA.txt", DEFAULT_JAVA_HEADER_DELIMITER)
+                }
+                format("license-java-pbjar") {
+                    target("**/org/pbjar/jxlayer/**/*.java")
+                    licenseHeaderFile("${project.rootDir}/config/PBJAR_LICENSE_HEADER_JAVA.txt", DEFAULT_JAVA_HEADER_DELIMITER)
+                }
+                format("license-java-intellij") {
+                    target("**/com/intellij/util/ui/*.java")
+                    licenseHeaderFile("${project.rootDir}/config/INTELLIJ_LICENSE_HEADER_JAVA.txt", DEFAULT_JAVA_HEADER_DELIMITER)
                 }
             }
         }
