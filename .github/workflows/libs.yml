@@ -43,12 +43,12 @@ jobs:
           dependencies-cache-enabled: true
           configuration-cache-enabled: true
       - name: Upload x86 artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: windows-x86
           path: windows/build/libs/main/x86/darklaf-windows.dll
       - name: Upload x86-64 artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: windows-x86-64
           path: windows/build/libs/main/x86-64/darklaf-windows.dll
@@ -78,12 +78,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload x86-64 artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: macos-x86-64
           path: macos/build/libs/main/x86-64/libdarklaf-macos.dylib
       - name: Upload arm64 artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: macos-arm64
           path: macos/build/libs/main/arm64/libdarklaf-macos.dylib

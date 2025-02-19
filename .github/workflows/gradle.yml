@@ -33,13 +33,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload Test Results
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
           name: windows-test-results
           path: build/test_results
       - name: Upload Test Report
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
           name: windows-test-report
@@ -67,12 +67,12 @@ jobs:
         run: xvfb-run -a -server-num=1 --server-args="-screen 0 2000x3000x16" ./gradlew build test -PskipSpotless -PfailIfLibraryMissing=true $(echo $PROPS_GITHUB) --no-daemon
       - name: Upload Test Results
         if: ${{ always() }}
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: linux-11-test-results
           path: build/test_results
       - name: Upload Test Report
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
           name: linux-11-test-report
@@ -103,13 +103,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload Test Results
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
           name: macOS-test-results
           path: build/test_results
       - name: Upload Test Report
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
           name: macOS-test-report
