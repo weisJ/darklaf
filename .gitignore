@@ -28,6 +28,7 @@ repo/
 *.ipr
 *.iws
 .run/
+.kotlin/
 
 # VS Code
 .vscode/

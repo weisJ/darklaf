@@ -5,10 +5,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.CopySpec
 import org.gradle.api.file.DuplicatesStrategy
-import org.gradle.api.file.FileTree
-import org.gradle.api.provider.Provider
 import org.gradle.jvm.tasks.Jar
-import java.io.File
 
 class UberJniJarPlugin : Plugin<Project> {
 
@@ -24,7 +21,7 @@ class UberJniJarPlugin : Plugin<Project> {
         val library = project.extensions.getByType(JavaNativeInterfaceLibrary::class.java)
 
         // Prevent variants from being published.
-        val targetMachines = library.targetMachines.forUseAtConfigurationTime().get()
+        val targetMachines = library.targetMachines.get()
         val variantNames = targetMachines.map { "${project.name}-${it.architectureString}" }
         project.configurations.forEach { config ->
             config.artifacts.removeIf { it.name in variantNames }
@@ -66,8 +63,4 @@ class UberJniJarPlugin : Plugin<Project> {
             libraryFileNameFor("${project.name}-${target.architectureString}", target.operatingSystemFamily)
         }
     }
-
-    private fun JniJarBinary.asZipTree(project: Project): Provider<FileTree> =
-        jarTask.map { project.zipTree(it.archiveFile) }
-
 }

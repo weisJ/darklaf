@@ -7,7 +7,7 @@ import org.gradle.api.file.RegularFile
 import org.gradle.api.tasks.OutputFile
 import java.io.File
 import java.net.HttpURLConnection
-import java.net.URL
+import java.net.URI
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.util.concurrent.locks.Lock
@@ -39,7 +39,7 @@ open class DownloadPrebuiltBinariesTask @Inject constructor(
 
     private val workflowURL
         get() = with(githubArtifactSpec) {
-            URL("https://api.github.com/repos/$user/$repository/actions/workflows/$workflow/runs")
+            URI("https://api.github.com/repos/$user/$repository/actions/workflows/$workflow/runs")
         }
 
     private val prebuiltDirectoryPath = project.layout.buildDirectory.dir("$PRE_BUILD_PATH/$variantName")
@@ -104,10 +104,10 @@ open class DownloadPrebuiltBinariesTask @Inject constructor(
         }
         val artifactUrl = run["artifacts_url"]?.toString()
             ?: return fetchFailed("Could not get artifacts urls")
-        val artifacts = URL(artifactUrl).getJson()["artifacts"] as List<Json>
+        val artifacts = URI(artifactUrl).getJson()["artifacts"] as List<Json>
         val downloadUrl = artifacts.find { variantName == it["name"] }?.get("url")?.toString()
             ?: return fetchFailed("Could not find matching artifact for $variantName")
-        val artifactDownloadUrl = URL(downloadUrl).getJson()["archive_download_url"]?.toString()
+        val artifactDownloadUrl = URI(downloadUrl).getJson()["archive_download_url"]?.toString()
             ?: return fetchFailed("Could not get download url")
         val artifact = downloadBinary(artifactDownloadUrl)
         if (artifact != null) {
@@ -128,7 +128,7 @@ open class DownloadPrebuiltBinariesTask @Inject constructor(
 
     private fun downloadBinary(url: String): File? {
         infoLog("Downloading binary for variant '$variantName' from $url")
-        return URL(url).fetch {
+        return URI(url).fetch {
             val artifact = fileOf(tempFilePath("$variantName.zip").get())
             Files.copy(it.inputStream, artifact.toPath(), StandardCopyOption.REPLACE_EXISTING)
             infoLog("Finished download for variant '$variantName'")
@@ -147,14 +147,14 @@ open class DownloadPrebuiltBinariesTask @Inject constructor(
         return candidates.find { branch == it["head_branch"] }
     }
 
-    private fun URL.getJson(): Json = fetch { connection ->
+    private fun URI.getJson(): Json = fetch { connection ->
         connection.inputStream.bufferedReader().use { it.readText() }.toJson()
     } ?: emptyMap()
 
-    private fun <T : Any> URL.fetch(transform: (HttpURLConnection) -> T?): T? {
+    private fun <T : Any> URI.fetch(transform: (HttpURLConnection) -> T?): T? {
         if (isOffline) return null
         infoLog("Fetching $this")
-        (openConnection() as HttpURLConnection).run {
+        (toURL().openConnection() as HttpURLConnection).run {
             requestMethod = "GET"
             if (githubArtifactSpec.timeout >= 0) {
                 connectTimeout = githubArtifactSpec.timeout
