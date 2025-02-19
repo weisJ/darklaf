@@ -36,7 +36,6 @@ import java.awt.Rectangle;
 import javax.swing.*;
 import javax.swing.plaf.LayerUI;
 
-import org.jdesktop.swingx.ForwardingRepaintManager;
 import org.pbjar.jxlayer.plaf.ext.TransformUI;
 import org.pbjar.jxlayer.repaint.RepaintManagerProvider;
 import org.pbjar.jxlayer.repaint.RepaintManagerUtils;
@@ -47,8 +46,6 @@ import org.pbjar.jxlayer.repaint.WrappedRepaintManager;
  * it has a JLayer ancestor, equipped with a TransformUI. In that case, the transformed region on
  * the JLayer is also marked dirty.
  * <p>
- * A fall back class if the {@link ForwardingRepaintManager} cannot be instantiated because the
- * SwingX packages are not on the class path.
  *
  * @see RepaintManagerProvider
  * @see RepaintManagerUtils

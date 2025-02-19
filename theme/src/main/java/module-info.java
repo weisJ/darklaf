@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2021-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,23 +18,29 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.github.weisj.darklaf.ui.taskpane;
+open module darklaf.theme {
+    requires transitive java.desktop;
 
-import javax.swing.*;
-import javax.swing.plaf.ComponentUI;
+    requires transitive darklaf.theme.spec;
+    requires darklaf.utils;
+    requires darklaf.properties;
 
-import org.jdesktop.swingx.plaf.basic.BasicTaskPaneContainerUI;
+    requires static darklaf.annotations;
+    requires static com.google.auto.service;
 
-public class DarkTaskPaneContainerUI extends BasicTaskPaneContainerUI {
+    exports com.github.weisj.darklaf.theme;
+    exports com.github.weisj.darklaf.theme.info;
+    exports com.github.weisj.darklaf.theme.event;
+    exports com.github.weisj.darklaf.theme.laf;
 
-    public static ComponentUI createUI(final JComponent c) {
-        return new DarkTaskPaneContainerUI();
-    }
+    uses com.github.weisj.darklaf.theme.laf.SynthesisedThemedLaf.ThemedLafProvider;
 
-    @Override
-    protected void installDefaults() {
-        super.installDefaults();
-        taskPane.setOpaque(false);
-        taskPane.setBackgroundPainter(null);
-    }
+    provides com.github.weisj.darklaf.theme.Theme with
+            com.github.weisj.darklaf.theme.IntelliJTheme,
+            com.github.weisj.darklaf.theme.DarculaTheme,
+            com.github.weisj.darklaf.theme.OneDarkTheme,
+            com.github.weisj.darklaf.theme.HighContrastLightTheme,
+            com.github.weisj.darklaf.theme.HighContrastDarkTheme,
+            com.github.weisj.darklaf.theme.SolarizedLightTheme,
+            com.github.weisj.darklaf.theme.SolarizedDarkTheme;
 }

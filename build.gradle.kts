@@ -1,4 +1,4 @@
-import com.diffplug.spotless.generic.LicenseHeaderStep.DEFAULT_JAVA_HEADER_DELIMITER
+
 import com.github.vlsi.gradle.crlf.CrLfSpec
 import com.github.vlsi.gradle.crlf.LineEndings
 import com.github.vlsi.gradle.properties.dsl.props
@@ -140,6 +140,7 @@ allprojects {
                 }
             }
             plugins.withType<JavaPlugin>().configureEach {
+                val LICENSE_DELIMITER_JAVA = "(package|import|public|class|module|open module) "
                 format("properties") {
                     target("**/*.properties")
                     targetExclude("*/build/")
@@ -158,15 +159,15 @@ allprojects {
                         "**/org/pbjar/jxlayer/**/*.java",
                         "**/com/intellij/util/ui/**/*.java",
                     )
-                    licenseHeaderFile("${project.rootDir}/config/LICENSE_HEADER_JAVA.txt", DEFAULT_JAVA_HEADER_DELIMITER)
+                    licenseHeaderFile("${project.rootDir}/config/LICENSE_HEADER_JAVA.txt", LICENSE_DELIMITER_JAVA)
                 }
                 format("license-java-pbjar") {
                     target("**/org/pbjar/jxlayer/**/*.java")
-                    licenseHeaderFile("${project.rootDir}/config/PBJAR_LICENSE_HEADER_JAVA.txt", DEFAULT_JAVA_HEADER_DELIMITER)
+                    licenseHeaderFile("${project.rootDir}/config/PBJAR_LICENSE_HEADER_JAVA.txt", LICENSE_DELIMITER_JAVA)
                 }
                 format("license-java-intellij") {
                     target("**/com/intellij/util/ui/*.java")
-                    licenseHeaderFile("${project.rootDir}/config/INTELLIJ_LICENSE_HEADER_JAVA.txt", DEFAULT_JAVA_HEADER_DELIMITER)
+                    licenseHeaderFile("${project.rootDir}/config/INTELLIJ_LICENSE_HEADER_JAVA.txt", LICENSE_DELIMITER_JAVA)
                 }
             }
         }

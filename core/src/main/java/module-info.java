@@ -1,26 +1,22 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021-2022 Jannis Weis
+ * Copyright (c) 2021-2025 Jannis Weis
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 module darklaf.core {
     requires transitive java.desktop;
@@ -42,7 +38,6 @@ module darklaf.core {
     requires static org.jetbrains.annotations;
     requires static com.google.errorprone.annotations;
     requires static com.google.auto.service;
-    requires static swingx;
 
     uses com.github.weisj.darklaf.theme.Theme;
 
@@ -58,7 +53,7 @@ module darklaf.core {
     opens com.github.weisj.darklaf.ui to darklaf.properties;
 
     provides com.github.weisj.darklaf.theme.laf.SynthesisedThemedLaf.ThemedLafProvider with
-        com.github.weisj.darklaf.synthesised.ThemedDarkLafProvider;
+            com.github.weisj.darklaf.synthesised.ThemedDarkLafProvider;
 
     exports com.github.weisj.darklaf;
     exports com.github.weisj.darklaf.components;
@@ -128,12 +123,10 @@ module darklaf.core {
     opens com.github.weisj.darklaf.ui.spinner;
     opens com.github.weisj.darklaf.ui.splitbutton;
     opens com.github.weisj.darklaf.ui.splitpane;
-    opens com.github.weisj.darklaf.ui.statusbar;
     opens com.github.weisj.darklaf.ui.tabbedpane;
     opens com.github.weisj.darklaf.ui.tabframe;
     opens com.github.weisj.darklaf.ui.table;
     opens com.github.weisj.darklaf.ui.table.header;
-    opens com.github.weisj.darklaf.ui.taskpane;
     opens com.github.weisj.darklaf.ui.text;
     opens com.github.weisj.darklaf.ui.titledborder;
     opens com.github.weisj.darklaf.ui.togglebutton;

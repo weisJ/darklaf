@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -24,8 +24,6 @@ import java.awt.dnd.DragSource;
 import java.awt.event.MouseEvent;
 
 import javax.swing.*;
-
-import org.jdesktop.swingx.SwingXUtilities;
 
 /**
  * Drag gesture recognition support for classes that have a <code>TransferHandler</code>. The
@@ -102,7 +100,38 @@ public class DragRecognitionSupport {
             return TransferHandler.NONE;
         }
         // PENDING JW: c'p from SunDragSourceContextPeer
-        return SwingXUtilities.convertModifiersToDropAction(me.getModifiersEx(), th.getSourceActions(component));
+        return convertModifiersToDropAction(me.getModifiersEx(), th.getSourceActions(component));
+    }
+
+    private static int convertModifiersToDropAction(int modifiers, int sourcActions) {
+        int i = 0;
+
+        switch (modifiers & 0xC0) {
+            case 192:
+                i = 1073741824;
+                break;
+            case 128:
+                i = 1;
+                break;
+            case 64:
+                i = 2;
+                break;
+            default:
+                if ((sourcActions & 0x2) != 0) {
+                    i = 2;
+                    break;
+                }
+                if ((sourcActions & 0x1) != 0) {
+                    i = 1;
+                    break;
+                }
+                if ((sourcActions & 0x40000000) == 0)
+                    break;
+                i = 1073741824;
+        }
+
+        // label88:
+        return (i & sourcActions);
     }
 
     private void clearState() {
