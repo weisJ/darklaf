@@ -22,11 +22,11 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 10
-      - name: Set up JDK 21
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: 21
+          java-version: 17
       - name: Publish
         env:
           PROPS_RELEASE: "-Prc=1 -Pgh -Prelease=false -PskipJavadoc -PskipSpotless -PfailIfLibraryMissing"
