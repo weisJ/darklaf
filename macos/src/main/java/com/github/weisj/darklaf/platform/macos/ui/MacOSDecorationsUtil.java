@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2024 Jannis Weis
+ * Copyright (c) 2020-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -71,7 +71,7 @@ public final class MacOSDecorationsUtil {
 
     public static void installPopupWindow(final Window window, final int radius, final int thickness, final int rgb) {
         long windowHandle = JNIDecorationsMacOS.getComponentPointer(window);
-        JNIDecorationsMacOS.installPopup(windowHandle, radius, thickness, radius);
+        JNIDecorationsMacOS.installPopup(windowHandle, radius / 2, thickness, rgb);
     }
 
     private static void setFullSizeContent(final long windowHandle, final boolean enabled) {
