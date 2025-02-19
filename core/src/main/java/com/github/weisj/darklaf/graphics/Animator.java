@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2024 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -291,7 +291,11 @@ public abstract class Animator {
      */
     public void stop() {
         if (cancel()) {
-            onAnimationFinished();
+            if (SwingUtilities.isEventDispatchThread()) {
+                onAnimationFinished();
+            } else {
+                SwingUtilities.invokeLater(this::onAnimationFinished);
+            }
         }
     }
 
