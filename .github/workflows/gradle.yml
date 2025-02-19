@@ -9,7 +9,7 @@ on:
       - '*'
 jobs:
   windows:
-    name: Windows (Java 11)
+    name: Windows
     runs-on: windows-latest
     permissions:
       contents: read
@@ -18,10 +18,11 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
         with:
-          java-version: 11
+          distribution: 'zulu'
+          java-version: 21
       - name: Build & Test
         uses: eskatos/gradle-command-action@v1
         with:
@@ -44,34 +45,8 @@ jobs:
           name: windows-test-report
           path: core/build/reports
 
-  linux8:
-    name: Linux (Java 8)
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: read
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 2
-      - name: Set up JDK 8
-        uses: actions/setup-java@v1
-        with:
-          java-version: 8
-      - name: Build
-        env:
-          PROPS_GITHUB: "-PgithubAccessToken=${{ secrets.GITHUB_TOKEN }}"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: xvfb-run -a -server-num=1 --server-args="-screen 0 2000x3000x16" ./gradlew build test -PskipSpotless -PskipModuleInfo -PfailIfLibraryMissing=true $(echo $PROPS_GITHUB) --no-daemon
-      - name: Upload Test Report
-        uses: actions/upload-artifact@v1
-        if: ${{ always() }}
-        with:
-          name: linux-8-test-report
-          path: core/build/reports
-
   linux:
-    name: Linux (Java 11)
+    name: Linux
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -80,10 +55,11 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
         with:
-          java-version: 11
+          distribution: 'zulu'
+          java-version: 21
       - name: Build & Test
         env:
           PROPS_GITHUB: "-PgithubAccessToken=${{ secrets.GITHUB_TOKEN }}"
@@ -103,7 +79,7 @@ jobs:
           path: core/build/reports
 
   macos:
-    name: macOS (Java 11)
+    name: macOS
     runs-on: macos-latest
     permissions:
       contents: read
@@ -112,10 +88,11 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
         with:
-          java-version: 11
+          distribution: 'zulu'
+          java-version: 21
       - name: Build & Test
         uses: eskatos/gradle-command-action@v1
         with:
