@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -194,6 +194,7 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
     public void paintDraggedArea(final Graphics2D g, final boolean ltr, final int cMin, final int cMax,
             final Color borderColor, final TableColumn draggedColumn) {
         int draggedColumnIndex = viewIndexForColumn(draggedColumn);
+        if (draggedColumnIndex < 0) return;
         boolean scrollPaneRtl = isScrollPaneRtl();
         Rectangle draggedCellRect = header.getHeaderRect(draggedColumnIndex);
         int dist = DarkTableUI.adjustDistance(header.getDraggedDistance(), draggedCellRect, header.getTable());
@@ -270,6 +271,7 @@ public class DarkTableHeaderUI extends BasicTableHeaderUI {
     }
 
     protected void paintCell(final Graphics g, final Rectangle cellRect, final int columnIndex) {
+        if (columnIndex < 0) return;
         Component component = getHeaderCellRenderer(columnIndex);
         rendererPane.paintComponent(g, component, header, cellRect.x, cellRect.y, cellRect.width, cellRect.height,
                 true);
