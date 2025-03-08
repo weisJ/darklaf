@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2023 Jannis Weis
+ * Copyright (c) 2020-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -45,8 +45,8 @@ public class ThemeDefaultsInitTask implements DefaultsInitTask {
     private static final String[] UI_PROPERTIES = new String[] {"borders", "button", "cell", "checkBox", "colorChooser",
             "comboBox", "fileChooser", "tristate", "internalFrame", "label", "list", "menu", "menuBar", "menuItem",
             "numberingPane", "optionPane", "panel", "popupMenu", "progressBar", "radioButton", "rootPane", "scrollBar",
-            "scrollPane", "separator", "slider", "spinner", "splitPane", "statusBar", "tabbedPane", "tabFrame", "table",
-            "taskPane", "text", "toggleButton", "toolBar", "toolTip", "tree", "misc"};
+            "scrollPane", "separator", "slider", "spinner", "splitPane", "tabbedPane", "tabFrame", "table", "text",
+            "toggleButton", "toolBar", "toolTip", "tree", "misc"};
     private static final String[] ICON_PROPERTIES =
             new String[] {"checkBox", "radioButton", "slider", "frame"};
     private static final String ACCENT_COLOR_KEY = "effectiveAccentColor";
