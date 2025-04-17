@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021-2023 Jannis Weis
+ * Copyright (c) 2021-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -21,6 +21,7 @@
 package com.github.weisj.darklaf.properties.icons;
 
 import java.awt.*;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,17 +31,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.github.weisj.darklaf.util.ColorUtil;
-import com.github.weisj.jsvg.attributes.paint.DefaultPaintParser;
-import com.github.weisj.jsvg.attributes.paint.SimplePaintSVGPaint;
-import com.github.weisj.jsvg.nodes.Defs;
-import com.github.weisj.jsvg.nodes.LinearGradient;
-import com.github.weisj.jsvg.nodes.SolidColor;
-import com.github.weisj.jsvg.parser.AttributeNode;
-import com.github.weisj.jsvg.parser.DefaultParserProvider;
+import com.github.weisj.jsvg.paint.SimplePaintSVGPaint;
 import com.github.weisj.jsvg.parser.DomProcessor;
-import com.github.weisj.jsvg.parser.ParsedElement;
+import com.github.weisj.jsvg.parser.PaintParser;
+import com.github.weisj.jsvg.parser.ParserProvider;
+import com.github.weisj.jsvg.parser.RawElement;
+import com.github.weisj.jsvg.parser.css.CssParser;
 
-public class ThemedSVGIconParserProvider extends DefaultParserProvider {
+public class ThemedSVGIconParserProvider implements ParserProvider {
+    private final ParserProvider defaultDelegate = ParserProvider.createDefault();
     private final DomProcessor preProcessor;
 
     public ThemedSVGIconParserProvider(final @NotNull ThemedSVGIcon icon) {
@@ -48,8 +47,18 @@ public class ThemedSVGIconParserProvider extends DefaultParserProvider {
     }
 
     @Override
-    public @Nullable DomProcessor createPreProcessor() {
+    public @Nullable DomProcessor createPreProcessor(@Nullable URI documentUri) {
         return preProcessor;
+    }
+
+    @Override
+    public @NotNull PaintParser createPaintParser() {
+        return defaultDelegate.createPaintParser();
+    }
+
+    @Override
+    public @NotNull CssParser createCssParser() {
+        return defaultDelegate.createCssParser();
     }
 
     private static class ThemedSVGIconDomProcessor extends DarkSVGIconDomProcessor<ThemedSVGIcon> {
@@ -59,45 +68,54 @@ public class ThemedSVGIconParserProvider extends DefaultParserProvider {
         }
 
         @Override
-        public void process(final @NotNull ParsedElement root) {
+        public void process(final @NotNull RawElement root) {
             super.process(root);
-            for (ParsedElement child : root.children()) {
-                if ("colors".equals(child.id()) && child.node() instanceof Defs) {
+            for (RawElement child : root.children()) {
+                if ("colors".equals(child.id()) && "defs".equalsIgnoreCase(child.tagName())) {
                     replaceColorDefinitions(child);
                     return;
                 }
             }
         }
 
-        private void replaceColorDefinitions(final ParsedElement element) {
-            for (ParsedElement child : element.children()) {
-                if (child.node() instanceof LinearGradient) {
+        private void replaceColorDefinitions(final RawElement element) {
+            for (RawElement child : element.children()) {
+                if ("lineargradient".equalsIgnoreCase(child.tagName())) {
                     replaceGradientColor(child, "opacity");
-                } else if (child.node() instanceof SolidColor) {
+                } else if ("solidcolor".equalsIgnoreCase(child.tagName())) {
                     replaceGradientColor(child, "solid-opacity");
                 }
             }
         }
 
-        private void replaceGradientColor(final ParsedElement colorElement, final String opacityTag) {
+        private float parseOpacity(final @Nullable String attribute, float fallback) {
+            if (attribute == null) return fallback;
+            try {
+                return Float.parseFloat(attribute.trim());
+            } catch (NumberFormatException e) {
+                return fallback;
+            }
+        }
+
+        private void replaceGradientColor(final RawElement colorElement, final String opacityTag) {
             String id = colorElement.id();
             if (id == null) return;
 
-            AttributeNode attributeNode = colorElement.attributeNode();
-            String[] fallbacks = attributeNode.getStringList("fallback");
-            String opacityKey = attributeNode.getValue(opacityTag);
-            String[] opacityFallback = attributeNode.getStringList("opacity-fallback");
+            String[] fallbacks = parseStringList(colorElement.attribute("fallback"));
+            String opacityKey = colorElement.attribute(opacityTag);
+            String[] opacityFallback = parseStringList(colorElement.attribute("opacity-fallback"));
 
-            List<ParsedElement> stops = colorElement.children();
+            List<? extends RawElement> stops = colorElement.children();
             float originalOpacity = 1;
             if (!stops.isEmpty()) {
-                originalOpacity = stops.get(0).attributeNode().getPercentage("stop-opacity", originalOpacity);
+                String rawOpacity = stops.get(0).attribute("stop-opacity");
+                originalOpacity = parseOpacity(rawOpacity, originalOpacity);
             }
 
             ThemedSVGIconParserProvider.ThemedSolidColorPaint themedPaint =
                     new ThemedSVGIconParserProvider.ThemedSolidColorPaint(
                             id, fallbacks, opacityKey, opacityFallback, originalOpacity);
-            colorElement.registerNamedElement(id, themedPaint);
+            colorElement.document().registerNamedElement(id, themedPaint);
             icon.registerPaint(themedPaint);
         }
     }
@@ -141,7 +159,7 @@ public class ThemedSVGIconParserProvider extends DefaultParserProvider {
 
         private final float originalOpacity;
 
-        private Color color = DefaultPaintParser.DEFAULT_COLOR;
+        private Color color = PaintParser.DEFAULT_COLOR;
 
         ThemedSolidColorPaint(final String colorKey, final String[] colorFallbacks,
                 final String opacityKey, final String[] opacityFallbacks,

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021-2022 Jannis Weis
+ * Copyright (c) 2021-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -23,9 +23,10 @@ package com.github.weisj.darklaf.properties.icons;
 import java.awt.*;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.github.weisj.jsvg.parser.DomProcessor;
-import com.github.weisj.jsvg.parser.ParsedElement;
+import com.github.weisj.jsvg.parser.RawElement;
 
 public class DarkSVGIconDomProcessor<T extends DarkSVGIcon> implements DomProcessor {
     protected final @NotNull T icon;
@@ -35,14 +36,27 @@ public class DarkSVGIconDomProcessor<T extends DarkSVGIcon> implements DomProces
     }
 
     @Override
-    public void process(@NotNull ParsedElement root) {
-        float[] visualPaddings = root.attributeNode().getFloatList("visualPadding");
-        if (visualPaddings.length == 4) {
-            icon.setVisualPadding(new Insets(
-                    (int) visualPaddings[0],
-                    (int) visualPaddings[1],
-                    (int) visualPaddings[2],
-                    (int) visualPaddings[3]));
+    public void process(@NotNull RawElement root) {
+        String[] paddingStrings = parseStringList(root.attribute("visualPadding"));
+        try {
+            if (paddingStrings.length == 4) {
+                icon.setVisualPadding(new Insets(
+                        Integer.parseInt(paddingStrings[0]),
+                        Integer.parseInt(paddingStrings[1]),
+                        Integer.parseInt(paddingStrings[2]),
+                        Integer.parseInt(paddingStrings[3])));
+            }
+        } catch (NumberFormatException e) {
+            // Ignore invalid padding values
         }
+    }
+
+    protected @NotNull String @NotNull [] parseStringList(final @Nullable String attribute) {
+        if (attribute == null) return new String[0];
+        String[] split = attribute.split("\\s+");
+        for (int i = 0; i < split.length; i++) {
+            split[i] = split[i].trim();
+        }
+        return split;
     }
 }

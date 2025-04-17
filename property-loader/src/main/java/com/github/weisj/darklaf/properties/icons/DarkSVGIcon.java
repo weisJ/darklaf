@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2024 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -39,10 +39,9 @@ import org.jetbrains.annotations.NotNull;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.Scale;
 import com.github.weisj.jsvg.SVGDocument;
-import com.github.weisj.jsvg.attributes.ViewBox;
-import com.github.weisj.jsvg.geometry.size.FloatSize;
-import com.github.weisj.jsvg.parser.DefaultParserProvider;
 import com.github.weisj.jsvg.parser.ParserProvider;
+import com.github.weisj.jsvg.view.FloatSize;
+import com.github.weisj.jsvg.view.ViewBox;
 import com.github.weisj.swingdsl.visualpadding.VisualPaddingProvider;
 
 /**
@@ -134,7 +133,7 @@ public class DarkSVGIcon extends ImageIcon
     }
 
     protected @NotNull ParserProvider createParserProvider() {
-        return new DefaultParserProvider();
+        return ParserProvider.createDefault();
     }
 
     protected void updateCache(final boolean update, final Component c) {
@@ -168,7 +167,7 @@ public class DarkSVGIcon extends ImageIcon
             if (aaHint != null) g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, aaHint);
             svgDocumentHolder.svgDocument.render(null, g, new ViewBox(0, 0, size.width, size.height));
         } catch (final RuntimeException e) {
-            LOGGER.log(Level.SEVERE, "Exception while painting '" + getURI().toASCIIString() + "'.", e);
+            LOGGER.log(Level.SEVERE, "Exception while painting '%s'.".formatted(getURI().toASCIIString()), e);
         } finally {
             g.dispose();
         }
