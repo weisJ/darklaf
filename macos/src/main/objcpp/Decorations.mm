@@ -209,7 +209,7 @@ JNF_COCOA_ENTER(env);
     }
 
     jfloatArray bounds = env->NewFloatArray(4);
-    jfloat rawBounds[4] = {rect.origin.x, rect.origin.y, rect.size.width, rect.size.height};
+    jfloat rawBounds[4] = {(jfloat)rect.origin.x, (jfloat)rect.origin.y, (jfloat)rect.size.width, (jfloat)rect.size.height};
     env->SetFloatArrayRegion(bounds, 0, 4, rawBounds);
 
     return bounds;
