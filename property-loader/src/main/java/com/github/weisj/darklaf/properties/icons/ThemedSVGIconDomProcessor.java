@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021-2025 Jannis Weis
+ * Copyright (c) 2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -21,7 +21,6 @@
 package com.github.weisj.darklaf.properties.icons;
 
 import java.awt.*;
-import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,92 +31,64 @@ import org.jetbrains.annotations.Nullable;
 
 import com.github.weisj.darklaf.util.ColorUtil;
 import com.github.weisj.jsvg.paint.SimplePaintSVGPaint;
-import com.github.weisj.jsvg.parser.DomProcessor;
+import com.github.weisj.jsvg.parser.DomElement;
 import com.github.weisj.jsvg.parser.PaintParser;
-import com.github.weisj.jsvg.parser.ParserProvider;
-import com.github.weisj.jsvg.parser.RawElement;
-import com.github.weisj.jsvg.parser.css.CssParser;
 
-public class ThemedSVGIconParserProvider implements ParserProvider {
-    private final ParserProvider defaultDelegate = ParserProvider.createDefault();
-    private final DomProcessor preProcessor;
+public class ThemedSVGIconDomProcessor extends DarkSVGIconDomProcessor<ThemedSVGIcon> {
 
-    public ThemedSVGIconParserProvider(final @NotNull ThemedSVGIcon icon) {
-        preProcessor = new ThemedSVGIconDomProcessor(icon);
+    public ThemedSVGIconDomProcessor(@NotNull ThemedSVGIcon icon) {
+        super(icon);
     }
 
     @Override
-    public @Nullable DomProcessor createPreProcessor(@Nullable URI documentUri) {
-        return preProcessor;
+    public void process(final @NotNull DomElement root) {
+        super.process(root);
+        for (var child : root.children()) {
+            if ("colors".equals(child.id()) && "defs".equalsIgnoreCase(child.tagName())) {
+                replaceColorDefinitions(child);
+                return;
+            }
+        }
     }
 
-    @Override
-    public @NotNull PaintParser createPaintParser() {
-        return defaultDelegate.createPaintParser();
+    private void replaceColorDefinitions(final DomElement element) {
+        for (var child : element.children()) {
+            if ("lineargradient".equalsIgnoreCase(child.tagName())) {
+                replaceGradientColor(child, "opacity");
+            } else if ("solidcolor".equalsIgnoreCase(child.tagName())) {
+                replaceGradientColor(child, "solid-opacity");
+            }
+        }
     }
 
-    @Override
-    public @NotNull CssParser createCssParser() {
-        return defaultDelegate.createCssParser();
+    private float parseOpacity(final @Nullable String attribute, float fallback) {
+        if (attribute == null) return fallback;
+        try {
+            return Float.parseFloat(attribute.trim());
+        } catch (NumberFormatException e) {
+            return fallback;
+        }
     }
 
-    private static class ThemedSVGIconDomProcessor extends DarkSVGIconDomProcessor<ThemedSVGIcon> {
+    private void replaceGradientColor(final DomElement colorElement, final String opacityTag) {
+        String id = colorElement.id();
+        if (id == null) return;
 
-        public ThemedSVGIconDomProcessor(@NotNull ThemedSVGIcon icon) {
-            super(icon);
+        String[] fallbacks = parseStringList(colorElement.attribute("fallback"));
+        String opacityKey = colorElement.attribute(opacityTag);
+        String[] opacityFallback = parseStringList(colorElement.attribute("opacity-fallback"));
+
+        var stops = colorElement.children();
+        float originalOpacity = 1;
+        if (!stops.isEmpty()) {
+            String rawOpacity = stops.get(0).attribute("stop-opacity");
+            originalOpacity = parseOpacity(rawOpacity, originalOpacity);
         }
 
-        @Override
-        public void process(final @NotNull RawElement root) {
-            super.process(root);
-            for (RawElement child : root.children()) {
-                if ("colors".equals(child.id()) && "defs".equalsIgnoreCase(child.tagName())) {
-                    replaceColorDefinitions(child);
-                    return;
-                }
-            }
-        }
-
-        private void replaceColorDefinitions(final RawElement element) {
-            for (RawElement child : element.children()) {
-                if ("lineargradient".equalsIgnoreCase(child.tagName())) {
-                    replaceGradientColor(child, "opacity");
-                } else if ("solidcolor".equalsIgnoreCase(child.tagName())) {
-                    replaceGradientColor(child, "solid-opacity");
-                }
-            }
-        }
-
-        private float parseOpacity(final @Nullable String attribute, float fallback) {
-            if (attribute == null) return fallback;
-            try {
-                return Float.parseFloat(attribute.trim());
-            } catch (NumberFormatException e) {
-                return fallback;
-            }
-        }
-
-        private void replaceGradientColor(final RawElement colorElement, final String opacityTag) {
-            String id = colorElement.id();
-            if (id == null) return;
-
-            String[] fallbacks = parseStringList(colorElement.attribute("fallback"));
-            String opacityKey = colorElement.attribute(opacityTag);
-            String[] opacityFallback = parseStringList(colorElement.attribute("opacity-fallback"));
-
-            List<? extends RawElement> stops = colorElement.children();
-            float originalOpacity = 1;
-            if (!stops.isEmpty()) {
-                String rawOpacity = stops.get(0).attribute("stop-opacity");
-                originalOpacity = parseOpacity(rawOpacity, originalOpacity);
-            }
-
-            ThemedSVGIconParserProvider.ThemedSolidColorPaint themedPaint =
-                    new ThemedSVGIconParserProvider.ThemedSolidColorPaint(
-                            id, fallbacks, opacityKey, opacityFallback, originalOpacity);
-            colorElement.document().registerNamedElement(id, themedPaint);
-            icon.registerPaint(themedPaint);
-        }
+        var themedPaint = new ThemedSVGIconDomProcessor.ThemedSolidColorPaint(
+                id, fallbacks, opacityKey, opacityFallback, originalOpacity);
+        colorElement.document().registerNamedElement(id, themedPaint);
+        icon.registerPaint(themedPaint);
     }
 
     public static void patchColors(final List<ThemedSolidColorPaint> paints, final Map<Object, Object> propertyMap,
@@ -132,9 +103,9 @@ public class ThemedSVGIconParserProvider implements ParserProvider {
         }
     }
 
-    public static Map<Object, Object> getProperties(List<ThemedSVGIconParserProvider.ThemedSolidColorPaint> paints) {
+    public static Map<Object, Object> getProperties(List<ThemedSolidColorPaint> paints) {
         Map<Object, Object> values = new HashMap<>(paints.size() * 2, 0.75f);
-        for (ThemedSVGIconParserProvider.ThemedSolidColorPaint paint : paints) {
+        for (ThemedSolidColorPaint paint : paints) {
             values.put(paint.colorKey, ColorUtil.removeAlpha(paint.color));
             if (paint.opacityKey != null && !paint.opacityKey.isEmpty()) {
                 values.put(paint.opacityKey, (int) (paint.color.getAlpha() / 255f));

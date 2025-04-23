@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -38,7 +38,7 @@ import com.github.weisj.jsvg.parser.*;
  */
 public class ThemedSVGIcon extends DarkSVGIcon implements ThemedIcon {
 
-    private final List<ThemedSVGIconParserProvider.ThemedSolidColorPaint> paints;
+    private final List<ThemedSVGIconDomProcessor.ThemedSolidColorPaint> paints;
     private Object currentTheme;
     private boolean updatedNotDuringPaint;
 
@@ -92,8 +92,8 @@ public class ThemedSVGIcon extends DarkSVGIcon implements ThemedIcon {
     }
 
     @Override
-    protected @NotNull ParserProvider createParserProvider() {
-        return new ThemedSVGIconParserProvider(this);
+    protected @NotNull LoaderContext createLoaderContext() {
+        return LoaderContext.builder().preProcessor(new ThemedSVGIconDomProcessor(this)).build();
     }
 
     @Override
@@ -106,11 +106,11 @@ public class ThemedSVGIcon extends DarkSVGIcon implements ThemedIcon {
                 '}';
     }
 
-    void registerPaint(final ThemedSVGIconParserProvider.ThemedSolidColorPaint paint) {
+    void registerPaint(final ThemedSVGIconDomProcessor.ThemedSolidColorPaint paint) {
         paints.add(paint);
     }
 
-    List<ThemedSVGIconParserProvider.ThemedSolidColorPaint> paints() {
+    List<ThemedSVGIconDomProcessor.ThemedSolidColorPaint> paints() {
         return paints;
     }
 
@@ -123,6 +123,6 @@ public class ThemedSVGIcon extends DarkSVGIcon implements ThemedIcon {
     }
 
     protected void patchColors() {
-        ThemedSVGIconParserProvider.patchColors(paints(), getContextDefaults(), null);
+        ThemedSVGIconDomProcessor.patchColors(paints(), getContextDefaults(), null);
     }
 }

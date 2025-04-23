@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -47,7 +47,7 @@ public class CustomThemedIcon extends ThemedSVGIcon implements MutableThemedIcon
     public CustomThemedIcon(final DarkSVGIcon icon, final Map<Object, Object> contextDefaults,
             final MergeMode mergeMode) {
         super(icon.getURI(), icon.getIconWidth(), icon.getIconHeight());
-        List<ThemedSVGIconParserProvider.ThemedSolidColorPaint> customPaints;
+        List<ThemedSVGIconDomProcessor.ThemedSolidColorPaint> customPaints;
         if (icon instanceof ThemedSVGIcon) {
             icon.ensureLoaded(false);
             customPaints = ((ThemedSVGIcon) icon).paints();
@@ -55,7 +55,7 @@ public class CustomThemedIcon extends ThemedSVGIcon implements MutableThemedIcon
             ensureLoaded(false);
             customPaints = paints();
         }
-        defaults = ThemedSVGIconParserProvider.getProperties(customPaints);
+        defaults = ThemedSVGIconDomProcessor.getProperties(customPaints);
         setContextProperties(contextDefaults);
         mergeProperties(mergeMode, icon);
     }
@@ -131,7 +131,7 @@ public class CustomThemedIcon extends ThemedSVGIcon implements MutableThemedIcon
 
     @Override
     protected void patchColors() {
-        ThemedSVGIconParserProvider.patchColors(paints(), getProperties(), getContextProperties());
+        ThemedSVGIconDomProcessor.patchColors(paints(), getProperties(), getContextProperties());
     }
 
     public enum MergeMode {

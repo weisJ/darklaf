@@ -25,8 +25,8 @@ import java.awt.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import com.github.weisj.jsvg.parser.DomElement;
 import com.github.weisj.jsvg.parser.DomProcessor;
-import com.github.weisj.jsvg.parser.RawElement;
 
 public class DarkSVGIconDomProcessor<T extends DarkSVGIcon> implements DomProcessor {
     protected final @NotNull T icon;
@@ -36,7 +36,7 @@ public class DarkSVGIconDomProcessor<T extends DarkSVGIcon> implements DomProces
     }
 
     @Override
-    public void process(@NotNull RawElement root) {
+    public void process(@NotNull DomElement root) {
         String[] paddingStrings = parseStringList(root.attribute("visualPadding"));
         try {
             if (paddingStrings.length == 4) {

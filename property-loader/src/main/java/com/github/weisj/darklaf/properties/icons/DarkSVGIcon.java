@@ -39,7 +39,7 @@ import org.jetbrains.annotations.NotNull;
 import com.github.weisj.darklaf.util.LogUtil;
 import com.github.weisj.darklaf.util.Scale;
 import com.github.weisj.jsvg.SVGDocument;
-import com.github.weisj.jsvg.parser.ParserProvider;
+import com.github.weisj.jsvg.parser.LoaderContext;
 import com.github.weisj.jsvg.view.FloatSize;
 import com.github.weisj.jsvg.view.ViewBox;
 import com.github.weisj.swingdsl.visualpadding.VisualPaddingProvider;
@@ -55,6 +55,7 @@ public class DarkSVGIcon extends ImageIcon
         VisualPaddingProvider {
 
     private static final Logger LOGGER = LogUtil.getLogger(DarkSVGIcon.class);
+    private static final LoaderContext SHARED_LOADER_CONTEXT = LoaderContext.createDefault();
 
     /*
      * Render the icon a bit larger than needed to ensure it is painted good enough when rotated. This
@@ -132,8 +133,8 @@ public class DarkSVGIcon extends ImageIcon
         return svgDocumentHolder.ensureLoaded(this);
     }
 
-    protected @NotNull ParserProvider createParserProvider() {
-        return ParserProvider.createDefault();
+    protected @NotNull LoaderContext createLoaderContext() {
+        return SHARED_LOADER_CONTEXT;
     }
 
     protected void updateCache(final boolean update, final Component c) {
@@ -347,7 +348,7 @@ public class DarkSVGIcon extends ImageIcon
                 URI iconUri = uri;
                 LOGGER.finer(() -> "Loading icon '" + iconUri.toASCIIString() + "'.");
                 try {
-                    svgDocument = IconLoader.svgLoader().load(uri.toURL(), darkSVGIcon.createParserProvider());
+                    svgDocument = IconLoader.svgLoader().load(uri.toURL(), darkSVGIcon.createLoaderContext());
                 } catch (MalformedURLException e) {
                     LOGGER.log(Level.SEVERE, e.getMessage(), e);
                 }
