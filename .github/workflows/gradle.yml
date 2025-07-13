@@ -15,7 +15,7 @@ jobs:
       contents: read
       packages: read
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 2
       - name: Set up JDK 17
@@ -24,12 +24,7 @@ jobs:
           distribution: 'zulu'
           java-version: 17
       - name: Build & Test
-        uses: eskatos/gradle-command-action@v1
-        with:
-          arguments: build test -PskipSpotless -PgithubAccessToken=${{ secrets.GITHUB_TOKEN }} --no-daemon
-          distributions-cache-enabled: true
-          dependencies-cache-enabled: true
-          configuration-cache-enabled: true
+        run: ./gradlew build test -PskipSpotless -PgithubAccessToken=${{ secrets.GITHUB_TOKEN }} --no-daemon
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload Test Results
@@ -52,7 +47,7 @@ jobs:
       contents: read
       packages: read
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 2
       - name: Set up JDK 17
@@ -85,7 +80,7 @@ jobs:
       contents: read
       packages: read
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 2
       - name: Set up JDK 17
@@ -94,12 +89,7 @@ jobs:
           distribution: 'zulu'
           java-version: 17
       - name: Build & Test
-        uses: eskatos/gradle-command-action@v1
-        with:
-          arguments: build test -PskipSpotless -PgithubAccessToken=${{ secrets.GITHUB_TOKEN }} --no-daemon
-          distributions-cache-enabled: true
-          dependencies-cache-enabled: true
-          configuration-cache-enabled: true
+        run: ./gradlew build test -PskipSpotless -PgithubAccessToken=${{ secrets.GITHUB_TOKEN }} --no-daemon
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload Test Results

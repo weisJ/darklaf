@@ -27,7 +27,7 @@ jobs:
       contents: read
       packages: read
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 10
       - name: Set up JDK 17
@@ -36,12 +36,9 @@ jobs:
           distribution: 'zulu'
           java-version: 17
       - name: Build
-        uses: eskatos/gradle-command-action@v1
-        with:
-          arguments: :darklaf-windows:build -PskipSpotless -x test
-          distributions-cache-enabled: true
-          dependencies-cache-enabled: true
-          configuration-cache-enabled: true
+        run: ./gradlew :darklaf-windows:build -PskipSpotless -x test
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload x86 artifact
         uses: actions/upload-artifact@v4
         with:
@@ -69,12 +66,7 @@ jobs:
           distribution: 'zulu'
           java-version: 17
       - name: Build
-        uses: eskatos/gradle-command-action@v1
-        with:
-          arguments: :darklaf-macos:build -PskipSpotless -x test
-          distributions-cache-enabled: true
-          dependencies-cache-enabled: true
-          configuration-cache-enabled: true
+        run: ./gradlew :darklaf-macos:build -PskipSpotless -x test
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload x86-64 artifact
