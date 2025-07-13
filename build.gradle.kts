@@ -29,10 +29,6 @@ val skipSpotless by props(false)
 val isRelease = props.bool(name = "release", default = false)
 val snapshotName by props("")
 
-if (isRelease && !JavaVersion.current().isJava9Compatible) {
-    throw GradleException("Java 9 compatible compiler is needed for release builds")
-}
-
 val String.v: String get() = rootProject.extra["$this.version"] as String
 val projectVersion = "darklaf".v
 
@@ -226,10 +222,6 @@ allprojects {
             apply(plugin = "net.ltgt.errorprone")
             dependencies {
                 "errorprone"(toolLibs.errorprone.core)
-                "annotationProcessor"(toolLibs.errorprone.guava)
-                if (!JavaVersion.current().isJava9Compatible) {
-                    "errorproneJavac"(toolLibs.errorprone.javac)
-                }
             }
             tasks.withType<JavaCompile>().configureEach {
                 options.compilerArgs.addAll(listOf("-Xmaxerrs", "10000", "-Xmaxwarns", "10000"))
@@ -310,12 +302,8 @@ allprojects {
                     header = "<b>Darklaf</b>"
                     addBooleanOption("Xdoclint:none", true)
                     addStringOption("source", "8")
-                    if (JavaVersion.current().isJava9Compatible) {
-                        addBooleanOption("html5", true)
-                        links("https://docs.oracle.com/javase/9/docs/api/")
-                    } else {
-                        links("https://docs.oracle.com/javase/8/docs/api/")
-                    }
+                    addBooleanOption("html5", true)
+                    links("https://docs.oracle.com/javase/9/docs/api/")
                 }
             }
         }

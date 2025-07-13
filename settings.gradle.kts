@@ -62,8 +62,6 @@ dependencyResolutionManagement {
             bundle("errorprone") {
                 idv("core", "com.google.errorprone:error_prone_core")
                 idv("annotations", "com.google.errorprone:error_prone_annotations")
-                idv("javac", "com.google.errorprone:javac", "errorprone.compiler")
-                idv("guava", "com.google.guava:guava-beta-checker", "guava")
             }
             bundle("autoservice") {
                 idv("annotations", "com.google.auto.service:auto-service-annotations")

@@ -27,6 +27,7 @@ open module darklaf.theme {
 
     requires static darklaf.annotations;
     requires static com.google.auto.service;
+    requires static com.google.errorprone.annotations;
 
     exports com.github.weisj.darklaf.theme;
     exports com.github.weisj.darklaf.theme.info;
