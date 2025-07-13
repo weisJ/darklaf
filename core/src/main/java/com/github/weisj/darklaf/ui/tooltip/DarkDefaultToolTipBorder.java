@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -32,7 +32,7 @@ import com.github.weisj.darklaf.ui.util.DarkUIUtil;
 
 public class DarkDefaultToolTipBorder extends MutableLineBorder implements UIResource, AlignableTooltipBorder {
 
-    protected Insets padding;
+    protected final Insets padding;
 
     public DarkDefaultToolTipBorder() {
         super(1, 1, 1, 1, null);

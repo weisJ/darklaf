@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -28,7 +28,7 @@ import javax.swing.plaf.basic.BasicDesktopPaneUI;
 
 public class DarkDesktopPaneUI extends BasicDesktopPaneUI {
 
-    protected InternalFrameMenuBar menuBarHolder = new InternalFrameMenuBar();
+    protected final InternalFrameMenuBar menuBarHolder = new InternalFrameMenuBar();
 
     public static ComponentUI createUI(final JComponent c) {
         return new DarkDesktopPaneUI();

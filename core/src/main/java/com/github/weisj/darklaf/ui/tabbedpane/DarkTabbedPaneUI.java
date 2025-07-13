@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2023 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -745,10 +745,8 @@ public class DarkTabbedPaneUI extends DarkTabbedPaneUIBridge implements Customiz
             if (tabPlacement == TOP || tabPlacement == BOTTOM) {
                 if (pane.getComponentOrientation().isLeftToRight()) {
                     rect.x -= dropRect.width;
-                    rect.width += dropRect.width;
-                } else {
-                    rect.width += dropRect.width;
                 }
+                rect.width += dropRect.width;
             } else if (tabPlacement == LEFT || tabPlacement == RIGHT) {
                 rect.y -= dropRect.height;
                 rect.height += dropRect.height;

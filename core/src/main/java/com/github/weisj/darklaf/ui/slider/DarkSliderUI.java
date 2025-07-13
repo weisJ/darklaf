@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2023 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -90,7 +90,7 @@ public class DarkSliderUI extends BasicSliderUI implements Customization.Slider 
 
     protected int focusBorderSize;
     protected boolean paintFocus;
-    protected RoundRectangle2D trackShape = new RoundRectangle2D.Double();
+    protected final RoundRectangle2D trackShape = new RoundRectangle2D.Double();
 
     public DarkSliderUI(final JSlider b) {
         super(b);

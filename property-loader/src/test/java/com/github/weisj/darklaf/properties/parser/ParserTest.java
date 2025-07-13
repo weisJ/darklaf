@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Jannis Weis
+ * Copyright (c) 2021-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -47,8 +47,8 @@ class ParserTest {
 
     @BeforeEach
     void setup() {
-        context.defaults.clear();
-        context.accumulator.clear();
+        context.defaults().clear();
+        context.accumulator().clear();
     }
 
     Object parse(final String key, final String value) {
@@ -90,23 +90,23 @@ class ParserTest {
 
         Object obj = new Object();
 
-        context.accumulator.put("key", obj);
+        context.accumulator().put("key", obj);
         Assertions.assertEquals(obj, parse("key2", "%key"));
 
-        context.accumulator.clear();
-        context.defaults.put("key", obj);
+        context.accumulator().clear();
+        context.defaults().put("key", obj);
         Assertions.assertEquals(obj, parse("key2", "%key"));
     }
 
     @Test
     void testFallbacks() {
         Object obj = new Object();
-        context.accumulator.put("key1", obj);
+        context.accumulator().put("key1", obj);
         Assertions.assertEquals(obj, parse("key1", "?:false"));
         Assertions.assertEquals(false, parse("key2", "?:false"));
 
         Object obj2 = new Object();
-        context.accumulator.put("key2", obj2);
+        context.accumulator().put("key2", obj2);
         Assertions.assertEquals(obj, parse("key3", "?:%key1"));
     }
 
@@ -121,7 +121,7 @@ class ParserTest {
         }
 
         Dimension dim = new Dimension(12, 34);
-        context.accumulator.put("key.width", dim.width);
+        context.accumulator().put("key.width", dim.width);
         Assertions.assertEquals(dim, parse("key.size", "%key.width," + dim.height));
     }
 
@@ -139,45 +139,45 @@ class ParserTest {
         }
 
         Insets ins = new Insets(1, 2, 3, 4);
-        context.accumulator.put("key.left", ins.left);
-        context.accumulator.put("key.bottom", ins.bottom);
+        context.accumulator().put("key.left", ins.left);
+        context.accumulator().put("key.bottom", ins.bottom);
         Assertions.assertEquals(ins, parse("key.insets", ins.top + ",%key.left,%key.bottom," + ins.right));
     }
 
     @Test
     void testActiveObject() {
-        context.accumulator.put("key", parse("key.component", "java.lang.Object"));
-        Assertions.assertEquals(Object.class, context.accumulator.get("key").getClass());
-        Assertions.assertNotEquals(context.accumulator.get("key"), context.accumulator.get("key"));
+        context.accumulator().put("key", parse("key.component", "java.lang.Object"));
+        Assertions.assertEquals(Object.class, context.accumulator().get("key").getClass());
+        Assertions.assertNotEquals(context.accumulator().get("key"), context.accumulator().get("key"));
 
-        context.accumulator.put("key2", parse("key2.component", "%key"));
-        Assertions.assertEquals(Object.class, context.accumulator.get("key2").getClass());
-        Assertions.assertNotEquals(context.accumulator.get("key"), context.accumulator.get("key2"));
-        if (context.accumulator instanceof UIDefaults) {
+        context.accumulator().put("key2", parse("key2.component", "%key"));
+        Assertions.assertEquals(Object.class, context.accumulator().get("key2").getClass());
+        Assertions.assertNotEquals(context.accumulator().get("key"), context.accumulator().get("key2"));
+        if (context.accumulator() instanceof UIDefaults) {
             // UIDefaults evaluates the active object when resolving the reference.
             // Hence active values get lost.
-            Assertions.assertEquals(context.accumulator.get("key2"), context.accumulator.get("key2"));
+            Assertions.assertEquals(context.accumulator().get("key2"), context.accumulator().get("key2"));
         } else {
-            Assertions.assertNotEquals(context.accumulator.get("key2"), context.accumulator.get("key2"));
+            Assertions.assertNotEquals(context.accumulator().get("key2"), context.accumulator().get("key2"));
         }
     }
 
     @Test
     void testLazyObject() {
-        context.accumulator.put("key", parse("key.border", "java.lang.Object"));
-        Assertions.assertEquals(Object.class, context.accumulator.get("key").getClass());
-        Assertions.assertEquals(context.accumulator.get("key"), context.accumulator.get("key"));
+        context.accumulator().put("key", parse("key.border", "java.lang.Object"));
+        Assertions.assertEquals(Object.class, context.accumulator().get("key").getClass());
+        Assertions.assertEquals(context.accumulator().get("key"), context.accumulator().get("key"));
 
-        context.accumulator.put("key2", parse("key2.component", "%key"));
-        Assertions.assertEquals(Object.class, context.accumulator.get("key2").getClass());
-        Assertions.assertEquals(context.accumulator.get("key"), context.accumulator.get("key2"));
-        Assertions.assertEquals(context.accumulator.get("key2"), context.accumulator.get("key2"));
+        context.accumulator().put("key2", parse("key2.component", "%key"));
+        Assertions.assertEquals(Object.class, context.accumulator().get("key2").getClass());
+        Assertions.assertEquals(context.accumulator().get("key"), context.accumulator().get("key2"));
+        Assertions.assertEquals(context.accumulator().get("key2"), context.accumulator().get("key2"));
     }
 
     @Test
     void testList() {
         Object obj = new Object();
-        context.accumulator.put("key", obj);
+        context.accumulator().put("key", obj);
         List<Object> list = Arrays.asList("Test", false, 15, obj);
         Assertions.assertEquals(list, parse("listKey", "[Test,false,15,%key]"));
 

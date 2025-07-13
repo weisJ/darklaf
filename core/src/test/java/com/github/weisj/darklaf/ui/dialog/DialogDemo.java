@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2024 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -125,7 +125,7 @@ public class DialogDemo extends JPanel {
                         JOptionPane.PLAIN_MESSAGE, icon, possibilities, "ham");
 
                 // If a string was returned, say so.
-                if ((s != null) && (s.length() > 0)) {
+                if ((s != null) && (!s.isEmpty())) {
                     setLabel("Green eggs and... " + s + "!");
                     return;
                 }
@@ -140,7 +140,7 @@ public class DialogDemo extends JPanel {
                         JOptionPane.PLAIN_MESSAGE, icon, null, "ham");
 
                 // If a string was returned, say so.
-                if ((s != null) && (s.length() > 0)) {
+                if ((s != null) && (!s.isEmpty())) {
                     setLabel("Green eggs and... " + s + "!");
                     return;
                 }

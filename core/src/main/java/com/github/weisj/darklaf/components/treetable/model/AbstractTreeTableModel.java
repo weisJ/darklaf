@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -27,7 +27,7 @@ import javax.swing.tree.TreePath;
 
 public abstract class AbstractTreeTableModel implements TreeTableModel {
     protected TreeTableNode root;
-    protected EventListenerList listenerList = new EventListenerList();
+    protected final EventListenerList listenerList = new EventListenerList();
 
     private static final int CHANGED = 0;
     private static final int INSERTED = 1;

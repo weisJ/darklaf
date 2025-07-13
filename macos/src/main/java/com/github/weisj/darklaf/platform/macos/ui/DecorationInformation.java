@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -22,22 +22,7 @@ package com.github.weisj.darklaf.platform.macos.ui;
 
 import javax.swing.*;
 
-class DecorationInformation {
+record DecorationInformation(long windowHandle, boolean useColoredTitleBar, JRootPane rootPane, boolean titleVisible,
+        int titleBarHeight, float titleFontSize) {
 
-    protected final long windowHandle;
-    protected final boolean useColoredTitleBar;
-    protected final JRootPane rootPane;
-    protected final boolean titleVisible;
-    protected final int titleBarHeight;
-    protected final float titleFontSize;
-
-    protected DecorationInformation(final long windowHandle, final boolean useColoredTitleBar,
-            final JRootPane rootPane, final boolean titleVisible, final int titleBarHeight, final float titleFontSize) {
-        this.windowHandle = windowHandle;
-        this.useColoredTitleBar = useColoredTitleBar;
-        this.rootPane = rootPane;
-        this.titleVisible = titleVisible;
-        this.titleBarHeight = titleBarHeight;
-        this.titleFontSize = titleFontSize;
-    }
 }

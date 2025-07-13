@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2024 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -93,9 +93,8 @@ public class StateIcon implements Icon, VisualPaddingProvider {
 
     @Override
     public @NotNull Insets getVisualPaddings(@NotNull Component component) {
-        Icon icon = getIcon(component);
-        if (icon instanceof VisualPaddingProvider) {
-            return ((VisualPaddingProvider) icon).getVisualPaddings(component);
+        if (getIcon(component) instanceof VisualPaddingProvider vp) {
+            return vp.getVisualPaddings(component);
         }
         return new Insets(0, 0, 0, 0);
     }

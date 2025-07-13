@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2024 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -125,11 +125,10 @@ public class BubbleBorder extends AbstractBorder {
      * Set the border thickness.
      *
      * @param n new thickness
-     * @return this
      */
-    public BubbleBorder setThickness(final int n) {
+    public void setThickness(final int n) {
         thickness = Math.max(n, 0);
-        return setPointerSize(pointerSize);
+        setPointerSize(pointerSize);
     }
 
     /**
@@ -192,11 +191,10 @@ public class BubbleBorder extends AbstractBorder {
      * Set the corner radius.
      *
      * @param radius radius of corner.
-     * @return this
      */
-    public BubbleBorder setRadius(final int radius) {
+    public void setRadius(final int radius) {
         this.radius = radius;
-        return setPointerSize(pointerSize);
+        setPointerSize(pointerSize);
     }
 
     /**
@@ -228,14 +226,13 @@ public class BubbleBorder extends AbstractBorder {
     }
 
     private double calculatePointerPad(final float width, final float height, final Alignment side) {
-        double pointerPad = switch (side) {
+        return switch (side) {
             case WEST, EAST -> radius + (height - insets.top - insets.bottom - 2 * radius) / 2.0;
             case NORTH_WEST, SOUTH_WEST -> radius + insets.left + pointerWidth;
             case NORTH_EAST, SOUTH_EAST -> width - radius - insets.right - pointerWidth;
             case SOUTH, NORTH -> radius + (0.5 * (width - insets.left - insets.right - 2 * radius));
             default -> 0;
         };
-        return pointerPad;
     }
 
     @Override

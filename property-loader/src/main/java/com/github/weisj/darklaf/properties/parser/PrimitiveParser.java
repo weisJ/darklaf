@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -21,6 +21,8 @@
 package com.github.weisj.darklaf.properties.parser;
 
 import java.awt.Color;
+
+import org.jetbrains.annotations.Nullable;
 
 import com.github.weisj.darklaf.properties.uiresource.DarkColorUIResource;
 import com.github.weisj.darklaf.util.ColorUtil;
@@ -51,12 +53,10 @@ public class PrimitiveParser implements PropertyParser {
         return parseResult;
     }
 
-    private Boolean getBoolean(final String value) {
-        return PropertyValue.TRUE.equalsIgnoreCase(value)
-                ? Boolean.TRUE
-                : PropertyValue.FALSE.equalsIgnoreCase(value)
-                        ? Boolean.FALSE
-                        : null;
+    private @Nullable Boolean getBoolean(final String value) {
+        if (PropertyValue.TRUE.equalsIgnoreCase(value)) return true;
+        if (PropertyValue.FALSE.equalsIgnoreCase(value)) return false;
+        return null;
     }
 
     private static Integer getInteger(final String value) {

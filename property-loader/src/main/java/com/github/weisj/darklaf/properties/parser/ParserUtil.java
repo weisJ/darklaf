@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Jannis Weis
+ * Copyright (c) 2021-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -58,15 +58,13 @@ final class ParserUtil implements Delimiters {
     }
 
     static boolean startsWith(final ParseResult parseResult, final char prefix) {
-        return parseResult.value.length() > 0 && parseResult.value.charAt(0) == prefix;
+        return !parseResult.value.isEmpty() && parseResult.value.charAt(0) == prefix;
     }
 
-    static boolean stripPrefixFromKey(final ParseResult parseResult, final String prefix) {
+    static void stripPrefixFromKey(final ParseResult parseResult, final String prefix) {
         if (parseResult.key.startsWith(prefix)) {
             parseResult.key = parseResult.key.substring(prefix.length());
-            return true;
         }
-        return false;
     }
 
     static boolean stripPrefixFromValue(final ParseResult parseResult, final String prefix) {
@@ -154,7 +152,7 @@ final class ParserUtil implements Delimiters {
             }
         }
         List<String> values = delimitedSplit(delimiter, forward ? end : start, parseResult, forward);
-        if (values.size() == 0) return Collections.emptyList();
+        if (values.isEmpty()) return Collections.emptyList();
         List<T> parsed = values.stream()
                 .map(v -> Parser.createParseResult(parseResult.key, v))
                 .map(p -> parser.parse(p, context))

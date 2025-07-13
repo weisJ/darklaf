@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2024 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -50,7 +50,7 @@ public final class StringUtil {
         if (s == null) {
             throw new NullPointerException("CharSequence can't be null");
         }
-        if (s.length() == 0) {
+        if (s.isEmpty()) {
             return s;
         }
 
@@ -168,7 +168,7 @@ public final class StringUtil {
     }
 
     public static boolean isBlank(final String s) {
-        return s.trim().length() == 0;
+        return s.trim().isEmpty();
     }
 
     public static String repeat(final String s, final int count) {

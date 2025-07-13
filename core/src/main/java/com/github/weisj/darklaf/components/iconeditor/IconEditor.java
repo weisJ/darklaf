@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -151,12 +151,11 @@ public class IconEditor extends JPanel {
      * Adds an editor with the given theme. If duplicate editors aren't allowed and there already is an
      * editor with the given theme nothing will happen and {@code null} is returned.
      *
-     * @see #removeEditor(IconEditorPanel)
      * @param theme the theme of the editor.
-     * @return the created editor.
+     * @see #removeEditor(IconEditorPanel)
      */
-    public IconEditorPanel addEditor(final Theme theme) {
-        return addEditor(theme, selectedIcon);
+    public void addEditor(final Theme theme) {
+        addEditor(theme, selectedIcon);
     }
 
     private IconEditorPanel addEditor(final Theme theme, final Icon icon) {

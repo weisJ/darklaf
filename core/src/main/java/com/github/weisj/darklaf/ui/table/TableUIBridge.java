@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -402,11 +402,10 @@ public abstract class TableUIBridge extends BasicTableUI {
      *
      * @param rect the rect
      * @param horizontal the horizontal
-     * @return the rectangle
      */
-    protected Rectangle extendRect(final Rectangle rect, final boolean horizontal) {
+    protected void extendRect(final Rectangle rect, final boolean horizontal) {
         if (rect == null) {
-            return rect;
+            return;
         }
 
         if (horizontal) {
@@ -423,7 +422,6 @@ public abstract class TableUIBridge extends BasicTableUI {
             }
         }
 
-        return rect;
     }
 
     /**
@@ -747,17 +745,15 @@ public abstract class TableUIBridge extends BasicTableUI {
          * Repost event boolean.
          *
          * @param e the e
-         * @return the boolean
          */
-        protected boolean repostEvent(final MouseEvent e) {
+        protected void repostEvent(final MouseEvent e) {
             // Check for isEditing() in case another event has
             // caused the editor to be removed. See bug #4306499.
             if (dispatchComponent == null || !table.isEditing()) {
-                return false;
+                return;
             }
             MouseEvent e2 = SwingUtilities.convertMouseEvent(table, e, dispatchComponent);
             dispatchComponent.dispatchEvent(e2);
-            return true;
         }
 
         /**

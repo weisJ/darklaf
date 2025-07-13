@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -28,7 +28,7 @@ public class ParseResult {
     public String value;
     public Object result;
     public boolean finished;
-    public List<String> warnings = new ArrayList<>();
+    public final List<String> warnings = new ArrayList<>();
 
     private String savedKey;
     private String savedValue;

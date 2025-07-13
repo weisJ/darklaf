@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2024 Jannis Weis
+ * Copyright (c) 2020-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -71,8 +71,8 @@ class CSSBuilder {
             return property("color", value);
         }
 
-        public CSSGroup border(final Object value) {
-            return property("border", value);
+        public void border(final Object value) {
+            property("border", value);
         }
 
         public CSSGroup borderColor(final String value) {
@@ -91,8 +91,8 @@ class CSSBuilder {
             return property("padding", value);
         }
 
-        public CSSGroup borderCollapse(final String value) {
-            return property("border-collapse", value);
+        public void borderCollapse(final String value) {
+            property("border-collapse", value);
         }
 
         public CSSGroup fontSize(final Object value) {
@@ -103,12 +103,12 @@ class CSSBuilder {
             return property("font-weight", value);
         }
 
-        public CSSGroup fontStyle(final String value) {
-            return property("font-style", value);
+        public void fontStyle(final String value) {
+            property("font-style", value);
         }
 
-        public CSSGroup textDecoration(final String value) {
-            return property("text-decoration", value);
+        public void textDecoration(final String value) {
+            property("text-decoration", value);
         }
 
         public CSSGroup fontFamily(final String family, final String name) {
@@ -143,8 +143,8 @@ class CSSBuilder {
             return property("list-style-type", value);
         }
 
-        public CSSGroup margin(final Object value) {
-            return property("margin", value);
+        public void margin(final Object value) {
+            property("margin", value);
         }
     }
 }

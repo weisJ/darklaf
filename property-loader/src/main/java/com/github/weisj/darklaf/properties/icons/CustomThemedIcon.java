@@ -48,9 +48,9 @@ public class CustomThemedIcon extends ThemedSVGIcon implements MutableThemedIcon
             final MergeMode mergeMode) {
         super(icon.getURI(), icon.getIconWidth(), icon.getIconHeight());
         List<ThemedSVGIconDomProcessor.ThemedSolidColorPaint> customPaints;
-        if (icon instanceof ThemedSVGIcon) {
+        if (icon instanceof ThemedSVGIcon themedSVGIcon) {
             icon.ensureLoaded(false);
-            customPaints = ((ThemedSVGIcon) icon).paints();
+            customPaints = themedSVGIcon.paints();
         } else {
             ensureLoaded(false);
             customPaints = paints();
@@ -65,14 +65,8 @@ public class CustomThemedIcon extends ThemedSVGIcon implements MutableThemedIcon
             // Any property that isn't explicitly defined needs to be converted to an implicit property
             // for proper inter-theme behaviour.
             String referencePrefix = PropertyLoader.getReferencePrefix();
-            if (!(originalIcon instanceof CustomThemedIcon)) {
-                if (mergeMode == MergeMode.REMOVE_REFERENCES) {
-                    defaults.clear();
-                } else {
-                    defaults.entrySet().forEach(e -> e.setValue(referencePrefix + e.getKey()));
-                }
-            } else {
-                Map<Object, Object> originalProperties = ((CustomThemedIcon) originalIcon).getProperties();
+            if (originalIcon instanceof CustomThemedIcon customThemedIcon) {
+                Map<Object, Object> originalProperties = customThemedIcon.getProperties();
                 defaults.keySet().forEach(k -> {
                     if (!originalProperties.containsKey(k)
                             && contextDefaults.containsKey(k)) {
@@ -83,6 +77,12 @@ public class CustomThemedIcon extends ThemedSVGIcon implements MutableThemedIcon
                         }
                     }
                 });
+            } else {
+                if (mergeMode == MergeMode.REMOVE_REFERENCES) {
+                    defaults.clear();
+                } else {
+                    defaults.entrySet().forEach(e -> e.setValue(referencePrefix + e.getKey()));
+                }
             }
             invalidate();
         }

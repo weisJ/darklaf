@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -41,15 +41,15 @@ public class TabbedPaneUtil implements SwingConstants {
                     if (tabbedPane.getTabCount() > 0) {
                         Rectangle minb = ui.getTabBounds(tabbedPane, 0);
                         Rectangle maxb = ui.getTabBounds(tabbedPane, tabbedPane.getTabCount() - 1);
+                        int x;
                         if (tabbedPane.getComponentOrientation().isLeftToRight()) {
-                            int x = Math.max(bounds.x, minb.x);
+                            x = Math.max(bounds.x, minb.x);
                             bounds.width = Math.min(bounds.x + bounds.width - x, maxb.x + maxb.width - x);
-                            bounds.x = x;
                         } else {
-                            int x = Math.max(bounds.x, maxb.x);
+                            x = Math.max(bounds.x, maxb.x);
                             bounds.width = Math.min(bounds.x + bounds.width - x, minb.x + minb.width - x);
-                            bounds.x = x;
                         }
+                        bounds.x = x;
                         int y = Math.max(bounds.y, minb.y);
                         bounds.height = Math.min(bounds.y + bounds.height - y, maxb.x + maxb.height - y);
                     }

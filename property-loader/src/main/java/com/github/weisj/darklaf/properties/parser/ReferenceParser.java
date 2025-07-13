@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -29,15 +29,15 @@ public class ReferenceParser implements PropertyParser {
         ParserUtil.stripPrefixFromKey(parseResult, REFERENCE_PREFIX);
         parseResult.save();
         if (ParserUtil.stripPrefixFromValue(parseResult, REFERENCE_PREFIX)) {
-            ParserUtil.replaceIfNull(parseResult, parseResult.value, context.accumulator);
-            ParserUtil.replaceIfNull(parseResult, parseResult.value, context.defaults);
+            ParserUtil.replaceIfNull(parseResult, parseResult.value, context.accumulator());
+            ParserUtil.replaceIfNull(parseResult, parseResult.value, context.defaults());
             if (!parseResult.finished) {
                 parseResult.warnings.add("Could not reference value '"
                         + parseResult.value + "' while loading '" + parseResult.key + "'. "
                         + "Maybe it's a forward reference.");
                 parseResult.restore();
-            } else if (parseResult instanceof Parser.DebugParseResult) {
-                ((Parser.DebugParseResult) parseResult).referenceKey = REFERENCE_PREFIX + parseResult.value;
+            } else if (parseResult instanceof Parser.DebugParseResult result) {
+                result.referenceKey = REFERENCE_PREFIX + parseResult.value;
             }
         }
         return parseResult;

@@ -139,7 +139,7 @@ public class UIUtilities {
     }
 
     public static int getLeftSideBearing(JComponent c, FontMetrics fm, String string) {
-        return string != null && string.length() != 0 ? getLeftSideBearing(c, fm, string.charAt(0)) : 0;
+        return string != null && !string.isEmpty() ? getLeftSideBearing(c, fm, string.charAt(0)) : 0;
     }
 
     public static int getLeftSideBearing(JComponent c, FontMetrics fm, char firstChar) {

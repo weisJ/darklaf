@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2022 Jannis Weis
+ * Copyright (c) 2020-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -73,7 +73,7 @@ public final class DynamicUI {
             listeners.compute(object, (k, v) -> {
                 if (v == null) return null;
                 if (!v.remove(callback)) return v;
-                if (v.size() == 0) return null;
+                if (v.isEmpty()) return null;
                 if (v.size() == 1) return Collections.singletonList(v.get(0));
                 return v;
             });

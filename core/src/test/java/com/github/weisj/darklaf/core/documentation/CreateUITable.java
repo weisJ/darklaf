@@ -205,7 +205,7 @@ public class CreateUITable {
         appendData(builder, key, ident + 1);
         Object value = entry.getValue();
         if (value instanceof Parser.DebugParseResult debugResult
-                && ((Parser.DebugParseResult) value).referenceKey != null) {
+                && debugResult.referenceKey != null) {
             appendData(builder, parseValue(debugResult.result), ident + 1); // Value
             appendData(builder, debugResult.referenceKey, ident + 1); // Reference
             builder.append(parsePreview(key, debugResult.result, ident + 1));

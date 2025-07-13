@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2024 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -990,14 +990,12 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
      * @param srcx the srcx
      * @param srcy the srcy
      * @param dest the dest
-     * @return the point
      */
-    protected Point translatePointToTabPanel(final int srcx, final int srcy, final Point dest) {
+    protected void translatePointToTabPanel(final int srcx, final int srcy, final Point dest) {
         Point vpp = tabScroller.viewport.getLocation();
         Point viewp = tabScroller.viewport.getViewPosition();
         dest.x = srcx - vpp.x + viewp.x;
         dest.y = srcy - vpp.y + viewp.y;
-        return dest;
     }
 
     /**
@@ -2073,7 +2071,7 @@ public abstract class DarkTabbedPaneUIBridge extends TabbedPaneUI implements Swi
             } else if (Objects.equals(key, SET_SELECTED)) {
                 String command = e.getActionCommand();
 
-                if (command != null && command.length() > 0) {
+                if (command != null && !command.isEmpty()) {
                     int mnemonic = e.getActionCommand().charAt(0);
                     if (mnemonic >= 'a' && mnemonic <= 'z') {
                         mnemonic -= 'a' - 'A';

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2023 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -95,8 +95,8 @@ public final class Parser {
 
     public static class DebugParseResult extends ParseResult {
 
-        public String originalKey;
-        public String originalValue;
+        public final String originalKey;
+        public final String originalValue;
         public String referenceKey;
 
         public DebugParseResult(final String key, final String value) {

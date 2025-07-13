@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2023 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -40,7 +40,7 @@ public class DarkRadioButtonMenuItemUI extends DarkMenuItemUIBase implements Tog
         if (menuItem != null) menuItem.setArmed(true);
     });
 
-    protected MenuItemLayoutDelegate layoutDelegate = new ToggleButtonMenuItemLayoutDelegate(null);
+    protected final MenuItemLayoutDelegate layoutDelegate = new ToggleButtonMenuItemLayoutDelegate(null);
     private Icon stateIcon;
 
     public static ComponentUI createUI(final JComponent c) {

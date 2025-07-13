@@ -229,7 +229,7 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
     @SuppressWarnings("DuplicatedCode")
 
     private Component getListeningComponent(final MouseEvent event, final Component component) {
-        Component comp = switch (event.getID()) {
+        return switch (event.getID()) {
             case MouseEvent.MOUSE_CLICKED, MouseEvent.MOUSE_ENTERED, MouseEvent.MOUSE_EXITED, MouseEvent.MOUSE_PRESSED,
                     MouseEvent.MOUSE_RELEASED ->
                 getMouseListeningComponent(
@@ -238,7 +238,6 @@ public class MouseEventUI<V extends JComponent> extends AbstractLayerUI<V> {
             case MouseEvent.MOUSE_WHEEL -> getMouseWheelListeningComponent(component);
             default -> null;
         };
-        return comp;
     }
 
     private Component getMouseListeningComponent(final Component component) {

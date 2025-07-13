@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021-2023 Jannis Weis
+ * Copyright (c) 2021-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -81,16 +81,16 @@ public class IconParser extends KeyFilteredParser implements Delimiters {
         if (ICON_EMPTY.equals(parseResult.value)) {
             icon = EmptyIcon.create(dim.width, dim.height);
         } else if (themed) {
-            icon = context.iconResolver.getIcon(parseResult.value, dim.width, dim.height, true);
+            icon = context.iconResolver().getIcon(parseResult.value, dim.width, dim.height, true);
         } else if (dual || aware) {
-            UIAwareIcon awareIcon = context.iconResolver.getUIAwareIcon(parseResult.value, dim.width, dim.height);
+            UIAwareIcon awareIcon = context.iconResolver().getUIAwareIcon(parseResult.value, dim.width, dim.height);
             if (dual) {
                 icon = awareIcon.getDual();
             } else {
                 icon = awareIcon;
             }
         } else {
-            icon = context.iconResolver.getIcon(parseResult.value, dim.width, dim.height);
+            icon = context.iconResolver().getIcon(parseResult.value, dim.width, dim.height);
         }
         return ParserUtil.setNonNull(parseResult, icon);
     }

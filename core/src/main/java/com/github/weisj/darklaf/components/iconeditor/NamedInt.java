@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2024 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -27,9 +27,7 @@ record NamedInt(String name, int value) implements Named {
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (!(o instanceof NamedInt)) return false;
-
-        NamedInt namedInt = (NamedInt) o;
+        if (!(o instanceof NamedInt namedInt)) return false;
 
         if (value != namedInt.value) return false;
         return Objects.equals(name, namedInt.name);

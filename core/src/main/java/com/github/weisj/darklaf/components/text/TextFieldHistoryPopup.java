@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2024 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -121,7 +121,7 @@ public class TextFieldHistoryPopup extends ScrollPopupMenu implements SearchList
 
     @Override
     public void show(final Component invoker, final int x, final int y) {
-        if (history.size() == 0) return;
+        if (history.isEmpty()) return;
         this.removeAll();
         List<String> list = new ArrayList<>(history);
         for (int i = list.size() - 1; i >= 0; i--) {

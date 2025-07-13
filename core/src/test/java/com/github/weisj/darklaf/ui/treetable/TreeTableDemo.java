@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2021 Jannis Weis
+ * Copyright (c) 2020-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -82,8 +82,8 @@ public class TreeTableDemo extends BaseComponentDemo {
     }
 
     protected static class DemoModel extends DefaultTreeTableModel {
-        protected static String[] columnNames = {"TreeNode", "String", "Date", "Integer"};
-        protected static Class<?>[] columnTypes = {TreeTableModel.class, String.class, Date.class, Integer.class};
+        protected static final String[] columnNames = {"TreeNode", "String", "Date", "Integer"};
+        protected static final Class<?>[] columnTypes = {TreeTableModel.class, String.class, Date.class, Integer.class};
 
         public DemoModel(final TreeTableNode rootNode) {
             super(rootNode, columnNames);

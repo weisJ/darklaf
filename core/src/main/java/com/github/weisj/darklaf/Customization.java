@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Jannis Weis
+ * Copyright (c) 2023-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -39,11 +39,11 @@ public class Customization {
     @Retention(RetentionPolicy.SOURCE)
     @Target(ElementType.FIELD)
     @interface Key {
-        Class valueType();
+        void valueType();
 
-        String defaultValue() default "";
+        void defaultValue() default "";
 
-        String detail() default "";
+        void detail() default "";
     }
     public interface Button {
         @Key(valueType = String.class, detail = "One of the values starting with VARIANT_")

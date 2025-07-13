@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2024 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -627,7 +627,7 @@ public class WindowsTitlePane extends CustomTitlePane {
 
         List<Image> icons = window.getIconImages();
         Icon systemIcon = null;
-        if (icons == null || icons.size() == 0) {
+        if (icons == null || icons.isEmpty()) {
             if (frame) {
                 systemIcon = UIManager.getIcon("Windows.TitlePane.icon");
             }
@@ -769,7 +769,7 @@ public class WindowsTitlePane extends CustomTitlePane {
         // e.g. VCLJ achieves fullscreen by hiding the titlebar through jni and setting visibility
         // of the menubar.
         boolean emptyMenuBar = menuBarStealer.isMenuBarEmpty();
-        boolean emptyContent = getDecorationStyle() == JRootPane.NONE && emptyMenuBar && title.length() == 0;
+        boolean emptyContent = getDecorationStyle() == JRootPane.NONE && emptyMenuBar && title.isEmpty();
         return !windowHandle.isValid()
                 || emptyContent
                 || (menuBarStealer.hasMenuBar() && !menuBarStealer.getMenuBar().isVisible());

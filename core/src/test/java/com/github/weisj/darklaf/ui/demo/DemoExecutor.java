@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021-2024 Jannis Weis
+ * Copyright (c) 2021-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -55,14 +55,14 @@ public final class DemoExecutor {
         showDemo(demo, false);
     }
 
-    public static AtomicReference<Window> showDemo(final ComponentDemo demo, final boolean asDialog) {
+    public static void showDemo(final ComponentDemo demo, final boolean asDialog) {
         InspectorKt.installInspector();
         LafManager.enabledPreferenceChangeReporting(false);
         LafManager.addThemePreferenceChangeListener(e -> {
             if (ThemeSettings.isInitialized() && ThemeSettings.getInstance().isSystemPreferencesEnabled()) return;
             LafManager.installTheme(e);
         });
-        return showDemoWithoutSetup(demo, asDialog);
+        showDemoWithoutSetup(demo, asDialog);
     }
 
     public static AtomicReference<Window> showDemoWithoutSetup(final ComponentDemo demo, final boolean asDialog) {

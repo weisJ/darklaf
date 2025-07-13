@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2024 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -91,7 +91,10 @@ public final class PropertyUtil {
     }
 
     public static boolean getBooleanProperty(final Component c, final String property, final boolean defaultValue) {
-        return c instanceof JComponent && getBooleanProperty((JComponent) c, property, defaultValue);
+        if (c instanceof JComponent jc) {
+            return getBooleanProperty(jc, property, defaultValue);
+        }
+        return false;
     }
 
     public static boolean getBooleanProperty(final JComponent c, final String property) {
@@ -116,7 +119,10 @@ public final class PropertyUtil {
     }
 
     public static <T> boolean isPropertyEqual(final Component c, final String property, final T checkValue) {
-        return c instanceof JComponent && isPropertyEqual((JComponent) c, property, checkValue);
+        if (c instanceof JComponent jc) {
+            return isPropertyEqual(jc, property, checkValue);
+        }
+        return false;
     }
 
     public static <T> boolean isPropertyEqual(final JComponent c, final String property, final T checkValue) {
@@ -126,8 +132,10 @@ public final class PropertyUtil {
     }
 
     public static <T> T getObject(final Component c, final Object key, final Class<T> type, final T defaultValue) {
-        if (!(c instanceof JComponent)) return defaultValue;
-        return getObject((JComponent) c, key, type, defaultValue);
+        if (c instanceof JComponent jc) {
+            return getObject(jc, key, type, defaultValue);
+        }
+        return defaultValue;
     }
 
     public static <T> T getObject(final JComponent c, final Object key, final Class<T> type, final T defaultValue) {
@@ -221,11 +229,11 @@ public final class PropertyUtil {
     }
 
     private static Integer parseMnemonic(final Object value) {
-        if (value instanceof Integer) {
-            return (Integer) value;
+        if (value instanceof Integer i) {
+            return i;
         }
-        if (value instanceof String) {
-            return Integer.parseInt((String) value);
+        if (value instanceof String s) {
+            return Integer.parseInt(s);
         }
         return -1;
     }

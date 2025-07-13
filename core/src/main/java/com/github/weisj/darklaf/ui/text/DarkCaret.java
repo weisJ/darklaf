@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2024 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -290,11 +290,7 @@ public class DarkCaret extends DefaultCaret implements UIResource {
     private void adjustFocus(final boolean inWindow) {
         JTextComponent textArea = getComponent();
         if ((textArea != null) && textArea.isEnabled() && textArea.isRequestFocusEnabled()) {
-            if (inWindow) {
-                textArea.requestFocusInWindow();
-            } else {
-                textArea.requestFocusInWindow();
-            }
+            textArea.requestFocusInWindow();
         }
     }
 

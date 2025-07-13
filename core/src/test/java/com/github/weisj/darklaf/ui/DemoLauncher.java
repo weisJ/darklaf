@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2024 Jannis Weis
+ * Copyright (c) 2020-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -44,7 +44,7 @@ public class DemoLauncher extends BaseComponentDemo {
         DemoExecutor.showDemo(new DemoLauncher());
     }
 
-    List<DemoEntry> demoClasses;
+    final List<DemoEntry> demoClasses;
 
     public List<DemoEntry> getDemoClasses() {
         return demoClasses;

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2022 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -58,14 +58,7 @@ public final class NativeUtil {
 
     private NativeUtil() {}
 
-    public static class Resource {
-        public final String filePath;
-        public final String destinationDirectoryPath;
-
-        public Resource(final String filePath, final String destinationDirectoryPath) {
-            this.filePath = filePath;
-            this.destinationDirectoryPath = destinationDirectoryPath;
-        }
+    public record Resource(String filePath, String destinationDirectoryPath) {
     }
 
     /**

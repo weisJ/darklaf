@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020-2022 Jannis Weis
+ * Copyright (c) 2020-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -133,9 +133,9 @@ public class MacOSTitlePane extends CustomTitlePane {
             decorationInformation = MacOSDecorationsUtil.installDecorations(rootPane, isUseColoredTitleBar(rootPane));
         }
         installListeners();
-        if (!decorationInformation.titleVisible) {
+        if (!decorationInformation.titleVisible()) {
             titleLabel = new JLabel();
-            titleLabel.setFont(titleLabel.getFont().deriveFont(decorationInformation.titleFontSize));
+            titleLabel.setFont(titleLabel.getFont().deriveFont(decorationInformation.titleFontSize()));
             titleLabel.setForeground(activeForeground);
             titleLabel.setText(getTitle());
             add(titleLabel);
@@ -164,7 +164,8 @@ public class MacOSTitlePane extends CustomTitlePane {
         }
         uninstallListeners();
         if (decorationInformation != null) {
-            if (removeDecorations || decorationInformation.useColoredTitleBar != isUseColoredTitleBar(getRootPane())) {
+            if (removeDecorations
+                    || decorationInformation.useColoredTitleBar() != isUseColoredTitleBar(getRootPane())) {
                 MacOSDecorationsUtil.uninstallDecorations(window, decorationInformation);
                 decorationInformation = null;
             }
@@ -200,7 +201,7 @@ public class MacOSTitlePane extends CustomTitlePane {
     }
 
     public long windowHandle() {
-        return decorationInformation != null ? decorationInformation.windowHandle : 0;
+        return decorationInformation != null ? decorationInformation.windowHandle() : 0;
     }
 
     protected class RootPanePropertyChangeListener implements PropertyChangeListener {
@@ -236,7 +237,7 @@ public class MacOSTitlePane extends CustomTitlePane {
         if (decorationInformation == null) {
             return new Dimension(0, 0);
         }
-        int height = decorationInformation.titleBarHeight;
+        int height = decorationInformation.titleBarHeight();
         if (hideTitleBar()) {
             LOGGER.finer("Title bar is hidden.");
             height = 0;
@@ -249,14 +250,14 @@ public class MacOSTitlePane extends CustomTitlePane {
     }
 
     private boolean hideTitleBar() {
-        if (decorationInformation == null || !decorationInformation.useColoredTitleBar) {
+        if (decorationInformation == null || !decorationInformation.useColoredTitleBar()) {
             return true;
         }
         if (titleBarHidden) {
             return true;
         }
-        return (decorationInformation.windowHandle == 0)
-                || JNIDecorationsMacOS.isFullscreen(decorationInformation.windowHandle)
+        return (decorationInformation.windowHandle() == 0)
+                || JNIDecorationsMacOS.isFullscreen(decorationInformation.windowHandle())
                 || getDecorationStyle() == JRootPane.NONE;
     }
 
@@ -282,7 +283,7 @@ public class MacOSTitlePane extends CustomTitlePane {
     }
 
     private boolean useCustomTitle() {
-        return titleLabel != null && decorationInformation != null && !decorationInformation.titleVisible;
+        return titleLabel != null && decorationInformation != null && !decorationInformation.titleVisible();
     }
 
     @Override

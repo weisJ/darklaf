@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2024 Jannis Weis
+ * Copyright (c) 2019-2025 Jannis Weis
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -364,7 +364,7 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
 
     @Override
     public PopupContainer getContainer(final Alignment alignment) {
-        PopupContainer popupComponent = switch (alignment) {
+        return switch (alignment) {
             case NORTH -> (PopupContainer) topSplitter.getLeftComponent();
             case NORTH_EAST -> (PopupContainer) topSplitter.getRightComponent();
             case EAST -> (PopupContainer) rightSplitter.getTopComponent();
@@ -375,7 +375,6 @@ public class TabFrameContentPane extends JPanel implements TabFrameContent {
             case NORTH_WEST -> (PopupContainer) leftSplitter.getTopComponent();
             default -> throw new IllegalArgumentException("CENTER is not supported");
         };
-        return popupComponent;
     }
 
     /**
