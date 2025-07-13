@@ -118,6 +118,7 @@ allprojects {
                     licenseHeaderFile("${project.rootDir}/config/LICENSE_HEADER_PROPERTIES.txt", "[^#]")
                 }
                 java {
+                    targetExclude("**/org/pbjar/jxlayer/**/*.java")
                     importOrder("java", "javax", "org", "com")
                     removeUnusedImports()
                     endWithNewline()
