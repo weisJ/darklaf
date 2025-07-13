@@ -11,6 +11,7 @@ pluginManagement {
         idv("com.github.vlsi.stage-vote-release", "com.github.vlsi.vlsi-release-plugins")
         idv("org.ajoberstar.grgit")
         idv("net.ltgt.errorprone")
+        idv("com.gradleup.nmcp")
     }
 }
 
