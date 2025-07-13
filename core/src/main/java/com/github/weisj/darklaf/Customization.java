@@ -35,15 +35,14 @@ import com.github.weisj.darklaf.util.AlignmentExt;
 
 public class Customization {
 
-    @SuppressWarnings("rawtypes")
     @Retention(RetentionPolicy.SOURCE)
     @Target(ElementType.FIELD)
     @interface Key {
-        void valueType();
+        Class<?> valueType();
 
-        void defaultValue() default "";
+        String defaultValue() default "";
 
-        void detail() default "";
+        String detail() default "";
     }
     public interface Button {
         @Key(valueType = String.class, detail = "One of the values starting with VARIANT_")
