@@ -26,12 +26,12 @@ This project is available on Maven Central:
 <dependency>
   <groupId>com.github.weisj</groupId>
   <artifactId>darklaf-core</artifactId>
-  <version>3.0.2</version>
+  <version>3.1.0</version>
 </dependency>
 ````
 ### Gradle
 ````kotlin
-implementation("com.github.weisj:darklaf-core:3.0.2")
+implementation("com.github.weisj:darklaf-core:3.1.0")
 ````
 
 You can also use the latest nightly build.
