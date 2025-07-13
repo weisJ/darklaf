@@ -165,8 +165,9 @@ allprojects {
 
     plugins.withType<JavaPlugin> {
         configure<JavaPluginExtension> {
-            sourceCompatibility = JavaVersion.VERSION_17
-            targetCompatibility = JavaVersion.VERSION_17
+            toolchain {
+                languageVersion.set(JavaLanguageVersion.of(17))
+            }
             withSourcesJar()
             if (!skipJavadoc && isRelease) {
                 withJavadocJar()
@@ -304,7 +305,7 @@ allprojects {
                     windowTitle = "Darklaf ${project.name} API"
                     header = "<b>Darklaf</b>"
                     addBooleanOption("Xdoclint:none", true)
-                    addStringOption("source", "8")
+                    addStringOption("source", "17")
                     addBooleanOption("html5", true)
                     links("https://docs.oracle.com/javase/9/docs/api/")
                 }
