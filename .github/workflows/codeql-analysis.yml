@@ -61,12 +61,7 @@ jobs:
     #    and modify them (or add more) to build your code if your project
     #    uses a compiled language
     - name: Build
-      uses: eskatos/gradle-command-action@v1
-      with:
-        arguments: build -PskipSpotless --info -x test
-        distributions-cache-enabled: true
-        dependencies-cache-enabled: true
-        configuration-cache-enabled: true
+      run: ./gradlew build -PskipSpotless --info -x test
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

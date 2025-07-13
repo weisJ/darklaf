@@ -24,12 +24,7 @@ jobs:
           distribution: 'zulu'
           java-version: 17
       - name: Build documentation
-        uses: eskatos/gradle-command-action@v1
-        with:
-          arguments: :darklaf-core:makeDocumentation -PskipSpotless -x test
-          distributions-cache-enabled: true
-          dependencies-cache-enabled: true
-          configuration-cache-enabled: true
+        run: ./gradlew :darklaf-core:makeDocumentation -PskipSpotless -x test
       - name: Upload documentation
         uses: actions/upload-artifact@v4
         with:
