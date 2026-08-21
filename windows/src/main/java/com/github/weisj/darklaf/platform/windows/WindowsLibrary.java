@@ -58,6 +58,7 @@ public class WindowsLibrary extends AbstractLibrary {
     protected String getX64Path() {
         return x86_64_PATH;
     }
+
     protected String getArm64Path() {
         return ARM64_PATH;
     }
@@ -78,7 +79,7 @@ public class WindowsLibrary extends AbstractLibrary {
     @Override
     protected boolean canLoad() {
         return !SystemInfo.undefinedArchitecture
-            && (SystemInfo.isX86Compatible || SystemInfo.isARM)
-            && SystemInfo.isWindows10OrGreater;
+                && (SystemInfo.isX86Compatible || SystemInfo.isARM)
+                && SystemInfo.isWindows10OrGreater;
     }
 }
