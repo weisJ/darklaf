@@ -45,7 +45,7 @@ class NativeLibraryTest {
                 "x64 library doesn't exist");
         Assertions.assertNotNull(WindowsLibrary.class.getResource(
                 windowsLibrary.getArm64Path()),
-            "Arm64 library doesn't exist");
+                "Arm64 library doesn't exist");
         Assertions.assertNotNull(WindowsLibrary.class.getResource(
                 windowsLibrary.getX86Path()),
                 "x86 library doesn't exist");
