@@ -28,11 +28,11 @@ jobs:
       contents: read
       packages: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 10
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version: 17
@@ -41,15 +41,20 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload x86 artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: windows-x86
           path: windows/build/libs/main/x86/darklaf-windows.dll
       - name: Upload x86-64 artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: windows-x86-64
           path: windows/build/libs/main/x86-64/darklaf-windows.dll
+      - name: Upload arm64 artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: windows-arm64
+          path: windows/build/libs/main/arm64/darklaf-windows.dll
 
   macOS:
     name: macOS

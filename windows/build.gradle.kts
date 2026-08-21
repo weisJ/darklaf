@@ -14,7 +14,7 @@ library {
         jvmImplementation(projects.darklafThemeSpec)
     }
 
-    targetMachines.addAll(machines.windows.x86, machines.windows.x86_64)
+    targetMachines.addAll(machines.windows.x86, machines.windows.x86_64, machines.windows.architecture("arm64"))
     variants.configureEach {
         resourcePath.set("com/github/weisj/darklaf/platform/${project.name}")
         sharedLibrary {

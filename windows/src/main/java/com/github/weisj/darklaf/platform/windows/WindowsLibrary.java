@@ -29,6 +29,7 @@ public class WindowsLibrary extends AbstractLibrary {
     private static final String PATH = "/com/github/weisj/darklaf/platform/darklaf-windows";
     private static final String x86_PATH = PATH + "/darklaf-windows-x86.dll";
     private static final String x86_64_PATH = PATH + "/darklaf-windows-x86-64.dll";
+    private static final String ARM64_PATH = PATH + "/darklaf-windows-arm64.dll";
     private static final WindowsLibrary library = new WindowsLibrary();
 
     public static WindowsLibrary get() {
@@ -57,6 +58,9 @@ public class WindowsLibrary extends AbstractLibrary {
     protected String getX64Path() {
         return x86_64_PATH;
     }
+    protected String getArm64Path() {
+        return ARM64_PATH;
+    }
 
     @Override
     public String getLibraryPath() {
@@ -64,6 +68,8 @@ public class WindowsLibrary extends AbstractLibrary {
             return getX86Path();
         } else if (SystemInfo.isX64) {
             return getX64Path();
+        } else if (SystemInfo.isARM) {
+            return getArm64Path();
         } else {
             throw new IllegalStateException("Unsupported arch");
         }
@@ -71,6 +77,8 @@ public class WindowsLibrary extends AbstractLibrary {
 
     @Override
     protected boolean canLoad() {
-        return !SystemInfo.undefinedArchitecture && SystemInfo.isX86Compatible && SystemInfo.isWindows10OrGreater;
+        return !SystemInfo.undefinedArchitecture
+            && (SystemInfo.isX86Compatible || SystemInfo.isARM)
+            && SystemInfo.isWindows10OrGreater;
     }
 }
